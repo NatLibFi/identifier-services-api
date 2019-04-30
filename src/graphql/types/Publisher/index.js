@@ -28,7 +28,7 @@
 
 export default `
     type Query{
-        publisher(id: String, lastUpdated:LastUpdated, name: String, language: String, metadataDelivery: String, activity:Activity, streetAddress: Address, email: String, website: String ):Publisher
+        publisher(id: String, name: String, language: String, metadataDelivery: String, email: String, website: String ):Publisher
         Publishers:[Publisher]
     }
 
