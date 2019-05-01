@@ -28,12 +28,12 @@
 
 export default {
 	Query: {
-		User: async (root, args, {mongo: {Users}}) => {
+		user: async (root, args, {mongo: {Users}}) => {
 			await Users.findOne(args).exec();
 		},
 
 		Users: () => {
-			return async (root, data, {mongo: {Users}}) => {
+			return async (root, {mongo: {Users}}) => {
 				await Users.find({})
 					.populate()
 					.exec();

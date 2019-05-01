@@ -30,22 +30,14 @@ import {PublisherModel as Publisher} from '../../../interfaces/models';
 
 export default {
 	Query: {
-		Publisher: (root, args) => {
-			return new Promise((resolve, reject) => {
-				Publisher.findOne(args).exec((err, res) => {
-					err ? reject(err) : resolve(res);
-				});
-			});
+		publisher: async (root, args) => {
+			await Publisher.findOne(args).exec();
 		},
 
-		Publishers: () => {
-			return new Promise((resolve, reject) => {
-				Publisher.find({})
-					.populate()
-					.exec((err, res) => {
-						err ? reject(err) : resolve(res);
-					});
-			});
+		Publishers: async () => {
+			await Publisher.find({})
+				.populate()
+				.exec();
 		}
 	}
 };

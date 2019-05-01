@@ -27,7 +27,9 @@
  */
 
 import {mergeResolvers} from 'merge-graphql-schemas';
+import User from './User';
+import Publisher from './Publisher';
 
-const resolver = [];
+const resolver = [User, Publisher];
 
 export default mergeResolvers(resolver, {all: true});
