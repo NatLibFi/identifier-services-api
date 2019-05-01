@@ -452,6 +452,187 @@
 				}
 			}
 		},
+		"/publishers/requests":{
+			"post":{
+				"summary": "Create a publisher creation request",
+				"tags": ["publishers"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "New Publisher creation request created",
+						"headers": {
+							"Location": {
+								"description": " ",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Publisher does not exist or Bad Request"
+					},
+					"401": {
+						"description": "Authentication failed or Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden or Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					},
+					"415": {
+						"description": "Content type was not specified or Unsupported Media Type"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publishers/request/{id}":{
+			"get":{
+					"summary": "Retrive a publisher creation request",
+					"tags": ["publishers"],
+					"parameters": [
+						{
+							"name": "publisherRequestId",
+							"in": "path",
+							"description": "ID of publisher's request to fetch",
+							"require": true,
+							"schema": {
+								"type": "string"
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "OK",
+							"content": {
+								"application/json": {
+									"schema": {
+										"$ref": "#/components/schemas/Publisher"
+									}
+								}
+							}
+						},
+						"401": {
+							"description": "Authentication failed"
+						},
+						"403": {
+							"description": "Not authorized or Forbidden"
+						},
+						"404": {
+							"description": "No record found"
+						},
+						"default": {
+							"description": "unexpected error"
+						}
+					}
+			},
+			"delete":{
+				"summary": "Delete a publisher's creation request",
+				"description": "The publisher's creation request is removed",
+				"tags": ["publishers"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"204": {
+						"description": "The publisher's creation request is removed"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher's creation request does not exist"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			},
+			"put":{
+				"summary": "Update a publisher's creation request",
+				"tags": ["publishers"],
+				"parameters": [
+					{
+						"name": "publisherRequestId",
+						"in": "path",
+						"description": "ID of publisher's creation request to fetch",
+						"require": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Publisher"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "The publisher's creation request is updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type":"string"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No new content to be updated"
+					},
+					"400": {
+						"description": "Malformed content or Bad request"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher's creation request does not exist"
+					},
+					"422": {
+						"description": "Invalid syntax"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
 		"/publishers/{id}/publications": {
 			"post": {
 				"summary": "Create a new publication",

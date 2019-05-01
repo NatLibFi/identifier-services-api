@@ -28,7 +28,7 @@
 
 export default `
     type Query{
-        publisher(id: String, name: String, language: String, metadataDelivery: String, email: String, website: String ):Publisher
+        publisher:Publisher
         Publishers:[Publisher]
     }
 
@@ -42,21 +42,26 @@ export default `
         yearInactivated: Int
     }
 
-    type Address{
+    type StreetAddress{
         address: String!
         city: String!
         zip: String!
     }
-    
-    type Publisher{
+
+    type MetaData{
         id: String!
-        lastUpdated: LastUpdated!
         name: String!
         language: String!
-        metadataDelivery: String
+        email: String
+        website: String
+        aliases: String
+        notes: String
+    }
+    
+    type Publisher{
+        metadata: MetaData
+        lastUpdated: LastUpdated!
         activity: Activity!
-        streetAddress: Address
-        email: String!
-        website: String!
+        streetAddress: StreetAddress
     }   
  `;
