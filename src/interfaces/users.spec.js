@@ -25,4 +25,43 @@
  * for the JavaScript code in this file.
  *
  */
+import {expect} from 'chai';
+import fixtureFactory, {READERS} from '@natlibfi/fixura';
+import mongoFixtureFactory from '@natlibfi/fixura-mongo';
+import Mongoose from 'mongoose';
+import {usersFactory} from '.';
 
+describe('interfaces/users', async () => {
+	let mongoFixtures;
+	const {getFixture} = fixtureFactory({
+		root: [__dirname, '..', '..', 'test-fixtures', 'users'],
+		reader: READERS.JSON
+	});
+
+	beforeEach(async () => {
+		mongoFixtures = await mongoFixtureFactory();
+		await Mongoose.connect(await mongoFixtures.getConnectionString(), {
+			useNewURLParser: true
+		});
+	});
+
+	afterEach(async () => {
+		await Mongoose.disconnect();
+		await mongoFixtures.close();
+	});
+
+	describe('#create', () => {
+		it('Should create a new user', async (index = '0') => {
+			const dbContents = getFixture(['create', index, 'dbContents.json']);
+			const expectedDb = getFixture(['create', index, 'expectedDb.json']);
+			const users = usersFactory({url: 'https://'});
+
+			await mongoFixtures.populate(dbContents);
+
+			await users.create({id: 'foo', preference: {}});
+			const db = await mongoFixtures.dump();
+
+			expect(db).to.eql(expectedDb);
+		});
+	});
+});

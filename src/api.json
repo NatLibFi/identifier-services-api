@@ -244,6 +244,161 @@
 				}				
 			}
 		},
+		"users/request": {
+			"post": {
+				"summary": "Create a user creation request",
+				"tags": ["users"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "User creation request created"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					}
+				}				
+			}
+		},
+		"users/requests/{id}": {
+			"get": {
+				"summary": "Retrieve a user creation request",
+				"tags": ["users"],
+				"parameters": [
+					{
+						"name": "userRequestId",
+						"in": "path",
+						"description": "Retrieves request for user creation",
+						"required": true,
+						"schema":{
+							"type":"string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "User creation request retrieved"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					}
+				}				
+			},
+			"delete": {
+				"summary": "Remove a user creation request",
+				"tags": ["users"],
+				"parameters": [
+					{
+						"name": "userRequestId",
+						"in": "path",
+						"description": "Remove request for user creation",
+						"required": true,
+						"schema":{
+							"type":"string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "User creation request removed"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					}
+				}				
+			},
+			"put": {
+				"summary": "Update a user creation request",
+				"tags": ["users"],
+				"parameters": [
+					{
+						"name": "userRequestId",
+						"in": "path",
+						"description": "Updates request for user creation",
+						"required": true,
+						"schema":{
+							"type":"string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "User creation request updated"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					}
+				}				
+			}
+		},
+		"users/requests/query": {
+			"post": {
+				"summary": "Query for user creation request",
+				"tags": ["users"],
+				"parameters": [
+					{
+						"name": "usersRequest",
+						"in": "query",
+						"description": "Query user creation request",
+						"required": true,
+						"schema":{
+							"type":"string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "Query returned "
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					}
+				}				
+			}
+		},
 
 		"/publishers": {
 			"post": {

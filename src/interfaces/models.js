@@ -6,8 +6,9 @@ export const UserModel = new Schema({
 		required: true,
 		unique: true
 	},
-	preference: {
+	defaultLanguage: {
 		type: String,
+		required: true,
 		default: 'English'
 	}
 }, {strict: 'throw'});
