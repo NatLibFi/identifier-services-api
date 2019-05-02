@@ -11,6 +11,10 @@
 	],
 	"tags": [
 		{
+			"name": "message templates",
+			"description": "Operate on message templates"
+		},
+		{
 			"name": "users",
 			"description": "Operate on users"
 		},
@@ -25,6 +29,252 @@
 		}
 	],
 	"paths": {
+		"/templates": {
+			"post": {
+				"summary": "Creates a new message templates",
+				"tags": ["message templates"],
+				"responses": {
+					"200": {
+						"description": "message template response",
+						"content": {
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/MessageTemplate"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Message templates successfully created",
+						"headers": {
+							"Location": {
+								"description": "",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed content"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					}
+				}
+			}
+		},
+		"/templates/{id}": {
+			"get": {
+				"summary": "Retrieve a message template",
+				"tags": ["message templates"],
+				"parameters": [
+					{
+						"name": "templateId",
+						"in": "path",
+						"description": "ID of message template which is to be retrieve",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "template response",
+						"content": {
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/MessageTemplate"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Message templates successfully retrieved",
+						"headers": {
+							"Location": {
+								"description": "",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed content"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					}
+				}
+			},
+			"delete": {
+				"summary": "Removes a message template",
+				"tags": ["message templates"],
+				"parameters": [
+					{
+						"name": "templateId",
+						"in": "path",
+						"description": "ID of message template which is to be removed",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "template response",
+						"content": {
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/MessageTemplate"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Message templates successfully deleted",
+						"headers": {
+							"Location": {
+								"description": "",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed content"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					}
+				}
+			},
+			"put": {
+				"summary": "Update a message template",
+				"tags": ["message templates"],
+				"parameters": [
+					{
+						"name": "templateId",
+						"in": "path",
+						"description": "ID of message template which is to be update",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "template response",
+						"content": {
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/MessageTemplate"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Message templates successfully updated",
+						"headers": {
+							"Location": {
+								"description": "",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed content"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					}
+				}
+			}
+		},
+		"/templates/query": {
+			"post": {
+				"summary": "Query message templates",
+				"tags": ["message templates"],
+				"parameters": [
+					{
+						"name": "templates",
+						"in": "query",
+						"description": "Query certain templates",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "message template response",
+						"content": {
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/MessageTemplate"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Template query returned",
+						"headers": {
+							"Location": {
+								"description": "",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed content"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"413": {
+						"description": "Request body is too large"
+					}
+				}
+			}
+		},
+
 		"/users": {
 			"post": {
 				"summary": "Creates a new users",
@@ -653,14 +903,73 @@
 			}
 		},
 		"schemas": {
+			"MessageTemplate": {
+				"type":"object",
+				"properties": {
+					"id": {
+						"type":"string",
+						"required":true
+					},
+					"lastUpdated": {
+						"type":"object",
+						"properties": {
+							"timestamp": {
+								"type": "string",
+								"required": true,
+								"description": "Last update timestamp in ISO 8601 Date time string format YYYY-MM-DDTHH:mm:ss.sssZ"
+							},
+							"user": {
+								"type": "string",
+								"required": true,
+								"description": "The id of the user who did the update."
+							}
+						}
+					},
+					"name":{
+						"type":"string",
+						"required":true,
+						"description":"Name of the template."
+					},
+					"language":{
+						"type":"string",
+						"required":true,
+						"description":"Three-letter language code indicating the default language for the publisher."
+					},
+					"subject":{
+						"type":"string",
+						"required":true,
+						"description":"Subject template for the message."
+					},
+					"body":{
+						"type":"string",
+						"required":true,
+						"description":"Body template for the message."
+					}
+				}
+			},
 			"User": {
 				"type": "object",
 				"properties": {
 					"id": {"type": "string", "required": true},
-					"preference": {
+					"preferences": {
 						"type": "object",
 						"properties": {
 							"defaultLanguage": {"type": "string", "required": true}
+						}
+					},
+					"lastUpdated": {
+						"type":"object",
+						"properties": {
+							"timestamp": {
+								"type": "string",
+								"required": true,
+								"description": "Last update timestamp in ISO 8601 Date time string format YYYY-MM-DDTHH:mm:ss.sssZ"
+							},
+							"user": {
+								"type": "string",
+								"required": true,
+								"description": "The id of the user who did the update."
+							}
 						}
 					}
 				}
