@@ -28,10 +28,12 @@
 import {Utils} from '@natlibfi/melinda-commons';
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
 import {createUsersRouter, createPublishersRouter} from './routes';
 import Mongoose from 'mongoose';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
+import bodyParser from 'body-parser';
+import expressGraphQL from 'express-graphql';
+import schema from './graphql';
 
 const {createLogger, handleInterrupt} = Utils;
 
@@ -53,6 +55,15 @@ async function run() {
 		app.use(cors());
 		app.use('/users', createUsersRouter());
 		app.use('/publishers', createPublishersRouter());
+		app.use(
+			'/graphql',
+			cors(),
+			bodyParser.json(),
+			expressGraphQL({
+				schema: schema,
+				graphiql: true
+			})
+		);
 
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');

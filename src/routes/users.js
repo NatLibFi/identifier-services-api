@@ -27,34 +27,50 @@
  */
 
 import {Router} from 'express';
-import {usersFactory} from '../interfaces';
-import {API_URL} from '../config';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
+import expressGraphQL from 'express-graphql';
+
+import {usersFactory} from '../interfaces';
+import {API_URL} from '../config';
+import schema from '../graphql';
 
 export default function() {
 	const users = usersFactory({url: API_URL});
 
+	// const mongo = {
+	// 	Users: db.db,
+	// 	Publishers: db.collections
+	// };
+
 	return new Router()
 		.post(
 			'/',
-			// validateContentType({type: 'application/json'}),
-			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({type: 'application/json'}),
+			validateContentType({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
+			// bodyParser.urlencoded({extended: false}),
+			bodyParser.json({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
 			create
 		)
 		.get('/:id', read)
 		.put('/:id', update)
 		.delete('/:id', remove)
 		.post('/:id/password', changePwd)
-		.post('./query', query);
+		.post(
+			'/query',
+			expressGraphQL({schema: schema, graphiql: true}),
+			query
+		);
 
 	async function create(req, res, next) {
 		try {
 			const user = await users.create({
-				preference: req.body.preference
+				preference: req.body.preference ? req.body.preference : 'FIN'
 			});
-			res.json(user);
+			return res.json(user);
 		} catch (err) {
 			next(err);
 		}
@@ -62,7 +78,7 @@ export default function() {
 
 	async function read(req, res, next) {
 		try {
-			console.log(req.params);
+			res.json(req.params);
 		} catch (err) {
 			next(err);
 		}
@@ -70,7 +86,7 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -78,7 +94,7 @@ export default function() {
 
 	async function remove(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -86,7 +102,7 @@ export default function() {
 
 	async function changePwd(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -94,7 +110,7 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}

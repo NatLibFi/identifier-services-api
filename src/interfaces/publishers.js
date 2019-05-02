@@ -28,30 +28,30 @@
 import Mongoose from 'mongoose';
 import {PublisherModel} from './models';
 
-export default function({url}) {
+export default function() {
 	Mongoose.model('Publisher', PublisherModel);
 	return {create, read, update, remove, query, newPublication};
 
 	async function query() {}
 
-	async function read({id, publisher}) {
+	async function read({publisher}) {
 		return publisher;
 	}
 
 	async function create({id}) {
-		console.log(id);
+		return id;
 	}
 
 	async function update({id, payload, user}) {
-		console.log(id, payload, user);
+		return {id, payload, user};
 	}
 
 	async function remove({id, user}) {
-		console.log(id, user);
+		return {id, user};
 	}
 
-	async function newPublication({inputStream, contentType, user}) {
-		console.log(user);
+	async function newPublication({user}) {
+		return user;
 	}
 
 	// async function getPublisher(id) {

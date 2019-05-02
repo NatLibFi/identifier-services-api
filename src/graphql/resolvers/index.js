@@ -26,40 +26,10 @@
  *
  */
 
-import Mongoose from 'mongoose';
-import {UserModel} from './models';
-import {v4 as uuid} from 'uuid';
+import {mergeResolvers} from 'merge-graphql-schemas';
+import User from './User';
+import Publisher from './Publisher';
 
-export default function() {
-	Mongoose.model('User', UserModel);
-	return {create, read, update, remove, changePwd, query};
+const resolver = [User, Publisher];
 
-	async function create({preference}) {
-		const id = uuid();
-		const newUser = {
-			id,
-			preference
-		};
-		return newUser;
-	}
-
-	async function read(val) {
-		return val;
-	}
-
-	async function update(val) {
-		return val;
-	}
-
-	async function remove(val) {
-		return val;
-	}
-
-	async function changePwd(val) {
-		return val;
-	}
-
-	async function query(val) {
-		return val;
-	}
-}
+export default mergeResolvers(resolver, {all: true});

@@ -26,40 +26,42 @@
  *
  */
 
-import Mongoose from 'mongoose';
-import {UserModel} from './models';
-import {v4 as uuid} from 'uuid';
+export default `
+    type Query{
+        publisher:Publisher
+        Publishers:[Publisher]
+    }
 
-export default function() {
-	Mongoose.model('User', UserModel);
-	return {create, read, update, remove, changePwd, query};
+    type LastUpdated{
+        timeStamp:String!
+        user: String!
+    }
 
-	async function create({preference}) {
-		const id = uuid();
-		const newUser = {
-			id,
-			preference
-		};
-		return newUser;
-	}
+    type Activity{
+        active: Boolean!
+        yearInactivated: Int
+    }
 
-	async function read(val) {
-		return val;
-	}
+    type StreetAddress{
+        address: String!
+        city: String!
+        zip: String!
+    }
 
-	async function update(val) {
-		return val;
-	}
-
-	async function remove(val) {
-		return val;
-	}
-
-	async function changePwd(val) {
-		return val;
-	}
-
-	async function query(val) {
-		return val;
-	}
-}
+    type MetaData{
+        id: String!
+        name: String!
+        language: String!
+        email: String
+        website: String
+        aliases: String
+        notes: String
+    }
+    
+    type Publisher{
+        metadata: MetaData
+        lastUpdated: LastUpdated!
+        activity: Activity!
+        streetAddress: StreetAddress
+    }   
+ `;
