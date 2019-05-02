@@ -26,3 +26,27 @@
  *
  */
 
+export function hasPermission(profile, user) {
+	const permitted = profile.auth.groups.some(profileGroup => {
+		return user.groups.some(
+			userGroup => userGroup === profileGroup || userGroup === 'admin'
+		);
+	});
+	return permitted;
+}
+export function hasPublisherPermission(profile, user) {
+	const permitted = profile.aut.groups.some(profileGroup => {
+		return user.group.some(
+			userGroup => userGroup === profileGroup || userGroup === 'publisher-admin'
+		);
+	});
+	return permitted;
+}
+
+export function hasAdminPermission(user) {
+	return hasPermission({auth: {groups: ['admin']}}, user);
+}
+
+export function hasPublisherAdminPermission(user) {
+	return hasPermission({auth: {groups: ['publisher-admin']}}, user);
+}

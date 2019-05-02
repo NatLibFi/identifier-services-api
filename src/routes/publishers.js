@@ -29,11 +29,18 @@
 import {Router} from 'express';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
-import {publishersFactory} from '../interfaces';
+
+import {usersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function() {
-	const publishers = publishersFactory({url: API_URL});
+	const users = usersFactory({url: API_URL});
+
+	// const mongo = {
+	// 	Users: db.db,
+	// 	Publishers: db.collections
+	// };
+
 	return new Router()
 		.post(
 			'/',
@@ -41,48 +48,30 @@ export default function() {
 				type: ['application/json', 'application/x-www-form-urlencoded']
 			}),
 			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({type: 'application/json'}),
+			bodyParser.json({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
 			create
 		)
 		.get('/:id', read)
 		.put('/:id', update)
 		.delete('/:id', remove)
-		.post('/query', query)
-		.post('/:id/publications', newPublication);
+		.post('/query', query);
 
-	async function query(req, res, next) {
+	async function create(req, res, next) {
 		try {
-			const queryParams = getQueryParams();
-			const result = await publishers.query({...queryParams, user: req.user});
-			res.json(result);
+			const user = await users.create({
+				preference: req.body.preference
+			});
+			res.json(user);
 		} catch (err) {
 			next(err);
-		}
-
-		function getQueryParams() {
-			const KEYS = [
-				'state',
-				'profile',
-				'contentType',
-				'creationTime',
-				'modificationTime'
-			];
-			return Object.keys(req.query)
-				.filter(k => KEYS.includes(k))
-				.reduce((acc, k) => {
-					const value = req.query[k];
-					return {...acc, [k]: Array.isArray(value) ? value : [value]};
-				}, {});
 		}
 	}
 
 	async function read(req, res, next) {
 		try {
-			const result = await publishers.read({
-				id: req.params.id,
-				publisher: req.publisher
-			});
-			res.json(result);
+			res.json(req);
 		} catch (err) {
 			next(err);
 		}
@@ -90,11 +79,7 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			await publishers.update({
-				id: req.params.id,
-				user: req.user,
-				payload: req.body
-			});
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -102,23 +87,15 @@ export default function() {
 
 	async function remove(req, res, next) {
 		try {
-			await publishers.remove({id: req.params.id, user: req.user});
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function create(req, res, next) {
+	async function query(req, res, next) {
 		try {
-			console.log(req);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function newPublication(req, res, next) {
-		try {
-			console.log(req.body);
+			res.json(req);
 		} catch (err) {
 			next(err);
 		}

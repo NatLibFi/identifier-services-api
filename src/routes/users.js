@@ -49,8 +49,10 @@ export default function() {
 			validateContentType({
 				type: ['application/json', 'application/x-www-form-urlencoded']
 			}),
-			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({type: 'application/json'}),
+			// bodyParser.urlencoded({extended: false}),
+			bodyParser.json({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
 			create
 		)
 		.get('/:id', read)
@@ -66,9 +68,9 @@ export default function() {
 	async function create(req, res, next) {
 		try {
 			const user = await users.create({
-				preference: req.body.preference
+				preference: req.body.preference ? req.body.preference : 'FIN'
 			});
-			res.json(user);
+			return res.json(user);
 		} catch (err) {
 			next(err);
 		}
@@ -76,7 +78,7 @@ export default function() {
 
 	async function read(req, res, next) {
 		try {
-			console.log(req.params);
+			res.json(req.params);
 		} catch (err) {
 			next(err);
 		}
@@ -84,7 +86,7 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -92,7 +94,7 @@ export default function() {
 
 	async function remove(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -100,7 +102,7 @@ export default function() {
 
 	async function changePwd(req, res, next) {
 		try {
-			console.log(req.body);
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}
@@ -108,7 +110,7 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			console.log(req)
+			res.json(req.body);
 		} catch (err) {
 			next(err);
 		}

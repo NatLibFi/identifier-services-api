@@ -33,9 +33,9 @@
 					"200": {
 						"description": "user response",
 						"content": {
-							"application/json":{
-								"schema":{
-									"$ref":"#/components/schemas/User"
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}
@@ -241,7 +241,7 @@
 					"404": {
 						"description": "The publisher does not exist"
 					}
-				}				
+				}
 			}
 		},
 
@@ -372,7 +372,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type":"string"
+									"type": "string"
 								}
 							}
 						}
@@ -706,13 +706,14 @@
 					"language": {"type": "string", "required": true},
 					"metadataDelivery": {
 						"type": "string",
+						"required": true,
 						"enum": ["manual", "batch", "external"]
 					},
 					"activity": {
 						"type": "object",
 						"properties": {
 							"active": {"type": "boolean", "default": true, "required": true},
-							"yearInactivated": {"type": "number"}
+							"yearInactivated": {"type": "number", "required": false}
 						}
 					},
 					"streetAddress": {
@@ -723,8 +724,10 @@
 							"zip": {"type": "string", "required": true}
 						}
 					},
-					"email": {"type": "string", "format": "email", "required": true},
-					"website": {"type": "string", "required": true}
+					"email": {"type": "string", "format": "email", "required": false},
+					"website": {"type": "string", "required": false},
+					"aliases": {"type": "string", "required": false},
+					"notes": {"type": "string", "required": false}
 				},
 				"Publication": {},
 				"Error": {}

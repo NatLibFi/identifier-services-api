@@ -27,7 +27,6 @@
  */
 
 import {expect} from 'chai';
-import HttpStatus from 'http-status';
 import Mongoose from 'mongoose';
 import publishersFactory from './publishers';
 import fixtureFactory, {READERS} from '@natlibfi/fixura';

@@ -37,28 +37,29 @@ export default function() {
 	async function create({preference}) {
 		const id = uuid();
 		const newUser = {
-			id, preference
+			id,
+			preference
 		};
-		console.log(newUser);
+		return newUser;
 	}
 
 	async function read(val) {
-		console.log(val);
+		return val;
 	}
 
 	async function update(val) {
-		console.log(val);
+		return val;
 	}
 
 	async function remove(val) {
-		console.log(val);
+		return val;
 	}
 
 	async function changePwd(val) {
-		console.log(val);
+		return val;
 	}
 
 	async function query(val) {
-		console.log(val);
+		return val;
 	}
 }

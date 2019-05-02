@@ -1,16 +1,19 @@
 import {Schema} from 'mongoose';
 
-export const UserModel = new Schema({
-	id: {
-		type: String,
-		required: true,
-		unique: true
+export const UserModel = new Schema(
+	{
+		id: {
+			type: String,
+			required: true,
+			unique: true
+		},
+		preference: {
+			type: String,
+			default: 'English'
+		}
 	},
-	preference: {
-		type: String,
-		default: 'English'
-	}
-}, {strict: 'throw'});
+	{strict: 'throw'}
+);
 
 export const PublisherModel = new Schema(
 	{
@@ -46,7 +49,8 @@ export const PublisherModel = new Schema(
 				required: true
 			},
 			yearInactivated: {
-				type: Number
+				type: Number,
+				required: false
 			}
 		},
 		streetAddress: {
@@ -68,7 +72,7 @@ export const PublisherModel = new Schema(
 			type: String,
 			lowercase: true,
 			required: true,
-			match: [/\S+@\S+\.\S+/, 'is invalid'],
+			match: [/\S+@\S+\.\S+/, 'is invalid']
 		},
 		website: {
 			type: String,
