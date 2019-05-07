@@ -1516,7 +1516,6 @@
 						"type": "array",
 						"items": {
 							"type": "string",
-							"required": true,
 							"description": "notes"
 						},
 						"required": true,
@@ -1624,7 +1623,6 @@
 						"type": "array",
 						"items": {
 							"type": "string",
-							"required": true,
 							"description": "A list of notes encoded as Base64."
 						},
 						"required": true,
@@ -1704,10 +1702,8 @@
 						"type": "array",
 						"items": {
 							"type": "string",
-							"required": true,
 							"description": "notes"
 						},
-						"required": true,
 						"description": "A list of notes encoded as Base64."
 					},
 					"state": {

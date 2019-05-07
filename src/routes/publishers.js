@@ -29,12 +29,11 @@
 import {Router} from 'express';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
-
-import {usersFactory} from '../interfaces';
+import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function() {
-	const users = usersFactory({url: API_URL});
+	const publishers = publishersFactory({url: API_URL});
 
 	return new Router()
 		.post(
@@ -49,7 +48,17 @@ export default function() {
 			create
 		)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put(
+			'/:id',
+			validateContentType({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
+			bodyParser.urlencoded({extended: false}),
+			bodyParser.json({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			}),
+			update
+		)
 		.delete('/:id', remove)
 		.post('/query', query)
 		.post('/requests', createRequest)
@@ -60,34 +69,38 @@ export default function() {
 
 	async function create(req, res, next) {
 		try {
-			const user = await users.create({
-				preference: req.body.preference
-			});
-			res.json(user);
+			const result = await publishers.create(req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function read(req, res, next) {
+		const id = req.params.id;
 		try {
-			res.json(req);
+			const result = await publishers.read(id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function update(req, res, next) {
+		const id = req.params.id;
 		try {
-			res.json(req.body);
+			const result = await publishers.update(id, req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function remove(req, res, next) {
+		const id = req.params.id;
 		try {
-			res.json(req.body);
+			const result = await publishers.remove(id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -95,7 +108,8 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publishers.query();
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

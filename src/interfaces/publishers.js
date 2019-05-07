@@ -25,29 +25,211 @@
  * for the JavaScript code in this file.
  *
  */
-import Mongoose from 'mongoose';
-import {PublisherModel} from './models';
+import {MongoClient} from 'mongodb';
+import {MONGO_URI} from '../config';
+import {graphql} from 'graphql';
+import schema from '../graphql';
 
 export default function() {
-	Mongoose.model('Publisher', PublisherModel);
+	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
+
+	let db;
+	client.connect(err => {
+		const dbName = 'IdentifierServices';
+		db = client.db(dbName);
+		console.log(err);
+	});
 	return {create, read, update, remove, query, newPublication};
 
-	async function query() {}
-
-	async function read({publisher}) {
-		return publisher;
+	async function query() {
+		return graphql(
+			schema,
+			`
+				{
+					Publishers {
+						id
+						lastUpdated {
+							timestamp
+							user
+						}
+						name
+						language
+						metadataDelivery
+						primaryContact
+						email
+						phone
+						website
+						aliases
+						notes
+						activity {
+							active
+							yearInactivated
+						}
+						streetAddress {
+							address
+							city
+							zip
+						}
+					}
+				}
+			`,
+			db
+		);
 	}
 
-	async function create({id}) {
-		return id;
+	async function read(id) {
+		return graphql(
+			schema,
+			`
+				{
+					Publisher {
+						id
+						lastUpdated {
+							timestamp
+							user
+						}
+						name
+						language
+						metadataDelivery
+						primaryContact
+						email
+						phone
+						website
+						aliases
+						notes
+						activity {
+							active
+							yearInactivated
+						}
+						streetAddress {
+							address
+							city
+							zip
+						}
+					}
+				}
+			`,
+			{db, id}
+		);
 	}
 
-	async function update({id, payload, user}) {
-		return {id, payload, user};
+	async function create(user) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$timestamp: String
+					$user: String
+					$name: String
+					$language: String
+					$metadataDelivery: String
+					$primaryContact: String
+					$email: String
+					$phone: String
+					$website: String
+					$aliases: String
+					$notes: String
+					$active: Boolean
+					$yearInactivated: Int
+					$address: String
+					$city: String
+					$zip: String
+				) {
+					createPublisher(
+						id: $id
+						timestamp: $timestamp
+						user: $user
+						name: $name
+						language: $language
+						metadataDelivery: $metadataDelivery
+						primaryContact: $primaryContact
+						email: $email
+						phone: $phone
+						website: $website
+						aliases: $aliases
+						notes: $notes
+						active: $active
+						yearInactivated: $yearInactivated
+						address: $address
+						city: $city
+						zip: $zip
+					) {
+						id
+						name
+					}
+				}
+			`,
+			{db, user}
+		);
 	}
 
-	async function remove({id, user}) {
-		return {id, user};
+	async function update(id, publisher) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$timestamp: String
+					$user: String
+					$name: String
+					$language: String
+					$metadataDelivery: String
+					$primaryContact: String
+					$email: String
+					$phone: String
+					$website: String
+					$aliases: String
+					$notes: String
+					$active: Boolean
+					$yearInactivated: Int
+					$address: String
+					$city: String
+					$zip: String
+				) {
+					updatePublisher(
+						id: $id
+						timestamp: $timestamp
+						user: $user
+						name: $name
+						language: $language
+						metadataDelivery: $metadataDelivery
+						primaryContact: $primaryContact
+						email: $email
+						phone: $phone
+						website: $website
+						aliases: $aliases
+						notes: $notes
+						active: $active
+						yearInactivated: $yearInactivated
+						address: $address
+						city: $city
+						zip: $zip
+					) {
+						id
+						name
+					}
+				}
+			`,
+			{db, id, publisher}
+		);
+	}
+
+	async function remove(id) {
+		console.log('remove', id);
+		return graphql(
+			schema,
+			`
+				mutation($id: String){
+					deletePublisher(
+						id: $id
+					){
+						id
+					}
+				}
+			`,
+			{db, id}
+		);
 	}
 
 	async function newPublication({user}) {

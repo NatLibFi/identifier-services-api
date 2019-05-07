@@ -27,16 +27,15 @@
  */
 
 export default `
-    type Query{
-        publisherMetadata(id:String, active:Boolean, name:String, language:String, metadataDelivery:String,
-            email:String, website:String, primaryContact: String, aliases: String, notes: String, active: Boolean,
-            yearInactivated: Int, address:String, city:String, zip:String ):Publisher
-        
+    type Query{   
+        Publisher:Publisher
+
+        Publishers:[Publisher!]!        
+
         publisherRequest(id: String, name:String, publisherId: String, language: String, email: String, website: String,
-            publicationEstimate: Int, note: String, state: String, address: String, city: String, zip: String, 
+            publicationEstimate: Int, state: String, address: String, city: String, zip: String, 
             givenName: String, familyName: String, emailContact: String ): PublisherRequest
 
-        Publishers:[Publisher]
 
     }
 
@@ -45,17 +44,11 @@ export default `
         user: String!
     }
 
-    type Active{
+
+
+    type Activity{
         active: Boolean
-    }
-
-    type YearInactivated{
         yearInactivated: Int
-    }
-
-    enum Activity{
-        Active
-        YearInactivated
     }
 
     type StreetAddress{
@@ -64,13 +57,8 @@ export default `
         zip: String!
     }
 
-    type PublisherAltName {
-        name:String!
-    }
 
-    type Note{
-        note: String!
-    }
+
 
     type UserId{
         userId: String
@@ -80,10 +68,7 @@ export default `
         email: String
     }
 
-    enum PrimaryContact{
-        UserId
-        Email
-    }
+ 
 
     type PrimaryContactRequest{
         givenName: String!
@@ -105,17 +90,18 @@ export default `
 
     type Publisher{
         id: String!
+        lastUpdated: LastUpdated
         name: String!
         language: String!
         metadataDelivery: String!
-        primaryContact(name:String, email: String): PrimaryContact
+        primaryContact: [String!]!
         email: String
+        phone: String
         website: String
-        aliases(publisherAltName: String!): [PublisherAltName]
-        notes: [Note]
-        lastUpdated(timeStamp: String, user: String): LastUpdated
-        activity(active: Boolean, yearInactivated: Int): Activity!
-        streetAddress(address: String, city:String, zip: String): StreetAddress
+        aliases: [String]
+        notes: [String]
+        activity: Activity
+        streetAddress: StreetAddress
     }  
     
     type PublisherRequest{
@@ -126,10 +112,55 @@ export default `
         email: String
         website: String
         publicationEstimate: Int!
-        notes: [Note]
         state: String!
         streetAddress(address: String, city: String, zip: String): StreetAddress
         primaryContact: [PrimaryContactRequest]
         publication: Publication
+    }
+
+    type Mutation{
+        createPublisher(
+            id: String,
+            timestamp: String,
+            user: String
+            name: String,
+            language: String,
+            metadataDelivery: String,
+            primaryContact: String
+            email: String,
+            phone: String,
+            website: String,
+            aliases: String,
+            notes: String,
+            active: Boolean,
+            yearInactivated: Int,
+            address: String,
+            city: String,
+            zip: String
+        ): Publisher
+
+        updatePublisher(
+            id: String,
+            timestamp: String,
+            user: String
+            name: String,
+            language: String,
+            metadataDelivery: String,
+            primaryContact: String
+            email: String,
+            phone: String,
+            website: String,
+            aliases: String,
+            notes: String,
+            active: Boolean,
+            yearInactivated: Int,
+            address: String,
+            city: String,
+            zip: String
+        ): Publisher
+
+        deletePublisher(
+            id: String
+        ): Publisher
     }
  `;

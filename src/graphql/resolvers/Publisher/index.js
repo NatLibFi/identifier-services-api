@@ -25,19 +25,83 @@
  * for the JavaScript code in this file.
  *
  */
-
-import {PublisherModel as Publisher} from '../../../interfaces/models';
+const uuidv4 = require('uuid/v4');
 
 export default {
 	Query: {
-		publisherMetadata: async (root, args) => {
-			await Publisher.findOne(args).exec();
+		Publishers: async db => {
+			try {
+				return await db
+					.collection('PublisherMetadata')
+					.find()
+					.toArray()
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		Publisher: async ({db, id}) => {
+			try {
+				return await db
+					.collection('PublisherMetadata')
+					.findOne({id})
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		}
+	},
+
+	Mutation: {
+		createPublisher: async ({db, user}) => {
+			try {
+				const newPublisher = {
+					...user,
+					id: uuidv4(),
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				await db
+					.collection('PublisherMetadata')
+					.insertOne(newPublisher)
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
 		},
 
-		Publishers: async () => {
-			await Publisher.find({})
-				.populate()
-				.exec();
+		updatePublisher: async ({db, id, publisher}) => {
+			try {
+				const publisherUpdate = {
+					...publisher,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				await db
+					.collection('PublisherMetadata')
+					.findOneAndUpdate({id}, {$set: publisherUpdate}, {upsert: true})
+					.then(res => res)
+					.catch(err => err);
+			} catch (err) {
+				return err;
+			}
+		},
+
+		deletePublisher: async ({db, id}) => {
+			try {
+				const deletedPublisher = await db
+					.collection('PublisherMetadata')
+					.findOneAndDelete({id})
+					.then(res => res.send('User Deleted'))
+					.catch(err => err);
+				return deletedPublisher;
+			} catch (err) {
+				return err;
+			}
 		}
 	}
 };

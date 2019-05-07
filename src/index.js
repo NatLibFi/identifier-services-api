@@ -52,21 +52,11 @@ async function run() {
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
-		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
-		client.connect(err => {
-			const dbName = 'IdentifierServices';
-			const db = client.db(dbName);
-			// const mongo = {
-			// 	Users: client.db(dbName).collection('userMetadata'),
-			// 	UsersRequest: client.db(dbName).collection('usersRequest')
-			// };
-			console.log(err);
 
-			app.use('/templates', createMessageTemplate());
-			app.use('/users', createUsersRouter(db));
-			app.use('/publishers', createPublishersRouter());
-			app.use('publications', createPublicationsRouter());
-		});
+		app.use('/templates', createMessageTemplate());
+		app.use('/users', createUsersRouter());
+		app.use('/publishers', createPublishersRouter());
+		app.use('publications', createPublicationsRouter());
 
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');
