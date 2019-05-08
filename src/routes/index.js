@@ -30,3 +30,4 @@ export {default as createUsersRouter} from './users';
 export {default as createPublishersRouter} from './publishers';
 export {default as createPublicationsRouter} from './publications';
 export {default as createMessageTemplate} from './messageTemplates';
+export {default as createRangesRouter} from './ranges';

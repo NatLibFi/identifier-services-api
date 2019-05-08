@@ -1,6 +1,3 @@
-import {read} from 'fs';
-import User from '../../types/User';
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.

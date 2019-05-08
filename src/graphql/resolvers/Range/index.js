@@ -26,11 +26,27 @@
  *
  */
 
-import {mergeResolvers} from 'merge-graphql-schemas';
-import User from './User';
-import Publisher from './Publisher';
-import Range from './Range';
+const uuidv4 = require('uuid/v4');
 
-const resolver = [User, Publisher, Range];
-
-export default mergeResolvers(resolver, {all: true});
+export default {
+	// Query: {},
+	Mutation: {
+		createISBN: async ({db, isbnData}) => {
+			try {
+				const newISBN = {
+					id: uuidv4(),
+					...isbnData,
+					lastUpdated: {
+						timestamp: new Date(),
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISBN')
+					.insertOne(newISBN)
+					.then(res => res.ops[0]);
+			} catch (err) {
+				return err;
+			}
+		}
+	}
+};

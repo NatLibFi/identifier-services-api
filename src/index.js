@@ -32,7 +32,8 @@ import {
 	createUsersRouter,
 	createPublishersRouter,
 	createPublicationsRouter,
-	createMessageTemplate
+	createMessageTemplate,
+	createRangesRouter
 } from './routes';
 import Mongoose from 'mongoose';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
@@ -68,6 +69,7 @@ async function run() {
 		app.use('/users', createUsersRouter());
 		app.use('/publishers', createPublishersRouter());
 		app.use('publications', createPublicationsRouter());
+		app.use('/ranges', createRangesRouter());
 
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');

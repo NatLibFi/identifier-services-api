@@ -28,3 +28,4 @@
 
 export {default as usersFactory} from './users';
 export {default as publishersFactory} from './publishers';
+export {default as rangesFactory} from './ranges';
