@@ -54,18 +54,15 @@ async function run() {
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
-		app.use(function(req, res, next) {
-			if (req.method !== 'GET') {
-				validateContentType({
-					type: ['application/json']
-				});
-				bodyParser.urlencoded({extended: false});
-				bodyParser.json({
-					type: ['application/json']
-				});
-			}
-			next();
-		});
+		app.use(
+			validateContentType({
+				type: ['application/json']
+			}),
+			bodyParser.urlencoded({extended: false}),
+			bodyParser.json({
+				type: ['application/json']
+			})
+		);
 
 		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
 
