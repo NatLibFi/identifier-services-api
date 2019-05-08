@@ -77,7 +77,7 @@ async function run() {
 			app.use('/templates', createMessageTemplate(db));
 			app.use('/users', createUsersRouter(db));
 			app.use('/publishers', createPublishersRouter(db));
-			app.use('/publications/isbnIsmn', createPublicationsRouterIsbnIsmn(db));
+			app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 			app.use('/publications/issn', createPublicationsRouterIssn(db));
 		});
 
