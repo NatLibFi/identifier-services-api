@@ -32,7 +32,8 @@ import cors from 'cors';
 import {
 	createUsersRouter,
 	createPublishersRouter,
-	createPublicationsRouter,
+	createPublicationsRouterIsbnIsmn,
+	createPublicationsRouterIssn,
 	createMessageTemplate
 } from './routes';
 import Mongoose from 'mongoose';
@@ -75,8 +76,9 @@ async function run() {
 			err && console.log(err);
 			app.use('/templates', createMessageTemplate(db));
 			app.use('/users', createUsersRouter(db));
-			app.use('/publishers', createPublishersRouter());
-			app.use('/publications', createPublicationsRouter(db));
+			app.use('/publishers', createPublishersRouter(db));
+			app.use('/publications/isbnIsmn', createPublicationsRouterIsbnIsmn(db));
+			app.use('/publications/issn', createPublicationsRouterIssn(db));
 		});
 
 		const server = app.listen(HTTP_PORT, () => {

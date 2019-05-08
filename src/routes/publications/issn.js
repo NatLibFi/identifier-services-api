@@ -27,8 +27,8 @@
  */
 
 import {Router} from 'express';
-import {publicationsFactory} from '../interfaces';
-import {API_URL} from '../config';
+import {publicationsFactory} from '../../interfaces';
+import {API_URL} from '../../config';
 
 export default function(db) {
 	const publications = publicationsFactory({url: API_URL});
@@ -45,7 +45,7 @@ export default function(db) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await publications.createISBN_ISMN({db, req});
+			const result = await publications.createISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -55,7 +55,7 @@ export default function(db) {
 	async function read(req, res, next) {
 		const params = req.params;
 		try {
-			const result = await publications.readISBN_ISMN({db, params});
+			const result = await publications.readISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -64,7 +64,7 @@ export default function(db) {
 
 	async function update(req, res, next) {
 		try {
-			const result = await publications.updateISBN_ISMN({db, req});
+			const result = await publications.updateISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -74,7 +74,7 @@ export default function(db) {
 	async function remove(req, res, next) {
 		const params = req.params;
 		try {
-			const result = await publications.removeISBN_ISMN({db, params});
+			const result = await publications.removeISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -83,7 +83,7 @@ export default function(db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await publications.queryISBN_ISMN(db);
+			const result = await publications.queryISSN(db);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -101,7 +101,7 @@ export default function(db) {
 	async function readRequest(req, res, next) {
 		const params = req.params;
 		try {
-			const result = await publications.readRequestISBN_ISMN({db, params});
+			const result = await publications.readRequestISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
