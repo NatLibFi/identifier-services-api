@@ -42,6 +42,7 @@ import schema from './graphql';
 import {MongoClient} from 'mongodb';
 
 const {createLogger, handleInterrupt} = Utils;
+import validateContentType from '@natlibfi/express-validate-content-type';
 
 run();
 
@@ -52,6 +53,16 @@ async function run() {
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
+
+		app.use(
+			// 	validateContentType({
+			// 	type: ['application/json', 'application/x-www-form-urlencoded']
+			// }),
+			bodyParser.urlencoded({extended: false}),
+			bodyParser.json({
+				type: ['application/json', 'application/x-www-form-urlencoded']
+			})
+		);
 
 		app.use('/templates', createMessageTemplate());
 		app.use('/users', createUsersRouter());

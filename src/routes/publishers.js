@@ -27,45 +27,25 @@
  */
 
 import {Router} from 'express';
-import bodyParser from 'body-parser';
-import validateContentType from '@natlibfi/express-validate-content-type';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
+import bodyParser from 'body-parser';
+import validateContentType from '@natlibfi/express-validate-content-type';
 
 export default function() {
 	const publishers = publishersFactory({url: API_URL});
 
 	return new Router()
-		.post(
-			'/',
-			validateContentType({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			create
-		)
+		.post('/', create)
 		.get('/:id', read)
-		.put(
-			'/:id',
-			validateContentType({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			update
-		)
+		.put('/:id', update)
 		.delete('/:id', remove)
 		.post('/query', query)
-		.post('/requests', createRequest)
+		.post('/requests', createRequests)
 		.get('/requests/:id', readRequest)
 		.delete('/requests/:id', removeRequest)
 		.put('/requests/:id', updateRequest)
-		.post('/requests/query', queryRequest);
+		.post('/requests/query', queryRequests);
 
 	async function create(req, res, next) {
 		try {
@@ -115,9 +95,10 @@ export default function() {
 		}
 	}
 
-	async function createRequest(req, res, next) {
+	async function createRequests(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publishers.createRequests(req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -125,7 +106,8 @@ export default function() {
 
 	async function readRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publishers.readRequest(req.params.id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -133,23 +115,27 @@ export default function() {
 
 	async function removeRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publishers.removeRequest(req.params.id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function updateRequest(req, res, next) {
+		const id = req.params.id;
 		try {
-			res.json(req);
+			const result = await publishers.updateRequest(id, req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function queryRequest(req, res, next) {
+	async function queryRequests(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publishers.queryRequests();
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

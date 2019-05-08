@@ -39,7 +39,18 @@ export default function() {
 		db = client.db(dbName);
 		console.log(err);
 	});
-	return {create, read, update, remove, query, newPublication};
+	return {
+		create,
+		read,
+		update,
+		remove,
+		query,
+		createRequests,
+		readRequest,
+		removeRequest,
+		updateRequest,
+		queryRequests
+	};
 
 	async function query() {
 		return graphql(
@@ -156,7 +167,7 @@ export default function() {
 						zip: $zip
 					) {
 						id
-						name
+						timestamp
 					}
 				}
 			`,
@@ -216,14 +227,11 @@ export default function() {
 	}
 
 	async function remove(id) {
-		console.log('remove', id);
 		return graphql(
 			schema,
 			`
-				mutation($id: String){
-					deletePublisher(
-						id: $id
-					){
+				mutation($id: String) {
+					deletePublisher(id: $id) {
 						id
 					}
 				}
@@ -232,15 +240,270 @@ export default function() {
 		);
 	}
 
-	async function newPublication({user}) {
-		return user;
+	async function createRequests(requests) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$lastUpdated: LastUpdatedInput
+					$state: String
+					$publisherId: String
+					$publicationEstimate: Int
+					$primaryContact: [PrimaryContactRequestInput]
+					$name: String
+					$language: String
+					$metadataDelivery: String
+					$email: String
+					$phone: String
+					$website: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
+					$publication: ISBNISMNPublicationRequestInput
+				) {
+					createPublisherRequests(
+						id: $id
+						lastUpdated: $lastUpdated
+						state: $state
+						publisherId: $publisherId
+						publicationEstimate: $publicationEstimate
+						primaryContact: $primaryContact
+						name: $name
+						language: $language
+						metadataDelivery: $metadataDelivery
+						email: $email
+						phone: $phone
+						website: $website
+						aliases: $aliases
+						notes: $notes
+						activity: $activity
+						streetAddress: $streetAddress
+						publication: $publication
+					) {
+						name
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, requests}
+		);
 	}
 
-	// async function getPublisher(id) {
-	// 	const profile = await Mongoose.models.Publisher.findOne({id});
-
-	// 	if (publisher) {
-	// 		 (publisher)
-	// 	}
-	// }
+	async function readRequest(id) {
+		return graphql(
+			schema,
+			`
+				{
+					PublisherRequest {
+						id
+						lastUpdated {
+							timestamp
+							user
+						}
+						state
+						publisherId
+						publicationEstimate
+						primaryContact {
+							givenName
+							familyName
+							email
+						}
+						name
+						language
+						metadataDelivery
+						email
+						phone
+						website
+						aliases
+						notes
+						activity {
+							active
+							yearInactivated
+						}
+						streetAddress {
+							address
+							city
+							zip
+						}
+						publication {
+							title
+							type
+							subtitle
+							language
+							publicationTime
+							additionalDetails
+							authors {
+								givenName
+								familyName
+								role
+							}
+							series {
+								identifier
+								name
+								volume
+							}
+							electronicDetails {
+								format
+							}
+							printDetails {
+								manufacturer
+								city
+								run
+								edition
+								format
+							}
+							mapDetails {
+								scale
+							}
+						}
+					}
+				}
+			`,
+			{db, id}
+		);
+	}
+	async function removeRequest(id) {
+		return graphql(
+			schema,
+			`
+				mutation($id: String) {
+					deletePublisherRequest(id: $id) {
+						id
+					}
+				}
+			`,
+			{db, id}
+		);
+	}
+	async function updateRequest(id, publisherRequest) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$lastUpdated: LastUpdatedInput
+					$state: String
+					$publisherId: String
+					$publicationEstimate: Int
+					$primaryContact: [PrimaryContactRequestInput]
+					$name: String
+					$language: String
+					$metadataDelivery: String
+					$email: String
+					$phone: String
+					$website: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
+					$publication: ISBNISMNPublicationRequestInput
+				) {
+					updatePublisherRequest(
+						id: $id
+						lastUpdated: $lastUpdated
+						state: $state
+						publisherId: $publisherId
+						publicationEstimate: $publicationEstimate
+						primaryContact: $primaryContact
+						name: $name
+						language: $language
+						metadataDelivery: $metadataDelivery
+						email: $email
+						phone: $phone
+						website: $website
+						aliases: $aliases
+						notes: $notes
+						activity: $activity
+						streetAddress: $streetAddress
+						publication: $publication
+					) {
+						name
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, id, publisherRequest}
+		);
+	}
+	async function queryRequests() {
+		return graphql(
+			schema,
+			`
+				{
+					PublisherRequests{
+						id
+						lastUpdated {
+							timestamp
+							user
+						}
+						state
+						publisherId
+						publicationEstimate
+						primaryContact {
+							givenName
+							familyName
+							email
+						}
+						name
+						language
+						metadataDelivery
+						email
+						phone
+						website
+						aliases
+						notes
+						activity {
+							active
+							yearInactivated
+						}
+						streetAddress {
+							address
+							city
+							zip
+						}
+						publication {
+							title
+							type
+							subtitle
+							language
+							publicationTime
+							additionalDetails
+							authors {
+								givenName
+								familyName
+								role
+							}
+							series {
+								identifier
+								name
+								volume
+							}
+							electronicDetails {
+								format
+							}
+							printDetails {
+								manufacturer
+								city
+								run
+								edition
+								format
+							}
+							mapDetails {
+								scale
+							}
+						}
+					}
+				}
+			`,
+			db
+		);
+	}
 }

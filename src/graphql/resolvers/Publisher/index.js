@@ -49,7 +49,28 @@ export default {
 			} catch (err) {
 				return err;
 			}
-		}
+		},
+		PublisherRequest: async ({db, id}) => {
+			try {
+				return await db
+					.collection('PublisherRequest')
+					.findOne({id})
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		PublisherRequests: async db => {
+			try {
+				return await db
+					.collection('PublisherRequest')
+					.find()
+					.toArray()
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
 	},
 
 	Mutation: {
@@ -99,6 +120,63 @@ export default {
 					.then(res => res.send('User Deleted'))
 					.catch(err => err);
 				return deletedPublisher;
+			} catch (err) {
+				return err;
+			}
+		},
+
+		createPublisherRequests: async ({db, requests}) => {
+			try {
+				const newPublisherRequests = {
+					...requests,
+					id: uuidv4(),
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('PublisherRequest')
+					.insertOne(newPublisherRequests)
+					.then(res => res.ops[0])
+					.catch(err => err);
+			} catch (err) {
+				return err;
+			}
+		},
+		deletePublisherRequest: async ({db, id}) => {
+			try {
+				return await db
+					.collection('PublisherRequest')
+					.findOneAndDelete({id})
+					.then(res => res.value)
+					.catch(err => err);
+			} catch (err) {
+				return err;
+			}
+		},
+		updatePublisherRequest: async ({db, id, publisherRequest}) => {
+			try {
+				const publisherRequestUpdate = {
+					...publisherRequest,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('PublisherRequest')
+					.findOneAndUpdate(
+						{id},
+						{$set: publisherRequestUpdate},
+						{upsert: true}
+					)
+					.then(() => {
+						return db.collection('PublisherRequest')
+							.findOne({id})
+							.then(res => res);
+					})
+					.catch(err => err);
 			} catch (err) {
 				return err;
 			}
