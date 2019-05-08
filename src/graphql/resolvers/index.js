@@ -29,9 +29,9 @@
 import {mergeResolvers} from 'merge-graphql-schemas';
 import User from './User';
 import Publisher from './Publisher';
-import Publication from './Publication';
+import PublicationIsbnIsmn from './Publication/isbnIsmn';
 import MessageTemplate from './MessageTemplate';
 
-const resolver = [User, Publisher, Publication, MessageTemplate];
+const resolver = [User, Publisher, PublicationIsbnIsmn, MessageTemplate];
 
 export default mergeResolvers(resolver, {all: true});

@@ -47,17 +47,29 @@ export default `
 }
 
 type Mutation{
-    createPublication(id: String, title: String, publicationId: String, melindaId: String, type: String, 
+    createPublicationIsbnIsmn(id: String, title: String, publicationId: String, melindaId: String, type: String, 
         subtitle: String, language: String, publicationTime: String, additionalDetails: String, authors:[authorInput], 
         series: seriesInput, electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, 
         mapDetails: mapDetailsInput, lastUpdated: lastUpdatedInput ): ISBN_ISMN
     
-    deletePublication(id:String): ISBN_ISMN
+    createPublicationRequestIsbnIsmn(id: String, title: String, state:String, type: String, subtitle: String, language: String, 
+        publicationTime: String, additionalDetails: String, authors:[authorInput], series: seriesInput, 
+        electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, mapDetails: mapDetailsInput, 
+        lastUpdated: lastUpdatedInput ): ISBN_ISMN_Request
+        
+    deletePublicationIsbnIsmn(id:String): ISBN_ISMN
 
-    updatePublication(id: String, title: String, publicationId: String, melindaId: String, type: String, 
+    updatePublicationIsbnIsmn(id: String, title: String, publicationId: String, melindaId: String, type: String, 
         subtitle: String, language: String, publicationTime: String, additionalDetails: String, authors:[authorInput], 
         series: seriesInput, electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, 
         mapDetails: mapDetailsInput, lastUpdated: lastUpdatedInput ): ISBN_ISMN
+    
+    updatePublicationRequestIsbnIsmn(id: String, title: String, state:String, type: String, subtitle: String, language: String, 
+        publicationTime: String, additionalDetails: String, authors:[authorInput], series: seriesInput, 
+        electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, mapDetails: mapDetailsInput, 
+        lastUpdated: lastUpdatedInput ): ISBN_ISMN_Request
+
+    deletePublicationRequestIsbnIsmn(id:String): ISBN_ISMN_Request
 }
 
 type LastUpdated{

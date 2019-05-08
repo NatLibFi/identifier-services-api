@@ -27,11 +27,11 @@
  */
 
 import {Router} from 'express';
-import {publicationsFactory} from '../../interfaces';
+import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
 export default function(db) {
-	const publications = publicationsFactory({url: API_URL});
+	const publications = publicationsIsbnIsmnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
 		.get('/:id', read)
@@ -92,7 +92,8 @@ export default function(db) {
 
 	async function createRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.createRequestISBN_ISMN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -109,8 +110,10 @@ export default function(db) {
 	}
 
 	async function removeRequest(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req);
+			const result = await publications.removeRequestISBN_ISMN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -118,7 +121,8 @@ export default function(db) {
 
 	async function updateRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.updateRequestISBN_ISMN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

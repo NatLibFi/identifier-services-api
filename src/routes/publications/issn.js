@@ -27,11 +27,11 @@
  */
 
 import {Router} from 'express';
-import {publicationsFactory} from '../../interfaces';
+import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
 export default function(db) {
-	const publications = publicationsFactory({url: API_URL});
+	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
 		.get('/:id', read)

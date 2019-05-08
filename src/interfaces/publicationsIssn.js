@@ -52,18 +52,18 @@ export default function() {
 	}`;
 
 	return {
-		createISBN_ISMN,
-		readISBN_ISMN,
-		updateISBN_ISMN,
-		removeISBN_ISMN,
-		queryISBN_ISMN,
-		createRequestISBN_ISMN,
-		readRequestISBN_ISMN
-		// updateRequestISBN_ISMN,
-		// removeRequestISBN_ISMN,
+		createISSN,
+		readISSN,
+		updateISSN,
+		removeISSN,
+		queryISSN,
+		createRequestISSN,
+		readRequestISSN
+		// updateRequestISSN,
+		// removeRequestISSN,
 	};
 
-	async function createISBN_ISMN({db, req}) {
+	async function createISSN({db, req}) {
 		return graphql(
 			schema,
 			`
@@ -109,12 +109,12 @@ export default function() {
 		);
 	}
 
-	async function readISBN_ISMN({db, params}) {
+	async function readISSN({db, params}) {
 		return graphql(
 			schema,
 			`
 				{
-					publication_ISBN_ISMN {
+					publication_ISSN {
 						${queryReturn}
 					}
 				}
@@ -123,7 +123,7 @@ export default function() {
 		);
 	}
 
-	async function updateISBN_ISMN({db, req}) {
+	async function updateISSN({db, req}) {
 		return graphql(
 			schema,
 			`
@@ -169,7 +169,7 @@ export default function() {
 		);
 	}
 
-	async function removeISBN_ISMN({db, params}) {
+	async function removeISSN({db, params}) {
 		return graphql(
 			schema,
 			`
@@ -183,12 +183,12 @@ export default function() {
 		);
 	}
 
-	async function queryISBN_ISMN(db) {
+	async function queryISSN(db) {
 		return graphql(
 			schema,
 			`
 				{
-					Publications_ISBN_ISMN {
+					Publications_ISSN {
 						${queryReturn}
 					}
 				}
@@ -197,7 +197,7 @@ export default function() {
 		);
 	}
 
-	async function createRequestISBN_ISMN({db, req}) {
+	async function createRequestISSN({db, req}) {
 		return graphql(
 			schema,
 			`
@@ -242,12 +242,12 @@ export default function() {
 		);
 	}
 
-	async function readRequestISBN_ISMN({db, params}) {
+	async function readRequestISSN({db, params}) {
 		return graphql(
 			schema,
 			`
 				{
-					PublicationRequests_ISBN_ISMN {
+					PublicationRequests_ISSN {
 						${queryReturn}
 					}
 				}
