@@ -144,8 +144,6 @@ type PrintDetails{
     run: Int
     edition: Int
     format: String
-<<<<<<< HEAD
-=======
 }
 
 type PrintDetailsISSN{
@@ -155,7 +153,6 @@ type PrintDetailsISSN{
 input printDetailsISSNInput{
     manufacturer: String
     city: String
->>>>>>> cf628eb719f9d818d4753cebb533f35e7595973a
 }
 
 type MapDetails{
