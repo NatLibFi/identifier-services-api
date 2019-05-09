@@ -26,7 +26,6 @@
  *
  */
 
-import {v4 as uuid} from 'uuid';
 import {graphql} from 'graphql';
 import schema from '../graphql';
 

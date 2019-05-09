@@ -54,7 +54,10 @@ describe('interfaces/publishers', () => {
 	});
 
 	describe('#read', () => {
-		let dbContents; let publishers; let publisher; let expectedResults;
+		let dbContents;
+		let publishers;
+		let publisher;
+		let expectedResults;
 
 		async function defineVariables(index) {
 			dbContents = getFixture(['read', index, 'dbContents.json']);

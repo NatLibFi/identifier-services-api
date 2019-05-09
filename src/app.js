@@ -38,11 +38,10 @@ import {
 	createMessageTemplate,
 	createRangesRouter
 } from './routes';
-import Mongoose from 'mongoose';
-import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
+import {ENABLE_PROXY, MONGO_URI, HTTP_PORT} from './config';
 import {MongoClient} from 'mongodb';
 
-const {createLogger, handleInterrupt} = Utils;
+const {handleInterrupt} = Utils;
 
 export default function run() {
 	try {

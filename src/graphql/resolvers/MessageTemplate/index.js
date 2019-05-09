@@ -40,7 +40,7 @@ export default {
 			}
 		},
 
-		Templates: async ({db, req}) => {
+		Templates: async ({db}) => {
 			try {
 				return await db
 					.collection('MessageTemplate')
@@ -48,7 +48,7 @@ export default {
 					.toArray()
 					.then(res => res);
 			} catch (err) {
-				return CustomElementRegistry;
+				return err;
 			}
 		}
 	},
