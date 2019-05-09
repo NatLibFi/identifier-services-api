@@ -30,7 +30,7 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	const queryReturn = `
 	id
 	title
@@ -70,7 +70,7 @@ export default function() {
 				mutation(
 					$id: String
 					$title: String
-					$publicationId: String
+					$publisher: String
 					$melindaId: String
 					$type: String
 					$subtitle: String
@@ -87,7 +87,7 @@ export default function() {
 					createPublicationIsbnIsmn(
 						id: $id
 						title: $title
-						publicationId: $publicationId
+						publisher: $publisher
 						melindaId: $melindaId
 						type: $type
 						subtitle: $subtitle
@@ -130,7 +130,7 @@ export default function() {
 				mutation(
 					$id: String
 					$title: String
-					$publicationId: String
+					$publisher: String
 					$melindaId: String
 					$type: String
 					$subtitle: String
@@ -147,7 +147,7 @@ export default function() {
 					updatePublicationIsbnIsmn(
 						id: $id
 						title: $title
-						publicationId: $publicationId
+						publisher: $publisher
 						melindaId: $melindaId
 						type: $type
 						subtitle: $subtitle
@@ -246,7 +246,7 @@ export default function() {
 			schema,
 			`
 				{
-					PublicationRequests_ISBN_ISMN {
+					publicationRequest_ISBN_ISMN {
 						${queryReturn}
 					}
 				}
@@ -312,6 +312,4 @@ export default function() {
 			{db, params}
 		);
 	}
-
-	
 }

@@ -30,7 +30,7 @@ import {Router} from 'express';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function(db) {
+export default function (db) {
 	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
@@ -92,7 +92,8 @@ export default function(db) {
 
 	async function createRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.createRequestISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -109,8 +110,10 @@ export default function(db) {
 	}
 
 	async function removeRequest(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req);
+			const result = await publications.removeRequestISSN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -118,7 +121,8 @@ export default function(db) {
 
 	async function updateRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.updateRequestISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

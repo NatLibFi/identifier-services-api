@@ -29,7 +29,7 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	const queryReturn = `
     id
     name

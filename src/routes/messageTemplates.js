@@ -30,7 +30,7 @@ import {Router} from 'express';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function(db) {
+export default function (db) {
 	const templates = templatesFactory({url: API_URL});
 	return new Router()
 		.post('/', create)

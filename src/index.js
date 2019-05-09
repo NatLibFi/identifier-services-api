@@ -49,7 +49,7 @@ run();
 
 async function run() {
 	try {
-		// const Logger = createLogger();
+		// Const Logger = createLogger();
 		const app = express();
 		app.enable('trust proxy', ENABLE_PROXY);
 

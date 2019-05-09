@@ -28,7 +28,7 @@
 import Mongoose from 'mongoose';
 import {PublisherModel} from './models';
 
-export default function() {
+export default function () {
 	Mongoose.model('Publisher', PublisherModel);
 	return {create, read, update, remove, query, newPublication};
 
@@ -54,7 +54,7 @@ export default function() {
 		return user;
 	}
 
-	// async function getPublisher(id) {
+	// Async function getPublisher(id) {
 	// 	const profile = await Mongoose.models.Publisher.findOne({id});
 
 	// 	if (publisher) {

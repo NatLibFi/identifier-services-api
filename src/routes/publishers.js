@@ -27,25 +27,15 @@
  */
 
 import {Router} from 'express';
-import bodyParser from 'body-parser';
-import validateContentType from '@natlibfi/express-validate-content-type';
-
 import {usersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function() {
+export default function () {
 	const users = usersFactory({url: API_URL});
 
 	return new Router()
 		.post(
 			'/',
-			validateContentType({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			bodyParser.urlencoded({extended: false}),
-			bodyParser.json({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
 			create
 		)
 		.get('/:id', read)

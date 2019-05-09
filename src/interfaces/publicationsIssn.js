@@ -30,22 +30,13 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	const queryReturn = `
 	id
 	title
 	language
-	publicationTime
 	type
 	language
-	authors{
-		givenName
-		familyName
-		role
-	}
-	printDetails{
-		manufacturer
-	}
 	lastUpdated{
 		timestamp
 		user
@@ -58,9 +49,9 @@ export default function() {
 		removeISSN,
 		queryISSN,
 		createRequestISSN,
-		readRequestISSN
-		// updateRequestISSN,
-		// removeRequestISSN,
+		readRequestISSN,
+		updateRequestISSN,
+		removeRequestISSN
 	};
 
 	async function createISSN({db, req}) {
@@ -71,35 +62,45 @@ export default function() {
 					$id: String
 					$title: String
 					$publicationId: String
+					$publisher: String
 					$melindaId: String
 					$type: String
 					$subtitle: String
 					$language: String
-					$publicationTime: String
+					$year: Int
+					$number: Int
+					$frequency: String
 					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
+					$electronicDteails: electronicDetailsISSNInput
+					$printDetails: printDetailsISSNInput
+					$seriesDetails: seriesDetailsISSNInput
+					$mainSeries: seriesDetailsISSNInput
+					$subSeries: seriesDetailsISSNInput
+					$otherMedium: seriesDetailsISSNInput
+					$previousPublication: previousPublicationInput
 					$lastUpdated: lastUpdatedInput
 				) {
-					createPublication(
-						id: $id
-						title: $title
-						publicationId: $publicationId
-						melindaId: $melindaId
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
+					createPublicationIssn(
+						id:$id
+						title:$title
+						publicationId:$publicationId
+						publisher:$publisher
+						melindaId:$melindaId
+						type:$type
+						subtitle:$subtitle
+						language:$language
+						year:$year
+						number:$number
+						frequency:$frequency
+						additionalDetails:$additionalDetails
+						electronicDteails:$electronicDteails
+						printDetails:$printDetails
+						seriesDetails:$seriesDetails
+						mainSeries:$mainSeries
+						subSeries:$subSeries
+						otherMedium:$otherMedium
+						previousPublication:$previousPublication
+						lastUpdated:$lastUpdated
 					) {
 						${queryReturn}
 					}
@@ -127,40 +128,50 @@ export default function() {
 		return graphql(
 			schema,
 			`
-				mutation(
-					$id: String
-					$title: String
-					$publicationId: String
-					$melindaId: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+			mutation(
+				$id: String
+				$title: String
+				$publicationId: String
+				$publisher: String
+				$melindaId: String
+				$type: String
+				$subtitle: String
+				$language: String
+				$year: Int
+				$number: Int
+				$frequency: String
+				$additionalDetails: String
+				$electronicDteails: electronicDetailsISSNInput
+				$printDetails: printDetailsISSNInput
+				$seriesDetails: seriesDetailsISSNInput
+				$mainSeries: seriesDetailsISSNInput
+				$subSeries: seriesDetailsISSNInput
+				$otherMedium: seriesDetailsISSNInput
+				$previousPublication: previousPublicationInput
+				$lastUpdated: lastUpdatedInput
+			) {
+				updatePublicationIssn(
+					id:$id
+					title:$title
+					publicationId:$publicationId
+					publisher:$publisher
+					melindaId:$melindaId
+					type:$type
+					subtitle:$subtitle
+					language:$language
+					year:$year
+					number:$number
+					frequency:$frequency
+					additionalDetails:$additionalDetails
+					electronicDteails:$electronicDteails
+					printDetails:$printDetails
+					seriesDetails:$seriesDetails
+					mainSeries:$mainSeries
+					subSeries:$subSeries
+					otherMedium:$otherMedium
+					previousPublication:$previousPublication
+					lastUpdated:$lastUpdated
 				) {
-					createPublication(
-						id: $id
-						title: $title
-						publicationId: $publicationId
-						melindaId: $melindaId
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
 						${queryReturn}
 					}
 				}
@@ -174,7 +185,7 @@ export default function() {
 			schema,
 			`
 				mutation($id: String) {
-					deletePublication(id: $id) {
+					deletePublicationIssn(id: $id) {
 						id
 					}
 				}
@@ -201,42 +212,101 @@ export default function() {
 		return graphql(
 			schema,
 			`
-				mutation(
-					$id: String
-					$title: String
-					$publicationId: String
-					$melindaId: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+			mutation(
+				$id: String
+				$title: String
+				$publisher: String
+				$type: String
+				$subtitle: String
+				$language: String
+				$year: Int
+				$number: Int
+				$frequency: String
+				$additionalDetails: String
+				$electronicDteails: electronicDetailsISSNInput
+				$printDetails: printDetailsISSNInput
+				$seriesDetails: seriesDetailsISSNInput
+				$mainSeries: seriesDetailsISSNInput
+				$subSeries: seriesDetailsISSNInput
+				$otherMedium: seriesDetailsISSNInput
+				$previousPublication: previousPublicationInput
+				$lastUpdated: lastUpdatedInput
+			) {
+				createPublicationRequestIssn(
+					id:$id
+					title:$title
+					publisher:$publisher
+					type:$type
+					subtitle:$subtitle
+					language:$language
+					year:$year
+					number:$number
+					frequency:$frequency
+					additionalDetails:$additionalDetails
+					electronicDteails:$electronicDteails
+					printDetails:$printDetails
+					seriesDetails:$seriesDetails
+					mainSeries:$mainSeries
+					subSeries:$subSeries
+					otherMedium:$otherMedium
+					previousPublication:$previousPublication
+					lastUpdated:$lastUpdated
 				) {
-					createPublication(
-						id: $id
-						title: $title
-						publicationId: $publicationId
-						melindaId: $melindaId
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
 						${queryReturn}
 					}
+				}
+		`,
+			{db, req}
+		);
+	}
+
+	async function updateRequestISSN({db, req}) {
+		return graphql(
+			schema,
+			`
+			mutation(
+				$id: String
+				$title: String
+				$publisher: String
+				$type: String
+				$subtitle: String
+				$language: String
+				$year: Int
+				$number: Int
+				$frequency: String
+				$additionalDetails: String
+				$electronicDteails: electronicDetailsISSNInput
+				$printDetails: printDetailsISSNInput
+				$seriesDetails: seriesDetailsISSNInput
+				$mainSeries: seriesDetailsISSNInput
+				$subSeries: seriesDetailsISSNInput
+				$otherMedium: seriesDetailsISSNInput
+				$previousPublication: previousPublicationInput
+				$lastUpdated: lastUpdatedInput
+			) {
+				updatePublicationRequestIssn(
+					id:$id
+					title:$title
+					publisher:$publisher
+					type:$type
+					subtitle:$subtitle
+					language:$language
+					year:$year
+					number:$number
+					frequency:$frequency
+					additionalDetails:$additionalDetails
+					electronicDteails:$electronicDteails
+					printDetails:$printDetails
+					seriesDetails:$seriesDetails
+					mainSeries:$mainSeries
+					subSeries:$subSeries
+					otherMedium:$otherMedium
+					previousPublication:$previousPublication
+					lastUpdated:$lastUpdated
+				) {
+						${queryReturn}
+					}
+				}
 		`,
 			{db, req}
 		);
@@ -247,8 +317,22 @@ export default function() {
 			schema,
 			`
 				{
-					PublicationRequests_ISSN {
+					publicationRequest_ISSN {
 						${queryReturn}
+					}
+				}
+			`,
+			{db, params}
+		);
+	}
+
+	async function removeRequestISSN({db, params}) {
+		return graphql(
+			schema,
+			`
+				mutation($id:String){
+					deletePublicationRequestIssn(id:$id){
+					id
 					}
 				}
 			`,

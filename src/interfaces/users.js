@@ -30,7 +30,7 @@ import {v4 as uuid} from 'uuid';
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	return {
 		create,
 		read,

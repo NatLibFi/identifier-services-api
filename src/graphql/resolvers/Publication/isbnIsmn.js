@@ -181,7 +181,6 @@ export default {
 					.collection('PublicationRequest_ISBN_ISMN')
 					.findOneAndDelete({id: params.id})
 					.then(res => res.value);
-				console.log(deletedPublicationRequest);
 				return deletedPublicationRequest;
 			} catch (err) {
 				return err;

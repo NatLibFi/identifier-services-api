@@ -31,7 +31,7 @@ import {Router} from 'express';
 import {usersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function(db) {
+export default function (db) {
 	const users = usersFactory({url: API_URL});
 
 	return new Router()
@@ -101,6 +101,7 @@ export default function(db) {
 			next(err);
 		}
 	}
+
 	async function createRequest(req, res, next) {
 		try {
 			const result = await users.createRequest({db, req});

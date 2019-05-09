@@ -88,11 +88,11 @@ export default {
 
 		deletePublicationIssn: async ({db, params}) => {
 			try {
-				const deletedUser = await db
+				const deletedPublication = await db
 					.collection('Publication_ISSN')
 					.findOneAndDelete({id: params.id})
 					.then(res => res.value);
-				return deletedUser;
+				return deletedPublication;
 			} catch (err) {
 				return err;
 			}
@@ -119,6 +119,61 @@ export default {
 			} catch (err) {
 				return err;
 			}
+		},
+
+		createPublicationRequestIssn: async ({db, req}) => {
+			try {
+				const newPublicationRequest = {
+					...req.body,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: req.body.lastUpdated.user
+					}
+				};
+				const createdPublicationRequest = await db
+					.collection('PublicationRequest_ISSN')
+					.insertOne(newPublicationRequest)
+					.then(res => res.ops[0]);
+				return createdPublicationRequest;
+			} catch (err) {
+				return err;
+			}
+		},
+
+		updatePublicationRequestIssn: async ({db, req}) => {
+			try {
+				const updatePublicationRequest = {
+					...req.body,
+					id: req.params.id,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: req.body.lastUpdated.user
+					}
+				};
+				await db
+					.collection('PublicationRequest_ISSN')
+					.findOneAndUpdate(
+						{id: req.params.id},
+						{$set: updatePublicationRequest},
+						{upsert: true}
+					);
+				return updatePublicationRequest;
+			} catch (err) {
+				return err;
+			}
+		},
+
+		deletePublicationRequestIssn: async ({db, params}) => {
+			try {
+				const deletedPublicationRequest = await db
+					.collection('PublicationRequest_ISSN')
+					.findOneAndDelete({id: params.id})
+					.then(res => res.value);
+				return deletedPublicationRequest;
+			} catch (err) {
+				return err;
+			}
 		}
+
 	}
 };

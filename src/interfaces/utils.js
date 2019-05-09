@@ -34,6 +34,7 @@ export function hasPermission(profile, user) {
 	});
 	return permitted;
 }
+
 export function hasPublisherPermission(profile, user) {
 	const permitted = profile.aut.groups.some(profileGroup => {
 		return user.group.some(

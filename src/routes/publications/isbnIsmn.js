@@ -30,7 +30,7 @@ import {Router} from 'express';
 import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function(db) {
+export default function (db) {
 	const publications = publicationsIsbnIsmnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
