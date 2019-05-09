@@ -26,20 +26,9 @@
  *
  */
 import {graphql} from 'graphql';
-import {MongoClient} from 'mongodb';
-import {MONGO_URI} from '../config';
 import schema from '../graphql';
 
 export default function () {
-	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
-
-	let db;
-	client.connect(err => {
-		const dbName = 'IdentifierServices';
-		db = client.db(dbName);
-		console.log(err);
-	});
-
 	return {
 		createIsbn,
 		readIsbn,
@@ -55,7 +44,7 @@ export default function () {
 		queryIssn
 	};
 
-	async function createIsbn(isbnData) {
+	async function createIsbn(db, isbnData) {
 		return graphql(
 			schema,
 			`
@@ -87,7 +76,7 @@ export default function () {
 		);
 	}
 
-	async function readIsbn(id) {
+	async function readIsbn(db, id) {
 		return graphql(
 			schema,
 			`
@@ -111,7 +100,7 @@ export default function () {
 		);
 	}
 
-	async function updateIsbn(id, data) {
+	async function updateIsbn(db, id, data) {
 		return graphql(
 			schema,
 			`
@@ -144,7 +133,7 @@ export default function () {
 		);
 	}
 
-	async function queryIsbn() {
+	async function queryIsbn(db) {
 		return graphql(
 			schema,
 			`
@@ -169,7 +158,7 @@ export default function () {
 		);
 	}
 
-	async function createIsmn(data) {
+	async function createIsmn(db, data) {
 		return graphql(
 			schema,
 			`
@@ -199,7 +188,7 @@ export default function () {
 		);
 	}
 
-	async function readIsmn(id) {
+	async function readIsmn(db, id) {
 		return graphql(
 			schema,
 			`
@@ -223,7 +212,7 @@ export default function () {
 		);
 	}
 
-	async function updateIsmn(id, data) {
+	async function updateIsmn(db, id, data) {
 		return graphql(
 			schema,
 			`
@@ -253,7 +242,7 @@ export default function () {
 		);
 	}
 
-	async function queryIsmn() {
+	async function queryIsmn(db) {
 		return graphql(
 			schema,
 			`
@@ -277,7 +266,7 @@ export default function () {
 		);
 	}
 
-	async function createIssn(data) {
+	async function createIssn(db, data) {
 		return graphql(
 			schema,
 			`
@@ -301,7 +290,7 @@ export default function () {
 		);
 	}
 
-	async function readIssn(id) {
+	async function readIssn(db, id) {
 		return graphql(
 			schema,
 			`
@@ -323,7 +312,7 @@ export default function () {
 		);
 	}
 
-	async function updateIssn(id, data) {
+	async function updateIssn(db, id, data) {
 		return graphql(
 			schema,
 			`
@@ -348,7 +337,7 @@ export default function () {
 		);
 	}
 
-	async function queryIssn() {
+	async function queryIssn(db) {
 		return graphql(
 			schema,
 			`

@@ -155,10 +155,10 @@ export default {
 				return err;
 			}
 		},
-		updatePublisherRequest: async ({db, id, publisherRequest}) => {
+		updatePublisherRequest: async ({db, id, body}) => {
 			try {
 				const publisherRequestUpdate = {
-					...publisherRequest,
+					...body,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'

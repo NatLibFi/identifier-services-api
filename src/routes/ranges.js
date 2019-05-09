@@ -28,31 +28,32 @@
 import {Router} from 'express';
 import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
+import {default as bodyParse} from './utils';
 
-export default function () {
+export default function (db) {
 	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
-		.post('/isbn', createIsbn)
+		.post('/isbn', bodyParse(), createIsbn)
 		.get('/isbn/:id', readIsbn)
-		.put('/isbn/:id', updateIsbn)
-		.post('/isbn/query', queryIsbn)
+		.put('/isbn/:id', bodyParse(), updateIsbn)
+		.post('/isbn/query', bodyParse(), queryIsbn)
 
-		.post('/ismn', createIsmn)
+		.post('/ismn', bodyParse(), createIsmn)
 		.get('/ismn/:id', readIsmn)
-		.put('/ismn/:id', updateIsmn)
-		.post('/ismn/query', queryIsmn)
+		.put('/ismn/:id', bodyParse(), updateIsmn)
+		.post('/ismn/query', bodyParse(), queryIsmn)
 
-		.post('/issn', createIssn)
+		.post('/issn', bodyParse(), createIssn)
 		.get('/issn/:id', readIssn)
-		.put('/issn/:id', updateIssn)
-		.post('/issn/query', queryIssn);
+		.put('/issn/:id', bodyParse(), updateIssn)
+		.post('/issn/query', bodyParse(), queryIssn);
 
 	// ISBN routes
 
 	async function createIsbn(req, res, next) {
 		try {
-			const result = await ranges.createIsbn(req.body);
+			const result = await ranges.createIsbn(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -62,7 +63,7 @@ export default function () {
 	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsbn(id);
+			const result = await ranges.readIsbn(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -72,7 +73,7 @@ export default function () {
 	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsbn(id, req.body);
+			const result = await ranges.updateIsbn(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -81,7 +82,7 @@ export default function () {
 
 	async function queryIsbn(req, res, next) {
 		try {
-			const result = await ranges.queryIsbn();
+			const result = await ranges.queryIsbn(db);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -92,7 +93,7 @@ export default function () {
 
 	async function createIsmn(req, res, next) {
 		try {
-			const result = await ranges.createIsmn(req.body);
+			const result = await ranges.createIsmn(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -102,7 +103,7 @@ export default function () {
 	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsmn(id);
+			const result = await ranges.readIsmn(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -112,7 +113,7 @@ export default function () {
 	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsmn(id, req.body);
+			const result = await ranges.updateIsmn(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -121,7 +122,7 @@ export default function () {
 
 	async function queryIsmn(req, res, next) {
 		try {
-			const result = await ranges.queryIsmn();
+			const result = await ranges.queryIsmn(db);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -132,7 +133,7 @@ export default function () {
 
 	async function createIssn(req, res, next) {
 		try {
-			const result = await ranges.createIssn(req.body);
+			const result = await ranges.createIssn(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -142,7 +143,7 @@ export default function () {
 	async function readIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIssn(id);
+			const result = await ranges.readIssn(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -152,7 +153,7 @@ export default function () {
 	async function updateIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIssn(id, req.body);
+			const result = await ranges.updateIssn(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -161,7 +162,7 @@ export default function () {
 
 	async function queryIssn(req, res, next) {
 		try {
-			const result = await ranges.queryIssn();
+			const result = await ranges.queryIssn(db);
 			res.json(result);
 		} catch (err) {
 			next(err);
