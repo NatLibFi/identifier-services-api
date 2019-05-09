@@ -29,7 +29,7 @@ import {Router} from 'express';
 import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function() {
+export default function () {
 	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
@@ -58,6 +58,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -67,6 +68,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -76,6 +78,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function queryIsbn(req, res, next) {
 		try {
 			const result = await ranges.queryIsbn();
@@ -95,6 +98,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -104,6 +108,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -113,6 +118,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function queryIsmn(req, res, next) {
 		try {
 			const result = await ranges.queryIsmn();
@@ -132,6 +138,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function readIssn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -141,6 +148,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function updateIssn(req, res, next) {
 		const id = req.params.id;
 		try {
@@ -150,6 +158,7 @@ export default function() {
 			next(err);
 		}
 	}
+
 	async function queryIssn(req, res, next) {
 		try {
 			const result = await ranges.queryIssn();

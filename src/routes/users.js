@@ -29,23 +29,24 @@
 import {Router} from 'express';
 
 import {usersFactory} from '../interfaces';
+import {default as bodyParse} from './utils';
 import {API_URL} from '../config';
 
 export default function (db) {
 	const users = usersFactory({url: API_URL});
 
 	return new Router()
-		.post('/', create)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
-		.post('/:id/password', changePwd)
-		.post('/query', query)
-		.post('/request', createRequest)
+		.post('/:id/password', bodyParse(), changePwd)
+		.post('/query', bodyParse(), query)
+		.post('/request', bodyParse(), createRequest)
 		.get('/request/:id', readRequest)
 		.delete('/request/:id', removeRequest)
-		.put('/request/:id', updateRequest)
-		.post('/request/query', queryRequest);
+		.put('/request/:id', bodyParse(), updateRequest)
+		.post('/request/query', bodyParse(), queryRequest);
 
 	async function create(req, res, next) {
 		try {

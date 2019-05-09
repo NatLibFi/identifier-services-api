@@ -27,17 +27,18 @@
  */
 
 import {Router} from 'express';
+import {default as bodyParse} from './utils';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function (db) {
 	const templates = templatesFactory({url: API_URL});
 	return new Router()
-		.post('/', create)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
-		.post('/query', query);
+		.post('/query', bodyParse(), query);
 
 	async function create(req, res, next) {
 		try {

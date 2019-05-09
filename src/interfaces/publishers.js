@@ -30,7 +30,7 @@ import {MONGO_URI} from '../config';
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
 
 	let db;
@@ -240,7 +240,6 @@ export default function() {
 		);
 	}
 
-<<<<<<< HEAD
 	async function createRequests(requests) {
 		return graphql(
 			schema,
@@ -294,10 +293,6 @@ export default function() {
 			{db, requests}
 		);
 	}
-=======
-	// Async function getPublisher(id) {
-	// 	const profile = await Mongoose.models.Publisher.findOne({id});
->>>>>>> cf628eb719f9d818d4753cebb533f35e7595973a
 
 	async function readRequest(id) {
 		return graphql(
@@ -372,6 +367,7 @@ export default function() {
 			{db, id}
 		);
 	}
+
 	async function removeRequest(id) {
 		return graphql(
 			schema,
@@ -385,6 +381,7 @@ export default function() {
 			{db, id}
 		);
 	}
+
 	async function updateRequest(id, publisherRequest) {
 		return graphql(
 			schema,
@@ -438,6 +435,7 @@ export default function() {
 			{db, id, publisherRequest}
 		);
 	}
+
 	async function queryRequests() {
 		return graphql(
 			schema,

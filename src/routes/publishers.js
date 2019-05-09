@@ -30,7 +30,7 @@ import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function() {
+export default function () {
 	const publishers = publishersFactory({url: API_URL});
 
 	return new Router()

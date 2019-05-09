@@ -27,21 +27,22 @@
  */
 
 import {Router} from 'express';
+import {default as bodyParse} from '../utils';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
 export default function (db) {
 	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
-		.post('/', create)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
-		.post('/query', query)
-		.post('/requests', createRequest)
+		.post('/query', bodyParse(), query)
+		.post('/requests', bodyParse(), createRequest)
 		.get('/requests/:id', readRequest)
 		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', updateRequest);
+		.put('/requests/:id', bodyParse(), updateRequest);
 
 	async function create(req, res, next) {
 		try {

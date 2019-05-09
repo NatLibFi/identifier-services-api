@@ -30,7 +30,7 @@ import {MongoClient} from 'mongodb';
 import {MONGO_URI} from '../config';
 import schema from '../graphql';
 
-export default function() {
+export default function () {
 	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
 
 	let db;
@@ -110,6 +110,7 @@ export default function() {
 			{db, id}
 		);
 	}
+
 	async function updateIsbn(id, data) {
 		return graphql(
 			schema,
@@ -142,6 +143,7 @@ export default function() {
 			{db, id, data}
 		);
 	}
+
 	async function queryIsbn() {
 		return graphql(
 			schema,
@@ -166,6 +168,7 @@ export default function() {
 			db
 		);
 	}
+
 	async function createIsmn(data) {
 		return graphql(
 			schema,
@@ -195,6 +198,7 @@ export default function() {
 			{db, data}
 		);
 	}
+
 	async function readIsmn(id) {
 		return graphql(
 			schema,
@@ -218,6 +222,7 @@ export default function() {
 			{db, id}
 		);
 	}
+
 	async function updateIsmn(id, data) {
 		return graphql(
 			schema,
@@ -247,6 +252,7 @@ export default function() {
 			{db, id, data}
 		);
 	}
+
 	async function queryIsmn() {
 		return graphql(
 			schema,
@@ -270,6 +276,7 @@ export default function() {
 			db
 		);
 	}
+
 	async function createIssn(data) {
 		return graphql(
 			schema,
@@ -293,6 +300,7 @@ export default function() {
 			{db, data}
 		);
 	}
+
 	async function readIssn(id) {
 		return graphql(
 			schema,
@@ -314,6 +322,7 @@ export default function() {
 			{db, id}
 		);
 	}
+
 	async function updateIssn(id, data) {
 		return graphql(
 			schema,
@@ -338,6 +347,7 @@ export default function() {
 			{db, id, data}
 		);
 	}
+
 	async function queryIssn() {
 		return graphql(
 			schema,
