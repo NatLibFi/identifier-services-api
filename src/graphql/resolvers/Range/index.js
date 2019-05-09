@@ -29,8 +29,76 @@
 const uuidv4 = require('uuid/v4');
 
 export default {
-	// Query: {},
+	Query: {
+		// ISBN Query
+		ISBN: async ({db, id}) => {
+			try {
+				return await db
+					.collection('IdentifierRangesISBN')
+					.findOne({id})
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		ISBNs: async db => {
+			try {
+				return await db
+					.collection('IdentifierRangesISBN')
+					.find()
+					.toArray()
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		// ISMN Query
+		ISMN: async ({db, id}) => {
+			try {
+				return await db
+					.collection('IdentifierRangesISMN')
+					.findOne({id})
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		ISMNs: async db => {
+			try {
+				return await db
+					.collection('IdentifierRangesISMN')
+					.find()
+					.toArray()
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		// ISSN Query
+		ISSN: async ({db, id}) => {
+			try {
+				return await db
+					.collection('IdentifierRangesISSN')
+					.findOne({id})
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		},
+		ISSNs: async db => {
+			try {
+				return await db
+					.collection('IdentifierRangesISSN')
+					.find()
+					.toArray()
+					.then(res => res);
+			} catch (err) {
+				return err;
+			}
+		}
+	},
 	Mutation: {
+		// ISBN Mutation
 		createISBN: async ({db, isbnData}) => {
 			try {
 				const newISBN = {
@@ -38,12 +106,120 @@ export default {
 					...isbnData,
 					lastUpdated: {
 						timestamp: new Date(),
+						user: 'foobar'
 					}
 				};
 				return await db
 					.collection('IdentifierRangesISBN')
 					.insertOne(newISBN)
 					.then(res => res.ops[0]);
+			} catch (err) {
+				return err;
+			}
+		},
+		updateISBN: async ({db, id, data}) => {
+			try {
+				const isbnUpdate = {
+					...data,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISBN')
+					.findOneAndUpdate({id}, {$set: isbnUpdate}, {upsert: true})
+					.then(() => {
+						return db
+							.collection('IdentifierRangesISBN')
+							.findOne({id})
+							.then(res => res);
+					})
+					.catch(err => err);
+			} catch (err) {
+				return err;
+			}
+		},
+		// ISMN Mutation
+		createISMN: async ({db, data}) => {
+			try {
+				const newISMN = {
+					id: uuidv4(),
+					...data,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISMN')
+					.insertOne(newISMN)
+					.then(res => res.ops[0]);
+			} catch (err) {
+				return err;
+			}
+		},
+		updateISMN: async ({db, id, data}) => {
+			try {
+				const ismnUpdate = {
+					...data,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISMN')
+					.findOneAndUpdate({id}, {$set: ismnUpdate}, {upsert: true})
+					.then(() => {
+						return db
+							.collection('IdentifierRangesISMN')
+							.findOne({id})
+							.then(res => res);
+					})
+					.catch(err => err);
+			} catch (err) {
+				return err;
+			}
+		},
+		// ISSN Mutation
+		createISSN: async ({db, data}) => {
+			try {
+				const newISSN = {
+					id: uuidv4(),
+					...data,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISSN')
+					.insertOne(newISSN)
+					.then(res => res.ops[0]);
+			} catch (err) {
+				return err;
+			}
+		},
+		updateISSN: async ({db, id, data}) => {
+			try {
+				const issnUpdate = {
+					...data,
+					lastUpdated: {
+						timestamp: new Date(),
+						user: 'foobar'
+					}
+				};
+				return await db
+					.collection('IdentifierRangesISSN')
+					.findOneAndUpdate({id}, {$set: issnUpdate}, {upsert: true})
+					.then(() => {
+						return db
+							.collection('IdentifierRangesISSN')
+							.findOne({id})
+							.then(res => res);
+					})
+					.catch(err => err);
 			} catch (err) {
 				return err;
 			}

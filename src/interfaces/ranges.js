@@ -87,37 +87,276 @@ export default function() {
 		);
 	}
 
-	async function readIsbn() {
-		return graphql();
+	async function readIsbn(id) {
+		return graphql(
+			schema,
+			`
+				{
+					ISBN {
+						id
+						prefix
+						language
+						rangeStart
+						rangeEnd
+						publisher
+						active
+						reservedCount
+						lastUpdated {
+							timestamp
+						}
+					}
+				}
+			`,
+			{db, id}
+		);
 	}
-	async function updateIsbn() {
-		return graphql();
+	async function updateIsbn(id, data) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$prefix: String
+					$language: String
+					$rangeStart: Int
+					$rangeEnd: Int
+					$publisher: String
+					$active: Boolean
+					$reservedCount: Int
+				) {
+					updateISBN(
+						prefix: $prefix
+						language: $language
+						rangeStart: $rangeStart
+						rangeEnd: $rangeEnd
+						publisher: $publisher
+						active: $active
+						reservedCount: $reservedCount
+					) {
+						prefix
+						language
+						rangeStart
+						rangeEnd
+					}
+				}
+			`,
+			{db, id, data}
+		);
 	}
 	async function queryIsbn() {
-		return graphql();
+		return graphql(
+			schema,
+			`
+				{
+					ISBNs {
+						id
+						prefix
+						language
+						rangeStart
+						rangeEnd
+						publisher
+						active
+						reservedCount
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			db
+		);
 	}
-	async function createIsmn() {
-		return graphql();
+	async function createIsmn(data) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$prefix: String
+					$rangeStart: Int
+					$rangeEnd: Int
+					$publisher: String
+					$active: Boolean
+					$reservedCount: Int
+					$lastUpdated: LastUpdatedInput
+				) {
+					createISMN(
+						prefix: $prefix
+						rangeStart: $rangeStart
+						rangeEnd: $rangeEnd
+						publisher: $publisher
+						active: $active
+						reservedCount: $reservedCount
+						lastUpdated: $lastUpdated
+					) {
+						prefix
+					}
+				}
+			`,
+			{db, data}
+		);
 	}
-	async function readIsmn() {
-		return graphql();
+	async function readIsmn(id) {
+		return graphql(
+			schema,
+			`
+				{
+					ISMN {
+						id
+						prefix
+						rangeStart
+						rangeEnd
+						publisher
+						active
+						reservedCount
+						lastUpdated {
+                            timestamp,
+                            user
+						}
+					}
+				}
+			`,
+			{db, id}
+		);
 	}
-	async function updateIsmn() {
-		return graphql();
+	async function updateIsmn(id, data) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$prefix: String
+					$rangeStart: Int
+					$rangeEnd: Int
+					$publisher: String
+					$active: Boolean
+					$reservedCount: Int
+				) {
+					updateISMN(
+						prefix: $prefix
+						rangeStart: $rangeStart
+						rangeEnd: $rangeEnd
+						publisher: $publisher
+						active: $active
+						reservedCount: $reservedCount
+					) {
+						prefix
+						rangeStart
+						rangeEnd
+					}
+				}
+			`,
+			{db, id, data}
+		);
 	}
 	async function queryIsmn() {
-		return graphql();
+		return graphql(
+			schema,
+			`
+				{
+					ISMNs {
+						id
+						prefix
+						rangeStart
+						rangeEnd
+						publisher
+						active
+						reservedCount
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			db
+		);
 	}
-	async function createIssn() {
-		return graphql();
+	async function createIssn(data) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$rangeStart: Int
+					$rangeEnd: Int
+					$active: Boolean
+					$reservedCount: Int
+				) {
+					createISSN(
+						rangeStart: $rangeStart
+						rangeEnd: $rangeEnd
+						active: $active
+						reservedCount: $reservedCount
+					) {
+						rangeStart
+					}
+				}
+			`,
+			{db, data}
+		);
 	}
-	async function readIssn() {
-		return graphql();
+	async function readIssn(id) {
+		return graphql(
+			schema,
+			`
+				{
+					ISSN {
+						id
+						rangeStart
+						rangeEnd
+						active
+						reservedCount
+						lastUpdated {
+                            timestamp,
+                            user
+						}
+					}
+				}
+			`,
+			{db, id}
+		);
 	}
-	async function updateIssn() {
-		return graphql();
+	async function updateIssn(id, data) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$rangeStart: Int
+					$rangeEnd: Int
+					$active: Boolean
+					$reservedCount: Int
+				) {
+					updateISSN(
+						rangeStart: $rangeStart
+						rangeEnd: $rangeEnd
+						active: $active
+						reservedCount: $reservedCount
+					) {
+						rangeStart
+						rangeEnd
+					}
+				}
+			`,
+			{db, id, data}
+		);
 	}
 	async function queryIssn() {
-		return graphql();
+		return graphql(
+			schema,
+			`
+				{
+					ISSNs {
+						id
+						rangeStart
+						rangeEnd
+						active
+						reservedCount
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			db
+		);
 	}
 }

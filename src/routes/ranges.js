@@ -59,22 +59,27 @@ export default function() {
 		}
 	}
 	async function readIsbn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.readIsbn(id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function updateIsbn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.updateIsbn(id, req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function queryIsbn(req, res, next) {
 		try {
-			console.log('test');
+			const result = await ranges.queryIsbn();
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -84,28 +89,34 @@ export default function() {
 
 	async function createIsmn(req, res, next) {
 		try {
-			console.log('test');
+			const result = await ranges.createIsmn(req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function readIsmn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.readIsmn(id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function updateIsmn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.updateIsmn(id, req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function queryIsmn(req, res, next) {
 		try {
-			console.log('test');
+			const result = await ranges.queryIsmn();
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -115,28 +126,34 @@ export default function() {
 
 	async function createIssn(req, res, next) {
 		try {
-			console.log('test');
+			const result = await ranges.createIssn(req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function readIssn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.readIssn(id);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function updateIssn(req, res, next) {
+		const id = req.params.id;
 		try {
-			console.log('test');
+			const result = await ranges.updateIssn(id, req.body);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 	async function queryIssn(req, res, next) {
 		try {
-			console.log('test');
+			const result = await ranges.queryIssn();
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

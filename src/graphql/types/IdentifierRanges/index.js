@@ -73,6 +73,11 @@ export default `
 
     type Query{
         ISBN: ISBN
+        ISBNs: [ISBN]
+        ISMN: ISMN
+        ISMNs: [ISMN]
+        ISSN: ISSN
+        ISSNs:[ISSN]
      }
     
      type Mutation{
@@ -86,6 +91,49 @@ export default `
             reservedCount: Int
             lastUpdated: LastUpdatedInput
          ):ISBN
+
+         updateISBN(
+            prefix: String
+            language: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+         ): ISBN
+
+         createISMN(
+            prefix: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+            lastUpdated: LastUpdatedInput
+         ):ISMN
+
+         updateISMN(
+            prefix: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+         ): ISMN
+
+         createISSN(
+            rangeStart: Int
+            rangeEnd: Int
+            active: Boolean
+            reservedCount: Int
+         ):ISSN
+
+         updateISSN(
+            rangeStart: Int
+            rangeEnd: Int
+            active: Boolean
+            reservedCount: Int
+         ): ISSN
      }
 
  `;
