@@ -27,16 +27,11 @@
  */
 
 export default `
-    type Query{
-        publisherMetadata(id:String, active:Boolean, name:String, language:String, metadataDelivery:String,
-            email:String, website:String, primaryContact: String, aliases: String, notes: String, active: Boolean,
-            yearInactivated: Int, address:String, city:String, zip:String ):Publisher
-        
-        publisherRequest(id: String, name:String, publisherId: String, language: String, email: String, website: String,
-            publicationEstimate: Int, note: String, state: String, address: String, city: String, zip: String, 
-            givenName: String, familyName: String, emailContact: String ): PublisherRequest
-
-        Publishers:[Publisher]
+    type Query{   
+        Publisher:Publisher
+        Publishers:[Publisher!]!
+        PublisherRequest: PublisherRequest
+        PublisherRequests: [PublisherRequest]
 
     }
 
@@ -44,18 +39,21 @@ export default `
         timeStamp: String!
         user: String!
     }
-
-    type Active{
-        active: Boolean
+    input LastUpdatedInput{
+        timeStamp: String!
+        user: String!
     }
 
-    type YearInactivated{
+
+
+    type Activity{
+        active: Boolean
         yearInactivated: Int
     }
 
-    enum Activity{
-        Active
-        YearInactivated
+    input ActivityInput{
+        active: Boolean
+        yearInactivated: Int
     }
 
     type StreetAddress{
@@ -63,27 +61,12 @@ export default `
         city: String!
         zip: String!
     }
-
-    type PublisherAltName {
-        name:String!
+    input StreetAddressInput{
+        address: String!
+        city: String!
+        zip: String!
     }
-
-    type Note{
-        note: String!
-    }
-
-    type UserId{
-        userId: String
-    }
-
-    type Email {
-        email: String
-    }
-
-    enum PrimaryContact{
-        UserId
-        Email
-    }
+ 
 
     type PrimaryContactRequest{
         givenName: String!
@@ -91,45 +74,212 @@ export default `
         email: String!
     }
 
-    type ISBN_ISMN{
-        name: String
-    }
-    type ISSN {
-        name: String
+    input PrimaryContactRequestInput{
+        givenName: String!
+        familyName: String!
+        email: String!
     }
 
-    enum Publication{
-        ISBN_ISMN
-        ISSN
+    type Authors{
+        givenName: String!
+        familyName: String!
+        role: String!
     }
+    input AuthorsInput{
+        givenName: String!
+        familyName: String!
+        role: String!
+    }
+    type Series{
+        identifier: String!
+        name: String!
+        volume: Int
+    }
+    input SeriesInput{
+        identifier: String!
+        name: String!
+        volume: Int
+    }
+
+    type ElectronicDetailsPublisher{
+        format: String!
+    }
+    input ElectronicDetailsPublisherInput{
+        format: String!
+    }
+
+    type PrintDetails{
+        manufacturer: String
+        city: String
+        run: Int
+        edition: Int
+        format: String
+    }
+    input PrintDetailsInput{
+        manufacturer: String
+        city: String
+        run: Int
+        edition: Int
+        format: String
+    }
+    type MapDetails{
+        scale: String
+    }
+    input MapDetailsInput{
+        scale: String
+    }
+    type ISBNISMNPublicationRequest{
+        title: String!
+        type: String!
+        subtitle: String
+        language: String!
+        publicationTime: String!
+        additionalDetails: String
+        authors: [Authors!]!
+        series: Series
+        electronicDetails: ElectronicDetailsPublisher
+        printDetails: PrintDetails
+        mapDetails: MapDetails
+    }
+
+    input ISBNISMNPublicationRequestInput{
+        title: String!
+        type: String!
+        subtitle: String
+        language: String!
+        publicationTime: String!
+        additionalDetails: String
+        authors: [AuthorsInput!]!
+        series: SeriesInput
+        electronicDetails: ElectronicDetailsPublisherInput
+        printDetails: PrintDetailsInput
+        mapDetails: MapDetailsInput
+    }
+
 
     type Publisher{
         id: String!
+        lastUpdated: LastUpdated
         name: String!
         language: String!
         metadataDelivery: String!
-        primaryContact(name:String, email: String): PrimaryContact
+        primaryContact: [String!]!
         email: String
+        phone: String
         website: String
-        aliases(publisherAltName: String!): [PublisherAltName]
-        notes: [Note]
-        lastUpdated(timeStamp: String, user: String): LastUpdated
-        activity(active: Boolean, yearInactivated: Int): Activity!
-        streetAddress(address: String, city:String, zip: String): StreetAddress
+        aliases: [String]
+        notes: [String]
+        activity: Activity
+        streetAddress: StreetAddress
     }  
     
     type PublisherRequest{
         id: String!
-        name: String!
-        publisherId: String!
-        language: String!
-        email: String
-        website: String
-        publicationEstimate: Int!
-        notes: [Note]
+        lastUpdated: LastUpdated
         state: String!
-        streetAddress(address: String, city: String, zip: String): StreetAddress
-        primaryContact: [PrimaryContactRequest]
-        publication: Publication
+        publisherId: String
+        publicationEstimate: Int!
+        primaryContact: [PrimaryContactRequest]!
+        name: String!
+        language: String!
+        metadataDelivery: String!
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        notes: [String]
+        activity: Activity
+        streetAddress: StreetAddress
+        publication: ISBNISMNPublicationRequest
+    }
+
+    type Mutation{
+        createPublisher(
+            id: String,
+            timestamp: String,
+            user: String
+            name: String,
+            language: String,
+            metadataDelivery: String,
+            primaryContact: String
+            email: String,
+            phone: String,
+            website: String,
+            aliases: String,
+            notes: String,
+            active: Boolean,
+            yearInactivated: Int,
+            address: String,
+            city: String,
+            zip: String
+        ): Publisher
+
+        updatePublisher(
+            id: String,
+            timestamp: String,
+            user: String
+            name: String,
+            language: String,
+            metadataDelivery: String,
+            primaryContact: String
+            email: String,
+            phone: String,
+            website: String,
+            aliases: String,
+            notes: String,
+            active: Boolean,
+            yearInactivated: Int,
+            address: String,
+            city: String,
+            zip: String
+        ): Publisher
+
+        deletePublisher(
+            id: String
+        ): Publisher
+
+        createPublisherRequests(
+            id: String
+            lastUpdated: LastUpdatedInput
+            state: String
+            publisherId: String
+            publicationEstimate: Int
+            primaryContact: [PrimaryContactRequestInput]
+            name: String
+            language: String
+            metadataDelivery: String
+            email: String
+            phone: String
+            website: String
+            aliases: [String]
+            notes: [String]
+            activity: ActivityInput
+            streetAddress: StreetAddressInput
+            publication: ISBNISMNPublicationRequestInput
+        ): PublisherRequest
+
+        deletePublisherRequest(
+            id: String
+        ): PublisherRequest
+
+        updatePublisherRequest(
+            id: String
+            lastUpdated: LastUpdatedInput
+            state: String
+            publisherId: String
+            publicationEstimate: Int
+            primaryContact: [PrimaryContactRequestInput]
+            name: String
+            language: String
+            metadataDelivery: String
+            email: String
+            phone: String
+            website: String
+            aliases: [String]
+            notes: [String]
+            activity: ActivityInput
+            streetAddress: StreetAddressInput
+            publication: ISBNISMNPublicationRequestInput
+        ): PublisherRequest
     }
  `;

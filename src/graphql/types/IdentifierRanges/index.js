@@ -27,50 +27,113 @@
  */
 
 export default `
- type Query{
-     identifierRangesISBN(id: String, timeStamp: String, user: String, prefix: String, language: String, rangeStart: Int, rangeEnd: Int, publisher: String, active: Boolean,
-       reserveCount: Int): RangesISBN
-     identifierRangesISMN(id: String, timeStamp: String, user: String, prefix: String, rangeStart: Int, rangeEnd: Int, publisher: String, active: Boolean, reserveCount: Int): RangesISMN
-     identifierRangesISSN(id: String, timeStamp: String, user: String, rangeStart: Int, rangeEnd: Int, publisher: String, active: Boolean, reserveCount: Int): RangesISSN
- }
 
-type LastUpdated{
-    timeStamp: String!
-    user: String!
-}
 
- type RangesISSN{
-     id: String!
-     rangeStart: Int!
-     rangeEnd: Int!
-     publisher: String
-     active: Boolean!
-     reservedCount: String!
-     lastUpdated: LastUpdated
+    type LastUpdated{
+        timeStamp: String!
+        user: String!
+    }
+    input LastUpdatedInput{
+        user: String!
+    }
+
+    type ISSN{
+        id: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdated
     }
  
- type RangesISMN{
-     id: String!
-     prefix: String!
-     rangeStart: Int!
-     rangeEnd: Int!
-     publisher: String
-     active: Boolean!
-     reservedCount: String!
-     lastUpdated: LastUpdated
+    type ISMN{
+        id: String!
+        prefix: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        publisher: String
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdated
+    }
+        
+    type ISBN{
+        id: String!
+        prefix: String!
+        language: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        publisher: String
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdated
 
- }
- type RangesISBN{
-     id: String!
-     prefix: String!
-     language: String!
-     rangeStart: Int!
-     rangeEnd: Int!
-     publisher: String
-     active: Boolean!
-     reservedCount: String!
-     lastUpdated: LastUpdated
+    }
 
- }
+
+    type Query{
+        ISBN: ISBN
+        ISBNs: [ISBN]
+        ISMN: ISMN
+        ISMNs: [ISMN]
+        ISSN: ISSN
+        ISSNs:[ISSN]
+     }
+    
+     type Mutation{
+         createISBN(
+            prefix: String
+            language: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+            lastUpdated: LastUpdatedInput
+         ):ISBN
+
+         updateISBN(
+            prefix: String
+            language: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+         ): ISBN
+
+         createISMN(
+            prefix: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+            lastUpdated: LastUpdatedInput
+         ):ISMN
+
+         updateISMN(
+            prefix: String
+            rangeStart: Int
+            rangeEnd: Int
+            publisher: String
+            active: Boolean
+            reservedCount: Int
+         ): ISMN
+
+         createISSN(
+            rangeStart: Int
+            rangeEnd: Int
+            active: Boolean
+            reservedCount: Int
+         ):ISSN
+
+         updateISSN(
+            rangeStart: Int
+            rangeEnd: Int
+            active: Boolean
+            reservedCount: Int
+         ): ISSN
+     }
 
  `;

@@ -31,3 +31,4 @@ export {default as createPublishersRouter} from './publishers';
 export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
 export {default as createPublicationsRouterIssn} from './publications/issn';
 export {default as createMessageTemplate} from './messageTemplates';
+export {default as createRangesRouter} from './ranges';

@@ -29,10 +29,11 @@
 import {mergeResolvers} from 'merge-graphql-schemas';
 import User from './User';
 import Publisher from './Publisher';
+import Range from './Range';
 import PublicationIsbnIsmn from './Publication/isbnIsmn';
 import PublicationIssn from './Publication/issn';
 import MessageTemplate from './MessageTemplate';
 
-const resolver = [User, Publisher, PublicationIsbnIsmn, PublicationIssn, MessageTemplate];
+const resolver = [User, Publisher, PublicationIsbnIsmn, PublicationIssn, MessageTemplate, Range];
 
 export default mergeResolvers(resolver, {all: true});

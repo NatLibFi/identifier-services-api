@@ -32,9 +32,11 @@ import cors from 'cors';
 import {
 	createUsersRouter,
 	createPublishersRouter,
+	createPublicationsRouter,
 	createPublicationsRouterIsbnIsmn,
 	createPublicationsRouterIssn,
-	createMessageTemplate
+	createMessageTemplate,
+	createRangesRouter
 } from './routes';
 import Mongoose from 'mongoose';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
@@ -44,6 +46,7 @@ import {MongoClient} from 'mongodb';
 import validateContentType from '@natlibfi/express-validate-content-type';
 
 const {createLogger, handleInterrupt} = Utils;
+import validateContentType from '@natlibfi/express-validate-content-type';
 
 run();
 
@@ -54,6 +57,7 @@ async function run() {
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
+
 		app.use(
 			validateContentType({
 				type: ['application/json']
@@ -76,6 +80,7 @@ async function run() {
 			app.use('/publishers', createPublishersRouter(db));
 			app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 			app.use('/publications/issn', createPublicationsRouterIssn(db));
+			app.use('/ranges', createRangesRouter(db));
 		});
 
 		const server = app.listen(HTTP_PORT, () => {

@@ -31,3 +31,4 @@ export {default as publishersFactory} from './publishers';
 export {default as publicationsIsbnIsmnFactory} from './publicationsIsbnIsmn';
 export {default as publicationsIssnFactory} from './publicationsIssn';
 export {default as templatesFactory} from './messageTemplates';
+export {default as rangesFactory} from './ranges';

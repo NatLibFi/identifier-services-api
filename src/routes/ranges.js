@@ -25,114 +25,134 @@
  * for the JavaScript code in this file.
  *
  */
-
 import {Router} from 'express';
-import {publishersFactory} from '../interfaces';
+import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function() {
-	const publishers = publishersFactory({url: API_URL});
+	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
-		.post('/', create)
-		.get('/:id', read)
-		.put('/:id', update)
-		.delete('/:id', remove)
-		.post('/query', query)
-		.post('/requests', createRequests)
-		.get('/requests/:id', readRequest)
-		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', updateRequest)
-		.post('/requests/query', queryRequests);
+		.post('/isbn', createIsbn)
+		.get('/isbn/:id', readIsbn)
+		.put('/isbn/:id', updateIsbn)
+		.post('/isbn/query', queryIsbn)
 
-	async function create(req, res, next) {
+		.post('/ismn', createIsmn)
+		.get('/ismn/:id', readIsmn)
+		.put('/ismn/:id', updateIsmn)
+		.post('/ismn/query', queryIsmn)
+
+		.post('/issn', createIssn)
+		.get('/issn/:id', readIssn)
+		.put('/issn/:id', updateIssn)
+		.post('/issn/query', queryIssn);
+
+	// ISBN routes
+
+	async function createIsbn(req, res, next) {
 		try {
-			const result = await publishers.create(req.body);
+			const result = await ranges.createIsbn(req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
-
-	async function read(req, res, next) {
+	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.read(id);
+			const result = await ranges.readIsbn(id);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
-
-	async function update(req, res, next) {
+	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.update(id, req.body);
+			const result = await ranges.updateIsbn(id, req.body);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function queryIsbn(req, res, next) {
+		try {
+			const result = await ranges.queryIsbn();
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function remove(req, res, next) {
+	// ISMN routes
+
+	async function createIsmn(req, res, next) {
+		try {
+			const result = await ranges.createIsmn(req.body);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.remove(id);
+			const result = await ranges.readIsmn(id);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
-
-	async function query(req, res, next) {
-		try {
-			const result = await publishers.query();
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function createRequests(req, res, next) {
-		try {
-			const result = await publishers.createRequests(req.body);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function readRequest(req, res, next) {
-		try {
-			const result = await publishers.readRequest(req.params.id);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function removeRequest(req, res, next) {
-		try {
-			const result = await publishers.removeRequest(req.params.id);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function updateRequest(req, res, next) {
+	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.updateRequest(id, req.body);
+			const result = await ranges.updateIsmn(id, req.body);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function queryIsmn(req, res, next) {
+		try {
+			const result = await ranges.queryIsmn();
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function queryRequests(req, res, next) {
+	// ISSN routes
+
+	async function createIssn(req, res, next) {
 		try {
-			const result = await publishers.queryRequests();
+			const result = await ranges.createIssn(req.body);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function readIssn(req, res, next) {
+		const id = req.params.id;
+		try {
+			const result = await ranges.readIssn(id);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function updateIssn(req, res, next) {
+		const id = req.params.id;
+		try {
+			const result = await ranges.updateIssn(id, req.body);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+	async function queryIssn(req, res, next) {
+		try {
+			const result = await ranges.queryIssn();
 			res.json(result);
 		} catch (err) {
 			next(err);
