@@ -240,6 +240,7 @@ export default function() {
 		);
 	}
 
+<<<<<<< HEAD
 	async function createRequests(requests) {
 		return graphql(
 			schema,
@@ -293,6 +294,10 @@ export default function() {
 			{db, requests}
 		);
 	}
+=======
+	// Async function getPublisher(id) {
+	// 	const profile = await Mongoose.models.Publisher.findOne({id});
+>>>>>>> cf628eb719f9d818d4753cebb533f35e7595973a
 
 	async function readRequest(id) {
 		return graphql(

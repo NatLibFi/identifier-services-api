@@ -27,9 +27,11 @@
  */
 
 import {Router} from 'express';
+import {publicationsIssnFactory} from '../../interfaces';
+import {API_URL} from '../../config';
 
-export default function() {
-	
+export default function (db) {
+	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
 		.get('/:id', read)
@@ -43,15 +45,18 @@ export default function() {
 
 	async function create(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.createISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function read(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req);
+			const result = await publications.readISSN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -59,15 +64,18 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await publications.updateISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function remove(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req.body);
+			const result = await publications.removeISSN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -75,7 +83,8 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.queryISSN(db);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -83,23 +92,28 @@ export default function() {
 
 	async function createRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.createRequestISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function readRequest(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req);
+			const result = await publications.readRequestISSN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function removeRequest(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req);
+			const result = await publications.removeRequestISSN({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -107,7 +121,8 @@ export default function() {
 
 	async function updateRequest(req, res, next) {
 		try {
-			res.json(req);
+			const result = await publications.updateRequestISSN({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

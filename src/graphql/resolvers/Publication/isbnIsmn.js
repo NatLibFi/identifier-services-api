@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -30,10 +31,10 @@ const date = new Date();
 
 export default {
 	Query: {
-		userMetadata: async ({db, params}) => {
+		publication_ISBN_ISMN: async ({db, params}) => {
 			try {
 				return await db
-					.collection('userMetadata')
+					.collection('Publication_ISBN_ISMN')
 					.findOne(params)
 					.then(res => res);
 			} catch (err) {
@@ -41,10 +42,10 @@ export default {
 			}
 		},
 
-		Users: async db => {
+		Publications_ISBN_ISMN: async db => {
 			try {
 				return await db
-					.collection('userMetadata')
+					.collection('Publication_ISBN_ISMN')
 					.find()
 					.toArray()
 					.then(res => res);
@@ -53,10 +54,10 @@ export default {
 			}
 		},
 
-		usersRequest: async ({db, params}) => {
+		publicationRequest_ISBN_ISMN: async ({db, params}) => {
 			try {
 				return await db
-					.collection('usersRequest')
+					.collection('PublicationRequest_ISBN_ISMN')
 					.findOne(params)
 					.then(res => res);
 			} catch (err) {
@@ -64,10 +65,10 @@ export default {
 			}
 		},
 
-		usersRequests: async db => {
+		PublicationRequests_ISBN_ISMN: async db => {
 			try {
 				return await db
-					.collection('usersRequest')
+					.collection('PublicationRequest_ISBN_ISMN')
 					.find()
 					.toArray()
 					.then(res => res);
@@ -78,40 +79,40 @@ export default {
 	},
 
 	Mutation: {
-		createUser: async ({db, req}) => {
+		createPublicationIsbnIsmn: async ({db, req}) => {
 			try {
-				const newUser = {
+				const newPublication = {
 					...req.body,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
 					}
 				};
-				const createdResponse = await db
-					.collection('userMetadata')
-					.insertOne(newUser)
+				const createdPublication = await db
+					.collection('Publication_ISBN_ISMN')
+					.insertOne(newPublication)
 					.then(res => res.ops);
-				return createdResponse[0];
+				return createdPublication[0];
 			} catch (err) {
 				return err;
 			}
 		},
 
-		deleteUser: async ({db, params}) => {
+		deletePublicationIsbnIsmn: async ({db, params}) => {
 			try {
-				const deletedUser = await db
-					.collection('userMetadata')
+				const deletedPublication = await db
+					.collection('Publication_ISBN_ISMN')
 					.findOneAndDelete({id: params.id})
 					.then(res => res.value);
-				return deletedUser;
+				return deletedPublication;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		updateUser: async ({db, req}) => {
+		updatePublicationIsbnIsmn: async ({db, req}) => {
 			try {
-				const updateUser = {
+				const updatePublication = {
 					...req.body,
 					id: req.params.id,
 					lastUpdated: {
@@ -120,66 +121,67 @@ export default {
 					}
 				};
 				await db
-					.collection('userMetadata')
+					.collection('Publication_ISBN_ISMN')
 					.findOneAndUpdate(
 						{id: req.params.id},
-						{$set: updateUser},
+						{$set: updatePublication},
 						{upsert: true}
 					);
-				return updateUser;
+				return updatePublication;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		createRequest: async ({db, req}) => {
+		createPublicationRequestIsbnIsmn: async ({db, req}) => {
 			try {
-				const newUserRequest = {
+				const newPublicationRequest = {
 					...req.body,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
 					}
 				};
-				const createdResponse = await db
-					.collection('usersRequest')
-					.insertOne(newUserRequest)
-					.then(res => res.ops);
-				return createdResponse[0];
+				const createdPublication = await db
+					.collection('PublicationRequest_ISBN_ISMN')
+					.insertOne(newPublicationRequest)
+					.then(res => res.ops[0]);
+				return createdPublication;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		deleteRequest: async ({db, params}) => {
+		updatePublicationRequestIsbnIsmn: async ({db, req}) => {
 			try {
-				const deletedRequest = await db
-					.collection('usersRequest')
-					.findOneAndDelete({id: params.id})
-					.then(res => res.value);
-				return deletedRequest;
-			} catch (err) {
-				return err;
-			}
-		},
-
-		updateRequest: async ({db, req}) => {
-			try {
-				const updateRequest = {
+				const updatePublicationRequest = {
 					...req.body,
+					id: req.params.id,
 					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
+						timestamp: `${date.toString()}`,
 						user: req.body.lastUpdated.user
 					}
 				};
 				await db
-					.collection('usersRequest')
+					.collection('PublicationRequest_ISBN_ISMN')
 					.findOneAndUpdate(
 						{id: req.params.id},
-						{$set: updateRequest},
+						{$set: updatePublicationRequest},
 						{upsert: true}
 					);
-				return updateRequest;
+				return updatePublicationRequest;
+			} catch (err) {
+				return err;
+			}
+		},
+
+		deletePublicationRequestIsbnIsmn: async ({db, params}) => {
+			try {
+				const deletedPublicationRequest = await db
+					.collection('PublicationRequest_ISBN_ISMN')
+					.findOneAndDelete({id: params.id})
+					.then(res => res.value);
+				return deletedPublicationRequest;
 			} catch (err) {
 				return err;
 			}

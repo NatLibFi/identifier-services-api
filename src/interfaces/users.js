@@ -26,40 +26,286 @@
  *
  */
 
-import Mongoose from 'mongoose';
-import {UserModel} from './models';
 import {v4 as uuid} from 'uuid';
+import {graphql} from 'graphql';
+import schema from '../graphql';
 
-export default function() {
-	Mongoose.model('User', UserModel);
-	return {create, read, update, remove, changePwd, query};
+export default function () {
+	return {
+		create,
+		read,
+		update,
+		remove,
+		changePwd,
+		query,
+		createRequest,
+		readRequest,
+		updateRequest,
+		removeRequest,
+		queryRequest
+	};
 
-	async function create({preference}) {
-		const id = uuid();
-		const newUser = {
-			id,
-			preference
-		};
-		return newUser;
+	async function create({db, req}) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$userId: String
+					$preferences: PreferencesInput
+					$lastUpdated: LastUpdatedInput
+				) {
+					createUser(
+						id: $id
+						userId: $userId
+						preferences: $preferences
+						lastUpdated: $lastUpdated
+						
+					) {
+						id
+						userId
+						preferences {
+							defaultLanguage
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, req}
+		);
 	}
 
-	async function read(val) {
-		return val;
+	async function read({db, val}) {
+		return graphql(
+			schema,
+			`
+				{
+					userMetadata {
+						id
+						userId
+						preferences {
+							defaultLanguage
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, val}
+		);
 	}
 
-	async function update(val) {
-		return val;
+	async function update({db, req}) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$userId: String
+					$preferences: PreferencesInput
+					$lastUpdated: LastUpdatedInput
+				) {
+					updateUser(
+						id: $id
+						userId: $userId
+						preferences: $preferences
+						lastUpdated: $lastUpdated
+						
+					) {
+						id
+						userId
+						preferences {
+							defaultLanguage
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, req}
+		);
 	}
 
-	async function remove(val) {
-		return val;
+	async function remove({db, params}) {
+		return graphql(
+			schema,
+			`
+				mutation($id: String, $userId: String) {
+					deleteUser(id: $id, userId: $userId) {
+						id
+					}
+				}
+			`,
+			{db, params}
+		);
 	}
 
-	async function changePwd(val) {
-		return val;
+	async function changePwd(db) {
+		return db;
 	}
 
-	async function query(val) {
-		return val;
+	async function query(db) {
+		return graphql(
+			schema,
+			'{Users{id, preferences{defaultLanguage}, userId}}',
+			db
+		);
+	}
+
+	// =====***************************** User Creation Request Starts From Here********************** ====
+
+	async function createRequest({db, req}) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$userId: String
+					$state: String
+					$publishers: [String]
+					$givenName: String
+					$familyName: String
+					$email: String
+					$notes: [String]
+					$lastUpdated: LastUpdatedInput
+				) {
+					createRequest(
+						id: $id
+						userId: $userId
+						state: $state
+						publishers: $publishers
+						givenName: $givenName
+						familyName: $familyName
+						email: $email
+						notes: $notes
+						lastUpdated: $lastUpdated
+					) {
+						id
+						userId
+						state
+						publishers
+						givenName
+						familyName
+						email
+						notes
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, req}
+		);
+	}
+
+	async function readRequest({db, val}) {
+		return graphql(
+			schema,
+			`
+				{
+					usersRequest{
+						id
+						userId
+						state
+						publishers
+						givenName
+						familyName
+						email
+						notes
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, val}
+		);
+	}
+
+	async function updateRequest({db, req}) {
+		return graphql(
+			schema,
+			`
+				mutation(
+					$id: String
+					$userId: String
+					$state: String
+					$publishers: String
+					$givenName: String
+					$familyName: String
+					$email: String
+					$notes: String
+					$lastUpdated: LastUpdatedInput
+				) {
+					updateRequest(
+						id: $id
+						userId: $userId
+						state: $state
+						publishers: $publishers
+						givenName: $givenName
+						familyName: $familyName
+						email: $email
+						notes: $notes
+						lastUpdated: $lastUpdated
+					) {
+						id
+						userId
+						state
+						publishers
+						givenName
+						familyName
+						email
+						notes
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`,
+			{db, req}
+		);
+	}
+
+	async function removeRequest({db, params}) {
+		return graphql(
+			schema,
+			`
+				mutation($id: String, $userId: String) {
+					deleteRequest(id: $id, userId: $userId) {
+						id
+					}
+				}
+			`,
+			{db, params}
+		);
+	}
+
+	async function queryRequest(db) {
+		return graphql(
+			schema,
+			`
+				{
+					usersRequests {
+						id
+						publishers
+						givenName
+						familyName
+						email
+						state
+					}
+				}
+			`,
+			db
+		);
 	}
 }

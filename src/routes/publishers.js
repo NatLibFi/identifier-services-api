@@ -29,8 +29,6 @@
 import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
-import bodyParser from 'body-parser';
-import validateContentType from '@natlibfi/express-validate-content-type';
 
 export default function() {
 	const publishers = publishersFactory({url: API_URL});

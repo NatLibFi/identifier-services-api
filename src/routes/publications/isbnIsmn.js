@@ -27,21 +27,25 @@
  */
 
 import {Router} from 'express';
-import {templatesFactory} from '../interfaces';
-import {API_URL} from '../config';
+import {publicationsIsbnIsmnFactory} from '../../interfaces';
+import {API_URL} from '../../config';
 
 export default function (db) {
-	const templates = templatesFactory({url: API_URL});
+	const publications = publicationsIsbnIsmnFactory({url: API_URL});
 	return new Router()
 		.post('/', create)
 		.get('/:id', read)
 		.put('/:id', update)
 		.delete('/:id', remove)
-		.post('/query', query);
+		.post('/query', query)
+		.post('/requests', createRequest)
+		.get('/requests/:id', readRequest)
+		.delete('/requests/:id', removeRequest)
+		.put('/requests/:id', updateRequest);
 
 	async function create(req, res, next) {
 		try {
-			const result = await templates.create({db, req});
+			const result = await publications.createISBN_ISMN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -51,7 +55,7 @@ export default function (db) {
 	async function read(req, res, next) {
 		const params = req.params;
 		try {
-			const result = await templates.read({db, params});
+			const result = await publications.readISBN_ISMN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -60,7 +64,7 @@ export default function (db) {
 
 	async function update(req, res, next) {
 		try {
-			const result = await templates.create({db, req});
+			const result = await publications.updateISBN_ISMN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -70,7 +74,7 @@ export default function (db) {
 	async function remove(req, res, next) {
 		const params = req.params;
 		try {
-			const result = await templates.remove({db, params});
+			const result = await publications.removeISBN_ISMN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -79,7 +83,45 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await templates.query({db, req});
+			const result = await publications.queryISBN_ISMN(db);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function createRequest(req, res, next) {
+		try {
+			const result = await publications.createRequestISBN_ISMN({db, req});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function readRequest(req, res, next) {
+		const params = req.params;
+		try {
+			const result = await publications.readRequestISBN_ISMN({db, params});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function removeRequest(req, res, next) {
+		const params = req.params;
+		try {
+			const result = await publications.removeRequestISBN_ISMN({db, params});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function updateRequest(req, res, next) {
+		try {
+			const result = await publications.updateRequestISBN_ISMN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);

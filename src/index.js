@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -32,15 +33,17 @@ import {
 	createUsersRouter,
 	createPublishersRouter,
 	createPublicationsRouter,
+	createPublicationsRouterIsbnIsmn,
+	createPublicationsRouterIssn,
 	createMessageTemplate,
 	createRangesRouter
 } from './routes';
 import Mongoose from 'mongoose';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
 import bodyParser from 'body-parser';
-import expressGraphQL from 'express-graphql';
-import schema from './graphql';
 import {MongoClient} from 'mongodb';
+
+import validateContentType from '@natlibfi/express-validate-content-type';
 
 const {createLogger, handleInterrupt} = Utils;
 import validateContentType from '@natlibfi/express-validate-content-type';
@@ -49,27 +52,36 @@ run();
 
 async function run() {
 	try {
-		// const Logger = createLogger();
+		// Const Logger = createLogger();
 		const app = express();
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
 
 		app.use(
-			// 	validateContentType({
-			// 	type: ['application/json', 'application/x-www-form-urlencoded']
-			// }),
+			validateContentType({
+				type: ['application/json']
+			}),
 			bodyParser.urlencoded({extended: false}),
 			bodyParser.json({
-				type: ['application/json', 'application/x-www-form-urlencoded']
+				type: ['application/json']
 			})
 		);
 
-		app.use('/templates', createMessageTemplate());
-		app.use('/users', createUsersRouter());
-		app.use('/publishers', createPublishersRouter());
-		app.use('publications', createPublicationsRouter());
-		app.use('/ranges', createRangesRouter());
+		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
+
+		let db;
+		client.connect(err => {
+			const dbName = 'IdentifierServices';
+			db = client.db(dbName);
+			err && console.log(err);
+			app.use('/templates', createMessageTemplate(db));
+			app.use('/users', createUsersRouter(db));
+			app.use('/publishers', createPublishersRouter(db));
+			app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
+			app.use('/publications/issn', createPublicationsRouterIssn(db));
+			app.use('/ranges', createRangesRouter(db));
+		});
 
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');

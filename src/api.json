@@ -1039,7 +1039,7 @@
 				}
 			}
 		},
-		"/publishers/{id}/publications": {
+		"/publications/isbn-ismn": {
 			"post": {
 				"summary": "Create a new publication",
 				"tags": ["publications"],
@@ -1076,7 +1076,7 @@
 				}
 			}
 		},
-		"/publishers/{id}/publications/{id}": {
+		"/publications/isbn-ismn/{id}": {
 			"get": {
 				"summary": "Retrive a publication's metadata",
 				"tags": ["publications"],
@@ -1185,7 +1185,7 @@
 				}
 			}
 		},
-		"/publishers/{id}/publications/requests": {
+		"/publications/isbn-ismn/requests": {
 			"post": {
 				"summary": "Create a new publication request",
 				"tags": ["publications"],
@@ -1222,7 +1222,7 @@
 				}
 			}
 		},
-		"/publishers/{id}/publications/requests/{id}": {
+		"/publications/isbn-ismn/requests/{id}": {
 			"get": {
 				"summary": "Retrive a publication creation request",
 				"tags": ["publications"],
@@ -1356,7 +1356,350 @@
 				}
 			}
 		},
-		"/publishers/{id}/publications/query": {
+		"/publications/isbn-ismn/query": {
+			"post": {
+				"summary": "Query for publications",
+				"tags": ["publications"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "Query returned "
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publications/issn": {
+			"post": {
+				"summary": "Create a new publication",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationId",
+						"in": "path",
+						"description": "ID of a new publication",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "New Publication created"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publications/issn/{id}": {
+			"get": {
+				"summary": "Retrive a publication's metadata",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationsId",
+						"in": "path",
+						"description": "ID of publications to fetch metadata informations",
+						"require": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "No record found"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			},
+			"put": {
+				"summary": "Update a publication metadata",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationId",
+						"in": "path",
+						"description": "ID of publication to fetch metadata informations",
+						"require": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Publisher"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "The publication metadata is updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No new content to be updated"
+					},
+					"400": {
+						"description": "Malformed content or Bad request"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "No record found"
+					},
+					"422": {
+						"description": "Invalid syntax"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publications/issn/requests": {
+			"post": {
+				"summary": "Create a new publication request",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationRequestId",
+						"in": "path",
+						"description": "ID of publication request",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"201": {
+						"description": "New Publication request created"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "The publisher does not exist"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publications/issn/requests/{id}": {
+			"get": {
+				"summary": "Retrive a publication creation request",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationsRequestId",
+						"in": "path",
+						"description": "ID of publications creation request to fetch",
+						"require": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "No record found"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete a publisher request",
+				"description": "The publisher creation request is removed",
+				"tags": ["publications"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"204": {
+						"description": "The publisher creation request is removed"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "No record found"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			},
+			"put": {
+				"summary": "Update a publications creation request",
+				"tags": ["publications"],
+				"parameters": [
+					{
+						"name": "publicationRequestId",
+						"in": "path",
+						"description": "ID of publication creation request to fetch",
+						"require": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Publisher"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Publisher"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "The publication's creation request is updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No new content to be updated"
+					},
+					"400": {
+						"description": "Malformed content or Bad request"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized or Forbidden"
+					},
+					"404": {
+						"description": "No record found"
+					},
+					"422": {
+						"description": "Invalid syntax"
+					},
+					"default": {
+						"description": "unexpected error"
+					}
+				}
+			}
+		},
+		"/publications/issn/query": {
 			"post": {
 				"summary": "Query for publications",
 				"tags": ["publications"],
@@ -1779,6 +2122,10 @@
 						"type": "string",
 						"description": "Identifier of the corresponding metadata record in Melinda."
 					},
+					"publisher": {
+						"type": "string",
+						"description": "Identifier of the publisher of this publication"
+					},
 					"type": {
 						"type": "string",
 						"required": true,
@@ -2079,7 +2426,11 @@
 						"required": false,
 						"description": "Identifier of the created publication"
 					},
-					"melindald": {
+					"publisher": {
+						"type": "string",
+						"description": "Identifier of the publisher of this publication"
+					},
+					"melindaId": {
 						"type": "string",
 						"required": false,
 						"decription": "Identifier of the corresponding metadata record in Melinda"
