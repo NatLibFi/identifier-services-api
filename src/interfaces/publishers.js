@@ -25,20 +25,11 @@
  * for the JavaScript code in this file.
  *
  */
-import {MongoClient} from 'mongodb';
-import {MONGO_URI} from '../config';
+
 import {graphql} from 'graphql';
 import schema from '../graphql';
 
 export default function () {
-	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
-
-	let db;
-	client.connect(err => {
-		const dbName = 'IdentifierServices';
-		db = client.db(dbName);
-		console.log(err);
-	});
 	return {
 		create,
 		read,
@@ -52,7 +43,7 @@ export default function () {
 		queryRequests
 	};
 
-	async function query() {
+	async function query(db) {
 		return graphql(
 			schema,
 			`
@@ -88,7 +79,7 @@ export default function () {
 		);
 	}
 
-	async function read(id) {
+	async function read(db, id) {
 		return graphql(
 			schema,
 			`
@@ -124,7 +115,7 @@ export default function () {
 		);
 	}
 
-	async function create(user) {
+	async function create(db, data) {
 		return graphql(
 			schema,
 			`
@@ -167,15 +158,17 @@ export default function () {
 						zip: $zip
 					) {
 						id
-						timestamp
+						lastUpdated{
+							timestamp
+						}
 					}
 				}
 			`,
-			{db, user}
+			{db, data}
 		);
 	}
 
-	async function update(id, publisher) {
+	async function update(db, id, publisher) {
 		return graphql(
 			schema,
 			`
@@ -226,7 +219,7 @@ export default function () {
 		);
 	}
 
-	async function remove(id) {
+	async function remove(db, id) {
 		return graphql(
 			schema,
 			`
@@ -240,7 +233,7 @@ export default function () {
 		);
 	}
 
-	async function createRequests(requests) {
+	async function createRequests(db, requests) {
 		return graphql(
 			schema,
 			`
@@ -294,7 +287,7 @@ export default function () {
 		);
 	}
 
-	async function readRequest(id) {
+	async function readRequest(db, id) {
 		return graphql(
 			schema,
 			`
@@ -368,7 +361,7 @@ export default function () {
 		);
 	}
 
-	async function removeRequest(id) {
+	async function removeRequest(db, id) {
 		return graphql(
 			schema,
 			`
@@ -382,7 +375,7 @@ export default function () {
 		);
 	}
 
-	async function updateRequest(id, publisherRequest) {
+	async function updateRequest(db, id, body) {
 		return graphql(
 			schema,
 			`
@@ -432,11 +425,11 @@ export default function () {
 					}
 				}
 			`,
-			{db, id, publisherRequest}
+			{db, id, body}
 		);
 	}
 
-	async function queryRequests() {
+	async function queryRequests(db) {
 		return graphql(
 			schema,
 			`
