@@ -45,37 +45,19 @@ const {handleInterrupt} = Utils;
 
 export default async function run() {
 	try {
-		// Const Logger = createLogger();
 		const app = express();
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
-		console.log('----------', MONGO_URI);
 		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
 		const connection = await client.connect();
-		const dbName = 'IdentifierServices';
-		const db = connection.db(dbName);
-		console.log(await db.collections());
+		const db = connection.db();
 		app.use('/templates', createMessageTemplate(db));
 		app.use('/users', createUsersRouter(db));
 		app.use('/publishers', createPublishersRouter(db));
 		app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 		app.use('/publications/issn', createPublicationsRouterIssn(db));
 		app.use('/ranges', createRangesRouter(db));
-
-		// Let db;
-		// client.connect(async err => {
-		// 	const dbName = 'IdentifierServices';
-		// 	db = client.db(dbName);
-		// 	console.log(err);
-		// 	console.log(await db.collections());
-		// 	app.use('/templates', createMessageTemplate(db));
-		// 	app.use('/users', createUsersRouter(db));
-		// 	app.use('/publishers', createPublishersRouter(db));
-		// 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
-		// 	app.use('/publications/issn', createPublicationsRouterIssn(db));
-		// 	app.use('/ranges', createRangesRouter(db));
-		// });
 
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');

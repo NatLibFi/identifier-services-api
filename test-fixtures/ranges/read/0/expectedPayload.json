@@ -1,16 +1,17 @@
 {
-   "IdentifierRangesISBN": {
-        "id": "4176b77948424c98a89dd824195b8f9b",
-        "prefix": "978",
-        "language": "951",
-        "rangeStart": "550",
-        "rangeEnd": "889",
-        "active": false,
-        "publisher": "b7ab91cf7d524b7284f6f01e8b2e14c0",
-        "reservedCount": 339,
-        "lastUpdated": {
-            "timestamp": "2019-05-03T09:17:46.412",
-            "user": "barfoo"
+    "data": {
+        "ISBN": {
+                 "id": "foo",
+                 "prefix": "978",
+                 "language": "951",
+                 "rangeStart": 550,
+                 "rangeEnd": 889,
+                 "active": false,
+                 "publisher": "b7ab91cf7d524b7284f6f01e8b2e14c0",
+                 "reservedCount": 339,
+                 "lastUpdated": {
+                     "timestamp": "2019-05-03T09:17:46.412"
+                 }
         }
     }
 }

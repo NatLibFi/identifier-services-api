@@ -65,16 +65,13 @@ describe('routes/ranges/isbn', () => {
 	describe('#read', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			console.log(await mongoFixtures.dump());
-			const response = await requester.get(`${requestPath}/4176b77948424c98a89dd824195b8f9b`);
-			// Console.log('*************', response);
+			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
 		async function init(index, getFixtures = false) {
 			await mongoFixtures.populate(['read', index, 'dbContents.json']);
-
 			if (getFixtures) {
 				return {
 					expectedPayload: getFixture({components: ['read', index, 'expectedPayload.json'], reader: READERS.JSON})
