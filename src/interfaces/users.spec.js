@@ -51,7 +51,7 @@ describe('interfaces/users', async () => {
 	});
 
 	describe('#create', () => {
-		it('Should create a new user', async (index = '0') => {
+		it.skip('Should create a new user', async (index = '0') => {
 			const dbContents = getFixture(['create', index, 'dbContents.json']);
 			const expectedDb = getFixture(['create', index, 'expectedDb.json']);
 			const users = usersFactory({url: 'https://'});

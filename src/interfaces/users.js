@@ -77,8 +77,8 @@ export default function () {
 		);
 	}
 
-	async function read({db, val}) {
-		return graphql(
+	async function read({db, params}) {
+		const result = await graphql(
 			schema,
 			`
 				{
@@ -95,8 +95,9 @@ export default function () {
 					}
 				}
 			`,
-			{db, val}
+			{db, params}
 		);
+		return result;
 	}
 
 	async function update({db, req}) {

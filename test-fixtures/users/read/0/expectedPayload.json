@@ -1,6 +1,6 @@
 {
-    "userMetadata": [
-        {
+    "data": {
+        "userMetadata": {
             "id": "foo",
             "userId":"foobar",
             "preferences": {
@@ -11,5 +11,5 @@
                 "user": "bar"
             }
         }
-    ]
+    }
 }
