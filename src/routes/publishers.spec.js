@@ -36,13 +36,13 @@ import chaiHttp from 'chai-http';
 
 chai.use(chaiHttp);
 
-describe('routes/ranges/isbn', () => {
+describe('routes/publishers', () => {
 	let requester;
 	let mongoFixtures;
 
 	const API_URL = `http://localhost:${HTTP_PORT}`;
-	const fixturesPath = [__dirname, '..', '..', 'test-fixtures', 'ranges'];
-	const requestPath = '/ranges/isbn';
+	const fixturesPath = [__dirname, '..', '..', 'test-fixtures', 'publishers'];
+	const requestPath = '/publishers';
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
@@ -70,7 +70,7 @@ describe('routes/ranges/isbn', () => {
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it('Should fail because the resource does not exist', async (index = '1') => {
+		it.skip('Should fail because the resource does not exist', async (index = '1') => {
 			await init(index);
 			try {
 				await requester.get(`${requestPath}/foo`);

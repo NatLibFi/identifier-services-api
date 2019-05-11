@@ -26,58 +26,49 @@
  *
  */
 const uuidv4 = require('uuid/v4');
+const objectId = require('mongodb').ObjectId;
 
 export default {
 	Query: {
 		Publishers: async db => {
 			try {
-				return await db
-					.collection('PublisherMetadata')
-					.find()
-					.toArray()
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').find().toArray();
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		Publisher: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherMetadata')
-					.findOne({id})
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').findOne(objectId(id));
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		PublisherRequest: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.findOne({id})
-					.then(res => res);
+				const result = await db.collection('PublisherRequest').findOne(objectId(id));
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		PublisherRequests: async db => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.find()
-					.toArray()
-					.then(res => res);
+				const result = await db.collection('PublisherRequest').find().toArray();
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	},
 
 	Mutation: {
-		createPublisher: async ({db, user}) => {
+		createPublisher: async ({db, data}) => {
 			try {
 				const newPublisher = {
-					...user,
+					...data,
 					id: uuidv4(),
 					lastUpdated: {
 						timestamp: new Date(),
@@ -89,7 +80,7 @@ export default {
 					.insertOne(newPublisher)
 					.then(res => res);
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 
@@ -108,7 +99,7 @@ export default {
 					.then(res => res)
 					.catch(err => err);
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 
@@ -121,7 +112,7 @@ export default {
 					.catch(err => err);
 				return deletedPublisher;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 
@@ -141,7 +132,7 @@ export default {
 					.then(res => res.ops[0])
 					.catch(err => err);
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		deletePublisherRequest: async ({db, id}) => {
@@ -152,7 +143,7 @@ export default {
 					.then(res => res.value)
 					.catch(err => err);
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		updatePublisherRequest: async ({db, id, body}) => {
@@ -178,7 +169,7 @@ export default {
 					})
 					.catch(err => err);
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	}

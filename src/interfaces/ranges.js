@@ -98,7 +98,6 @@ export default function () {
 			`,
 			{db, id}
 		);
-		console.log(id, JSON.stringify(result, undefined, 2));
 		return result;
 	}
 

@@ -80,7 +80,7 @@ export default function () {
 	}
 
 	async function read(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
@@ -113,15 +113,14 @@ export default function () {
 			`,
 			{db, id}
 		);
+		return result;
 	}
 
 	async function create(db, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$timestamp: String
 					$user: String
 					$name: String
 					$language: String
@@ -133,14 +132,11 @@ export default function () {
 					$aliases: String
 					$notes: String
 					$active: Boolean
-					$yearInactivated: Int
 					$address: String
 					$city: String
 					$zip: String
 				) {
 					createPublisher(
-						id: $id
-						timestamp: $timestamp
 						user: $user
 						name: $name
 						language: $language
@@ -152,20 +148,18 @@ export default function () {
 						aliases: $aliases
 						notes: $notes
 						active: $active
-						yearInactivated: $yearInactivated
 						address: $address
 						city: $city
 						zip: $zip
 					) {
 						id
-						lastUpdated{
-							timestamp
-						}
+						name
 					}
 				}
 			`,
 			{db, data}
 		);
+		return result;
 	}
 
 	async function update(db, id, publisher) {

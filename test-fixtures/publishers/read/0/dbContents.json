@@ -1,21 +1,30 @@
 {
-    "publishers":[{
-        "id":"foo",
-        "lastUpdated":{
-            "timestamp":"foo",
-            "user": "foo"
-        },
-        "name": "foo",
-        "language":"foo",
-        "activity":{
-            "active": true
-        },
-        "streetAddress":{
-            "address": "foo",
-            "city": "foo",
-            "zip": "foo"
-        },
-        "email":"foo@bar.com",
-        "website": "foo"
-    }]
+    "PublisherMetadata": [
+        {
+            "id":"foo",
+            "name": "foo",
+            "language": "foo",
+            "metadataDelivery": "foo",
+            "primaryContact": ["foobar", "foo@foobar.com"],
+            "email":"foo@bar.com",
+            "phone": "foo",
+            "website": "foo",
+            "streetAddress":{
+                "address": "foo",
+                "city": "foo",
+                "zip": "foo"
+            },
+            "aliases": ["foo"],
+            "activity":{
+                "active": true,
+                "yearInactivated": 111
+            },
+            "notes": ["foo", "bar"],
+            "lastUpdated":{
+                "timestamp":"foo",
+                "user": "foo"
+            }
+        }
+    ]
 }
+
