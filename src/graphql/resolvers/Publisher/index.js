@@ -69,35 +69,29 @@ export default {
 			try {
 				const newPublisher = {
 					...data,
-					id: uuidv4(),
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				await db
-					.collection('PublisherMetadata')
-					.insertOne(newPublisher)
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
+				return result.ops[0];
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 
-		updatePublisher: async ({db, id, publisher}) => {
+		updatePublisher: async ({db, id, data}) => {
 			try {
 				const publisherUpdate = {
-					...publisher,
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				await db
-					.collection('PublisherMetadata')
-					.findOneAndUpdate({id}, {$set: publisherUpdate}, {upsert: true})
-					.then(res => res)
-					.catch(err => err);
+				await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
+				return await db.collection('PublisherMetadata').findOne(objectId(id));
 			} catch (err) {
 				throw new Error(err);
 			}
@@ -105,11 +99,7 @@ export default {
 
 		deletePublisher: async ({db, id}) => {
 			try {
-				const deletedPublisher = await db
-					.collection('PublisherMetadata')
-					.findOneAndDelete({id})
-					.then(res => res.send('User Deleted'))
-					.catch(err => err);
+				const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
 				return deletedPublisher;
 			} catch (err) {
 				throw new Error(err);

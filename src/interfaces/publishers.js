@@ -49,7 +49,7 @@ export default function () {
 			`
 				{
 					Publishers {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
@@ -121,23 +121,19 @@ export default function () {
 			schema,
 			`
 				mutation(
-					$user: String
 					$name: String
 					$language: String
 					$metadataDelivery: String
-					$primaryContact: String
+					$primaryContact: [String]
 					$email: String
 					$phone: String
 					$website: String
-					$aliases: String
-					$notes: String
-					$active: Boolean
-					$address: String
-					$city: String
-					$zip: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
 				) {
 					createPublisher(
-						user: $user
 						name: $name
 						language: $language
 						metadataDelivery: $metadataDelivery
@@ -147,13 +143,11 @@ export default function () {
 						website: $website
 						aliases: $aliases
 						notes: $notes
-						active: $active
-						address: $address
-						city: $city
-						zip: $zip
-					) {
-						id
+						activity: $activity
+						streetAddress: $streetAddress
+					) {					
 						name
+						language						
 					}
 				}
 			`,
@@ -162,33 +156,24 @@ export default function () {
 		return result;
 	}
 
-	async function update(db, id, publisher) {
+	async function update(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$timestamp: String
-					$user: String
 					$name: String
 					$language: String
 					$metadataDelivery: String
-					$primaryContact: String
+					$primaryContact: [String]
 					$email: String
 					$phone: String
 					$website: String
-					$aliases: String
-					$notes: String
-					$active: Boolean
-					$yearInactivated: Int
-					$address: String
-					$city: String
-					$zip: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
 				) {
 					updatePublisher(
-						id: $id
-						timestamp: $timestamp
-						user: $user
 						name: $name
 						language: $language
 						metadataDelivery: $metadataDelivery
@@ -198,18 +183,14 @@ export default function () {
 						website: $website
 						aliases: $aliases
 						notes: $notes
-						active: $active
-						yearInactivated: $yearInactivated
-						address: $address
-						city: $city
-						zip: $zip
+						activity: $activity
+						streetAddress: $streetAddress
 					) {
-						id
 						name
 					}
 				}
 			`,
-			{db, id, publisher}
+			{db, id, data}
 		);
 	}
 
@@ -217,9 +198,9 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublisher(id: $id) {
-						id
+				mutation($_id: ID) {
+					deletePublisher(_id: $_id) {
+						_id
 					}
 				}
 			`,
