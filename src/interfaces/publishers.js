@@ -208,13 +208,11 @@ export default function () {
 		);
 	}
 
-	async function createRequests(db, requests) {
+	async function createRequests(db, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$lastUpdated: LastUpdatedInput
 					$state: String
 					$publisherId: String
 					$publicationEstimate: Int
@@ -232,8 +230,6 @@ export default function () {
 					$publication: ISBNISMNPublicationRequestInput
 				) {
 					createPublisherRequests(
-						id: $id
-						lastUpdated: $lastUpdated
 						state: $state
 						publisherId: $publisherId
 						publicationEstimate: $publicationEstimate
@@ -258,7 +254,7 @@ export default function () {
 					}
 				}
 			`,
-			{db, requests}
+			{db, data}
 		);
 	}
 
@@ -340,9 +336,9 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublisherRequest(id: $id) {
-						id
+				mutation($_id: ID) {
+					deletePublisherRequest(_id: $_id) {
+						_id
 					}
 				}
 			`,
@@ -350,13 +346,11 @@ export default function () {
 		);
 	}
 
-	async function updateRequest(db, id, body) {
+	async function updateRequest(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$lastUpdated: LastUpdatedInput
 					$state: String
 					$publisherId: String
 					$publicationEstimate: Int
@@ -374,8 +368,6 @@ export default function () {
 					$publication: ISBNISMNPublicationRequestInput
 				) {
 					updatePublisherRequest(
-						id: $id
-						lastUpdated: $lastUpdated
 						state: $state
 						publisherId: $publisherId
 						publicationEstimate: $publicationEstimate
@@ -400,7 +392,7 @@ export default function () {
 					}
 				}
 			`,
-			{db, id, body}
+			{db, id, data}
 		);
 	}
 

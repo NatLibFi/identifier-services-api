@@ -174,7 +174,7 @@ export default `
     }  
     
     type PublisherRequest{
-        id: String!
+        _id: ID!
         lastUpdated: LastUpdated
         state: String!
         publisherId: String
@@ -227,8 +227,6 @@ export default `
         ): Publisher
 
         createPublisherRequests(
-            id: String
-            lastUpdated: LastUpdatedInput
             state: String
             publisherId: String
             publicationEstimate: Int
@@ -247,12 +245,10 @@ export default `
         ): PublisherRequest
 
         deletePublisherRequest(
-            id: String
+            _id: ID
         ): PublisherRequest
 
         updatePublisherRequest(
-            id: String
-            lastUpdated: LastUpdatedInput
             state: String
             publisherId: String
             publicationEstimate: Int

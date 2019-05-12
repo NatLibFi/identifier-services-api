@@ -25,7 +25,6 @@
  * for the JavaScript code in this file.
  *
  */
-const uuidv4 = require('uuid/v4');
 const objectId = require('mongodb').ObjectId;
 
 export default {
@@ -100,64 +99,46 @@ export default {
 		deletePublisher: async ({db, id}) => {
 			try {
 				const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
-				return deletedPublisher;
+				return deletedPublisher.value;
 			} catch (err) {
-				throw new Error(err);
+				throw new Error('Publisher doesnot Exist');
 			}
 		},
 
-		createPublisherRequests: async ({db, requests}) => {
+		createPublisherRequests: async ({db, data}) => {
 			try {
 				const newPublisherRequests = {
-					...requests,
-					id: uuidv4(),
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('PublisherRequest')
-					.insertOne(newPublisherRequests)
-					.then(res => res.ops[0])
-					.catch(err => err);
+				const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
+				return result.ops[0];
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		deletePublisherRequest: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.findOneAndDelete({id})
-					.then(res => res.value)
-					.catch(err => err);
+				const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
+				return deletePublisherRequest.value;
 			} catch (err) {
-				throw new Error(err);
+				throw new Error(err, 'PublisherRequest doesnot Exist');
 			}
 		},
-		updatePublisherRequest: async ({db, id, body}) => {
+		updatePublisherRequest: async ({db, id, data}) => {
 			try {
 				const publisherRequestUpdate = {
-					...body,
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('PublisherRequest')
-					.findOneAndUpdate(
-						{id},
-						{$set: publisherRequestUpdate},
-						{upsert: true}
-					)
-					.then(() => {
-						return db.collection('PublisherRequest')
-							.findOne({id})
-							.then(res => res);
-					})
-					.catch(err => err);
+				await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
+				return await db.collection('PublisherRequest').findOne(objectId(id));
 			} catch (err) {
 				throw new Error(err);
 			}
