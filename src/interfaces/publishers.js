@@ -85,7 +85,7 @@ export default function () {
 			`
 				{
 					Publisher {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
@@ -264,7 +264,7 @@ export default function () {
 			`
 				{
 					PublisherRequest {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
@@ -402,7 +402,7 @@ export default function () {
 			`
 				{
 					PublisherRequests{
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user

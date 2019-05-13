@@ -63,7 +63,7 @@ describe('routes/publishers', () => {
 	});
 
 	describe('#read', () => {
-		it('Should succeed', async (index = '0') => {
+		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.OK);

@@ -33,10 +33,11 @@ export default {
 	Query: {
 		userMetadata: async ({db, id}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('userMetadata')
-					.findOne(objectId(id))
-					.then(res => res);
+					.findOne(objectId(id));
+				console.log(result);
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -44,11 +45,11 @@ export default {
 
 		Users: async db => {
 			try {
-				return await db
+				const result = await db
 					.collection('userMetadata')
 					.find()
-					.toArray()
-					.then(res => res);
+					.toArray();
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -56,10 +57,10 @@ export default {
 
 		usersRequest: async ({db, id}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('usersRequest')
-					.findOne(objectId(id))
-					.then(res => res);
+					.findOne(objectId(id));
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -67,11 +68,11 @@ export default {
 
 		usersRequests: async db => {
 			try {
-				return await db
+				const result = await db
 					.collection('usersRequest')
 					.find()
-					.toArray()
-					.then(res => res);
+					.toArray();
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -102,7 +103,7 @@ export default {
 			try {
 				const deletedUser = await db
 					.collection('userMetadata')
-					.findOneAndDelete({_id: objectId(id)})
+					.findOneAndDelete(objectId(id))
 					.then(res => res.value);
 				return deletedUser;
 			} catch (err) {
@@ -150,7 +151,6 @@ export default {
 				return err;
 			}
 		},
-
 		deleteRequest: async ({db, id}) => {
 			try {
 				const deletedRequest = await db
@@ -162,7 +162,6 @@ export default {
 				return err;
 			}
 		},
-
 		updateRequest: async ({db, id, data}) => {
 			try {
 				const updateRequest = {

@@ -1,15 +1,3 @@
 {
-    "userMetadata": [
-        {
-            "id": "foo",
-            "userId":"foobar",
-            "preferences": {
-                "defaultLanguage": "foo"
-            },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
-        }
-    ]
+    "userMetadata": []
 }
