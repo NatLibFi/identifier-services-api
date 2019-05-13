@@ -38,7 +38,7 @@ export default `
     }
 
     type ISSN{
-        id: String!
+        _id: String!
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
@@ -47,7 +47,7 @@ export default `
     }
  
     type ISMN{
-        id: String!
+        _id: String!
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
@@ -58,7 +58,7 @@ export default `
     }
         
     type ISBN{
-        id: String!
+        _id: ID!
         prefix: String!
         language: String!
         rangeStart: Int!

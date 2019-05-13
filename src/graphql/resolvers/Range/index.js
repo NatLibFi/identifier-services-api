@@ -26,72 +26,54 @@
  *
  */
 
-const uuidv4 = require('uuid/v4');
+const objectId = require('mongodb').ObjectId;
 
 export default {
 	Query: {
 		// ISBN Query
 		ISBN: async ({db, id}) => {
 			try {
-				return await db.collection('IdentifierRangesISBN')
-					.findOne({id}).then(res => res);
+				return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		ISBNs: async db => {
 			try {
-				return await db
-					.collection('IdentifierRangesISBN')
-					.find()
-					.toArray()
-					.then(res => res);
+				return await db.collection('IdentifierRangesISBN').find().toArray();
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		// ISMN Query
 		ISMN: async ({db, id}) => {
 			try {
-				return await db
-					.collection('IdentifierRangesISMN')
-					.findOne({id})
-					.then(res => res);
+				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		ISMNs: async db => {
 			try {
-				return await db
-					.collection('IdentifierRangesISMN')
-					.find()
-					.toArray()
-					.then(res => res);
+				return await db.collection('IdentifierRangesISMN').find().toArray();
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		// ISSN Query
 		ISSN: async ({db, id}) => {
 			try {
-				return await db
-					.collection('IdentifierRangesISSN')
-					.findOne({id})
-					.then(res => res);
+				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		ISSNs: async db => {
 			try {
 				return await db
-					.collection('IdentifierRangesISSN')
-					.find()
-					.toArray()
-					.then(res => res);
+					.collection('IdentifierRangesISSN').find().toArray();
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	},
@@ -100,19 +82,16 @@ export default {
 		createISBN: async ({db, isbnData}) => {
 			try {
 				const newISBN = {
-					id: uuidv4(),
 					...isbnData,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('IdentifierRangesISBN')
-					.insertOne(newISBN)
-					.then(res => res.ops[0]);
+				const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
+				return result.ops[0];
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		updateISBN: async ({db, id, data}) => {
@@ -124,37 +103,29 @@ export default {
 						user: 'foobar'
 					}
 				};
-				return await db
+				await db
 					.collection('IdentifierRangesISBN')
-					.findOneAndUpdate({id}, {$set: isbnUpdate}, {upsert: true})
-					.then(() => {
-						return db
-							.collection('IdentifierRangesISBN')
-							.findOne({id})
-							.then(res => res);
-					})
-					.catch(err => err);
+					.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
+				return await db.collection('IdentifierRangesISBN').findOne(objectId(id));
+
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		// ISMN Mutation
 		createISMN: async ({db, data}) => {
 			try {
 				const newISMN = {
-					id: uuidv4(),
 					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('IdentifierRangesISMN')
-					.insertOne(newISMN)
-					.then(res => res.ops[0]);
+				const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
+				return result.ops[0];
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		updateISMN: async ({db, id, data}) => {
@@ -166,37 +137,26 @@ export default {
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('IdentifierRangesISMN')
-					.findOneAndUpdate({id}, {$set: ismnUpdate}, {upsert: true})
-					.then(() => {
-						return db
-							.collection('IdentifierRangesISMN')
-							.findOne({id})
-							.then(res => res);
-					})
-					.catch(err => err);
+				await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true})
+				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		// ISSN Mutation
 		createISSN: async ({db, data}) => {
 			try {
 				const newISSN = {
-					id: uuidv4(),
 					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('IdentifierRangesISSN')
-					.insertOne(newISSN)
-					.then(res => res.ops[0]);
+				const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
+				return result.ops[0];
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		updateISSN: async ({db, id, data}) => {
@@ -208,18 +168,11 @@ export default {
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('IdentifierRangesISSN')
-					.findOneAndUpdate({id}, {$set: issnUpdate}, {upsert: true})
-					.then(() => {
-						return db
-							.collection('IdentifierRangesISSN')
-							.findOne({id})
-							.then(res => res);
-					})
-					.catch(err => err);
+				await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true})
+				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
+
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	}

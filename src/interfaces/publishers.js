@@ -85,7 +85,7 @@ export default function () {
 			`
 				{
 					Publisher {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
