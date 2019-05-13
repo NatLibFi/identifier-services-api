@@ -27,16 +27,17 @@
  *
  */
 
+const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
 export default {
 	Query: {
-		publication_ISSN: async ({db, params}) => {
+		publication_ISSN: async ({db, id}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('Publication_ISSN')
-					.findOne(params)
-					.then(res => res);
+					.findOne(objectId(id));
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -44,22 +45,22 @@ export default {
 
 		Publications_ISSN: async db => {
 			try {
-				return await db
+				const result = await db
 					.collection('Publication_ISSN')
 					.find()
-					.toArray()
-					.then(res => res);
+					.toArray();
+				return result;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		publicationRequest_ISSN: async ({db, params}) => {
+		publicationRequest_ISSN: async ({db, id}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('PublicationRequest_ISSN')
-					.findOne(params)
-					.then(res => res);
+					.findOne(objectId(id));
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -67,109 +68,108 @@ export default {
 	},
 
 	Mutation: {
-		createPublicationIssn: async ({db, req}) => {
+		createPublicationIssn: async ({db, data}) => {
 			try {
 				const newPublication = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
-				const createdPublication = await db
+				const result = await db
 					.collection('Publication_ISSN')
-					.insertOne(newPublication)
-					.then(res => res.ops);
-				return createdPublication[0];
+					.insertOne(newPublication);
+				return result.ops[0];
 			} catch (err) {
 				return err;
 			}
 		},
 
-		deletePublicationIssn: async ({db, params}) => {
+		deletePublicationIssn: async ({db, id}) => {
 			try {
 				const deletedPublication = await db
 					.collection('Publication_ISSN')
-					.findOneAndDelete({id: params.id})
-					.then(res => res.value);
-				return deletedPublication;
+					.findOneAndDelete({_id: objectId(id)});
+				return deletedPublication.value;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		updatePublicationIssn: async ({db, req}) => {
+		updatePublicationIssn: async ({db, id, data}) => {
+			console.log(id)
 			try {
 				const updatePublication = {
-					...req.body,
-					id: req.params.id,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				await db
 					.collection('Publication_ISSN')
 					.findOneAndUpdate(
-						{id: req.params.id},
+						{_id: objectId(id)},
 						{$set: updatePublication},
 						{upsert: true}
 					);
-				return updatePublication;
+				return await db
+					.collection('Publication_ISSN')
+					.findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}
 		},
 
-		createPublicationRequestIssn: async ({db, req}) => {
+		createPublicationRequestIssn: async ({db, data}) => {
 			try {
 				const newPublicationRequest = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
-				const createdPublicationRequest = await db
+				const result = await db
 					.collection('PublicationRequest_ISSN')
-					.insertOne(newPublicationRequest)
-					.then(res => res.ops[0]);
-				return createdPublicationRequest;
+					.insertOne(newPublicationRequest);
+				return result.ops[0];
 			} catch (err) {
 				return err;
 			}
 		},
 
-		updatePublicationRequestIssn: async ({db, req}) => {
+		updatePublicationRequestIssn: async ({db, id, data}) => {
 			try {
 				const updatePublicationRequest = {
-					...req.body,
-					id: req.params.id,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				await db
 					.collection('PublicationRequest_ISSN')
 					.findOneAndUpdate(
-						{id: req.params.id},
+						{_id: objectId(id)},
 						{$set: updatePublicationRequest},
 						{upsert: true}
 					);
-				return updatePublicationRequest;
+				return await db
+					.collection('PublicationRequest_ISSN')
+					.findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}
 		},
 
-		deletePublicationRequestIssn: async ({db, params}) => {
+		deletePublicationRequestIssn: async ({db, id}) => {
 			try {
 				const deletedPublicationRequest = await db
 					.collection('PublicationRequest_ISSN')
-					.findOneAndDelete({id: params.id})
-					.then(res => res.value);
-				return deletedPublicationRequest;
+					.findOneAndDelete({_id: objectId(id)});
+				return deletedPublicationRequest.value;
 			} catch (err) {
 				return err;
 			}
