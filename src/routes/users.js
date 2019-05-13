@@ -27,58 +27,41 @@
  */
 
 import {Router} from 'express';
-import bodyParser from 'body-parser';
-import validateContentType from '@natlibfi/express-validate-content-type';
-import expressGraphQL from 'express-graphql';
 
 import {usersFactory} from '../interfaces';
+import {default as bodyParse} from './utils';
 import {API_URL} from '../config';
-import schema from '../graphql';
 
-export default function() {
+export default function (db) {
 	const users = usersFactory({url: API_URL});
 
-	// const mongo = {
-	// 	Users: db.db,
-	// 	Publishers: db.collections
-	// };
-
 	return new Router()
-		.post(
-			'/',
-			validateContentType({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			// bodyParser.urlencoded({extended: false}),
-			bodyParser.json({
-				type: ['application/json', 'application/x-www-form-urlencoded']
-			}),
-			create
-		)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
-		.post('/:id/password', changePwd)
-		.post(
-			'/query',
-			expressGraphQL({schema: schema, graphiql: true}),
-			query
-		);
+		.post('/:id/password', bodyParse(), changePwd)
+		.post('/query', bodyParse(), query)
+		.post('/request', bodyParse(), createRequest)
+		.get('/request/:id', readRequest)
+		.delete('/request/:id', removeRequest)
+		.put('/request/:id', bodyParse(), updateRequest)
+		.post('/request/query', bodyParse(), queryRequest);
 
 	async function create(req, res, next) {
 		try {
-			const user = await users.create({
-				preference: req.body.preference ? req.body.preference : 'FIN'
-			});
-			return res.json(user);
+			const result = await users.create({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function read(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req.params);
+			const result = await users.read({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -86,15 +69,18 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await users.update({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function remove(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req.body);
+			const result = await users.remove({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -110,7 +96,55 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await users.query(db);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function createRequest(req, res, next) {
+		try {
+			const result = await users.createRequest({db, req});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function readRequest(req, res, next) {
+		const params = req.params;
+		try {
+			const result = await users.readRequest({db, params});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function updateRequest(req, res, next) {
+		try {
+			const result = await users.updateRequest({db, req});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function removeRequest(req, res, next) {
+		const params = req.params;
+		try {
+			const result = await users.removeRequest({db, params});
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function queryRequest(req, res, next) {
+		try {
+			const result = await users.queryRequest(db);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

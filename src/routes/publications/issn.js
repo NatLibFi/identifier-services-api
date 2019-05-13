@@ -27,28 +27,26 @@
  */
 
 import {Router} from 'express';
-import {publishersFactory} from '../interfaces';
-import {API_URL} from '../config';
-import {default as bodyParse} from './utils';
+import {default as bodyParse} from '../utils';
+import {publicationsIssnFactory} from '../../interfaces';
+import {API_URL} from '../../config';
 
 export default function (db) {
-	const publishers = publishersFactory({url: API_URL});
-
+	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
 		.post('/query', bodyParse(), query)
-		.post('/requests', bodyParse(), createRequests)
+		.post('/requests', bodyParse(), createRequest)
 		.get('/requests/:id', readRequest)
 		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', bodyParse(), updateRequest)
-		.post('/requests/query', bodyParse(), queryRequests);
+		.put('/requests/:id', bodyParse(), updateRequest);
 
 	async function create(req, res, next) {
 		try {
-			const result = await publishers.create(db, req.body);
+			const result = await publications.createISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -56,9 +54,9 @@ export default function (db) {
 	}
 
 	async function read(req, res, next) {
-		const id = req.params.id;
+		const params = req.params;
 		try {
-			const result = await publishers.read(id);
+			const result = await publications.readISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -66,9 +64,8 @@ export default function (db) {
 	}
 
 	async function update(req, res, next) {
-		const id = req.params.id;
 		try {
-			const result = await publishers.update(db, id, req.body);
+			const result = await publications.updateISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -76,9 +73,9 @@ export default function (db) {
 	}
 
 	async function remove(req, res, next) {
-		const id = req.params.id;
+		const params = req.params;
 		try {
-			const result = await publishers.remove(db, id);
+			const result = await publications.removeISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -87,16 +84,16 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await publishers.query(db);
+			const result = await publications.queryISSN(db);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function createRequests(req, res, next) {
+	async function createRequest(req, res, next) {
 		try {
-			const result = await publishers.createRequests(db, req.body);
+			const result = await publications.createRequestISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -104,8 +101,9 @@ export default function (db) {
 	}
 
 	async function readRequest(req, res, next) {
+		const params = req.params;
 		try {
-			const result = await publishers.readRequest(db, req.params.id);
+			const result = await publications.readRequestISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -113,8 +111,9 @@ export default function (db) {
 	}
 
 	async function removeRequest(req, res, next) {
+		const params = req.params;
 		try {
-			const result = await publishers.removeRequest(db, req.params.id);
+			const result = await publications.removeRequestISSN({db, params});
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -122,19 +121,8 @@ export default function (db) {
 	}
 
 	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		const body = req.body;
 		try {
-			const result = await publishers.updateRequest(db, id, body);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function queryRequests(req, res, next) {
-		try {
-			const result = await publishers.queryRequests(db);
+			const result = await publications.updateRequestISSN({db, req});
 			res.json(result);
 		} catch (err) {
 			next(err);

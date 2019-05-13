@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -25,71 +26,7 @@
  * for the JavaScript code in this file.
  *
  */
-import {Utils} from '@natlibfi/melinda-commons';
-import express from 'express';
-import cors from 'cors';
-import {createUsersRouter, createPublishersRouter, createPublicationsRouter, createMessageTemplate} from './routes';
-import Mongoose from 'mongoose';
-import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, MONGO_DEBUG} from './config';
-import bodyParser from 'body-parser';
-import expressGraphQL from 'express-graphql';
-import schema from './graphql';
 
-const {createLogger, handleInterrupt} = Utils;
+import start from './app';
 
-run();
-
-async function run() {
-	try {
-		Mongoose.set('debug', MONGO_DEBUG);
-		// const Logger = createLogger();
-
-		const app = express();
-
-		await Mongoose.connect(MONGO_URI, {
-			useNewUrlParser: true,
-			useCreateIndex: true
-		});
-		app.enable('trust proxy', ENABLE_PROXY);
-
-		app.use(cors());
-		app.use('/templates', createMessageTemplate());
-		app.use('/users', createUsersRouter());
-		app.use('/publishers', createPublishersRouter());
-		app.use('publications', createPublicationsRouter());
-		
-		app.use(
-			'/graphql',
-			cors(),
-			bodyParser.json(),
-			expressGraphQL({
-				schema: schema,
-				graphiql: true
-			})
-		);
-
-		const server = app.listen(HTTP_PORT, () => {
-			// Logger.log('info', 'Started melinda-record-import-api');
-			console.log(`server running in port ${HTTP_PORT}`);
-		});
-
-		registerSignalHandlers();
-
-		function registerSignalHandlers() {
-			process
-				.on('SIGINT', handle)
-				.on('uncaughtException', handle)
-				.on('unhandledRejection', handle)
-				// Nodemon
-				.on('SIGUSR2', handle);
-
-			function handle(arg) {
-				server.close();
-				Mongoose.disconnect();
-				handleInterrupt(arg);
-			}
-		}
-	} catch (err) {
-		console.log(err);
-	}
-}
+start();

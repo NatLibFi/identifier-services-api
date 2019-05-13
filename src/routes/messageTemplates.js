@@ -27,26 +27,33 @@
  */
 
 import {Router} from 'express';
+import {default as bodyParse} from './utils';
+import {templatesFactory} from '../interfaces';
+import {API_URL} from '../config';
 
-export default function() {
+export default function (db) {
+	const templates = templatesFactory({url: API_URL});
 	return new Router()
-		.post('/', create)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
-		.put('/:id', update)
+		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
-		.post('/query', query);
+		.post('/query', bodyParse(), query);
 
 	async function create(req, res, next) {
 		try {
-			res.json(req);
+			const result = await templates.create({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function read(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req.params);
+			const result = await templates.read({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -54,15 +61,18 @@ export default function() {
 
 	async function update(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await templates.create({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
 	async function remove(req, res, next) {
+		const params = req.params;
 		try {
-			res.json(req.body);
+			const result = await templates.remove({db, params});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
@@ -70,7 +80,8 @@ export default function() {
 
 	async function query(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await templates.query({db, req});
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

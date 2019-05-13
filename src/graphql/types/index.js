@@ -32,6 +32,7 @@ import User from './User';
 import Publisher from './Publisher';
 import Publication from './Publication';
 import IdentifierRanges from './IdentifierRanges';
+import MessageTemplates from './MessageTemplates';
 
-const typeDefs = [User, Publisher, Publication, IdentifierRanges];
+const typeDefs = [User, Publisher, Publication, IdentifierRanges, MessageTemplates];
 export default mergeTypes(typeDefs, {all: true});

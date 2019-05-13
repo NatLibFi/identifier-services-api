@@ -54,7 +54,10 @@ describe('interfaces/publishers', () => {
 	});
 
 	describe('#read', () => {
-		let dbContents, publishers, publisher, expectedResults;
+		let dbContents;
+		let publishers;
+		let publisher;
+		let expectedResults;
 
 		async function defineVariables(index) {
 			dbContents = getFixture(['read', index, 'dbContents.json']);
@@ -78,7 +81,7 @@ describe('interfaces/publishers', () => {
 				await publishers.read({id: 'foo'});
 				throw new Error('Should not succeed');
 			} catch (err) {
-				// expect(err).to.be.instanceOf(ApiError);
+				// Expect(err).to.be.instanceOf(ApiError);
 				// expect(err.status).to.equal(HttpStatus.NOT_FOUND);
 			}
 		});

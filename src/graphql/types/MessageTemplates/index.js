@@ -26,28 +26,28 @@
  *
  */
 
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.groups.some(profileGroup => {
-		return user.groups.some(
-			userGroup => userGroup === profileGroup || userGroup === 'admin'
-		);
-	});
-	return permitted;
+export default `
+type Query{
+    template: Template
+    Templates: [Template]
 }
 
-export function hasPublisherPermission(profile, user) {
-	const permitted = profile.aut.groups.some(profileGroup => {
-		return user.group.some(
-			userGroup => userGroup === profileGroup || userGroup === 'publisher-admin'
-		);
-	});
-	return permitted;
+type Template{
+    id: String!
+    name:String!
+    language: String!
+    subject: String!
+    body: String!
+    lastUpdated: LastUpdated!
 }
 
-export function hasAdminPermission(user) {
-	return hasPermission({auth: {groups: ['admin']}}, user);
+type Mutation{
+    createTemplate(id:String, name:String, language:String, subject:String, body:String, 
+        lastUpdated:LastUpdatedInput):Template
+    
+    updateTemplate(id:String, name:String, language:String, subject:String, body:String, 
+        lastUpdated:LastUpdatedInput):Template
+    
+    deleteTemplate(id:String):Template
 }
-
-export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {groups: ['publisher-admin']}}, user);
-}
+`;
