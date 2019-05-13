@@ -33,6 +33,10 @@ export default {
 		// ISBN Query
 		ISBN: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISBN doesnot exists');
+				}
+
 				return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
 			} catch (err) {
 				throw new Error(err);
@@ -48,6 +52,10 @@ export default {
 		// ISMN Query
 		ISMN: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISMN doesnot exists');
+				}
+
 				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
 				throw new Error(err);
@@ -63,6 +71,10 @@ export default {
 		// ISSN Query
 		ISSN: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISSN doesnot exists');
+				}
+
 				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
 			} catch (err) {
 				throw new Error(err);
@@ -96,6 +108,10 @@ export default {
 		},
 		updateISBN: async ({db, id, data}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISBN doesnot exists');
+				}
+
 				const isbnUpdate = {
 					...data,
 					lastUpdated: {
@@ -107,7 +123,6 @@ export default {
 					.collection('IdentifierRangesISBN')
 					.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISBN').findOne(objectId(id));
-
 			} catch (err) {
 				throw new Error(err);
 			}
@@ -130,6 +145,10 @@ export default {
 		},
 		updateISMN: async ({db, id, data}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISMN doesnot exists');
+				}
+
 				const ismnUpdate = {
 					...data,
 					lastUpdated: {
@@ -137,7 +156,7 @@ export default {
 						user: 'foobar'
 					}
 				};
-				await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true})
+				await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
 				throw new Error(err);
@@ -161,6 +180,10 @@ export default {
 		},
 		updateISSN: async ({db, id, data}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('ISSN doesnot exists');
+				}
+
 				const issnUpdate = {
 					...data,
 					lastUpdated: {
@@ -168,9 +191,8 @@ export default {
 						user: 'foobar'
 					}
 				};
-				await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true})
+				await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
-
 			} catch (err) {
 				throw new Error(err);
 			}
