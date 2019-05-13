@@ -32,7 +32,7 @@ import schema from '../graphql';
 
 export default function () {
 	const queryReturn = `
-	id
+	_id
 	title
 	language
 	type
@@ -54,12 +54,11 @@ export default function () {
 		removeRequestISSN
 	};
 
-	async function createISSN({db, req}) {
+	async function createISSN(db, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
 					$title: String
 					$publicationId: String
 					$publisher: String
@@ -81,7 +80,6 @@ export default function () {
 					$lastUpdated: lastUpdatedInput
 				) {
 					createPublicationIssn(
-						id:$id
 						title:$title
 						publicationId:$publicationId
 						publisher:$publisher
@@ -106,11 +104,11 @@ export default function () {
 					}
 				}
 			`,
-			{db, req}
+			{db, data}
 		);
 	}
 
-	async function readISSN({db, params}) {
+	async function readISSN(db, id) {
 		return graphql(
 			schema,
 			`
@@ -120,16 +118,15 @@ export default function () {
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function updateISSN({db, req}) {
+	async function updateISSN(db, id, data) {
 		return graphql(
 			schema,
 			`
 			mutation(
-				$id: String
 				$title: String
 				$publicationId: String
 				$publisher: String
@@ -151,7 +148,6 @@ export default function () {
 				$lastUpdated: lastUpdatedInput
 			) {
 				updatePublicationIssn(
-					id:$id
 					title:$title
 					publicationId:$publicationId
 					publisher:$publisher
@@ -176,21 +172,21 @@ export default function () {
 					}
 				}
 			`,
-			{db, req}
+			{db, id, data}
 		);
 	}
 
-	async function removeISSN({db, params}) {
+	async function removeISSN(db, id) {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublicationIssn(id: $id) {
-						id
+				mutation($id: ID) {
+					deletePublicationIssn(_id: $id) {
+						_id
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
@@ -208,12 +204,11 @@ export default function () {
 		);
 	}
 
-	async function createRequestISSN({db, req}) {
+	async function createRequestISSN(db, data) {
 		return graphql(
 			schema,
 			`
 			mutation(
-				$id: String
 				$title: String
 				$publisher: String
 				$type: String
@@ -233,7 +228,6 @@ export default function () {
 				$lastUpdated: lastUpdatedInput
 			) {
 				createPublicationRequestIssn(
-					id:$id
 					title:$title
 					publisher:$publisher
 					type:$type
@@ -256,16 +250,15 @@ export default function () {
 					}
 				}
 		`,
-			{db, req}
+			{db, data}
 		);
 	}
 
-	async function updateRequestISSN({db, req}) {
+	async function updateRequestISSN(db, id, data) {
 		return graphql(
 			schema,
 			`
 			mutation(
-				$id: String
 				$title: String
 				$publisher: String
 				$type: String
@@ -285,7 +278,6 @@ export default function () {
 				$lastUpdated: lastUpdatedInput
 			) {
 				updatePublicationRequestIssn(
-					id:$id
 					title:$title
 					publisher:$publisher
 					type:$type
@@ -308,11 +300,11 @@ export default function () {
 					}
 				}
 		`,
-			{db, req}
+			{db, id, data}
 		);
 	}
 
-	async function readRequestISSN({db, params}) {
+	async function readRequestISSN(db, id) {
 		return graphql(
 			schema,
 			`
@@ -322,21 +314,21 @@ export default function () {
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function removeRequestISSN({db, params}) {
+	async function removeRequestISSN(db, id) {
 		return graphql(
 			schema,
 			`
-				mutation($id:String){
-					deletePublicationRequestIssn(id:$id){
-					id
+				mutation($id:ID){
+					deletePublicationRequestIssn(_id:$id){
+					_id
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 }

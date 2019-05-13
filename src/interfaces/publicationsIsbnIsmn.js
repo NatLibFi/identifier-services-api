@@ -32,7 +32,7 @@ import schema from '../graphql';
 
 export default function () {
 	const queryReturn = `
-	id
+	_id
 	title
 	language
 	publicationTime
@@ -63,12 +63,11 @@ export default function () {
 		removeRequestISBN_ISMN
 	};
 
-	async function createISBN_ISMN({db, req}) {
+	async function createISBN_ISMN(db, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
 					$title: String
 					$publisher: String
 					$melindaId: String
@@ -85,7 +84,6 @@ export default function () {
 					$lastUpdated: lastUpdatedInput
 				) {
 					createPublicationIsbnIsmn(
-						id: $id
 						title: $title
 						publisher: $publisher
 						melindaId: $melindaId
@@ -105,11 +103,11 @@ export default function () {
 					}
 				}
 			`,
-			{db, req}
+			{db, data}
 		);
 	}
 
-	async function readISBN_ISMN({db, params}) {
+	async function readISBN_ISMN(db, id) {
 		return graphql(
 			schema,
 			`
@@ -119,16 +117,15 @@ export default function () {
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function updateISBN_ISMN({db, req}) {
+	async function updateISBN_ISMN(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
 					$title: String
 					$publisher: String
 					$melindaId: String
@@ -145,7 +142,6 @@ export default function () {
 					$lastUpdated: lastUpdatedInput
 				) {
 					updatePublicationIsbnIsmn(
-						id: $id
 						title: $title
 						publisher: $publisher
 						melindaId: $melindaId
@@ -165,21 +161,21 @@ export default function () {
 					}
 				}
 			`,
-			{db, req}
+			{db, id, data}
 		);
 	}
 
-	async function removeISBN_ISMN({db, params}) {
+	async function removeISBN_ISMN(db, id) {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublicationIsbnIsmn(id: $id) {
-						id
+				mutation($id: ID) {
+					deletePublicationIsbnIsmn(_id: $id) {
+						_id
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
@@ -197,12 +193,11 @@ export default function () {
 		);
 	}
 
-	async function createRequestISBN_ISMN({db, req}) {
+	async function createRequestISBN_ISMN(db, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
 					$title: String
 					$state: String
 					$type: String
@@ -218,7 +213,6 @@ export default function () {
 					$lastUpdated: lastUpdatedInput
 				) {
 					createPublicationRequestIsbnIsmn(
-						id: $id
 						title: $title
 						state: $state
 						type: $type
@@ -233,15 +227,15 @@ export default function () {
 						mapDetails: $mapDetails
 						lastUpdated: $lastUpdated
 					) {
-						id
+						_id
 					}
 				}
 			`,
-			{db, req}
+			{db, data}
 		);
 	}
 
-	async function readRequestISBN_ISMN({db, params}) {
+	async function readRequestISBN_ISMN(db, id) {
 		return graphql(
 			schema,
 			`
@@ -251,16 +245,15 @@ export default function () {
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function updateRequestISBN_ISMN({db, req}) {
+	async function updateRequestISBN_ISMN(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
 					$title: String
 					$state: String
 					$type: String
@@ -276,7 +269,6 @@ export default function () {
 					$lastUpdated: lastUpdatedInput
 				) {
 					updatePublicationRequestIsbnIsmn(
-						id: $id
 						title: $title
 						state: $state
 						type: $type
@@ -291,25 +283,25 @@ export default function () {
 						mapDetails: $mapDetails
 						lastUpdated: $lastUpdated
 					) {
-						id
+						${queryReturn}
 					}
 				}
 			`,
-			{db, req}
+			{db, id, data}
 		);
 	}
 
-	async function removeRequestISBN_ISMN({db, params}) {
+	async function removeRequestISBN_ISMN(db, id) {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublicationRequestIsbnIsmn(id: $id) {
-						id
+				mutation($id: ID) {
+					deletePublicationRequestIsbnIsmn(_id: $id) {
+						_id
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 }

@@ -72,7 +72,7 @@ describe('routes/ranges/isbn', () => {
 
 		it('Should fail because the resource does not exist', async (index = '1') => {
 			const {expectedPayload} = await init(index, true);
-			await init(index, false)
+			await init(index, false);
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 			expect(response.body).to.eql(expectedPayload);

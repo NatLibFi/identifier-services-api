@@ -27,6 +27,7 @@
  */
 
 const date = new Date();
+<<<<<<< HEAD
 
 export default {
 	Query: {
@@ -35,6 +36,17 @@ export default {
 				return await db
 					.collection('userMetadata')
 					.findOne(params)
+=======
+const objectId = require('mongodb').ObjectId;
+
+export default {
+	Query: {
+		userMetadata: async ({db, id}) => {
+			try {
+				return await db
+					.collection('userMetadata')
+					.findOne(objectId(id))
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					.then(res => res);
 			} catch (err) {
 				return err;
@@ -53,11 +65,19 @@ export default {
 			}
 		},
 
+<<<<<<< HEAD
 		usersRequest: async ({db, params}) => {
 			try {
 				return await db
 					.collection('usersRequest')
 					.findOne(params)
+=======
+		usersRequest: async ({db, id}) => {
+			try {
+				return await db
+					.collection('usersRequest')
+					.findOne(objectId(id))
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					.then(res => res);
 			} catch (err) {
 				return err;
@@ -78,6 +98,7 @@ export default {
 	},
 
 	Mutation: {
+<<<<<<< HEAD
 		createUser: async ({db, req}) => {
 			try {
 				const newUser = {
@@ -85,6 +106,15 @@ export default {
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
+=======
+		createUser: async ({db, data}) => {
+			try {
+				const newUser = {
+					...data,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: data.lastUpdated.user
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					}
 				};
 				const createdResponse = await db
@@ -97,11 +127,19 @@ export default {
 			}
 		},
 
+<<<<<<< HEAD
 		deleteUser: async ({db, params}) => {
 			try {
 				const deletedUser = await db
 					.collection('userMetadata')
 					.findOneAndDelete({id: params.id})
+=======
+		deleteUser: async ({db, id}) => {
+			try {
+				const deletedUser = await db
+					.collection('userMetadata')
+					.findOneAndDelete({_id: objectId(id)})
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					.then(res => res.value);
 				return deletedUser;
 			} catch (err) {
@@ -109,6 +147,7 @@ export default {
 			}
 		},
 
+<<<<<<< HEAD
 		updateUser: async ({db, req}) => {
 			try {
 				const updateUser = {
@@ -117,21 +156,39 @@ export default {
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
+=======
+		updateUser: async ({db, id, data}) => {
+			try {
+				const updateUser = {
+					...data,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: data.lastUpdated.user
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					}
 				};
 				await db
 					.collection('userMetadata')
 					.findOneAndUpdate(
+<<<<<<< HEAD
 						{id: req.params.id},
 						{$set: updateUser},
 						{upsert: true}
 					);
 				return updateUser;
+=======
+						{_id: objectId(id)},
+						{$set: updateUser},
+						{upsert: true}
+					);
+				return await db.collection('userMetadata').findOne(objectId(id));
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			} catch (err) {
 				return err;
 			}
 		},
 
+<<<<<<< HEAD
 		createRequest: async ({db, req}) => {
 			try {
 				const newUserRequest = {
@@ -139,6 +196,15 @@ export default {
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
+=======
+		createRequest: async ({db, data}) => {
+			try {
+				const newUserRequest = {
+					...data,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: data.lastUpdated.user
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					}
 				};
 				const createdResponse = await db
@@ -151,11 +217,19 @@ export default {
 			}
 		},
 
+<<<<<<< HEAD
 		deleteRequest: async ({db, params}) => {
 			try {
 				const deletedRequest = await db
 					.collection('usersRequest')
 					.findOneAndDelete({id: params.id})
+=======
+		deleteRequest: async ({db, id}) => {
+			try {
+				const deletedRequest = await db
+					.collection('usersRequest')
+					.findOneAndDelete({_id: objectId(id)})
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					.then(res => res.value);
 				return deletedRequest;
 			} catch (err) {
@@ -163,6 +237,7 @@ export default {
 			}
 		},
 
+<<<<<<< HEAD
 		updateRequest: async ({db, req}) => {
 			try {
 				const updateRequest = {
@@ -170,16 +245,35 @@ export default {
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
 						user: req.body.lastUpdated.user
+=======
+		updateRequest: async ({db, id, data}) => {
+			try {
+				const updateRequest = {
+					...data,
+					lastUpdated: {
+						timestamp: `${date.toISOString()}`,
+						user: data.lastUpdated.user
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 					}
 				};
 				await db
 					.collection('usersRequest')
 					.findOneAndUpdate(
+<<<<<<< HEAD
 						{id: req.params.id},
 						{$set: updateRequest},
 						{upsert: true}
 					);
 				return updateRequest;
+=======
+						{_id: objectId(id)},
+						{$set: updateRequest},
+						{upsert: true}
+					);
+				return db
+					.collection('usersRequest')
+					.findOne(objectId(id));
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			} catch (err) {
 				return err;
 			}
