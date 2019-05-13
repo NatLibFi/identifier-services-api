@@ -42,11 +42,11 @@ export default function (db) {
 		.delete('/:id', remove)
 		.post('/:id/password', bodyParse(), changePwd)
 		.post('/query', bodyParse(), query)
-		.post('/request', bodyParse(), createRequest)
-		.get('/request/:id', readRequest)
-		.delete('/request/:id', removeRequest)
-		.put('/request/:id', bodyParse(), updateRequest)
-		.post('/request/query', bodyParse(), queryRequest);
+		.post('/requests', bodyParse(), createRequest)
+		.get('/requests/:id', readRequest)
+		.delete('/requests/:id', removeRequest)
+		.put('/requests/:id', bodyParse(), updateRequest)
+		.post('/requests/query', bodyParse(), queryRequest);
 
 	async function create(req, res, next) {
 		try {

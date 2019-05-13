@@ -179,7 +179,9 @@ export default {
 						{$set: updateRequest},
 						{upsert: true}
 					);
-				return updateRequest;
+				return db
+					.collection('usersRequest')
+					.findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}

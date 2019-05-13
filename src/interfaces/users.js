@@ -275,7 +275,7 @@ export default function () {
 			`
 				mutation($id: ID) {
 					deleteRequest(_id: $id) {
-						-id
+						_id
 					}
 				}
 			`,
