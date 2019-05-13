@@ -62,7 +62,7 @@ export default function (db) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.create(db, id, req.body);
+			const result = await templates.update(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);

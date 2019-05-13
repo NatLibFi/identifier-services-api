@@ -92,7 +92,7 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
+				mutation($id: ID) {
 					deleteTemplate(_id: $id) {
 						_id
 					}
@@ -103,6 +103,7 @@ export default function () {
 	}
 
 	async function update(db, id, data) {
+        console.log(data)
 		return graphql(
 			schema,
 			`

@@ -67,7 +67,6 @@ export default {
 				const result = await db
 					.collection('MessageTemplate')
 					.insertOne(newTemplate);
-					console.log(result)
 				return result.ops[0];
 			} catch (err) {
 				return err;
