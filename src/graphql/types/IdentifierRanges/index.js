@@ -38,11 +38,7 @@ export default `
     }
 
     type ISSN{
-<<<<<<< HEAD
         _id: String!
-=======
-        id: String!
->>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
@@ -51,11 +47,7 @@ export default `
     }
  
     type ISMN{
-<<<<<<< HEAD
         _id: String!
-=======
-        id: String!
->>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
@@ -66,11 +58,7 @@ export default `
     }
         
     type ISBN{
-<<<<<<< HEAD
         _id: ID!
-=======
-        id: String!
->>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
         prefix: String!
         language: String!
         rangeStart: Int!
