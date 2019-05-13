@@ -36,13 +36,13 @@ import chaiHttp from 'chai-http';
 
 chai.use(chaiHttp);
 
-describe('routes/users', () => {
+describe('routes/publishers', () => {
 	let requester;
 	let mongoFixtures;
 
 	const API_URL = `http://localhost:${HTTP_PORT}`;
-	const fixturesPath = [__dirname, '..', '..', 'test-fixtures', 'users'];
-	const requestPath = '/users';
+	const fixturesPath = [__dirname, '..', '..', 'test-fixtures', 'publishers'];
+	const requestPath = '/publishers';
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
@@ -70,11 +70,14 @@ describe('routes/users', () => {
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
+		it.skip('Should fail because the resource does not exist', async (index = '1') => {
+			await init(index);
+			try {
+				await requester.get(`${requestPath}/foo`);
+			} catch (err) {
+				console.log('***', err);
+				expect(err.status).to.equal(HttpStatus.NOT_FOUND);
+			}
 		});
 
 		async function init(index, getFixtures = false) {
@@ -86,36 +89,5 @@ describe('routes/users', () => {
 			}
 		}
 	});
-
-	describe('#create', () => {
-		it('Should succeed', async (index = '0') => {
-			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
-		});
-
-		it('Should fail because the resources does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
-		});
-
-		it('Should fail to create because of incorrect db schema', async (index = '2') => {
-			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).not.to.eql(expectedPayload);
-		});
-
-		async function init(index, getFixtures = false) {
-			await mongoFixtures.populate(['create', index, 'dbContents.json']);
-			if (getFixtures) {
-				return {
-					expectedPayload: getFixture({components: ['create', index, 'expectedPayload.json'], reader: READERS.JSON})
-				};
-			}
-		}
-	});
 });
+

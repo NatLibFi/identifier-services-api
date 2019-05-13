@@ -77,7 +77,7 @@ export default function () {
 	}
 
 	async function readIsbn(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
@@ -98,6 +98,7 @@ export default function () {
 			`,
 			{db, id}
 		);
+		return result;
 	}
 
 	async function updateIsbn(db, id, data) {

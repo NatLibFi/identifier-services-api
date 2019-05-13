@@ -42,6 +42,7 @@ export default function (db) {
 		.delete('/:id', remove)
 		.post('/:id/password', bodyParse(), changePwd)
 		.post('/query', bodyParse(), query)
+<<<<<<< HEAD
 		.post('/request', bodyParse(), createRequest)
 		.get('/request/:id', readRequest)
 		.delete('/request/:id', removeRequest)
@@ -51,6 +52,17 @@ export default function (db) {
 	async function create(req, res, next) {
 		try {
 			const result = await users.create({db, req});
+=======
+		.post('/requests', bodyParse(), createRequest)
+		.get('/requests/:id', readRequest)
+		.delete('/requests/:id', removeRequest)
+		.put('/requests/:id', bodyParse(), updateRequest)
+		.post('/requests/query', bodyParse(), queryRequest);
+
+	async function create(req, res, next) {
+		try {
+			const result = await users.create(db, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -58,9 +70,15 @@ export default function (db) {
 	}
 
 	async function read(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await users.read({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await users.read(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -68,8 +86,13 @@ export default function (db) {
 	}
 
 	async function update(req, res, next) {
+		const id = req.params.id;
 		try {
+<<<<<<< HEAD
 			const result = await users.update({db, req});
+=======
+			const result = await users.update(db, id, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -77,9 +100,15 @@ export default function (db) {
 	}
 
 	async function remove(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await users.remove({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await users.remove(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -105,7 +134,11 @@ export default function (db) {
 
 	async function createRequest(req, res, next) {
 		try {
+<<<<<<< HEAD
 			const result = await users.createRequest({db, req});
+=======
+			const result = await users.createRequest(db, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -113,9 +146,15 @@ export default function (db) {
 	}
 
 	async function readRequest(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await users.readRequest({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await users.readRequest(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -123,8 +162,14 @@ export default function (db) {
 	}
 
 	async function updateRequest(req, res, next) {
+<<<<<<< HEAD
 		try {
 			const result = await users.updateRequest({db, req});
+=======
+		const id = req.params.id;
+		try {
+			const result = await users.updateRequest(db, id, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -132,9 +177,15 @@ export default function (db) {
 	}
 
 	async function removeRequest(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await users.removeRequest({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await users.removeRequest(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);

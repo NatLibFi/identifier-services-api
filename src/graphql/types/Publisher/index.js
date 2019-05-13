@@ -158,7 +158,7 @@ export default `
 
 
     type Publisher{
-        id: String!
+        _id: ID!
         lastUpdated: LastUpdated
         name: String!
         language: String!
@@ -174,7 +174,7 @@ export default `
     }  
     
     type PublisherRequest{
-        id: String!
+        _id: ID!
         lastUpdated: LastUpdated
         state: String!
         publisherId: String
@@ -195,52 +195,38 @@ export default `
 
     type Mutation{
         createPublisher(
-            id: String,
-            timestamp: String,
-            user: String
             name: String,
             language: String,
             metadataDelivery: String,
-            primaryContact: String
+            primaryContact: [String],
             email: String,
             phone: String,
             website: String,
-            aliases: String,
-            notes: String,
-            active: Boolean,
-            yearInactivated: Int,
-            address: String,
-            city: String,
-            zip: String
+            aliases: [String],
+            notes: [String],
+            activity: ActivityInput,
+            streetAddress: StreetAddressInput
         ): Publisher
 
         updatePublisher(
-            id: String,
-            timestamp: String,
-            user: String
             name: String,
             language: String,
             metadataDelivery: String,
-            primaryContact: String
+            primaryContact: [String]
             email: String,
             phone: String,
             website: String,
-            aliases: String,
-            notes: String,
-            active: Boolean,
-            yearInactivated: Int,
-            address: String,
-            city: String,
-            zip: String
+            aliases: [String],
+            notes: [String],
+            activity: ActivityInput,
+            streetAddress: StreetAddressInput
         ): Publisher
 
         deletePublisher(
-            id: String
+            _id: ID
         ): Publisher
 
         createPublisherRequests(
-            id: String
-            lastUpdated: LastUpdatedInput
             state: String
             publisherId: String
             publicationEstimate: Int
@@ -259,12 +245,10 @@ export default `
         ): PublisherRequest
 
         deletePublisherRequest(
-            id: String
+            _id: ID
         ): PublisherRequest
 
         updatePublisherRequest(
-            id: String
-            lastUpdated: LastUpdatedInput
             state: String
             publisherId: String
             publicationEstimate: Int

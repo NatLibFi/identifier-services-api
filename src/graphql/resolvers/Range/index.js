@@ -33,10 +33,17 @@ export default {
 		// ISBN Query
 		ISBN: async ({db, id}) => {
 			try {
+<<<<<<< HEAD
 				const resul = await db.collection('IdentifierRangesISBN');
 				return resul.findOne({id});
 			} catch (err) {
 				return err;
+=======
+				return await db.collection('IdentifierRangesISBN')
+					.findOne({id}).then(res => res);
+			} catch (err) {
+				throw new Error(err);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			}
 		},
 		ISBNs: async db => {

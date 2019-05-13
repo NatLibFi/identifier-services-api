@@ -1,4 +1,4 @@
-/**
+zz/**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
  *
@@ -58,7 +58,7 @@ export default function (db) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.read(id);
+			const result = await publishers.read(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);

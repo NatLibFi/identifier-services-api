@@ -49,7 +49,7 @@ export default function () {
 			`
 				{
 					Publishers {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
@@ -80,7 +80,7 @@ export default function () {
 	}
 
 	async function read(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
@@ -113,35 +113,27 @@ export default function () {
 			`,
 			{db, id}
 		);
+		return result;
 	}
 
 	async function create(db, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$timestamp: String
-					$user: String
 					$name: String
 					$language: String
 					$metadataDelivery: String
-					$primaryContact: String
+					$primaryContact: [String]
 					$email: String
 					$phone: String
 					$website: String
-					$aliases: String
-					$notes: String
-					$active: Boolean
-					$yearInactivated: Int
-					$address: String
-					$city: String
-					$zip: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
 				) {
 					createPublisher(
-						id: $id
-						timestamp: $timestamp
-						user: $user
 						name: $name
 						language: $language
 						metadataDelivery: $metadataDelivery
@@ -151,50 +143,37 @@ export default function () {
 						website: $website
 						aliases: $aliases
 						notes: $notes
-						active: $active
-						yearInactivated: $yearInactivated
-						address: $address
-						city: $city
-						zip: $zip
-					) {
-						id
-						lastUpdated{
-							timestamp
-						}
+						activity: $activity
+						streetAddress: $streetAddress
+					) {					
+						name
+						language						
 					}
 				}
 			`,
 			{db, data}
 		);
+		return result;
 	}
 
-	async function update(db, id, publisher) {
+	async function update(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$timestamp: String
-					$user: String
 					$name: String
 					$language: String
 					$metadataDelivery: String
-					$primaryContact: String
+					$primaryContact: [String]
 					$email: String
 					$phone: String
 					$website: String
-					$aliases: String
-					$notes: String
-					$active: Boolean
-					$yearInactivated: Int
-					$address: String
-					$city: String
-					$zip: String
+					$aliases: [String]
+					$notes: [String]
+					$activity: ActivityInput
+					$streetAddress: StreetAddressInput
 				) {
 					updatePublisher(
-						id: $id
-						timestamp: $timestamp
-						user: $user
 						name: $name
 						language: $language
 						metadataDelivery: $metadataDelivery
@@ -204,18 +183,14 @@ export default function () {
 						website: $website
 						aliases: $aliases
 						notes: $notes
-						active: $active
-						yearInactivated: $yearInactivated
-						address: $address
-						city: $city
-						zip: $zip
+						activity: $activity
+						streetAddress: $streetAddress
 					) {
-						id
 						name
 					}
 				}
 			`,
-			{db, id, publisher}
+			{db, id, data}
 		);
 	}
 
@@ -223,9 +198,9 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublisher(id: $id) {
-						id
+				mutation($_id: ID) {
+					deletePublisher(_id: $_id) {
+						_id
 					}
 				}
 			`,
@@ -233,13 +208,11 @@ export default function () {
 		);
 	}
 
-	async function createRequests(db, requests) {
+	async function createRequests(db, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$lastUpdated: LastUpdatedInput
 					$state: String
 					$publisherId: String
 					$publicationEstimate: Int
@@ -257,8 +230,6 @@ export default function () {
 					$publication: ISBNISMNPublicationRequestInput
 				) {
 					createPublisherRequests(
-						id: $id
-						lastUpdated: $lastUpdated
 						state: $state
 						publisherId: $publisherId
 						publicationEstimate: $publicationEstimate
@@ -283,7 +254,7 @@ export default function () {
 					}
 				}
 			`,
-			{db, requests}
+			{db, data}
 		);
 	}
 
@@ -365,9 +336,9 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: String) {
-					deletePublisherRequest(id: $id) {
-						id
+				mutation($_id: ID) {
+					deletePublisherRequest(_id: $_id) {
+						_id
 					}
 				}
 			`,
@@ -375,13 +346,11 @@ export default function () {
 		);
 	}
 
-	async function updateRequest(db, id, body) {
+	async function updateRequest(db, id, data) {
 		return graphql(
 			schema,
 			`
 				mutation(
-					$id: String
-					$lastUpdated: LastUpdatedInput
 					$state: String
 					$publisherId: String
 					$publicationEstimate: Int
@@ -399,8 +368,6 @@ export default function () {
 					$publication: ISBNISMNPublicationRequestInput
 				) {
 					updatePublisherRequest(
-						id: $id
-						lastUpdated: $lastUpdated
 						state: $state
 						publisherId: $publisherId
 						publicationEstimate: $publicationEstimate
@@ -425,7 +392,7 @@ export default function () {
 					}
 				}
 			`,
-			{db, id, body}
+			{db, id, data}
 		);
 	}
 

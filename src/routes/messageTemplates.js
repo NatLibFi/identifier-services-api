@@ -42,7 +42,11 @@ export default function (db) {
 
 	async function create(req, res, next) {
 		try {
+<<<<<<< HEAD
 			const result = await templates.create({db, req});
+=======
+			const result = await templates.create(db, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -50,9 +54,15 @@ export default function (db) {
 	}
 
 	async function read(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await templates.read({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await templates.read(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -60,8 +70,13 @@ export default function (db) {
 	}
 
 	async function update(req, res, next) {
+		const id = req.params.id;
 		try {
+<<<<<<< HEAD
 			const result = await templates.create({db, req});
+=======
+			const result = await templates.update(db, id, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -69,9 +84,15 @@ export default function (db) {
 	}
 
 	async function remove(req, res, next) {
+<<<<<<< HEAD
 		const params = req.params;
 		try {
 			const result = await templates.remove({db, params});
+=======
+		const id = req.params.id;
+		try {
+			const result = await templates.remove(db, id);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -80,7 +101,11 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
+<<<<<<< HEAD
 			const result = await templates.query({db, req});
+=======
+			const result = await templates.query(db, req.body);
+>>>>>>> c94bb448d73e5e9be0d37648efe87d68c2e4a7bd
 			res.json(result);
 		} catch (err) {
 			next(err);
