@@ -25,16 +25,17 @@
  * for the JavaScript code in this file.
  *
  */
+const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
 export default {
 	Query: {
-		template: async ({db, params}) => {
+		template: async ({db, id}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('MessageTemplate')
-					.findOne(params)
-					.then(res => res);
+					.findOne(objectId(id));
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -42,11 +43,11 @@ export default {
 
 		Templates: async ({db}) => {
 			try {
-				return await db
+				const result = await db
 					.collection('MessageTemplate')
 					.find()
-					.toArray()
-					.then(res => res);
+					.toArray();
+				return result;
 			} catch (err) {
 				return err;
 			}
@@ -54,54 +55,54 @@ export default {
 	},
 
 	Mutation: {
-		createTemplate: async ({db, req}) => {
+		createTemplate: async ({db, data}) => {
 			try {
 				const newTemplate = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
-				const createdTemplate = await db
+				const result = await db
 					.collection('MessageTemplate')
-					.insertOne(newTemplate)
-					.then(res => res.ops);
-				return createdTemplate[0];
+					.insertOne(newTemplate);
+					console.log(result)
+				return result.ops[0];
 			} catch (err) {
 				return err;
 			}
 		},
-		updateTemplate: async ({db, req}) => {
+		updateTemplate: async ({db, id, data}) => {
 			try {
 				const updateTemplate = {
-					...req.body,
-					id: req.params.id,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				await db
 					.collection('MessageTemplate')
 					.findOneAndUpdate(
-						{id: req.params.id},
+						{_id: objectId(id)},
 						{$set: updateTemplate},
 						{upsert: true}
 					);
-				return updateTemplate;
+				return db
+					.collection('MessageTemplate')
+					.findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}
 		},
 
-		deleteTemplate: async ({db, params}) => {
+		deleteTemplate: async ({db, id}) => {
 			try {
 				const deletedUser = await db
 					.collection('MessageTemplate')
-					.findOneAndDelete({id: params.id})
-					.then(res => res.value);
-				return deletedUser;
+					.findOneAndDelete({_id: objectId(id)});
+				return deletedUser.value;
 			} catch (err) {
 				return err;
 			}

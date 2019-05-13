@@ -98,7 +98,7 @@ export default {
 		},
 
 		updatePublicationIssn: async ({db, id, data}) => {
-			console.log(id)
+			console.log(id);
 			try {
 				const updatePublication = {
 					...data,

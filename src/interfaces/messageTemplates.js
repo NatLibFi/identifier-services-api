@@ -31,7 +31,7 @@ import schema from '../graphql';
 
 export default function () {
 	const queryReturn = `
-    id
+    _id
     name
     language
     subject
@@ -50,19 +50,17 @@ export default function () {
 		query
 	};
 
-	async function create({db, req}) {
+	async function create(db, data) {
 		return graphql(
 			schema,
 			`
             mutation(
-                $id:String 
                 $language:String 
                 $subject:String 
                 $body:String 
                 $lastUpdated:LastUpdatedInput
                 ){
                 createTemplate(
-                    id:$id 
                     language:$language 
                     subject:$subject 
                     body:$body 
@@ -72,11 +70,11 @@ export default function () {
                 }
             }
             `,
-			{db, req}
+			{db, data}
 		);
 	}
 
-	async function read({db, params}) {
+	async function read(db, id) {
 		return graphql(
 			schema,
 			`
@@ -86,37 +84,35 @@ export default function () {
                     }
                 }
             `,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function remove({db, params}) {
+	async function remove(db, id) {
 		return graphql(
 			schema,
 			`
 				mutation($id: String) {
-					deleteTemplate(id: $id) {
-						id
+					deleteTemplate(_id: $id) {
+						_id
 					}
 				}
 			`,
-			{db, params}
+			{db, id}
 		);
 	}
 
-	async function update({db, req}) {
+	async function update(db, id, data) {
 		return graphql(
 			schema,
 			`
             mutation(
-                $id:String 
                 $language:String 
                 $subject:String 
                 $body:String 
                 $lastUpdated:LastUpdatedInput
                 ){
                 updateTemplate(
-                    id:$id 
                     language:$language 
                     subject:$subject 
                     body:$body 
@@ -126,11 +122,11 @@ export default function () {
                 }
             }
             `,
-			{db, req}
+			{db, id, data}
 		);
 	}
 
-	async function query({db, req}) {
+	async function query(db, data) {
 		return graphql(
 			schema,
 			`
@@ -140,7 +136,7 @@ export default function () {
                     }
                 }
             `,
-			{db, req}
+			{db, data}
 		);
 	}
 }

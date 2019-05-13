@@ -285,4 +285,3 @@ type ISSN_Request{
 }
 
  `;
- 

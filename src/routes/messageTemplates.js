@@ -42,7 +42,7 @@ export default function (db) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await templates.create({db, req});
+			const result = await templates.create(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -50,9 +50,9 @@ export default function (db) {
 	}
 
 	async function read(req, res, next) {
-		const params = req.params;
+		const id = req.params.id;
 		try {
-			const result = await templates.read({db, params});
+			const result = await templates.read(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -60,8 +60,9 @@ export default function (db) {
 	}
 
 	async function update(req, res, next) {
+		const id = req.params.id;
 		try {
-			const result = await templates.create({db, req});
+			const result = await templates.create(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -69,9 +70,9 @@ export default function (db) {
 	}
 
 	async function remove(req, res, next) {
-		const params = req.params;
+		const id = req.params.id;
 		try {
-			const result = await templates.remove({db, params});
+			const result = await templates.remove(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -80,7 +81,7 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await templates.query({db, req});
+			const result = await templates.query(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
