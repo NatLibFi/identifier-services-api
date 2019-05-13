@@ -27,14 +27,15 @@
  */
 
 const date = new Date();
+const objectId = require('mongodb').ObjectId;
 
 export default {
 	Query: {
-		userMetadata: async ({db, params}) => {
+		userMetadata: async ({db, id}) => {
 			try {
 				return await db
 					.collection('userMetadata')
-					.findOne(params)
+					.findOne(objectId(id))
 					.then(res => res);
 			} catch (err) {
 				return err;
@@ -53,11 +54,11 @@ export default {
 			}
 		},
 
-		usersRequest: async ({db, params}) => {
+		usersRequest: async ({db, id}) => {
 			try {
 				return await db
 					.collection('usersRequest')
-					.findOne(params)
+					.findOne(objectId(id))
 					.then(res => res);
 			} catch (err) {
 				return err;
@@ -78,13 +79,13 @@ export default {
 	},
 
 	Mutation: {
-		createUser: async ({db, req}) => {
+		createUser: async ({db, data}) => {
 			try {
 				const newUser = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				const createdResponse = await db
@@ -97,11 +98,11 @@ export default {
 			}
 		},
 
-		deleteUser: async ({db, params}) => {
+		deleteUser: async ({db, id}) => {
 			try {
 				const deletedUser = await db
 					.collection('userMetadata')
-					.findOneAndDelete({id: params.id})
+					.findOneAndDelete({_id: objectId(id)})
 					.then(res => res.value);
 				return deletedUser;
 			} catch (err) {
@@ -109,36 +110,35 @@ export default {
 			}
 		},
 
-		updateUser: async ({db, req}) => {
+		updateUser: async ({db, id, data}) => {
 			try {
 				const updateUser = {
-					...req.body,
-					id: req.params.id,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				await db
 					.collection('userMetadata')
 					.findOneAndUpdate(
-						{id: req.params.id},
+						{_id: objectId(id)},
 						{$set: updateUser},
 						{upsert: true}
 					);
-				return updateUser;
+				return await db.collection('userMetadata').findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}
 		},
 
-		createRequest: async ({db, req}) => {
+		createRequest: async ({db, data}) => {
 			try {
 				const newUserRequest = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				const createdResponse = await db
@@ -151,11 +151,11 @@ export default {
 			}
 		},
 
-		deleteRequest: async ({db, params}) => {
+		deleteRequest: async ({db, id}) => {
 			try {
 				const deletedRequest = await db
 					.collection('usersRequest')
-					.findOneAndDelete({id: params.id})
+					.findOneAndDelete({_id: objectId(id)})
 					.then(res => res.value);
 				return deletedRequest;
 			} catch (err) {
@@ -163,23 +163,25 @@ export default {
 			}
 		},
 
-		updateRequest: async ({db, req}) => {
+		updateRequest: async ({db, id, data}) => {
 			try {
 				const updateRequest = {
-					...req.body,
+					...data,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: req.body.lastUpdated.user
+						user: data.lastUpdated.user
 					}
 				};
 				await db
 					.collection('usersRequest')
 					.findOneAndUpdate(
-						{id: req.params.id},
+						{_id: objectId(id)},
 						{$set: updateRequest},
 						{upsert: true}
 					);
-				return updateRequest;
+				return db
+					.collection('usersRequest')
+					.findOne(objectId(id));
 			} catch (err) {
 				return err;
 			}

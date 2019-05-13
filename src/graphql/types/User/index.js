@@ -28,11 +28,10 @@
 
 export default `
  type Query{
-     userMetadata(id: String, userId: String, defaultLanguage: String, user: String, timestamp: String):User
-     usersRequest(id: String, userId: String, publishers: String, givenName: String, familyName: String,
-        email: String, state: String, notes:String, timestamp:String, user:String): UsersRequest
-     Users: [User]
-     usersRequests: [UsersRequest]
+     userMetadata:User
+     usersRequest: UsersRequest
+     Users: [User!]
+     usersRequests: [UsersRequest!]
  }
 
  type LastUpdated{
@@ -54,14 +53,14 @@ export default `
  }
  
  type User{
-    id: String!
+    _id: ID!
     userId: String
-    preferences(defaultLanguage:String): Preferences!
+    preferences: Preferences!
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
 
  type UsersRequest{
-     id: String!
+     _id: ID!
      userId: String!
      publishers: [String!]
      givenName: String!
@@ -74,18 +73,18 @@ export default `
 
 
  type Mutation{
-    createUser(id:String, userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
+    createUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
 
-    createRequest(id:String, userId:String, state:String, publishers:[String], givenName:String, familyName:String,
+    createRequest(userId:String, state:String, publishers:[String], givenName:String, familyName:String,
         email:String, notes:[String], lastUpdated: LastUpdatedInput ):UsersRequest
 
-    deleteUser(id:String, userId:String):User
+    deleteUser(_id:ID):User
 
-    deleteRequest(id:String, userId:String):UsersRequest
+    deleteRequest(_id:ID):UsersRequest
 
-    updateUser(id:String, userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
+    updateUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
 
-    updateRequest(id:String, userId:String, state:String, publishers:String, givenName:String, familyName:String,
+    updateRequest(userId:String, state:String, publishers:String, givenName:String, familyName:String,
         email:String, notes:String, lastUpdated: LastUpdatedInput ):UsersRequest
  }
  `;

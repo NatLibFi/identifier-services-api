@@ -25,160 +25,122 @@
  * for the JavaScript code in this file.
  *
  */
-const uuidv4 = require('uuid/v4');
+const objectId = require('mongodb').ObjectId;
 
 export default {
 	Query: {
 		Publishers: async db => {
 			try {
-				return await db
-					.collection('PublisherMetadata')
-					.find()
-					.toArray()
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').find().toArray();
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		Publisher: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherMetadata')
-					.findOne({id})
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').findOne(objectId(id));
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		PublisherRequest: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.findOne({id})
-					.then(res => res);
+				const result = await db.collection('PublisherRequest').findOne(objectId(id));
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		PublisherRequests: async db => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.find()
-					.toArray()
-					.then(res => res);
+				const result = await db.collection('PublisherRequest').find().toArray();
+				return result;
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	},
 
 	Mutation: {
-		createPublisher: async ({db, user}) => {
+		createPublisher: async ({db, data}) => {
 			try {
 				const newPublisher = {
-					...user,
-					id: uuidv4(),
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				await db
-					.collection('PublisherMetadata')
-					.insertOne(newPublisher)
-					.then(res => res);
+				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
+				return result.ops[0];
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 
-		updatePublisher: async ({db, id, publisher}) => {
+		updatePublisher: async ({db, id, data}) => {
 			try {
 				const publisherUpdate = {
-					...publisher,
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				await db
-					.collection('PublisherMetadata')
-					.findOneAndUpdate({id}, {$set: publisherUpdate}, {upsert: true})
-					.then(res => res)
-					.catch(err => err);
+				await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
+				return await db.collection('PublisherMetadata').findOne(objectId(id));
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 
 		deletePublisher: async ({db, id}) => {
 			try {
-				const deletedPublisher = await db
-					.collection('PublisherMetadata')
-					.findOneAndDelete({id})
-					.then(res => res.send('User Deleted'))
-					.catch(err => err);
-				return deletedPublisher;
+				const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
+				return deletedPublisher.value;
 			} catch (err) {
-				return err;
+				throw new Error('Publisher doesnot Exist');
 			}
 		},
 
-		createPublisherRequests: async ({db, requests}) => {
+		createPublisherRequests: async ({db, data}) => {
 			try {
 				const newPublisherRequests = {
-					...requests,
-					id: uuidv4(),
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('PublisherRequest')
-					.insertOne(newPublisherRequests)
-					.then(res => res.ops[0])
-					.catch(err => err);
+				const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
+				return result.ops[0];
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		},
 		deletePublisherRequest: async ({db, id}) => {
 			try {
-				return await db
-					.collection('PublisherRequest')
-					.findOneAndDelete({id})
-					.then(res => res.value)
-					.catch(err => err);
+				const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
+				return deletePublisherRequest.value;
 			} catch (err) {
-				return err;
+				throw new Error(err, 'PublisherRequest doesnot Exist');
 			}
 		},
-		updatePublisherRequest: async ({db, id, body}) => {
+		updatePublisherRequest: async ({db, id, data}) => {
 			try {
 				const publisherRequestUpdate = {
-					...body,
+					...data,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
 					}
 				};
-				return await db
-					.collection('PublisherRequest')
-					.findOneAndUpdate(
-						{id},
-						{$set: publisherRequestUpdate},
-						{upsert: true}
-					)
-					.then(() => {
-						return db.collection('PublisherRequest')
-							.findOne({id})
-							.then(res => res);
-					})
-					.catch(err => err);
+				await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
+				return await db.collection('PublisherRequest').findOne(objectId(id));
 			} catch (err) {
-				return err;
+				throw new Error(err);
 			}
 		}
 	}
