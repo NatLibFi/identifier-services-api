@@ -39,6 +39,10 @@ export default {
 		},
 		Publisher: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('Publisher doesnot exists');
+				}
+
 				const result = await db.collection('PublisherMetadata').findOne(objectId(id));
 				return result;
 			} catch (err) {
@@ -47,6 +51,10 @@ export default {
 		},
 		PublisherRequest: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
+				}
+
 				const result = await db.collection('PublisherRequest').findOne(objectId(id));
 				return result;
 			} catch (err) {
@@ -82,6 +90,10 @@ export default {
 
 		updatePublisher: async ({db, id, data}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('Publisher doesnot exists');
+				}
+
 				const publisherUpdate = {
 					...data,
 					lastUpdated: {
@@ -98,6 +110,10 @@ export default {
 
 		deletePublisher: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('Publisher doesnot exists');
+				}
+
 				const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
 				return deletedPublisher.value;
 			} catch (err) {
@@ -122,6 +138,10 @@ export default {
 		},
 		deletePublisherRequest: async ({db, id}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
+				}
+
 				const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
 				return deletePublisherRequest.value;
 			} catch (err) {
@@ -130,6 +150,10 @@ export default {
 		},
 		updatePublisherRequest: async ({db, id, data}) => {
 			try {
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
+				}
+
 				const publisherRequestUpdate = {
 					...data,
 					lastUpdated: {

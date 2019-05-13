@@ -1,7 +1,8 @@
+
 {
     "PublisherMetadata": [
         {
-            "id":"foo",
+            "_id": "foo",
             "name": "foo",
             "language": "foo",
             "metadataDelivery": "foo",

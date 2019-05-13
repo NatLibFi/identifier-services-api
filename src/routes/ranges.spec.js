@@ -71,13 +71,11 @@ describe('routes/ranges/isbn', () => {
 		});
 
 		it('Should fail because the resource does not exist', async (index = '1') => {
-			await init(index);
-			try {
-				await requester.get(`${requestPath}/foo`);
-			} catch (err) {
-				console.log('***', err);
-				expect(err.status).to.equal(HttpStatus.NOT_FOUND);
-			}
+			const {expectedPayload} = await init(index, true);
+			await init(index, false);
+			const response = await requester.get(`${requestPath}/foo`);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
+			expect(response.body).to.eql(expectedPayload);
 		});
 
 		async function init(index, getFixtures = false) {

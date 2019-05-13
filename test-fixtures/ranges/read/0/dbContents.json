@@ -1,7 +1,7 @@
 {
     "IdentifierRangesISBN": [
         {
-            "id": "foo",
+            "_id": "foo",
             "prefix": "978",
             "language": "951",
             "rangeStart": 550,

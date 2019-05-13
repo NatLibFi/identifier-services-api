@@ -85,7 +85,7 @@ export default function () {
 			`
 				{
 					Publisher {
-						id
+						_id
 						lastUpdated {
 							timestamp
 							user
@@ -113,6 +113,7 @@ export default function () {
 			`,
 			{db, id}
 		);
+		console.log('--------', result);
 		return result;
 	}
 
