@@ -33,7 +33,7 @@ type Query{
 }
 
 type Template{
-    id: String!
+    _id: ID!
     name:String!
     language: String!
     subject: String!
@@ -42,12 +42,12 @@ type Template{
 }
 
 type Mutation{
-    createTemplate(id:String, name:String, language:String, subject:String, body:String, 
+    createTemplate(name:String, language:String, subject:String, body:String, 
         lastUpdated:LastUpdatedInput):Template
     
-    updateTemplate(id:String, name:String, language:String, subject:String, body:String, 
+    updateTemplate(name:String, language:String, subject:String, body:String, 
         lastUpdated:LastUpdatedInput):Template
     
-    deleteTemplate(id:String):Template
+    deleteTemplate(_id:ID):Template
 }
 `;
