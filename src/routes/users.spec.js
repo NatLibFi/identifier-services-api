@@ -66,16 +66,13 @@ describe('routes/users', () => {
 		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
-
 			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
+			expect(response.body).to.eql(expectedPayload); // Time-stamp will never match
 		});
 
-		it.skip('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
+		it.skip('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
-			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -91,14 +88,26 @@ describe('routes/users', () => {
 	describe('#create', () => {
 		it.skip('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['create', index, 'dbContents.json']);
+
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
-
-			await mongoFixtures.populate(['create', index, 'dbExpected.json']);
-			const dbQuery = await requester.post(`${requestPath}/query`);
-			const arrayID = dbQuery.body.data.Users.map(item => item._id);
 			expect(response).to.have.status(HttpStatus.OK);
-			expect(arrayID).to.have.include(response.body.data.createUser._id);
+
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		it.skip('Should not succeed because content is not provided', async (index = '1') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		it('Should not succeed because of invalid syntax', async (index = '2') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -107,6 +116,62 @@ describe('routes/users', () => {
 					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
 				};
 			}
+
+			return {
+				expectedDb: getFixture({components: ['create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
 		}
 	});
+
+	// Describe('#delete', () => {
+	// 	it.skip('Should succeed', async (index = '0') => {
+	// 		await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+	// 		const response = await requester.delete(`${requestPath}/5cd90e696a1e930789dfaa48`);
+	// 		await mongoFixtures.populate(['delete', index, 'dbExpected.json']);
+	// 		const res = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
+	// 		expect(response).to.have.status(HttpStatus.OK);
+	// 		expect(res.body.data.userMetadata).to.eql(null);
+	// 	});
+
+	// 	it.skip('Should not succeed because of wrong parameters', async (index = '1') => {
+	// 		await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+	// 		const query = await requester.post(`${requestPath}/query`);
+	// 		const response = await requester.delete(`${requestPath}/foo`);
+	// 		const newQuery = await requester.post(`${requestPath}/query`);
+	// 		expect(response).to.have.status(HttpStatus.OK);
+	// 		expect(query.body.data).to.eql(newQuery.body.data);
+	// 	});
+	// });
+
+	// describe('#update', () => {
+	// 	it.skip('Should succeed', async (index = '0') => {
+	// 		await mongoFixtures.populate(['update', index, 'dbContents.json']);
+	// 		const {payload} = await init(index, true);
+	// 		const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send(payload);
+	// 		console.log('reqponse', response.body);
+
+	// 		await mongoFixtures.populate(['update', index, 'dbExpected.json']);
+	// 		const query = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
+	// 		console.log('query', query.body);
+	// 	});
+
+	// 	async function init(index, getFixtures = false) {
+	// 		if (getFixtures) {
+	// 			return {
+	// 				payload: getFixture({components: ['update', index, 'payload.json'], reader: READERS.JSON})
+	// 			};
+	// 		}
+	// 	}
+	// });
+
+	function formatDump(dump) {
+		dump.userMetadata.forEach(doc =>
+			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+				item === 'timestamp'
+			).forEach(i => delete doc.lastUpdated[i]))
+		);
+		console.log(dump.userMetadata);
+		return dump;
+	}
 });
+

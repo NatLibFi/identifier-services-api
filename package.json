@@ -36,6 +36,7 @@
     "@natlibfi/express-validate-content-type": "^1.0.1",
     "@natlibfi/melinda-commons": "^4.1.0",
     "@natlibfi/passport-atlassian-crowd": "^1.0.0",
+    "@natlibfi/identifier-services-commons": "https://github.com/natlibfi/identifier-services-commons#feature/apiError",
     "body-parser": "^1.19.0",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",

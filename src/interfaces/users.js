@@ -28,6 +28,8 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	return {
@@ -45,10 +47,10 @@ export default function () {
 	};
 
 	async function create(db, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
-				mutation(
+				mutation CreateUser(
 					$userId: String
 					$preferences: PreferencesInput
 					$lastUpdated: LastUpdatedInput
@@ -73,10 +75,16 @@ export default function () {
 			`,
 			{db, data}
 		);
+
+		if (result.data.createUser === null) {
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
+
+		return result;
 	}
 
 	async function read(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
@@ -95,6 +103,11 @@ export default function () {
 			`,
 			{db, id}
 		);
+		if (result.data.userMetadata === null) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
 	}
 
 	async function update(db, id, data) {
@@ -107,6 +120,9 @@ export default function () {
 					$lastUpdated: LastUpdatedInput
 				) {
 					updateUser(
+						userId: $userId
+						preferences: $preferences
+						lastUpdated: $lastUpdated
 					) {
 						_id
 						userId
@@ -145,7 +161,7 @@ export default function () {
 	async function query(db) {
 		return graphql(
 			schema,
-			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{user}}}',
+			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
 			db
 		);
 	}

@@ -53,7 +53,7 @@ export default function (db) {
 			const result = await users.create(db, req.body);
 			res.json(result);
 		} catch (err) {
-			next(err);
+			return next(err);
 		}
 	}
 
