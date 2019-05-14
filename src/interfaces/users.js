@@ -145,7 +145,7 @@ export default function () {
 	async function query(db) {
 		return graphql(
 			schema,
-			'{Users{_id, preferences{defaultLanguage}, userId}}',
+			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{user}}}',
 			db
 		);
 	}

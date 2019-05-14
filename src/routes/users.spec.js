@@ -63,7 +63,7 @@ describe('routes/users', () => {
 	});
 
 	describe('#read', () => {
-		it('Should succeed', async (index = '0') => {
+		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
 
@@ -89,5 +89,24 @@ describe('routes/users', () => {
 	});
 
 	describe('#create', () => {
-		
+		it.skip('Should succeed', async (index = '0') => {
+			await mongoFixtures.populate(['create', index, 'dbContents.json']);
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+
+			await mongoFixtures.populate(['create', index, 'dbExpected.json']);
+			const dbQuery = await requester.post(`${requestPath}/query`);
+			const arrayID = dbQuery.body.data.Users.map(item => item._id);
+			expect(response).to.have.status(HttpStatus.OK);
+			expect(arrayID).to.have.include(response.body.data.createUser._id);
+		});
+
+		async function init(index, getFixtures = false) {
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+		}
+	});
 });

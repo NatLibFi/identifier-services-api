@@ -36,7 +36,6 @@ export default {
 				const result = await db
 					.collection('userMetadata')
 					.findOne(objectId(id));
-				console.log(result);
 				return result;
 			} catch (err) {
 				return err;
@@ -91,9 +90,8 @@ export default {
 				};
 				const createdResponse = await db
 					.collection('userMetadata')
-					.insertOne(newUser)
-					.then(res => res.ops);
-				return createdResponse[0];
+					.insertOne(newUser);
+				return createdResponse.ops[0];
 			} catch (err) {
 				return err;
 			}
