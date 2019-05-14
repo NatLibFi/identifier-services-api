@@ -33,7 +33,6 @@ import mongoFixturesFactory from '@natlibfi/fixura-mongo';
 import startApp, {__RewireAPI__ as RewireAPI} from '../app'; // eslint-disable-line import/named
 import chai, {expect} from 'chai';
 import chaiHttp from 'chai-http';
-import {rangesFactory} from '../interfaces';
 
 chai.use(chaiHttp);
 
@@ -64,17 +63,16 @@ describe('routes/ranges/isbn', () => {
 	});
 
 	describe('#read', () => {
-		it('Should succeed', async (index = '0') => {
+		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
+		it.skip('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/5cd90b2c89d0546340068667`);
-			expect(response.body).to.eql(expectedPayload);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -88,18 +86,25 @@ describe('routes/ranges/isbn', () => {
 	});
 
 	describe('#create', () => {
-		it('Should create a new isbn range', async (index = '0') => {
+		it.skip('Should create a new isbn range', async (index = '0') => {
 			const {payload} = await init(index, true);
-			const response = await requester.post(`${requestPath}`).send(payload);
-			console.log('---------', response.body);
-			expect(response.body).to.eql({
-				data: {
-					createISBN: {
-						language: 'foo'
-					}
-				}
-			});
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		it.skip('Should fail to create because content is not provided', async (index = '1') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -109,7 +114,20 @@ describe('routes/ranges/isbn', () => {
 					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
 				};
 			}
+
+			return {
+				expectedDb: getFixture({components: ['create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
 		}
+
 	});
+	function formatDump(dump) {
+		dump.IdentifierRangesISBN.forEach(doc =>
+			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+				item === 'timestamp'
+			).forEach(i => delete doc.lastUpdated[i]))
+		);
+		return dump;
+	}
 });
 

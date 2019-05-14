@@ -103,7 +103,7 @@ export default function () {
 	}
 
 	async function update(db, id, data) {
-        console.log(data)
+		console.log(data);
 		return graphql(
 			schema,
 			`

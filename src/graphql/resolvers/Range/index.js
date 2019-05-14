@@ -39,14 +39,14 @@ export default {
 
 				return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		ISBNs: async db => {
 			try {
 				return await db.collection('IdentifierRangesISBN').find().toArray();
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		// ISMN Query
@@ -58,14 +58,14 @@ export default {
 
 				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		ISMNs: async db => {
 			try {
 				return await db.collection('IdentifierRangesISMN').find().toArray();
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		// ISSN Query
@@ -77,7 +77,7 @@ export default {
 
 				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		ISSNs: async db => {
@@ -85,7 +85,7 @@ export default {
 				return await db
 					.collection('IdentifierRangesISSN').find().toArray();
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		}
 	},
@@ -94,7 +94,14 @@ export default {
 		createISBN: async ({db, isbnData}) => {
 			try {
 				const newISBN = {
-					...isbnData,
+					// ...isbnData,
+					prefix: isbnData.prefix,
+					language: isbnData.language,
+					rangeStart: isbnData.rangeStart,
+					rangeEnd: isbnData.rangeEnd,
+					active: isbnData.active,
+					publisher: isbnData.publisher,
+					reservedCount: isbnData.reservedCount,
 					lastUpdated: {
 						timestamp: new Date(),
 						user: 'foobar'
@@ -103,7 +110,7 @@ export default {
 				const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
 				return result.ops[0];
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		updateISBN: async ({db, id, data}) => {
@@ -124,7 +131,7 @@ export default {
 					.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISBN').findOne(objectId(id));
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		// ISMN Mutation
@@ -140,7 +147,7 @@ export default {
 				const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
 				return result.ops[0];
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		updateISMN: async ({db, id, data}) => {
@@ -159,7 +166,7 @@ export default {
 				await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		// ISSN Mutation
@@ -175,7 +182,7 @@ export default {
 				const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
 				return result.ops[0];
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		},
 		updateISSN: async ({db, id, data}) => {
@@ -194,7 +201,7 @@ export default {
 				await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
 				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
 			} catch (err) {
-				throw new Error(err);
+				return err;
 			}
 		}
 	}

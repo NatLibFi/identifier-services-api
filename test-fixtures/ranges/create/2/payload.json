@@ -8,5 +8,6 @@
     "reservedCount": 100,
     "lastUpdated": {
         "user": "foo"
-    }
+    },
+    "extra": "extra"
 }

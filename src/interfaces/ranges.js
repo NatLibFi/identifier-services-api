@@ -27,6 +27,8 @@
  */
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	return {
@@ -74,6 +76,10 @@ export default function () {
 			`,
 			{db, isbnData}
 		);
+		if (result.data.createISBN === null) {
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
+
 		return result;
 	}
 
@@ -99,6 +105,10 @@ export default function () {
 			`,
 			{db, id}
 		);
+		if (result.data.ISBN === null) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
 		return result;
 	}
 
