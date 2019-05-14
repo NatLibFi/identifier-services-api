@@ -33,6 +33,7 @@ import mongoFixturesFactory from '@natlibfi/fixura-mongo';
 import startApp, {__RewireAPI__ as RewireAPI} from '../app'; // eslint-disable-line import/named
 import chai, {expect} from 'chai';
 import chaiHttp from 'chai-http';
+import {rangesFactory} from '../interfaces';
 
 chai.use(chaiHttp);
 
@@ -46,7 +47,7 @@ describe('routes/ranges/isbn', () => {
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
-		mongoFixtures = await mongoFixturesFactory({rootPath: fixturesPath});
+		mongoFixtures = await mongoFixturesFactory({rootPath: fixturesPath, useObjectId: true});
 		RewireAPI.__Rewire__('MONGO_URI', await mongoFixtures.getConnectionString());
 		RewireAPI.__Rewire__('API_URL', API_URL);
 
@@ -65,16 +66,14 @@ describe('routes/ranges/isbn', () => {
 	describe('#read', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
+			const response = await requester.get(`${requestPath}/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
 		it('Should fail because the resource does not exist', async (index = '1') => {
 			const {expectedPayload} = await init(index, true);
-			await init(index, false);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.NOT_FOUND);
+			const response = await requester.get(`${requestPath}/5cd90b2c89d0546340068667`);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
@@ -83,6 +82,31 @@ describe('routes/ranges/isbn', () => {
 			if (getFixtures) {
 				return {
 					expectedPayload: getFixture({components: ['read', index, 'expectedPayload.json'], reader: READERS.JSON})
+				};
+			}
+		}
+	});
+
+	describe('#create', () => {
+		it('Should create a new isbn range', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).send(payload);
+			console.log('---------', response.body);
+			expect(response.body).to.eql({
+				data: {
+					createISBN: {
+						language: 'foo'
+					}
+				}
+			});
+			expect(response).to.have.status(HttpStatus.OK);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['create', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
 				};
 			}
 		}
