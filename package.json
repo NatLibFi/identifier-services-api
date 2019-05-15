@@ -113,9 +113,6 @@
     }
   },
   "nyc": {
-    "include": [
-      "src/interfaces/*.js"
-    ],
     "exclude": [
       "**/*.spec.js"
     ],

@@ -79,13 +79,14 @@ export default {
 	},
 
 	Mutation: {
-		createUser: async ({db, data}) => {
+		createUser: async (root, args) => {
+			const {db} = root;
 			try {
 				const newUser = {
-					...data,
+					...args,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
+						user: 'user'
 					}
 				};
 				const createdResponse = await db
@@ -97,25 +98,24 @@ export default {
 			}
 		},
 
-		deleteUser: async ({db, id}) => {
+		deleteUser: async ({db}, args) => {
 			try {
 				const deletedUser = await db
 					.collection('userMetadata')
-					.findOneAndDelete(objectId(id))
-					.then(res => res.value);
-				return deletedUser;
+					.findOneAndDelete({_id: objectId(args._id)});
+				return deletedUser.value;
 			} catch (err) {
 				return err;
 			}
 		},
 
-		updateUser: async ({db, id, data}) => {
+		updateUser: async ({db, id}, args) => {
 			try {
 				const updateUser = {
-					...data,
+					...args,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
+						user: 'user'
 					}
 				};
 				await db
@@ -131,13 +131,13 @@ export default {
 			}
 		},
 
-		createRequest: async ({db, data}) => {
+		createRequest: async ({db}, args) => {
 			try {
 				const newUserRequest = {
-					...data,
+					...args,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
+						user: 'data.lastUpdated.user'
 					}
 				};
 				const createdResponse = await db
@@ -149,24 +149,24 @@ export default {
 				return err;
 			}
 		},
-		deleteRequest: async ({db, id}) => {
+		deleteRequest: async ({db}, args) => {
 			try {
 				const deletedRequest = await db
 					.collection('usersRequest')
-					.findOneAndDelete({_id: objectId(id)})
+					.findOneAndDelete({_id: objectId(args._id)})
 					.then(res => res.value);
 				return deletedRequest;
 			} catch (err) {
 				return err;
 			}
 		},
-		updateRequest: async ({db, id, data}) => {
+		updateRequest: async ({db, id}, args) => {
 			try {
 				const updateRequest = {
-					...data,
+					...args,
 					lastUpdated: {
 						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
+						user: 'data.lastUpdated.user'
 					}
 				};
 				await db

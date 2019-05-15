@@ -98,13 +98,12 @@ describe('routes/users', () => {
 			expect(formatDump(db)).to.eql(expectedDb);
 		});
 
-		it.skip('Should not succeed because content is not provided', async (index = '1') => {
-			const {payload} = await init(index, true);
-			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+		it('Should not succeed because content is not provided', async () => {
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send();
 			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
-		it('Should not succeed because of invalid syntax', async (index = '2') => {
+		it.skip('Should not succeed because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);

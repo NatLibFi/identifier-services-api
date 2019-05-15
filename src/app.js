@@ -38,6 +38,7 @@ import {
 	createMessageTemplate,
 	createRangesRouter
 } from './routes';
+import bodyParse from '../src/routes/utils';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT} from './config';
 import {MongoClient} from 'mongodb';
 
@@ -49,6 +50,7 @@ export default async function run() {
 		app.enable('trust proxy', ENABLE_PROXY);
 
 		app.use(cors());
+		app.use(bodyParse());
 		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
 		const connection = await client.connect();
 		const db = connection.db();
@@ -58,7 +60,6 @@ export default async function run() {
 		app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 		app.use('/publications/issn', createPublicationsRouterIssn(db));
 		app.use('/ranges', createRangesRouter(db));
-
 		const server = app.listen(HTTP_PORT, () => {
 			// Logger.log('info', 'Started melinda-record-import-api');
 			console.log(`server running in port ${HTTP_PORT}`);

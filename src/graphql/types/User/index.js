@@ -44,7 +44,7 @@ export default `
  }
 
  input LastUpdatedInput{
-     timestamp: String!
+     timestamp: String
      user: String!
  }
  
@@ -54,8 +54,8 @@ export default `
  
  type User{
     _id: ID!
-    userId: String
-    preferences: Preferences!
+    userId: String!
+    preferences(defaultLanguage: String): Preferences!
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
 
@@ -66,14 +66,14 @@ export default `
      givenName: String!
      familyName: String!
      email: String!
-     notes:[String]
+     notes:[String!]
      state: String!
      lastUpdated: LastUpdated
  }
 
 
  type Mutation{
-    createUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
+    createUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User!
 
     createRequest(userId:String, state:String, publishers:[String], givenName:String, familyName:String,
         email:String, notes:[String], lastUpdated: LastUpdatedInput ):UsersRequest

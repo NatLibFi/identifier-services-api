@@ -47,19 +47,16 @@ export default function () {
 	};
 
 	async function create(db, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation CreateUser(
-					$userId: String
-					$preferences: PreferencesInput
-					$lastUpdated: LastUpdatedInput
-				) {
+		try {
+			const result = await graphql(
+				schema,
+				`
+				mutation{
 					createUser(
-						userId: $userId
-						preferences: $preferences
-						lastUpdated: $lastUpdated
-						
+							userId:"${data.userId}", 
+							preferences: {
+								defaultLanguage: "${data.preferences.defaultLanguage}"
+							}
 					) {
 						_id
 						userId
@@ -73,14 +70,12 @@ export default function () {
 					}
 				}
 			`,
-			{db, data}
-		);
-
-		if (result.data.createUser === null) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+				{db}
+			);
+			return result;
+		} catch (err) {
+			console.log(err);
 		}
-
-		return result;
 	}
 
 	async function read(db, id) {
@@ -111,47 +106,46 @@ export default function () {
 	}
 
 	async function update(db, id, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
-				mutation(
-					$userId: String
-					$preferences: PreferencesInput
-					$lastUpdated: LastUpdatedInput
+			mutation{
+				updateUser(
+						userId:"${data.userId}", 
+						preferences: {
+							defaultLanguage: "${data.preferences.defaultLanguage}"
+						}
 				) {
-					updateUser(
-						userId: $userId
-						preferences: $preferences
-						lastUpdated: $lastUpdated
-					) {
-						_id
-						userId
-						preferences {
-							defaultLanguage
-						}
-						lastUpdated {
-							timestamp
-							user
-						}
+					_id
+					userId
+					preferences {
+						defaultLanguage
+					}
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			{db, id, data}
-		);
-	}
-
-	async function remove(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id: ID) {
-					deleteUser(_id: $id) {
-						_id
-					}
-				}
+			}	
 			`,
 			{db, id}
 		);
+		return result;
+	}
+
+	async function remove(db, id) {
+		const result = await graphql(
+			schema,
+			`
+				mutation {
+					deleteUser(_id: "${id}") {
+						_id
+					}
+				}
+			`,
+			{db}
+		);
+		return result;
 	}
 
 	async function changePwd(db) {
@@ -172,27 +166,15 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation(
-					$id: ID
-					$userId: String
-					$state: String
-					$publishers: [String]
-					$givenName: String
-					$familyName: String
-					$email: String
-					$notes: [String]
-					$lastUpdated: LastUpdatedInput
-				) {
+				mutation{
 					createRequest(
-						_id: $id
-						userId: $userId
-						state: $state
-						publishers: $publishers
-						givenName: $givenName
-						familyName: $familyName
-						email: $email
-						notes: $notes
-						lastUpdated: $lastUpdated
+						userId: "${data.userId}",
+						state: "${data.state}",
+						publishers: ["${data.publishers ? data.publishers : null}"],
+						givenName: "${data.givenName}",
+						familyName: "${data.familyName}",
+						email: "${data.email}",
+						notes: ["${data.notes ? data.notes : null}"],
 					) {
 						_id
 						userId
@@ -209,7 +191,7 @@ export default function () {
 					}
 				}
 			`,
-			{db, data}
+			{db}
 		);
 	}
 
@@ -242,38 +224,32 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation(
-					$userId: String
-					$state: String
-					$publishers: String
-					$givenName: String
-					$familyName: String
-					$email: String
-					$notes: String
-					$lastUpdated: LastUpdatedInput
+			mutation{
+				updateRequest(
+					userId: "${data.userId}",
+					state: "${data.state}",
+					publishers: ["${data.publishers ? data.publishers : null}"],
+					givenName: "${data.givenName}",
+					familyName: "${data.familyName}",
+					email: "${data.email}",
+					notes: ["${data.notes ? data.notes : null}"],
 				) {
-					updateRequest(
-						familyName: $familyName
-						email: $email
-						notes: $notes
-						lastUpdated: $lastUpdated
-					) {
-						_id
-						userId
-						state
-						publishers
-						givenName
-						familyName
-						email
-						notes
-						lastUpdated {
-							timestamp
-							user
-						}
+					_id
+					userId
+					state
+					publishers
+					givenName
+					familyName
+					email
+					notes
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
+			}
 			`,
-			{db, id, data}
+			{db, id}
 		);
 	}
 
@@ -281,13 +257,13 @@ export default function () {
 		return graphql(
 			schema,
 			`
-				mutation($id: ID) {
-					deleteRequest(_id: $id) {
+				mutation {
+					deleteRequest(_id:"${id}") {
 						_id
 					}
 				}
 			`,
-			{db, id}
+			{db}
 		);
 	}
 
