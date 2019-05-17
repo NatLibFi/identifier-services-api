@@ -91,14 +91,14 @@ export default `
  type Mutation{
     createUser(inputUser:InputUser):User!
 
-    createRequest(inputUserRequest: InputUserRequest):UsersRequest
+    createRequest(inputUserRequest: InputUserRequest):UsersRequest!
 
     deleteUser(id:ID):User
 
     deleteRequest(id:ID):UsersRequest
 
-    updateUser(id:ID, inputUser:InputUser):User
+    updateUser(id:ID, inputUser:InputUser):User!
 
-    updateRequest(id: ID, inputUserRequest: InputUserRequest):UsersRequest
+    updateRequest(id: ID, inputUserRequest: InputUserRequest):UsersRequest!
  }
  `;

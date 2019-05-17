@@ -151,7 +151,7 @@ export default function () {
 			}
 		`;
 		const resolve = {deleteUser: resolver.deleteUser};
-		const result = await graphql(schema, query, resolve, db, {id: id});
+		const result = await graphql(schema, query, resolve, db);
 		return result;
 	}
 
@@ -248,14 +248,14 @@ export default function () {
 	async function removeRequest(db, id) {
 		const query = `
 			mutation {
-				deleteRequest(id:"${id}") {
+				deleteRequest(id:${JSON.stringify(id)}) {
 					_id
 				}
 			}
 		`;
 
 		const resolve = {deleteRequest: resolver.deleteRequest};
-		const result = await graphql(schema, query, resolve, db, {id: id});
+		const result = await graphql(schema, query, resolve, db);
 		return result;
 	}
 
