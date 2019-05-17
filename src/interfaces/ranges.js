@@ -93,9 +93,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISBN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 

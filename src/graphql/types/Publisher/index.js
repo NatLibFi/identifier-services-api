@@ -228,9 +228,7 @@ export default `
 
         createPublisherRequests(input: PublisherRequestInput): PublisherRequest!
 
-        deletePublisherRequest(
-            _id: ID
-        ): PublisherRequest
+        deletePublisherRequest(_id: ID): PublisherRequest
 
         updatePublisherRequest(input: PublisherRequestInput): PublisherRequest!
     }
