@@ -98,12 +98,12 @@ describe('routes/users', () => {
 			expect(formatDump(db)).to.eql(expectedDb);
 		});
 
-		it('Should not succeed because content is not provided', async () => {
+		it.skip('Should not succeed because content is not provided', async () => {
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send();
 			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
-		it.skip('Should not succeed because of invalid syntax', async (index = '2') => {
+		it('Should not succeed because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -166,7 +166,7 @@ describe('routes/users', () => {
 	function formatDump(dump) {
 		dump.userMetadata.forEach(doc =>
 			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
-				item === 'timestamp'
+				item === 'timestamp' || item === 'user'
 			).forEach(i => delete doc.lastUpdated[i]))
 		);
 		console.log(dump.userMetadata);

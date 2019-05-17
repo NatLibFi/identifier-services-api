@@ -103,7 +103,7 @@ type Mutation{
 }
 
 type LastUpdated{
-    timestamp: String!
+    timestamp: String
     user: String!
 }
 
@@ -173,7 +173,7 @@ input previousPublicationInput{
 }
 
 input lastUpdatedInput{
-    timestamp: String!
+    timestamp: String
     user: String!
 }
 

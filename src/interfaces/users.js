@@ -30,6 +30,7 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import resolver from '../graphql/resolvers';
 
 export default function () {
 	return {
@@ -48,74 +49,43 @@ export default function () {
 
 	async function create(db, data) {
 		try {
-			const result = await graphql(
-				schema,
-				`
-				mutation{
-					createUser(
-							userId:"${data.userId}", 
-							preferences: {
-								defaultLanguage: "${data.preferences.defaultLanguage}"
+			const query = `
+							mutation($inputUser:InputUser){
+								createUser(inputUser: $inputUser
+								) {
+									userId
+									preferences {
+										defaultLanguage
+									}
+									lastUpdated {
+										timestamp
+										user
+									}
+								}
 							}
-					) {
-						_id
-						userId
-						preferences {
-							defaultLanguage
-						}
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
-				}
-			`,
-				{db}
-			);
+						`;
+			const args = {inputUser: data};
+			const resolve = {createUser: resolver.createUser};
+			const result = await graphql(schema, query, resolve, db, args);
+
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
 			return result;
 		} catch (err) {
-			console.log(err);
+			if (err.status === 422) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	async function read(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					userMetadata {
-						_id
-						userId
-						preferences {
-							defaultLanguage
-						}
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
-				}
-			`,
-			{db, id}
-		);
-		if (result.data.userMetadata === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
-		return result;
-	}
-
-	async function update(db, id, data) {
-		const result = await graphql(
-			schema,
-			`
-			mutation{
-				updateUser(
-						userId:"${data.userId}", 
-						preferences: {
-							defaultLanguage: "${data.preferences.defaultLanguage}"
-						}
-				) {
+		const query = `
+		{
+				userMetadata(id: ${JSON.stringify(id)}) {
 					_id
 					userId
 					preferences {
@@ -126,25 +96,62 @@ export default function () {
 						user
 					}
 				}
-			}	
-			`,
-			{db, id}
-		);
+		}
+	`;
+		const resolve = {userMetadata: resolver.userMetadata};
+		const result = await graphql(schema, query, resolve, db, {id: id});
+		if (result.data.userMetadata === null) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
 		return result;
 	}
 
+	async function update(db, id, data) {
+		try {
+			const query = `
+							mutation($id:ID, $inputUser:InputUser){
+								updateUser(id:$id, inputUser: $inputUser
+								) {
+									userId
+									preferences {
+										defaultLanguage
+									}
+									lastUpdated {
+										timestamp
+										user
+									}
+								}
+							}
+						`;
+			const args = {id: id, inputUser: data};
+			const resolve = {updateUser: resolver.updateUser};
+			const result = await graphql(schema, query, resolve, db, args);
+
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
+		} catch (err) {
+			if (err.status === 422) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	async function remove(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				mutation {
-					deleteUser(_id: "${id}") {
-						_id
-					}
+		const query = `
+			mutation {
+				deleteUser(id: ${JSON.stringify(id)}) {
+					_id
 				}
-			`,
-			{db}
-		);
+			}
+		`;
+		const resolve = {deleteUser: resolver.deleteUser};
+		const result = await graphql(schema, query, resolve, db, {id: id});
 		return result;
 	}
 
@@ -153,87 +160,22 @@ export default function () {
 	}
 
 	async function query(db) {
-		return graphql(
+		const resolve = {Users: resolver.Users};
+		const result = await graphql(
 			schema,
 			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
-			db
+			resolve,
+			db,
 		);
+		return result;
 	}
 
 	// =====***************************** User Creation Request Starts From Here********************** ====
 
 	async function createRequest(db, data) {
-		return graphql(
-			schema,
-			`
-				mutation{
-					createRequest(
-						userId: "${data.userId}",
-						state: "${data.state}",
-						publishers: ["${data.publishers ? data.publishers : null}"],
-						givenName: "${data.givenName}",
-						familyName: "${data.familyName}",
-						email: "${data.email}",
-						notes: ["${data.notes ? data.notes : null}"],
-					) {
-						_id
-						userId
-						state
-						publishers
-						givenName
-						familyName
-						email
-						notes
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
-				}
-			`,
-			{db}
-		);
-	}
-
-	async function readRequest(db, id) {
-		return graphql(
-			schema,
-			`
-				{
-					usersRequest{
-						_id
-						userId
-						state
-						publishers
-						givenName
-						familyName
-						email
-						notes
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
-				}
-			`,
-			{db, id}
-		);
-	}
-
-	async function updateRequest(db, id, data) {
-		return graphql(
-			schema,
-			`
-			mutation{
-				updateRequest(
-					userId: "${data.userId}",
-					state: "${data.state}",
-					publishers: ["${data.publishers ? data.publishers : null}"],
-					givenName: "${data.givenName}",
-					familyName: "${data.familyName}",
-					email: "${data.email}",
-					notes: ["${data.notes ? data.notes : null}"],
-				) {
+		const query = `
+			mutation($inputUserRequest: InputUserRequest){
+				createRequest(inputUserRequest: $inputUserRequest) {
 					_id
 					userId
 					state
@@ -248,40 +190,95 @@ export default function () {
 					}
 				}
 			}
-			`,
-			{db, id}
-		);
+		`;
+		const args = {inputUserRequest: data};
+		const resolve = {createRequest: resolver.createRequest};
+		const result = await graphql(schema, query, resolve, db, args);
+		return result;
+	}
+
+	async function readRequest(db, id) {
+		const query = `
+			{
+				usersRequest(id:${JSON.stringify(id)}){
+					userId
+					state
+					publishers
+					givenName
+					familyName
+					email
+					notes
+					lastUpdated {
+						timestamp
+						user
+					}
+				}
+			}
+		`;
+		const resolve = {usersRequest: resolver.usersRequest};
+		const result = await graphql(schema, query, resolve, db, {id: id});
+		return result;
+	}
+
+	async function updateRequest(db, id, data) {
+		const query = `
+			mutation($id:ID, $inputUserRequest: InputUserRequest){
+				updateRequest(id:$id, inputUserRequest: $inputUserRequest) {
+					_id
+					state
+					publishers
+					givenName
+					familyName
+					email
+					notes
+					lastUpdated {
+						timestamp
+						user
+					}
+				}
+			}
+			`;
+
+		const args = {id: id, inputUserRequest: data};
+		const resolve = {updateRequest: resolver.updateRequest};
+		const result = await graphql(schema, query, resolve, db, args);
+		return result;
 	}
 
 	async function removeRequest(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation {
-					deleteRequest(_id:"${id}") {
-						_id
-					}
+		const query = `
+			mutation {
+				deleteRequest(id:"${id}") {
+					_id
 				}
-			`,
-			{db}
-		);
+			}
+		`;
+
+		const resolve = {deleteRequest: resolver.deleteRequest};
+		const result = await graphql(schema, query, resolve, db, {id: id});
+		return result;
 	}
 
 	async function queryRequest(db) {
+		const query = `
+			{
+				UsersRequests {
+					_id
+					publishers
+					givenName
+					familyName
+					email
+					state
+				}
+			}
+		`;
+
+		const resolve = {UsersRequests: resolver.UsersRequests};
+
 		return graphql(
 			schema,
-			`
-				{
-					usersRequests {
-						_id
-						publishers
-						givenName
-						familyName
-						email
-						state
-					}
-				}
-			`,
+			query,
+			resolve,
 			db
 		);
 	}

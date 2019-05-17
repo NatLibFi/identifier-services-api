@@ -1,8 +1,5 @@
 {
     "preferences": {
         "defaultLanguage": "foo"
-    },
-    "lastUpdated": {
-        "user": "bar"
     }
 }

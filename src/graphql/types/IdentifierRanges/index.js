@@ -29,14 +29,6 @@
 export default `
 
 
-    type LastUpdated{
-        timeStamp: String!
-        user: String!
-    }
-    input LastUpdatedInput{
-        user: String!
-    }
-
     type ISSN{
         id: String!
         rangeStart: Int!
