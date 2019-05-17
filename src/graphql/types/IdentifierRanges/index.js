@@ -29,13 +29,7 @@
 export default `
 
 
-    type LastUpdated{
-        timeStamp: String!
-        user: String!
-    }
-    input LastUpdatedInput{
-        user: String!
-    }
+
 
     type ISSN{
         _id: String!
@@ -70,6 +64,17 @@ export default `
 
     }
 
+    input ISBNInput{
+        prefix: String!
+        language: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        publisher: String
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdatedInput
+    }
+
 
     type Query{
         ISBN: ISBN
@@ -81,16 +86,7 @@ export default `
      }
     
      type Mutation{
-         createISBN(
-            prefix: String
-            language: String
-            rangeStart: Int
-            rangeEnd: Int
-            publisher: String
-            active: Boolean
-            reservedCount: Int
-            lastUpdated: LastUpdatedInput
-         ):ISBN
+         createISBN(input: ISBNInput):ISBN!
 
          updateISBN(
             prefix: String

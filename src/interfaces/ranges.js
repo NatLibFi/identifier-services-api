@@ -25,10 +25,11 @@
  * for the JavaScript code in this file.
  *
  */
-import {graphql} from 'graphql';
+import {graphql, buildSchema} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import resolvers from '../graphql/resolvers';
 
 export default function () {
 	return {
@@ -46,41 +47,26 @@ export default function () {
 		queryIssn
 	};
 
-	async function createIsbn(db, isbnData) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$prefix: String
-					$language: String
-					$rangeStart: Int
-					$rangeEnd: Int
-					$publisher: String
-					$active: Boolean
-					$reservedCount: Int
-					$lastUpdated: LastUpdatedInput
-				) {
-					createISBN(
-						prefix: $prefix
-						language: $language
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						publisher: $publisher
-						active: $active
-						reservedCount: $reservedCount
-						lastUpdated: $lastUpdated
-					) {
-						language
-					}
+	async function createIsbn(db, isbnData) {		
+		const query = `
+			mutation($input: ISBNInput){
+				createISBN(input: $input) {
+					prefix
+					language
+					rangeStart
+					rangeEnd
 				}
-			`,
-			{db, isbnData}
-		);
-		if (result.data.createISBN === null) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+		`;
+		const root = {
+			createISBN: resolvers.createISBN
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: isbnData});
+			console.log(result);
+		} catch (err) {
+			console.log(err);
 		}
-
-		return result;
 	}
 
 	async function readIsbn(db, id) {

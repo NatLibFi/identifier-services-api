@@ -1,5 +1,5 @@
 {            
-    "prefix": "foo",
+    "prefix": +,
     "language": "foo",
     "rangeStart": 100,
     "rangeEnd": 100,
@@ -8,6 +8,5 @@
     "reservedCount": 100,
     "lastUpdated": {
         "user": "foo"
-    },
-    "extra": "extra"
+    }
 }

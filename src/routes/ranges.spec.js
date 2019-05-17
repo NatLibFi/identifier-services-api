@@ -119,7 +119,6 @@ describe('routes/ranges/isbn', () => {
 				expectedDb: getFixture({components: ['create', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
-
 	});
 	function formatDump(dump) {
 		dump.IdentifierRangesISBN.forEach(doc =>

@@ -29,180 +29,179 @@
 const objectId = require('mongodb').ObjectId;
 
 export default {
-	Query: {
-		// ISBN Query
-		ISBN: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISBN doesnot exists');
-				}
+	// ISBN Query
+	ISBN: async ({db, id}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISBN doesnot exists');
+			}
 
-				return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
-			} catch (err) {
-				return err;
-			}
-		},
-		ISBNs: async db => {
-			try {
-				return await db.collection('IdentifierRangesISBN').find().toArray();
-			} catch (err) {
-				return err;
-			}
-		},
-		// ISMN Query
-		ISMN: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISMN doesnot exists');
-				}
-
-				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
-		ISMNs: async db => {
-			try {
-				return await db.collection('IdentifierRangesISMN').find().toArray();
-			} catch (err) {
-				return err;
-			}
-		},
-		// ISSN Query
-		ISSN: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISSN doesnot exists');
-				}
-
-				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
-		ISSNs: async db => {
-			try {
-				return await db
-					.collection('IdentifierRangesISSN').find().toArray();
-			} catch (err) {
-				return err;
-			}
+			return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
+		} catch (err) {
+			return err;
 		}
 	},
-	Mutation: {
-		// ISBN Mutation
-		createISBN: async ({db, isbnData}) => {
-			try {
-				const newISBN = {
-					// ...isbnData,
-					prefix: isbnData.prefix,
-					language: isbnData.language,
-					rangeStart: isbnData.rangeStart,
-					rangeEnd: isbnData.rangeEnd,
-					active: isbnData.active,
-					publisher: isbnData.publisher,
-					reservedCount: isbnData.reservedCount,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
-				return result.ops[0];
-			} catch (err) {
-				return err;
+	ISBNs: async db => {
+		try {
+			return await db.collection('IdentifierRangesISBN').find().toArray();
+		} catch (err) {
+			return err;
+		}
+	},
+	// ISMN Query
+	ISMN: async ({db, id}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISMN doesnot exists');
 			}
-		},
-		updateISBN: async ({db, id, data}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISBN doesnot exists');
-				}
 
-				const isbnUpdate = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				await db
-					.collection('IdentifierRangesISBN')
-					.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
-				return await db.collection('IdentifierRangesISBN').findOne(objectId(id));
-			} catch (err) {
-				return err;
+			return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+	ISMNs: async db => {
+		try {
+			return await db.collection('IdentifierRangesISMN').find().toArray();
+		} catch (err) {
+			return err;
+		}
+	},
+	// ISSN Query
+	ISSN: async ({db, id}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISSN doesnot exists');
 			}
-		},
-		// ISMN Mutation
-		createISMN: async ({db, data}) => {
-			try {
-				const newISMN = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
-				return result.ops[0];
-			} catch (err) {
-				return err;
-			}
-		},
-		updateISMN: async ({db, id, data}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISMN doesnot exists');
-				}
 
-				const ismnUpdate = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
-				return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
-		// ISSN Mutation
-		createISSN: async ({db, data}) => {
-			try {
-				const newISSN = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
-				return result.ops[0];
-			} catch (err) {
-				return err;
-			}
-		},
-		updateISSN: async ({db, id, data}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('ISSN doesnot exists');
-				}
+			return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+	ISSNs: async db => {
+		try {
+			return await db
+				.collection('IdentifierRangesISSN').find().toArray();
+		} catch (err) {
+			return err;
+		}
+	},
 
-				const issnUpdate = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
-				return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
-			} catch (err) {
-				return err;
+	// ISBN Mutation
+	createISBN: async (args, ctx) => {
+		console.log('***********', args);
+		try {
+			const newISBN = {
+				// ...isbnData,
+				prefix: isbnData.prefix,
+				language: isbnData.language,
+				rangeStart: isbnData.rangeStart,
+				rangeEnd: isbnData.rangeEnd,
+				active: isbnData.active,
+				publisher: isbnData.publisher,
+				reservedCount: isbnData.reservedCount,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+	updateISBN: async ({db, id, data}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISBN doesnot exists');
 			}
+
+			const isbnUpdate = {
+				...data,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			await db
+				.collection('IdentifierRangesISBN')
+				.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
+			return await db.collection('IdentifierRangesISBN').findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+	// ISMN Mutation
+	createISMN: async ({db, data}) => {
+		try {
+			const newISMN = {
+				...data,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+	updateISMN: async ({db, id, data}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISMN doesnot exists');
+			}
+
+			const ismnUpdate = {
+				...data,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
+			return await db.collection('IdentifierRangesISMN').findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+	// ISSN Mutation
+	createISSN: async ({db, data}) => {
+		try {
+			const newISSN = {
+				...data,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+	updateISSN: async ({db, id, data}) => {
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('ISSN doesnot exists');
+			}
+
+			const issnUpdate = {
+				...data,
+				lastUpdated: {
+					timestamp: new Date(),
+					user: 'foobar'
+				}
+			};
+			await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
+			return await db.collection('IdentifierRangesISSN').findOne(objectId(id));
+		} catch (err) {
+			return err;
 		}
 	}
+
 };

@@ -35,14 +35,6 @@ export default `
 
     }
 
-    type LastUpdated{
-        timeStamp: String!
-        user: String!
-    }
-    input LastUpdatedInput{
-        timeStamp: String!
-        user: String!
-    }
 
 
 

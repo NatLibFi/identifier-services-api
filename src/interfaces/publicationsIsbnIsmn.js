@@ -81,7 +81,7 @@ export default function () {
 					$electronicDetails: electronicDetailsInput
 					$printDetails: printDetailsInput
 					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+					$lastUpdated: LastUpdatedInput
 				) {
 					createPublicationIsbnIsmn(
 						title: $title
@@ -139,7 +139,7 @@ export default function () {
 					$electronicDetails: electronicDetailsInput
 					$printDetails: printDetailsInput
 					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+					$lastUpdated: LastUpdatedInput
 				) {
 					updatePublicationIsbnIsmn(
 						title: $title
@@ -210,7 +210,7 @@ export default function () {
 					$electronicDetails: electronicDetailsInput
 					$printDetails: printDetailsInput
 					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+					$lastUpdated: LastUpdatedInput
 				) {
 					createPublicationRequestIsbnIsmn(
 						title: $title
@@ -266,7 +266,7 @@ export default function () {
 					$electronicDetails: electronicDetailsInput
 					$printDetails: printDetailsInput
 					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
+					$lastUpdated: LastUpdatedInput
 				) {
 					updatePublicationRequestIsbnIsmn(
 						title: $title

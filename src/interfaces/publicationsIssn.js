@@ -77,7 +77,7 @@ export default function () {
 					$subSeries: seriesDetailsISSNInput
 					$otherMedium: seriesDetailsISSNInput
 					$previousPublication: previousPublicationInput
-					$lastUpdated: lastUpdatedInput
+					$lastUpdated: LastUpdatedInput
 				) {
 					createPublicationIssn(
 						title:$title
@@ -145,7 +145,7 @@ export default function () {
 				$subSeries: seriesDetailsISSNInput
 				$otherMedium: seriesDetailsISSNInput
 				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
+				$lastUpdated: LastUpdatedInput
 			) {
 				updatePublicationIssn(
 					title:$title
@@ -225,7 +225,7 @@ export default function () {
 				$subSeries: seriesDetailsISSNInput
 				$otherMedium: seriesDetailsISSNInput
 				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
+				$lastUpdated: LastUpdatedInput
 			) {
 				createPublicationRequestIssn(
 					title:$title
@@ -275,7 +275,7 @@ export default function () {
 				$subSeries: seriesDetailsISSNInput
 				$otherMedium: seriesDetailsISSNInput
 				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
+				$lastUpdated: LastUpdatedInput
 			) {
 				updatePublicationRequestIssn(
 					title:$title

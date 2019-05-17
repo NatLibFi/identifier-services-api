@@ -44,7 +44,7 @@ export default `
  }
 
  input LastUpdatedInput{
-     timestamp: String!
+     timestamp: String
      user: String!
  }
  
