@@ -29,6 +29,7 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import resolvers from '../graphql/resolvers';
 
 export default function () {
 	const queryReturn = `
@@ -64,244 +65,159 @@ export default function () {
 	};
 
 	async function createISBN_ISMN(db, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$title: String
-					$publisher: String
-					$melindaId: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
-				) {
-					createPublicationIsbnIsmn(
-						title: $title
-						publisher: $publisher
-						melindaId: $melindaId
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
-						${queryReturn}
-					}
+		try {
+			const query = `
+			mutation($input:InputPublicationIsbnIsmn) {
+				createPublicationIsbnIsmn(input:$input) {
+					${queryReturn}
 				}
-			`,
-			{db, data}
-		);
+			}
+		`;
+			const args = {input: data};
+			const resolve = {createPublicationIsbnIsmn: resolvers.createPublicationIsbnIsmn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function readISBN_ISMN(db, id) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
-					publication_ISBN_ISMN {
+					publication_ISBN_ISMN(id: ${JSON.stringify(id)}) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {publication_ISBN_ISMN: resolvers.publication_ISBN_ISMN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function updateISBN_ISMN(db, id, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$title: String
-					$publisher: String
-					$melindaId: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
-				) {
-					updatePublicationIsbnIsmn(
-						title: $title
-						publisher: $publisher
-						melindaId: $melindaId
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
+		try {
+			const query = `
+				mutation($id: ID, $input:InputPublicationIsbnIsmn) {
+					updatePublicationIsbnIsmn(id:$id, input:$input) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id, data}
-		);
+			`;
+			const args = {id: id, input: data};
+			const resolve = {updatePublicationIsbnIsmn: resolvers.updatePublicationIsbnIsmn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function removeISBN_ISMN(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id: ID) {
-					deletePublicationIsbnIsmn(_id: $id) {
+		try {
+			const query = `
+				mutation{
+					deletePublicationIsbnIsmn(id: ${JSON.stringify(id)}) {
 						_id
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {deletePublicationIsbnIsmn: resolvers.deletePublicationIsbnIsmn};
+			const result = graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryISBN_ISMN(db) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
 					Publications_ISBN_ISMN {
 						${queryReturn}
 					}
 				}
-			`,
-			db
-		);
+			`;
+			const resolve = {Publications_ISBN_ISMN: resolvers.Publications_ISBN_ISMN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function createRequestISBN_ISMN(db, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$title: String
-					$state: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
-				) {
-					createPublicationRequestIsbnIsmn(
-						title: $title
-						state: $state
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
+		try {
+			const query = `
+				mutation($input: InputPublicationIsbnIsmnRequest) {
+					createPublicationRequestIsbnIsmn(input:$input) {
 						_id
 					}
 				}
-			`,
-			{db, data}
-		);
+			`;
+			const args = {input: data};
+			const resolve = {createPublicationRequestIsbnIsmn: resolvers.createPublicationRequestIsbnIsmn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function readRequestISBN_ISMN(db, id) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
-					publicationRequest_ISBN_ISMN {
+					publicationRequest_ISBN_ISMN(id: ${JSON.stringify(id)}) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {publicationRequest_ISBN_ISMN: resolvers.publicationRequest_ISBN_ISMN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function updateRequestISBN_ISMN(db, id, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$title: String
-					$state: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$publicationTime: String
-					$additionalDetails: String
-					$authors: [authorInput]
-					$series: seriesInput
-					$electronicDetails: electronicDetailsInput
-					$printDetails: printDetailsInput
-					$mapDetails: mapDetailsInput
-					$lastUpdated: lastUpdatedInput
-				) {
-					updatePublicationRequestIsbnIsmn(
-						title: $title
-						state: $state
-						type: $type
-						subtitle: $subtitle
-						language: $language
-						publicationTime: $publicationTime
-						additionalDetails: $additionalDetails
-						authors: $authors
-						series: $series
-						electronicDetails: $electronicDetails
-						printDetails: $printDetails
-						mapDetails: $mapDetails
-						lastUpdated: $lastUpdated
-					) {
-						${queryReturn}
-					}
-				}
-			`,
-			{db, id, data}
-		);
-	}
-
-	async function removeRequestISBN_ISMN(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id: ID) {
-					deletePublicationRequestIsbnIsmn(_id: $id) {
+		try {
+			const query = `
+				mutation($id:ID, $input: InputPublicationIsbnIsmnRequest) {
+					updatePublicationRequestIsbnIsmn(id:$id, input:$input) {
 						_id
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const args = {id: id, input: data};
+			const resolve = {updatePublicationRequestIsbnIsmn: resolvers.updatePublicationRequestIsbnIsmn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async function removeRequestISBN_ISMN(db, id) {
+		try {
+			const query = `
+				mutation{
+					deletePublicationRequestIsbnIsmn(id: ${JSON.stringify(id)}) {
+						_id
+					}
+				}
+			`;
+			const resolve = {deletePublicationRequestIsbnIsmn: resolvers.deletePublicationRequestIsbnIsmn};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 }

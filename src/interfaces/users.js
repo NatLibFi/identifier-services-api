@@ -99,7 +99,7 @@ export default function () {
 		}
 	`;
 		const resolve = {userMetadata: resolver.userMetadata};
-		const result = await graphql(schema, query, resolve, db, {id: id});
+		const result = await graphql(schema, query, resolve, db);
 		if (result.data.userMetadata === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
@@ -216,7 +216,7 @@ export default function () {
 			}
 		`;
 		const resolve = {usersRequest: resolver.usersRequest};
-		const result = await graphql(schema, query, resolve, db, {id: id});
+		const result = await graphql(schema, query, resolve, db);
 		return result;
 	}
 
