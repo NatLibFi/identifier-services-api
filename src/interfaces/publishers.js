@@ -28,6 +28,7 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import resolvers from '../graphql/resolvers';
 
 export default function () {
 	return {
@@ -44,430 +45,362 @@ export default function () {
 	};
 
 	async function query(db) {
-		return graphql(
-			schema,
-			`
-				{
-					Publishers {
-						_id
-						lastUpdated {
-							timestamp
-							user
-						}
-						name
-						language
-						metadataDelivery
-						primaryContact
-						email
-						phone
-						website
-						aliases
-						notes
-						activity {
-							active
-							yearInactivated
-						}
-						streetAddress {
-							address
-							city
-							zip
-						}
+		const query = `
+			{
+				Publishers{
+					_id
+					name
+					language
+					metadataDelivery
+					primaryContact
+					email
+					phone
+					website
+					aliases
+					notes
+					activity {
+						active
+						yearInactivated
+					}
+					streetAddress {
+						address
+						city
+						zip
+					}
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			db
-		);
+			}
+		`;
+		const root = {
+			Publishers: resolvers.Publishers
+		};
+		try {
+			const result = await graphql(schema, query, root, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function read(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					Publisher {
-						_id
-						lastUpdated {
-							timestamp
-							user
-						}
-						name
-						language
-						metadataDelivery
-						primaryContact
-						email
-						phone
-						website
-						aliases
-						notes
-						activity {
-							active
-							yearInactivated
-						}
-						streetAddress {
-							address
-							city
-							zip
-						}
+		const query = `
+			{
+				Publisher{
+					_id
+					name
+					language
+					metadataDelivery
+					primaryContact
+					email
+					phone
+					website
+					aliases
+					notes
+					activity {
+						active
+						yearInactivated
+					}
+					streetAddress {
+						address
+						city
+						zip
+					}
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			{db, id}
-		);
-		console.log('--------', result);
-		return result;
+			}
+		`;
+		const root = {
+			Publisher: resolvers.Publisher
+		};
+		try {
+			const result = await graphql(schema, query, root, {id, db});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function create(db, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$name: String
-					$language: String
-					$metadataDelivery: String
-					$primaryContact: [String]
-					$email: String
-					$phone: String
-					$website: String
-					$aliases: [String]
-					$notes: [String]
-					$activity: ActivityInput
-					$streetAddress: StreetAddressInput
-				) {
-					createPublisher(
-						name: $name
-						language: $language
-						metadataDelivery: $metadataDelivery
-						primaryContact: $primaryContact
-						email: $email
-						phone: $phone
-						website: $website
-						aliases: $aliases
-						notes: $notes
-						activity: $activity
-						streetAddress: $streetAddress
-					) {					
-						name
-						language						
-					}
+		const query = `
+			mutation($input: PublisherInput){
+				createPublisher(input: $input) {
+					name
+					language
 				}
-			`,
-			{db, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			createPublisher: resolvers.createPublisher
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function update(db, id, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$name: String
-					$language: String
-					$metadataDelivery: String
-					$primaryContact: [String]
-					$email: String
-					$phone: String
-					$website: String
-					$aliases: [String]
-					$notes: [String]
-					$activity: ActivityInput
-					$streetAddress: StreetAddressInput
-				) {
-					updatePublisher(
-						name: $name
-						language: $language
-						metadataDelivery: $metadataDelivery
-						primaryContact: $primaryContact
-						email: $email
-						phone: $phone
-						website: $website
-						aliases: $aliases
-						notes: $notes
-						activity: $activity
-						streetAddress: $streetAddress
-					) {
-						name
-					}
+		const query = `
+			mutation($input: PublisherInput){
+				updatePublisher(input: $input) {
+					name
+					language
 				}
-			`,
-			{db, id, data}
-		);
+			}
+		`;
+		const root = {
+			updatePublisher: resolvers.updatePublisher
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id}, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function remove(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($_id: ID) {
-					deletePublisher(_id: $_id) {
-						_id
-					}
+		const query = `
+			mutation($_id: ID){
+				deletePublisher(_id: $_id) {
+					name
+					language
 				}
-			`,
-			{db, id}
-		);
+			}
+		`;
+		const root = {
+			deletePublisher: resolvers.deletePublisher
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function createRequests(db, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$state: String
-					$publisherId: String
-					$publicationEstimate: Int
-					$primaryContact: [PrimaryContactRequestInput]
-					$name: String
-					$language: String
-					$metadataDelivery: String
-					$email: String
-					$phone: String
-					$website: String
-					$aliases: [String]
-					$notes: [String]
-					$activity: ActivityInput
-					$streetAddress: StreetAddressInput
-					$publication: ISBNISMNPublicationRequestInput
-				) {
-					createPublisherRequests(
-						state: $state
-						publisherId: $publisherId
-						publicationEstimate: $publicationEstimate
-						primaryContact: $primaryContact
-						name: $name
-						language: $language
-						metadataDelivery: $metadataDelivery
-						email: $email
-						phone: $phone
-						website: $website
-						aliases: $aliases
-						notes: $notes
-						activity: $activity
-						streetAddress: $streetAddress
-						publication: $publication
-					) {
-						name
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
+		const query = `
+			mutation($input: PublisherRequestInput){
+				createPublisherRequests(input: $input) {
+					name
+					language
 				}
-			`,
-			{db, data}
-		);
+			}
+		`;
+		const root = {
+			createPublisherRequests: resolvers.createPublisherRequests
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function readRequest(db, id) {
-		return graphql(
-			schema,
-			`
-				{
-					PublisherRequest {
-						id
-						lastUpdated {
-							timestamp
-							user
-						}
-						state
-						publisherId
-						publicationEstimate
-						primaryContact {
+		const query = `
+			{
+				PublisherRequest {
+					_id
+					lastUpdated {
+						timestamp
+						user
+					}
+					state
+					publisherId
+					publicationEstimate
+					primaryContact {
+						givenName
+						familyName
+						email
+					}
+					name
+					language
+					metadataDelivery
+					email
+					phone
+					website
+					aliases
+					notes
+					activity {
+						active
+						yearInactivated
+					}
+					streetAddress {
+						address
+						city
+						zip
+					}
+					publication {
+						title
+						type
+						subtitle
+						language
+						publicationTime
+						additionalDetails
+						authors {
 							givenName
 							familyName
-							email
+							role
 						}
-						name
-						language
-						metadataDelivery
-						email
-						phone
-						website
-						aliases
-						notes
-						activity {
-							active
-							yearInactivated
+						series {
+							identifier
+							name
+							volume
 						}
-						streetAddress {
-							address
+						electronicDetails {
+							format
+						}
+						printDetails {
+							manufacturer
 							city
-							zip
+							run
+							edition
+							format
 						}
-						publication {
-							title
-							type
-							subtitle
-							language
-							publicationTime
-							additionalDetails
-							authors {
-								givenName
-								familyName
-								role
-							}
-							series {
-								identifier
-								name
-								volume
-							}
-							electronicDetails {
-								format
-							}
-							printDetails {
-								manufacturer
-								city
-								run
-								edition
-								format
-							}
-							mapDetails {
-								scale
-							}
+						mapDetails {
+							scale
 						}
 					}
 				}
-			`,
-			{db, id}
-		);
+			}
+		`;
+		const root = {
+			PublisherRequest: resolvers.PublisherRequest
+		};
+		try {
+			const result = await graphql(schema, query, root, {id, db});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function removeRequest(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($_id: ID) {
-					deletePublisherRequest(_id: $_id) {
-						_id
-					}
+		const query = `
+			mutation($_id: ID){
+				deletePublisherRequest(_id: $_id) {
+					name
+					language
 				}
-			`,
-			{db, id}
-		);
+			}
+		`;
+		const root = {
+			deletePublisherRequest: resolvers.deletePublisherRequest
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function updateRequest(db, id, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$state: String
-					$publisherId: String
-					$publicationEstimate: Int
-					$primaryContact: [PrimaryContactRequestInput]
-					$name: String
-					$language: String
-					$metadataDelivery: String
-					$email: String
-					$phone: String
-					$website: String
-					$aliases: [String]
-					$notes: [String]
-					$activity: ActivityInput
-					$streetAddress: StreetAddressInput
-					$publication: ISBNISMNPublicationRequestInput
-				) {
-					updatePublisherRequest(
-						state: $state
-						publisherId: $publisherId
-						publicationEstimate: $publicationEstimate
-						primaryContact: $primaryContact
-						name: $name
-						language: $language
-						metadataDelivery: $metadataDelivery
-						email: $email
-						phone: $phone
-						website: $website
-						aliases: $aliases
-						notes: $notes
-						activity: $activity
-						streetAddress: $streetAddress
-						publication: $publication
-					) {
-						name
-						lastUpdated {
-							timestamp
-							user
-						}
-					}
+		const query = `
+			mutation($input: PublisherRequestInput){
+				updatePublisherRequest(input: $input) {
+					name
+					language
 				}
-			`,
-			{db, id, data}
-		);
+			}
+		`;
+		const root = {
+			updatePublisherRequest: resolvers.updatePublisherRequest
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id}, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryRequests(db) {
-		return graphql(
-			schema,
-			`
-				{
-					PublisherRequests{
-						id
-						lastUpdated {
-							timestamp
-							user
-						}
-						state
-						publisherId
-						publicationEstimate
-						primaryContact {
+		const query = `
+			{
+				PublisherRequests{
+					_id
+					lastUpdated {
+						timestamp
+						user
+					}
+					state
+					publisherId
+					publicationEstimate
+					primaryContact {
+						givenName
+						familyName
+						email
+					}
+					name
+					language
+					metadataDelivery
+					email
+					phone
+					website
+					aliases
+					notes
+					activity {
+						active
+						yearInactivated
+					}
+					streetAddress {
+						address
+						city
+						zip
+					}
+					publication {
+						title
+						type
+						subtitle
+						language
+						publicationTime
+						additionalDetails
+						authors {
 							givenName
 							familyName
-							email
+							role
 						}
-						name
-						language
-						metadataDelivery
-						email
-						phone
-						website
-						aliases
-						notes
-						activity {
-							active
-							yearInactivated
+						series {
+							identifier
+							name
+							volume
 						}
-						streetAddress {
-							address
+						electronicDetails {
+							format
+						}
+						printDetails {
+							manufacturer
 							city
-							zip
+							run
+							edition
+							format
 						}
-						publication {
-							title
-							type
-							subtitle
-							language
-							publicationTime
-							additionalDetails
-							authors {
-								givenName
-								familyName
-								role
-							}
-							series {
-								identifier
-								name
-								volume
-							}
-							electronicDetails {
-								format
-							}
-							printDetails {
-								manufacturer
-								city
-								run
-								edition
-								format
-							}
-							mapDetails {
-								scale
-							}
+						mapDetails {
+							scale
 						}
 					}
 				}
-			`,
-			db
-		);
+			}
+		`;
+		const root = {
+			PublisherRequests: resolvers.PublisherRequests
+		};
+		try {
+			const result = await graphql(schema, query, root, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -28,144 +29,149 @@
 const objectId = require('mongodb').ObjectId;
 
 export default {
-	Query: {
-		Publishers: async db => {
-			try {
-				const result = await db.collection('PublisherMetadata').find().toArray();
-				return result;
-			} catch (err) {
-				throw new Error(err);
+	Publishers: async (undefined, db) => {
+		try {
+			const result = await db.collection('PublisherMetadata').find().toArray();
+			return result;
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
+	Publisher: async (undefined, ctx) => {
+		const {id, db} = ctx;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
 			}
-		},
-		Publisher: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('Publisher doesnot exists');
-				}
 
-				const result = await db.collection('PublisherMetadata').findOne(objectId(id));
-				return result;
-			} catch (err) {
-				throw new Error(err);
+			const result = await db.collection('PublisherMetadata').findOne(objectId(id));
+			return result;
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
+	PublisherRequest: async (undefined, ctx) => {
+		const {id, db} = ctx;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
 			}
-		},
-		PublisherRequest: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('PublisherRequest doesnot exists');
-				}
 
-				const result = await db.collection('PublisherRequest').findOne(objectId(id));
-				return result;
-			} catch (err) {
-				throw new Error(err);
-			}
-		},
-		PublisherRequests: async db => {
-			try {
-				const result = await db.collection('PublisherRequest').find().toArray();
-				return result;
-			} catch (err) {
-				throw new Error(err);
-			}
+			const result = await db.collection('PublisherRequest').findOne(objectId(id));
+			return result;
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
+	PublisherRequests: async (undefined, db) => {
+		try {
+			const result = await db.collection('PublisherRequest').find().toArray();
+			return result;
+		} catch (err) {
+			throw new Error(err);
 		}
 	},
 
-	Mutation: {
-		createPublisher: async ({db, data}) => {
-			try {
-				const newPublisher = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
-				return result.ops[0];
-			} catch (err) {
-				throw new Error(err);
-			}
-		},
+	// ***************************Mutation starts here***************************
 
-		updatePublisher: async ({db, id, data}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('Publisher doesnot exists');
+	createPublisher: async (args, db) => {
+		try {
+			const newPublisher = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
 				}
+			};
+			const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
+			return result.ops[0];
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
 
-				const publisherUpdate = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
-				return await db.collection('PublisherMetadata').findOne(objectId(id));
-			} catch (err) {
-				throw new Error(err);
+	updatePublisher: async (args, cxt) => {
+		const {db, id} = cxt;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
 			}
-		},
 
-		deletePublisher: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('Publisher doesnot exists');
+			const publisherUpdate = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date(),
 				}
+			};
+			await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
+			return await db.collection('PublisherMetadata').findOne(objectId(id));
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
 
-				const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
-				return deletedPublisher.value;
-			} catch (err) {
-				throw new Error('Publisher doesnot Exist');
+	deletePublisher: async (undefined, ctx) => {
+		const {id, db} = ctx;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
 			}
-		},
 
-		createPublisherRequests: async ({db, data}) => {
-			try {
-				const newPublisherRequests = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
-				return result.ops[0];
-			} catch (err) {
-				throw new Error(err);
-			}
-		},
-		deletePublisherRequest: async ({db, id}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('PublisherRequest doesnot exists');
+			const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
+			return deletedPublisher.value;
+		} catch (err) {
+			throw new Error('Publisher doesnot Exist');
+		}
+	},
+
+	createPublisherRequests: async (args, db) => {
+		console.log(db)
+		try {
+			const newPublisherRequests = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
 				}
-
-				const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
-				return deletePublisherRequest.value;
-			} catch (err) {
-				throw new Error(err, 'PublisherRequest doesnot Exist');
+			};
+			const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
+			return result.ops[0];
+		} catch (err) {
+			throw new Error(err);
+		}
+	},
+	deletePublisherRequest: async (undefined, ctx) => {
+		const {id, db} = ctx;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
 			}
-		},
-		updatePublisherRequest: async ({db, id, data}) => {
-			try {
-				if (!objectId.isValid(id)) {
-					throw new Error('PublisherRequest doesnot exists');
+
+			const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
+			return deletePublisherRequest.value;
+		} catch (err) {
+			throw new Error(err, 'PublisherRequest doesnot Exist');
+		}
+	},
+	updatePublisherRequest: async (args, ctx) => {
+		const {db, id} = ctx;
+		try {
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
+			}
+
+			const publisherRequestUpdate = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
 				}
-
-				const publisherRequestUpdate = {
-					...data,
-					lastUpdated: {
-						timestamp: new Date(),
-						user: 'foobar'
-					}
-				};
-				await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
-				return await db.collection('PublisherRequest').findOne(objectId(id));
-			} catch (err) {
-				throw new Error(err);
-			}
+			};
+			await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
+			return await db.collection('PublisherRequest').findOne(objectId(id));
+		} catch (err) {
+			throw new Error(err);
 		}
 	}
 };

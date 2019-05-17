@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -30,7 +31,8 @@ const objectId = require('mongodb').ObjectId;
 
 export default {
 	// ISBN Query
-	ISBN: async ({db, id}) => {
+	ISBN: async (undefined, ctx) => {
+		const {id, db} = ctx;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISBN doesnot exists');
@@ -41,7 +43,7 @@ export default {
 			return err;
 		}
 	},
-	ISBNs: async db => {
+	ISBNs: async (undefined, db) => {
 		try {
 			return await db.collection('IdentifierRangesISBN').find().toArray();
 		} catch (err) {
@@ -49,7 +51,8 @@ export default {
 		}
 	},
 	// ISMN Query
-	ISMN: async ({db, id}) => {
+	ISMN: async (undefined, ctx) => {
+		const {id, db} = ctx;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISMN doesnot exists');
@@ -60,7 +63,7 @@ export default {
 			return err;
 		}
 	},
-	ISMNs: async db => {
+	ISMNs: async (undefined, db) => {
 		try {
 			return await db.collection('IdentifierRangesISMN').find().toArray();
 		} catch (err) {
@@ -68,7 +71,8 @@ export default {
 		}
 	},
 	// ISSN Query
-	ISSN: async ({db, id}) => {
+	ISSN: async (undefined, ctx) => {
+		const {id, db} = ctx;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISSN doesnot exists');
@@ -79,7 +83,7 @@ export default {
 			return err;
 		}
 	},
-	ISSNs: async db => {
+	ISSNs: async (undefined, db) => {
 		try {
 			return await db
 				.collection('IdentifierRangesISSN').find().toArray();
@@ -89,21 +93,13 @@ export default {
 	},
 
 	// ISBN Mutation
-	createISBN: async (args, ctx) => {
-		console.log('***********', args);
+	createISBN: async (args, db) => {
 		try {
 			const newISBN = {
-				// ...isbnData,
-				prefix: isbnData.prefix,
-				language: isbnData.language,
-				rangeStart: isbnData.rangeStart,
-				rangeEnd: isbnData.rangeEnd,
-				active: isbnData.active,
-				publisher: isbnData.publisher,
-				reservedCount: isbnData.reservedCount,
+				...args.input,
 				lastUpdated: {
-					timestamp: new Date(),
-					user: 'foobar'
+					...args.input.lastUpdated,
+					timestamp: new Date()
 				}
 			};
 			const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
@@ -112,17 +108,18 @@ export default {
 			return err;
 		}
 	},
-	updateISBN: async ({db, id, data}) => {
+	updateISBN: async (args, cxt) => {
+		const {db, id} = cxt;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISBN doesnot exists');
 			}
 
 			const isbnUpdate = {
-				...data,
+				...args.input,
 				lastUpdated: {
+					...args.input.lastUpdated,
 					timestamp: new Date(),
-					user: 'foobar'
 				}
 			};
 			await db
@@ -134,13 +131,13 @@ export default {
 		}
 	},
 	// ISMN Mutation
-	createISMN: async ({db, data}) => {
+	createISMN: async (args, db) => {
 		try {
 			const newISMN = {
-				...data,
+				...args.input,
 				lastUpdated: {
+					...args.input.lastUpdated,
 					timestamp: new Date(),
-					user: 'foobar'
 				}
 			};
 			const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
@@ -149,17 +146,18 @@ export default {
 			return err;
 		}
 	},
-	updateISMN: async ({db, id, data}) => {
+	updateISMN: async (args, cxt) => {
+		const {db, id} = cxt;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISMN doesnot exists');
 			}
 
 			const ismnUpdate = {
-				...data,
+				...args.input,
 				lastUpdated: {
+					...args.input.lastUpdated,
 					timestamp: new Date(),
-					user: 'foobar'
 				}
 			};
 			await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
@@ -169,13 +167,13 @@ export default {
 		}
 	},
 	// ISSN Mutation
-	createISSN: async ({db, data}) => {
+	createISSN: async (args, db) => {
 		try {
 			const newISSN = {
-				...data,
+				...args.input,
 				lastUpdated: {
+					...args.input.lastUpdated,
 					timestamp: new Date(),
-					user: 'foobar'
 				}
 			};
 			const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
@@ -184,17 +182,18 @@ export default {
 			return err;
 		}
 	},
-	updateISSN: async ({db, id, data}) => {
+	updateISSN: async (args, cxt) => {
+		const {db, id} = cxt;
 		try {
 			if (!objectId.isValid(id)) {
 				throw new Error('ISSN doesnot exists');
 			}
 
 			const issnUpdate = {
-				...data,
+				...args.input,
 				lastUpdated: {
+					...args.input.lastUpdated,
 					timestamp: new Date(),
-					user: 'foobar'
 				}
 			};
 			await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
