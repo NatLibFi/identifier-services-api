@@ -63,9 +63,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, db, {input: isbnData});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -170,9 +174,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -199,9 +207,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISMN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -271,9 +283,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -298,9 +314,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISSN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 

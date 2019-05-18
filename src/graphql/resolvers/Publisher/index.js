@@ -101,7 +101,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
@@ -126,7 +126,7 @@ export default {
 	},
 
 	createPublisherRequests: async (args, db) => {
-		console.log(db)
+		console.log(db);
 		try {
 			const newPublisherRequests = {
 				...args.input,

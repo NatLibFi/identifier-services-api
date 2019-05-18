@@ -119,7 +119,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			await db
@@ -137,7 +137,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
@@ -157,7 +157,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
@@ -173,7 +173,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
@@ -193,7 +193,7 @@ export default {
 				...args.input,
 				lastUpdated: {
 					...args.input.lastUpdated,
-					timestamp: new Date(),
+					timestamp: new Date()
 				}
 			};
 			await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
