@@ -44,10 +44,9 @@ export default {
 				throw new Error('Publisher doesnot exists');
 			}
 
-			const result = await db.collection('PublisherMetadata').findOne(objectId(id));
-			return result;
+			return await db.collection('PublisherMetadata').findOne(objectId(id));
 		} catch (err) {
-			throw new Error(err);
+			return err;
 		}
 	},
 	PublisherRequest: async (undefined, ctx) => {
@@ -58,6 +57,8 @@ export default {
 			}
 
 			const result = await db.collection('PublisherRequest').findOne(objectId(id));
+			console.log('----------', result)
+
 			return result;
 		} catch (err) {
 			throw new Error(err);
@@ -126,7 +127,6 @@ export default {
 	},
 
 	createPublisherRequests: async (args, db) => {
-		console.log(db);
 		try {
 			const newPublisherRequests = {
 				...args.input,

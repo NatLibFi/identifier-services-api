@@ -279,6 +279,7 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+
 			return result;
 		} catch (err) {
 			return err;

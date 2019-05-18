@@ -66,14 +66,14 @@ describe('routes/ranges', () => {
 	// ************************Testing for ISBN starts **************************
 
 	describe('#read ISBN', () => {
-		it.skip('Should succeed', async (index = '0') => {
+		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/isbn/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it.skip('Should fail because the resource does not exist', async () => {
+		it('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/isbn/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
@@ -89,7 +89,7 @@ describe('routes/ranges', () => {
 	});
 
 	describe('#create ISBN', () => {
-		it.skip('Should create a new isbn range', async (index = '0') => {
+		it('Should create a new isbn range', async (index = '0') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
@@ -98,13 +98,13 @@ describe('routes/ranges', () => {
 			expect(formatDump(db)).to.eql(expectedDb);
 		});
 
-		it.skip('Should fail to create because content is not provided', async (index = '1') => {
+		it('Should fail to create because content is not provided', async (index = '1') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
-		it.skip('Should fail to create because of invalid syntax', async (index = '2') => {
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -136,14 +136,14 @@ describe('routes/ranges', () => {
 	// ************************Testing for ISMN starts **************************
 
 	describe('#read ISMN', () => {
-		it.skip('Should succeed', async (index = '0') => {
+		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/ismn/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it.skip('Should fail because the resource does not exist', async () => {
+		it('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/ismn/5cd90b2c89d0546340068667`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
@@ -159,7 +159,7 @@ describe('routes/ranges', () => {
 	});
 
 	describe('#create ISMN', () => {
-		it.skip('Should create a new ismn range', async (index = '0') => {
+		it('Should create a new ismn range', async (index = '0') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/ismn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
@@ -168,13 +168,13 @@ describe('routes/ranges', () => {
 			expect(formatDump(db)).to.eql(expectedDb);
 		});
 
-		it.skip('Should fail to create because content is not provided', async (index = '1') => {
+		it('Should fail to create because content is not provided', async (index = '1') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/ismn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
-		it.skip('Should fail to create because of invalid syntax', async (index = '2') => {
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -244,7 +244,7 @@ describe('routes/ranges', () => {
 			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
-		it.skip('Should fail to create because of invalid syntax', async (index = '2') => {
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);

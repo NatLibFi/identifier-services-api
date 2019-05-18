@@ -62,15 +62,17 @@ describe('routes/publishers', () => {
 		RewireAPI.__ResetDependency__('API_URL');
 	});
 
-	describe('#read', () => {
+	// *********************Testing for Publishers starts ************************
+
+	describe('#read Publishers', () => {
 		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/foo`);
+			const response = await requester.get(`${requestPath}/5cd702693c30e77663e2b3ce`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it('Should fail because the resource does not exist', async (index = '1') => {
+		it.skip('Should fail because the resource does not exist', async (index = '1') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
@@ -82,6 +84,33 @@ describe('routes/publishers', () => {
 			if (getFixtures) {
 				return {
 					expectedPayload: getFixture({components: ['read', index, 'expectedPayload.json'], reader: READERS.JSON})
+				};
+			}
+		}
+	});
+
+	// ***********************Testing for Publisher requests starts************************
+
+	describe('#read Publishers requests', () => {
+		it('Should succeed', async (index = '0') => {
+			const {expectedPayload} = await init(index, true);
+			const response = await requester.get(`${requestPath}/requests/5cdff4db937aed356a2b5817`);
+			expect(response).to.have.status(HttpStatus.OK);
+			expect(response.body).to.eql(expectedPayload);
+		});
+
+		it.skip('Should fail because the resource does not exist', async (index = '1') => {
+			const {expectedPayload} = await init(index, true);
+			const response = await requester.get(`${requestPath}/foo`);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
+			expect(response.body).to.eql(expectedPayload);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['requests/read', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					expectedPayload: getFixture({components: ['requests/read', index, 'expectedPayload.json'], reader: READERS.JSON})
 				};
 			}
 		}

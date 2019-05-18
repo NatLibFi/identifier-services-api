@@ -38,7 +38,8 @@ export default {
 				throw new Error('ISBN doesnot exists');
 			}
 
-			return await db.collection('IdentifierRangesISBN').findOne(objectId(id)).then(res => res);
+			const result = await db.collection('IdentifierRangesISBN').findOne(objectId(id));
+			return result;
 		} catch (err) {
 			return err;
 		}
