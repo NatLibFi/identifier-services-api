@@ -63,14 +63,14 @@ describe('routes/users', () => {
 	});
 
 	describe('#read', () => {
-		it.skip('Should succeed', async (index = '0') => {
+		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload); // Time-stamp will never match
 		});
 
-		it.skip('Should fail because the resource does not exist', async () => {
+		it('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
@@ -86,7 +86,7 @@ describe('routes/users', () => {
 	});
 
 	describe('#create', () => {
-		it.skip('Should succeed', async (index = '0') => {
+		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['create', index, 'dbContents.json']);
 
 			const {payload} = await init(index, true);
@@ -98,9 +98,9 @@ describe('routes/users', () => {
 			expect(formatDump(db)).to.eql(expectedDb);
 		});
 
-		it.skip('Should not succeed because content is not provided', async () => {
+		it('Should not succeed because content is not provided', async () => {
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send();
-			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
 		it('Should not succeed because of invalid syntax', async (index = '2') => {
@@ -122,46 +122,68 @@ describe('routes/users', () => {
 		}
 	});
 
-	// Describe('#delete', () => {
-	// 	it.skip('Should succeed', async (index = '0') => {
-	// 		await mongoFixtures.populate(['delete', index, 'dbContents.json']);
-	// 		const response = await requester.delete(`${requestPath}/5cd90e696a1e930789dfaa48`);
-	// 		await mongoFixtures.populate(['delete', index, 'dbExpected.json']);
-	// 		const res = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
-	// 		expect(response).to.have.status(HttpStatus.OK);
-	// 		expect(res.body.data.userMetadata).to.eql(null);
-	// 	});
+	describe('#delete', () => {
+		it('Should succeed', async (index = '0') => {
+			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+			const response = await requester.delete(`${requestPath}/5cd90e696a1e930789dfaa48`);
+			expect(response).to.have.status(HttpStatus.OK);
 
-	// 	it.skip('Should not succeed because of wrong parameters', async (index = '1') => {
-	// 		await mongoFixtures.populate(['delete', index, 'dbContents.json']);
-	// 		const query = await requester.post(`${requestPath}/query`);
-	// 		const response = await requester.delete(`${requestPath}/foo`);
-	// 		const newQuery = await requester.post(`${requestPath}/query`);
-	// 		expect(response).to.have.status(HttpStatus.OK);
-	// 		expect(query.body.data).to.eql(newQuery.body.data);
-	// 	});
-	// });
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index);
+			expect(response).to.have.status(HttpStatus.OK);
+			expect(formatDump(db)).to.eql(formatDump(expectedDb));
+		});
 
-	// describe('#update', () => {
-	// 	it.skip('Should succeed', async (index = '0') => {
-	// 		await mongoFixtures.populate(['update', index, 'dbContents.json']);
-	// 		const {payload} = await init(index, true);
-	// 		const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send(payload);
-	// 		console.log('reqponse', response.body);
+		it('Should not succeed because of wrong parameters', async (index = '1') => {
+			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+			const response = await requester.delete(`${requestPath}/`);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
+		});
 
-	// 		await mongoFixtures.populate(['update', index, 'dbExpected.json']);
-	// 		const query = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
-	// 		console.log('query', query.body);
-	// 	});
+		async function init(index) {
+			return {
+				expectedDb: getFixture({components: ['delete', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+	});
 
-	// 	async function init(index, getFixtures = false) {
-	// 		if (getFixtures) {
-	// 			return {
-	// 				payload: getFixture({components: ['update', index, 'payload.json'], reader: READERS.JSON})
-	// 			};
-	// 		}
-	// 	}
-	// });
+	describe('#update', () => {
+		it('Should succeed', async (index = '0') => {
+			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(formatDump(expectedDb));
+		});
+
+		it('Should not succeed because of worng parameter', async (index = '1') => {
+			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/fooo`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+		});
+
+		it('Should not succeed because input was not provided', async (index = '1') => {
+			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send();
+			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+		});
+
+		async function init(index, getFixtures = false) {
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['update', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+	});
 
 	function formatDump(dump) {
 		dump.userMetadata.forEach(doc =>
@@ -169,7 +191,6 @@ describe('routes/users', () => {
 				item === 'timestamp' || item === 'user'
 			).forEach(i => delete doc.lastUpdated[i]))
 		);
-		console.log(dump.userMetadata);
 		return dump;
 	}
 });

@@ -74,16 +74,13 @@ export default function () {
 
 			return result;
 		} catch (err) {
-			if (err.status === 422) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
 	async function read(db, id) {
-		const query = `
+		try {
+			const query = `
 		{
 				userMetadata(id: ${JSON.stringify(id)}) {
 					_id
@@ -98,13 +95,16 @@ export default function () {
 				}
 		}
 	`;
-		const resolve = {userMetadata: resolver.userMetadata};
-		const result = await graphql(schema, query, resolve, db);
-		if (result.data.userMetadata === null) {
+			const resolve = {userMetadata: resolver.userMetadata};
+			const result = await graphql(schema, query, resolve, db);
+			if (result.data.userMetadata === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		} catch (err) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
-
-		return result;
 	}
 
 	async function update(db, id, data) {
@@ -143,16 +143,24 @@ export default function () {
 	}
 
 	async function remove(db, id) {
-		const query = `
+		try {
+			const query = `
 			mutation {
 				deleteUser(id: ${JSON.stringify(id)}) {
 					_id
 				}
 			}
 		`;
-		const resolve = {deleteUser: resolver.deleteUser};
-		const result = await graphql(schema, query, resolve, db);
-		return result;
+			const resolve = {deleteUser: resolver.deleteUser};
+			const result = await graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function changePwd(db) {
