@@ -69,7 +69,6 @@ describe('routes/publishers', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd702693c30e77663e2b3ce`);
-			// const db = await mongoFixtures.dump();
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
@@ -131,6 +130,62 @@ describe('routes/publishers', () => {
 				).forEach(i => delete doc.lastUpdated[i]))
 			);
 			return dump;
+		}
+	});
+
+	describe('#update', () => {
+		it('Should update Publisher', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/5cdfe76e46c65d23f7cf94d3`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['update', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.PublisherMetadata.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
+	describe('#delete', () => {
+		it('Should delete a publisher', async (index = '0') => {
+			await init(index, false);
+			const response = await requester.delete(`${requestPath}/5cd702693c30e77663e2b3ce`);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(db).to.eql(expectedDb);
+		});
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['delete', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['delete', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
 		}
 	});
 
@@ -201,6 +256,62 @@ describe('routes/publishers', () => {
 				).forEach(i => delete doc.lastUpdated[i]))
 			);
 			return dump;
+		}
+	});
+
+	describe('#update requests', () => {
+		it('Should update Publisher Requests', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/requests/5cdff4db937aed356a2b5817`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['requests/update', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['requests/update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['requests/update', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.PublisherRequest.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
+	describe('#delete', () => {
+		it('Should delete a publisher requests', async (index = '0') => {
+			await init(index, false);
+			const response = await requester.delete(`${requestPath}/requests/5cdff4db937aed356a2b5817`);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(db).to.eql(expectedDb);
+		});
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['requests/delete', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['requests/delete', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['requests/delete', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
 		}
 	});
 });
