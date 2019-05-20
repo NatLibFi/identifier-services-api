@@ -71,7 +71,7 @@ type Mutation{
 
     deletePublicationRequestIsbnIsmn(id: ID!): ISBN_ISMN_Request
     deletePublicationRequestIssn(id: ID!): ISSN_Request
-       
+}
 
 input InputPublicationIsbnIsmn{
     title: String!,  publisher:String!, melindaId: String, type: String!, 

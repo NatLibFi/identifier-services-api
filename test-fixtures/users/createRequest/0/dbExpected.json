@@ -1,0 +1,20 @@
+{
+    "userMetadata": [
+        {
+            "userId":"foo foo",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+            }
+        },
+        {
+            "userId":"foobar",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+            }
+        }
+    ]
+}
