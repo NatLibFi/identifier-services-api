@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 
 /**
  *
@@ -46,7 +47,7 @@ describe('routes/publishers', () => {
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
-		mongoFixtures = await mongoFixturesFactory({rootPath: fixturesPath});
+		mongoFixtures = await mongoFixturesFactory({rootPath: fixturesPath, useObjectId: true});
 		RewireAPI.__Rewire__('MONGO_URI', await mongoFixtures.getConnectionString());
 		RewireAPI.__Rewire__('API_URL', API_URL);
 
@@ -65,18 +66,17 @@ describe('routes/publishers', () => {
 	// *********************Testing for Publishers starts ************************
 
 	describe('#read Publishers', () => {
-		it.skip('Should succeed', async (index = '0') => {
+		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/5cd702693c30e77663e2b3ce`);
+			// const db = await mongoFixtures.dump();
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it.skip('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
+		it('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
-			expect(response.body).to.eql(expectedPayload);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -89,9 +89,54 @@ describe('routes/publishers', () => {
 		}
 	});
 
+	describe('#create', () => {
+		it('Should create a new Publisher', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		it('Should fail to create because content is not provided', async (index = '1') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['create', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.PublisherMetadata.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
 	// ***********************Testing for Publisher requests starts************************
 
-	describe('#read Publishers requests', () => {
+	describe('#read Publishers Requests', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/requests/5cdff4db937aed356a2b5817`);
@@ -99,11 +144,9 @@ describe('routes/publishers', () => {
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it.skip('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
+		it('Should fail because the resource does not exist', async () => {
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
-			expect(response.body).to.eql(expectedPayload);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -113,6 +156,51 @@ describe('routes/publishers', () => {
 					expectedPayload: getFixture({components: ['requests/read', index, 'expectedPayload.json'], reader: READERS.JSON})
 				};
 			}
+		}
+	});
+
+	describe('#create Publisher Requests', () => {
+		it('Should create a new Publisher Requests', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}/requests`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		it('Should fail to create because content is not provided', async (index = '1') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}/requests`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		it('Should fail to create because of invalid syntax', async (index = '2') => {
+			const {payload} = await init(index, true);
+			const response = await requester.post(`${requestPath}/requests`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['requests/create', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['requests/create', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['requests/create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.PublisherRequest.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
 		}
 	});
 });

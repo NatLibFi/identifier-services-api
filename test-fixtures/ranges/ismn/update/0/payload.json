@@ -1,5 +1,5 @@
-{            
-    "language": "foo",
+{ 
+    "prefix": "updateValue",
     "rangeStart": 100,
     "rangeEnd": 100,
     "active": false,

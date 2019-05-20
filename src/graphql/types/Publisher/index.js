@@ -154,7 +154,7 @@ export default `
         name: String!
         language: String!
         metadataDelivery: String!
-        primaryContact: [String!]!
+        primaryContact: [String!]
         email: String
         phone: String
         website: String
@@ -169,7 +169,7 @@ export default `
         name: String!
         language: String!
         metadataDelivery: String!
-        primaryContact: [String!]!
+        primaryContact: [String!]
         email: String
         phone: String
         website: String

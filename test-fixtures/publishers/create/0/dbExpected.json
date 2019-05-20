@@ -1,8 +1,6 @@
-
 {
-    "PublisherMetadata": [
+    "PublisherMetadata": [{},
         {
-            "_id": "5cd702693c30e77663e2b3ce",
             "name": "foo",
             "language": "foo",
             "metadataDelivery": "foo",
@@ -22,10 +20,8 @@
             },
             "notes": ["foo", "bar"],
             "lastUpdated":{
-                "timestamp":"foo",
                 "user": "foo"
             }
         }
     ]
 }
-

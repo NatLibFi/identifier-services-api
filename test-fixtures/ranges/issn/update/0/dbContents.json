@@ -1,0 +1,14 @@
+{
+    "IdentifierRangesISSN": [
+        { 
+            "_id": "5cd90b2c89d0546340068668",           
+            "rangeStart": 100,
+            "rangeEnd": 100,
+            "active": false,
+            "reservedCount": 100,
+            "lastUpdated": {
+                "user": "foo"
+            }
+        }
+    ]
+}

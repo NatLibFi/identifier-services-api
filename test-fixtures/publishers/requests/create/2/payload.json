@@ -1,0 +1,69 @@
+ {
+    "lastUpdated": {
+        "user": "foo"
+    },
+    "state": "processed",
+    "publisherId": "83c5867cf8984cf297b5e6aed72492ac",
+    "publicationEstimate": 1000,
+    "primaryContact": [
+        {
+            "givenName": "Foo",
+            "familyName": "Bar",
+            "email": "foo.bar@foo.bar"
+        }
+    ],
+    "language": "fin",
+    "metadataDelivery": "external",
+    "email": "asiakaspalvelu@otava.fi",
+    "phone": "050123456",
+    "website": "http://www.otava.fi",
+    "aliases": [
+        "Kustannusosakeyhtiö Nemo"
+    ],
+    "notes": [
+        "T3RhdmEgb24gb3N0YW51dCBNb3JlZW5pbiBrdXN0YW5udXN0b2ltaW5uYW4sIG11dHRhIE1vcmVlbmkgamF0a2FhIG9tYWxsYSBuaW1lbGzDpMOkbiBqYSB0dW5udWtzaWxsYWFuLiA0LjEyLjE0L0tQICAgS3VzdGFudGFqYW4gaWxtb2l0dXM6IEFuaXRhIEZpbGltb25vZmYgaG9pdGFhIHlsZWlzZW4gcHVvbGVuIGtpcmpvamVuIElTQk4tbnVtZXJvaW5uaXQ7IE90YXZhLCBMaWtlIGphIE1vcmVlbmkuIC0gT3BwaWtpcmpvamVuIG9zYWx0YSBJU0JOLXlodGV5c2hlbmtpbMO2IG9uIFRpaW5hIEtpdmlzdMO2LCB0aWluYS5raXZpc3RvQG90YXZhLmZpLCAwNTAgMzg5IDQ1OTAuIDE4LjUuMjAxNi9LUC4gSmF0a29zc2EgTW9yZWVuaSBrw6R5dHTDpMOkIE90YXZhbiB0dW5udWtzaWEuIDI3LjIuMjAxOC9IUgo=",
+        "T3RhdmEgb24gb3N0YW51dCBOZW1vbi4gT2hlc3NhIFDDpGl2aSBIdWphc2VuIHZhc3RhdXM6IE5lbW8gdG9pbWlpIE90YXZhbiBzaXPDpGxsw6Qgb21hbmEgYnJhbmRpbsOkw6RuLCBtdXR0YSBrw6R5dHTDpMOkIE90YXZhbiBJU0JuOmnDpCwga29za2Egc2Ugb24gb3NhIEt1c3Rhbm51c29zYWtleWh0acO2IE90YXZhYS4KTGlzw6R0aWV0b2phIGFzaWFzdGE6IFRpZXRvcGFsdmVsdXDDpMOkbGxpa2vDtiBNaW5uYSBIZXJ0dHVhaW5lbiB0YWkgTmVtb24gb21hIGt1c3Rhbm51c3DDpMOkbGxpa2vDtiBNaWthIFNpaW1lcy4gICBUZXJ2ZWlzaW4gUMOkaXZpIEh1amFuZW4"
+    ],
+    "activity": {
+        "active": true,
+        "yearInactivated": null
+    },
+    "streetAddress": {
+        "address": "Uudenmaankatu 10",
+        "city": "Helsinki",
+        "zip": "00120"
+    },
+    "publication": {
+        "title": "some title",
+        "type": "some Type",
+        "subtitle": "some subtitle",
+        "language": "english",
+        "publicationTime": "foo",
+        "additionalDetails": "foobar",
+        "authors": [
+            {
+                "givenName": "rojak",
+                "familyName": "amatya",
+                "role": "admin"
+            }
+        ],
+        "series": {
+            "identifier": "hello",
+            "name": "world",
+            "volume": 22
+        },
+        "electronicDetails": {
+            "format": "foobar"
+        },
+        "printDetails": {
+            "manufacturer": "foobar",
+            "city": "bar",
+            "run": 44,
+            "edition": 2,
+            "format": "foo"
+        },
+        "mapDetails": {
+            "scale": "bar"
+        }
+    }
+}

@@ -44,7 +44,8 @@ export default {
 				throw new Error('Publisher doesnot exists');
 			}
 
-			return await db.collection('PublisherMetadata').findOne(objectId(id));
+			const result = await db.collection('PublisherMetadata').findOne(objectId(id));
+			return result;
 		} catch (err) {
 			return err;
 		}
@@ -57,7 +58,6 @@ export default {
 			}
 
 			const result = await db.collection('PublisherRequest').findOne(objectId(id));
-			console.log('----------', result)
 
 			return result;
 		} catch (err) {

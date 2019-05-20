@@ -29,6 +29,8 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 import resolvers from '../graphql/resolvers';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	return {
@@ -120,9 +122,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.Publisher === null) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -140,9 +146,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -200,9 +210,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -279,10 +293,13 @@ export default function () {
 		};
 		try {
 			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.Publisher === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
 
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 

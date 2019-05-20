@@ -105,9 +105,9 @@ describe('routes/ranges', () => {
 		});
 
 		it('Should fail to create because of invalid syntax', async (index = '2') => {
-			const {payload} = await init(index, true);
+			const {payload} = await (index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
-			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -120,6 +120,39 @@ describe('routes/ranges', () => {
 
 			return {
 				expectedDb: getFixture({components: ['isbn/create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.IdentifierRangesISBN.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
+	describe('#update ISBN', () => {
+		it('Should update ISBN', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/isbn/5cd90b2c89d0546340068667`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['isbn/update', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['isbn/update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['isbn/update', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 
@@ -177,7 +210,7 @@ describe('routes/ranges', () => {
 		it('Should fail to create because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
-			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -190,6 +223,39 @@ describe('routes/ranges', () => {
 
 			return {
 				expectedDb: getFixture({components: ['ismn/create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.IdentifierRangesISMN.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
+	describe('#update ISMN', () => {
+		it('Should update ISMN', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/ismn/5cd90b2c89d0546340068668`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['ismn/update', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['ismn/update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['ismn/update', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 
@@ -247,7 +313,7 @@ describe('routes/ranges', () => {
 		it('Should fail to create because of invalid syntax', async (index = '2') => {
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}/isbn`).set('content-type', 'application/json').send(payload);
-			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+			expect(response).to.have.status(HttpStatus.BAD_REQUEST);
 		});
 
 		async function init(index, getFixtures = false) {
@@ -260,6 +326,39 @@ describe('routes/ranges', () => {
 
 			return {
 				expectedDb: getFixture({components: ['issn/create', index, 'dbExpected.json'], reader: READERS.JSON})
+			};
+		}
+
+		function formatDump(dump) {
+			dump.IdentifierRangesISSN.forEach(doc =>
+				Object.values(doc).forEach(field => Object.keys(field).filter(item =>
+					item === 'timestamp'
+				).forEach(i => delete doc.lastUpdated[i]))
+			);
+			return dump;
+		}
+	});
+
+	describe('#update ISSN', () => {
+		it('Should update ISSN', async (index = '0') => {
+			const {payload} = await init(index, true);
+			const response = await requester.put(`${requestPath}/issn/5cd90b2c89d0546340068668`).set('content-type', 'application/json').send(payload);
+			expect(response).to.have.status(HttpStatus.OK);
+			const db = await mongoFixtures.dump();
+			const {expectedDb} = await init(index, false);
+			expect(formatDump(db)).to.eql(expectedDb);
+		});
+
+		async function init(index, getFixtures = false) {
+			await mongoFixtures.populate(['issn/update', index, 'dbContents.json']);
+			if (getFixtures) {
+				return {
+					payload: getFixture({components: ['issn/update', index, 'payload.json'], reader: READERS.JSON})
+				};
+			}
+
+			return {
+				expectedDb: getFixture({components: ['issn/update', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 
