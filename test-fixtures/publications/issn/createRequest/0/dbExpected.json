@@ -1,0 +1,30 @@
+{
+    "PublicationRequest_ISSN": [
+        {
+            "title": "Tiede Asema",
+            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
+            "year": 2019,
+            "frequency": "Neljä kertaa vuodessa",
+            "language": "eng",
+            "type": "painettu julkaisu",
+            "state": "Finished",
+            "lastUpdated": {
+                "timestamp": "2019-05-13T08:29:56.632Z",
+                "user": "barfoo"
+            }
+        },
+        {
+            "title": "Tiede Asema",
+            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
+            "year": 2018,
+            "frequency": "Neljä kertaa vuodessa",
+            "language": "eng",
+            "type": "painettu julkaisu",
+            "state": "Finished",
+            "lastUpdated": {
+                "timestamp": "2019-05-13T08:29:56.632Z",
+                "user": "barfoo"
+            }
+        }
+    ]
+}

@@ -203,7 +203,7 @@ export default function () {
 			`;
 			const resolve = {publicationRequest_ISBN_ISMN: resolvers.publicationRequest_ISBN_ISMN};
 			const result = await graphql(schema, query, resolve, db);
-			if (result.data.usersRequest === null) {
+			if (result.data.publicationRequest_ISBN_ISMN === null) {
 				throw new Error();
 			}
 

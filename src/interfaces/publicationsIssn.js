@@ -30,11 +30,16 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 import resolvers from '../graphql/resolvers';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	const queryReturn = `
 	_id
 	title
+	publisher
+	year
+	frequency
 	language
 	type
 	language
@@ -67,9 +72,13 @@ export default function () {
 			const args = {input: data};
 			const resolve = {createPublicationIssn: resolvers.createPublicationIssn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -84,9 +93,13 @@ export default function () {
 			`;
 			const resolve = {publication_ISSN: resolvers.publication_ISSN};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.data.publication_ISSN	 === null) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -102,26 +115,34 @@ export default function () {
 			const args = {id: id, input: data};
 			const resolve = {updatePublicationIssn: resolvers.updatePublicationIssn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
 	async function removeISSN(db, id) {
 		try {
 			const query = `
-				mutation{
-					deletePublicationIssn(id: ${JSON.stringify(id)}) {
-						_id
-					}
+			mutation{
+				deletePublicationIssn(id: ${JSON.stringify(id)}) {
+					_id
 				}
+			}
 			`;
 			const resolve = {deletePublicationIssn: resolvers.deletePublicationIssn};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -154,9 +175,13 @@ export default function () {
 			const args = {input: data};
 			const resolve = {createPublicationRequestIssn: resolvers.createPublicationRequestIssn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -172,9 +197,13 @@ export default function () {
 			const args = {id: id, input: data};
 			const resolve = {updatePublicationRequestIssn: resolvers.updatePublicationRequestIssn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -183,15 +212,19 @@ export default function () {
 			const query = `
 				{
 					publicationRequest_ISSN(id:${JSON.stringify(id)}){
-						${queryReturn}
+						${queryReturn} state
 					}
 				}
 			`;
 			const resolve = {publicationRequest_ISSN: resolvers.publicationRequest_ISSN};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.data.publicationRequest_ISSN	 === null) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -204,11 +237,15 @@ export default function () {
 					}
 				}
 			`;
-			const resolve = {deletePublicationRequestIssn: resolvers.createPublicationRequestIssn};
+			const resolve = {deletePublicationRequestIssn: resolvers.deletePublicationRequestIssn};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 }

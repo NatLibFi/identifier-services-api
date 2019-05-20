@@ -36,13 +36,13 @@ import chaiHttp from 'chai-http';
 
 chai.use(chaiHttp);
 
-describe('routes/publications/isbn-ismn', () => {
+describe('routes/publications/issn', () => {
 	let requester;
 	let mongoFixtures;
 
 	const API_URL = `http://localhost:${HTTP_PORT}`;
-	const fixturesPath = [__dirname, '..', '..', '..', 'test-fixtures', 'publications', 'isbnIsmn'];
-	const requestPath = '/publications/isbn-ismn';
+	const fixturesPath = [__dirname, '..', '..', '..', 'test-fixtures', 'publications', 'issn'];
+	const requestPath = '/publications/issn';
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
@@ -65,13 +65,13 @@ describe('routes/publications/isbn-ismn', () => {
 	describe('#read', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/5ce29b5559757f4cfc1f62c3`);
+			const response = await requester.get(`${requestPath}/5cd92b2197477f5addc0d293`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload); // Time-stamp will never match
 		});
 
 		it('Should fail because the resource does not exist', async () => {
-			const response = await requester.get(`${requestPath}/5ce29b5559757f4cfc1f62c3`);
+			const response = await requester.get(`${requestPath}/5cd92b2197477f5addc0d293`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
@@ -125,7 +125,7 @@ describe('routes/publications/isbn-ismn', () => {
 	describe('#delete', () => {
 		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
-			const response = await requester.delete(`${requestPath}/5ce29b5559757f4cfc1f6453`);
+			const response = await requester.delete(`${requestPath}/5ce29b5559757f4cfc1f62c3`);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -151,7 +151,7 @@ describe('routes/publications/isbn-ismn', () => {
 		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['update', index, 'dbContents.json']);
 			const {payload} = await init(index, true);
-			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6453`).set('content-type', 'application/json').send(payload);
+			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6456`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -168,7 +168,7 @@ describe('routes/publications/isbn-ismn', () => {
 
 		it('Should not succeed because input was not provided', async (index = '1') => {
 			await mongoFixtures.populate(['update', index, 'dbContents.json']);
-			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6453`).set('content-type', 'application/json').send();
+			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6456`).set('content-type', 'application/json').send();
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
@@ -186,7 +186,7 @@ describe('routes/publications/isbn-ismn', () => {
 	});
 
 	function formatDump(dump) {
-		dump.Publication_ISBN_ISMN.forEach(doc =>
+		dump.Publication_ISSN.forEach(doc =>
 			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
 				item === 'timestamp' || item === 'user'
 			).forEach(i => delete doc.lastUpdated[i]))
@@ -195,13 +195,13 @@ describe('routes/publications/isbn-ismn', () => {
 	}
 });
 
-describe('routes/publications/isbn-ismn/requests', () => {
+describe('routes/publications/issn/requests', () => {
 	let requester;
 	let mongoFixtures;
 
 	const API_URL = `http://localhost:${HTTP_PORT}`;
-	const fixturesPath = [__dirname, '..', '..', '..', 'test-fixtures', 'publications', 'isbnIsmn'];
-	const requestPath = '/publications/isbn-ismn/requests';
+	const fixturesPath = [__dirname, '..', '..', '..', 'test-fixtures', 'publications', 'issn'];
+	const requestPath = '/publications/issn/requests';
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
@@ -224,13 +224,13 @@ describe('routes/publications/isbn-ismn/requests', () => {
 	describe('#readRequest', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/5ce29b5559757f4cfc1f62c3`);
+			const response = await requester.get(`${requestPath}/5cd92b2197477f5addc0d293`);
 			expect(response).to.have.status(HttpStatus.OK);
 			expect(response.body).to.eql(expectedPayload);
 		});
 
 		it('Should fail because the resource does not exist', async () => {
-			const response = await requester.get(`${requestPath}/5ce29b5559757f4cfc1f62c3`);
+			const response = await requester.get(`${requestPath}/5cd92b2197477f5addc0d293`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
@@ -284,7 +284,7 @@ describe('routes/publications/isbn-ismn/requests', () => {
 	describe('#deleteRequest', () => {
 		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['deleteRequest', index, 'dbContents.json']);
-			const response = await requester.delete(`${requestPath}/5cdc1706d435475787f4751d`);
+			const response = await requester.delete(`${requestPath}/5cd92b2197477f5addc0d455`);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -345,7 +345,7 @@ describe('routes/publications/isbn-ismn/requests', () => {
 	});
 
 	function formatDump(dump) {
-		dump.PublicationRequest_ISBN_ISMN.forEach(doc =>
+		dump.PublicationRequest_ISSN.forEach(doc =>
 			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
 				item === 'timestamp' || item === 'user'
 			).forEach(i => delete doc.lastUpdated[i]))

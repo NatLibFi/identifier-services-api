@@ -278,6 +278,7 @@ type ISSN_Request{
     otherMedium: SeriesDetailsISSN
     previousPublication: PreviousPublication
     lastUpdated: LastUpdated
+    state: String!
 }
 
  `;
