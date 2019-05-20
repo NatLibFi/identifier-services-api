@@ -29,6 +29,8 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 import resolvers from '../graphql/resolvers';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	const queryReturn = `
@@ -64,9 +66,13 @@ export default function () {
 			const args = {inputTemplate: data};
 			const resolve = {createTemplate: resolvers.createTemplate};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -81,9 +87,13 @@ export default function () {
         `;
 			const resolve = {template: resolvers.template};
 			const result = await graphql(schema, query, resolve, db, {id: id});
+			if (result.data.template === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -100,7 +110,7 @@ export default function () {
 			const result = await graphql(schema, query, resolve, db);
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -116,9 +126,13 @@ export default function () {
 			const args = {id: id, inputTemplate: data};
 			const resolve = {updateTemplate: resolvers.updateTemplate};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 

@@ -14,22 +14,6 @@
                 "timestamp": "838383838",
                 "user": "bar"
             }
-        },
-        {
-            "publishers": [
-                "fubar"
-            ],
-            "userId": "foobar",
-            "givenName": "Barbar",
-            "familyName": "Bar",
-            "email": "foo.bar@foo.bar",
-            "state": "processed",
-            "notes":["This is a note"],
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
-
         }
     ]
 }

@@ -47,8 +47,7 @@ input InputTemplate{
 
 type Mutation{
     createTemplate(inputTemplate:InputTemplate):Template!
-    updateTemplate(id:String, name:String, language:String, subject:String, body:String, 
-        lastUpdated:LastUpdatedInput):Template
+    updateTemplate(id:ID, inputTemplate: InputTemplate):Template
     deleteTemplate(id:ID):Template
 }
 `;

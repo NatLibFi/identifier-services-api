@@ -21,7 +21,7 @@
             "publishers": [
                 "fubar"
             ],
-            "userId": "foobar",
+            "userId": "foo",
             "givenName": "Barbar",
             "familyName": "Bar",
             "email": "foo.bar@foo.bar",
@@ -31,7 +31,6 @@
                 "timestamp": "838383838",
                 "user": "bar"
             }
-
         }
     ]
 }

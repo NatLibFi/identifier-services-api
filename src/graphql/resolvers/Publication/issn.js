@@ -55,7 +55,6 @@ export default {
 	},
 
 	publicationRequest_ISSN: async ({id}, db) => {
-		console.log(db);
 		try {
 			const result = await db
 				.collection('PublicationRequest_ISSN')

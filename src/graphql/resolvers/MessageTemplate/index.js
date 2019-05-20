@@ -30,7 +30,6 @@ const date = new Date();
 
 export default {
 	template: async ({id}, db) => {
-		console.log(id);
 		try {
 			const result = await db
 				.collection('MessageTemplate')
@@ -42,7 +41,6 @@ export default {
 	},
 
 	Templates: async (root, db) => {
-		console.log(root);
 		try {
 			const result = await db
 				.collection('MessageTemplate')
@@ -71,6 +69,7 @@ export default {
 			return err;
 		}
 	},
+
 	updateTemplate: async ({inputTemplate, id}, db) => {
 		try {
 			const updateTemplate = {

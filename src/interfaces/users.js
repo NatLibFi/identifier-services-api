@@ -129,16 +129,12 @@ export default function () {
 			const result = await graphql(schema, query, resolve, db, args);
 
 			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+				throw new Error();
 			}
 
 			return result;
 		} catch (err) {
-			if (err.status === 422) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -181,7 +177,8 @@ export default function () {
 	// =====***************************** User Creation Request Starts From Here********************** ====
 
 	async function createRequest(db, data) {
-		const query = `
+		try {
+			const query = `
 			mutation($inputUserRequest: InputUserRequest){
 				createRequest(inputUserRequest: $inputUserRequest) {
 					_id
@@ -199,14 +196,23 @@ export default function () {
 				}
 			}
 		`;
-		const args = {inputUserRequest: data};
-		const resolve = {createRequest: resolver.createRequest};
-		const result = await graphql(schema, query, resolve, db, args);
-		return result;
+			const args = {inputUserRequest: data};
+			const resolve = {createRequest: resolver.createRequest};
+			const result = await graphql(schema, query, resolve, db, args);
+
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 	}
 
 	async function readRequest(db, id) {
-		const query = `
+		try {
+			const query = `
 			{
 				usersRequest(id:${JSON.stringify(id)}){
 					userId
@@ -223,13 +229,21 @@ export default function () {
 				}
 			}
 		`;
-		const resolve = {usersRequest: resolver.usersRequest};
-		const result = await graphql(schema, query, resolve, db);
-		return result;
+			const resolve = {usersRequest: resolver.usersRequest};
+			const result = await graphql(schema, query, resolve, db);
+			if (result.data.usersRequest === null) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function updateRequest(db, id, data) {
-		const query = `
+		try {
+			const query = `
 			mutation($id:ID, $inputUserRequest: InputUserRequest){
 				updateRequest(id:$id, inputUserRequest: $inputUserRequest) {
 					_id
@@ -247,14 +261,23 @@ export default function () {
 			}
 			`;
 
-		const args = {id: id, inputUserRequest: data};
-		const resolve = {updateRequest: resolver.updateRequest};
-		const result = await graphql(schema, query, resolve, db, args);
-		return result;
+			const args = {id: id, inputUserRequest: data};
+			const resolve = {updateRequest: resolver.updateRequest};
+			const result = await graphql(schema, query, resolve, db, args);
+
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 	}
 
 	async function removeRequest(db, id) {
-		const query = `
+		try {
+			const query = `
 			mutation {
 				deleteRequest(id:${JSON.stringify(id)}) {
 					_id
@@ -262,9 +285,16 @@ export default function () {
 			}
 		`;
 
-		const resolve = {deleteRequest: resolver.deleteRequest};
-		const result = await graphql(schema, query, resolve, db);
-		return result;
+			const resolve = {deleteRequest: resolver.deleteRequest};
+			const result = await graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function queryRequest(db) {
