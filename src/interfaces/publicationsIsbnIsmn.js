@@ -30,6 +30,8 @@
 import {graphql} from 'graphql';
 import schema from '../graphql';
 import resolvers from '../graphql/resolvers';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	const queryReturn = `
@@ -38,6 +40,7 @@ export default function () {
 	language
 	publicationTime
 	type
+	publisher
 	language
 	authors{
 		givenName
@@ -76,9 +79,13 @@ export default function () {
 			const args = {input: data};
 			const resolve = {createPublicationIsbnIsmn: resolvers.createPublicationIsbnIsmn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -93,9 +100,13 @@ export default function () {
 			`;
 			const resolve = {publication_ISBN_ISMN: resolvers.publication_ISBN_ISMN};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.data.publication_ISBN_ISMN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -111,9 +122,13 @@ export default function () {
 			const args = {id: id, input: data};
 			const resolve = {updatePublicationIsbnIsmn: resolvers.updatePublicationIsbnIsmn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -128,9 +143,13 @@ export default function () {
 			`;
 			const resolve = {deletePublicationIsbnIsmn: resolvers.deletePublicationIsbnIsmn};
 			const result = graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -163,9 +182,13 @@ export default function () {
 			const args = {input: data};
 			const resolve = {createPublicationRequestIsbnIsmn: resolvers.createPublicationRequestIsbnIsmn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -180,9 +203,13 @@ export default function () {
 			`;
 			const resolve = {publicationRequest_ISBN_ISMN: resolvers.publicationRequest_ISBN_ISMN};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.data.usersRequest === null) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -198,9 +225,13 @@ export default function () {
 			const args = {id: id, input: data};
 			const resolve = {updatePublicationRequestIsbnIsmn: resolvers.updatePublicationRequestIsbnIsmn};
 			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 
@@ -215,9 +246,13 @@ export default function () {
 			`;
 			const resolve = {deletePublicationRequestIsbnIsmn: resolvers.deletePublicationRequestIsbnIsmn};
 			const result = await graphql(schema, query, resolve, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
 			return result;
 		} catch (err) {
-			return err;
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
 }

@@ -162,7 +162,8 @@ export default {
 					{$set: updatePublicationRequest},
 					{upsert: true}
 				);
-			return await db.collection('PublicationRequest_ISBN_ISMN').findOne(objectId(id));
+			const result = await db.collection('PublicationRequest_ISBN_ISMN').findOne(objectId(id));
+			return result;
 		} catch (err) {
 			return err;
 		}

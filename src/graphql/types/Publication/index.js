@@ -81,7 +81,7 @@ input InputPublicationIsbnIsmn{
 }
 
 input InputPublicationIsbnIsmnRequest{
-    title: String!, state:String!, type: String, subtitle: String, language: String, 
+    title: String!, publisher:String!, state:String!, type: String, subtitle: String, language: String, 
         publicationTime: String, additionalDetails: String, authors:[authorInput], series: seriesInput, 
         electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, mapDetails: mapDetailsInput, 
         lastUpdated: lastUpdatedInput
@@ -246,6 +246,7 @@ type ISBN_ISMN_Request{
     title: String!
     type: String!
     subtitle: String
+    publisher:String!
     language: String!
     publicationTime: String!
     additionalDetails: String
