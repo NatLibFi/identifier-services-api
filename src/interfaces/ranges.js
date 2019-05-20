@@ -45,7 +45,7 @@ export default function () {
 	};
 
 	async function createIsbn(db, isbnData) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -74,6 +74,7 @@ export default function () {
 			`,
 			{db, isbnData}
 		);
+		return result;
 	}
 
 	async function readIsbn(db, id) {
@@ -82,7 +83,7 @@ export default function () {
 			`
 				{
 					ISBN {
-						id
+						_id
 						prefix
 						language
 						rangeStart
@@ -102,7 +103,7 @@ export default function () {
 	}
 
 	async function updateIsbn(db, id, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -132,15 +133,16 @@ export default function () {
 			`,
 			{db, id, data}
 		);
+		return result;
 	}
 
 	async function queryIsbn(db) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
 					ISBNs {
-						id
+						_id
 						prefix
 						language
 						rangeStart
@@ -157,10 +159,11 @@ export default function () {
 			`,
 			db
 		);
+		return result;
 	}
 
 	async function createIsmn(db, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -187,15 +190,16 @@ export default function () {
 			`,
 			{db, data}
 		);
+		return result;
 	}
 
 	async function readIsmn(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
 					ISMN {
-						id
+						_id
 						prefix
 						rangeStart
 						rangeEnd
@@ -211,10 +215,11 @@ export default function () {
 			`,
 			{db, id}
 		);
+		return result;
 	}
 
 	async function updateIsmn(db, id, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -241,15 +246,16 @@ export default function () {
 			`,
 			{db, id, data}
 		);
+		return result;
 	}
 
 	async function queryIsmn(db) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
 					ISMNs {
-						id
+						_id
 						prefix
 						rangeStart
 						rangeEnd
@@ -265,10 +271,11 @@ export default function () {
 			`,
 			db
 		);
+		return result;
 	}
 
 	async function createIssn(db, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -289,15 +296,16 @@ export default function () {
 			`,
 			{db, data}
 		);
+		return result;
 	}
 
 	async function readIssn(db, id) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
 					ISSN {
-						id
+						_id
 						rangeStart
 						rangeEnd
 						active
@@ -311,10 +319,11 @@ export default function () {
 			`,
 			{db, id}
 		);
+		return result;
 	}
 
 	async function updateIssn(db, id, data) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				mutation(
@@ -336,15 +345,16 @@ export default function () {
 			`,
 			{db, id, data}
 		);
+		return result;
 	}
 
 	async function queryIssn(db) {
-		return graphql(
+		const result = await graphql(
 			schema,
 			`
 				{
 					ISSNs {
-						id
+						_id
 						rangeStart
 						rangeEnd
 						active
@@ -358,5 +368,6 @@ export default function () {
 			`,
 			db
 		);
+		return result;
 	}
 }

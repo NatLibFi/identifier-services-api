@@ -28,7 +28,6 @@
 
 const date = new Date();
 const objectId = require('mongodb').ObjectId;
-import {User} from '../../../interfaces/models';
 
 export default {
 	userMetadata: async ({id}, db) => {
@@ -81,10 +80,10 @@ export default {
 
 	createUser: async ({inputUser}, db) => {
 		try {
-			const newUser = new User({...inputUser, lastUpdated: {
+			const newUser = {...inputUser, lastUpdated: {
 				timestamp: `${date.toISOString()}`,
 				user: 'user'
-			}});
+			}};
 			const createdResponse = await db
 				.collection('userMetadata')
 				.insertOne(newUser);

@@ -36,13 +36,13 @@ export default `
         
     publicationRequest_ISSN(id:ID!): ISSN_Request
 
-    Publications_ISBN_ISMN: [ISBN_ISMN!]   
+    Publications_ISBN_ISMN: [ISBN_ISMN]   
 
-    Publications_ISSN: [ISSN!]
+    Publications_ISSN: [ISSN]
     
-    PublicationRequests_ISBN_ISMN: [ISBN_ISMN_Request!]
+    PublicationRequests_ISBN_ISMN: [ISBN_ISMN_Request]
     
-    PublicationRequests_ISSN: [ISSN_Request!]
+    PublicationRequests_ISSN: [ISSN_Request]
 
 }
 
@@ -64,7 +64,6 @@ type Mutation{
     updatePublicationIsbnIsmn(id: ID, input: InputPublicationIsbnIsmn ): ISBN_ISMN!
     
     updatePublicationRequestIsbnIsmn(id:ID, input: InputPublicationIsbnIsmnRequest ): ISBN_ISMN_Request!
-
     
     updatePublicationIssn(id: ID, input: InputPublicationIssn):ISSN  
 
@@ -72,7 +71,7 @@ type Mutation{
 
     deletePublicationRequestIsbnIsmn(id: ID!): ISBN_ISMN_Request
     deletePublicationRequestIssn(id: ID!): ISSN_Request
-}
+       
 
 input InputPublicationIsbnIsmn{
     title: String!,  publisher:String!, melindaId: String, type: String!, 

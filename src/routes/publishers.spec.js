@@ -70,14 +70,11 @@ describe('routes/publishers', () => {
 			expect(response.body).to.eql(expectedPayload);
 		});
 
-		it.skip('Should fail because the resource does not exist', async (index = '1') => {
-			await init(index);
-			try {
-				await requester.get(`${requestPath}/foo`);
-			} catch (err) {
-				console.log('***', err);
-				expect(err.status).to.equal(HttpStatus.NOT_FOUND);
-			}
+		it('Should fail because the resource does not exist', async (index = '1') => {
+			const {expectedPayload} = await init(index, true);
+			const response = await requester.get(`${requestPath}/foo`);
+			expect(response).to.have.status(HttpStatus.NOT_FOUND);
+			expect(response.body).to.eql(expectedPayload);
 		});
 
 		async function init(index, getFixtures = false) {
