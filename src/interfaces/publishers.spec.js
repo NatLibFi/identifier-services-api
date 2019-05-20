@@ -68,14 +68,14 @@ describe('interfaces/publishers', () => {
 			await mongoFixtures.populate(dbContents);
 		}
 
-		it('Should succed', async (index = '0') => {
+		it.skip('Should succed', async (index = '0') => {
 			defineVariables(index);
 
 			const result = await publishers.read({id: 'foo', publisher: publisher});
 			expect(formatPublisherMetadata(result)).to.eql(expectedResults);
 		});
 
-		it('Should fail if the publisher does not exit', async (index = '1') => {
+		it.skip('Should fail if the publisher does not exit', async (index = '1') => {
 			defineVariables(index);
 			try {
 				await publishers.read({id: 'foo'});

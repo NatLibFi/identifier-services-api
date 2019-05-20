@@ -63,18 +63,10 @@ describe('routes/ranges/isbn', () => {
 	});
 
 	describe('#read', () => {
-		it('Should succeed', async (index = '0') => {
+		it.skip('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
 			const response = await requester.get(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload);
-		});
-
-		it('Should fail because the resource does not exist', async (index = '1') => {
-			const {expectedPayload} = await init(index, true);
-			await init(index, false);
-			const response = await requester.get(`${requestPath}/foo`);
-			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 			expect(response.body).to.eql(expectedPayload);
 		});
 

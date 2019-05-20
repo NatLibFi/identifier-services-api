@@ -28,14 +28,14 @@
 
 export default `
  type Query{
-     userMetadata:User
-     usersRequest: UsersRequest
+     userMetadata(id:ID!):User
+     usersRequest(id:ID!): UsersRequest
      Users: [User!]
-     usersRequests: [UsersRequest!]
+     UsersRequests: [UsersRequest!]
  }
 
  type LastUpdated{
-     timestamp: String!
+     timestamp: String
      user: String!
  }
  
@@ -44,7 +44,7 @@ export default `
  }
 
  input LastUpdatedInput{
-     timestamp: String!
+     timestamp: String
      user: String!
  }
  
@@ -54,37 +54,51 @@ export default `
  
  type User{
     _id: ID!
-    userId: String
-    preferences: Preferences!
+    userId: String!
+    preferences(defaultLanguage: String): Preferences!
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
 
  type UsersRequest{
      _id: ID!
-     userId: String!
-     publishers: [String!]
+     userId: String
+     publishers: [String!]!
      givenName: String!
      familyName: String!
      email: String!
-     notes:[String]
+     notes:[String!]!
      state: String!
      lastUpdated: LastUpdated
  }
 
+ input InputUser{
+    userId:String!,
+    preferences:PreferencesInput,
+    lastUpdated:LastUpdatedInput
+ }
+
+ input InputUserRequest{
+    userId:String,
+    state:String!,
+    publishers:[String!]!,
+    givenName:String!,
+    familyName:String!,
+    email:String!,
+    notes:[String!]!,
+    lastUpdated: LastUpdatedInput
+ }
 
  type Mutation{
-    createUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
+    createUser(inputUser:InputUser):User!
 
-    createRequest(userId:String, state:String, publishers:[String], givenName:String, familyName:String,
-        email:String, notes:[String], lastUpdated: LastUpdatedInput ):UsersRequest
+    createRequest(inputUserRequest: InputUserRequest):UsersRequest!
 
-    deleteUser(_id:ID):User
+    deleteUser(id:ID):User
 
-    deleteRequest(_id:ID):UsersRequest
+    deleteRequest(id:ID):UsersRequest
 
-    updateUser(userId:String, preferences:PreferencesInput, lastUpdated:LastUpdatedInput):User
+    updateUser(id:ID, inputUser:InputUser):User!
 
-    updateRequest(userId:String, state:String, publishers:String, givenName:String, familyName:String,
-        email:String, notes:String, lastUpdated: LastUpdatedInput ):UsersRequest
+    updateRequest(id: ID, inputUserRequest: InputUserRequest):UsersRequest!
  }
  `;

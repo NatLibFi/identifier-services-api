@@ -1,11 +1,12 @@
 {
     "userMetadata": [
         {
-            "userId":"foo foo",
+            "userId":"foobar",
             "preferences": {
-                "defaultLanguage": "foo"
+                "defaultLanguage": "bar"
             },
             "lastUpdated": {
+                "user":"bar"
             }
         }
     ]

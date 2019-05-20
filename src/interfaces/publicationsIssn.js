@@ -29,6 +29,7 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import resolvers from '../graphql/resolvers';
 
 export default function () {
 	const queryReturn = `
@@ -55,280 +56,159 @@ export default function () {
 	};
 
 	async function createISSN(db, data) {
-		return graphql(
-			schema,
-			`
-				mutation(
-					$title: String
-					$publicationId: String
-					$publisher: String
-					$melindaId: String
-					$type: String
-					$subtitle: String
-					$language: String
-					$year: Int
-					$number: Int
-					$frequency: String
-					$additionalDetails: String
-					$electronicDteails: electronicDetailsISSNInput
-					$printDetails: printDetailsISSNInput
-					$seriesDetails: seriesDetailsISSNInput
-					$mainSeries: seriesDetailsISSNInput
-					$subSeries: seriesDetailsISSNInput
-					$otherMedium: seriesDetailsISSNInput
-					$previousPublication: previousPublicationInput
-					$lastUpdated: lastUpdatedInput
-				) {
-					createPublicationIssn(
-						title:$title
-						publicationId:$publicationId
-						publisher:$publisher
-						melindaId:$melindaId
-						type:$type
-						subtitle:$subtitle
-						language:$language
-						year:$year
-						number:$number
-						frequency:$frequency
-						additionalDetails:$additionalDetails
-						electronicDteails:$electronicDteails
-						printDetails:$printDetails
-						seriesDetails:$seriesDetails
-						mainSeries:$mainSeries
-						subSeries:$subSeries
-						otherMedium:$otherMedium
-						previousPublication:$previousPublication
-						lastUpdated:$lastUpdated
-					) {
+		try {
+			const query = `
+				mutation($input: InputPublicationIssn ) {
+					createPublicationIssn(input: $input) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, data}
-		);
+			`;
+			const args = {input: data};
+			const resolve = {createPublicationIssn: resolvers.createPublicationIssn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function readISSN(db, id) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
-					publication_ISSN {
+					publication_ISSN(id:${JSON.stringify(id)}) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {publication_ISSN: resolvers.publication_ISSN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function updateISSN(db, id, data) {
-		return graphql(
-			schema,
-			`
-			mutation(
-				$title: String
-				$publicationId: String
-				$publisher: String
-				$melindaId: String
-				$type: String
-				$subtitle: String
-				$language: String
-				$year: Int
-				$number: Int
-				$frequency: String
-				$additionalDetails: String
-				$electronicDteails: electronicDetailsISSNInput
-				$printDetails: printDetailsISSNInput
-				$seriesDetails: seriesDetailsISSNInput
-				$mainSeries: seriesDetailsISSNInput
-				$subSeries: seriesDetailsISSNInput
-				$otherMedium: seriesDetailsISSNInput
-				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
-			) {
-				updatePublicationIssn(
-					title:$title
-					publicationId:$publicationId
-					publisher:$publisher
-					melindaId:$melindaId
-					type:$type
-					subtitle:$subtitle
-					language:$language
-					year:$year
-					number:$number
-					frequency:$frequency
-					additionalDetails:$additionalDetails
-					electronicDteails:$electronicDteails
-					printDetails:$printDetails
-					seriesDetails:$seriesDetails
-					mainSeries:$mainSeries
-					subSeries:$subSeries
-					otherMedium:$otherMedium
-					previousPublication:$previousPublication
-					lastUpdated:$lastUpdated
-				) {
+		try {
+			const query = `
+				mutation($id:ID, $input: InputPublicationIssn ) {
+					updatePublicationIssn(id: $id, input: $input) {
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id, data}
-		);
+			`;
+			const args = {id: id, input: data};
+			const resolve = {updatePublicationIssn: resolvers.updatePublicationIssn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function removeISSN(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id: ID) {
-					deletePublicationIssn(_id: $id) {
+		try {
+			const query = `
+				mutation{
+					deletePublicationIssn(id: ${JSON.stringify(id)}) {
 						_id
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {deletePublicationIssn: resolvers.deletePublicationIssn};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryISSN(db) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
 					Publications_ISSN {
 						${queryReturn}
 					}
 				}
-			`,
-			db
-		);
+			`;
+			const resolve = {Publications_ISSN: resolvers.Publications_ISSN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function createRequestISSN(db, data) {
-		return graphql(
-			schema,
-			`
-			mutation(
-				$title: String
-				$publisher: String
-				$type: String
-				$subtitle: String
-				$language: String
-				$year: Int
-				$number: Int
-				$frequency: String
-				$additionalDetails: String
-				$electronicDteails: electronicDetailsISSNInput
-				$printDetails: printDetailsISSNInput
-				$seriesDetails: seriesDetailsISSNInput
-				$mainSeries: seriesDetailsISSNInput
-				$subSeries: seriesDetailsISSNInput
-				$otherMedium: seriesDetailsISSNInput
-				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
-			) {
-				createPublicationRequestIssn(
-					title:$title
-					publisher:$publisher
-					type:$type
-					subtitle:$subtitle
-					language:$language
-					year:$year
-					number:$number
-					frequency:$frequency
-					additionalDetails:$additionalDetails
-					electronicDteails:$electronicDteails
-					printDetails:$printDetails
-					seriesDetails:$seriesDetails
-					mainSeries:$mainSeries
-					subSeries:$subSeries
-					otherMedium:$otherMedium
-					previousPublication:$previousPublication
-					lastUpdated:$lastUpdated
-				) {
-						${queryReturn}
+		try {
+			const query = `
+				mutation($input: InputPublicationRequestIssn) {
+					createPublicationRequestIssn(input: $input) {
+							${queryReturn}
+						}
 					}
-				}
-		`,
-			{db, data}
-		);
+			`;
+			const args = {input: data};
+			const resolve = {createPublicationRequestIssn: resolvers.createPublicationRequestIssn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function updateRequestISSN(db, id, data) {
-		return graphql(
-			schema,
-			`
-			mutation(
-				$title: String
-				$publisher: String
-				$type: String
-				$subtitle: String
-				$language: String
-				$year: Int
-				$number: Int
-				$frequency: String
-				$additionalDetails: String
-				$electronicDteails: electronicDetailsISSNInput
-				$printDetails: printDetailsISSNInput
-				$seriesDetails: seriesDetailsISSNInput
-				$mainSeries: seriesDetailsISSNInput
-				$subSeries: seriesDetailsISSNInput
-				$otherMedium: seriesDetailsISSNInput
-				$previousPublication: previousPublicationInput
-				$lastUpdated: lastUpdatedInput
-			) {
-				updatePublicationRequestIssn(
-					title:$title
-					publisher:$publisher
-					type:$type
-					subtitle:$subtitle
-					language:$language
-					year:$year
-					number:$number
-					frequency:$frequency
-					additionalDetails:$additionalDetails
-					electronicDteails:$electronicDteails
-					printDetails:$printDetails
-					seriesDetails:$seriesDetails
-					mainSeries:$mainSeries
-					subSeries:$subSeries
-					otherMedium:$otherMedium
-					previousPublication:$previousPublication
-					lastUpdated:$lastUpdated
-				) {
-						${queryReturn}
+		try {
+			const query = `
+				mutation($id:ID, $input: InputPublicationRequestIssn) {
+					updatePublicationRequestIssn(id: $id, input: $input) {
+							${queryReturn}
+						}
 					}
-				}
-		`,
-			{db, id, data}
-		);
+			`;
+			const args = {id: id, input: data};
+			const resolve = {updatePublicationRequestIssn: resolvers.updatePublicationRequestIssn};
+			const result = await graphql(schema, query, resolve, db, args);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function readRequestISSN(db, id) {
-		return graphql(
-			schema,
-			`
+		try {
+			const query = `
 				{
-					publicationRequest_ISSN {
+					publicationRequest_ISSN(id:${JSON.stringify(id)}){
 						${queryReturn}
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {publicationRequest_ISSN: resolvers.publicationRequest_ISSN};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function removeRequestISSN(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id:ID){
-					deletePublicationRequestIssn(_id:$id){
+		try {
+			const query = `
+				mutation{
+					deletePublicationRequestIssn(id:${JSON.stringify(id)}){
 					_id
 					}
 				}
-			`,
-			{db, id}
-		);
+			`;
+			const resolve = {deletePublicationRequestIssn: resolvers.createPublicationRequestIssn};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 }
