@@ -42,16 +42,8 @@
     "cors": "^2.8.5",
     "eslint-plugin-mocha": "^5.3.0",
     "express": "^4.17.0",
-<<<<<<< HEAD
-    "express-graphql": "^0.8.0",
-    "graphql": "^14.3.0",
-    "graphql-tools": "^4.0.4",
-    "merge-graphql-schemas": "^1.5.8",
-    "mongoose": "^5.5.9",
-=======
     "graphql": "^14.3.0",
     "merge-graphql-schemas": "^1.5.8",
->>>>>>> 1ba3c5ffb68350a1e3ca1def810b8775ae84a193
     "passport-http": "^0.3.0",
     "path": "^0.12.7",
     "uuid": "^3.3.2"
