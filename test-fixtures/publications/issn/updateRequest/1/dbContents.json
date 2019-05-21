@@ -8,6 +8,7 @@
             "frequency": "Neljä kertaa vuodessa",
             "language": "eng",
             "type": "painettu julkaisu",
+            "state": "Finished",
             "lastUpdated": {
                 "timestamp": "2019-05-13T08:29:56.632Z",
                 "user": "barfoo"
@@ -21,6 +22,7 @@
             "frequency": "Neljä kertaa vuodessa",
             "language": "eng",
             "type": "painettu julkaisu",
+            "state": "Finished",
             "lastUpdated": {
                 "timestamp": "2019-05-13T08:29:56.632Z",
                 "user": "barfoo"

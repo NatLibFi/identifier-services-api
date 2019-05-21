@@ -310,7 +310,7 @@ describe('routes/publications/issn/requests', () => {
 		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['updateRequest', index, 'dbContents.json']);
 			const {payload} = await init(index, true);
-			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6453`).set('content-type', 'application/json').send(payload);
+			const response = await requester.put(`${requestPath}/5cd92b2197477f5addc0d455`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -327,7 +327,7 @@ describe('routes/publications/issn/requests', () => {
 
 		it('Should not succeed because input was not provided', async (index = '1') => {
 			await mongoFixtures.populate(['updateRequest', index, 'dbContents.json']);
-			const response = await requester.put(`${requestPath}/5ce29b5559757f4cfc1f6453`).set('content-type', 'application/json').send();
+			const response = await requester.put(`${requestPath}/5cd92b2197477f5addc0d455`).set('content-type', 'application/json').send();
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 

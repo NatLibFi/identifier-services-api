@@ -284,7 +284,7 @@ describe('routes/publications/isbn-ismn/requests', () => {
 	describe('#deleteRequest', () => {
 		it('Should succeed', async (index = '0') => {
 			await mongoFixtures.populate(['deleteRequest', index, 'dbContents.json']);
-			const response = await requester.delete(`${requestPath}/5cdc1706d435475787f4751d`);
+			const response = await requester.delete(`${requestPath}/5ce29b5559757f4cfc1f6455`);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -295,7 +295,7 @@ describe('routes/publications/isbn-ismn/requests', () => {
 
 		it('Should not succeed because of wrong parameters', async (index = '1') => {
 			await mongoFixtures.populate(['deleteRequest', index, 'dbContents.json']);
-			const response = await requester.delete(`${requestPath}/`);
+			const response = await requester.delete(`${requestPath}/foo`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 

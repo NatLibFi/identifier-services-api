@@ -25,7 +25,7 @@
     "lint:base": "eslint --fix",
     "lint": "npm run lint:base -- src",
     "test:base": "cross-env NODE_ENV=test nyc mocha -t 20000 --exit --require @babel/register",
-    "test": "npm run lint && npm run test:base -- src/**/*.spec.js && npm run coverage",
+    "test": "npm run lint && npm run test:base -- src/routes/*.spec.js src/routes/**/*.spec.js && npm run coverage",
     "coverage": "nyc check-coverage --per-file",
     "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified",
     "build:dev": "npm run build:transpile && npm run check-deps",
