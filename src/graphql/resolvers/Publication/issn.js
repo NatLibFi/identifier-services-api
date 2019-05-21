@@ -31,149 +31,144 @@ const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
 export default {
-	Query: {
-		publication_ISSN: async ({db, id}) => {
-			try {
-				const result = await db
-					.collection('Publication_ISSN')
-					.findOne(objectId(id));
-				return result;
-			} catch (err) {
-				return err;
-			}
-		},
-
-		Publications_ISSN: async db => {
-			try {
-				const result = await db
-					.collection('Publication_ISSN')
-					.find()
-					.toArray();
-				return result;
-			} catch (err) {
-				return err;
-			}
-		},
-
-		publicationRequest_ISSN: async ({db, id}) => {
-			try {
-				const result = await db
-					.collection('PublicationRequest_ISSN')
-					.findOne(objectId(id));
-				return result;
-			} catch (err) {
-				return err;
-			}
+	publication_ISSN: async ({id}, db) => {
+		try {
+			const result = await db
+				.collection('Publication_ISSN')
+				.findOne(objectId(id));
+			return result;
+		} catch (err) {
+			return err;
 		}
 	},
 
-	Mutation: {
-		createPublicationIssn: async ({db, data}) => {
-			try {
-				const newPublication = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				const result = await db
-					.collection('Publication_ISSN')
-					.insertOne(newPublication);
-				return result.ops[0];
-			} catch (err) {
-				return err;
-			}
-		},
-
-		deletePublicationIssn: async ({db, id}) => {
-			try {
-				const deletedPublication = await db
-					.collection('Publication_ISSN')
-					.findOneAndDelete({_id: objectId(id)});
-				return deletedPublication.value;
-			} catch (err) {
-				return err;
-			}
-		},
-
-		updatePublicationIssn: async ({db, id, data}) => {
-			console.log(id);
-			try {
-				const updatePublication = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				await db
-					.collection('Publication_ISSN')
-					.findOneAndUpdate(
-						{_id: objectId(id)},
-						{$set: updatePublication},
-						{upsert: true}
-					);
-				return await db
-					.collection('Publication_ISSN')
-					.findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
-
-		createPublicationRequestIssn: async ({db, data}) => {
-			try {
-				const newPublicationRequest = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				const result = await db
-					.collection('PublicationRequest_ISSN')
-					.insertOne(newPublicationRequest);
-				return result.ops[0];
-			} catch (err) {
-				return err;
-			}
-		},
-
-		updatePublicationRequestIssn: async ({db, id, data}) => {
-			try {
-				const updatePublicationRequest = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				await db
-					.collection('PublicationRequest_ISSN')
-					.findOneAndUpdate(
-						{_id: objectId(id)},
-						{$set: updatePublicationRequest},
-						{upsert: true}
-					);
-				return await db
-					.collection('PublicationRequest_ISSN')
-					.findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
-
-		deletePublicationRequestIssn: async ({db, id}) => {
-			try {
-				const deletedPublicationRequest = await db
-					.collection('PublicationRequest_ISSN')
-					.findOneAndDelete({_id: objectId(id)});
-				return deletedPublicationRequest.value;
-			} catch (err) {
-				return err;
-			}
+	Publications_ISSN: async (root, db) => {
+		try {
+			const result = await db
+				.collection('Publication_ISSN')
+				.find()
+				.toArray();
+			return result;
+		} catch (err) {
+			return err;
 		}
+	},
 
+	publicationRequest_ISSN: async ({id}, db) => {
+		try {
+			const result = await db
+				.collection('PublicationRequest_ISSN')
+				.findOne(objectId(id));
+			return result;
+		} catch (err) {
+			return err;
+		}
+	},
+
+	createPublicationIssn: async ({input}, db) => {
+		try {
+			const newPublication = {
+				...input,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			const result = await db
+				.collection('Publication_ISSN')
+				.insertOne(newPublication);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+
+	deletePublicationIssn: async ({id}, db) => {
+		try {
+			const deletedPublication = await db
+				.collection('Publication_ISSN')
+				.findOneAndDelete({_id: objectId(id)});
+			return deletedPublication.value;
+		} catch (err) {
+			return err;
+		}
+	},
+
+	updatePublicationIssn: async ({input, id}, db) => {
+		try {
+			const updatePublication = {
+				...input,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			await db
+				.collection('Publication_ISSN')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updatePublication},
+					{upsert: true}
+				);
+			return await db
+				.collection('Publication_ISSN')
+				.findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+
+	createPublicationRequestIssn: async ({input}, db) => {
+		try {
+			const newPublicationRequest = {
+				...input,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			const result = await db
+				.collection('PublicationRequest_ISSN')
+				.insertOne(newPublicationRequest);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+
+	updatePublicationRequestIssn: async ({id, input}, db) => {
+		try {
+			const updatePublicationRequest = {
+				...input,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			await db
+				.collection('PublicationRequest_ISSN')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updatePublicationRequest},
+					{upsert: true}
+				);
+			return await db
+				.collection('PublicationRequest_ISSN')
+				.findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+
+	deletePublicationRequestIssn: async ({id}, db) => {
+		try {
+			const deletedPublicationRequest = await db
+				.collection('PublicationRequest_ISSN')
+				.findOneAndDelete({_id: objectId(id)});
+			return deletedPublicationRequest.value;
+		} catch (err) {
+			return err;
+		}
 	}
+
 };

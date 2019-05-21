@@ -29,82 +29,79 @@ const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
 export default {
-	Query: {
-		template: async ({db, id}) => {
-			try {
-				const result = await db
-					.collection('MessageTemplate')
-					.findOne(objectId(id));
-				return result;
-			} catch (err) {
-				return err;
-			}
-		},
-
-		Templates: async ({db}) => {
-			try {
-				const result = await db
-					.collection('MessageTemplate')
-					.find()
-					.toArray();
-				return result;
-			} catch (err) {
-				return err;
-			}
+	template: async ({id}, db) => {
+		try {
+			const result = await db
+				.collection('MessageTemplate')
+				.findOne(objectId(id));
+			return result;
+		} catch (err) {
+			return err;
 		}
 	},
 
-	Mutation: {
-		createTemplate: async ({db, data}) => {
-			try {
-				const newTemplate = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				const result = await db
-					.collection('MessageTemplate')
-					.insertOne(newTemplate);
-				return result.ops[0];
-			} catch (err) {
-				return err;
-			}
-		},
-		updateTemplate: async ({db, id, data}) => {
-			try {
-				const updateTemplate = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				await db
-					.collection('MessageTemplate')
-					.findOneAndUpdate(
-						{_id: objectId(id)},
-						{$set: updateTemplate},
-						{upsert: true}
-					);
-				return db
-					.collection('MessageTemplate')
-					.findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
+	Templates: async (root, db) => {
+		try {
+			const result = await db
+				.collection('MessageTemplate')
+				.find()
+				.toArray();
+			return result;
+		} catch (err) {
+			return err;
+		}
+	},
 
-		deleteTemplate: async ({db, id}) => {
-			try {
-				const deletedUser = await db
-					.collection('MessageTemplate')
-					.findOneAndDelete({_id: objectId(id)});
-				return deletedUser.value;
-			} catch (err) {
-				return err;
-			}
+	createTemplate: async ({inputTemplate}, db) => {
+		try {
+			const newTemplate = {
+				...inputTemplate,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			const result = await db
+				.collection('MessageTemplate')
+				.insertOne(newTemplate);
+			return result.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
+
+	updateTemplate: async ({inputTemplate, id}, db) => {
+		try {
+			const updateTemplate = {
+				...inputTemplate,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			await db
+				.collection('MessageTemplate')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updateTemplate},
+					{upsert: true}
+				);
+			return db
+				.collection('MessageTemplate')
+				.findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+
+	deleteTemplate: async ({id}, db) => {
+		try {
+			const deletedUser = await db
+				.collection('MessageTemplate')
+				.findOneAndDelete({_id: objectId(id)});
+			return deletedUser.value;
+		} catch (err) {
+			return err;
 		}
 	}
 };

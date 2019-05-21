@@ -28,7 +28,7 @@
 
 export default `
 type Query{
-    template: Template
+    template(id:ID!): Template
     Templates: [Template]
 }
 
@@ -40,14 +40,14 @@ type Template{
     body: String!
     lastUpdated: LastUpdated!
 }
+input InputTemplate{
+    name:String!, language:String!, subject:String!, body:String!, 
+    lastUpdated:LastUpdatedInput
+}
 
 type Mutation{
-    createTemplate(name:String, language:String, subject:String, body:String, 
-        lastUpdated:LastUpdatedInput):Template
-    
-    updateTemplate(name:String, language:String, subject:String, body:String, 
-        lastUpdated:LastUpdatedInput):Template
-    
-    deleteTemplate(_id:ID):Template
+    createTemplate(inputTemplate:InputTemplate):Template!
+    updateTemplate(id:ID, inputTemplate: InputTemplate):Template
+    deleteTemplate(id:ID):Template
 }
 `;

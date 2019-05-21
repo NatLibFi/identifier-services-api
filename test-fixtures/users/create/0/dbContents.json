@@ -1,8 +1,12 @@
 {
-    "users": [{
-        "id": "foo",
-        "preference": {
-            "defaultLanguage": "foo"
+    "userMetadata": [
+        {
+            "userId":"foo foo",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+            }
         }
-    }]
+    ]
 }

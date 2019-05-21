@@ -28,6 +28,9 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import resolvers from '../graphql/resolvers';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
 	const queryReturn = `
@@ -51,93 +54,99 @@ export default function () {
 	};
 
 	async function create(db, data) {
-		return graphql(
-			schema,
-			`
-            mutation(
-                $language:String 
-                $subject:String 
-                $body:String 
-                $lastUpdated:LastUpdatedInput
-                ){
-                createTemplate(
-                    language:$language 
-                    subject:$subject 
-                    body:$body 
-                    lastUpdated:$lastUpdated
-                    ){
+		try {
+			const query = `
+            mutation($inputTemplate: InputTemplate ){
+                createTemplate(inputTemplate: $inputTemplate){
                     ${queryReturn}
                 }
             }
-            `,
-			{db, data}
-		);
+        `;
+
+			const args = {inputTemplate: data};
+			const resolve = {createTemplate: resolvers.createTemplate};
+			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 	}
 
 	async function read(db, id) {
-		return graphql(
-			schema,
-			`
-                {
-                    template{
-                        ${queryReturn}
-                    }
-                }
-            `,
-			{db, id}
-		);
-	}
-
-	async function remove(db, id) {
-		return graphql(
-			schema,
-			`
-				mutation($id: ID) {
-					deleteTemplate(_id: $id) {
-						_id
-					}
-				}
-			`,
-			{db, id}
-		);
-	}
-
-	async function update(db, id, data) {
-		console.log(data);
-		return graphql(
-			schema,
-			`
-            mutation(
-                $language:String 
-                $subject:String 
-                $body:String 
-                $lastUpdated:LastUpdatedInput
-                ){
-                updateTemplate(
-                    language:$language 
-                    subject:$subject 
-                    body:$body 
-                    lastUpdated:$lastUpdated
-                    ){
+		try {
+			const query = `
+            {
+                template(id:${JSON.stringify(id)}){
                     ${queryReturn}
                 }
             }
-            `,
-			{db, id, data}
-		);
+        `;
+			const resolve = {template: resolvers.template};
+			const result = await graphql(schema, query, resolve, db, {id: id});
+			if (result.data.template === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
-	async function query(db, data) {
-		return graphql(
-			schema,
-			`
-                {
-                    Templates{
+	async function remove(db, id) {
+		try {
+			const query = `
+            mutation{
+                deleteTemplate(id: ${JSON.stringify(id)}) {
+                    _id
+                }
+            }
+        `;
+			const resolve = {deleteTemplate: resolvers.deleteTemplate};
+			const result = await graphql(schema, query, resolve, db);
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	async function update(db, id, data) {
+		try {
+			const query = `
+                mutation($id:ID, $inputTemplate:InputTemplate){
+                    updateTemplate(id:$id, inputTemplate: $inputTemplate){
                         ${queryReturn}
                     }
                 }
-            `,
-			{db, data}
-		);
+            `;
+			const args = {id: id, inputTemplate: data};
+			const resolve = {updateTemplate: resolvers.updateTemplate};
+			const result = await graphql(schema, query, resolve, db, args);
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+	}
+
+	async function query(db) {
+		const query = `
+            {
+                Templates{
+                    ${queryReturn}
+                }
+            }
+        `;
+
+		const resolve = {Templates: resolvers.Templates};
+		const result = await graphql(schema, query, resolve, db);
+		return result;
 	}
 }

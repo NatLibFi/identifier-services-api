@@ -30,161 +30,152 @@ const date = new Date();
 const objectId = require('mongodb').ObjectId;
 
 export default {
-	Query: {
-		userMetadata: async ({db, id}) => {
-			try {
-				return await db
-					.collection('userMetadata')
-					.findOne(objectId(id))
-					.then(res => res);
-			} catch (err) {
-				return err;
-			}
-		},
-
-		Users: async db => {
-			try {
-				return await db
-					.collection('userMetadata')
-					.find()
-					.toArray()
-					.then(res => res);
-			} catch (err) {
-				return err;
-			}
-		},
-
-		usersRequest: async ({db, id}) => {
-			try {
-				return await db
-					.collection('usersRequest')
-					.findOne(objectId(id))
-					.then(res => res);
-			} catch (err) {
-				return err;
-			}
-		},
-
-		usersRequests: async db => {
-			try {
-				return await db
-					.collection('usersRequest')
-					.find()
-					.toArray()
-					.then(res => res);
-			} catch (err) {
-				return err;
-			}
+	userMetadata: async ({id}, db) => {
+		try {
+			const result = await db
+				.collection('userMetadata')
+				.findOne(objectId(id));
+			return result;
+		} catch (err) {
+			return err;
 		}
 	},
 
-	Mutation: {
-		createUser: async ({db, data}) => {
-			try {
-				const newUser = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				const createdResponse = await db
-					.collection('userMetadata')
-					.insertOne(newUser)
-					.then(res => res.ops);
-				return createdResponse[0];
-			} catch (err) {
-				return err;
-			}
-		},
+	Users: async (root, db) => {
+		try {
+			const result = await db
+				.collection('userMetadata')
+				.find()
+				.toArray();
+			return result;
+		} catch (err) {
+			return err;
+		}
+	},
 
-		deleteUser: async ({db, id}) => {
-			try {
-				const deletedUser = await db
-					.collection('userMetadata')
-					.findOneAndDelete({_id: objectId(id)})
-					.then(res => res.value);
-				return deletedUser;
-			} catch (err) {
-				return err;
-			}
-		},
+	usersRequest: async ({id}, db) => {
+		try {
+			const result = await db
+				.collection('usersRequest')
+				.findOne(objectId(id));
+			return result;
+		} catch (err) {
+			return err;
+		}
+	},
 
-		updateUser: async ({db, id, data}) => {
-			try {
-				const updateUser = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				await db
-					.collection('userMetadata')
-					.findOneAndUpdate(
-						{_id: objectId(id)},
-						{$set: updateUser},
-						{upsert: true}
-					);
-				return await db.collection('userMetadata').findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
-		},
+	UsersRequests: async (root, db) => {
+		try {
+			const result = await db
+				.collection('usersRequest')
+				.find()
+				.toArray();
+			return result;
+		} catch (err) {
+			return err;
+		}
+	},
 
-		createRequest: async ({db, data}) => {
-			try {
-				const newUserRequest = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				const createdResponse = await db
-					.collection('usersRequest')
-					.insertOne(newUserRequest)
-					.then(res => res.ops);
-				return createdResponse[0];
-			} catch (err) {
-				return err;
-			}
-		},
+	/// ***************** */Mutation  Starts Here*********************
 
-		deleteRequest: async ({db, id}) => {
-			try {
-				const deletedRequest = await db
-					.collection('usersRequest')
-					.findOneAndDelete({_id: objectId(id)})
-					.then(res => res.value);
-				return deletedRequest;
-			} catch (err) {
-				return err;
-			}
-		},
+	createUser: async ({inputUser}, db) => {
+		try {
+			const newUser = {...inputUser, lastUpdated: {
+				timestamp: `${date.toISOString()}`,
+				user: 'user'
+			}};
+			const createdResponse = await db
+				.collection('userMetadata')
+				.insertOne(newUser);
+			return createdResponse.ops[0];
+		} catch (err) {
+			return err;
+		}
+	},
 
-		updateRequest: async ({db, id, data}) => {
-			try {
-				const updateRequest = {
-					...data,
-					lastUpdated: {
-						timestamp: `${date.toISOString()}`,
-						user: data.lastUpdated.user
-					}
-				};
-				await db
-					.collection('usersRequest')
-					.findOneAndUpdate(
-						{_id: objectId(id)},
-						{$set: updateRequest},
-						{upsert: true}
-					);
-				return db
-					.collection('usersRequest')
-					.findOne(objectId(id));
-			} catch (err) {
-				return err;
-			}
+	deleteUser: async ({id}, db) => {
+		try {
+			const deletedUser = await db
+				.collection('userMetadata')
+				.findOneAndDelete({_id: objectId(id)});
+			return deletedUser.value;
+		} catch (err) {
+			return err;
+		}
+	},
+
+	updateUser: async ({inputUser, id}, db) => {
+		try {
+			const updateUser = {
+				...inputUser,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			await db
+				.collection('userMetadata')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updateUser},
+					{upsert: true}
+				);
+			return await db.collection('userMetadata').findOne(objectId(id));
+		} catch (err) {
+			return err;
+		}
+	},
+
+	createRequest: async ({inputUserRequest}, db) => {
+		try {
+			const newUserRequest = {
+				...inputUserRequest,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'data.lastUpdated.user'
+				}
+			};
+			const createdResponse = await db
+				.collection('usersRequest')
+				.insertOne(newUserRequest)
+				.then(res => res.ops);
+			return createdResponse[0];
+		} catch (err) {
+			return err;
+		}
+	},
+	deleteRequest: async ({id}, db) => {
+		try {
+			const deletedRequest = await db
+				.collection('usersRequest')
+				.findOneAndDelete({_id: objectId(id)})
+				.then(res => res.value);
+			return deletedRequest;
+		} catch (err) {
+			return err;
+		}
+	},
+	updateRequest: async ({inputUserRequest, id}, db) => {
+		try {
+			const updateRequest = {
+				...inputUserRequest,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'data.lastUpdated.user'
+				}
+			};
+			await db
+				.collection('usersRequest')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updateRequest},
+					{upsert: true}
+				);
+			return db
+				.collection('usersRequest')
+				.findOne(objectId(id));
+		} catch (err) {
+			return err;
 		}
 	}
 };

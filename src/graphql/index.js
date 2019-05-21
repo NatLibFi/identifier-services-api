@@ -30,6 +30,8 @@ import {buildSchema} from 'graphql';
 
 import typeDefs from './types';
 
-const schema = buildSchema(typeDefs);
+const schema = buildSchema(
+	typeDefs
+);
 
 export default schema;

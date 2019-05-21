@@ -1,0 +1,27 @@
+{
+    "PublicationRequest_ISBN_ISMN": [
+        {
+        "_id": "5ce29b5559757f4cfc1f62c3",
+            "title": "The Mines",
+            "language": "Fin",
+            "publisher":"National Library",
+            "publicationTime": "2019-08-01T00:00:00.000",
+            "type": "painettu julkaisu",
+            "authors": [
+                {
+                    "givenName": "Daniel",
+                    "familyName": "Yushick",
+                    "role": "author"
+                }
+            ],
+            "printDetails": {
+                "manufacturer": "Daniel Yuschick"
+            },
+            "lastUpdated": {
+                "timestamp": "2019-05-20T12:17:23.996Z",
+                "user": "user"
+            }
+        }
+        
+    ]
+}
