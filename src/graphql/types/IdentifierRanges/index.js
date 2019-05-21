@@ -29,17 +29,27 @@
 export default `
 
 
+
+
     type ISSN{
-        _id: String!
+        _id: ID!
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
         reservedCount: Int!
         lastUpdated: LastUpdated
     }
+
+    input ISSNInput{
+        rangeStart: Int!
+        rangeEnd: Int!
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdatedInput
+    }
  
     type ISMN{
-        _id: String!
+        _id: ID!
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
@@ -47,6 +57,16 @@ export default `
         active: Boolean!
         reservedCount: Int!
         lastUpdated: LastUpdated
+    }
+
+    input ISMNInput{
+        prefix: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        publisher: String
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdatedInput
     }
         
     type ISBN{
@@ -62,6 +82,17 @@ export default `
 
     }
 
+    input ISBNInput{
+        prefix: String!
+        language: String!
+        rangeStart: Int!
+        rangeEnd: Int!
+        publisher: String
+        active: Boolean!
+        reservedCount: Int!
+        lastUpdated: LastUpdatedInput
+    }
+
 
     type Query{
         ISBN: ISBN
@@ -73,59 +104,17 @@ export default `
      }
     
      type Mutation{
-         createISBN(
-            prefix: String
-            language: String
-            rangeStart: Int
-            rangeEnd: Int
-            publisher: String
-            active: Boolean
-            reservedCount: Int
-            lastUpdated: LastUpdatedInput
-         ):ISBN
+         createISBN(input: ISBNInput):ISBN!
 
-         updateISBN(
-            prefix: String
-            language: String
-            rangeStart: Int
-            rangeEnd: Int
-            publisher: String
-            active: Boolean
-            reservedCount: Int
-         ): ISBN
+         updateISBN(input: ISBNInput): ISBN!
 
-         createISMN(
-            prefix: String
-            rangeStart: Int
-            rangeEnd: Int
-            publisher: String
-            active: Boolean
-            reservedCount: Int
-            lastUpdated: LastUpdatedInput
-         ):ISMN
+         createISMN(input: ISMNInput):ISMN!
 
-         updateISMN(
-            prefix: String
-            rangeStart: Int
-            rangeEnd: Int
-            publisher: String
-            active: Boolean
-            reservedCount: Int
-         ): ISMN
+         updateISMN(input: ISMNInput): ISBN!
 
-         createISSN(
-            rangeStart: Int
-            rangeEnd: Int
-            active: Boolean
-            reservedCount: Int
-         ):ISSN
+         createISSN(input: ISSNInput):ISSN!
 
-         updateISSN(
-            rangeStart: Int
-            rangeEnd: Int
-            active: Boolean
-            reservedCount: Int
-         ): ISSN
+         updateISSN(input: ISSNInput): ISSN!
      }
 
  `;

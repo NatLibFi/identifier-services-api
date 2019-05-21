@@ -1,0 +1,56 @@
+
+{
+    "PublisherMetadata": [
+        {
+            "_id": "5cd702693c30e77663e2b3ce",
+            "name": "foo",
+            "language": "foo",
+            "metadataDelivery": "foo",
+            "primaryContact": ["foobar", "foo"],
+            "email":"foo@bar.com",
+            "phone": "foo",
+            "website": "foo",
+            "streetAddress":{
+                "address": "foo",
+                "city": "foo",
+                "zip": "foo"
+            },
+            "aliases": ["foo"],
+            "activity":{
+                "active": true,
+                "yearInactivated": 111
+            },
+            "notes": ["foo", "bar"],
+            "lastUpdated":{
+                "timestamp":"foo",
+                "user": "foo"
+            }
+        },
+        {
+            "_id": "5cd702693c30e77663e2b3cf",
+            "name": "rojak",
+            "language": "foo",
+            "metadataDelivery": "foo",
+            "primaryContact": ["foobar", "foo"],
+            "email":"foo@bar.com",
+            "phone": "foo",
+            "website": "foo",
+            "streetAddress":{
+                "address": "foo",
+                "city": "foo",
+                "zip": "foo"
+            },
+            "aliases": ["foo"],
+            "activity":{
+                "active": true,
+                "yearInactivated": 111
+            },
+            "notes": ["foo", "bar"],
+            "lastUpdated":{
+                "timestamp":"foo",
+                "user": "foo"
+            }
+        }
+    ]
+}
+

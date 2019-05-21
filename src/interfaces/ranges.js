@@ -27,6 +27,9 @@
  */
 import {graphql} from 'graphql';
 import schema from '../graphql';
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+import resolvers from '../graphql/resolvers';
 
 export default function () {
 	return {
@@ -45,329 +48,327 @@ export default function () {
 	};
 
 	async function createIsbn(db, isbnData) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$prefix: String
-					$language: String
-					$rangeStart: Int
-					$rangeEnd: Int
-					$publisher: String
-					$active: Boolean
-					$reservedCount: Int
-					$lastUpdated: LastUpdatedInput
-				) {
-					createISBN(
-						prefix: $prefix
-						language: $language
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						publisher: $publisher
-						active: $active
-						reservedCount: $reservedCount
-						lastUpdated: $lastUpdated
-					) {
-						language
-					}
+		const query = `
+			mutation($input: ISBNInput){
+				createISBN(input: $input) {
+					prefix
+					language
+					rangeStart
+					rangeEnd
 				}
-			`,
-			{db, isbnData}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			createISBN: resolvers.createISBN
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: isbnData});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	async function readIsbn(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISBN {
-						_id
-						prefix
-						language
-						rangeStart
-						rangeEnd
-						publisher
-						active
-						reservedCount
-						lastUpdated {
-							timestamp
-						}
+		const query = `
+			{
+				ISBN{
+					_id
+					prefix
+					language
+					rangeStart
+					rangeEnd
+					publisher
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			{db, id}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISBN: resolvers.ISBN
+		};
+		try {
+			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISBN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function updateIsbn(db, id, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$prefix: String
-					$language: String
-					$rangeStart: Int
-					$rangeEnd: Int
-					$publisher: String
-					$active: Boolean
-					$reservedCount: Int
-				) {
-					updateISBN(
-						prefix: $prefix
-						language: $language
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						publisher: $publisher
-						active: $active
-						reservedCount: $reservedCount
-					) {
-						prefix
-						language
-						rangeStart
-						rangeEnd
-					}
+		const query = `
+			mutation($input: ISBNInput){
+				updateISBN(input: $input) {
+					prefix
+					language
+					rangeStart
+					rangeEnd
 				}
-			`,
-			{db, id, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			updateISBN: resolvers.updateISBN
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id}, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryIsbn(db) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISBNs {
-						_id
-						prefix
-						language
-						rangeStart
-						rangeEnd
-						publisher
-						active
-						reservedCount
-						lastUpdated {
-							timestamp
-							user
-						}
+		const query = `
+			{
+				ISBNs{
+					_id
+					prefix
+					language
+					rangeStart
+					rangeEnd
+					publisher
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			db
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISBNs: resolvers.ISBNs
+		};
+		try {
+			const result = await graphql(schema, query, root, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function createIsmn(db, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$prefix: String
-					$rangeStart: Int
-					$rangeEnd: Int
-					$publisher: String
-					$active: Boolean
-					$reservedCount: Int
-					$lastUpdated: LastUpdatedInput
-				) {
-					createISMN(
-						prefix: $prefix
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						publisher: $publisher
-						active: $active
-						reservedCount: $reservedCount
-						lastUpdated: $lastUpdated
-					) {
-						prefix
-					}
+		const query = `
+			mutation($input: ISMNInput){
+				createISMN(input: $input) {
+					prefix
+					rangeStart
+					rangeEnd
 				}
-			`,
-			{db, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			createISMN: resolvers.createISMN
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	async function readIsmn(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISMN {
-						_id
-						prefix
-						rangeStart
-						rangeEnd
-						publisher
-						active
-						reservedCount
-						lastUpdated {
-                            timestamp,
-                            user
-						}
+		const query = `
+			{
+				ISMN{
+					_id
+					prefix
+					rangeStart
+					rangeEnd
+					publisher
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			{db, id}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISMN: resolvers.ISMN
+		};
+		try {
+			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISMN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function updateIsmn(db, id, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$prefix: String
-					$rangeStart: Int
-					$rangeEnd: Int
-					$publisher: String
-					$active: Boolean
-					$reservedCount: Int
-				) {
-					updateISMN(
-						prefix: $prefix
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						publisher: $publisher
-						active: $active
-						reservedCount: $reservedCount
-					) {
-						prefix
-						rangeStart
-						rangeEnd
-					}
+		const query = `
+			mutation($input: ISMNInput){
+				updateISMN(input: $input) {
+					prefix
+					rangeStart
+					rangeEnd
 				}
-			`,
-			{db, id, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			updateISMN: resolvers.updateISMN
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id}, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryIsmn(db) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISMNs {
-						_id
-						prefix
-						rangeStart
-						rangeEnd
-						publisher
-						active
-						reservedCount
-						lastUpdated {
-							timestamp
-							user
-						}
+		const query = `
+			{
+				ISMNs{
+					_id
+					prefix
+					rangeStart
+					rangeEnd
+					publisher
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			db
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISMNs: resolvers.ISMNs
+		};
+		try {
+			const result = await graphql(schema, query, root, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function createIssn(db, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$rangeStart: Int
-					$rangeEnd: Int
-					$active: Boolean
-					$reservedCount: Int
-				) {
-					createISSN(
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						active: $active
-						reservedCount: $reservedCount
-					) {
-						rangeStart
-					}
+		const query = `
+			mutation($input: ISSNInput){
+				createISSN(input: $input) {
+					rangeStart
+					rangeEnd
+					active
+					reservedCount
 				}
-			`,
-			{db, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			createISSN: resolvers.createISSN
+		};
+		try {
+			const result = await graphql(schema, query, root, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	async function readIssn(db, id) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISSN {
-						_id
-						rangeStart
-						rangeEnd
-						active
-						reservedCount
-						lastUpdated {
-                            timestamp,
-                            user
-						}
+		const query = `
+			{
+				ISSN{
+					_id
+					rangeStart
+					rangeEnd
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			{db, id}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISSN: resolvers.ISSN
+		};
+		try {
+			const result = await graphql(schema, query, root, {id, db});
+			if (result.data.ISSN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		} catch (err) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function updateIssn(db, id, data) {
-		const result = await graphql(
-			schema,
-			`
-				mutation(
-					$rangeStart: Int
-					$rangeEnd: Int
-					$active: Boolean
-					$reservedCount: Int
-				) {
-					updateISSN(
-						rangeStart: $rangeStart
-						rangeEnd: $rangeEnd
-						active: $active
-						reservedCount: $reservedCount
-					) {
-						rangeStart
-						rangeEnd
-					}
+		const query = `
+			mutation($input: ISSNInput){
+				updateISSN(input: $input) {
+					rangeStart
+					rangeEnd
+					active
 				}
-			`,
-			{db, id, data}
-		);
-		return result;
+			}
+		`;
+		const root = {
+			updateISSN: resolvers.updateISSN
+		};
+		try {
+			const result = await graphql(schema, query, root, {db, id}, {input: data});
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async function queryIssn(db) {
-		const result = await graphql(
-			schema,
-			`
-				{
-					ISSNs {
-						_id
-						rangeStart
-						rangeEnd
-						active
-						reservedCount
-						lastUpdated {
-							timestamp
-							user
-						}
+		const query = `
+			{
+				ISSNs{
+					_id
+					rangeStart
+					rangeEnd
+					active
+					reservedCount
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`,
-			db
-		);
-		return result;
+			}
+		`;
+		const root = {
+			ISSNs: resolvers.ISSNs
+		};
+		try {
+			const result = await graphql(schema, query, root, db);
+			return result;
+		} catch (err) {
+			return err;
+		}
 	}
 }

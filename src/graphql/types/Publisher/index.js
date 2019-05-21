@@ -29,11 +29,14 @@
 export default `
     type Query{   
         Publisher:Publisher
-        Publishers:[Publisher!]!
+        Publishers:[Publisher]
         PublisherRequest: PublisherRequest
         PublisherRequests: [PublisherRequest]
 
     }
+
+
+
 
     type Activity{
         active: Boolean
@@ -148,11 +151,10 @@ export default `
 
     type Publisher{
         _id: ID!
-        lastUpdated: LastUpdated
         name: String!
         language: String!
         metadataDelivery: String!
-        primaryContact: [String!]!
+        primaryContact: [String!]
         email: String
         phone: String
         website: String
@@ -160,11 +162,26 @@ export default `
         notes: [String]
         activity: Activity
         streetAddress: StreetAddress
+        lastUpdated: LastUpdated
     }  
+
+    input PublisherInput{
+        name: String!
+        language: String!
+        metadataDelivery: String!
+        primaryContact: [String!]
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        notes: [String]
+        activity: ActivityInput
+        streetAddress: StreetAddressInput
+        lastUpdated: LastUpdatedInput
+    }
     
     type PublisherRequest{
         _id: ID!
-        lastUpdated: LastUpdated
         state: String!
         publisherId: String
         publicationEstimate: Int!
@@ -180,79 +197,39 @@ export default `
         activity: Activity
         streetAddress: StreetAddress
         publication: ISBNISMNPublicationRequest
+        lastUpdated: LastUpdated
+    }
+
+    input PublisherRequestInput{
+        state: String!
+        publisherId: String
+        publicationEstimate: Int!
+        primaryContact: [PrimaryContactRequestInput]!
+        name: String!
+        language: String!
+        metadataDelivery: String!
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        notes: [String]
+        activity: ActivityInput
+        streetAddress: StreetAddressInput
+        publication: ISBNISMNPublicationRequestInput    
+        lastUpdated: LastUpdatedInput
     }
 
     type Mutation{
-        createPublisher(
-            name: String,
-            language: String,
-            metadataDelivery: String,
-            primaryContact: [String],
-            email: String,
-            phone: String,
-            website: String,
-            aliases: [String],
-            notes: [String],
-            activity: ActivityInput,
-            streetAddress: StreetAddressInput
-        ): Publisher
+        createPublisher(input: PublisherInput): Publisher!
 
-        updatePublisher(
-            name: String,
-            language: String,
-            metadataDelivery: String,
-            primaryContact: [String]
-            email: String,
-            phone: String,
-            website: String,
-            aliases: [String],
-            notes: [String],
-            activity: ActivityInput,
-            streetAddress: StreetAddressInput
-        ): Publisher
+        updatePublisher(input: PublisherInput): Publisher!
 
-        deletePublisher(
-            _id: ID
-        ): Publisher
+        deletePublisher(_id: ID): Publisher!
 
-        createPublisherRequests(
-            state: String
-            publisherId: String
-            publicationEstimate: Int
-            primaryContact: [PrimaryContactRequestInput]
-            name: String
-            language: String
-            metadataDelivery: String
-            email: String
-            phone: String
-            website: String
-            aliases: [String]
-            notes: [String]
-            activity: ActivityInput
-            streetAddress: StreetAddressInput
-            publication: ISBNISMNPublicationRequestInput
-        ): PublisherRequest
+        createPublisherRequests(input: PublisherRequestInput): PublisherRequest!
 
-        deletePublisherRequest(
-            _id: ID
-        ): PublisherRequest
+        deletePublisherRequest(_id: ID): PublisherRequest
 
-        updatePublisherRequest(
-            state: String
-            publisherId: String
-            publicationEstimate: Int
-            primaryContact: [PrimaryContactRequestInput]
-            name: String
-            language: String
-            metadataDelivery: String
-            email: String
-            phone: String
-            website: String
-            aliases: [String]
-            notes: [String]
-            activity: ActivityInput
-            streetAddress: StreetAddressInput
-            publication: ISBNISMNPublicationRequestInput
-        ): PublisherRequest
+        updatePublisherRequest(input: PublisherRequestInput): PublisherRequest!
     }
  `;

@@ -1,0 +1,31 @@
+{
+    "name": "rojak",
+    "language": "fin",
+    "metadataDelivery": "external",
+    "primaryContact": [
+        "foobar",
+        "bar.foo@bar.foo"
+    ],
+    "email": "asiakaspalvelu@otava.fi",
+    "phone": "050123456",
+    "website": "http://www.otava.fi",
+    "aliases": [
+        "Kustannusosakeyhtiö Nemo"
+    ],
+    "notes": [
+        "foo",
+        "foo"
+    ],
+    "activity": {
+        "active": true,
+        "yearInactivated": 111
+    },
+    "streetAddress": {
+        "address": "Uudenmaankatu 10",
+        "city": "Helsinki",
+        "zip": "00120"
+    },
+    "lastUpdated": {
+        "user": "foobar"
+    }
+}

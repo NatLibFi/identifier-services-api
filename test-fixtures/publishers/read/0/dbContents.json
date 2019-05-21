@@ -2,11 +2,11 @@
 {
     "PublisherMetadata": [
         {
-            "_id": "5cd90e696a1e930789dfaa48",
+            "_id": "5cd702693c30e77663e2b3ce",
             "name": "foo",
             "language": "foo",
             "metadataDelivery": "foo",
-            "primaryContact": ["foobar", "foo@foobar.com"],
+            "primaryContact": ["foobar", "foo"],
             "email":"foo@bar.com",
             "phone": "foo",
             "website": "foo",

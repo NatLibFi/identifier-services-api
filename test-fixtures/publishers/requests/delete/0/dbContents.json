@@ -1,0 +1,148 @@
+
+{
+    "PublisherRequest": [
+        {
+            "_id": "5cdff4db937aed356a2b5817",
+            "lastUpdated": {
+                "user": "foo"
+            },
+            "state": "processed",
+            "publisherId": "83c5867cf8984cf297b5e6aed72492ac",
+            "publicationEstimate": 1000,
+            "primaryContact": [
+                {
+                    "givenName": "Foo",
+                    "familyName": "Bar",
+                    "email": "foo.bar@foo.bar"
+                }
+            ],
+            "name": "sanjog",
+            "language": "fin",
+            "metadataDelivery": "external",
+            "email": "asiakaspalvelu@otava.fi",
+            "phone": "050123456",
+            "website": "http://www.otava.fi",
+            "aliases": [
+                "Kustannusosakeyhtiö Nemo"
+            ],
+            "notes": [
+                "foo",
+                "foo"
+            ],
+            "activity": {
+                "active": true,
+                "yearInactivated": null
+            },
+            "streetAddress": {
+                "address": "Uudenmaankatu 10",
+                "city": "Helsinki",
+                "zip": "00120"
+            },
+            "publication": {
+                "title": "some title",
+                "type": "some Type",
+                "subtitle": "some subtitle",
+                "language": "english",
+                "publicationTime": "foo",
+                "additionalDetails": "foobar",
+                "authors": [
+                    {
+                        "givenName": "rojak",
+                        "familyName": "amatya",
+                        "role": "admin"
+                    }
+                ],
+                "series": {
+                    "identifier": "hello",
+                    "name": "world",
+                    "volume": 22
+                },
+                "electronicDetails": {
+                    "format": "foobar"
+                },
+                "printDetails": {
+                    "manufacturer": "foobar",
+                    "city": "bar",
+                    "run": 44,
+                    "edition": 2,
+                    "format": "foo"
+                },
+                "mapDetails": {
+                    "scale": "bar"
+                }
+            }
+        },
+        {
+            "_id": "5cdff4db937aed356a2b5818",
+            "lastUpdated": {
+                "user": "foo"
+            },
+            "state": "processed",
+            "publisherId": "83c5867cf8984cf297b5e6aed72492ac",
+            "publicationEstimate": 1000,
+            "primaryContact": [
+                {
+                    "givenName": "Foo",
+                    "familyName": "Bar",
+                    "email": "foo.bar@foo.bar"
+                }
+            ],
+            "name": "rojak",
+            "language": "fin",
+            "metadataDelivery": "external",
+            "email": "asiakaspalvelu@otava.fi",
+            "phone": "050123456",
+            "website": "http://www.otava.fi",
+            "aliases": [
+                "Kustannusosakeyhtiö Nemo"
+            ],
+            "notes": [
+                "foo",
+                "foo"
+            ],
+            "activity": {
+                "active": true,
+                "yearInactivated": null
+            },
+            "streetAddress": {
+                "address": "Uudenmaankatu 10",
+                "city": "Helsinki",
+                "zip": "00120"
+            },
+            "publication": {
+                "title": "some title",
+                "type": "some Type",
+                "subtitle": "some subtitle",
+                "language": "english",
+                "publicationTime": "foo",
+                "additionalDetails": "foobar",
+                "authors": [
+                    {
+                        "givenName": "rojak",
+                        "familyName": "amatya",
+                        "role": "admin"
+                    }
+                ],
+                "series": {
+                    "identifier": "hello",
+                    "name": "world",
+                    "volume": 22
+                },
+                "electronicDetails": {
+                    "format": "foobar"
+                },
+                "printDetails": {
+                    "manufacturer": "foobar",
+                    "city": "bar",
+                    "run": 44,
+                    "edition": 2,
+                    "format": "foo"
+                },
+                "mapDetails": {
+                    "scale": "bar"
+                }
+            }
+        }
+    ]
+}
+
