@@ -28,11 +28,11 @@
 
 import {mergeTypes} from 'merge-graphql-schemas';
 
-import User from './User';
-import Publisher from './Publisher';
-import Publication from './Publication';
-import IdentifierRanges from './IdentifierRanges';
-import MessageTemplates from './MessageTemplates';
+import User from './users';
+import Publisher from './publishers';
+import Publication from './publications';
+import IdentifierRanges from './identifier-ranges';
+import MessageTemplates from './message-templates';
 
 const typeDefs = [User, Publisher, Publication, IdentifierRanges, MessageTemplates];
 export default mergeTypes(typeDefs, {all: true});

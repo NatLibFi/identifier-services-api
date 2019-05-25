@@ -39,50 +39,48 @@ import {
 	createRangesRouter
 } from './routes';
 import bodyParse from '../src/routes/utils';
-import {ENABLE_PROXY, MONGO_URI, HTTP_PORT} from './config';
+import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, USER_AGENT_LOGGING_BLACKLIST} from './config';
 import {MongoClient} from 'mongodb';
 
-const {handleInterrupt} = Utils;
+const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 
 export default async function run() {
-	try {
-		const app = express();
-		app.enable('trust proxy', ENABLE_PROXY);
+	const Logger = createLogger();
+	const app = express();
+	app.enable('trust proxy', ENABLE_PROXY);
+	app.use(createExpressLogger({
+		skip: r => USER_AGENT_LOGGING_BLACKLIST.includes(r.get('User-Agent'))
+	}));
+	app.use(cors());
+	app.use(bodyParse());
+	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
+	const connection = await client.connect();
+	const db = connection.db();
+	app.use('/templates', createMessageTemplate(db));
+	app.use('/users', createUsersRouter(db));
+	app.use('/publishers', createPublishersRouter(db));
+	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
+	app.use('/publications/issn', createPublicationsRouterIssn(db));
+	app.use('/ranges', createRangesRouter(db));
+	const server = app.listen(HTTP_PORT, () => {
+		Logger.log('info', 'Started identifier-services-api');
+	});
 
-		app.use(cors());
-		app.use(bodyParse());
-		const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
-		const connection = await client.connect();
-		const db = connection.db();
-		app.use('/templates', createMessageTemplate(db));
-		app.use('/users', createUsersRouter(db));
-		app.use('/publishers', createPublishersRouter(db));
-		app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
-		app.use('/publications/issn', createPublicationsRouterIssn(db));
-		app.use('/ranges', createRangesRouter(db));
-		const server = app.listen(HTTP_PORT, () => {
-			// Logger.log('info', 'Started melinda-record-import-api');
-			console.log(`server running in port ${HTTP_PORT}`);
-		});
+	registerSignalHandlers();
 
-		registerSignalHandlers();
+	return server;
 
-		return server;
+	function registerSignalHandlers() {
+		process
+			.on('SIGINT', handle)
+			.on('uncaughtException', handle)
+			.on('unhandledRejection', handle)
+		// Nodemon
+			.on('SIGUSR2', handle);
 
-		function registerSignalHandlers() {
-			process
-				.on('SIGINT', handle)
-				.on('uncaughtException', handle)
-				.on('unhandledRejection', handle)
-				// Nodemon
-				.on('SIGUSR2', handle);
-
-			function handle(arg) {
-				server.close();
-				handleInterrupt(arg);
-			}
+		function handle(arg) {
+			server.close();
+			handleInterrupt(arg);
 		}
-	} catch (err) {
-		console.log(err);
 	}
 }

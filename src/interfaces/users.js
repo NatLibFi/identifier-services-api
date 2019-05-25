@@ -30,7 +30,8 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
-import resolver from '../graphql/resolvers';
+const objectId = require('mongodb').ObjectId;
+const date = new Date();
 
 export default function () {
 	return {
@@ -48,8 +49,7 @@ export default function () {
 	};
 
 	async function create(db, data) {
-		try {
-			const query = `
+		const query = `
 							mutation($inputUser:InputUser){
 								createUser(inputUser: $inputUser
 								) {
@@ -64,23 +64,32 @@ export default function () {
 								}
 							}
 						`;
-			const args = {inputUser: data};
-			const resolve = {createUser: resolver.createUser};
-			const result = await graphql(schema, query, resolve, db, args);
-
-			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			return result;
-		} catch (err) {
+		const args = {inputUser: data};
+		const result = await graphql(schema, query, {createUser}, db, args);
+		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return result;
+
+		async function createUser({inputUser}, db) {
+			const newUser = {
+				...inputUser,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'data.lastUpdated.user'
+				}
+			};
+			const createdResponse = await db
+				.collection('userMetadata')
+				.insertOne(newUser)
+				.then(res => res.ops);
+			return createdResponse[0];
 		}
 	}
 
 	async function read(db, id) {
-		try {
-			const query = `
+		const query = `
 		{
 				userMetadata(id: ${JSON.stringify(id)}) {
 					_id
@@ -95,21 +104,23 @@ export default function () {
 				}
 		}
 	`;
-			const resolve = {userMetadata: resolver.userMetadata};
-			const result = await graphql(schema, query, resolve, db);
-			if (result.data.userMetadata === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
-
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {userMetadata}, db);
+		if (result.data.userMetadata === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
+
+		async function userMetadata({id}, db) {
+			const result = await db
+				.collection('userMetadata')
+				.findOne(objectId(id));
+			return result;
 		}
 	}
 
 	async function update(db, id, data) {
-		try {
-			const query = `
+		const query = `
 							mutation($id:ID, $inputUser:InputUser){
 								updateUser(id:$id, inputUser: $inputUser
 								) {
@@ -124,38 +135,55 @@ export default function () {
 								}
 							}
 						`;
-			const args = {id: id, inputUser: data};
-			const resolve = {updateUser: resolver.updateUser};
-			const result = await graphql(schema, query, resolve, db, args);
+		const args = {id: id, inputUser: data};
+		const result = await graphql(schema, query, {updateUser}, db, args);
 
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return result;
+
+		async function updateUser({inputUser, id}, db) {
+			const updateUser = {
+				...inputUser,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'user'
+				}
+			};
+			await db
+				.collection('userMetadata')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updateUser},
+					{upsert: true}
+				);
+			return db.collection('userMetadata').findOne(objectId(id));
 		}
 	}
 
 	async function remove(db, id) {
-		try {
-			const query = `
+		const query = `
 			mutation {
 				deleteUser(id: ${JSON.stringify(id)}) {
 					_id
 				}
 			}
 		`;
-			const resolve = {deleteUser: resolver.deleteUser};
-			const result = await graphql(schema, query, resolve, db);
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {deleteUser}, db);
+		if (result.errors) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
+
+		async function deleteUser({id}, db) {
+			const deletedRequest = await db
+				.collection('userMetadata')
+				.findOneAndDelete({_id: objectId(id)})
+				.then(res => res.value);
+			return deletedRequest;
 		}
 	}
 
@@ -164,21 +192,32 @@ export default function () {
 	}
 
 	async function query(db) {
-		const resolve = {Users: resolver.Users};
 		const result = await graphql(
 			schema,
 			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
-			resolve,
+			{Users},
 			db,
 		);
+
+		if (result.errors) {
+			throw new Error();
+		}
+
 		return result;
+
+		async function Users(root, db) {
+			const result = await db
+				.collection('userMetadata')
+				.find()
+				.toArray();
+			return result;
+		}
 	}
 
 	// =====***************************** User Creation Request Starts From Here********************** ====
 
 	async function createRequest(db, data) {
-		try {
-			const query = `
+		const query = `
 			mutation($inputUserRequest: InputUserRequest){
 				createRequest(inputUserRequest: $inputUserRequest) {
 					_id
@@ -196,23 +235,33 @@ export default function () {
 				}
 			}
 		`;
-			const args = {inputUserRequest: data};
-			const resolve = {createRequest: resolver.createRequest};
-			const result = await graphql(schema, query, resolve, db, args);
+		const args = {inputUserRequest: data};
+		const result = await graphql(schema, query, {createRequest}, db, args);
 
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return result;
+
+		async function createRequest({inputUserRequest}, db) {
+			const newUserRequest = {
+				...inputUserRequest,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'data.lastUpdated.user'
+				}
+			};
+			const createdResponse = await db
+				.collection('usersRequest')
+				.insertOne(newUserRequest)
+				.then(res => res.ops);
+			return createdResponse[0];
 		}
 	}
 
 	async function readRequest(db, id) {
-		try {
-			const query = `
+		const query = `
 			{
 				usersRequest(id:${JSON.stringify(id)}){
 					userId
@@ -229,21 +278,23 @@ export default function () {
 				}
 			}
 		`;
-			const resolve = {usersRequest: resolver.usersRequest};
-			const result = await graphql(schema, query, resolve, db);
-			if (result.data.usersRequest === null) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {usersRequest}, db);
+		if (result.data.usersRequest === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
+
+		async function usersRequest({id}, db) {
+			const result = await db
+				.collection('usersRequest')
+				.findOne(objectId(id));
+			return result;
 		}
 	}
 
 	async function updateRequest(db, id, data) {
-		try {
-			const query = `
+		const query = `
 			mutation($id:ID, $inputUserRequest: InputUserRequest){
 				updateRequest(id:$id, inputUserRequest: $inputUserRequest) {
 					_id
@@ -261,23 +312,38 @@ export default function () {
 			}
 			`;
 
-			const args = {id: id, inputUserRequest: data};
-			const resolve = {updateRequest: resolver.updateRequest};
-			const result = await graphql(schema, query, resolve, db, args);
+		const args = {id: id, inputUserRequest: data};
+		const result = await graphql(schema, query, {updateRequest}, db, args);
 
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return result;
+
+		async function updateRequest({inputUserRequest, id}, db) {
+			const updateRequest = {
+				...inputUserRequest,
+				lastUpdated: {
+					timestamp: `${date.toISOString()}`,
+					user: 'data.lastUpdated.user'
+				}
+			};
+			await db
+				.collection('usersRequest')
+				.findOneAndUpdate(
+					{_id: objectId(id)},
+					{$set: updateRequest},
+					{upsert: true}
+				);
+			return db
+				.collection('usersRequest')
+				.findOne(objectId(id));
 		}
 	}
 
 	async function removeRequest(db, id) {
-		try {
-			const query = `
+		const query = `
 			mutation {
 				deleteRequest(id:${JSON.stringify(id)}) {
 					_id
@@ -285,15 +351,19 @@ export default function () {
 			}
 		`;
 
-			const resolve = {deleteRequest: resolver.deleteRequest};
-			const result = await graphql(schema, query, resolve, db);
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {deleteRequest}, db);
+		if (result.errors) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
+
+		async function deleteRequest({id}, db) {
+			const deletedRequest = await db
+				.collection('usersRequest')
+				.findOneAndDelete({_id: objectId(id)})
+				.then(res => res.value);
+			return deletedRequest;
 		}
 	}
 
@@ -310,14 +380,25 @@ export default function () {
 				}
 			}
 		`;
-
-		const resolve = {UsersRequests: resolver.UsersRequests};
-
-		return graphql(
+		const result = await graphql(
 			schema,
 			query,
-			resolve,
+			{UsersRequests},
 			db
 		);
+		if (result.errors) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
+
+		async function UsersRequests(root, db) {
+			const result = await db
+				.collection('usersRequest')
+				.find()
+				.toArray();
+			return result;
+		}
 	}
 }
+
