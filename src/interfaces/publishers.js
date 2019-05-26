@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -28,9 +29,9 @@
 
 import {graphql} from 'graphql';
 import schema from '../graphql';
-import resolvers from '../graphql/resolvers';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+const objectId = require('mongodb').ObjectId;
 
 export default function () {
 	return {
@@ -76,15 +77,13 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			Publishers: resolvers.Publishers
-		};
-		try {
-			const result = await graphql(schema, query, root, db);
+		const Publishers = async (undefined, db) => {
+			const result = await db.collection('PublisherMetadata').find().toArray();
 			return result;
-		} catch (err) {
-			return err;
-		}
+		};
+
+		const result = await graphql(schema, query, {Publishers}, db);
+		return result;
 	}
 
 	async function read(db, id) {
@@ -117,19 +116,22 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			Publisher: resolvers.Publisher
-		};
-		try {
-			const result = await graphql(schema, query, root, {id, db});
-			if (result.data.Publisher === null) {
-				throw new Error();
+		const Publisher = async (undefined, ctx) => {
+			const {id, db} = ctx;
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
 			}
 
+			const result = await db.collection('PublisherMetadata').findOne(objectId(id));
 			return result;
-		} catch (err) {
+		};
+
+		const result = await graphql(schema, query, {Publisher}, {id, db});
+		if (result.data.Publisher === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
+
+		return result;
 	}
 
 	async function create(db, data) {
@@ -141,19 +143,24 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			createPublisher: resolvers.createPublisher
+		const createPublisher = async (args, db) => {
+			const newPublisher = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
+				}
+			};
+			const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
+			return result.ops[0];
 		};
-		try {
-			const result = await graphql(schema, query, root, db, {input: data});
-			if (result.errors) {
-				throw new Error();
-			}
 
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {createPublisher}, db, {input: data});
+		if (result.errors) {
 			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
+
+		return result;
 	}
 
 	async function update(db, id, data) {
@@ -165,15 +172,26 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			updatePublisher: resolvers.updatePublisher
-		};
-		try {
-			const result = await graphql(schema, query, root, {db, id}, {input: data});
+		const updatePublisher = async (args, cxt) => {
+			const {db, id} = cxt;
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
+			}
+
+			const publisherUpdate = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
+				}
+			};
+			await db.collection('PublisherMetadata').findOneAndUpdate({_id: objectId(id)}, {$set: publisherUpdate}, {upsert: true});
+			const result = await db.collection('PublisherMetadata').findOne(objectId(id));
 			return result;
-		} catch (err) {
-			return err;
-		}
+		};
+
+		const result = await graphql(schema, query, {updatePublisher}, {db, id}, {input: data});
+		return result;
 	}
 
 	async function remove(db, id) {
@@ -185,15 +203,18 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			deletePublisher: resolvers.deletePublisher
+		const deletePublisher = async (undefined, ctx) => {
+			const {id, db} = ctx;
+			if (!objectId.isValid(id)) {
+				throw new Error('Publisher doesnot exists');
+			}
+
+			const deletedPublisher = await db.collection('PublisherMetadata').findOneAndDelete({_id: objectId(id)});
+			return deletedPublisher.value;
 		};
-		try {
-			const result = await graphql(schema, query, root, {db, id});
-			return result;
-		} catch (err) {
-			return err;
-		}
+
+		const result = await graphql(schema, query, {deletePublisher}, {db, id});
+		return result;
 	}
 
 	async function createRequests(db, data) {
@@ -205,19 +226,24 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			createPublisherRequests: resolvers.createPublisherRequests
+		const createPublisherRequests = async (args, db) => {
+			const newPublisherRequests = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
+				}
+			};
+			const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
+			return result.ops[0];
 		};
-		try {
-			const result = await graphql(schema, query, root, db, {input: data});
-			if (result.errors) {
-				throw new Error();
-			}
 
-			return result;
-		} catch (err) {
+		const result = await graphql(schema, query, {createPublisherRequests}, db, {input: data});
+		if (result.errors) {
 			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
+
+		return result;
 	}
 
 	async function readRequest(db, id) {
@@ -288,19 +314,23 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			PublisherRequest: resolvers.PublisherRequest
-		};
-		try {
-			const result = await graphql(schema, query, root, {id, db});
-			if (result.data.Publisher === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
+		const PublisherRequest = async (undefined, ctx) => {
+			const {id, db} = ctx;
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
 			}
 
+			const result = await db.collection('PublisherRequest').findOne(objectId(id));
+
 			return result;
-		} catch (err) {
+		};
+
+		const result = await graphql(schema, query, {PublisherRequest}, {id, db});
+		if (result.data.Publisher === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
+
+		return result;
 	}
 
 	async function removeRequest(db, id) {
@@ -312,15 +342,18 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			deletePublisherRequest: resolvers.deletePublisherRequest
+		const deletePublisherRequest = async (undefined, ctx) => {
+			const {id, db} = ctx;
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
+			}
+
+			const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
+			return deletePublisherRequest.value;
 		};
-		try {
-			const result = await graphql(schema, query, root, {db, id});
-			return result;
-		} catch (err) {
-			return err;
-		}
+
+		const result = await graphql(schema, query, {deletePublisherRequest}, {db, id});
+		return result;
 	}
 
 	async function updateRequest(db, id, data) {
@@ -332,15 +365,26 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			updatePublisherRequest: resolvers.updatePublisherRequest
-		};
-		try {
-			const result = await graphql(schema, query, root, {db, id}, {input: data});
+		const updatePublisherRequest = async (args, ctx) => {
+			const {db, id} = ctx;
+			if (!objectId.isValid(id)) {
+				throw new Error('PublisherRequest doesnot exists');
+			}
+
+			const publisherRequestUpdate = {
+				...args.input,
+				lastUpdated: {
+					...args.input.lastUpdated,
+					timestamp: new Date()
+				}
+			};
+			await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
+			const result = await db.collection('PublisherRequest').findOne(objectId(id));
 			return result;
-		} catch (err) {
-			return err;
-		}
+		};
+
+		const result = await graphql(schema, query, {updatePublisherRequest}, {db, id}, {input: data});
+		return result;
 	}
 
 	async function queryRequests(db) {
@@ -411,14 +455,12 @@ export default function () {
 				}
 			}
 		`;
-		const root = {
-			PublisherRequests: resolvers.PublisherRequests
-		};
-		try {
-			const result = await graphql(schema, query, root, db);
+		const PublisherRequests = async (undefined, db) => {
+			const result = await db.collection('PublisherRequest').find().toArray();
 			return result;
-		} catch (err) {
-			return err;
-		}
+		};
+
+		const result = await graphql(schema, query, {PublisherRequests}, db);
+		return result;
 	}
 }
