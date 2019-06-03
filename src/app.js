@@ -68,10 +68,8 @@ export default async function run() {
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');
 	});
-
+	
 	registerSignalHandlers();
-
-	return server;
 
 	function registerSignalHandlers() {
 		process

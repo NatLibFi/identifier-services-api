@@ -10,8 +10,7 @@ export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
 });
 
 export const MONGO_URI = readEnvironmentVariable('MONGO_URI', {
-	defaultValue: 'mongodb+srv://ProblemChild:hHILeEi59eGIZ74u@identifierservices-ejdak.gcp.mongodb.net/IdentifierServices'
-	// DefaultValue: 'mongodb://127.0.0.1:1337/db'
+	defaultValue: 'mongodb://localhost:27017/db'
 });
 
 export const MONGO_DEBUG = readEnvironmentVariable('MONGO_DEBUG', {

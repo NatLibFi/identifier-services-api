@@ -86,6 +86,7 @@ export default function (db) {
 	}
 
 	async function query(req, res, next) {
+		console.log('**');
 		try {
 			const result = await publishers.query(db);
 			res.json(result);
