@@ -1,0 +1,10 @@
+{
+    "_id": "5cdc1706d435475787f4751d",
+    "publishers": [
+        "fubar"
+    ],
+    "givenName": "Barbar",
+    "familyName": "Bar",
+    "email": "foo.bar@foo.bar",
+    "state": "processed"
+}

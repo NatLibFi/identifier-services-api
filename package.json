@@ -25,7 +25,7 @@
     "lint:base": "eslint --fix",
     "lint": "npm run lint:base -- src",
     "test:base": "cross-env NODE_ENV=test nyc mocha -t 20000 --exit --require @babel/register",
-    "test": "npm run lint && npm run test:base -- src/**/*.spec.js && npm run coverage",
+    "test": "npm run lint && npm run test:base -- src/routes/*.spec.js src/routes/**/*.spec.js && npm run coverage",
     "coverage": "nyc check-coverage --per-file",
     "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified",
     "build:dev": "npm run build:transpile && npm run check-deps",
@@ -33,10 +33,18 @@
     "watch:dev": "cross-env DEBUG=1 nodemon -w src --exec 'babel-node src/index.js'"
   },
   "dependencies": {
+    "@natlibfi/express-validate-content-type": "^1.0.1",
+    "@natlibfi/identifier-services-commons": "git+https://github.com/natlibfi/identifier-services-commons.git#feature/apiError",
     "@natlibfi/melinda-commons": "^4.1.0",
     "@natlibfi/passport-atlassian-crowd": "^1.0.0",
-    "express": "^4.16.4",
-    "passport-http": "^0.3.0"
+    "body-parser": "^1.19.0",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.0",
+    "graphql": "^14.3.0",
+    "merge-graphql-schemas": "^1.5.8",
+    "path": "^0.12.7",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
@@ -45,18 +53,19 @@
     "@babel/preset-env": "^7.2.0",
     "@babel/register": "^7.0.0",
     "@natlibfi/fixura": "^1.0.0",
-    "@natlibfi/fixura-mongo": "^1.0.0",
+    "@natlibfi/fixura-mongo": "^1.1.1",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-istanbul": "^5.1.4",
     "babel-plugin-rewire": "^1.2.0",
-    "babel-plugin-istanbul": "^5.1.0",
     "cross-env": "^5.2.0",
     "eslint": "^5.9.0",
     "eslint-config-xo": ">=0.25.0 <1.0.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.3.0",
     "istanbul": ">=0.4.5 <1.0.0",
     "mocha": "^6.0.2",
     "nock": "^10.0.3",
-    "nodemon": "^1.18.10",
+    "nodemon": "^1.19.0",
     "npm-check": "^5.9.0",
     "nyc": "^13.1.0"
   },
@@ -99,9 +108,6 @@
     }
   },
   "nyc": {
-    "include": [
-      "src/interfaces/*.js"
-    ],
     "exclude": [
       "**/*.spec.js"
     ],

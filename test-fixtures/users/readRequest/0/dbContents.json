@@ -1,0 +1,37 @@
+{
+    "usersRequest": [
+        {
+            "_id": "5cd3e9e5f2376736726e4c19",
+            "publishers": [
+                "fubar"
+            ],
+            "userId": "foo",
+            "givenName": "Barbar",
+            "familyName": "Bar",
+            "email": "foo.bar@foo.bar",
+            "state": "processed",
+            "notes":["This is a note"],
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        },
+        {
+            "_id": "5cdc1706d435475787f4751d",
+            "publishers": [
+                "fubar"
+            ],
+            "userId": "foobar",
+            "givenName": "Barbar",
+            "familyName": "Bar",
+            "email": "foo.bar@foo.bar",
+            "state": "processed",
+            "notes":["This is a note"],
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+
+        }
+    ]
+}

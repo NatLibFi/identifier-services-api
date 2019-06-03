@@ -1,0 +1,15 @@
+{
+    "data": {
+        "userMetadata": {
+            "_id": "5cd90e696a1e930789dfaa48",
+            "userId":"foobar",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    }
+}

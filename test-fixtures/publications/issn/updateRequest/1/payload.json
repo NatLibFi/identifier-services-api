@@ -1,0 +1,9 @@
+{
+    "userId":"foobar",
+    "preferences": {
+        "defaultLanguage": "bar"
+    },
+    "lastUpdated": {
+        "user": "bar"
+    }
+}

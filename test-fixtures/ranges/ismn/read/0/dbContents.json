@@ -1,0 +1,17 @@
+{
+    "IdentifierRangesISMN": [
+        {
+            "_id": "5cd90b2c89d0546340068667",
+            "prefix": "978",
+            "rangeStart": 550,
+            "rangeEnd": 889,
+            "active": false,
+            "publisher": "b7ab91cf7d524b7284f6f01e8b2e14c0",
+            "reservedCount": 339,
+            "lastUpdated": {
+                "timestamp": "2019-05-03T09:17:46.412",
+                "user": "foo"
+            }
+        }
+    ]
+}
