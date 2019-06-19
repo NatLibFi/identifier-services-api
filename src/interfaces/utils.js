@@ -51,3 +51,7 @@ export function hasAdminPermission(user) {
 export function hasPublisherAdminPermission(user) {
 	return hasPermission({auth: {groups: ['publisher-admin']}}, user);
 }
+
+export function escapeRegex(text) {
+	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
