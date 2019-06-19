@@ -2,10 +2,10 @@ import {Utils} from '@natlibfi/melinda-commons';
 const {readEnvironmentVariable, parseBoolean} = Utils;
 
 export const API_URL = readEnvironmentVariable('API_URL', {
-	defaultValue: 'http://localhost:8080'
+	defaultValue: 'http://localhost:8081'
 });
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
-	defaultValue: 8080,
+	defaultValue: 8081,
 	format: v => Number(v)
 });
 

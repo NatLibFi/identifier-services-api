@@ -32,6 +32,7 @@ import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 const objectId = require('mongodb').ObjectId;
+import {escapeRegex} from './utils';
 
 export default function () {
 	return {
@@ -47,7 +48,7 @@ export default function () {
 		queryRequests
 	};
 
-	async function query(db) {
+	async function query(db, data) {
 		const query = `
 			{
 				Publishers{
@@ -77,12 +78,24 @@ export default function () {
 				}
 			}
 		`;
-		const Publishers = async (undefined, db) => {
-			const result = await db.collection('PublisherMetadata').find().toArray();
-			return result;
+		const Publishers = async (undefined, ctx) => {
+			const {data, db} = ctx;
+			if (data) {
+				try {
+					const regex = new RegExp(escapeRegex(data), 'gi');
+					const result = await db.collection('PublisherMetadata').find({$or: [{aliases: regex}, {name: regex}]}).toArray();
+					return result;
+				} catch (err) {
+					console.log(err);
+				}
+			} else {
+				const result = await db.collection('PublisherMetadata').find().toArray();
+				return result;
+			}
 		};
 
-		const result = await graphql(schema, query, {Publishers}, db);
+		const result = await graphql(schema, query, {Publishers}, {db, data});
+		console.log(result);
 		return result;
 	}
 
