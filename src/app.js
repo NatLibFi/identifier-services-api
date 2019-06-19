@@ -47,21 +47,24 @@ const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 export default async function run() {
 	const Logger = createLogger();
 	const app = express();
+	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
+	const connection = await client.connect();
+	const db = connection.db();
+
 	app.enable('trust proxy', ENABLE_PROXY);
 	app.use(createExpressLogger({
 		skip: r => USER_AGENT_LOGGING_BLACKLIST.includes(r.get('User-Agent'))
 	}));
 	app.use(cors());
 	app.use(bodyParse());
-	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
-	const connection = await client.connect();
-	const db = connection.db();
+
 	app.use('/templates', createMessageTemplate(db));
 	app.use('/users', createUsersRouter(db));
 	app.use('/publishers', createPublishersRouter(db));
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 	app.use('/publications/issn', createPublicationsRouterIssn(db));
 	app.use('/ranges', createRangesRouter(db));
+
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');
 	});
