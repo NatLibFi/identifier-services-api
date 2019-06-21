@@ -44,6 +44,7 @@
     "graphql": "^14.3.0",
     "merge-graphql-schemas": "^1.5.8",
     "path": "^0.12.7",
+    "svg-captcha": "^1.4.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
