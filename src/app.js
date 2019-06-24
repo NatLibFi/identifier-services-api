@@ -36,12 +36,12 @@ import {
 	createPublicationsRouterIsbnIsmn,
 	createPublicationsRouterIssn,
 	createMessageTemplate,
-	createRangesRouter
+	createRangesRouter,
+	createCaptchaRouter
 } from './routes';
 import bodyParse from '../src/routes/utils';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, USER_AGENT_LOGGING_BLACKLIST} from './config';
 import {MongoClient} from 'mongodb';
-import svgCaptcha from 'svg-captcha';
 
 const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 
@@ -65,14 +65,7 @@ export default async function run() {
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 	app.use('/publications/issn', createPublicationsRouterIssn(db));
 	app.use('/ranges', createRangesRouter(db));
-	app.get('/captcha', (req, res) => {
-		var captcha = svgCaptcha.create({
-			size: 6,
-			noise: 4
-		});
-		res.type('svg');
-		res.json(captcha);
-	});
+	app.use('/captcha', createCaptchaRouter());
 
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');

@@ -26,10 +26,47 @@
  *
  */
 
-export {default as createUsersRouter} from './users';
-export {default as createPublishersRouter} from './publishers';
-export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
-export {default as createPublicationsRouterIssn} from './publications/issn';
-export {default as createMessageTemplate} from './messageTemplates';
-export {default as createRangesRouter} from './ranges';
-export {default as createCaptchaRouter} from './captcha';
+import {Router} from 'express';
+import {default as bodyParse} from './utils';
+import svgCaptcha from 'svg-captcha';
+import uuidv4 from 'uuid/v4';
+
+export default function () {
+	let captcha;
+
+	return new Router()
+		.get('/', create)
+		.post('/', bodyParse(), post);
+
+	async function create(req, res, next) {
+		try {
+			captcha = svgCaptcha.create({
+				size: 6,
+				noise: 4
+			});
+			captcha.id = uuidv4();
+			const {text, ...captchaWithoutText} = captcha;
+			res.type('svg');
+			res.json(captchaWithoutText);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function post(req, res, next) {
+		console.log('id', captcha.id);
+		console.log('req', req.body.id);
+		let result = false;
+		try {
+			if ((captcha.text === req.body.captchaInput) && captcha.id === req.body.id) {
+				result = true;
+			} else {
+				result = false;
+			}
+		} catch (err) {
+			next(err);
+		}
+
+		res.send(result);
+	}
+}
