@@ -36,8 +36,7 @@ import {
 	createPublicationsRouterIsbnIsmn,
 	createPublicationsRouterIssn,
 	createMessageTemplate,
-	createRangesRouter,
-	createCaptchaRouter
+	createRangesRouter
 } from './routes';
 import bodyParse from '../src/routes/utils';
 import {ENABLE_PROXY, MONGO_URI, HTTP_PORT, USER_AGENT_LOGGING_BLACKLIST} from './config';
@@ -65,7 +64,6 @@ export default async function run() {
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db));
 	app.use('/publications/issn', createPublicationsRouterIssn(db));
 	app.use('/ranges', createRangesRouter(db));
-	app.use('/captcha', createCaptchaRouter());
 
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');
