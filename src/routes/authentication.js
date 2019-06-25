@@ -25,11 +25,17 @@
  * for the JavaScript code in this file.
  *
  */
+import {Router} from 'express';
+import HttpStatus from 'http-status';
 
-export {default as createUsersRouter} from './users';
-export {default as createPublishersRouter} from './publishers';
-export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
-export {default as createPublicationsRouterIssn} from './publications/issn';
-export {default as createMessageTemplate} from './messageTemplates';
-export {default as createRangesRouter} from './ranges';
-export {default as authenticationRouter} from './authentication';
+export default function (passportMiddleware) {
+	return new Router()
+		.use(passportMiddleware)
+		.post('/', authenticate);
+
+	function authenticate(req, res) {
+		console.log(req.user);
+		res.set('Token', req.user);
+		res.sendStatus(HttpStatus.NO_CONTENT);
+	}
+}
