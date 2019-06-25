@@ -30,10 +30,11 @@ import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
 import {default as bodyParse} from './utils';
 
-export default function (db) {
+export default function (db, passportMiddleware) {
 	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
+		.use(passportMiddleware)
 		.post('/isbn', bodyParse(), createIsbn)
 		.get('/isbn/:id', readIsbn)
 		.put('/isbn/:id', bodyParse(), updateIsbn)

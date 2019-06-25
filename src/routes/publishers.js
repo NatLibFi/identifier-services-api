@@ -31,10 +31,11 @@ import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 import {default as bodyParse} from './utils';
 
-export default function (db) {
+export default function (db, passportMiddleware) {
 	const publishers = publishersFactory({url: API_URL});
-
+	console.log(passportMiddleware)
 	return new Router()
+		// .use(passportMiddleware)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)

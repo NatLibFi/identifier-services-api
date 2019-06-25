@@ -31,9 +31,10 @@ import {default as bodyParse} from '../utils';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function (db) {
+export default function (db, passportMiddleware) {
 	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
+		.use(passportMiddleware)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
