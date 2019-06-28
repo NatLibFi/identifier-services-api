@@ -2747,11 +2747,18 @@
       "RequestMetadata": {
         "type": "object",
         "properties": {
+          "backgroundProcessingState": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "inProgress",
+              "processed"
+            ]
+          },
           "state": {
             "type": "string",
             "enum": [
               "new",
-              "queued",
               "inProgress",
               "accepted",
               "rejected"
