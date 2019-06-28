@@ -2765,6 +2765,25 @@
           "state"
         ]
       },
+      "MetadataReference": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "inProgress",
+              "processed"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
       "MessageTemplateContent": {
         "type": "object",
         "properties": {
@@ -3259,6 +3278,9 @@
             "$ref": "#/components/schemas/PublicationIsbnIsmnBase"
           },
           {
+            "$ref": "#/components/schemas/MetadataReference"
+          },
+          {
             "oneOf": [
               {
                 "type": "object",
@@ -3379,6 +3401,9 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/PublicationBase"
+          },
+          {
+            "$ref": "#/components/schemas/MetadataReference"
           },
           {
             "type": "object",
