@@ -31,11 +31,11 @@ import {default as bodyParse} from './utils';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db, passportMiddleware) {
+export default function (db, passportMiddlewares) {
 	const templates = templatesFactory({url: API_URL});
 	
 	return new Router()
-		.use(passportMiddleware)
+		.use(passportMiddlewares)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)

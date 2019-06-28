@@ -29,23 +29,21 @@
 import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
-import {default as bodyParse} from './utils';
 
-export default function (db, passportMiddleware) {
+export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
-	console.log(passportMiddleware)
 	return new Router()
-	.post('/query', bodyParse(), query)
-	.post('/', bodyParse(), create)
-	.get('/:id', read)
-	.use(passportMiddleware)
-		.put('/:id', bodyParse(), update)
+		.post('/query', query)
+		.post('/', create)
+		.get('/:id', read)
+		.use(passportMiddlewares.token)
+		.put('/:id', update)
 		.delete('/:id', remove)
-		.post('/requests', bodyParse(), createRequests)
+		.post('/requests', createRequests)
 		.get('/requests/:id', readRequest)
 		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', bodyParse(), updateRequest)
-		.post('/requests/query', bodyParse(), queryRequests);
+		.put('/requests/:id', updateRequest)
+		.post('/requests/query', queryRequests);
 
 	async function create(req, res, next) {
 		try {
@@ -67,6 +65,7 @@ export default function (db, passportMiddleware) {
 	}
 
 	async function update(req, res, next) {
+		console.log(req)
 		const id = req.params.id;
 		try {
 			const result = await publishers.update(db, id, req.body);
