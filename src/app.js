@@ -79,7 +79,7 @@ export default async function run() {
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
 	app.use('/publications/issn', createPublicationsRouterIssn(db, passportMiddlewares.token));
 	app.use('/ranges', createRangesRouter(db, passportMiddlewares.token));
-	app.use('/authentication', authenticationRouter(passportMiddlewares.credentials));
+	app.use('/auth', authenticationRouter(passportMiddlewares));
 
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');

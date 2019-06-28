@@ -28,14 +28,18 @@
 import {Router} from 'express';
 import HttpStatus from 'http-status';
 
-export default function (passportMiddleware) {
+export default function (passportMiddlewares) {
 	return new Router()
-		.use(passportMiddleware)
-		.post('/', authenticate);
+		.post('/', passportMiddlewares.credentials, authenticate)
+		.get('/', passportMiddlewares.token, read);
 
 	function authenticate(req, res) {
-		console.log(req.user);
 		res.set('Token', req.user);
 		res.sendStatus(HttpStatus.NO_CONTENT);
+	}
+
+	function read(req, res) {
+		res.json(req.user);
+		res.sendStatus(HttpStatus.OK);
 	}
 }
