@@ -2753,8 +2753,12 @@
               "new",
               "queued",
               "inProgress",
-              "processed"
+              "accepted",
+              "rejected"
             ]
+          },
+          "rejectionReason": {
+            "type": "string"
           },
           "createdResource": {
             "description": "Identifier of the resource that was created based on this request",
