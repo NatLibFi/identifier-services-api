@@ -2,10 +2,10 @@ import {Utils} from '@natlibfi/melinda-commons';
 const {readEnvironmentVariable, parseBoolean} = Utils;
 
 export const API_URL = readEnvironmentVariable('API_URL', {
-	defaultValue: 'http://localhost:8081'
+	defaultValue: 'http://localhost:8080'
 });
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
-	defaultValue: 8081,
+	defaultValue: 8080,
 	format: v => Number(v)
 });
 
@@ -32,3 +32,5 @@ export const USER_AGENT_LOGGING_BLACKLIST = readEnvironmentVariable('USER_AGENT_
 	],
 	format: JSON.parse
 });
+
+export const PASSPORT_LOCAL_USERS = readEnvironmentVariable('PASSPORT_LOCAL_USERS');

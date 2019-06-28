@@ -32,4 +32,3 @@ export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIs
 export {default as createPublicationsRouterIssn} from './publications/issn';
 export {default as createMessageTemplate} from './messageTemplates';
 export {default as createRangesRouter} from './ranges';
-export {default as createCaptchaRouter} from './captcha';
