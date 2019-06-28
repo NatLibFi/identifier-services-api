@@ -44,7 +44,6 @@
     "graphql": "^14.3.1",
     "merge-graphql-schemas": "^1.5.8",
     "path": "^0.12.7",
-    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
