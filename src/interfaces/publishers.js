@@ -32,7 +32,7 @@ import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 const objectId = require('mongodb').ObjectId;
-import {escapeRegex} from './utils';
+import {escapeRegex, hasAdminPermission} from './utils';
 
 export default function () {
 	return {
@@ -147,8 +147,9 @@ export default function () {
 		return result;
 	}
 
-	async function create(db, data) {
-		const query = `
+	async function create(db, data, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
 			mutation($input: PublisherInput){
 				createPublisher(input: $input) {
 					name
@@ -156,27 +157,31 @@ export default function () {
 				}
 			}
 		`;
-		const createPublisher = async (args, db) => {
-			const newPublisher = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
+			const createPublisher = async (args, db) => {
+				const newPublisher = {
+					...args.input,
+					lastUpdated: {
+						...args.input.lastUpdated,
+						timestamp: new Date()
+					}
+				};
+				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
+				return result.ops[0];
 			};
-			const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
-			return result.ops[0];
-		};
 
-		const result = await graphql(schema, query, {createPublisher}, db, {input: data});
-		if (result.errors) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+			const result = await graphql(schema, query, {createPublisher}, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function update(db, id, data) {
+	async function update(db, id, data, user) {
+		console.log('***', user)
 		const query = `
 			mutation($input: PublisherInput){
 				updatePublisher(input: $input) {

@@ -33,45 +33,54 @@ import {API_URL} from '../config';
 export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
-		.get('/:id', read)
 		.use(passportMiddlewares.token)
-		.post('/', create)
-		.put('/:id', update)
-		.post('/query', query);
+		.post('/', createRequests)
+		.get('/:id', readRequest)
+		.put('/:id', updateRequest)
+		.delete('/:id', removeRequest)
+		.post('/query', queryRequests);
 
-	async function create(req, res, next) {
+	async function createRequests(req, res, next) {
 		try {
-			const result = await publishers.create(db, req.body, req.user);
+			const result = await publishers.createRequests(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function read(req, res, next) {
+	async function readRequest(req, res, next) {
+		try {
+			const result = await publishers.readRequest(db, req.params.id);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function removeRequest(req, res, next) {
+		try {
+			const result = await publishers.removeRequest(db, req.params.id);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function updateRequest(req, res, next) {
 		const id = req.params.id;
+		const body = req.body;
 		try {
-			const result = await publishers.read(db, id);
+			const result = await publishers.updateRequest(db, id, body);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function update(req, res, next) {
-		const id = req.params.id;
+	async function queryRequests(req, res, next) {
 		try {
-			const result = await publishers.update(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function query(req, res, next) {
-		const query = req.query.q;
-		try {
-			const result = await publishers.query(db, query);
+			const result = await publishers.queryRequests(db);
 			res.json(result);
 		} catch (err) {
 			next(err);

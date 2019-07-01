@@ -27,9 +27,9 @@
  */
 
 export function hasPermission(profile, user) {
-	const permitted = profile.auth.groups.some(profileGroup => {
-		return user.groups.some(
-			userGroup => userGroup === profileGroup || userGroup === 'admin'
+	const permitted = profile.auth.role.some(profileRole => {
+		return user.role.some(
+			userRole => userRole === profileRole || userRole === 'admin'
 		);
 	});
 	return permitted;
@@ -45,7 +45,7 @@ export function hasPublisherPermission(profile, user) {
 }
 
 export function hasAdminPermission(user) {
-	return hasPermission({auth: {groups: ['admin']}}, user);
+	return hasPermission({auth: {role: ['admin']}}, user);
 }
 
 export function hasPublisherAdminPermission(user) {
