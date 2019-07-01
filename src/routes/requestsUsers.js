@@ -36,63 +36,54 @@ export default function (db, passportMiddlewares) {
 
 	return new Router()
 		.use(passportMiddlewares)
-		.post('/', create)
-		.get('/:id', read)
-		.put('/:id', update)
-		.delete('/:id', remove)
-		.post('/:id/password', changePwd)
-		.post('/query', query);
+		.post('/', createRequest)
+		.get('/:id', readRequest)
+		.delete('/:id', removeRequest)
+		.put('/:id', updateRequest)
+		.post('/query', queryRequest);
 
-	async function create(req, res, next) {
+	async function createRequest(req, res, next) {
 		try {
-			const result = await users.create(db, req.body);
+			const result = await users.createRequest(db, req.body);
 			res.json(result);
 		} catch (err) {
-			return next(err);
+			next(err);
 		}
 	}
 
-	async function read(req, res, next) {
+	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.read(db, id, req.user);
+			const result = await users.readRequest(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function update(req, res, next) {
+	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.update(db, id, req.body);
+			const result = await users.updateRequest(db, id, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function remove(req, res, next) {
+	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.remove(db, id);
+			const result = await users.removeRequest(db, id);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function changePwd(req, res, next) {
+	async function queryRequest(req, res, next) {
 		try {
-			res.json(req.body);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function query(req, res, next) {
-		try {
-			const result = await users.query(db, req.user);
+			const result = await users.queryRequest(db);
 			res.json(result);
 		} catch (err) {
 			next(err);

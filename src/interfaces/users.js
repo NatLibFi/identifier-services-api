@@ -27,9 +27,11 @@
  */
 
 import {graphql} from 'graphql';
-import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import schema from '../graphql';
+import {hasAdminPermission} from './utils';
+
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
@@ -88,7 +90,7 @@ export default function () {
 		}
 	}
 
-	async function read(db, id) {
+	async function read(db, id, user) {
 		const query = `
 		{
 				userMetadata(id: ${JSON.stringify(id)}) {
@@ -109,7 +111,7 @@ export default function () {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		return result;
+		return {...user, userInfo: result.data};
 
 		async function userMetadata({id}, db) {
 			const result = await db
@@ -191,19 +193,23 @@ export default function () {
 		return db;
 	}
 
-	async function query(db) {
-		const result = await graphql(
-			schema,
-			'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
-			{Users},
-			db,
-		);
+	async function query(db, user) {
+		if (hasAdminPermission(user)) {
+			const result = await graphql(
+				schema,
+				'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
+				{Users},
+				db,
+			);
 
-		if (result.errors) {
-			throw new Error();
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function Users(root, db) {
 			const result = await db

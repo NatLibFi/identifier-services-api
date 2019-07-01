@@ -95,7 +95,6 @@ export default function () {
 		};
 
 		const result = await graphql(schema, query, {Publishers}, {db, data});
-		console.log(result);
 		return result;
 	}
 

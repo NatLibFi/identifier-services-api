@@ -33,6 +33,7 @@ import cors from 'cors';
 import {MongoClient} from 'mongodb';
 import {
 	createUsersRouter,
+	createRequestsUsersRouter,
 	createPublishersRouter,
 	createPublicationsRouterIsbnIsmn,
 	createPublicationsRouterIssn,
@@ -75,6 +76,7 @@ export default async function run() {
 
 	app.use('/templates', createMessageTemplate(db, passportMiddlewares.token));
 	app.use('/users', createUsersRouter(db, passportMiddlewares.token));
+	app.use('/requests/users', createRequestsUsersRouter(db, passportMiddlewares.token));
 	app.use('/publishers', createPublishersRouter(db, passportMiddlewares));
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
 	app.use('/publications/issn', createPublicationsRouterIssn(db, passportMiddlewares.token));
