@@ -28,26 +28,44 @@
 
 export default `
 type Query{
-    template(id:ID!): Template
-    Templates: [Template]
+    messageTemplate(id:ID!): MessageTemplate
+    MessageTemplates: [MessageTemplate]
+    messageTemplateContent(id:ID!): MessageTemplateContent
+    MessageTemplatesContent: [MessageTemplateContent]
 }
 
-type Template{
+type MessageTemplate{
     _id: ID!
     name:String!
     language: String!
     subject: String!
     body: String!
+    notes: [String]
     lastUpdated: LastUpdated!
 }
-input InputTemplate{
+
+type MessageTemplateContent{
+    _id: ID!
+    name:String!
+    language: String!
+    subject: String!
+    body: String!
+}
+
+input InputMessageTemplate{
     name:String!, language:String!, subject:String!, body:String!, 
-    lastUpdated:LastUpdatedInput
+    lastUpdated: LastUpdatedInput
+}
+input InputMessageTemplateContent{
+    name:String!, language:String!, subject:String!, body:String!, 
 }
 
 type Mutation{
-    createTemplate(inputTemplate:InputTemplate):Template!
-    updateTemplate(id:ID, inputTemplate: InputTemplate):Template
-    deleteTemplate(id:ID):Template
+    createTemplate(inputMessageTemplate:InputMessageTemplate):MessageTemplate!
+    updateTemplate(id:ID, inputMessageTemplate: InputMessageTemplate):MessageTemplate
+    deleteTemplate(id:ID):MessageTemplate
+    createTemplateContent(inputMessageTemplateContent:InputMessageTemplateContent):MessageTemplateContent!
+    updateTemplateContent(id:ID, inputMessageTemplateContent: InputMessageTemplateContent):MessageTemplateContent
+    deleteTemplateContent(id:ID):MessageTemplateContent
 }
 `;
