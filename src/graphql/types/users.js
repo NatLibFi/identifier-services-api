@@ -53,9 +53,14 @@ export default `
  }
  
  enum Language{
-     ENG
-     FIN
-     SWD
+     eng
+     fin
+     swe
+ }
+
+ enum MetadataDelivery{
+     manual
+     external
  }
 
  type UserBase{

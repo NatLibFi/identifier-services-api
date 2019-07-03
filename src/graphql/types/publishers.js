@@ -34,10 +34,7 @@ export default `
         PublisherRequests: [PublisherRequest]
 
     }
-
-
-
-
+    
     type Activity{
         active: Boolean
         yearInactivated: Int
@@ -196,6 +193,25 @@ export default `
         distributorOf: DistributorOfInput
         distributor: DistributorInput
     }
+    type Organization{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    type PublisherBaseOrganizationDetails{
+        affiliateOf: Organization
+        affiliates: [Organization]
+        distributorOf: Organization
+        distributor: Organization
+    }
+    type PublisherContentOrganizationDetails{
+        affiliateOf: Organization
+        affiliates: [Organization]
+        distributorOf: Organization
+        distributor: Organization
+    }
     input PrintDetailsInput{
         manufacturer: String
         city: String
@@ -238,6 +254,37 @@ export default `
         mapDetails: MapDetailsInput
     }
 
+    type PublisherBase{
+        name: String!
+        code: String
+        language: Language
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: PublisherBaseOrganizationDetails
+    }
+
+    type PublisherContent{
+        name: String!
+        code: String
+        language: Language
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: PublisherContentOrganizationDetails
+        metadataDelivery: MetadataDelivery!
+        primaryContact: [String!]!
+        activity: Activity!
+    }
+
 
     type Publisher{
         _id: ID!
@@ -245,7 +292,7 @@ export default `
         notes: [String]
         name: String!
         code: String
-        language: String!
+        language: Language!
         email: String
         phone: String
         website: String
@@ -254,7 +301,7 @@ export default `
         publicationDetails: PublicationDetails
         classification: String!
         organizationDetails: OrganizationDetails
-        metadataDelivery: String!
+        metadataDelivery: MetadataDelivery!
         primaryContact: [String!]!
         activity: Activity!
         streetAddress: StreetAddress
@@ -265,7 +312,7 @@ export default `
         notes: [String]
         name: String!
         code: String
-        language: String!
+        language: Language!
         email: String
         phone: String
         website: String
@@ -274,7 +321,7 @@ export default `
         publicationDetails: PublicationDetailsInput
         classification: String!
         organizationDetails: OrganizationDetailsInput
-        metadataDelivery: String!
+        metadataDelivery: MetadataDelivery!
         primaryContact: [String!]
         activity: ActivityInput
         streetAddress: StreetAddressInput

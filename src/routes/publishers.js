@@ -34,12 +34,13 @@ export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
 		.get('/:id', read)
-		//.use(passportMiddlewares.token)
+		.use(passportMiddlewares.token)
 		.post('/', create)
 		.put('/:id', update)
 		.post('/query', query);
 
 	async function create(req, res, next) {
+		//console.log('***', req.user)
 		try {
 			const result = await publishers.create(db, req.body, req.user);
 			res.json(result);
