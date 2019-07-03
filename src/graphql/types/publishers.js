@@ -107,6 +107,95 @@ export default `
         edition: Int
         format: String
     }
+    type PostalAddress{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        public: Boolean
+    }
+    input PostalAddressInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        public: Boolean
+    }
+
+    type PublicationDetails{
+        frequency: Int!
+    }
+    input PublicationDetailsInput{
+        frequency: Int!
+    }
+    type AffiliateOf{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    input AffiliateOfInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    type Affiliates{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    input AffiliatesInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    type DistributorOf{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    input DistributorOfInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    type Distributor{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    input DistributorInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
+    type OrganizationDetails{
+        affiliateOf: AffiliateOf
+        affiliates: [Affiliates]
+        distributorOf: DistributorOf
+        distributor: Distributor
+    }
+    input OrganizationDetailsInput{
+        affiliateOf: AffiliateOfInput
+        affiliates: [AffiliatesInput]
+        distributorOf: DistributorOfInput
+        distributor: DistributorInput
+    }
     input PrintDetailsInput{
         manufacturer: String
         city: String
@@ -120,6 +209,7 @@ export default `
     input MapDetailsInput{
         scale: String
     }
+
     type ISBNISMNPublicationRequest{
         title: String!
         type: String!
@@ -151,33 +241,43 @@ export default `
 
     type Publisher{
         _id: ID!
+        lastUpdated: LastUpdated!
+        notes: [String]
         name: String!
+        code: String
         language: String!
-        metadataDelivery: String!
-        primaryContact: [String!]
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
-        activity: Activity
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        metadataDelivery: String!
+        primaryContact: [String!]!
+        activity: Activity!
         streetAddress: StreetAddress
-        lastUpdated: LastUpdated
     }  
 
     input PublisherInput{
+        lastUpdated: LastUpdatedInput!
+        notes: [String]
         name: String!
+        code: String
         language: String!
-        metadataDelivery: String!
-        primaryContact: [String!]
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
+        postalAddress: PostalAddressInput!
+        publicationDetails: PublicationDetailsInput
+        classification: String!
+        organizationDetails: OrganizationDetailsInput
+        metadataDelivery: String!
+        primaryContact: [String!]
         activity: ActivityInput
         streetAddress: StreetAddressInput
-        lastUpdated: LastUpdatedInput
     }
     
     type PublisherRequest{
