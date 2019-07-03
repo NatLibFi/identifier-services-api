@@ -52,16 +52,82 @@ export default `
      defaultLanguage: Language!
  }
  
- enum Language{
-     ENG
-     FIN
-     SWD
- }
+enum Language{
+    ENG
+    FIN
+    SWD
+}
+enum FileFormat{
+    pdf
+    epub
+    cd
+}
+enum PrintFormat{
+    paperback
+    hardback
+    spiralBinding
+    orderedMap
+}
+
+enum Format{
+    cd
+    electronic
+    printed
+    printedAndelectronic
+}
+
+enum State{
+    new
+    pending
+    inProgress
+    processed
+    accepted
+    rejected
+}
+enum BackgroundProcessingState{
+    pending
+    inProgress
+    processed
+}
+enum Type{
+    book
+    dissertation
+    music
+    other
+    map
+}
+enum Role{
+    admin
+    publisherAdmin
+    publisher
+    system
+}
+enum Frequency{
+    daily
+    weekly
+    biMonthly
+    monthly
+    quarterly
+    biYearly
+    yearly
+    continuously
+    irregularly
+}
+enum IssnType{
+    journal
+    newsletter
+    staffMagazine
+    membershipMagazine
+    cartoon
+    newspaper
+    freepaper
+    monography
+}
 
  type UserBase{
      _id: ID!
      publisher: String
-     role: [String!]!
+     role: [Role]!
      preferences(defaultLanguage: Language): Preferences!
  }
 
@@ -71,14 +137,14 @@ export default `
     familyName: String!
     email: String!
     publisher: String
-    role: [String!]!
+    role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
  }
 
  type UserContent2{
     _id: ID!
     publisher: String
-    role: [String!]!
+    role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
     userId: String!
  }
@@ -91,29 +157,30 @@ export default `
     familyName: String!
     email: String!
     publisher: String
-    role: [String!]!
+    role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
     notes:[String]
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
 
  type UsersRequestContent{
-     _id: ID!
-     state: String!
-     rejectionReason: String
-     createdResource: String
-     givenName: String!
-     familyName: String!
-     email: String!
-     publishers: String
-     role:[String!]
+    _id: ID!
+    backgroundProcessingState: BackgroundProcessingState
+    state: State!
+    rejectionReason: String
+    createdResource: String
+    givenName: String!
+    familyName: String!
+    email: String!
+    publishers: String
+    role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
  }
 
  type UserRequest{
-     givenName: String!
-     familyName: String!
-     email: String!
+    givenName: String!
+    familyName: String!
+    email: String!
  }
 
  input InputUser{
@@ -121,9 +188,9 @@ export default `
     familyName: String!
     email: String!
     publisher: String
-    role: [String!]!
+    role: [Role]!
     notes:[String]
-    preferences: PreferencesInput,
+    preferences: PreferencesInput
     lastUpdated: LastUpdatedInput
  }
 
@@ -135,7 +202,7 @@ export default `
     familyName: String!
     email: String!
     publishers: String
-    role:[String!]
+    role: [Role]!
     lastUpdated: LastUpdatedInput
  }
 

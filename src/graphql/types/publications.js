@@ -28,60 +28,61 @@
 
 export default `
  type Query{
-    publication_ISBN_ISMN(id:ID!): ISBN_ISMN
+    publicationBase: PublicationBase
+
+    publication_ISBN_ISMN(id:ID!): PublicationIsbnIsmn
      
-    publication_ISSN(id:ID!): ISSN
+    publication_ISSN(id:ID!): PublicationIssn
         
-    publicationRequest_ISBN_ISMN(id:ID!): ISBN_ISMN_Request
+    publicationRequest_ISBN_ISMN(id:ID!): PublicationIsbnIsmnRequest
         
-    publicationRequest_ISSN(id:ID!): ISSN_Request
+    publicationRequest_ISSN(id:ID!): PublicationIssnRequest
 
-    Publications_ISBN_ISMN: [ISBN_ISMN]   
+    Publications_ISBN_ISMN: [PublicationIsbnIsmn]   
 
-    Publications_ISSN: [ISSN]
+    Publications_ISSN: [PublicationIssn]
     
-    PublicationRequests_ISBN_ISMN: [ISBN_ISMN_Request]
+    PublicationRequests_ISBN_ISMN: [PublicationIsbnIsmnRequest]
     
-    PublicationRequests_ISSN: [ISSN_Request]
+    PublicationRequests_ISSN: [PublicationIssnRequest]
 
 }
 
 type Mutation{
-    createPublicationIsbnIsmn(input:InputPublicationIsbnIsmn ): ISBN_ISMN!
+    createPublicationIsbnIsmn(input:InputPublicationIsbnIsmn ): PublicationIsbnIsmn!
     
-    createPublicationRequestIsbnIsmn(input:InputPublicationIsbnIsmnRequest ): ISBN_ISMN_Request!
+    createPublicationRequestIsbnIsmn(input:InputPublicationIsbnIsmnRequest ): PublicationIsbnIsmnRequest!
         
-    createPublicationIssn(input: InputPublicationIssn):ISSN  
+    createPublicationIssn(input: InputPublicationIssn):PublicationIssn  
     
-    createPublicationRequestIssn(input:InputPublicationRequestIssn):ISSN_Request
+    createPublicationRequestIssn(input:InputPublicationRequestIssn):PublicationIssnRequest
 
     
-    deletePublicationIsbnIsmn(id: ID!): ISBN_ISMN
+    deletePublicationIsbnIsmn(id: ID!): PublicationIsbnIsmn
     
-    deletePublicationIssn(id: ID!): ISSN
+    deletePublicationIssn(id: ID!): PublicationIssn
 
-
-    updatePublicationIsbnIsmn(id: ID, input: InputPublicationIsbnIsmn ): ISBN_ISMN!
+    updatePublicationIsbnIsmn(id: ID, input: InputPublicationIsbnIsmn ): PublicationIsbnIsmn!
     
-    updatePublicationRequestIsbnIsmn(id:ID, input: InputPublicationIsbnIsmnRequest ): ISBN_ISMN_Request!
+    updatePublicationRequestIsbnIsmn(id:ID, input: InputPublicationIsbnIsmnRequest ): PublicationIsbnIsmnRequest!
     
-    updatePublicationIssn(id: ID, input: InputPublicationIssn):ISSN  
+    updatePublicationIssn(id: ID, input: InputPublicationIssn):PublicationIssn  
 
-    updatePublicationRequestIssn(id:ID, input: InputPublicationRequestIssn):ISSN_Request
+    updatePublicationRequestIssn(id:ID, input: InputPublicationRequestIssn):PublicationIssnRequest
 
-    deletePublicationRequestIsbnIsmn(id: ID!): ISBN_ISMN_Request
-    deletePublicationRequestIssn(id: ID!): ISSN_Request
+    deletePublicationRequestIsbnIsmn(id: ID!): PublicationIsbnIsmnRequest
+    deletePublicationRequestIssn(id: ID!): PublicationIssnRequest
 }
 
 input InputPublicationIsbnIsmn{
     title: String!,  publisher:String!, melindaId: String, type: String!, 
-        subtitle: String, language: String!, publicationTime: String!, additionalDetails: String, authors:[authorInput], 
+        subtitle: String, language: Language!, publicationTime: String!, additionalDetails: String, authors:[authorInput], 
         series: seriesInput, electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, 
         mapDetails: mapDetailsInput, lastUpdated: lastUpdatedInput
 }
 
 input InputPublicationIsbnIsmnRequest{
-    title: String!, publisher:String!, state:String!, type: String, subtitle: String, language: String, 
+    title: String!, publisher:String!, state:String!, type: String, subtitle: String, language: Language, 
         publicationTime: String, additionalDetails: String, authors:[authorInput], series: seriesInput, 
         electronicDetails: electronicDetailsInput, printDetails: printDetailsInput, mapDetails: mapDetailsInput, 
         lastUpdated: lastUpdatedInput
@@ -89,16 +90,16 @@ input InputPublicationIsbnIsmnRequest{
 
 input InputPublicationIssn{ 
     title: String! ,publicationId: String, publisher: String!, melindaId: String,
-    type: String!, subtitle: String, language: String!, year: Int!, number: Int, frequency: String!, additionalDetails: String,
-    electronicDteails: electronicDetailsISSNInput, printDetails: printDetailsISSNInput, seriesDetails: seriesDetailsISSNInput, 
-    mainSeries: seriesDetailsISSNInput, subSeries: seriesDetailsISSNInput, otherMedium: seriesDetailsISSNInput, 
+    type: String!, subtitle: String, language: Language!, year: Int!, number: Int, frequency: String!, additionalDetails: String,
+    electronicDteails: electronicDetailsISSNInput, printDetails: printDetailsISSNInput, seriesDetails: seriesDetailsIssnInput, 
+    mainSeries: seriesDetailsIssnInput, subSeries: seriesDetailsIssnInput, otherMedium: seriesDetailsIssnInput, 
     previousPublication: previousPublicationInput, lastUpdated: lastUpdatedInput
 }
 input InputPublicationRequestIssn{ 
-    title: String!, publisher: String!, type: String!, subtitle: String, language: String!, 
+    title: String!, publisher: String!, type: String!, subtitle: String, language: Language!, 
     year: Int!, number: Int, frequency: String!, additionalDetails: String, electronicDteails: electronicDetailsISSNInput, 
-    printDetails: printDetailsISSNInput, seriesDetails: seriesDetailsISSNInput, state: String!,
-    mainSeries: seriesDetailsISSNInput, subSeries: seriesDetailsISSNInput, otherMedium: seriesDetailsISSNInput, 
+    printDetails: printDetailsISSNInput, seriesDetails: seriesDetailsIssnInput, state: String!,
+    mainSeries: seriesDetailsIssnInput, subSeries: seriesDetailsIssnInput, otherMedium: seriesDetailsIssnInput, 
     previousPublication: previousPublicationInput, lastUpdated: lastUpdatedInput
 }
 
@@ -108,18 +109,29 @@ type Author{
     role: String!
 }
 
-type Series{
-    identifier: String!
-    name: String!
+type SeriesDetails{
     volume: Int
+    titleOrIdentifier: TitleOrIdentifier
 }
-type SeriesDetailsISSN{
-    identifier: String!
-    name: String!
+
+union TitleOrIdentifier = Title | Identifier
+
+type Title{
+    title: String
 }
-input seriesDetailsISSNInput{
-    identifier: String!
-    name: String!
+
+type Identifier{
+    identifier: String
+}
+
+type SeriesDetailsIssn{
+    mainSeries: TitleOrIdentifier
+    subSeries: TitleOrIdentifier
+}
+
+input seriesDetailsIssnInput{
+    mainSeries: TitleOrIdentifier
+    subSeries: TitleOrIdentifier
 }
 
 type ElectronicDetails{
@@ -150,21 +162,68 @@ input printDetailsISSNInput{
     city: String
 }
 
+union FormatDetailsIsbnIsmn = FormatDetails1 | FormatDetails2 | FormatDetails3
+union FormatDetailsIssn = FormatDetails4 | FormatDetails5
+
+type FormatDetails1 {
+    fileFormat: FileFormat!
+    format: Format!
+}
+
+type FormatDetails2 {
+    printFormat: PrintFormat!
+    manufacturer: String
+    city: String
+    run: Int
+    edition: Int
+    format: Format!
+}
+type FormatDetails3 {
+    fileFormat: FileFormat!
+    printFormat: PrintFormat!
+    manufacturer: String
+    city: String
+    run: Int
+    edition: Int
+    format: Format!
+}
+type FormatDetails4 {
+    format: Format!
+}
+type FormatDetails5 {
+    format: Format!
+    url: String!
+}
+
 type MapDetails{
     scale: String
 }
 
 type PreviousPublication{
-    identifier: String!
-    name: String!
-    year: Int
-    number: Int
+    lastYear: Int
+    lastNumber: Int
+    titleOrIdentifier: TitleOrIdentifier
 }
+
+union Category = Category1 | Category2
+
+type Category1{
+    type: Type
+}
+
+type Category2{
+    type: Type
+    mapDetails: MapDetails
+}
+
+type MapDetails{
+    scale: String
+}
+
 input previousPublicationInput{
-    identifier: String!
-    name: String!
-    year: Int
-    number: Int
+    lastYear: Int
+    lastNumber: Int
+    titleOrIdentifier: TitleOrIdentifier
 }
 
 input lastUpdatedInput{
@@ -188,7 +247,16 @@ input electronicDetailsInput{
     format: String!
 }
 
-input printDetailsInput{
+input printDetailsInput{electronicDetails
+    electronicDetails
+    electronicDetails
+    electronicDetails
+    electronicDetails
+    electronicDetails
+    ElectronicDetails
+    ElectronicDetails
+    electronicDetails
+    electronicDetails
     manufacturer: String!
     city: String
     run: Int
@@ -200,85 +268,166 @@ input mapDetailsInput{
     scale: String
 }
 
-type ISBN_ISMN{
+type PublicationBase{
     _id: ID!
     title: String!
-    publisher: String!
-    melindaId: String
-    type: String!
     subtitle: String
-    language: String!
+    language: Language!
+    additionalDetails: String
+}
+
+type PublicationIsbnIsmnBase{
+    _id: ID!
+    title: String!
+    subtitle: String
+    language: Language!
+    additionalDetails: String
     publicationTime: String!
-    additionalDetails: String
-    authors: [Author]
-    series: Series
-    electronicDetails: ElectronicDetails
-    printDetails: PrintDetails
-    mapDetails: MapDetails
-    lastUpdated: LastUpdated
+    isPublic: Boolean!
+    authors: [Author]!
+    seriesDetails: SeriesDetails
+    formatDetails: FormatDetailsIsbnIsmn!
 }
 
-type ISSN{
+type PublicationIsbnIsmnContent{
     _id: ID!
     title: String!
-    publicationId: String
-    publisher: String!
+    subtitle: String
+    language: Language!
+    additionalDetails: String
+    publicationTime: String!
+    isPublic: Boolean!
+    authors: [Author]!
+    seriesDetails: SeriesDetails
+    formatDetails: FormatDetailsIsbnIsmn!
+    state: State!
+    id: String!
+    category: Category
+}
+
+type PublicationIsbnIsmn{
+    _id: ID!
+    title: String!
     melindaId: String
-    type: String!
     subtitle: String
-    language: String!
-    year: Int!
-    number: Int
-    frequency: String!
+    language: Language!
     additionalDetails: String
-    electronicDteails: ElectronicDetailsISSN
-    printDetails: PrintDetailsISSN
-    seriesDetails: SeriesDetailsISSN
-    mainSeries: SeriesDetailsISSN
-    subSeries: SeriesDetailsISSN
-    otherMedium: SeriesDetailsISSN
-    previousPublication: PreviousPublication
+    publicationTime: String!
+    isPublic: Boolean!
+    authors: [Author]!
+    seriesDetails: SeriesDetails
+    formatDetails: FormatDetailsIsbnIsmn!
+    state: State!
+    id: String!
+    publisher: String!
+    metadataReference: String
+    associatedRange: String!
+    category: Category
+    notes: [String]
     lastUpdated: LastUpdated
 }
 
-type ISBN_ISMN_Request{
+type PublicationIssn{
     _id: ID!
     title: String!
-    type: String!
     subtitle: String
+    language: Language!
+    additionalDetails: String
+    state: State!
+    id: String
+    manufacturer: String
+    city: String!
+    firstYear: Int!
+    firstNumber: Int!
+    frequency: Frequency!
+    type: IssnType!
+    formatDetails: FormatDetailsIssn
+    previousPublication: PreviousPublication
+    otherMedium: TitleOrIdentifier
+    seriesDetails: SeriesDetailsIssn
+    metadataReference: String!
+    associatedRange: String!
+    lastUpdated: LastUpdated
+    notes: [String]
+}
+type PublicationIssnContent{
+    _id: ID!
+    title: String!
+    subtitle: String
+    language: Language!
+    additionalDetails: String
+    state: State!
+    id: String
+    manufacturer: String
+    city: String!
+    firstYear: Int!
+    firstNumber: Int!
+    frequency: Frequency!
+    type: IssnType!
+    formatDetails: FormatDetailsIssn
+    previousPublication: PreviousPublication
+    otherMedium: TitleOrIdentifier
+    seriesDetails: SeriesDetailsIssn
+    
+}
+
+type PublicationIsbnIsmnRequestContent{
+    _id: ID!
+    backgroundProcessingState: BackgroundProcessingState
+    state: State!
+    rejectionReason: String
+    createdResource: String
+    title: String!
+    subtitle: String
+    language: Language!
+    additionalDetails: String
+    publicationTime: String
+    isPublic: Boolean!
+    authors: [Author]!
+    seriesDetails: SeriesDetails
+    formatDetails: FormatDetailsIsbnIsmn!
+    id: String
     publisher:String!
-    language: String!
-    publicationTime: String!
-    additionalDetails: String
-    authors: [Author]
-    series: Series
-    electronicDetails: ElectronicDetails
-    printDetails: PrintDetails
-    mapDetails: MapDetails
-    lastUpdated: LastUpdated
-    state: String!
+    category: Category
 }
 
-type ISSN_Request{
+type PublicationIsbnIsmnRequest{
     _id: ID!
     title: String!
-    publisher: String!
-    type: String!
     subtitle: String
-    language: String!
-    year: Int!
-    number: Int
-    frequency: String!
+    language: Language!
     additionalDetails: String
-    electronicDteails: ElectronicDetailsISSN
-    printDetails: PrintDetailsISSN
-    seriesDetails: SeriesDetailsISSN
-    mainSeries: SeriesDetailsISSN
-    subSeries: SeriesDetailsISSN
-    otherMedium: SeriesDetailsISSN
+    publicationTime: String!
+    isPublic: Boolean!
+    authors: [Author]!
+    seriesDetails: SeriesDetails
+    formatDetails: FormatDetailsIsbnIsmn!
+}
+
+type PublicationIssnRequest{
+    _id: ID!
+    backgroundProcessingState: BackgroundProcessingState
+    state: State!
+    rejectionReason: String
+    createdResource: String
+    title: String!
+    subtitle: String
+    language: Language!
+    additionalDetails: String
+    id: String
+    manufacturer: String
+    city: String
+    firstYear: Int!
+    firstNumber: Int!
+    frequency: Frequency!
+    type: IssnType!
+    formatDetails: FormatDetailsIssn
     previousPublication: PreviousPublication
+    otherMedium: TitleOrIdentifier
+    seriesDetails: SeriesDetailsIssn
+    publisher: String!
     lastUpdated: LastUpdated
-    state: String!
+    notes: [String]
 }
 
  `;
