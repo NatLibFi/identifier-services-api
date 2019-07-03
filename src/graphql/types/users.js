@@ -35,7 +35,7 @@ export default `
  }
 
  type LastUpdated{
-     timestamp: String
+     timestamp: String!
      user: String!
  }
  
