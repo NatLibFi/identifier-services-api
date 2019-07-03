@@ -29,9 +29,9 @@
 export default `
  type Query{
      userMetadata(id:ID!):User
-     usersRequest(id:ID!): UsersRequest
+     usersRequestContent(id:ID!): UsersRequestContent
      Users: [User!]
-     UsersRequests: [UsersRequest!]
+     UsersRequestContents: [UsersRequestContent!]
  }
 
  type LastUpdated{
@@ -40,7 +40,7 @@ export default `
  }
  
  type Preferences{
-     defaultLanguage: String!
+     defaultLanguage: Language!
  }
 
  input LastUpdatedInput{
@@ -49,56 +49,107 @@ export default `
  }
  
  input PreferencesInput{
-     defaultLanguage: String!
+     defaultLanguage: Language!
  }
+ 
+ enum Language{
+     ENG
+     FIN
+     SWD
+ }
+
+ type UserBase{
+     _id: ID!
+     publisher: String
+     role: [String!]!
+     preferences(defaultLanguage: Language): Preferences!
+ }
+
+ type UserContent{
+    _id: ID!
+    givenName: String!
+    familyName: String!
+    email: String!
+    publisher: String
+    role: [String!]!
+    preferences(defaultLanguage: Language): Preferences!
+ }
+
+ type UserContent2{
+    _id: ID!
+    publisher: String
+    role: [String!]!
+    preferences(defaultLanguage: Language): Preferences!
+    userId: String!
+ }
+
+ union UserCreation = UserContent | UserContent2
  
  type User{
     _id: ID!
-    userId: String!
-    preferences(defaultLanguage: String): Preferences!
+    givenName: String!
+    familyName: String!
+    email: String!
+    publisher: String
+    role: [String!]!
+    preferences(defaultLanguage: Language): Preferences!
+    notes:[String]
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
 
- type UsersRequest{
+ type UsersRequestContent{
      _id: ID!
-     userId: String
-     publishers: [String!]!
+     state: String!
+     rejectionReason: String
+     createdResource: String
      givenName: String!
      familyName: String!
      email: String!
-     notes:[String!]!
-     state: String!
-     lastUpdated: LastUpdated
+     publishers: String
+     role:[String!]
+    preferences(defaultLanguage: Language): Preferences!
+ }
+
+ type UserRequest{
+     givenName: String!
+     familyName: String!
+     email: String!
  }
 
  input InputUser{
-    userId:String!,
-    preferences:PreferencesInput,
-    lastUpdated:LastUpdatedInput
+    givenName: String!
+    familyName: String!
+    email: String!
+    publisher: String
+    role: [String!]!
+    notes:[String]
+    preferences: PreferencesInput,
+    lastUpdated: LastUpdatedInput
  }
 
- input InputUserRequest{
-    userId:String,
-    state:String!,
-    publishers:[String!]!,
-    givenName:String!,
-    familyName:String!,
-    email:String!,
-    notes:[String!]!,
+ input InputUserRequestContent{
+    state: String!
+    rejectionReason: String
+    createdResource: String
+    givenName: String!
+    familyName: String!
+    email: String!
+    publishers: String
+    role:[String!]
     lastUpdated: LastUpdatedInput
  }
 
  type Mutation{
     createUser(inputUser:InputUser):User!
 
-    createRequest(inputUserRequest: InputUserRequest):UsersRequest!
+    createRequest(inputUserRequestContent: InputUserRequestContent):UsersRequestContent!
 
     deleteUser(id:ID):User
 
-    deleteRequest(id:ID):UsersRequest
+    deleteRequest(id:ID):UsersRequestContent
 
     updateUser(id:ID, inputUser:InputUser):User!
 
-    updateRequest(id: ID, inputUserRequest: InputUserRequest):UsersRequest!
+    updateRequest(id: ID, inputUserRequestContent: InputUserRequestContent):UsersRequestContent!
  }
  `;
