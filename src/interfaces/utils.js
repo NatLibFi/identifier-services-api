@@ -27,23 +27,23 @@
  */
 
 export function hasPermission(profile, user) {
-	const permitted = profile.auth.groups.some(profileGroup => {
+	const permitted = profile.auth.role.some(profileRole => {
 		return user.role.some(
-			userGroup => userGroup === profileGroup || userGroup === 'admin'
+			userRole => userRole === profileRole || userRole === 'admin'
 		);
 	});
 	return permitted;
 }
 
 export function hasAdminPermission(user) {
-	return hasPermission({auth: {groups: ['admin']}}, user);
+	return hasPermission({auth: {role: ['admin']}}, user);
 }
 
 export function hasSystemPermission(user) {
-	return hasPermission({auth: {groups: ['system']}}, user);
+	return hasPermission({auth: {role: ['system']}}, user);
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {groups: ['publisher-admin']}}, user);
+	return hasPermission({auth: {role: ['publisher-admin']}}, user);
 }
 
