@@ -247,16 +247,7 @@ input electronicDetailsInput{
     format: String!
 }
 
-input printDetailsInput{electronicDetails
-    electronicDetails
-    electronicDetails
-    electronicDetails
-    electronicDetails
-    electronicDetails
-    ElectronicDetails
-    ElectronicDetails
-    electronicDetails
-    electronicDetails
+input printDetailsInput{
     manufacturer: String!
     city: String
     run: Int
