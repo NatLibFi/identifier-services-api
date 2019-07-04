@@ -35,9 +35,6 @@ export default `
 
     }
 
-
-
-
     type Activity{
         active: Boolean
         yearInactivated: Int
@@ -237,7 +234,46 @@ export default `
         printDetails: PrintDetailsInput
         mapDetails: MapDetailsInput
     }
-
+    type PublisherBase{
+        _id: ID!
+        lastUpdated: LastUpdated!
+        notes: [String]
+        name: String!
+        code: String
+        language: String!
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        metadataDelivery: String!
+        primaryContact: [String!]!
+        activity: Activity!
+        streetAddress: StreetAddress
+    } 
+    type PublisherBaseInput{
+        _id: ID!
+        lastUpdated: LastUpdated!
+        notes: [String]
+        name: String!
+        code: String
+        language: String!
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        metadataDelivery: String!
+        primaryContact: [String!]!
+        activity: Activity!
+        streetAddress: StreetAddress
+    }   
 
     type Publisher{
         _id: ID!
