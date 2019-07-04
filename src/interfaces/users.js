@@ -50,30 +50,32 @@ export default function () {
 		queryRequest
 	};
 
-	async function create(db, data) {
-		console.log('data', data)
-		const query = `
-							mutation($inputUser:UserInput){
-								createUser(inputUser: $inputUser
-								) {
-									preferences {
-										defaultLanguage
-									}
-									lastUpdated {
-										timestamp
-										user
+	async function create(db, data, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
+								mutation($inputUser:UserInput){
+									createUser(inputUser: $inputUser
+									) {
+										preferences {
+											defaultLanguage
+										}
+										lastUpdated {
+											timestamp
+											user
+										}
 									}
 								}
-							}
-						`;
-		const args = {inputUser: data};
-		const result = await graphql(schema, query, {createUser}, db, args);
-		console.log('results', result)
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+							`;
+			const args = {inputUser: data};
+			const result = await graphql(schema, query, {createUser}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function createUser({inputUser}, db) {
 			const newUser = {
@@ -96,7 +98,6 @@ export default function () {
 		{
 				userMetadata(id: ${JSON.stringify(id)}) {
 					_id
-					userId
 					preferences {
 						defaultLanguage
 					}
@@ -124,10 +125,9 @@ export default function () {
 
 	async function update(db, id, data) {
 		const query = `
-							mutation($id:ID, $inputUser:InputUser){
+							mutation($id:ID, $inputUser: UserInput){
 								updateUser(id:$id, inputUser: $inputUser
 								) {
-									userId
 									preferences {
 										defaultLanguage
 									}
