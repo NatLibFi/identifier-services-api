@@ -74,17 +74,6 @@ type Mutation{
     deletePublicationRequestIssn(id: ID!): PublicationIssnRequest
 }
 
-type Author{
-    givenName: String!
-    familyName: String!
-    role: String!
-}
-input authorInput{
-    givenName: String!
-    familyName: String!
-    role: String!
-}
-
 union TitleOrIdentifier = Title | Identifier
 
 type Title{
@@ -243,7 +232,7 @@ type PublicationIsbnIsmnBase{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors: [Author]!
+    authors: [Authors]!
     seriesDetails: SeriesDetails
     formatDetails: FormatDetailsIsbnIsmn!
 }
@@ -256,7 +245,7 @@ type PublicationIsbnIsmnContent{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors: [Author]!
+    authors: [Authors]!
     seriesDetails: SeriesDetails
     formatDetails: FormatDetailsIsbnIsmn!
     state: State!
@@ -273,7 +262,7 @@ type PublicationIsbnIsmn{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors: [Author]!
+    authors: [Authors]!
     seriesDetails: SeriesDetails
     formatDetails: FormatDetailsIsbnIsmn!
     state: State!
@@ -292,7 +281,7 @@ input PublicationIsbnIsmnInput{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors:[authorInput]!
+    authors:[AuthorsInput]!
     seriesDetails: SeriesDetailsInput
     formatDetails: FormatDetailsIsbnIsmn!
     state: State!
@@ -382,7 +371,7 @@ type PublicationIsbnIsmnRequestContent{
     additionalDetails: String
     publicationTime: String
     isPublic: Boolean!
-    authors: [Author]!
+    authors: [Authors]!
     seriesDetails: SeriesDetails
     formatDetails: FormatDetailsIsbnIsmn!
     id: String
@@ -398,7 +387,7 @@ type PublicationIsbnIsmnRequest{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors: [Author]!
+    authors: [Authors]!
     seriesDetails: SeriesDetails
     formatDetails: FormatDetailsIsbnIsmn!
 }
@@ -410,7 +399,7 @@ input PublicationIsbnIsmnRequestInput{
     additionalDetails: String
     publicationTime: String!
     isPublic: Boolean!
-    authors:[authorInput]!
+    authors:[AuthorsInput]!
     seriesDetails: SeriesDetailsInput
     formatDetails: FormatDetailsIsbnIsmn!
 }

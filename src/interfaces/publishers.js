@@ -100,33 +100,75 @@ export default function () {
 
 	async function read(db, id) {
 		const query = `
-			{
-				Publisher{
-					_id
-					name
-					language
-					metadataDelivery
-					primaryContact
-					email
-					phone
-					website
-					aliases
-					notes
-					activity {
-						active
-						yearInactivated
-					}
-					streetAddress {
+		{
+			Publisher{
+				_id
+				lastUpdated {
+					timestamp
+					user
+				}
+				notes
+				name
+				code
+				language
+				email
+				phone
+				website
+				aliases
+				postalAddress {
+					address
+					addressDetails
+					city
+					zip
+					public
+				}
+				publicationDetails {
+					frequency
+				}
+				classification
+				organizationDetails {
+					affiliateOf {
 						address
+						addressDetails
 						city
 						zip
+						name
 					}
-					lastUpdated {
-						timestamp
-						user
+					affiliates {
+						address
+						addressDetails
+						city
+						zip
+						name
+					}
+					distributorOf {
+						address
+						addressDetails
+						city
+						zip
+						name
+					}
+					distributor {
+						address
+						addressDetails
+						city
+						zip
+						name
 					}
 				}
+				metadataDelivery
+				primaryContact
+				activity {
+					active
+					yearInactivated
+				}
+				streetAddress {
+					address
+					city
+					zip
+				}
 			}
+		}
 		`;
 		const Publisher = async (undefined, ctx) => {
 			const {id, db} = ctx;
@@ -180,7 +222,6 @@ export default function () {
 	}
 
 	async function update(db, id, data, user) {
-		console.log('***', user)
 		const query = `
 			mutation($input: PublisherInput){
 				updatePublisher(input: $input) {

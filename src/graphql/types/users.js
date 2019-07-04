@@ -52,11 +52,17 @@ export default `
      defaultLanguage: Language!
  }
  
-enum Language{
-    ENG
-    FIN
-    SWD
-}
+ enum Language{
+     eng
+     fin
+     swe
+ }
+
+ enum MetadataDelivery{
+     manual
+     external
+ }
+
 enum FileFormat{
     pdf
     epub
