@@ -200,17 +200,36 @@ export default `
         zip: String!
         name: String!
     }
+    input OrganizationInput{
+        address: String!
+        addressDetails: String
+        city: String!
+        zip: String!
+        name: String!
+    }
     type PublisherBaseOrganizationDetails{
         affiliateOf: Organization
         affiliates: [Organization]
         distributorOf: Organization
         distributor: Organization
     }
+    input PublisherBaseOrganizationDetailsInput{
+        affiliateOf: OrganizationInput
+        affiliates: [OrganizationInput]
+        distributorOf: OrganizationInput
+        distributor: OrganizationInput
+    }
     type PublisherContentOrganizationDetails{
         affiliateOf: Organization
         affiliates: [Organization]
         distributorOf: Organization
         distributor: Organization
+    }
+    input PublisherContentOrganizationDetailsInput{
+        affiliateOf: OrganizationInput
+        affiliates: [OrganizationInput]
+        distributorOf: OrganizationInput
+        distributor: OrganizationInput
     }
     input PrintDetailsInput{
         manufacturer: String
@@ -276,10 +295,10 @@ export default `
         phone: String
         website: String
         aliases: [String]
-        postalAddress: PostalAddress!
-        publicationDetails: PublicationDetails
+        postalAddress: PostalAddressInput!
+        publicationDetails: PublicationDetailsInput
         classification: String!
-        organizationDetails: PublisherBaseOrganizationDetails
+        organizationDetails: PublisherBaseOrganizationDetailsInput
     }
 
     type PublisherContent{

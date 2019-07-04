@@ -51,11 +51,11 @@ export default function () {
 	};
 
 	async function create(db, data) {
+		console.log('data', data)
 		const query = `
-							mutation($inputUser:InputUser){
+							mutation($inputUser:UserInput){
 								createUser(inputUser: $inputUser
 								) {
-									userId
 									preferences {
 										defaultLanguage
 									}
@@ -68,6 +68,7 @@ export default function () {
 						`;
 		const args = {inputUser: data};
 		const result = await graphql(schema, query, {createUser}, db, args);
+		console.log('results', result)
 		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}

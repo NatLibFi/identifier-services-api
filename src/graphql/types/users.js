@@ -168,6 +168,16 @@ enum IssnType{
     notes:[String]
     lastUpdated(timestamp: String, user: String): LastUpdated
  }
+ input UserInput{
+    givenName: String!
+    familyName: String!
+    email: String!
+    publisher: String
+    role: [Role]!
+    notes:[String]
+    preferences: PreferencesInput
+    lastUpdated: LastUpdatedInput
+ }
 
  type UsersRequestContent{
     _id: ID!
@@ -189,18 +199,7 @@ enum IssnType{
     email: String!
  }
 
- input InputUser{
-    givenName: String!
-    familyName: String!
-    email: String!
-    publisher: String
-    role: [Role]!
-    notes:[String]
-    preferences: PreferencesInput
-    lastUpdated: LastUpdatedInput
- }
-
- input InputUserRequestContent{
+ input UserRequestContentInput{
     state: String!
     rejectionReason: String
     createdResource: String
@@ -213,16 +212,16 @@ enum IssnType{
  }
 
  type Mutation{
-    createUser(inputUser:InputUser):User!
+    createUser(inputUser:UserInput):User!
 
-    createRequest(inputUserRequestContent: InputUserRequestContent):UsersRequestContent!
+    createRequest(UserRequestContentInput: UserRequestContentInput):UsersRequestContent!
 
     deleteUser(id:ID):User
 
     deleteRequest(id:ID):UsersRequestContent
 
-    updateUser(id:ID, inputUser:InputUser):User!
+    updateUser(id:ID, inputUser:UserInput):User!
 
-    updateRequest(id: ID, inputUserRequestContent: InputUserRequestContent):UsersRequestContent!
+    updateRequest(id: ID, UserRequestContentInput: UserRequestContentInput):UsersRequestContent!
  }
  `;

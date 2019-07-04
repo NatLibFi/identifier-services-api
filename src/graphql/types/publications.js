@@ -75,12 +75,22 @@ type Mutation{
 }
 
 union TitleOrIdentifier = Title | Identifier
+input TitleOrIdentifierInput {
+    title: TitleInput 
+    Identifier: IdentifierInput
+} 
 
 type Title{
     title: String
 }
+input TitleInput{
+    title: String
+}
 
 type Identifier{
+    identifier: String
+}
+input IdentifierInput{
     identifier: String
 }
 
@@ -90,7 +100,7 @@ type SeriesDetails{
 }
 input SeriesDetailsInput{
     volume: Int
-    titleOrIdentifier: TitleOrIdentifier
+    titleOrIdentifier: TitleOrIdentifierInput
 }
 
 type SeriesDetailsIssn{
@@ -99,8 +109,8 @@ type SeriesDetailsIssn{
 }
 
 input SeriesDetailsIssnInput{
-    mainSeries: TitleOrIdentifier
-    subSeries: TitleOrIdentifier
+    mainSeries: TitleOrIdentifierInput
+    subSeries: TitleOrIdentifierInput
 }
 
 type ElectronicPublicationDetails{
@@ -108,7 +118,18 @@ type ElectronicPublicationDetails{
 }
 
 union FormatDetailsIsbnIsmn = FormatDetails1 | FormatDetails2 | FormatDetails3
+
+input FormatDetailsIsbnIsmnInput{ 
+    formatDetails1: FormatDetailsInput1
+    formatDetails2: FormatDetailsInput2 
+    formatDetails3: FormatDetailsInput3
+}
+
 union FormatDetailsIssn = FormatDetails4 | FormatDetails5
+input FormatDetailsIssnInput {
+    formatDetails4: FormatDetailsInput4
+    formatDetails5: FormatDetailsInput5
+}
 
 type FormatDetails1 {
     fileFormat: FileFormat!
@@ -176,22 +197,36 @@ type PreviousPublication{
 input PreviousPublicationInput{
     lastYear: Int
     lastNumber: Int
-    titleOrIdentifier: TitleOrIdentifier
-}
-
-type MapDetails{
-    scale: String
+    titleOrIdentifierInput: TitleOrIdentifierInput
 }
 
 union Category = Category1 | Category2
 
+input CategoryInput {
+    category1: CategoryInput1
+    category2: CategoryInput2
+}
+
 type Category1{
+    type: Type!
+}
+input CategoryInput1{
     type: Type!
 }
 
 type Category2{
     type: Type!
     mapDetails: MapDetails
+}
+input CategoryInput2{
+    type: Type!
+    mapDetails: MapDetailsInput
+}
+type MapDetails{
+    scale: String
+}
+input mapDetailsInput{
+    scale: String
 }
 
 input seriesInput{
@@ -212,9 +247,6 @@ input printDetailsInput{
     format: String
 }
 
-input mapDetailsInput{
-    scale: String
-}
 
 type PublicationBase{
     _id: ID!
@@ -283,13 +315,13 @@ input PublicationIsbnIsmnInput{
     isPublic: Boolean!
     authors:[AuthorsInput]!
     seriesDetails: SeriesDetailsInput
-    formatDetails: FormatDetailsIsbnIsmn!
+    formatDetails: FormatDetailsIsbnIsmnInput!
     state: State!
     id: String
     publisher: String!
     metaDataReference: String
     associatedRange: String!
-    category: Category
+    category: CategoryInput
     notes: [String]
     lastUpdated: LastUpdatedInput
 }
@@ -330,12 +362,12 @@ input PublicationIssnInput{
     firstNumber: Int
     frequency: Frequency
     type: IssnType!
-    formatDetails: FormatDetailsIssn
+    formatDetails: FormatDetailsIssnInput
     previousPublication: PreviousPublicationInput
-    otherMedium: TitleOrIdentifier
+    otherMedium: TitleOrIdentifierInput
     seriesDetails: SeriesDetailsIssnInput
     publisher: PublisherBaseInput!
-    lastUpdated: LastUpdated
+    lastUpdated: LastUpdatedInput
     notes: [String]
 }
 type PublicationIssnContent{
@@ -401,7 +433,7 @@ input PublicationIsbnIsmnRequestInput{
     isPublic: Boolean!
     authors:[AuthorsInput]!
     seriesDetails: SeriesDetailsInput
-    formatDetails: FormatDetailsIsbnIsmn!
+    formatDetails: FormatDetailsIsbnIsmnInput!
 }
 
 type PublicationIssnRequest{
@@ -442,13 +474,14 @@ input PublicationRequestIssnInput{
     firstNumber: Int
     frequency: Frequency
     type: IssnType!
-    formatDetails: FormatDetailsIssn    
+    formatDetails: FormatDetailsIssnInput  
     previousPublication: PreviousPublicationInput
-    otherMedium: TitleOrIdentifier
+    otherMedium: TitleOrIdentifierInput
     seriesDetails: SeriesDetailsIssnInput    
-    publisher: PublisherBaseInput! lastUpdated: LastUpdated
+    publisher: PublisherBaseInput!
+    lastUpdated: LastUpdatedInput
     notes: [String]
-    backgroundProcessingState: BackgroundProcessingState    
+    backgroundProcessingState: BackgroundProcessingState  
     createdResource: String
     rejectionReason: String
 }
