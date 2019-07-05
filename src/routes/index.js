@@ -29,7 +29,7 @@
 export {default as createUsersRouter} from './users';
 export {default as createRequestsUsersRouter} from './requestsUsers';
 export {default as createPublishersRouter} from './publishers';
-export {default as createPublishersRequestsRouter} from './publishers';
+export {default as createPublishersRequestsRouter} from './requestsPublishers';
 export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
 export {default as createPublicationsRouterIssn} from './publications/issn';
 export {default as createMessageTemplate} from './messageTemplates';

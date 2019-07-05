@@ -55,6 +55,18 @@ export default `
         city: String!
         zip: String!
     }
+
+    type PrimaryContact{
+        givenName: String
+        familyName: String
+        email: String!
+    }
+
+    input PrimaryContactInput{
+        givenName: String
+        familyName: String
+        email: String!
+    }
  
 
     type PrimaryContactRequest{
@@ -329,41 +341,45 @@ export default `
     
     type PublisherRequest{
         _id: ID!
-        state: String!
-        publisherId: String
-        publicationEstimate: Int!
-        primaryContact: [PrimaryContactRequest]!
+        lastUpdated: LastUpdated!
+        notes: [String]
+        backgroundProcessingState: BackgroundProcessingState
+        state: State!
+        rejectionReason: String
+        createdResource: String
         name: String!
-        language: String!
-        metadataDelivery: String!
+        code: String
+        language: Language
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
-        activity: Activity
-        streetAddress: StreetAddress
-        publication: ISBNISMNPublicationRequest
-        lastUpdated: LastUpdated
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        primaryContact: [PrimaryContactInput!]
     }
 
     input PublisherRequestInput{
-        state: String!
-        publisherId: String
-        publicationEstimate: Int!
-        primaryContact: [PrimaryContactRequestInput]!
+        lastUpdated: LastUpdatedInput!
+        notes: [String]
+        backgroundProcessingState: BackgroundProcessingState
+        state: State!
+        rejectionReason: String
+        createdResource: String
         name: String!
-        language: String!
-        metadataDelivery: String!
+        code: String
+        language: Language
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
-        activity: ActivityInput
-        streetAddress: StreetAddressInput
-        publication: ISBNISMNPublicationRequestInput    
-        lastUpdated: LastUpdatedInput
+        postalAddress: PostalAddressInput!
+        publicationDetails: PublicationDetailsInput
+        classification: String!
+        organizationDetails: OrganizationDetailsInput
+        primaryContact: [PrimaryContact!]
     }
 
     type Mutation{

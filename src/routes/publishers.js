@@ -40,7 +40,6 @@ export default function (db, passportMiddlewares) {
 		.post('/query', query);
 
 	async function create(req, res, next) {
-		//console.log('***', req.user)
 		try {
 			const result = await publishers.create(db, req.body, req.user);
 			res.json(result);

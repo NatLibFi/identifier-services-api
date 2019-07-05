@@ -189,6 +189,7 @@ export default function () {
 	}
 
 	async function create(db, data, user) {
+		console.log('--', data)
 		if (hasAdminPermission(user)) {
 			const query = `
 			mutation($input: PublisherInput){
@@ -211,6 +212,7 @@ export default function () {
 			};
 
 			const result = await graphql(schema, query, {createPublisher}, db, {input: data});
+			console.log(result);
 			if (result.errors) {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
 			}
