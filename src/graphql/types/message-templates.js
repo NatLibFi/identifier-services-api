@@ -53,11 +53,17 @@ type MessageTemplateContent{
 }
 
 input InputMessageTemplate{
-    name:String!, language:String!, subject:String!, body:String!, 
+    name:String!
+    language:String!
+    subject:String!
+    body:String!
     lastUpdated: LastUpdatedInput
 }
 input InputMessageTemplateContent{
-    name:String!, language:String!, subject:String!, body:String!, 
+    name:String!
+    language:String!
+    subject:String!
+    body:String!
 }
 
 type Mutation{

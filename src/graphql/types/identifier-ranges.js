@@ -28,19 +28,42 @@
 
 export default `
 
-
-
-
-    type ISSN{
+    type RangeBase{
+        prefix: String!
+        rangeStart: String!
+        rangeEnd: String!
+        active: Boolean!
+    }
+    type RangeIsbnContent{
+        prefix: String!
+        rangeStart: String!
+        rangeEnd: String!
+        active: Boolean!
+        langauge: String!
+    }
+    type RangeIsmnContent{
+        prefix: String!
+        rangeStart: String!
+        rangeEnd: String!
+        active: Boolean!
+    }
+    type RangeIssnContent{
+        prefix: String!
+        rangeStart: String!
+        rangeEnd: String!
+        active: Boolean!
+    }
+    type RangeIssn{
         _id: ID!
+        prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
-        reservedCount: Int!
+        notes: [String!]
         lastUpdated: LastUpdated
     }
 
-    input ISSNInput{
+    input RangeIssnInput{
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
@@ -48,18 +71,17 @@ export default `
         lastUpdated: LastUpdatedInput
     }
  
-    type ISMN{
+    type RangeIsmn{
         _id: ID!
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
-        publisher: String
         active: Boolean!
-        reservedCount: Int!
+        notes: [String!]
         lastUpdated: LastUpdated
     }
 
-    input ISMNInput{
+    input RangeIsmnInput{
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
@@ -69,20 +91,19 @@ export default `
         lastUpdated: LastUpdatedInput
     }
         
-    type ISBN{
+    type RangeIsbn{
         _id: ID!
         prefix: String!
-        language: String!
         rangeStart: Int!
         rangeEnd: Int!
-        publisher: String
         active: Boolean!
-        reservedCount: Int!
+        language: String!
+        notes: [String!]
         lastUpdated: LastUpdated
 
     }
 
-    input ISBNInput{
+    input RangeIsbnInput{
         prefix: String!
         language: String!
         rangeStart: Int!
@@ -95,26 +116,26 @@ export default `
 
 
     type Query{
-        ISBN: ISBN
-        ISBNs: [ISBN]
-        ISMN: ISMN
-        ISMNs: [ISMN]
-        ISSN: ISSN
-        ISSNs:[ISSN]
+        ISBN: RangeIsbn
+        ISBNs: [RangeIsbn]
+        ISMN: RangeIsmn
+        ISMNs: [RangeIsmn]
+        ISSN: RangeIssn
+        ISSNs:[RangeIssn]
      }
     
      type Mutation{
-         createISBN(input: ISBNInput):ISBN!
+         createISBN(input: RangeIsbnInput): RangeIsbn!
 
-         updateISBN(input: ISBNInput): ISBN!
+         updateISBN(input: RangeIsbnInput): RangeIsbn!
 
-         createISMN(input: ISMNInput):ISMN!
+         createISMN(input: RangeIsmnInput): RangeIsmn!
 
-         updateISMN(input: ISMNInput): ISBN!
+         updateISMN(input: RangeIsmnInput): RangeIsmn!
 
-         createISSN(input: ISSNInput):ISSN!
+         createISSN(input: RangeIssnInput): RangeIssn!
 
-         updateISSN(input: ISSNInput): ISSN!
+         updateISSN(input: RangeIssnInput): RangeIssn!
      }
 
  `;

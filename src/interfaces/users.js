@@ -30,7 +30,7 @@ import {graphql} from 'graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import schema from '../graphql';
-import {hasAdminPermission} from './utils';
+import {hasAdminPermission, hasSystemPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
@@ -50,29 +50,32 @@ export default function () {
 		queryRequest
 	};
 
-	async function create(db, data) {
-		const query = `
-							mutation($inputUser:InputUser){
-								createUser(inputUser: $inputUser
-								) {
-									userId
-									preferences {
-										defaultLanguage
-									}
-									lastUpdated {
-										timestamp
-										user
+	async function create(db, data, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
+								mutation($inputUser:UserInput){
+									createUser(inputUser: $inputUser
+									) {
+										preferences {
+											defaultLanguage
+										}
+										lastUpdated {
+											timestamp
+											user
+										}
 									}
 								}
-							}
-						`;
-		const args = {inputUser: data};
-		const result = await graphql(schema, query, {createUser}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+							`;
+			const args = {inputUser: data};
+			const result = await graphql(schema, query, {createUser}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function createUser({inputUser}, db) {
 			const newUser = {
@@ -91,27 +94,30 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
-		const query = `
-		{
-				userMetadata(id: ${JSON.stringify(id)}) {
-					_id
-					userId
-					preferences {
-						defaultLanguage
-					}
-					lastUpdated {
-						timestamp
-						user
-					}
+		if (hasAdminPermission(user)) {
+			const query = `
+				{
+						userMetadata(id: ${JSON.stringify(id)}) {
+							_id
+							preferences {
+								defaultLanguage
+							}
+							lastUpdated {
+								timestamp
+								user
+							}
+						}
 				}
-		}
-	`;
-		const result = await graphql(schema, query, {userMetadata}, db);
-		if (result.data.userMetadata === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+			`;
+			const result = await graphql(schema, query, {userMetadata}, db);
+			if (result.data.userMetadata === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return {...user, userInfo: result.data};
 		}
 
-		return {...user, userInfo: result.data};
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function userMetadata({id}, db) {
 			const result = await db
@@ -121,30 +127,33 @@ export default function () {
 		}
 	}
 
-	async function update(db, id, data) {
-		const query = `
-							mutation($id:ID, $inputUser:InputUser){
-								updateUser(id:$id, inputUser: $inputUser
-								) {
-									userId
-									preferences {
-										defaultLanguage
-									}
-									lastUpdated {
-										timestamp
-										user
+	async function update(db, id, data, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
+								mutation($id:ID, $inputUser: UserInput){
+									updateUser(id:$id, inputUser: $inputUser
+									) {
+										preferences {
+											defaultLanguage
+										}
+										lastUpdated {
+											timestamp
+											user
+										}
 									}
 								}
-							}
-						`;
-		const args = {id: id, inputUser: data};
-		const result = await graphql(schema, query, {updateUser}, db, args);
+							`;
+			const args = {id: id, inputUser: data};
+			const result = await graphql(schema, query, {updateUser}, db, args);
 
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function updateUser({inputUser, id}, db) {
 			const updateUser = {
@@ -165,20 +174,24 @@ export default function () {
 		}
 	}
 
-	async function remove(db, id) {
-		const query = `
-			mutation {
-				deleteUser(id: ${JSON.stringify(id)}) {
-					_id
+	async function remove(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
+				mutation {
+					deleteUser(id: ${JSON.stringify(id)}) {
+						_id
+					}
 				}
+			`;
+			const result = await graphql(schema, query, {deleteUser}, db);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
-		`;
-		const result = await graphql(schema, query, {deleteUser}, db);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function deleteUser({id}, db) {
 			const deletedRequest = await db
@@ -189,8 +202,10 @@ export default function () {
 		}
 	}
 
-	async function changePwd(db) {
-		return db;
+	async function changePwd(db, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			return db;
+		}
 	}
 
 	async function query(db, user) {
