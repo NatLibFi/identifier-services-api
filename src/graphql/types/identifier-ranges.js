@@ -64,10 +64,11 @@ export default `
     }
 
     input RangeIssnInput{
+        prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
         active: Boolean!
-        reservedCount: Int!
+        notes: [String!]
         lastUpdated: LastUpdatedInput
     }
  
@@ -85,9 +86,8 @@ export default `
         prefix: String!
         rangeStart: Int!
         rangeEnd: Int!
-        publisher: String
         active: Boolean!
-        reservedCount: Int!
+        notes: [String!]
         lastUpdated: LastUpdatedInput
     }
         
@@ -105,12 +105,11 @@ export default `
 
     input RangeIsbnInput{
         prefix: String!
-        language: String!
         rangeStart: Int!
         rangeEnd: Int!
-        publisher: String
         active: Boolean!
-        reservedCount: Int!
+        language: String!
+        notes: [String!]
         lastUpdated: LastUpdatedInput
     }
 

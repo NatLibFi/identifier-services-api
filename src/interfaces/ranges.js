@@ -50,7 +50,7 @@ export default function () {
 
 	async function createIsbn(db, isbnData) {
 		const query = `
-			mutation($input: ISBNInput){
+			mutation($input: RangeIsbnInput){
 				createISBN(input: $input) {
 					prefix
 					language
@@ -72,6 +72,7 @@ export default function () {
 		};
 
 		const result = await graphql(schema, query, {createISBN}, db, {input: isbnData});
+
 		if (result.errors) {
 			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
@@ -88,9 +89,7 @@ export default function () {
 					language
 					rangeStart
 					rangeEnd
-					publisher
 					active
-					reservedCount
 					lastUpdated {
 						timestamp
 						user
@@ -118,7 +117,7 @@ export default function () {
 
 	async function updateIsbn(db, id, data) {
 		const query = `
-			mutation($input: ISBNInput){
+			mutation($input: RangeIsbnInput){
 				updateISBN(input: $input) {
 					prefix
 					language
@@ -160,9 +159,7 @@ export default function () {
 					language
 					rangeStart
 					rangeEnd
-					publisher
 					active
-					reservedCount
 					lastUpdated {
 						timestamp
 						user
@@ -181,7 +178,7 @@ export default function () {
 
 	async function createIsmn(db, data) {
 		const query = `
-			mutation($input: ISMNInput){
+			mutation($input: RangeIsmnInput){
 				createISMN(input: $input) {
 					prefix
 					rangeStart
@@ -217,9 +214,8 @@ export default function () {
 					prefix
 					rangeStart
 					rangeEnd
-					publisher
 					active
-					reservedCount
+					notes
 					lastUpdated {
 						timestamp
 						user
@@ -247,7 +243,7 @@ export default function () {
 
 	async function updateIsmn(db, id, data) {
 		const query = `
-			mutation($input: ISMNInput){
+			mutation($input: RangeIsmnInput){
 				updateISMN(input: $input) {
 					prefix
 					rangeStart
@@ -285,9 +281,8 @@ export default function () {
 					prefix
 					rangeStart
 					rangeEnd
-					publisher
 					active
-					reservedCount
+					notes
 					lastUpdated {
 						timestamp
 						user
@@ -306,12 +301,11 @@ export default function () {
 
 	async function createIssn(db, data) {
 		const query = `
-			mutation($input: ISSNInput){
+			mutation($input: RangeIssnInput){
 				createISSN(input: $input) {
 					rangeStart
 					rangeEnd
 					active
-					reservedCount
 				}
 			}
 		`;
@@ -328,6 +322,7 @@ export default function () {
 		};
 
 		const result = await graphql(schema, query, {createISSN}, db, {input: data});
+		console.log(result)
 		if (result.errors) {
 			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
@@ -343,7 +338,6 @@ export default function () {
 					rangeStart
 					rangeEnd
 					active
-					reservedCount
 					lastUpdated {
 						timestamp
 						user
@@ -371,7 +365,7 @@ export default function () {
 
 	async function updateIssn(db, id, data) {
 		const query = `
-			mutation($input: ISSNInput){
+			mutation($input: RangeIssnInput){
 				updateISSN(input: $input) {
 					rangeStart
 					rangeEnd
@@ -406,10 +400,11 @@ export default function () {
 			{
 				ISSNs{
 					_id
+					prefix
 					rangeStart
 					rangeEnd
 					active
-					reservedCount
+					notes
 					lastUpdated {
 						timestamp
 						user
