@@ -29,7 +29,7 @@
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
 		return user.role.some(
-			userRole => userRole === profileRole || userRole === 'admin'
+			userRole => userRole === profileRole
 		);
 	});
 	return permitted;

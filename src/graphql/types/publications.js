@@ -247,6 +247,17 @@ input printDetailsInput{
     format: String
 }
 
+type Authors{
+    givenName: String!
+    familyName: String!
+    role: String!
+}
+input AuthorsInput{
+    givenName: String!
+    familyName: String!
+    role: String!
+}
+
 
 type PublicationBase{
     _id: ID!

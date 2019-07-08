@@ -34,7 +34,7 @@ export default function (db, passportMiddlewares) {
 	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
-		.use(passportMiddlewares)
+		.use(passportMiddlewares.token)
 		.post('/isbn', bodyParse(), createIsbn)
 		.get('/isbn/:id', readIsbn)
 		.put('/isbn/:id', bodyParse(), updateIsbn)

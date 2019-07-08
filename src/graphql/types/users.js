@@ -129,6 +129,17 @@ enum IssnType{
     freepaper
     monography
 }
+enum BackgroundProcessingState{
+    pending
+    inProgress
+    processed
+}
+enum State{
+    new
+    inProgress
+    accepted
+    rejected
+}
 
  type UserBase{
      _id: ID!

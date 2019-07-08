@@ -55,6 +55,18 @@ export default `
         city: String!
         zip: String!
     }
+
+    type PrimaryContact{
+        givenName: String
+        familyName: String
+        email: String!
+    }
+
+    input PrimaryContactInput{
+        givenName: String
+        familyName: String
+        email: String!
+    }
  
 
     type PrimaryContactRequest{
@@ -69,41 +81,6 @@ export default `
         email: String!
     }
 
-    type Authors{
-        givenName: String!
-        familyName: String!
-        role: String!
-    }
-    input AuthorsInput{
-        givenName: String!
-        familyName: String!
-        role: String!
-    }
-    type Series{
-        identifier: String!
-        name: String!
-        volume: Int
-    }
-    input SeriesInput{
-        identifier: String!
-        name: String!
-        volume: Int
-    }
-
-    type ElectronicDetailsPublisher{
-        format: String!
-    }
-    input ElectronicDetailsPublisherInput{
-        format: String!
-    }
-
-    type PrintDetails{
-        manufacturer: String
-        city: String
-        run: Int
-        edition: Int
-        format: String
-    }
     type PostalAddress{
         address: String!
         addressDetails: String
@@ -231,13 +208,7 @@ export default `
         distributorOf: OrganizationInput
         distributor: OrganizationInput
     }
-    input PrintDetailsInput{
-        manufacturer: String
-        city: String
-        run: Int
-        edition: Int
-        format: String
-    }
+
     type MapDetails{
         scale: String
     }
@@ -245,33 +216,6 @@ export default `
         scale: String
     }
 
-    type ISBNISMNPublicationRequest{
-        title: String!
-        type: String!
-        subtitle: String
-        language: String!
-        publicationTime: String!
-        additionalDetails: String
-        authors: [Authors!]!
-        series: Series
-        electronicDetails: ElectronicDetailsPublisher
-        printDetails: PrintDetails
-        mapDetails: MapDetails
-    }
-
-    input ISBNISMNPublicationRequestInput{
-        title: String!
-        type: String!
-        subtitle: String
-        language: String!
-        publicationTime: String!
-        additionalDetails: String
-        authors: [AuthorsInput!]!
-        series: SeriesInput
-        electronicDetails: ElectronicDetailsPublisherInput
-        printDetails: PrintDetailsInput
-        mapDetails: MapDetailsInput
-    }
 
     type PublisherBase{
         name: String!
@@ -362,41 +306,64 @@ export default `
     
     type PublisherRequest{
         _id: ID!
-        state: String!
-        publisherId: String
-        publicationEstimate: Int!
-        primaryContact: [PrimaryContactRequest]!
+        lastUpdated: LastUpdated!
+        notes: [String]
+        backgroundProcessingState: BackgroundProcessingState
+        state: State!
+        rejectionReason: String
+        createdResource: String
         name: String!
-        language: String!
-        metadataDelivery: String!
+        code: String
+        language: Language
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
-        activity: Activity
-        streetAddress: StreetAddress
-        publication: ISBNISMNPublicationRequest
-        lastUpdated: LastUpdated
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        primaryContact: [PrimaryContact!]
     }
 
     input PublisherRequestInput{
-        state: String!
-        publisherId: String
-        publicationEstimate: Int!
-        primaryContact: [PrimaryContactRequestInput]!
+        lastUpdated: LastUpdatedInput!
+        notes: [String]
+        backgroundProcessingState: BackgroundProcessingState
+        state: State!
+        rejectionReason: String
+        createdResource: String
         name: String!
-        language: String!
-        metadataDelivery: String!
+        code: String
+        language: Language
         email: String
         phone: String
         website: String
         aliases: [String]
-        notes: [String]
-        activity: ActivityInput
-        streetAddress: StreetAddressInput
-        publication: ISBNISMNPublicationRequestInput    
-        lastUpdated: LastUpdatedInput
+        postalAddress: PostalAddressInput!
+        publicationDetails: PublicationDetailsInput
+        classification: String!
+        organizationDetails: OrganizationDetailsInput
+        primaryContact: [PrimaryContactInput!]
+    }
+
+    type PublisherRequestContent{
+        backgroundProcessingState: BackgroundProcessingState
+        state: State!
+        rejectionReason: String
+        createdResource: String
+        name: String!
+        code: String
+        language: Language
+        email: String
+        phone: String
+        website: String
+        aliases: [String]
+        postalAddress: PostalAddress!
+        publicationDetails: PublicationDetails
+        classification: String!
+        organizationDetails: OrganizationDetails
+        primaryContact: [PrimaryContact!]
     }
 
     type Mutation{

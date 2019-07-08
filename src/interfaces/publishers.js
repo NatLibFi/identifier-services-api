@@ -306,71 +306,73 @@ export default function () {
 
 	async function readRequest(db, id) {
 		const query = `
-			{
-				PublisherRequest {
-					_id
-					lastUpdated {
-						timestamp
-						user
-					}
-					state
-					publisherId
-					publicationEstimate
-					primaryContact {
-						givenName
-						familyName
-						email
-					}
-					name
-					language
-					metadataDelivery
-					email
-					phone
-					website
-					aliases
-					notes
-					activity {
-						active
-						yearInactivated
-					}
-					streetAddress {
+		{
+			PublisherRequest{
+				_id
+				lastUpdated {
+					timestamp
+					user
+				}
+				notes
+				backgroundProcessingState
+				state
+				rejectionReason
+				createdResource
+				name
+				code
+				language
+				email
+				phone
+				website
+				aliases
+				postalAddress {
+					address
+					addressDetails
+					city
+					zip
+					public
+				}
+				publicationDetails {
+					frequency
+				}
+				classification
+				organizationDetails {
+					affiliateOf {
 						address
+						addressDetails
 						city
 						zip
+						name
 					}
-					publication {
-						title
-						type
-						subtitle
-						language
-						publicationTime
-						additionalDetails
-						authors {
-							givenName
-							familyName
-							role
-						}
-						series {
-							identifier
-							name
-							volume
-						}
-						electronicDetails {
-							format
-						}
-						printDetails {
-							manufacturer
-							city
-							run
-							edition
-							format
-						}
-						mapDetails {
-							scale
-						}
+					affiliates {
+						address
+						addressDetails
+						city
+						zip
+						name
+					}
+					distributorOf {
+						address
+						addressDetails
+						city
+						zip
+						name
+					}
+					distributor {
+						address
+						addressDetails
+						city
+						zip
+						name
 					}
 				}
+				primaryContact{
+					givenName
+					familyName
+					email
+				}
 			}
+		}
 		`;
 		const PublisherRequest = async (undefined, ctx) => {
 			const {id, db} = ctx;
@@ -384,7 +386,7 @@ export default function () {
 		};
 
 		const result = await graphql(schema, query, {PublisherRequest}, {id, db});
-		if (result.data.Publisher === null) {
+		if (result.data.PublisherRequest === null) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
