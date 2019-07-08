@@ -68,6 +68,7 @@ export default function () {
 							`;
 			const args = {inputUser: data};
 			const result = await graphql(schema, query, {createUser}, db, args);
+
 			if (result.errors) {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
