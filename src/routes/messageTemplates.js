@@ -33,10 +33,10 @@ import {API_URL} from '../config';
 
 export default function (db, passportMiddlewares) {
 	const templates = templatesFactory({url: API_URL});
-	
+
 	return new Router()
-		.use(passportMiddlewares)
 		.post('/', bodyParse(), create)
+		.use(passportMiddlewares)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)

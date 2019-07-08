@@ -28,7 +28,7 @@
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
-		return user.role.some(
+		return user.groups.some(
 			userRole => userRole === profileRole
 		);
 	});
@@ -47,3 +47,6 @@ export function hasPublisherAdminPermission(user) {
 	return hasPermission({auth: {role: ['publisher-admin']}}, user);
 }
 
+export function convertLanguage(language) {
+	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
+}

@@ -30,6 +30,7 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import {convertLanguage} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
@@ -56,15 +57,24 @@ export default function () {
 	};
 
 	async function create(db, data) {
+		const id = data.user.id;
+		const newData = {
+			...data,
+			language: convertLanguage(data.language),
+			body: data.description
+		};
+		delete newData.email;
+		delete newData.description;
+		delete newData.user;
 		const query = `
-		mutation($inputTemplate: InputTemplate ){
-			createTemplate(inputTemplate: $inputTemplate){
+		mutation($inputMessageTemplate: MessageTemplateInput ){
+			createTemplate(inputMessageTemplate: $inputMessageTemplate){
 				${queryReturn}
 			}
 		}
 		`;
 
-		const args = {inputTemplate: data};
+		const args = {inputMessageTemplate: newData};
 		const result = await graphql(schema, query, {createTemplate}, db, args);
 		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -72,12 +82,12 @@ export default function () {
 
 		return result;
 
-		async function createTemplate({inputTemplate}, db) {
+		async function createTemplate(args, db) {
 			const newTemplate = {
-				...inputTemplate,
+				...args.inputMessageTemplate,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: (id === undefined) ? 'user' : id
 				}
 			};
 			const result = await db
@@ -135,13 +145,13 @@ export default function () {
 
 	async function update(db, id, data) {
 		const query = `
-				mutation($id:ID, $inputTemplate:InputTemplate){
-					updateTemplate(id:$id, inputTemplate: $inputTemplate){
+				mutation($id:ID, $inputTemplate:MessageTemplateInput){
+					updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
 						${queryReturn}
 					}
 				}
 				`;
-		const args = {id: id, inputTemplate: data};
+		const args = {id: id, inputMessageTemplate: data};
 		const result = await graphql(schema, query, {updateTemplate}, db, args);
 		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -149,9 +159,9 @@ export default function () {
 
 		return result;
 
-		async function updateTemplate({inputTemplate, id}, db) {
+		async function updateTemplate({inputMessageTemplate, id}, db) {
 			const updateTemplate = {
-				...inputTemplate,
+				...inputMessageTemplate,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
 					user: 'user'
