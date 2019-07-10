@@ -31,8 +31,9 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import {hasAdminPermission} from './utils';
+
 const objectId = require('mongodb').ObjectId;
-import {escapeRegex, hasAdminPermission} from './utils';
 
 export default function () {
 	return {
@@ -51,50 +52,47 @@ export default function () {
 	async function query(db, data) {
 		const query = `
 			{
-				Publishers{
-					_id
-					name
-					language
-					metadataDelivery
-					primaryContact
-					email
-					phone
-					website
-					aliases
-					notes
-					activity {
-						active
-						yearInactivated
+					SearchPublishers(first: ${2} after:"Y3Vyc29yOnYyOpHOBK0NoA=="){
+						_id
+						name
+						language
+						metadataDelivery
+						primaryContact
+						email
+						phone
+						website
+						aliases
+						notes
+						activity {
+							active
+							yearInactivated
+						}
+						streetAddress {
+							address
+							city
+							zip
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
 					}
-					streetAddress {
-						address
-						city
-						zip
-					}
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
 			}
 		`;
-		const Publishers = async (undefined, ctx) => {
-			const {data, db} = ctx;
-			if (data) {
-				try {
-					const regex = new RegExp(escapeRegex(data), 'gi');
-					const result = await db.collection('PublisherMetadata').find({$or: [{aliases: regex}, {name: regex}]}).toArray();
-					return result;
-				} catch (err) {
-					console.log(err);
-				}
+		const SearchPublishers = async ({first, after}, db) => {
+			const result = await db.collection('PublisherMetadata').find().toArray();
+			if (after === null || after === undefined) {
+				const index = result.map(m => m._id);
+				return result.slice(0, first);
 			} else {
-				const result = await db.collection('PublisherMetadata').find().toArray();
-				return result;
+				const index = result.map(m=> m._id).indexOf(after) + 1;
+				return result.slice(index, first + 1);
 			}
+			
 		};
 
-		const result = await graphql(schema, query, {Publishers}, {db, data});
+		const result = await graphql(schema, query, {SearchPublishers}, db, {filter: data});
+		console.log(result);
 		return result;
 	}
 

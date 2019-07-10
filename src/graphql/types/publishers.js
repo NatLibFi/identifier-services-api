@@ -28,11 +28,24 @@
 
 export default `
     type Query{   
-        Publisher:Publisher
+        Publisher:Publisher        
+        SearchPublishers(first:Int, after:String ):[Publisher]
         Publishers:[Publisher]
         PublisherRequest: PublisherRequest
         PublisherRequests: [PublisherRequest]
+    }
 
+    input PublisherFilterInput{
+        name: String
+        alias: StringFilterInput
+    }
+
+    input StringFilterInput{
+        ne: String
+        eq: String
+        contains: String
+        notContains: String
+        beginsWith: String
     }
     
     type Activity{

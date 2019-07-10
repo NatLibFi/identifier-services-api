@@ -228,7 +228,6 @@ enum State{
     emails: [EmailsInput]!
     publishers: String
     role: [Role]!
-    lastUpdated: LastUpdatedInput
  }
 
  type Mutation{

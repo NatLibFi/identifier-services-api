@@ -75,7 +75,7 @@ export default function (db, passportMiddlewares) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.remove(db, id);
+			const result = await users.remove(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

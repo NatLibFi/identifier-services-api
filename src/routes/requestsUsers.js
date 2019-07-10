@@ -44,7 +44,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await users.createRequest(db, req.body);
+			const result = await users.createRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -54,7 +54,7 @@ export default function (db, passportMiddlewares) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.readRequest(db, id);
+			const result = await users.readRequest(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,8 +63,9 @@ export default function (db, passportMiddlewares) {
 
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
+		const values = {data: req.body, user: req.user};
 		try {
-			const result = await users.updateRequest(db, id, req.body);
+			const result = await users.updateRequest(db, id, values);
 			res.json(result);
 		} catch (err) {
 			next(err);

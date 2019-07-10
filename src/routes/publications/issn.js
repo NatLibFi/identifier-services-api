@@ -47,7 +47,7 @@ export default function (db, passportMiddleware) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await publications.createISSN(db, req.body);
+			const result = await publications.createISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -57,7 +57,7 @@ export default function (db, passportMiddleware) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readISSN(db, id);
+			const result = await publications.readISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -66,8 +66,9 @@ export default function (db, passportMiddleware) {
 
 	async function update(req, res, next) {
 		const id = req.params.id;
+		const values = {data: req.body, user: req.user};
 		try {
-			const result = await publications.updateISSN(db, id, req.body);
+			const result = await publications.updateISSN(db, id, values);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -77,7 +78,7 @@ export default function (db, passportMiddleware) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.removeISSN(db, id);
+			const result = await publications.removeISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -86,7 +87,7 @@ export default function (db, passportMiddleware) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await publications.queryISSN(db);
+			const result = await publications.queryISSN(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -95,7 +96,7 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createRequestISSN(db, req.body);
+			const result = await publications.createRequestISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -105,7 +106,7 @@ export default function (db, passportMiddleware) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readRequestISSN(db, id);
+			const result = await publications.readRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -115,7 +116,7 @@ export default function (db, passportMiddleware) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.removeRequestISSN(db, id);
+			const result = await publications.removeRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -124,8 +125,9 @@ export default function (db, passportMiddleware) {
 
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
+		const values = {data: req.body, user: req.user};
 		try {
-			const result = await publications.updateRequestISSN(db, id, req.body);
+			const result = await publications.updateRequestISSN(db, id, values);
 			res.json(result);
 		} catch (err) {
 			next(err);

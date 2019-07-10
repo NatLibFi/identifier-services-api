@@ -31,6 +31,7 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import {hasAdminPermission, hasSystemPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
@@ -69,28 +70,30 @@ export default function () {
 		removeRequestISBN_ISMN
 	};
 
-	async function createISBN_ISMN(db, data) {
-		const query = `
+	async function createISBN_ISMN(db, data, user) {
+		if (hasAdminPermission(user)) {
+			const query = `
 			mutation($input:InputPublicationIsbnIsmn) {
 				createPublicationIsbnIsmn(input:$input) {
 					${queryReturn}
 				}
 			}
-		`;
-		const args = {input: data};
-		const result = await graphql(schema, query, {createPublicationIsbnIsmn}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+			`;
+			const args = {input: data};
+			const result = await graphql(schema, query, {createPublicationIsbnIsmn}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
 
-		return result;
+			return result;
+		}
 
 		async function createPublicationIsbnIsmn({input}, db) {
 			const newPublication = {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			const result = await db
@@ -100,20 +103,29 @@ export default function () {
 		}
 	}
 
-	async function readISBN_ISMN(db, id) {
-		const query = `
-				{
-					publication_ISBN_ISMN(id: ${JSON.stringify(id)}) {
-						${queryReturn}
+	async function readISBN_ISMN(db, id, user) {
+		async function query() {
+			const query = `
+					{
+						publication_ISBN_ISMN(id: ${JSON.stringify(id)}) {
+							${queryReturn}
+						}
 					}
-				}
-			`;
-		const result = await graphql(schema, query, {publication_ISBN_ISMN}, db);
-		if (result.data.publication_ISBN_ISMN === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+				`;
+			const result = await graphql(schema, query, {publication_ISBN_ISMN}, db);
+			if (result.data.publication_ISBN_ISMN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
 		}
 
-		return result;
+		const response = query();
+		if (hasAdminPermission() || user.id === response.data.publication_ISBN_ISMN.publisher) {
+			return response;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function publication_ISBN_ISMN({id}, db) {
 			const result = await db
@@ -123,28 +135,31 @@ export default function () {
 		}
 	}
 
-	async function updateISBN_ISMN(db, id, data) {
-		const query = `
-				mutation($id: ID, $input:InputPublicationIsbnIsmn) {
-					updatePublicationIsbnIsmn(id:$id, input:$input) {
-						${queryReturn}
-					}
+	async function updateISBN_ISMN(db, id, values) {
+		const {data, user} = values;
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const query = `
+			mutation($id: ID, $input:InputPublicationIsbnIsmn) {
+				updatePublicationIsbnIsmn(id:$id, input:$input) {
+					${queryReturn}
 				}
+			}
 			`;
-		const args = {id: id, input: data};
-		const result = await graphql(schema, query, {updatePublicationIsbnIsmn}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+			const args = {id: id, input: data};
+			const result = await graphql(schema, query, {updatePublicationIsbnIsmn}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
 
-		return result;
+			return result;
+		}
 
 		async function updatePublicationIsbnIsmn({id, input}, db) {
 			const updatePublication = {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			await db
@@ -181,20 +196,30 @@ export default function () {
 		}
 	}
 
-	async function queryISBN_ISMN(db) {
-		const query = `
-				{
-					Publications_ISBN_ISMN {
-						${queryReturn}
+	async function queryISBN_ISMN(db, user) {
+		async function query() {
+			const query = `
+					{
+						Publications_ISBN_ISMN {
+							${queryReturn}
+						}
 					}
-				}
-			`;
-		const result = await graphql(schema, query, {Publications_ISBN_ISMN}, db);
-		if (result.errors) {
-			throw new Error();
+				`;
+			const result = await graphql(schema, query, {Publications_ISBN_ISMN}, db);
+			if (result.errors) {
+				throw new Error();
+			}
+
+			return result;
+		}
+	
+		const response = await query();
+
+		if (hasSystemPermission(user) || hasAdminPermission(user) || user.id === response.data.publication_ISBN_ISMN.publisher) {
+			return response;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function Publications_ISBN_ISMN(root, db) {
 			const result = await db
@@ -205,28 +230,38 @@ export default function () {
 		}
 	}
 
-	async function createRequestISBN_ISMN(db, data) {
-		const query = `
-				mutation($input: InputPublicationIsbnIsmnRequest) {
-					createPublicationRequestIsbnIsmn(input:$input) {
-						_id
-					}
+	async function createRequestISBN_ISMN(db, data, user) {
+		async function query() {
+			const query = `
+			mutation($input: InputPublicationIsbnIsmnRequest) {
+				createPublicationRequestIsbnIsmn(input:$input) {
+					_id
 				}
+			}
 			`;
-		const args = {input: data};
-		const result = await graphql(schema, query, {createPublicationRequestIsbnIsmn}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			const args = {input: data};
+			const result = await graphql(schema, query, {createPublicationRequestIsbnIsmn}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
 		}
 
-		return result;
+		const response = query();
+
+		if (hasSystemPermission(user) || user.id === response.data.publicationRequest_ISBN_ISMN.publisher) {
+			return response;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function createPublicationRequestIsbnIsmn({input}, db) {
 			const newPublicationRequest = {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			const result = await db
@@ -236,20 +271,29 @@ export default function () {
 		}
 	}
 
-	async function readRequestISBN_ISMN(db, id) {
-		const query = `
-				{
-					publicationRequest_ISBN_ISMN(id: ${JSON.stringify(id)}) {
-						${queryReturn}
-					}
+	async function readRequestISBN_ISMN(db, id, user) {
+		async function query() {
+			const query = `
+			{
+				publicationRequest_ISBN_ISMN(id: ${JSON.stringify(id)}) {
+					${queryReturn}
 				}
+			}
 			`;
-		const result = await graphql(schema, query, {publicationRequest_ISBN_ISMN}, db);
-		if (result.data.publicationRequest_ISBN_ISMN === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+			const result = await graphql(schema, query, {publicationRequest_ISBN_ISMN}, db);
+			if (result.data.publicationRequest_ISBN_ISMN === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
 		}
 
-		return result;
+		const response = query();
+		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.data.publicationRequest_ISBN_ISMN.publisher) {
+			return response;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function publicationRequest_ISBN_ISMN({id}, db) {
 			const result = await db
@@ -259,28 +303,38 @@ export default function () {
 		}
 	}
 
-	async function updateRequestISBN_ISMN(db, id, data) {
-		const query = `
-				mutation($id:ID, $input: InputPublicationIsbnIsmnRequest) {
-					updatePublicationRequestIsbnIsmn(id:$id, input:$input) {
-						_id
-					}
+	async function updateRequestISBN_ISMN(db, id, values) {
+		const {data, user} = values;
+		async function query() {
+			const query = `
+			mutation($id:ID, $input: InputPublicationIsbnIsmnRequest) {
+				updatePublicationRequestIsbnIsmn(id:$id, input:$input) {
+					_id
 				}
+			}
 			`;
-		const args = {id: id, input: data};
-		const result = await graphql(schema, query, {updatePublicationRequestIsbnIsmn}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			const args = {id: id, input: data};
+			const result = await graphql(schema, query, {updatePublicationRequestIsbnIsmn}, db, args);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			return result;
 		}
 
-		return result;
+		const response = query();
+		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.data.updatePublicationRequestIsbnIsmn.publisher) {
+			return response;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function updatePublicationRequestIsbnIsmn({id, input}, db) {
 			const updatePublicationRequest = {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toString()}`,
-					user: input.lastUpdated.user
+					user: user.id
 				}
 			};
 			await db
@@ -295,20 +349,22 @@ export default function () {
 		}
 	}
 
-	async function removeRequestISBN_ISMN(db, id) {
-		const query = `
-				mutation{
-					deletePublicationRequestIsbnIsmn(id: ${JSON.stringify(id)}) {
-						_id
-					}
+	async function removeRequestISBN_ISMN(db, id, user) {
+		if (hasSystemPermission(user)) {
+			const query = `
+			mutation{
+				deletePublicationRequestIsbnIsmn(id: ${JSON.stringify(id)}) {
+					_id
 				}
+			}
 			`;
-		const result = await graphql(schema, query, {deletePublicationRequestIsbnIsmn}, db);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
+			const result = await graphql(schema, query, {deletePublicationRequestIsbnIsmn}, db);
+			if (result.errors) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
 
-		return result;
+			return result;
+		}
 
 		async function deletePublicationRequestIsbnIsmn({id}, db) {
 			const deletedPublicationRequest = await db
