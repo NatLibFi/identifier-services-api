@@ -54,7 +54,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIsbn(req, res, next) {
 		try {
-			const result = await ranges.createIsbn(db, req.body);
+			const result = await ranges.createIsbn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -64,7 +64,7 @@ export default function (db, passportMiddlewares) {
 	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsbn(db, id);
+			const result = await ranges.readIsbn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -74,7 +74,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsbn(db, id, req.body);
+			const result = await ranges.updateIsbn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -83,7 +83,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsbn(req, res, next) {
 		try {
-			const result = await ranges.queryIsbn(db);
+			const result = await ranges.queryIsbn(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -94,7 +94,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIsmn(req, res, next) {
 		try {
-			const result = await ranges.createIsmn(db, req.body);
+			const result = await ranges.createIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -104,7 +104,7 @@ export default function (db, passportMiddlewares) {
 	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsmn(db, id);
+			const result = await ranges.readIsmn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -114,7 +114,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsmn(db, id, req.body);
+			const result = await ranges.updateIsmn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -123,7 +123,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsmn(req, res, next) {
 		try {
-			const result = await ranges.queryIsmn(db);
+			const result = await ranges.queryIsmn(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -134,7 +134,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIssn(req, res, next) {
 		try {
-			const result = await ranges.createIssn(db, req.body);
+			const result = await ranges.createIssn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -144,7 +144,7 @@ export default function (db, passportMiddlewares) {
 	async function readIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIssn(db, id);
+			const result = await ranges.readIssn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -154,7 +154,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIssn(db, id, req.body);
+			const result = await ranges.updateIssn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -163,7 +163,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIssn(req, res, next) {
 		try {
-			const result = await ranges.queryIssn(db);
+			const result = await ranges.queryIssn(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

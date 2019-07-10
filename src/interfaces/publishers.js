@@ -28,10 +28,11 @@
  */
 
 import {graphql} from 'graphql';
-import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
-import {hasAdminPermission} from './utils';
+
+import schema from '../graphql';
+import {hasAdminPermission, hasSystemPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 
@@ -84,11 +85,10 @@ export default function () {
 			if (after === null || after === undefined) {
 				const index = result.map(m => m._id);
 				return result.slice(0, first);
-			} else {
-				const index = result.map(m=> m._id).indexOf(after) + 1;
-				return result.slice(index, first + 1);
 			}
-			
+
+			const index = result.map(m => m._id).indexOf(after) + 1;
+			return result.slice(index, first + 1);
 		};
 
 		const result = await graphql(schema, query, {SearchPublishers}, db, {filter: data});
@@ -273,180 +273,197 @@ export default function () {
 		return result;
 	}
 
-	async function createRequests(db, data) {
-		const query = `
-			mutation($input: PublisherRequestInput){
-				createPublisherRequests(input: $input) {
-					name
-					language
+	async function createRequests(db, data, user) {
+		if (hasSystemPermission(user)) {
+			const query = `
+				mutation($input: PublisherRequestInput){
+					createPublisherRequests(input: $input) {
+						name
+						language
+					}
 				}
-			}
-		`;
-		const createPublisherRequests = async (args, db) => {
-			const newPublisherRequests = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
+			`;
+			const createPublisherRequests = async (args, db) => {
+				const newPublisherRequests = {
+					...args.input,
+					lastUpdated: {
+						...args.input.lastUpdated,
+						timestamp: new Date()
+					}
+				};
+				const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
+				return result.ops[0];
 			};
-			const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
-			return result.ops[0];
-		};
 
-		const result = await graphql(schema, query, {createPublisherRequests}, db, {input: data});
-		if (result.errors) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+			const result = await graphql(schema, query, {createPublisherRequests}, db, {input: data});
+			if (result.errors) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readRequest(db, id) {
-		const query = `
-		{
-			PublisherRequest{
-				_id
-				lastUpdated {
-					timestamp
-					user
-				}
-				notes
-				backgroundProcessingState
-				state
-				rejectionReason
-				createdResource
-				name
-				code
-				language
-				email
-				phone
-				website
-				aliases
-				postalAddress {
-					address
-					addressDetails
-					city
-					zip
-					public
-				}
-				publicationDetails {
-					frequency
-				}
-				classification
-				organizationDetails {
-					affiliateOf {
-						address
-						addressDetails
-						city
-						zip
-						name
+	async function readRequest(db, id, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const query = `
+			{
+				PublisherRequest{
+					_id
+					lastUpdated {
+						timestamp
+						user
 					}
-					affiliates {
-						address
-						addressDetails
-						city
-						zip
-						name
-					}
-					distributorOf {
-						address
-						addressDetails
-						city
-						zip
-						name
-					}
-					distributor {
-						address
-						addressDetails
-						city
-						zip
-						name
-					}
-				}
-				primaryContact{
-					givenName
-					familyName
+					notes
+					backgroundProcessingState
+					state
+					rejectionReason
+					createdResource
+					name
+					code
+					language
 					email
+					phone
+					website
+					aliases
+					postalAddress {
+						address
+						addressDetails
+						city
+						zip
+						public
+					}
+					publicationDetails {
+						frequency
+					}
+					classification
+					organizationDetails {
+						affiliateOf {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+						affiliates {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+						distributorOf {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+						distributor {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+					}
+					primaryContact{
+						givenName
+						familyName
+						email
+					}
 				}
 			}
-		}
-		`;
-		const PublisherRequest = async (undefined, ctx) => {
-			const {id, db} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('PublisherRequest doesnot exists');
-			}
-
-			const result = await db.collection('PublisherRequest').findOne(objectId(id));
-
-			return result;
-		};
-
-		const result = await graphql(schema, query, {PublisherRequest}, {id, db});
-		if (result.data.PublisherRequest === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
-		return result;
-	}
-
-	async function removeRequest(db, id) {
-		const query = `
-			mutation($_id: ID){
-				deletePublisherRequest(_id: $_id) {
-					name
-					language
+			`;
+			const PublisherRequest = async (undefined, ctx) => {
+				const {id, db} = ctx;
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
 				}
-			}
-		`;
-		const deletePublisherRequest = async (undefined, ctx) => {
-			const {id, db} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('PublisherRequest doesnot exists');
-			}
 
-			const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
-			return deletePublisherRequest.value;
-		};
+				const result = await db.collection('PublisherRequest').findOne(objectId(id));
 
-		const result = await graphql(schema, query, {deletePublisherRequest}, {db, id});
-		return result;
-	}
-
-	async function updateRequest(db, id, data) {
-		const query = `
-			mutation($input: PublisherRequestInput){
-				updatePublisherRequest(input: $input) {
-					name
-					language
-				}
-			}
-		`;
-		const updatePublisherRequest = async (args, ctx) => {
-			const {db, id} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('PublisherRequest doesnot exists');
-			}
-
-			const publisherRequestUpdate = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
+				return result;
 			};
-			await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
-			const result = await db.collection('PublisherRequest').findOne(objectId(id));
-			return result;
-		};
 
-		const result = await graphql(schema, query, {updatePublisherRequest}, {db, id}, {input: data});
-		return result;
+			const result = await graphql(schema, query, {PublisherRequest}, {id, db});
+			if (result.data.PublisherRequest === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequests(db) {
-		const query = `
+	async function removeRequest(db, id, user) {
+		if (hasSystemPermission(user)) {
+			const query = `
+				mutation($_id: ID){
+					deletePublisherRequest(_id: $_id) {
+						name
+						language
+					}
+				}
+			`;
+			const deletePublisherRequest = async (undefined, ctx) => {
+				const {id, db} = ctx;
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
+				}
+
+				const deletePublisherRequest = await db.collection('PublisherRequest').findOneAndDelete({_id: objectId(id)});
+				return deletePublisherRequest.value;
+			};
+
+			const result = await graphql(schema, query, {deletePublisherRequest}, {db, id});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function updateRequest(db, id, data, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const query = `
+				mutation($input: PublisherRequestInput){
+					updatePublisherRequest(input: $input) {
+						name
+						language
+					}
+				}
+			`;
+			const updatePublisherRequest = async (args, ctx) => {
+				const {db, id} = ctx;
+				if (!objectId.isValid(id)) {
+					throw new Error('PublisherRequest doesnot exists');
+				}
+
+				const publisherRequestUpdate = {
+					...args.input,
+					lastUpdated: {
+						...args.input.lastUpdated,
+						timestamp: new Date()
+					}
+				};
+				await db.collection('PublisherRequest').findOneAndUpdate({_id: objectId(id)}, {$set: publisherRequestUpdate}, {upsert: true});
+				const result = await db.collection('PublisherRequest').findOne(objectId(id));
+				return result;
+			};
+
+			const result = await graphql(schema, query, {updatePublisherRequest}, {db, id}, {input: data});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function queryRequests(db, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const query = `
 			{
 				PublisherRequests{
 					_id
@@ -454,71 +471,76 @@ export default function () {
 						timestamp
 						user
 					}
+					notes
+					backgroundProcessingState
 					state
-					publisherId
-					publicationEstimate
-					primaryContact {
-						givenName
-						familyName
-						email
-					}
+					rejectionReason
+					createdResource
 					name
+					code
 					language
-					metadataDelivery
 					email
 					phone
 					website
 					aliases
-					notes
-					activity {
-						active
-						yearInactivated
-					}
-					streetAddress {
+					postalAddress {
 						address
+						addressDetails
 						city
 						zip
+						public
 					}
-					publication {
-						title
-						type
-						subtitle
-						language
-						publicationTime
-						additionalDetails
-						authors {
-							givenName
-							familyName
-							role
-						}
-						series {
-							identifier
-							name
-							volume
-						}
-						electronicDetails {
-							format
-						}
-						printDetails {
-							manufacturer
+					publicationDetails {
+						frequency
+					}
+					classification
+					organizationDetails {
+						affiliateOf {
+							address
+							addressDetails
 							city
-							run
-							edition
-							format
+							zip
+							name
 						}
-						mapDetails {
-							scale
+						affiliates {
+							address
+							addressDetails
+							city
+							zip
+							name
 						}
+						distributorOf {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+						distributor {
+							address
+							addressDetails
+							city
+							zip
+							name
+						}
+					}
+					primaryContact{
+						givenName
+						familyName
+						email
 					}
 				}
 			}
-		`;
-		const PublisherRequests = async (undefined, db) => {
-			const result = await db.collection('PublisherRequest').find().toArray();
-			return result;
-		};
+			`;
+			const PublisherRequests = async (undefined, db) => {
+				const result = await db.collection('PublisherRequest').find().toArray();
+				return result;
+			};
 
-		const result = await graphql(schema, query, {PublisherRequests}, db);
-		return result;
+			const result = await graphql(schema, query, {PublisherRequests}, db);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }
