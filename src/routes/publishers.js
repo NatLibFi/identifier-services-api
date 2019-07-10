@@ -33,7 +33,7 @@ import {API_URL} from '../config';
 export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
-		.get('/:id', read)
+		.get('/:id', passportMiddlewares.token, read)
 		.use(passportMiddlewares.token)
 		.post('/', create)
 		.put('/:id', update)
@@ -50,6 +50,7 @@ export default function (db, passportMiddlewares) {
 
 	async function read(req, res, next) {
 		const id = req.params.id;
+		console.log('***', req.user)
 		try {
 			const result = await publishers.read(db, id);
 			res.json(result);

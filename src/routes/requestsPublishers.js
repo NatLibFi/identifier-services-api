@@ -42,7 +42,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequests(req, res, next) {
 		try {
-			const result = await publishers.createRequests(db, req.body);
+			const result = await publishers.createRequests(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -51,7 +51,7 @@ export default function (db, passportMiddlewares) {
 
 	async function readRequest(req, res, next) {
 		try {
-			const result = await publishers.readRequest(db, req.params.id);
+			const result = await publishers.readRequest(db, req.params.id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -60,7 +60,7 @@ export default function (db, passportMiddlewares) {
 
 	async function removeRequest(req, res, next) {
 		try {
-			const result = await publishers.removeRequest(db, req.params.id);
+			const result = await publishers.removeRequest(db, req.params.id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -71,7 +71,7 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		const body = req.body;
 		try {
-			const result = await publishers.updateRequest(db, id, body);
+			const result = await publishers.updateRequest(db, id, body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -80,7 +80,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequests(req, res, next) {
 		try {
-			const result = await publishers.queryRequests(db);
+			const result = await publishers.queryRequests(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
