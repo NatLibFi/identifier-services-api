@@ -68,6 +68,7 @@ export default function () {
 							`;
 			const args = {inputUser: data};
 			const result = await graphql(schema, query, {createUser}, db, args);
+
 			if (result.errors) {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
@@ -122,7 +123,7 @@ export default function () {
 		async function userMetadata({id}, db) {
 			const result = await db
 				.collection('userMetadata')
-				.findOne(objectId(id));
+				.findOne({givenName: id});
 			return result;
 		}
 	}
@@ -179,7 +180,7 @@ export default function () {
 			const query = `
 				mutation {
 					deleteUser(id: ${JSON.stringify(id)}) {
-						_id
+						givenName
 					}
 				}
 			`;
@@ -196,7 +197,7 @@ export default function () {
 		async function deleteUser({id}, db) {
 			const deletedRequest = await db
 				.collection('userMetadata')
-				.findOneAndDelete({_id: objectId(id)})
+				.findOneAndDelete({givenName: id})
 				.then(res => res.value);
 			return deletedRequest;
 		}

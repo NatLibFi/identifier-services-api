@@ -52,14 +52,14 @@ type MessageTemplateContent{
     body: String!
 }
 
-input InputMessageTemplate{
+input MessageTemplateInput{
     name:String!
     language:String!
     subject:String!
     body:String!
     lastUpdated: LastUpdatedInput
 }
-input InputMessageTemplateContent{
+input MessageTemplateContentInput{
     name:String!
     language:String!
     subject:String!
@@ -67,11 +67,11 @@ input InputMessageTemplateContent{
 }
 
 type Mutation{
-    createTemplate(inputMessageTemplate:InputMessageTemplate):MessageTemplate!
-    updateTemplate(id:ID, inputMessageTemplate: InputMessageTemplate):MessageTemplate
+    createTemplate(inputMessageTemplate: MessageTemplateInput):MessageTemplate!
+    updateTemplate(id:ID, inputMessageTemplate: MessageTemplateInput):MessageTemplate
     deleteTemplate(id:ID):MessageTemplate
-    createTemplateContent(inputMessageTemplateContent:InputMessageTemplateContent):MessageTemplateContent!
-    updateTemplateContent(id:ID, inputMessageTemplateContent: InputMessageTemplateContent):MessageTemplateContent
+    createTemplateContent(inputMessageTemplateContent: MessageTemplateContentInput):MessageTemplateContent!
+    updateTemplateContent(id:ID, inputMessageTemplateContent: MessageTemplateContentInput):MessageTemplateContent
     deleteTemplateContent(id:ID):MessageTemplateContent
 }
 `;

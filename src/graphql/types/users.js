@@ -152,7 +152,7 @@ enum State{
     _id: ID!
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [Emails]!
     publisher: String
     role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
@@ -166,13 +166,22 @@ enum State{
     userId: String!
  }
 
+ type Emails{
+     value: String!
+     type: String!
+ }
+ input EmailsInput{
+     value: String!
+     type: String!
+ }
+
  union UserCreation = UserContent | UserContent2
  
  type User{
     _id: ID!
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [Emails]!
     publisher: String
     role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
@@ -182,7 +191,7 @@ enum State{
  input UserInput{
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [EmailsInput]!
     publisher: String
     role: [Role]!
     notes:[String]
@@ -198,7 +207,7 @@ enum State{
     createdResource: String
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [Emails]!
     publishers: String
     role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
@@ -207,7 +216,7 @@ enum State{
  type UserRequest{
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [Emails]!
  }
 
  input UserRequestContentInput{
@@ -216,7 +225,7 @@ enum State{
     createdResource: String
     givenName: String!
     familyName: String!
-    email: String!
+    emails: [EmailsInput]!
     publishers: String
     role: [Role]!
     lastUpdated: LastUpdatedInput
