@@ -136,7 +136,7 @@ export default function () {
 
 		const response = await query();
 
-		if (id === user.id || hasAdminPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
+		if (id === response.userInfo.userMetadata._id || hasAdminPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
 			return response;
 		} else {
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -145,7 +145,7 @@ export default function () {
 		async function userMetadata({id}, db) {
 			const result = await db
 				.collection('userMetadata')
-				.findOne({givenName: id});
+				.findOne(objectId(id));
 			return result;
 		}
 	}
@@ -238,12 +238,23 @@ export default function () {
 
 	async function query(db, user) {
 		async function query() {
-			const result = await graphql(
-				schema,
-				'{Users{_id, preferences{defaultLanguage}, userId, lastUpdated{timestamp, user}}}',
-				{Users},
-				db,
-			);
+			const query = `
+				{
+					Users{
+						_id
+						givenName
+						publisher
+						preferences {
+							defaultLanguage
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`;
+			const result = await graphql(schema, query, {Users}, db);
 
 			if (result.errors) {
 				throw new Error();

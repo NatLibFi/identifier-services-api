@@ -92,7 +92,6 @@ export default function () {
 		};
 
 		const result = await graphql(schema, query, {SearchPublishers}, db, {filter: data});
-		console.log(result);
 		return result;
 	}
 
