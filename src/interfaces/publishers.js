@@ -199,8 +199,8 @@ export default function () {
 				const newPublisher = {
 					...args.input,
 					lastUpdated: {
-						...args.input.lastUpdated,
-						timestamp: new Date()
+						timestamp: new Date(),
+						user: user.id
 					}
 				};
 				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);

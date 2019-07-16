@@ -54,7 +54,7 @@ export default function (db, passportMiddlewares) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.read(db, id);
+			const result = await templates.read(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -84,7 +84,7 @@ export default function (db, passportMiddlewares) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await templates.query(db, req.body);
+			const result = await templates.query(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

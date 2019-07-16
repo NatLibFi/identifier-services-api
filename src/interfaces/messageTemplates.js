@@ -30,22 +30,30 @@ import {graphql} from 'graphql';
 import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
-import {convertLanguage} from './utils';
+import {convertLanguage, hasAdminPermission, hasSystemPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
 export default function () {
+	const protectedQueryReturn = `
+	_id
+	name
+	language
+	subject
+	body
+	notes
+	lastUpdated{
+		timestamp
+		user
+	}
+	`;
 	const queryReturn = `
 	_id
 	name
 	language
 	subject
 	body
-	lastUpdated{
-		timestamp
-		user
-	}
 	`;
 
 	return {
@@ -97,22 +105,33 @@ export default function () {
 		}
 	}
 
-	async function read(db, id) {
-		const query = `
-				{
-					template(id:${JSON.stringify(id)}){
-						${queryReturn}
-					}
+	async function read(db, id, user) {
+		let query;
+		if(hasAdminPermission(user) || hasSystemPermission(user)){
+			query = `
+			{
+				messageTemplate(id:${JSON.stringify(id)}){
+					${protectedQueryReturn}
 				}
-				`;
-		const result = await graphql(schema, query, {template}, db, {id: id});
-		if (result.data.template === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+			`;
+		} else {
+			query = `
+			{
+				messageTemplate(id:${JSON.stringify(id)}){
+					${queryReturn}
+				}
+			}
+			`;
 		}
+			const result = await graphql(schema, query, {messageTemplate}, db, {id: id});
+			if (result.data.messageTemplate === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+			
+			return result;
 
-		return result;
-
-		async function template({id}, db) {
+		async function messageTemplate({id}, db) {
 			const result = await db
 				.collection('MessageTemplate')
 				.findOne(objectId(id));
@@ -144,13 +163,26 @@ export default function () {
 	}
 
 	async function update(db, {id, data, user}) {
-		const query = `
-				mutation($id:ID, $inputTemplate:MessageTemplateInput){
-					updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
-						${queryReturn}
-					}
+		let query;
+		if(hasAdminPermission(user) || hasSystemPermission(user)){
+
+			query = `
+			mutation($id:ID, $inputTemplate:MessageTemplateInput){
+				updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
+					${protectedQueryReturn}
 				}
-				`;
+			}
+			`;
+		} else {
+			query = `
+			mutation($id:ID, $inputTemplate:MessageTemplateInput){
+				updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
+					${queryReturn}
+				}
+			}
+			`;
+
+		}
 		const args = {id: id, inputMessageTemplate: data};
 		const result = await graphql(schema, query, {updateTemplate}, db, args);
 		if (result.errors) {
@@ -180,16 +212,29 @@ export default function () {
 		}
 	}
 
-	async function query(db) {
-		const query = `
+	async function query(db, user) {
+		let query;
+		if(hasAdminPermission(user) || hasSystemPermission(user)){
+			query = `
+				{
+					MessageTemplates{
+						${protectedQueryReturn}
+					}
+				}
+				`;
+
+		} else {
+			query = `
 			{
-				Templates{
+				MessageTemplates{
 					${queryReturn}
 				}
 			}
 			`;
+		}
 
-		const result = await graphql(schema, query, {Templates}, db);
+		const result = await graphql(schema, query, {MessageTemplates}, db);
+			console.log(result)
 		if (result.errors) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
@@ -197,7 +242,7 @@ export default function () {
 		return result;
 	}
 
-	async function Templates(root, db) {
+	async function MessageTemplates(root, db) {
 		const result = await db
 			.collection('MessageTemplate')
 			.find()
