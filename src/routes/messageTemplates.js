@@ -63,8 +63,9 @@ export default function (db, passportMiddlewares) {
 
 	async function update(req, res, next) {
 		const id = req.params.id;
+		const values = {id: id, data: req.body, user: req.user};
 		try {
-			const result = await templates.update(db, id, req.body);
+			const result = await templates.update(db, id, values);
 			res.json(result);
 		} catch (err) {
 			next(err);

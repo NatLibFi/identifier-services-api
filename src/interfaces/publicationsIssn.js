@@ -87,7 +87,7 @@ export default function () {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			const result = await db
@@ -153,7 +153,7 @@ export default function () {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			await db
@@ -257,7 +257,7 @@ export default function () {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			const result = await db
@@ -299,7 +299,7 @@ export default function () {
 				...input,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			await db

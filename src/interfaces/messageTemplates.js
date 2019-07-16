@@ -143,7 +143,7 @@ export default function () {
 		}
 	}
 
-	async function update(db, id, data) {
+	async function update(db, {id, data, user}) {
 		const query = `
 				mutation($id:ID, $inputTemplate:MessageTemplateInput){
 					updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
@@ -164,7 +164,7 @@ export default function () {
 				...inputMessageTemplate,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: 'user'
+					user: user.id
 				}
 			};
 			await db
