@@ -44,10 +44,15 @@ const queryReturn = `_id
 	publishers
 	givenName
 	familyName
-	emails
+	emails{
+		value
+		type
+	}
 	publishers
 	role
-	preferences`;
+	preferences {
+		defaultLanguage
+	}`;
 
 export default function () {
 	return {
@@ -283,26 +288,30 @@ export default function () {
 	// =====***************************** User Creation Request Starts From Here********************** ====
 
 	async function createRequest(db, data, user) {
+		
 		const query = `
-			mutation($inputUserRequest: InputUserRequest){
-				createRequest(inputUserRequest: $inputUserRequest) {
-					${queryReturn}
+			mutation($usersRequestInput: UsersRequestInput){
+				createUsersRequest(usersRequestInput: $usersRequestInput) {
+					givenName
+					familyName
+					emails{
+						value
+						type
+					}
 				}
 			}
 		`;
-		const args = {inputUserRequest: data};
-		const result = await graphql(schema, query, {createRequest}, db, args);
-
+		const args = {usersRequestInput: data};
+		const result = await graphql(schema, query, {createUsersRequest}, db, args);
 		if (result.errors) {
 			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
 		return result;
 
-		async function createRequest({inputUserRequest}, db) {
+		async function createUsersRequest({usersRequestInput}, db) {
 			const newUserRequest = {
-				...inputUserRequest,
-				publisher: (user.groups.every(item => item === 'publisherAdmin')) ? user.id : null, // If user is publisher-admin then publisher can only be his id
+				...usersRequestInput,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
 					user: user.id
@@ -437,7 +446,7 @@ export default function () {
 		async function query() {
 			const query = `
 				{
-					UsersRequests {
+					UsersRequestContents {
 						${queryReturn}
 					}
 				}
@@ -445,16 +454,15 @@ export default function () {
 			const result = await graphql(
 				schema,
 				query,
-				{UsersRequests},
+				{UsersRequestContents},
 				db
 			);
+			console.log(result)
 			if (result.errors) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
-
 			return result;
 		}
-
 		const response = query();
 
 		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
@@ -463,7 +471,7 @@ export default function () {
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 
-		async function UsersRequests(root, db) {
+		async function UsersRequestContents(root, db) {
 			const result = await db
 				.collection('usersRequest')
 				.find()

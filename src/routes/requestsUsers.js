@@ -84,7 +84,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const result = await users.queryRequest(db);
+			const result = await users.queryRequest(db, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

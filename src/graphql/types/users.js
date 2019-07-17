@@ -213,10 +213,15 @@ enum State{
     preferences(defaultLanguage: Language): Preferences!
  }
 
- type UserRequest{
+ type UsersRequest{
     givenName: String!
     familyName: String!
     emails: [Emails]!
+ }
+ input UsersRequestInput{
+     givenName: String!
+     familyName: String!
+     emails: [EmailsInput]!
  }
 
  input UserRequestContentInput{
@@ -233,7 +238,7 @@ enum State{
  type Mutation{
     createUser(inputUser:UserInput):User!
 
-    createRequest(UserRequestContentInput: UserRequestContentInput):UsersRequestContent!
+    createUsersRequest(usersRequestInput: UsersRequestInput):UsersRequest!
 
     deleteUser(id:ID):User
 
@@ -241,6 +246,6 @@ enum State{
 
     updateUser(id:ID, inputUser:UserInput):User!
 
-    updateRequest(id: ID, UserRequestContentInput: UserRequestContentInput):UsersRequestContent!
+    updateRequest(id: ID, userRequestContentInput: UserRequestContentInput):UsersRequestContent!
  }
  `;
