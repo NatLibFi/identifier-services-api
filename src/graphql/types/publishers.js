@@ -278,7 +278,7 @@ export default `
 
     type Publisher{
         _id: ID!
-        lastUpdated: LastUpdated!
+        lastUpdated: LastUpdated
         notes: [String]
         name: String!
         code: String
@@ -298,7 +298,7 @@ export default `
     }  
 
     input PublisherInput{
-        lastUpdated: LastUpdatedInput!
+        lastUpdated: LastUpdatedInput
         notes: [String]
         name: String!
         code: String
@@ -312,14 +312,14 @@ export default `
         classification: String!
         organizationDetails: OrganizationDetailsInput
         metadataDelivery: MetadataDelivery!
-        primaryContact: [String!]
+        primaryContact: [String!]!
         activity: ActivityInput
         streetAddress: StreetAddressInput
     }
     
     type PublisherRequest{
         _id: ID!
-        lastUpdated: LastUpdated!
+        lastUpdated: LastUpdated
         notes: [String]
         backgroundProcessingState: BackgroundProcessingState
         state: State!
@@ -340,7 +340,7 @@ export default `
     }
 
     input PublisherRequestInput{
-        lastUpdated: LastUpdatedInput!
+        lastUpdated: LastUpdatedInput
         notes: [String]
         backgroundProcessingState: BackgroundProcessingState
         state: State!

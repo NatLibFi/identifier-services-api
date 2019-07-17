@@ -35,6 +35,7 @@ import schema from '../graphql';
 import {hasAdminPermission, hasSystemPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
+const date = new Date();
 
 export default function () {
 	return {
@@ -199,8 +200,8 @@ export default function () {
 				const newPublisher = {
 					...args.input,
 					lastUpdated: {
-						timestamp: new Date(),
-						user: user.id
+						user: user.id,
+						timestamp: date.toISOString()
 					}
 				};
 				const result = await db.collection('PublisherMetadata').insertOne(newPublisher);
@@ -208,6 +209,7 @@ export default function () {
 			};
 
 			const result = await graphql(schema, query, {createPublisher}, db, {input: data});
+			console.log('result', result)
 			if (result.errors) {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
 			}
@@ -236,7 +238,7 @@ export default function () {
 			const publisherUpdate = {
 				...args.input,
 				lastUpdated: {
-					...args.input.lastUpdated,
+					user: user.id,
 					timestamp: new Date()
 				}
 			};
@@ -286,8 +288,8 @@ export default function () {
 				const newPublisherRequests = {
 					...args.input,
 					lastUpdated: {
-						...args.input.lastUpdated,
-						timestamp: new Date()
+						user: user.id,
+						timestamp: date.toDateString()
 					}
 				};
 				const result = await db.collection('PublisherRequest').insertOne(newPublisherRequests);
