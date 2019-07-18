@@ -30,10 +30,10 @@ export default `
  type Query{
      userMetadata(id:ID!):User
      usersRequestContent(id:ID!): UsersRequestContent
-     Users: [User!]
+     Users(input: String): [User!]
      UsersRequestContents: [UsersRequestContent!]
  }
-
+ 
  type LastUpdated{
      timestamp: String!
      user: String!
@@ -42,7 +42,7 @@ export default `
  type Preferences{
      defaultLanguage: Language!
  }
-
+ 
  input LastUpdatedInput{
      timestamp: String
      user: String!
@@ -214,6 +214,7 @@ enum State{
  }
 
  type UsersRequest{
+    _id: ID!
     givenName: String!
     familyName: String!
     emails: [Emails]!

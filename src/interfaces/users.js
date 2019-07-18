@@ -31,28 +31,20 @@ import {graphql} from 'graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import schema from '../graphql';
-import {hasAdminPermission, hasSystemPermission} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
-const queryReturn = `_id
-	backgroundProcessingState
-	rejectionReason
-	createdResource
-	state
-	publishers
+const queryReturn = `
+	_id
 	givenName
 	familyName
 	emails{
 		value
 		type
 	}
-	publishers
-	role
-	preferences {
-		defaultLanguage
-	}`;
+	`;
 
 export default function () {
 	return {
@@ -242,53 +234,51 @@ export default function () {
 	}
 
 	async function query(db, user) {
-		async function query() {
-			const query = `
-				{
-					Users{
-						_id
-						givenName
-						publisher
-						preferences {
-							defaultLanguage
-						}
-						lastUpdated {
-							timestamp
-							user
-						}
+		const input = JSON.stringify(user.id);
+		const query = `
+			{
+				Users(input: ${input} ){
+					_id
+					givenName
+					publisher
+					preferences {
+						defaultLanguage
+					}
+					lastUpdated {
+						timestamp
+						user
 					}
 				}
-			`;
-			const result = await graphql(schema, query, {Users}, db);
-
-			if (result.errors) {
-				throw new Error();
 			}
+		`;
 
-			return result;
+		const result = await graphql(schema, query, {Users}, db);
+		if (result.errors) {
+			throw new Error();
 		}
 
-		const response = query();
+		return result;
 
-		if (hasAdminPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function Users(root, db) {
-			const result = await db
-				.collection('userMetadata')
-				.find()
-				.toArray();
-			return result;
+		async function Users({input}, db) {
+			if (hasAdminPermission(user) || hasSystemPermission(user)) {
+				const result = await db
+					.collection('userMetadata')
+					.find()
+					.toArray();
+				return result;
+			} else {
+				const result = await db
+					.collection('userMetadata')
+					.find({publisher: input})
+					.toArray();
+				return result;
+			}
 		}
 	}
 
 	// =====***************************** User Creation Request Starts From Here********************** ====
 
 	async function createRequest(db, data, user) {
-		
 		const query = `
 			mutation($usersRequestInput: UsersRequestInput){
 				createUsersRequest(usersRequestInput: $usersRequestInput) {
@@ -329,13 +319,13 @@ export default function () {
 		async function query() {
 			const query = `
 				{
-					usersRequest(id:${JSON.stringify(id)}){
+					usersRequestContent(id:${JSON.stringify(id)}){
 						${queryReturn}
 					}
 				}
 			`;
-			const result = await graphql(schema, query, {usersRequest}, db);
-			if (result.data.usersRequest === null) {
+			const result = await graphql(schema, query, {usersRequestContent}, db);
+			if (result.data.usersRequestContent === null) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
 
@@ -349,7 +339,7 @@ export default function () {
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 
-		async function usersRequest({id}, db) {
+		async function usersRequestContent({id}, db) {
 			const result = await db
 				.collection('usersRequest')
 				.findOne(objectId(id));
@@ -430,7 +420,7 @@ export default function () {
 		if (hasSystemPermission(user)) {
 			return response;
 		}
- 
+
 		throw new ApiError(HttpStatus.FORBIDDEN);
 
 		async function deleteRequest({id}, db) {
@@ -457,12 +447,13 @@ export default function () {
 				{UsersRequestContents},
 				db
 			);
-			console.log(result)
 			if (result.errors) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
+
 			return result;
 		}
+
 		const response = query();
 
 		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.userInfo.userMetadata.publisher) {

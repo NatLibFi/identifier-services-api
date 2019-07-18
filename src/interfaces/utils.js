@@ -44,7 +44,7 @@ export function hasSystemPermission(user) {
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisher-admin']}}, user);
+	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
 }
 
 export function convertLanguage(language) {
