@@ -62,27 +62,33 @@ export default function () {
 	};
 
 	async function create(db, data, user) {
+		const requestId = data._id;
 		delete data._id;
 		if (hasAdminPermission(user)) {
 			const query = `
-								mutation($inputUser:UserInput){
-									createUser(inputUser: $inputUser
-									) {
-										preferences {
-											defaultLanguage
-										}
-										lastUpdated {
-											timestamp
-											user
-										}
-									}
-								}
-							`;
+				mutation($inputUser:UserInput){
+					createUser(inputUser: $inputUser
+					) {
+						preferences {
+							defaultLanguage
+						}
+						lastUpdated {
+							timestamp
+							user
+						}
+					}
+				}
+			`;
 			const args = {inputUser: data};
 			const result = await graphql(schema, query, {createUser}, db, args);
 			if (result.errors) {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
+
+			await db
+				.collection('usersRequest')
+				.findOneAndDelete({_id: objectId(requestId)})
+				.then(res => res.value);
 
 			return result;
 		}
