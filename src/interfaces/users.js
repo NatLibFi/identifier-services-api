@@ -62,6 +62,7 @@ export default function () {
 	};
 
 	async function create(db, data, user) {
+		delete data._id;
 		if (hasAdminPermission(user)) {
 			const query = `
 								mutation($inputUser:UserInput){
@@ -79,7 +80,6 @@ export default function () {
 							`;
 			const args = {inputUser: data};
 			const result = await graphql(schema, query, {createUser}, db, args);
-
 			if (result.errors) {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
@@ -266,12 +266,14 @@ export default function () {
 					.find()
 					.toArray();
 				return result;
-			} else {
+			} else if (hasPublisherAdminPermission(user)) {
 				const result = await db
 					.collection('userMetadata')
 					.find({publisher: input})
 					.toArray();
 				return result;
+			} else {
+				return [];
 			}
 		}
 	}
