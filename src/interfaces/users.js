@@ -239,11 +239,11 @@ export default function () {
 		}
 	}
 
-	async function query(db, user) {
+	async function query(db, body, user) {
 		const input = JSON.stringify(user.id);
 		const query = `
 			{
-				Users(input: ${input} ){
+				Users(input: ${input}, first: ${body.first}, offset: ${body.offset}){
 					_id
 					givenName
 					publisher
@@ -263,15 +263,16 @@ export default function () {
 			throw new Error();
 		}
 
-		return result;
+		const newResult = {result, total: await db.collection('userMetadata').count()};
+		return newResult;
 
-		async function Users({input}, db) {
+		async function Users({input, first, offset}, db) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
 				const result = await db
 					.collection('userMetadata')
 					.find()
 					.toArray();
-				return result;
+				return result.slice(first, (offset + first));
 			} else if (hasPublisherAdminPermission(user)) {
 				const result = await db
 					.collection('userMetadata')
