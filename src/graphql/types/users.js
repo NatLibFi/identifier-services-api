@@ -31,7 +31,7 @@ export default `
      userMetadata(id:ID!):User
      usersRequestContent(id:ID!): UsersRequestContent
      Users(input: String, first: Int, offset: Int): [User!]
-     UsersRequestContents: [UsersRequestContent!]
+     UsersRequestContents(input: String, first: Int, offset: Int): [UsersRequestContent!]
  }
  
  type LastUpdated{
@@ -208,7 +208,7 @@ enum State{
     givenName: String!
     familyName: String!
     emails: [Emails]!
-    publishers: String
+    publisher: String
     role: [Role]!
     preferences(defaultLanguage: Language): Preferences!
  }
@@ -232,7 +232,7 @@ enum State{
     givenName: String!
     familyName: String!
     emails: [EmailsInput]!
-    publishers: String
+    publisher: String
     role: [Role]!
  }
 

@@ -40,6 +40,7 @@ const queryReturn = `
 	_id
 	givenName
 	familyName
+	publisher
 	emails{
 		value
 		type
@@ -98,6 +99,7 @@ export default function () {
 		async function createUser({inputUser}, db) {
 			const newUser = {
 				...inputUser,
+				publisher: hasPublisherAdminPermission(user) ? user.id : 'admin',
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
 					user: user.id
@@ -243,7 +245,7 @@ export default function () {
 		const input = JSON.stringify(user.id);
 		const query = `
 			{
-				Users(input: ${input}, first: ${body.first}, offset: ${body.offset}){
+				Users(input: ${input}){
 					_id
 					givenName
 					publisher
@@ -263,16 +265,16 @@ export default function () {
 			throw new Error();
 		}
 
-		const newResult = {result, total: await db.collection('userMetadata').count()};
+		const newResult = {result: result.data.Users.slice(body.first, (body.offset + body.first)), total: result.data.Users.length};
 		return newResult;
 
-		async function Users({input, first, offset}, db) {
+		async function Users({input}, db) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
 				const result = await db
 					.collection('userMetadata')
 					.find()
 					.toArray();
-				return result.slice(first, (offset + first));
+				return result;
 			} else if (hasPublisherAdminPermission(user)) {
 				const result = await db
 					.collection('userMetadata')
@@ -341,8 +343,8 @@ export default function () {
 			return result;
 		}
 
-		const response = query();
-		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
+		const response = await query();
+		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.data.usersRequestContent.publisher) {
 			return response;
 		}
 
@@ -441,42 +443,44 @@ export default function () {
 		}
 	}
 
-	async function queryRequest(db, user) {
-		async function query() {
-			const query = `
-				{
-					UsersRequestContents {
-						${queryReturn}
-					}
+	async function queryRequest(db, body, user) {
+		const input = JSON.stringify(user.id);
+		const query = `
+			{
+				UsersRequestContents(input: ${input}) {
+					${queryReturn}
 				}
-			`;
-			const result = await graphql(
-				schema,
-				query,
-				{UsersRequestContents},
-				db
-			);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
-
-			return result;
+		`;
+		const result = await graphql(
+			schema,
+			query,
+			{UsersRequestContents},
+			db
+		);
+		if (result.errors) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		const response = query();
+		const newResult = {result: result.data.UsersRequestContents.slice(body.first, (body.offset + body.first)), total: result.data.UsersRequestContents.length};
+		return newResult;
 
-		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.userInfo.userMetadata.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function UsersRequestContents(root, db) {
-			const result = await db
-				.collection('usersRequest')
-				.find()
-				.toArray();
-			return result;
+		async function UsersRequestContents({input}, db) {
+			if (hasAdminPermission(user) || hasSystemPermission(user)) {
+				const result = await db
+					.collection('usersRequest')
+					.find()
+					.toArray();
+				return result;
+			} else if (hasPublisherAdminPermission(user)) {
+				const result = await db
+					.collection('usersRequest')
+					.find({publisher: input})
+					.toArray();
+				return result;
+			} else {
+				return [];
+			}
 		}
 	}
 }
