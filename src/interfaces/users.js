@@ -31,7 +31,7 @@ import {graphql} from 'graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import schema from '../graphql';
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, countFn, pagination} from './utils';
 
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
@@ -241,8 +241,9 @@ export default function () {
 		}
 	}
 
-	async function query(db, body, user) {
+	async function query(db, body, user, queryData) {
 		const input = JSON.stringify(user.id);
+		const collectionName = 'userMetadata';
 		const query = `
 			{
 				Users(input: ${input}){
@@ -265,22 +266,15 @@ export default function () {
 			throw new Error();
 		}
 
-		const newResult = {result: result.data.Users.slice(body.first, (body.offset + body.first)), total: result.data.Users.length};
+		const count = (hasAdminPermission(user) || hasSystemPermission(user)) ? await countFn(db, collectionName, queryData) : await countFn(db, collectionName, queryData, {publisher: user.id});
+		const newResult = {...result, total: count.length};
 		return newResult;
 
 		async function Users({input}, db) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
-				const result = await db
-					.collection('userMetadata')
-					.find()
-					.toArray();
-				return result;
+				return pagination(db, collectionName, queryData);
 			} else if (hasPublisherAdminPermission(user)) {
-				const result = await db
-					.collection('userMetadata')
-					.find({publisher: input})
-					.toArray();
-				return result;
+				return pagination(db, collectionName, queryData, {publisher: input});
 			} else {
 				return [];
 			}
