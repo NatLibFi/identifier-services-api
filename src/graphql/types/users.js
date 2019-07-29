@@ -29,6 +29,7 @@
 export default `
  type Query{
      userMetadata(id:ID!):User
+     usersRequest(id:ID!):UsersRequest
      usersRequestContent(id:ID!): UsersRequestContent
      Users(input: String, first: Int, offset: Int): [User!]
      UsersRequestContents(input: String, first: Int, offset: Int): [UsersRequestContent!]

@@ -356,7 +356,6 @@ export default function () {
 			};
 
 			const result = await graphql(schema, query, {createISSN}, db, {input: data});
-			console.log(result)
 			if (result.errors) {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
 			}

@@ -41,6 +41,8 @@ const queryReturn = `
 	givenName
 	familyName
 	publisher
+	state
+	backgroundProcessingState
 	emails{
 		value
 		type
@@ -65,6 +67,8 @@ export default function () {
 	async function create(db, data, user) {
 		const requestId = data._id;
 		delete data._id;
+		delete data.backgroundProcessingState;
+		delete data.state;
 		if (hasAdminPermission(user)) {
 			const query = `
 				mutation($inputUser:UserInput){
@@ -86,10 +90,10 @@ export default function () {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
 
-			await db
-				.collection('usersRequest')
-				.findOneAndDelete({_id: objectId(requestId)})
-				.then(res => res.value);
+			// Await db
+			// 	.collection('usersRequest')
+			// 	.findOneAndDelete({_id: objectId(requestId)})
+			// 	.then(res => res.value);
 
 			return result;
 		}
@@ -307,6 +311,8 @@ export default function () {
 		async function createUsersRequest({usersRequestInput}, db) {
 			const newUserRequest = {
 				...usersRequestInput,
+				state: 'new',
+				backgroundProcessingState: 'pending',
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
 					user: user.id
@@ -354,18 +360,19 @@ export default function () {
 
 	async function updateRequest(db, id, values) {
 		const {data, user} = values;
+		console.log('jjjjj', values);
 		async function query() {
 			const query = `
-			mutation($id:ID, $inputUserRequest: InputUserRequest){
-				updateRequest(id:$id, inputUserRequest: $inputUserRequest) {
+			mutation($id:ID, $userRequestContentInput: UserRequestContentInput){
+				updateRequest(id:$id, userRequestContentInput: $userRequestContentInput) {
 					${queryReturn}
 				}
 			}
 			`;
 
-			const args = {id: id, inputUserRequest: data};
+			const args = {id: id, userRequestContentInput: data};
 			const result = await graphql(schema, query, {updateRequest}, db, args);
-
+			console.log(result)
 			if (result.errors) {
 				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
@@ -381,9 +388,9 @@ export default function () {
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 
-		async function updateRequest({inputUserRequest, id}, db) {
+		async function updateRequest({userRequestContentInput, id}, db) {
 			const updateRequest = {
-				...inputUserRequest,
+				...userRequestContentInput,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
 					user: user.id
@@ -452,6 +459,7 @@ export default function () {
 			{UsersRequestContents},
 			db
 		);
+		console.log(result)
 		if (result.errors) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}

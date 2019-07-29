@@ -65,7 +65,7 @@ export default function () {
 	};
 
 	async function create(db, data) {
-		const id = data.user.id;
+		const id = (data.user === undefined) ? 'user' : data.user.id;
 		const newData = {
 			...data,
 			language: convertLanguage(data.language),
@@ -95,7 +95,7 @@ export default function () {
 				...args.inputMessageTemplate,
 				lastUpdated: {
 					timestamp: `${date.toISOString()}`,
-					user: (id === undefined) ? 'user' : id
+					user: id
 				}
 			};
 			const result = await db
@@ -107,7 +107,7 @@ export default function () {
 
 	async function read(db, id, user) {
 		let query;
-		if(hasAdminPermission(user) || hasSystemPermission(user)){
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			query = `
 			{
 				messageTemplate(id:${JSON.stringify(id)}){
@@ -124,12 +124,13 @@ export default function () {
 			}
 			`;
 		}
-			const result = await graphql(schema, query, {messageTemplate}, db, {id: id});
-			if (result.data.messageTemplate === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
-			
-			return result;
+
+		const result = await graphql(schema, query, {messageTemplate}, db, {id: id});
+		if (result.data.messageTemplate === null) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
+		return result;
 
 		async function messageTemplate({id}, db) {
 			const result = await db
@@ -164,8 +165,7 @@ export default function () {
 
 	async function update(db, {id, data, user}) {
 		let query;
-		if(hasAdminPermission(user) || hasSystemPermission(user)){
-
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			query = `
 			mutation($id:ID, $inputTemplate:MessageTemplateInput){
 				updateTemplate(id:$id, inputMessageTemplate: $inputTemplate){
@@ -181,8 +181,8 @@ export default function () {
 				}
 			}
 			`;
-
 		}
+
 		const args = {id: id, inputMessageTemplate: data};
 		const result = await graphql(schema, query, {updateTemplate}, db, args);
 		if (result.errors) {
@@ -214,7 +214,7 @@ export default function () {
 
 	async function query(db, user) {
 		let query;
-		if(hasAdminPermission(user) || hasSystemPermission(user)){
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			query = `
 				{
 					MessageTemplates{
@@ -222,7 +222,6 @@ export default function () {
 					}
 				}
 				`;
-
 		} else {
 			query = `
 			{
@@ -234,7 +233,6 @@ export default function () {
 		}
 
 		const result = await graphql(schema, query, {MessageTemplates}, db);
-			console.log(result)
 		if (result.errors) {
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
