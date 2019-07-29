@@ -49,7 +49,6 @@ export default function (db, passportMiddlewares) {
 	}
 
 	async function read(req, res, next) {
-		console.log('test', req.user)
 		const id = req.params.id;
 		try {
 			const result = await publishers.read(db, id);
