@@ -26,8 +26,8 @@
  * for the JavaScript code in this file.
  *
  */
-import {graphql} from 'graphql';
-import schema from '../graphql';
+
+
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import { hasAdminPermission } from './utils';

@@ -35,16 +35,17 @@ export default function (db, passportMiddlewares) {
 	const templates = templatesFactory({url: API_URL});
 
 	return new Router()
-		.post('/', bodyParse(), create)
 		.use(passportMiddlewares)
+		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
 		.delete('/:id', remove)
 		.post('/query', bodyParse(), query);
 
 	async function create(req, res, next) {
+
 		try {
-			const result = await templates.create(db, req.body);
+			const result = await templates.create(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

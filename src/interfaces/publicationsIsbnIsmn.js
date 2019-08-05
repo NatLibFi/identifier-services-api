@@ -27,8 +27,8 @@
  *
  */
 
-import {graphql} from 'graphql';
-import schema from '../graphql';
+
+
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import {hasAdminPermission, hasSystemPermission} from './utils';

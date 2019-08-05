@@ -27,10 +27,10 @@
  *
  */
 
-import {graphql} from 'graphql';
+
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
-import schema from '../graphql';
+
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, countFn, pagination} from './utils';
 
 const objectId = require('mongodb').ObjectId;
