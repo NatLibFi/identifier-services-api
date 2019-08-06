@@ -36,19 +36,6 @@ import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, co
 const objectId = require('mongodb').ObjectId;
 const date = new Date();
 
-const queryReturn = `
-	_id
-	givenName
-	familyName
-	publisher
-	state
-	backgroundProcessingState
-	emails{
-		value
-		type
-	}
-	`;
-
 export default function () {
 	return {
 		create,
