@@ -27,22 +27,22 @@
  */
 
 import {Router} from 'express';
-import {publishersFactory} from '../interfaces';
+import {publisherRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function (db, passportMiddlewares) {
-	const publishers = publishersFactory({url: API_URL});
+	const publisherRequests = publisherRequestsFactory({url: API_URL});
 	return new Router()
 		.use(passportMiddlewares.token)
-		.post('/', createRequests)
+		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.put('/:id', updateRequest)
 		.delete('/:id', removeRequest)
 		.post('/query', queryRequests);
 
-	async function createRequests(req, res, next) {
+	async function createRequest(req, res, next) {
 		try {
-			const result = await publishers.createRequests(db, req.body, req.user);
+			const result = await publisherRequests.createRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -51,7 +51,7 @@ export default function (db, passportMiddlewares) {
 
 	async function readRequest(req, res, next) {
 		try {
-			const result = await publishers.readRequest(db, req.params.id, req.user);
+			const result = await publisherRequests.readRequest(db, req.params.id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -60,7 +60,7 @@ export default function (db, passportMiddlewares) {
 
 	async function removeRequest(req, res, next) {
 		try {
-			const result = await publishers.removeRequest(db, req.params.id, req.user);
+			const result = await publisherRequests.removeRequest(db, req.params.id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -71,7 +71,7 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		const body = req.body;
 		try {
-			const result = await publishers.updateRequest(db, id, body, req.user);
+			const result = await publisherRequests.updateRequest(db, id, body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -80,7 +80,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequests(req, res, next) {
 		try {
-			const result = await publishers.queryRequests(db, req.user);
+			const result = await publisherRequests.queryRequests(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);

@@ -29,33 +29,33 @@
 
 import interfaceFactory from './interfaceModules';
 
-const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
+const publisherRequestsInterface = interfaceFactory('PublisherRequest', 'PublisherRequestContent');
 
 export default function () {
 	return {
-		create,
-		read,
-		update,
-		query
+		createRequest,
+		readRequest,
+		updateRequest,
+		queryRequests
 	};
 
-	async function create(db, doc, user) {
-		const result = await publisherInterface.create(db, doc, user);
+	async function createRequest(db, doc, user) {
+		const result = await publisherRequestsInterface.create(db, doc, user);
 		return result;
 	}
 
-	async function read(db, id) {
-		const result = await publisherInterface.read(db, id);
+	async function readRequest(db, id) {
+		const result = await publisherRequestsInterface.read(db, id);
 		return result;
 	}
 
-	async function update(db, id, doc, user) {
-		const result = await publisherInterface.update(db, id, doc, user);
+	async function updateRequest(db, id, doc, user) {
+		const result = await publisherRequestsInterface.update(db, id, doc, user);
 		return result;
 	}
 
-	async function query(db, {query, offset}) {
-		const result = await publisherInterface.query(db, {query, offset});
+	async function queryRequests(db, {query, offset}) {
+		const result = await publisherRequestsInterface.query(db, {query, offset});
 		return result;
 	}
 }

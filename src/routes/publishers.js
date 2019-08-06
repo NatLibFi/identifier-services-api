@@ -40,6 +40,7 @@ export default function (db, passportMiddlewares) {
 		.post('/query', query);
 
 	async function create(req, res, next) {
+
 		try {
 			const result = await publishers.create(db, req.body, req.user);
 			res.json(result);
@@ -69,9 +70,8 @@ export default function (db, passportMiddlewares) {
 	}
 
 	async function query(req, res, next) {
-		const query = req.query.q;
 		try {
-			const result = await publishers.query(db, query);
+			const result = await publishers.query(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);
