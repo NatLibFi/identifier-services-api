@@ -29,39 +29,33 @@
 
 import interfaceFactory from './interfaceModules';
 
-const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
+const publicationsRequestsIsbnIsmnInterface = interfaceFactory('PublicationRequest_ISBN_ISMN', 'PublicationIsbnIsmnRequestContent');
 
 export default function () {
 	return {
-		createIsbnIsmn,
-		readIsbnIsmn,
-		updateIsbnIsmn,
-		removeIsbnIsmn,
-		queryIsbnIsmn
+		createRequestIsbnIsmn,
+		readRequestIsbnIsmn,
+		updateRequestIsbnIsmn,
+		removeRequestIsbnIsmn
 	};
 
-	async function createIsbnIsmn(db, doc, user) {
-		const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
+	async function createRequestIsbnIsmn(db, doc, user) {
+		const result = await publicationsRequestsIsbnIsmnInterface.create(db, doc, user);
 		return result;
 	}
 
-	async function readIsbnIsmn(db, id) {
-		const result = await publicationsIsbnIsmnInterface.read(db, id);
+	async function readRequestIsbnIsmn(db, id) {
+		const result = await publicationsRequestsIsbnIsmnInterface.read(db, id);
 		return result;
 	}
 
-	async function updateIsbnIsmn(db, id, doc, user) {
-		const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
+	async function updateRequestIsbnIsmn(db, id, doc, user) {
+		const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, doc, user);
 		return result;
 	}
 
-	async function removeIsbnIsmn(db, id) {
-		const result = await publicationsIsbnIsmnInterface.remove(db, id);
-		return result;
-	}
-
-	async function queryIsbnIsmn(db, {query, offset}) {
-		const result = await publicationsIsbnIsmnInterface.query(db, {query, offset});
+	async function removeRequestIsbnIsmn(db, id) {
+		const result = await publicationsRequestsIsbnIsmnInterface.remove(db, id);
 		return result;
 	}
 }

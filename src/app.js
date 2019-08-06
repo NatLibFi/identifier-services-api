@@ -37,6 +37,7 @@ import {
 	createPublishersRouter,
 	createPublishersRequestsRouter,
 	createPublicationsRouterIsbnIsmn,
+	createRequestsPublicationsRouterIsbnIsmn,
 	createPublicationsRouterIssn,
 	createRequestsPublicationsRouterIssn,
 	createMessageTemplate,
@@ -82,6 +83,7 @@ export default async function run() {
 	app.use('/publishers', createPublishersRouter(db, passportMiddlewares));
 	app.use('/requests/publishers', createPublishersRequestsRouter(db, passportMiddlewares));
 	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
+	app.use('/requests/publications/isbn-ismn', createRequestsPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
 	app.use('/publications/issn', createPublicationsRouterIssn(db, passportMiddlewares.token));
 	app.use('/requests/publications/issn', createRequestsPublicationsRouterIssn(db, passportMiddlewares.token));
 	app.use('/ranges', createRangesRouter(db, passportMiddlewares));

@@ -28,7 +28,7 @@
 
 import interfaceFactory from './interfaceModules';
 
-const publicationsIssnInterface = interfaceFactory('PublicationRequest_ISSN', 'PublicationIssnRequestContent');
+const publicationsRequestsIssnInterface = interfaceFactory('PublicationRequest_ISSN', 'PublicationIssnRequestContent');
 
 export default function () {
 	return {
@@ -39,22 +39,22 @@ export default function () {
 	};
 
 	async function createRequestISSN(db, doc, user) {
-		const result = await publicationsIssnInterface.create(db, doc, user);
+		const result = await publicationsRequestsIssnInterface.create(db, doc, user);
 		return result;
 	}
 
 	async function readRequestISSN(db, id) {
-		const result = await publicationsIssnInterface.read(db, id);
+		const result = await publicationsRequestsIssnInterface.read(db, id);
 		return result;
 	}
 
 	async function updateRequestISSN(db, id, doc, user) {
-		const result = await publicationsIssnInterface.update(db, id, doc, user);
+		const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
 		return result;
 	}
 
 	async function removeRequestISSN(db, id) {
-		const result = await publicationsIssnInterface.remove(db, id);
+		const result = await publicationsRequestsIssnInterface.remove(db, id);
 		return result;
 	}
 }

@@ -82,7 +82,7 @@ export default function (db, passportMiddleware) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await publications.queryISSN(db, req.user);
+			const result = await publications.queryISSN(db, req.body, req.user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);
