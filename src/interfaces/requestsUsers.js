@@ -26,44 +26,42 @@
  *
  */
 
-const {readFileSync} = require('fs');
-const Ajv = require('ajv');
+import interfaceFactory from './interfaceModules';
 
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.role.some(profileRole => {
-		return user.groups.some(
-			userRole => userRole === profileRole
-		);
-	});
-	return permitted;
+const userInterface = interfaceFactory('usersRequest', 'UserRequestContent');
+
+export default function () {
+	return {
+		createRequest,
+		readRequest,
+		updateRequest,
+		removeRequest,
+		queryRequest
+	};
+
+	async function createRequest(db, doc, user) {
+		const result = await userInterface.create(db, doc, user);
+		return result;
+	}
+
+	async function readRequest(db, id) {
+		const result = await userInterface.read(db, id);
+		return result;
+	}
+
+	async function updateRequest(db, id, doc, user) {
+		const result = await userInterface.update(db, id, doc, user);
+		return result;
+	}
+
+	async function removeRequest(db, id) {
+		const result = await userInterface.remove(db, id);
+		return result;
+	}
+
+	async function queryRequest(db, {query, offset}) {
+		const result = await userInterface.query(db, {query, offset});
+		return result;
+	}
 }
 
-export function hasAdminPermission(user) {
-	return hasPermission({auth: {role: ['admin']}}, user);
-}
-
-export function hasSystemPermission(user) {
-	return hasPermission({auth: {role: ['system']}}, user);
-}
-
-export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
-}
-
-export function convertLanguage(language) {
-	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
-}
-
-export function getValidator(schemaName) {
-	const str = readFileSync('src/api.json', 'utf8')
-		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
-
-	const obj = JSON.parse(str);
-
-	return new Ajv({allErrors: true})
-		.addSchema({
-			$id: 'defs',
-			definitions: obj.components.schemas
-		})
-		.compile(obj.components.schemas[schemaName]);
-}

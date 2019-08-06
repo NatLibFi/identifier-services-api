@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -27,350 +26,41 @@
  *
  */
 
+import interfaceFactory from './interfaceModules';
 
-
-import HttpStatus from 'http-status';
-import {ApiError} from '@natlibfi/identifier-services-commons';
-import {hasAdminPermission, hasSystemPermission} from './utils';
-const objectId = require('mongodb').ObjectId;
-const date = new Date();
+const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
 
 export default function () {
-	const queryReturn = `
-	_id
-	title
-	publisher
-	year
-	frequency
-	language
-	type
-	language
-	lastUpdated{
-		timestamp
-		user
-	}`;
-
 	return {
 		createISSN,
 		readISSN,
 		updateISSN,
 		removeISSN,
-		queryISSN,
-		createRequestISSN,
-		readRequestISSN,
-		updateRequestISSN,
-		removeRequestISSN
+		queryISSN
 	};
 
-	async function createISSN(db, data, user) {
-		if (hasAdminPermission(user)) {
-			const query = `
-					mutation($input: InputPublicationIssn ) {
-						createPublicationIssn(input: $input) {
-							${queryReturn}
-						}
-					}
-				`;
-			const args = {input: data};
-			const result = await graphql(schema, query, {createPublicationIssn}, db, args);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function createPublicationIssn({input}, db) {
-			const newPublication = {
-				...input,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: user.id
-				}
-			};
-			const result = await db
-				.collection('Publication_ISSN')
-				.insertOne(newPublication);
-			return result.ops[0];
-		}
+	async function createISSN(db, doc, user) {
+		const result = await publicationsIssnInterface.create(db, doc, user);
+		return result;
 	}
 
-	async function readISSN(db, id, user) {
-		async function query() {
-			const query = `
-				{
-					publication_ISSN(id:${JSON.stringify(id)}) {
-						${queryReturn}
-						}
-					}
-					`;
-			const result = await graphql(schema, query, {publication_ISSN}, db);
-			if (result.data.publication_ISSN === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
-
-			return result;
-		}
-
-		const response = query();
-		if (hasAdminPermission() || user.id === response.data.publication_ISSN.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function publication_ISSN({id}, db) {
-			const result = await db
-				.collection('Publication_ISSN')
-				.findOne(objectId(id));
-			return result;
-		}
+	async function readISSN(db, id) {
+		const result = await publicationsIssnInterface.read(db, id);
+		return result;
 	}
 
-	async function updateISSN(db, id, values) {
-		const {data, user} = values;
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const query = `
-			mutation($id:ID, $input: InputPublicationIssn ) {
-				updatePublicationIssn(id: $id, input: $input) {
-					${queryReturn}
-				}
-			}
-			`;
-			const args = {id: id, input: data};
-			const result = await graphql(schema, query, {updatePublicationIssn}, db, args);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			return result;
-		}
-
-		async function updatePublicationIssn({input, id}, db) {
-			const updatePublication = {
-				...input,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: user.id
-				}
-			};
-			await db
-				.collection('Publication_ISSN')
-				.findOneAndUpdate(
-					{_id: objectId(id)},
-					{$set: updatePublication},
-					{upsert: true}
-				);
-			return db
-				.collection('Publication_ISSN')
-				.findOne(objectId(id));
-		}
+	async function updateISSN(db, id, doc, user) {
+		const result = await publicationsIssnInterface.update(db, id, doc, user);
+		return result;
 	}
 
 	async function removeISSN(db, id) {
-		const query = `
-			mutation{
-				deletePublicationIssn(id: ${JSON.stringify(id)}) {
-					_id
-				}
-			}
-			`;
-		const result = await graphql(schema, query, {deletePublicationIssn}, db);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
+		const result = await publicationsIssnInterface.remove(db, id);
 		return result;
-
-		async function deletePublicationIssn({id}, db) {
-			const deletedPublication = await db
-				.collection('Publication_ISSN')
-				.findOneAndDelete({_id: objectId(id)});
-			return deletedPublication.value;
-		}
 	}
 
-	async function queryISSN(db, user) {
-		async function query() {
-			const query = `
-					{
-						Publications_ISSN {
-							${queryReturn}
-						}
-					}
-				`;
-			const result = await graphql(schema, query, {Publications_ISSN}, db);
-			if (result.errors) {
-				throw new Error();
-			}
-
-			return result;
-		}
-
-		const response = await query();
-
-		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.data.publication_ISSN.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function Publications_ISSN(root, db) {
-			const result = await db
-				.collection('Publication_ISSN')
-				.find()
-				.toArray();
-			return result;
-		}
-	}
-
-	async function createRequestISSN(db, data, user) {
-		async function query() {
-			const query = `
-				mutation($input: InputPublicationRequestIssn) {
-					createPublicationRequestIssn(input: $input) {
-								${queryReturn}
-							}
-						}
-				`;
-			const args = {input: data};
-			const result = await graphql(schema, query, {createPublicationRequestIssn}, db, args);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			return result;
-		}
-
-		const response = query();
-
-		if (hasSystemPermission(user) || user.id === response.data.updatePublicationRequestIssn.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function createPublicationRequestIssn({input}, db) {
-			const newPublicationRequest = {
-				...input,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: user.id
-				}
-			};
-			const result = await db
-				.collection('PublicationRequest_ISSN')
-				.insertOne(newPublicationRequest);
-			return result.ops[0];
-		}
-	}
-
-	async function updateRequestISSN(db, id, value) {
-		const {data, user} = value;
-		async function query() {
-			const query = `
-			mutation($id:ID, $input: InputPublicationRequestIssn) {
-				updatePublicationRequestIssn(id: $id, input: $input) {
-					${queryReturn}
-				}
-			}
-			`;
-			const args = {id: id, input: data};
-			const result = await graphql(schema, query, {updatePublicationRequestIssn}, db, args);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-
-			return result;
-		}
-
-		const response = query();
-
-		if (hasAdminPermission(user) || hasSystemPermission(user) || user.id === response.data.updatePublicationRequestIssn.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function updatePublicationRequestIssn({id, input}, db) {
-			const updatePublicationRequest = {
-				...input,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: user.id
-				}
-			};
-			await db
-				.collection('PublicationRequest_ISSN')
-				.findOneAndUpdate(
-					{_id: objectId(id)},
-					{$set: updatePublicationRequest},
-					{upsert: true}
-				);
-			return db
-				.collection('PublicationRequest_ISSN')
-				.findOne(objectId(id));
-		}
-	}
-
-	async function readRequestISSN(db, id, user) {
-		async function query() {
-			const query = `
-			{
-				publicationRequest_ISSN(id:${JSON.stringify(id)}){
-					${queryReturn} state
-				}
-			}
-			`;
-			const result = await graphql(schema, query, {publicationRequest_ISSN}, db);
-			if (result.data.publicationRequest_ISSN	 === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
-
-			return result;
-		}
-
-		const response = query();
-		if (hasSystemPermission(user) || hasAdminPermission(user) || user.id === response.data.updatePublicationRequestIssn.publisher) {
-			return response;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function publicationRequest_ISSN({id}, db) {
-			const result = await db
-				.collection('PublicationRequest_ISSN')
-				.findOne(objectId(id));
-			return result;
-		}
-	}
-
-	async function removeRequestISSN(db, id) {
-		if (hasSystemPermission) {
-			const query = `
-			mutation{
-				deletePublicationRequestIssn(id:${JSON.stringify(id)}){
-					_id
-					}
-				}
-			`;
-			const result = await graphql(schema, query, {deletePublicationRequestIssn}, db);
-			if (result.errors) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
-
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-
-		async function deletePublicationRequestIssn({id}, db) {
-			const deletedPublicationRequest = await db
-				.collection('PublicationRequest_ISSN')
-				.findOneAndDelete({_id: objectId(id)});
-			return deletedPublicationRequest.value;
-		}
+	async function queryISSN(db, {query, offset}) {
+		const result = await publicationsIssnInterface.query(db, {query, offset});
+		return result;
 	}
 }

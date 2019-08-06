@@ -28,61 +28,51 @@
 
 import {Router} from 'express';
 import {default as bodyParse} from '../utils';
-import {publicationsIssnFactory} from '../../interfaces';
+import {publicationIssnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
 export default function (db, passportMiddleware) {
-	const publications = publicationsIssnFactory({url: API_URL});
+	const publications = publicationIssnRequestsFactory({url: API_URL});
 	return new Router()
 		.use(passportMiddleware)
-		.post('/', bodyParse(), create)
-		.get('/:id', read)
-		.put('/:id', bodyParse(), update)
-		.delete('/:id', remove)
-		.post('/query', bodyParse(), query);
+		.post('/', bodyParse(), createRequest)
+		.get('/:id', readRequest)
+		.delete('/:id', removeRequest)
+		.put('/:id', bodyParse(), updateRequest);
 
-	async function create(req, res, next) {
+	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createISSN(db, req.body, req.user);
+			const result = await publications.createRequestISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function read(req, res, next) {
+	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readISSN(db, id, req.user);
+			const result = await publications.readRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function update(req, res, next) {
+	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.updateISSN(db, id, req.body, req.user);
+			const result = await publications.removeRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function remove(req, res, next) {
+	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.removeISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function query(req, res, next) {
-		try {
-			const result = await publications.queryISSN(db, req.user);
+			const result = await publications.updateRequestISSN(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

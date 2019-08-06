@@ -26,44 +26,35 @@
  *
  */
 
-const {readFileSync} = require('fs');
-const Ajv = require('ajv');
+import interfaceFactory from './interfaceModules';
 
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.role.some(profileRole => {
-		return user.groups.some(
-			userRole => userRole === profileRole
-		);
-	});
-	return permitted;
-}
+const publicationsIssnInterface = interfaceFactory('PublicationRequest_ISSN', 'PublicationIssnRequestContent');
 
-export function hasAdminPermission(user) {
-	return hasPermission({auth: {role: ['admin']}}, user);
-}
+export default function () {
+	return {
+		createRequestISSN,
+		readRequestISSN,
+		updateRequestISSN,
+		removeRequestISSN
+	};
 
-export function hasSystemPermission(user) {
-	return hasPermission({auth: {role: ['system']}}, user);
-}
+	async function createRequestISSN(db, doc, user) {
+		const result = await publicationsIssnInterface.create(db, doc, user);
+		return result;
+	}
 
-export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
-}
+	async function readRequestISSN(db, id) {
+		const result = await publicationsIssnInterface.read(db, id);
+		return result;
+	}
 
-export function convertLanguage(language) {
-	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
-}
+	async function updateRequestISSN(db, id, doc, user) {
+		const result = await publicationsIssnInterface.update(db, id, doc, user);
+		return result;
+	}
 
-export function getValidator(schemaName) {
-	const str = readFileSync('src/api.json', 'utf8')
-		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
-
-	const obj = JSON.parse(str);
-
-	return new Ajv({allErrors: true})
-		.addSchema({
-			$id: 'defs',
-			definitions: obj.components.schemas
-		})
-		.compile(obj.components.schemas[schemaName]);
+	async function removeRequestISSN(db, id) {
+		const result = await publicationsIssnInterface.remove(db, id);
+		return result;
+	}
 }

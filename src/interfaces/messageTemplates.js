@@ -28,148 +28,35 @@
 *
 */
 
-const {ObjectId} = require('mongodb');
-const moment = require('moment');
-const {readFileSync} = require('fs');
-const Ajv = require('ajv');
+import interfaceFactory from './interfaceModules';
+
+const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
 export default function () {
-	const QUERY_LIMIT = 5;
-	const collectionName = 'MessageTemplate';
-	const PROJECTION = {
-		_id: 0
-	};
-
-	const validate = getValidator('MessageTemplateContent');
-
 	return {create, read, update, remove, query};
 
 	async function create(db, doc, user) {
-		console.log(user);
-		validateDoc(doc);
-
-		const {insertedId} = await db.collection(collectionName).insertOne({
-			...doc,
-			lastUpated: {
-				timestamp: moment().format(),
-				user: user.id
-			}
-		});
-		return insertedId.toString();
+		const result = await templateInterface.create(db, doc, user);
+		return result;
 	}
 
 	async function read(db, id) {
-		const doc = await db.collection(collectionName).findOne({
-			_id: new ObjectId(id)
-		}, {
-			projection: PROJECTION
-		});
-		return doc;
+		const result = await templateInterface.read(db, id);
+		return result;
 	}
 
 	async function update(db, id, values) {
-		const {doc, user} = values;
-		validateDoc(format(doc));
-		const result = await db.collection(collectionName).findOneAndReplace({
-			_id: ObjectId(id)
-		}, {
-			...doc,
-			lastUpated: {
-				timestamp: moment().format(),
-				user: user.id
-			}
-		});
-
+		const result = await templateInterface.update(db, id, values);
 		return result;
-		function format(obj) {
-			return Object.keys(obj)
-				.filter(k => !['lastUpdated', 'user'].includes(k))
-				.reduce((acc, k) => {
-					return {...acc, [k]: obj[k]};
-				}, {});
-		}
 	}
 
 	async function remove(db, id) {
-		await db.collection(collectionName).findOneAndDelete({
-			_id: ObjectId(id)
-		});
+		const result = await templateInterface.remove(db, id);
+		return result;
 	}
 
 	async function query(db, {query, offset}) {
-		if (offset) {
-			return doQuery({
-				...formatQuery(),
-				$and: [{
-					_id: {$gt: ObjectId(offset)}
-				}]
-			});
-		}
-
-		return doQuery(formatQuery());
-
-		async function doQuery(query) {
-			const cursor = await db.collection(collectionName)
-				.find(query)
-				.limit(parseInt(QUERY_LIMIT));
-
-			return new Promise(resolve => {
-				const results = [];
-
-				cursor.on('data', processData);
-				cursor.on('end', () => {
-					if (results.length > 0) {
-						resolve({
-							results,
-							offset: results.slice(-1).shift().id
-						});
-					} else {
-						resolve({results});
-					}
-				});
-
-				function processData(doc) {
-					doc.id = doc._id.toString();
-					delete doc._id;
-					results.push(doc);
-				}
-			});
-		}
-
-		function formatQuery() {
-			return Object.keys(query).reduce((acc, key) => {
-				switch (typeof query[key]) {
-					case 'string':
-						return {...acc, [key]: {
-							$regex: query[key],
-							$options: 'i'
-						}};
-					case 'number':
-						return {...acc, [key]: query[key]};
-					default:
-						throw new Error('Invalid query');
-				}
-			}, {});
-		}
-	}
-
-	function validateDoc(doc) {
-		if (!validate(doc)) {
-			throw new Error(JSON.stringify(validate.errors, undefined, 2));
-		}
-	}
-
-	function getValidator(schemaName) {
-		const str = readFileSync('src/api.json', 'utf8')
-			.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
-
-		const obj = JSON.parse(str);
-
-		return new Ajv({allErrors: true})
-			.addSchema({
-				$id: 'defs',
-				definitions: obj.components.schemas
-			})
-			.compile(obj.components.schemas[schemaName]);
+		const result = await templateInterface.query(db, {query, offset});
+		return result;
 	}
 }
