@@ -28,6 +28,9 @@
  */
 
 import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasSystemPermission} from './utils';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
 
 const publisherRequestsInterface = interfaceFactory('PublisherRequest', 'PublisherRequestContent');
 
@@ -36,26 +39,52 @@ export default function () {
 		createRequest,
 		readRequest,
 		updateRequest,
+		removeRequest,
 		queryRequests
 	};
 
 	async function createRequest(db, doc, user) {
-		const result = await publisherRequestsInterface.create(db, doc, user);
-		return result;
+		if (hasSystemPermission(user)) {
+			const result = await publisherRequestsInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readRequest(db, id) {
-		const result = await publisherRequestsInterface.read(db, id);
-		return result;
+	async function readRequest(db, id, user) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.read(db, id);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateRequest(db, id, doc, user) {
-		const result = await publisherRequestsInterface.update(db, id, doc, user);
-		return result;
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequests(db, {query, offset}) {
-		const result = await publisherRequestsInterface.query(db, {query, offset});
-		return result;
+	async function removeRequest(db, id, user) {
+		if (hasSystemPermission(user)) {
+			const result = await publisherRequestsInterface.remove(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function queryRequests(db, {query, offset}, user) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

@@ -28,6 +28,9 @@
  */
 
 import interfaceFactory from './interfaceModules';
+import {hasAdminPermission} from './utils';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
 
 const rangesISBNInterface = interfaceFactory('IdentifierRangesISBN', 'RangeIsbnContent');
 const rangesISMNInterface = interfaceFactory('IdentifierRangesISMN', 'RangeIsmnContent');
@@ -50,62 +53,111 @@ export default function () {
 	};
 
 	async function createIsbn(db, doc, user) {
-		const result = await rangesISBNInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readIsbn(db, id, user) {
-		const result = await rangesISBNInterface.read(db, id, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.read(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+
 	}
 
 	async function updateIsbn(db, id, doc, user) {
-		const result = await rangesISBNInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIsbn(db, {query, offset}) {
-		const result = await rangesISBNInterface.query(db, {query, offset});
-		return result;
+	async function queryIsbn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function createIsmn(db, doc, user) {
-		const result = await rangesISMNInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readIsmn(db, id, user) {
-		const result = await rangesISMNInterface.read(db, id, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.read(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateIsmn(db, id, doc, user) {
-		const result = await rangesISMNInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIsmn(db, {query, offset}) {
-		const result = await rangesISMNInterface.query(db, {query, offset});
-		return result;
+	async function queryIsmn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function createIssn(db, doc, user) {
-		const result = await rangesISSNInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readIssn(db, id, user) {
-		const result = await rangesISMNInterface.read(db, id, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.read(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateIssn(db, id, doc, user) {
-		const result = await rangesISSNInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIssn(db, {query, offset}) {
-		const result = await rangesISSNInterface.query(db, {query, offset});
-		return result;
+	async function queryIssn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

@@ -83,7 +83,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsbn(req, res, next) {
 		try {
-			const result = await ranges.queryIsbn(db, req.body);
+			const result = await ranges.queryIsbn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -123,7 +123,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsmn(req, res, next) {
 		try {
-			const result = await ranges.queryIsmn(db, req.body);
+			const result = await ranges.queryIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -163,7 +163,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIssn(req, res, next) {
 		try {
-			const result = await ranges.queryIssn(db, req.body);
+			const result = await ranges.queryIssn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

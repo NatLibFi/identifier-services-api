@@ -28,6 +28,9 @@
  */
 
 import interfaceFactory from './interfaceModules';
+import {hasSystemPermission} from './utils';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
 
@@ -40,11 +43,15 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		const result = await publisherInterface.create(db, doc, user);
-		return result;
+		if (hasSystemPermission(user)) {
+			const result = await publisherInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function read(db, id) {
+	async function read(db, id, user) {
 		const result = await publisherInterface.read(db, id);
 		return result;
 	}

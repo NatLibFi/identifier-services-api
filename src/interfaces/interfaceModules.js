@@ -43,7 +43,8 @@ export default function (collectionName, collectionContent) {
 	return {
 		create,
 		read,
-		update,
+        update,
+        remove,
 		query
 	};
 
@@ -91,6 +92,12 @@ export default function (collectionName, collectionContent) {
 					return {...acc, [k]: obj[k]};
 				}, {});
 		}
+	}
+
+	async function remove(db, id) {
+		await db.collection(collectionName).findOneAndDelete({
+			_id: new ObjectId(id)
+		});
 	}
 
 	async function query(db, {query, offset}) {
