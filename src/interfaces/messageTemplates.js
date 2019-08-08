@@ -28,7 +28,11 @@
 *
 */
 
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+
 import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasSystemPermission} from './utils';
 
 const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
@@ -36,27 +40,47 @@ export default function () {
 	return {create, read, update, remove, query};
 
 	async function create(db, doc, user) {
-		const result = await templateInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function read(db, id) {
-		const result = await templateInterface.read(db, id);
-		return result;
+	async function read(db, id, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await templateInterface.read(db, id);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function update(db, id, values) {
-		const result = await templateInterface.update(db, id, values);
-		return result;
+	async function update(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function remove(db, id) {
-		const result = await templateInterface.remove(db, id);
-		return result;
+	async function remove(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.remove(db, id);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function query(db, {query, offset}) {
-		const result = await templateInterface.query(db, {query, offset});
-		return result;
+	async function query(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

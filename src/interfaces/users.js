@@ -26,6 +26,10 @@
  *
  */
 
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
 import interfaceFactory from './interfaceModules';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
@@ -41,32 +45,60 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		const result = await userInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await userInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function read(db, id) {
+	async function read(db, id, user) {
 		const result = await userInterface.read(db, id);
-		return result;
+		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function update(db, id, doc, user) {
-		const result = await userInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await userInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function remove(db, id) {
-		const result = await userInterface.remove(db, id);
-		return result;
+	async function remove(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await userInterface.remove(db, id);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function changePwd() {
-		return null;
+	async function changePwd(user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			return null;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function query(db, {query, offset}) {
+	async function query(db, {query, offset}, user) {
 		const result = await userInterface.query(db, {query, offset});
-		return result;
+		if (hasAdminPermission(user)) {
+			return result;
+		}
+
+		if (hasPublisherAdminPermission(user)) {
+			return result.results.filter(item => item.publisher === user.id);
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }
 

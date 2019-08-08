@@ -26,7 +26,11 @@
  *
  */
 
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+
 import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasPublisherAdminPermission, hasSystemPermission} from './utils';
 
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
 
@@ -35,32 +39,53 @@ export default function () {
 		createISSN,
 		readISSN,
 		updateISSN,
-		removeISSN,
+		// RemoveISSN,
 		queryISSN
 	};
 
 	async function createISSN(db, doc, user) {
-		const result = await publicationsIssnInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			const result = await publicationsIssnInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readISSN(db, id) {
+	async function readISSN(db, id, user) {
 		const result = await publicationsIssnInterface.read(db, id);
-		return result;
+		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateISSN(db, id, doc, user) {
-		const result = await publicationsIssnInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await publicationsIssnInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function removeISSN(db, id) {
-		const result = await publicationsIssnInterface.remove(db, id);
-		return result;
-	}
+	// Async function removeISSN(db, id) {
+	// 	const result = await publicationsIssnInterface.remove(db, id);
+	// 	return result;
+	// }
 
-	async function queryISSN(db, {query, offset}) {
+	async function queryISSN(db, {query, offset}, user) {
 		const result = await publicationsIssnInterface.query(db, {query, offset});
-		return result;
+
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			return result;
+		}
+
+		if (user) {
+			return result.results.filter(item => item.publisher === user.id);
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

@@ -1,4 +1,3 @@
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -27,7 +26,11 @@
  *
  */
 
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+
 import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasPublisherAdminPermission, hasSystemPermission} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 
@@ -36,32 +39,60 @@ export default function () {
 		createIsbnIsmn,
 		readIsbnIsmn,
 		updateIsbnIsmn,
-		removeIsbnIsmn,
 		queryIsbnIsmn
 	};
 
 	async function createIsbnIsmn(db, doc, user) {
-		const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
-		return result;
+		if (hasAdminPermission(user)) {
+			doc.state = 'pending';
+			doc.publisher = user.id;
+			doc.metadataReference =	'string';
+			doc.associatedRange = 'string';
+			const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readIsbnIsmn(db, id) {
+	async function readIsbnIsmn(db, id, user) {
 		const result = await publicationsIsbnIsmnInterface.read(db, id);
-		return result;
+		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateIsbnIsmn(db, id, doc, user) {
-		const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
-		return result;
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function removeIsbnIsmn(db, id) {
-		const result = await publicationsIsbnIsmnInterface.remove(db, id);
-		return result;
-	}
+	// Async function removeIsbnIsmn(db, id) {
+	// 	if (hasAdminPermission(user) || hasSystemPermission(user)) {
+	// 		const result = await publicationsIsbnIsmnInterface.remove(db, id);
+	// 		return result;
+	// 	}
 
-	async function queryIsbnIsmn(db, {query, offset}) {
+	// 	throw new ApiError(HttpStatus.FORBIDDEN);
+	// }
+
+	async function queryIsbnIsmn(db, {query, offset}, user) {
 		const result = await publicationsIsbnIsmnInterface.query(db, {query, offset});
-		return result;
+
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			return result;
+		}
+
+		if (user) {
+			return result.results.filter(item => item.publisher === user.id);
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

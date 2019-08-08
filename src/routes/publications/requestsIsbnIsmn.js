@@ -38,7 +38,8 @@ export default function (db, passportMiddleware) {
 		.post('/', bodyParse(), createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
-		.put('/:id', bodyParse(), updateRequest);
+		.put('/:id', bodyParse(), updateRequest)
+		.post('/', bodyParse(), queryRequest);
 
 	async function createRequest(req, res, next) {
 		try {
@@ -73,6 +74,15 @@ export default function (db, passportMiddleware) {
 		const id = req.params.id;
 		try {
 			const result = await publications.updateRequestIsbnIsmn(db, id, req.body, req.user);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function queryRequest(req, res, next) {
+		try {
+			const result = await publications.queryRequestIsbnIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

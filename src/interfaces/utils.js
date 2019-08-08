@@ -67,3 +67,10 @@ export function getValidator(schemaName) {
 		})
 		.compile(obj.components.schemas[schemaName]);
 }
+
+export function filterResult(result) {
+	delete result.state;
+	delete result.publisher;
+	delete result.lastUpdated;
+	return result;
+}
