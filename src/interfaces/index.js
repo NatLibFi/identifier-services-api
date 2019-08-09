@@ -33,3 +33,6 @@ export {default as publicationsIsbnIsmnFactory} from './publicationsIsbnIsmn';
 export {default as publicationsIssnFactory} from './publicationsIssn';
 export {default as templatesFactory} from './messageTemplates';
 export {default as rangesFactory} from './ranges';
+export {default as usersRequestsFactory} from './requestsUsers';
+export {default as publicationIssnRequestsFactory} from './requestsPublicationsIssn';
+export {default as publicationIsbnIsmnRequestsFactory} from './requestsPublicationsIsbnIsmn';

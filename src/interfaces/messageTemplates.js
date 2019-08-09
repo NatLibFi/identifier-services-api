@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 
 /**
 *
@@ -27,51 +28,59 @@
 *
 */
 
-const {MongoClient, ObjectId} = require('mongodb');
-const moment = require('moment');
-const {readFileSync} = require('fs');
-const Ajv = require('ajv');
+import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
+
+import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasSystemPermission} from './utils';
+
+const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
 export default function () {
-	const QUERY_LIMIT = 5;
-	const collectionName = 'MessageTemplate';
-	const PROJECTION = {
-		_id: 0
-	};
-
-	const validate = getValidator('MessageTemplateContent');
-
-	return {create};
+	return {create, read, update, remove, query};
 
 	async function create(db, doc, user) {
-		console.log(user);
-		validateDoc(doc);
-
-		const {insertedId} = await db.collection(collectionName).insertOne({
-			...doc,
-			lastUpated: moment().format(),
-			user: user.id
-		});
-		return insertedId.toString();
-	}
-
-	function validateDoc(doc) {
-		if (!validate(doc)) {
-			throw new Error(JSON.stringify(validate.errors, undefined, 2));
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.create(db, doc, user);
+			return result;
 		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	function getValidator(schemaName) {
-		const str = readFileSync('src/api.json', 'utf8')
-			.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
+	async function read(db, id, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await templateInterface.read(db, id);
+			return result;
+		}
 
-		const obj = JSON.parse(str);
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
 
-		return new Ajv({allErrors: true})
-			.addSchema({
-				$id: 'defs',
-				definitions: obj.components.schemas
-			})
-			.compile(obj.components.schemas[schemaName]);
+	async function update(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function remove(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.remove(db, id);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function query(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

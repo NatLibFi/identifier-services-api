@@ -43,7 +43,6 @@ export default function (db, passportMiddlewares) {
 		.post('/query', bodyParse(), query);
 
 	async function create(req, res, next) {
-
 		try {
 			const result = await templates.create(db, req.body, req.user);
 			res.json(result);
@@ -64,9 +63,8 @@ export default function (db, passportMiddlewares) {
 
 	async function update(req, res, next) {
 		const id = req.params.id;
-		const values = {id: id, data: req.body, user: req.user};
 		try {
-			const result = await templates.update(db, id, values);
+			const result = await templates.update(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -76,7 +74,7 @@ export default function (db, passportMiddlewares) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.remove(db, id);
+			const result = await templates.remove(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -84,8 +82,9 @@ export default function (db, passportMiddlewares) {
 	}
 
 	async function query(req, res, next) {
+		let result;
 		try {
-			const result = await templates.query(db, req.user);
+			result = await templates.query(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

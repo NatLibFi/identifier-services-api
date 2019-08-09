@@ -26,6 +26,9 @@
  *
  */
 
+const {readFileSync} = require('fs');
+const Ajv = require('ajv');
+
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
 		return user.groups.some(
@@ -49,4 +52,25 @@ export function hasPublisherAdminPermission(user) {
 
 export function convertLanguage(language) {
 	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
+}
+
+export function getValidator(schemaName) {
+	const str = readFileSync('src/api.json', 'utf8')
+		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
+
+	const obj = JSON.parse(str);
+
+	return new Ajv({allErrors: true})
+		.addSchema({
+			$id: 'defs',
+			definitions: obj.components.schemas
+		})
+		.compile(obj.components.schemas[schemaName]);
+}
+
+export function filterResult(result) {
+	delete result.state;
+	delete result.publisher;
+	delete result.lastUpdated;
+	return result;
 }

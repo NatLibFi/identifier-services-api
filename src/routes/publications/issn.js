@@ -38,12 +38,7 @@ export default function (db, passportMiddleware) {
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
-		.delete('/:id', remove)
-		.post('/query', bodyParse(), query)
-		.post('/requests', bodyParse(), createRequest)
-		.get('/requests/:id', readRequest)
-		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', bodyParse(), updateRequest);
+		.post('/query', bodyParse(), query);
 
 	async function create(req, res, next) {
 		try {
@@ -66,68 +61,27 @@ export default function (db, passportMiddleware) {
 
 	async function update(req, res, next) {
 		const id = req.params.id;
-		const values = {data: req.body, user: req.user};
 		try {
-			const result = await publications.updateISSN(db, id, values);
+			const result = await publications.updateISSN(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function remove(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.removeISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+	// async function remove(req, res, next) {
+	// 	const id = req.params.id;
+	// 	try {
+	// 		const result = await publications.removeISSN(db, id, req.user);
+	// 		res.json(result);
+	// 	} catch (err) {
+	// 		next(err);
+	// 	}
+	// }
 
 	async function query(req, res, next) {
 		try {
-			const result = await publications.queryISSN(db, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function createRequest(req, res, next) {
-		try {
-			const result = await publications.createRequestISSN(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function readRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.readRequestISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function removeRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.removeRequestISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		const values = {data: req.body, user: req.user};
-		try {
-			const result = await publications.updateRequestISSN(db, id, values);
+			const result = await publications.queryISSN(db, req.body, req.user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);

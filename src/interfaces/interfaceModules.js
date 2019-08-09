@@ -58,7 +58,6 @@ export default function (collectionName, collectionContent) {
 				user: user.id
 			}
 		});
-
 		return insertedId.toString();
 	}
 
