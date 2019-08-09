@@ -30,7 +30,7 @@
 import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
 
-export default function () {
+export function bodyParse() {
 	validateContentType({
 		type: ['application/json']
 	});

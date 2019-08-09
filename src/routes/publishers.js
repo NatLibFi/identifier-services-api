@@ -33,14 +33,21 @@ import {API_URL} from '../config';
 export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddlewares.token)
 		.get('/:id', read)
+		.post('/query', query)
+		.use(passportMiddlewares.token)
 		.post('/', create)
-		.put('/:id', update)
-		.post('/query', query);
+		.put('/:id', update);
+
+	// function test(req, res, next) {
+	// 	if ('authorization' in req.headers) {	
+	// 		return passportMiddleware.token(req, res, next);
+	// 	}
+
+	// 	next();
+	// }
 
 	async function create(req, res, next) {
-
 		try {
 			const result = await publishers.create(db, req.body, req.user);
 			res.json(result);
@@ -50,6 +57,7 @@ export default function (db, passportMiddlewares) {
 	}
 
 	async function read(req, res, next) {
+		console.log('xxxxxxxxxx', req.user);
 		const id = req.params.id;
 		try {
 			const result = await publishers.read(db, id, req.user);

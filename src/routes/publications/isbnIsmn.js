@@ -27,7 +27,7 @@
  */
 
 import {Router} from 'express';
-import {default as bodyParse} from '../utils';
+import {bodyParse} from '../utils';
 import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 

@@ -115,6 +115,7 @@ export default function (collectionName, collectionContent) {
 		async function doQuery(query) {
 			return new Promise(async resolve => {
 				const results = [];
+				const totalDoc = await db.collection(collectionName).find(query).count();
 				const cursor = await db.collection(collectionName)
 					.find(query)
 					.limit(QUERY_LIMIT);
@@ -123,7 +124,8 @@ export default function (collectionName, collectionContent) {
 					if (results.length > 0) {
 						resolve({
 							results,
-							offset: results.slice(-1).shift().id
+							offset: results.slice(-1).shift().id,
+							totalDoc: totalDoc
 						});
 					} else {
 						resolve({results});
