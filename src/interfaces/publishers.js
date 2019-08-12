@@ -61,8 +61,8 @@ export default function () {
 		return result;
 	}
 
-	async function query(db, {query, offset}) {
-		const result = await publisherInterface.query(db, {query, offset});
+	async function query(db, {queries, offset}) {
+		const result = await publisherInterface.query(db, {queries, offset});
 		return result;
 	}
 }

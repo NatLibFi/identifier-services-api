@@ -99,17 +99,21 @@ export default function (collectionName, collectionContent) {
 		});
 	}
 
-	async function query(db, {query, offset}) {
+	async function query(db, {queries, offset}) {
 		if (offset) {
 			return doQuery({
-				...formatQuery(),
+				...formatQuery(query),
 				$and: [{
 					_id: {$gt: new ObjectId(offset)}
 				}]
-			});                        
+			});
 		}
 
-		return doQuery(formatQuery());
+		const result = queries.reduce((acc, {name, query}) => {
+			return doQuery(formatQuery(query));
+		}, []);
+
+		return result;
 
 		async function doQuery(query) {
 			return new Promise(async resolve => {
@@ -139,20 +143,46 @@ export default function (collectionName, collectionContent) {
 			});
 		}
 
-		function formatQuery() {
+		function formatQuery(query) {
 			return Object.keys(query).reduce((acc, key) => {
-				switch (typeof query[key]) {
-					case 'string':
-						return {...acc, [key]: {
-							$regex: query[key],
-							$options: 'i'
-						}};
-					case 'number':
-						return {...acc, [key]: query[key]};
-					default:
-						throw new Error('Invalid query');
+				if (key === '$or') {
+					const propertyQueries = query[key].map(o => {
+						const [key, value] = Object.entries(o).shift();
+						return convert(key, value);
+					});
+					
+					return {
+						$or: propertyQueries
+					};
 				}
-			}, {});
+
+				const propertyQuery = convert(key, query[key]);
+
+				return {
+					...acc,
+					$and: acc.$and.concat(propertyQuery)
+				};
+
+				function convert(key, value) {
+					switch (typeof value) {
+						case 'string':
+							return {[key]: {
+								$regex: value,
+								$options: 'i'
+							}};
+						case 'number':
+							return {[key]: value};
+						case 'object':
+							if (Array.isArray(value)) {
+								return {[key]: {$in: value}};
+							}
+
+							throw new Error('Invalid query');
+						default:
+							throw new Error('Invalid query');
+					}
+				}
+			}, {$and: []});
 		}
 	}
 
