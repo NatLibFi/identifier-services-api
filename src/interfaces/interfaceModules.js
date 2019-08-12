@@ -43,8 +43,8 @@ export default function (collectionName, collectionContent) {
 	return {
 		create,
 		read,
-        update,
-        remove,
+		update,
+		remove,
 		query
 	};
 
@@ -144,23 +144,27 @@ export default function (collectionName, collectionContent) {
 		}
 
 		function formatQuery(query) {
+			if (Object.keys(query).length === 0) {
+				return query;
+			}
+
 			return Object.keys(query).reduce((acc, key) => {
 				if (key === '$or') {
 					const propertyQueries = query[key].map(o => {
 						const [key, value] = Object.entries(o).shift();
 						return convert(key, value);
 					});
-					
+
 					return {
+						...acc,
 						$or: propertyQueries
 					};
 				}
 
 				const propertyQuery = convert(key, query[key]);
-
 				return {
 					...acc,
-					$and: acc.$and.concat(propertyQuery)
+					$and: '$acc' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
 				};
 
 				function convert(key, value) {
@@ -182,7 +186,7 @@ export default function (collectionName, collectionContent) {
 							throw new Error('Invalid query');
 					}
 				}
-			}, {$and: []});
+			}, {});
 		}
 	}
 
