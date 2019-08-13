@@ -34,17 +34,14 @@ const {readFileSync} = require('fs');
 
 export default function (collectionName, collectionContent) {
 	const QUERY_LIMIT = 5;
-	const PROJECTION = {
-		_id: 0
-	};
 
 	const validate = getValidator(collectionContent);
 
 	return {
 		create,
 		read,
-        update,
-        remove,
+		update,
+		remove,
 		query
 	};
 
@@ -61,11 +58,11 @@ export default function (collectionName, collectionContent) {
 		return insertedId.toString();
 	}
 
-	async function read(db, id) {
+	async function read(db, id, protectedProperties) {
 		const doc = await db.collection(collectionName).findOne({
 			_id: new ObjectId(id)
 		}, {
-			projection: PROJECTION
+			projection: protectedProperties
 		});
 
 		return doc;
@@ -112,29 +109,28 @@ export default function (collectionName, collectionContent) {
 		const result = queries.reduce((acc, {name, query}) => {
 			return doQuery(formatQuery(query));
 		}, []);
-
 		return result;
-
 		async function doQuery(query) {
 			return new Promise(async resolve => {
 				const results = [];
-				const totalDoc = await db.collection(collectionName).find(query).count();
+				const totalDoc = await db.collection(collectionName).find({}).count();
 				const cursor = await db.collection(collectionName)
 					.find(query)
 					.limit(QUERY_LIMIT);
+				const queryDocCount = await cursor.count();
 				cursor.on('data', processData);
 				cursor.on('end', () => {
 					if (results.length > 0) {
 						resolve({
 							results,
 							offset: results.slice(-1).shift().id,
-							totalDoc: totalDoc
+							totalDoc: totalDoc,
+							queryDocCount: queryDocCount
 						});
 					} else {
 						resolve({results});
 					}
 				});
-
 				function processData(doc) {
 					doc.id = doc._id.toString();
 					delete doc._id;
@@ -144,45 +140,69 @@ export default function (collectionName, collectionContent) {
 		}
 
 		function formatQuery(query) {
+			if (Object.keys(query).length === 0) {
+				return query;
+			}
+
 			return Object.keys(query).reduce((acc, key) => {
 				if (key === '$or') {
 					const propertyQueries = query[key].map(o => {
 						const [key, value] = Object.entries(o).shift();
 						return convert(key, value);
 					});
-					
 					return {
+						...acc,
 						$or: propertyQueries
 					};
 				}
 
 				const propertyQuery = convert(key, query[key]);
-
 				return {
 					...acc,
-					$and: acc.$and.concat(propertyQuery)
+					$and: '$acc' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
 				};
-
 				function convert(key, value) {
-					switch (typeof value) {
-						case 'string':
-							return {[key]: {
-								$regex: value,
-								$options: 'i'
-							}};
-						case 'number':
-							return {[key]: value};
-						case 'object':
-							if (Array.isArray(value)) {
-								return {[key]: {$in: value}};
-							}
+					if (typeof value === 'object') {
+						if (Array.isArray(value)) {
+							return {
+								[key]: {
+									$in: value.map(getComparisonOperator)
+								}
+							};
+						}
 
-							throw new Error('Invalid query');
-						default:
-							throw new Error('Invalid query');
+						const [key1, value1] = Object.entries(value).shift();
+						return {[`${key}.${key1}`]: value1};
+						// Doesnot support at this moment
+						// return {
+						// 	[key]: Object.entries(value).reduce((acc, [subKey, subValue]) => {
+						// 		return {
+						// 			...acc,
+						// 			[subKey]: getComparisonOperator(subValue)
+						// 		}
+						// 	}, {})
+						// };
+					}
+
+					return {
+						[key]: getComparisonOperator(value)
+					};
+
+					new Error('Invalid query');
+
+					function getComparisonOperator(value) {
+						switch (typeof value) {
+							case 'string':
+								return { $regex: value, $options: 'i'};
+							case 'boolean':
+							case 'number':
+								return value;
+							default:
+								throw new Array('Invalid query');
+						}
 					}
 				}
-			}, {$and: []});
+			}, {});
 		}
 	}
 

@@ -79,9 +79,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequests(db, {query, offset}, user) {
+	async function queryRequests(db, {queries, offset}, user) {
 		if (hasSystemPermission(user) || hasAdminPermission(user)) {
-			const result = await publisherRequestsInterface.query(db, {query, offset});
+			const result = await publisherRequestsInterface.query(db, {queries, offset});
 			return result;
 		}
 

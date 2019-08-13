@@ -87,8 +87,8 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequest(db, {query, offset}, user) {
-		const result = await userInterface.query(db, {query, offset});
+	async function queryRequest(db, {queries, offset}, user) {
+		const result = await userInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}

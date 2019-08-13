@@ -28,7 +28,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasSystemPermission} from './utils';
+import {hasSystemPermission, hasPublisherAdminPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
@@ -52,7 +52,36 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
-		const result = await publisherInterface.read(db, id);
+		let protectedProperties;
+		if (user === undefined) {
+			protectedProperties = {
+				publicationDetails: 0,
+				language: 0,
+				metadataDelivery: 0,
+				primaryContact: 0,
+				activity: 0
+			};
+		}
+
+		if (hasPublisherAdminPermission(user)) {
+			protectedProperties = {
+				publicationDetails: 0,
+				metadataDelivery: 0,
+				activity: 0
+			};
+		}
+
+		const result = await publisherInterface.read(db, id, protectedProperties);
+		if (user === undefined && result.postalAddress.public === true) {
+			return result;
+		}
+
+		if (user === undefined && result.postalAddress.public === false) {
+			const {postalAddress, ...rest} = result;
+
+			return rest;
+		}
+
 		return result;
 	}
 
