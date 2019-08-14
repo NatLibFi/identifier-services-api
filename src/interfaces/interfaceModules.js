@@ -131,13 +131,14 @@ export default function (collectionName, collectionContent) {
 			// 			resolve({results});
 			// 		}
 			// 	});
+
+			// });
 			function processData(doc) {
 				doc.id = doc._id.toString();
 				delete doc._id;
 				results.push(doc);
 			}
 
-			// });
 			const results = [];
 			const totalDoc = await db.collection(collectionName).find({}).count();
 			const cursor = await db.collection(collectionName)
@@ -147,7 +148,11 @@ export default function (collectionName, collectionContent) {
 			const queryDocCount = await db.collection(collectionName)
 				.find(query)
 				.limit(QUERY_LIMIT).count();
-			return {results, offset: results.slice(-1).shift().id, totalDoc: totalDoc, queryDocCount: queryDocCount};
+			if (results.length > 0) {
+				return {results, offset: results.slice(-1).shift().id, totalDoc: totalDoc, queryDocCount: queryDocCount};
+			}
+
+			return {results};
 		}
 
 		function formatQuery(query) {
@@ -170,7 +175,7 @@ export default function (collectionName, collectionContent) {
 				const propertyQuery = convert(key, query[key]);
 				return {
 					...acc,
-					$and: '$acc' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
+					$and: '$and' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
 				};
 				function convert(key, value) {
 					if (typeof value === 'object') {
