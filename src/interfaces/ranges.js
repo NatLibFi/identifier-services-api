@@ -68,7 +68,6 @@ export default function () {
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
-
 	}
 
 	async function updateIsbn(db, id, doc, user) {

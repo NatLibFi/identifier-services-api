@@ -59,7 +59,7 @@ export default function () {
 			return result;
 		}
 
-		if (user && result.publisher === user.id) {		
+		if (user && result.publisher === user.id) {
 			return filterResult(result);
 		}
 

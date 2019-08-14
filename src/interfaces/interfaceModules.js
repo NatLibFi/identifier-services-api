@@ -193,7 +193,7 @@ export default function (collectionName, collectionContent) {
 					function getComparisonOperator(value) {
 						switch (typeof value) {
 							case 'string':
-								return { $regex: value, $options: 'i'};
+								return {$regex: value, $options: 'i'};
 							case 'boolean':
 							case 'number':
 								return value;

@@ -41,7 +41,7 @@ export default function (db, passportMiddlewares) {
 
 	function authenticated(req, res, next) {
 		console.log(req.headers);
-		if ('authorization' in req.headers) {	
+		if ('authorization' in req.headers) {
 			return passportMiddlewares.token(req, res, next);
 		}
 

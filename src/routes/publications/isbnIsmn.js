@@ -69,7 +69,7 @@ export default function (db, passportMiddleware) {
 		}
 	}
 
-	// async function remove(req, res, next) {
+	// Async function remove(req, res, next) {
 	// 	const id = req.params.id;
 	// 	try {
 	// 		const result = await publications.removeIsbnIsmn(db, id, req.user);

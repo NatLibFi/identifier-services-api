@@ -92,6 +92,7 @@ export default function () {
 
 	async function query(db, {queries, offset}) {
 		const result = await publisherInterface.query(db, {queries, offset});
+		console.log(result)
 		return result;
 	}
 }
