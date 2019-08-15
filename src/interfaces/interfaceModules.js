@@ -106,11 +106,12 @@ export default function (collectionName, collectionContent) {
 			});
 		}
 
-		const result = queries.reduce((acc, {name, query}) => {
+		const result = queries.reduce((acc, {query}) => {
 			return doQuery(formatQuery(query));
 		}, []);
 		return result;
 		async function doQuery(query) {
+			console.log(JSON.stringify(query, undefined, 2));
 			return new Promise(async resolve => {
 				const results = [];
 				const totalDoc = await db.collection(collectionName).find({}).count();
@@ -159,7 +160,7 @@ export default function (collectionName, collectionContent) {
 				const propertyQuery = convert(key, query[key]);
 				return {
 					...acc,
-					$and: '$acc' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
+					$and: '$and' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
 				};
 				function convert(key, value) {
 					if (typeof value === 'object') {
@@ -187,8 +188,6 @@ export default function (collectionName, collectionContent) {
 					return {
 						[key]: getComparisonOperator(value)
 					};
-
-					new Error('Invalid query');
 
 					function getComparisonOperator(value) {
 						switch (typeof value) {
