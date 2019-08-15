@@ -63,14 +63,6 @@ export default function () {
 			};
 		}
 
-		if (hasPublisherAdminPermission(user)) {
-			protectedProperties = {
-				publicationDetails: 0,
-				metadataDelivery: 0,
-				activity: 0
-			};
-		}
-
 		const result = await publisherInterface.read(db, id, protectedProperties);
 		if (user === undefined && result.postalAddress.public === true) {
 			return result;
@@ -78,8 +70,15 @@ export default function () {
 
 		if (user === undefined && result.postalAddress.public === false) {
 			const {postalAddress, ...rest} = result;
-
 			return rest;
+		}
+
+		if (hasPublisherAdminPermission(user)) {
+			protectedProperties = {
+				publicationDetails: 0,
+				metadataDelivery: 0,
+				activity: 0
+			};
 		}
 
 		return result;

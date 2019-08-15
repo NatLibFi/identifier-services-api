@@ -106,53 +106,37 @@ export default function (collectionName, collectionContent) {
 			});
 		}
 
-		const result = await queries.reduce((acc, {query}) => {
+		const result = queries.reduce((acc, {query}) => {
 			return doQuery(formatQuery(query));
 		}, []);
 		return result;
 		async function doQuery(query) {
-			// Return new Promise(async resolve => {
-			// 	const results = [];
-			// 	const totalDoc = await db.collection(collectionName).find({}).count();
-			// 	const cursor = await db.collection(collectionName)
-			// 		.find(query)
-			// 		.limit(QUERY_LIMIT);
-			// 	const queryDocCount = await cursor.count();
-			// 	cursor.on('data', processData);
-			// 	cursor.on('end', () => {
-			// 		if (results.length > 0) {
-			// 			resolve({
-			// 				results,
-			// 				offset: results.slice(-1).shift().id,
-			// 				totalDoc: totalDoc,
-			// 				queryDocCount: queryDocCount
-			// 			});
-			// 		} else {
-			// 			resolve({results});
-			// 		}
-			// 	});
-
-			// });
-			function processData(doc) {
-				doc.id = doc._id.toString();
-				delete doc._id;
-				results.push(doc);
-			}
-
 			const results = [];
 			const totalDoc = await db.collection(collectionName).find({}).count();
 			const cursor = await db.collection(collectionName)
 				.find(query)
-				.limit(QUERY_LIMIT).toArray();
-			cursor.map(item => processData(item));
-			const queryDocCount = await db.collection(collectionName)
-				.find(query)
-				.limit(QUERY_LIMIT).count();
-			if (results.length > 0) {
-				return {results, offset: results.slice(-1).shift().id, totalDoc: totalDoc, queryDocCount: queryDocCount};
-			}
-
-			return {results};
+				.limit(QUERY_LIMIT);
+			const queryDocCount = await cursor.count();
+			return new Promise(resolve => {
+				cursor.on('data', processData);
+				cursor.on('end', () => {
+					if (results.length > 0) {
+						resolve({
+							results,
+							offset: results.slice(-1).shift().id,
+							totalDoc: totalDoc,
+							queryDocCount: queryDocCount
+						});
+					} else {
+						resolve({results});
+					}
+				});
+				function processData(doc) {
+					doc.id = doc._id.toString();
+					delete doc._id;
+					results.push(doc);
+				}
+			});
 		}
 
 		function formatQuery(query) {
