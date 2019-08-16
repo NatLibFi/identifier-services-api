@@ -84,7 +84,7 @@ export default function (db, passportMiddlewares) {
 	async function query(req, res, next) {
 		let result;
 		try {
-			result = await templates.query(db, req.body, req.user);
+			result = await templates.query(db, req.body, req.user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);
