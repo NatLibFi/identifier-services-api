@@ -36,13 +36,13 @@ import chaiHttp from 'chai-http';
 
 chai.use(chaiHttp);
 
-describe('routes/users', () => {
+describe('routes/requests/users', () => {
 	let requester;
 	let mongoFixtures;
 
 	const API_URL = `http://localhost:${HTTP_PORT}`;
 	const fixturesPath = [__dirname, '..', '..', 'test-fixtures', 'users'];
-	const requestPath = '/users';
+	const requestPath = '/users/requests';
 	const {getFixture} = fixtureFactory({root: fixturesPath});
 
 	beforeEach(async () => {
@@ -62,32 +62,32 @@ describe('routes/users', () => {
 		RewireAPI.__ResetDependency__('API_URL');
 	});
 
-	describe('#read', () => {
+	describe('#readRequest', () => {
 		it('Should succeed', async (index = '0') => {
 			const {expectedPayload} = await init(index, true);
-			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
+			const response = await requester.get(`${requestPath}/5cd3e9e5f2376736726e4c19`);
 			expect(response).to.have.status(HttpStatus.OK);
-			expect(response.body).to.eql(expectedPayload); // Time-stamp will never match
+			expect(response.body).to.eql(expectedPayload);
 		});
 
 		it('Should fail because the resource does not exist', async () => {
-			const response = await requester.get(`${requestPath}/5cd90e696a1e930789dfaa48`);
+			const response = await requester.get(`${requestPath}/5cd3e9e5f2376736726e4c19`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
 		async function init(index, getFixtures = false) {
-			await mongoFixtures.populate(['read', index, 'dbContents.json']);
+			await mongoFixtures.populate(['readRequest', index, 'dbContents.json']);
 			if (getFixtures) {
 				return {
-					expectedPayload: getFixture({components: ['read', index, 'expectedPayload.json'], reader: READERS.JSON})
+					expectedPayload: getFixture({components: ['readRequest', index, 'expectedPayload.json'], reader: READERS.JSON})
 				};
 			}
 		}
 	});
 
-	describe('#create', () => {
+	describe('#createRequest', () => {
 		it('Should succeed', async (index = '0') => {
-			await mongoFixtures.populate(['create', index, 'dbContents.json']);
+			await mongoFixtures.populate(['createRequest', index, 'dbContents.json']);
 
 			const {payload} = await init(index, true);
 			const response = await requester.post(`${requestPath}`).set('content-type', 'application/json').send(payload);
@@ -95,7 +95,7 @@ describe('routes/users', () => {
 
 			const db = await mongoFixtures.dump();
 			const {expectedDb} = await init(index, false);
-			expect(formatDump(db)).to.eql(expectedDb);
+			expect(formatDump(db)).to.eql(formatDump(expectedDb));
 		});
 
 		it('Should not succeed because content is not provided', async () => {
@@ -112,20 +112,20 @@ describe('routes/users', () => {
 		async function init(index, getFixtures = false) {
 			if (getFixtures) {
 				return {
-					payload: getFixture({components: ['create', index, 'payload.json'], reader: READERS.JSON})
+					payload: getFixture({components: ['createRequest', index, 'payload.json'], reader: READERS.JSON})
 				};
 			}
 
 			return {
-				expectedDb: getFixture({components: ['create', index, 'dbExpected.json'], reader: READERS.JSON})
+				expectedDb: getFixture({components: ['createRequest', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 	});
 
-	describe('#delete', () => {
+	describe('#deleteRequest', () => {
 		it('Should succeed', async (index = '0') => {
-			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
-			const response = await requester.delete(`${requestPath}/5cd90e696a1e930789dfaa48`);
+			await mongoFixtures.populate(['deleteRequest', index, 'dbContents.json']);
+			const response = await requester.delete(`${requestPath}/5cdc1706d435475787f4751d`);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -135,23 +135,23 @@ describe('routes/users', () => {
 		});
 
 		it('Should not succeed because of wrong parameters', async (index = '1') => {
-			await mongoFixtures.populate(['delete', index, 'dbContents.json']);
+			await mongoFixtures.populate(['deleteRequest', index, 'dbContents.json']);
 			const response = await requester.delete(`${requestPath}/`);
 			expect(response).to.have.status(HttpStatus.NOT_FOUND);
 		});
 
 		async function init(index) {
 			return {
-				expectedDb: getFixture({components: ['delete', index, 'dbExpected.json'], reader: READERS.JSON})
+				expectedDb: getFixture({components: ['deleteRequest', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 	});
 
-	describe('#update', () => {
+	describe('#updateRequest', () => {
 		it('Should succeed', async (index = '0') => {
-			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			await mongoFixtures.populate(['updateRequest', index, 'dbContents.json']);
 			const {payload} = await init(index, true);
-			const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send(payload);
+			const response = await requester.put(`${requestPath}/5cdc1706d435475787f4751d`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.OK);
 
 			const db = await mongoFixtures.dump();
@@ -160,33 +160,33 @@ describe('routes/users', () => {
 		});
 
 		it('Should not succeed because of worng parameter', async (index = '1') => {
-			await mongoFixtures.populate(['update', index, 'dbContents.json']);
+			await mongoFixtures.populate(['updateRequest', index, 'dbContents.json']);
 			const {payload} = await init(index, true);
 			const response = await requester.put(`${requestPath}/fooo`).set('content-type', 'application/json').send(payload);
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
 		it('Should not succeed because input was not provided', async (index = '1') => {
-			await mongoFixtures.populate(['update', index, 'dbContents.json']);
-			const response = await requester.put(`${requestPath}/5cd90e696a1e930789dfaa48`).set('content-type', 'application/json').send();
+			await mongoFixtures.populate(['updateRequest', index, 'dbContents.json']);
+			const response = await requester.put(`${requestPath}/5cdc1706d435475787f4751d`).set('content-type', 'application/json').send();
 			expect(response).to.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
 		});
 
 		async function init(index, getFixtures = false) {
 			if (getFixtures) {
 				return {
-					payload: getFixture({components: ['update', index, 'payload.json'], reader: READERS.JSON})
+					payload: getFixture({components: ['updateRequest', index, 'payload.json'], reader: READERS.JSON})
 				};
 			}
 
 			return {
-				expectedDb: getFixture({components: ['update', index, 'dbExpected.json'], reader: READERS.JSON})
+				expectedDb: getFixture({components: ['updateRequest', index, 'dbExpected.json'], reader: READERS.JSON})
 			};
 		}
 	});
 
 	function formatDump(dump) {
-		dump.userMetadata.forEach(doc =>
+		dump.usersRequest.forEach(doc =>
 			Object.values(doc).forEach(field => Object.keys(field).filter(item =>
 				item === 'timestamp' || item === 'user'
 			).forEach(i => delete doc.lastUpdated[i]))

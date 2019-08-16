@@ -1,3 +1,5 @@
+/* eslint-disable new-cap */
+
 /**
 *
 * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -26,172 +28,59 @@
 *
 */
 
-import {graphql} from 'graphql';
-import schema from '../graphql';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-const objectId = require('mongodb').ObjectId;
-const date = new Date();
+import interfaceFactory from './interfaceModules';
+import {hasAdminPermission, hasSystemPermission} from './utils';
+
+const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
 export default function () {
-	const queryReturn = `
-	_id
-	name
-	language
-	subject
-	body
-	lastUpdated{
-		timestamp
-		user
-	}
-	`;
+	return {create, read, update, remove, query};
 
-	return {
-		create,
-		read,
-		remove,
-		update,
-		query
-	};
-
-	async function create(db, data) {
-		const query = `
-		mutation($inputTemplate: InputTemplate ){
-			createTemplate(inputTemplate: $inputTemplate){
-				${queryReturn}
-			}
-		}
-		`;
-
-		const args = {inputTemplate: data};
-		const result = await graphql(schema, query, {createTemplate}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-
-		return result;
-
-		async function createTemplate({inputTemplate}, db) {
-			const newTemplate = {
-				...inputTemplate,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: 'user'
-				}
-			};
-			const result = await db
-				.collection('MessageTemplate')
-				.insertOne(newTemplate);
-			return result.ops[0];
-		}
-	}
-
-	async function read(db, id) {
-		const query = `
-				{
-					template(id:${JSON.stringify(id)}){
-						${queryReturn}
-					}
-				}
-				`;
-		const result = await graphql(schema, query, {template}, db, {id: id});
-		if (result.data.template === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
-		return result;
-
-		async function template({id}, db) {
-			const result = await db
-				.collection('MessageTemplate')
-				.findOne(objectId(id));
+	async function create(db, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.create(db, doc, user);
 			return result;
 		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function remove(db, id) {
-		const query = `
-				mutation{
-					deleteTemplate(id: ${JSON.stringify(id)}) {
-						_id
-					}
-				}
-				`;
-		const result = await graphql(schema, query, {deleteTemplate}, db);
-		if (result.err) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+	async function read(db, id, user) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await templateInterface.read(db, id);
+			return result;
 		}
 
-		return result;
-
-		async function deleteTemplate({id}, db) {
-			const deletedUser = await db
-				.collection('MessageTemplate')
-				.findOneAndDelete({_id: objectId(id)});
-			return deletedUser.value;
-		}
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function update(db, id, data) {
-		const query = `
-				mutation($id:ID, $inputTemplate:InputTemplate){
-					updateTemplate(id:$id, inputTemplate: $inputTemplate){
-						${queryReturn}
-					}
-				}
-				`;
-		const args = {id: id, inputTemplate: data};
-		const result = await graphql(schema, query, {updateTemplate}, db, args);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
+	async function update(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.update(db, id, doc, user);
+			return result;
 		}
 
-		return result;
-
-		async function updateTemplate({inputTemplate, id}, db) {
-			const updateTemplate = {
-				...inputTemplate,
-				lastUpdated: {
-					timestamp: `${date.toISOString()}`,
-					user: 'user'
-				}
-			};
-			await db
-				.collection('MessageTemplate')
-				.findOneAndUpdate(
-					{_id: objectId(id)},
-					{$set: updateTemplate},
-					{upsert: true}
-				);
-			return db
-				.collection('MessageTemplate')
-				.findOne(objectId(id));
-		}
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function query(db) {
-		const query = `
-			{
-				Templates{
-					${queryReturn}
-				}
-			}
-			`;
-
-		const result = await graphql(schema, query, {Templates}, db);
-		if (result.errors) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
+	async function remove(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.remove(db, id);
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function Templates(root, db) {
-		const result = await db
-			.collection('MessageTemplate')
-			.find()
-			.toArray();
-		return result;
+	async function query(db, {queries, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await templateInterface.query(db, {queries, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

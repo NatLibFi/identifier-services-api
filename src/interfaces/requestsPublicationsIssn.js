@@ -29,61 +29,74 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
+import {hasAdminPermission, hasSystemPermission, filterResult} from './utils';
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasPublisherAdminPermission, hasSystemPermission} from './utils';
 
-const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
+const publicationsRequestsIssnInterface = interfaceFactory('PublicationRequest_ISSN', 'PublicationIssnRequestContent');
 
 export default function () {
 	return {
-		createISSN,
-		readISSN,
-		updateISSN,
-		// RemoveISSN,
-		queryISSN
+		createRequestISSN,
+		readRequestISSN,
+		updateRequestISSN,
+		removeRequestISSN,
+		queryRequestISSN
 	};
 
-	async function createISSN(db, doc, user) {
-		if (hasAdminPermission(user)) {
-			const result = await publicationsIssnInterface.create(db, doc, user);
+	async function createRequestISSN(db, doc, user) {
+		if (hasSystemPermission(user)) {
+			const result = await publicationsRequestsIssnInterface.create(db, doc, user);
 			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readISSN(db, id, user) {
-		const result = await publicationsIssnInterface.read(db, id);
-		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-	}
-
-	async function updateISSN(db, id, doc, user) {
+	async function readRequestISSN(db, id, user) {
+		const result = await publicationsRequestsIssnInterface.read(db, id);
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await publicationsIssnInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		if (user && result.publisher === user.id) {
+			return filterResult(result);
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function updateRequestISSN(db, id, doc, user) {
+		const readResult = await readRequestISSN(db, id, user);
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		if (user && readResult.publisher === user.id) {
+			const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
+			return filterResult(result);
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function removeRequestISSN(db, id, user) {
+		if (hasSystemPermission(user)) {
+			const result = await publicationsRequestsIssnInterface.remove(db, id);
 			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	// Async function removeISSN(db, id) {
-	// 	const result = await publicationsIssnInterface.remove(db, id);
-	// 	return result;
-	// }
-
-	async function queryISSN(db, {query, offset}, user) {
-		const result = await publicationsIssnInterface.query(db, {query, offset});
-
+	async function queryRequestISSN(db, {query, offset}, user) {
+		const result = await publicationsRequestsIssnInterface.query(db, {query, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}
 
 		if (user) {
-			return result.results.filter(item => item.publisher === user.id);
+			return result.results.filter(item => item.publisher === user.id && filterResult(item));
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

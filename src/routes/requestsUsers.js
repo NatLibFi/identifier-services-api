@@ -27,61 +27,63 @@
  */
 
 import {Router} from 'express';
-import {bodyParse} from '../../utils';
-import {publicationsIssnFactory} from '../../interfaces';
-import {API_URL} from '../../config';
 
-export default function (db, passportMiddleware) {
-	const publications = publicationsIssnFactory({url: API_URL});
+import {usersRequestsFactory} from '../interfaces';
+import {API_URL} from '../config';
+
+export default function (db, passportMiddlewares) {
+	const usersRequests = usersRequestsFactory({url: API_URL});
+
 	return new Router()
-		.use(passportMiddleware)
-		.post('/', bodyParse(), create)
-		.get('/:id', read)
-		.put('/:id', bodyParse(), update)
-		.post('/query', bodyParse(), query);
+		.use(passportMiddlewares)
+		.post('/', createRequest)
+		.get('/:id', readRequest)
+		.delete('/:id', removeRequest)
+		.put('/:id', updateRequest)
+		.post('/query', queryRequest);
 
-	async function create(req, res, next) {
+	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createISSN(db, req.body, req.user);
+			const result = await usersRequests.createRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function read(req, res, next) {
+	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readISSN(db, id, req.user);
+			const result = await usersRequests.readRequest(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	async function update(req, res, next) {
+	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.updateISSN(db, id, req.body, req.user);
+			const result = await usersRequests.updateRequest(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	// Async function remove(req, res, next) {
-	// 	const id = req.params.id;
-	// 	try {
-	// 		const result = await publications.removeISSN(db, id, req.user);
-	// 		res.json(result);
-	// 	} catch (err) {
-	// 		next(err);
-	// 	}
-	// }
-
-	async function query(req, res, next) {
+	async function removeRequest(req, res, next) {
+		const id = req.params.id;
 		try {
-			const result = await publications.queryISSN(db, req.body, req.user, req.query);
+			const result = await usersRequests.removeRequest(db, id);
+			res.json(result);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async function queryRequest(req, res, next) {
+		try {
+			const result = await usersRequests.queryRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

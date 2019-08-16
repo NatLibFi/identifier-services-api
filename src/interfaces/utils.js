@@ -26,28 +26,51 @@
  *
  */
 
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.groups.some(profileGroup => {
-		return user.groups.some(
-			userGroup => userGroup === profileGroup || userGroup === 'admin'
-		);
-	});
-	return permitted;
-}
+const {readFileSync} = require('fs');
+const Ajv = require('ajv');
 
-export function hasPublisherPermission(profile, user) {
-	const permitted = profile.aut.groups.some(profileGroup => {
-		return user.group.some(
-			userGroup => userGroup === profileGroup || userGroup === 'publisher-admin'
+export function hasPermission(profile, user) {
+	const permitted = profile.auth.role.some(profileRole => {
+		return user.groups.some(
+			userRole => userRole === profileRole
 		);
 	});
 	return permitted;
 }
 
 export function hasAdminPermission(user) {
-	return hasPermission({auth: {groups: ['admin']}}, user);
+	return hasPermission({auth: {role: ['admin']}}, user);
+}
+
+export function hasSystemPermission(user) {
+	return hasPermission({auth: {role: ['system']}}, user);
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {groups: ['publisher-admin']}}, user);
+	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
+}
+
+export function convertLanguage(language) {
+	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
+}
+
+export function getValidator(schemaName) {
+	const str = readFileSync('src/api.json', 'utf8')
+		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
+
+	const obj = JSON.parse(str);
+
+	return new Ajv({allErrors: true})
+		.addSchema({
+			$id: 'defs',
+			definitions: obj.components.schemas
+		})
+		.compile(obj.components.schemas[schemaName]);
+}
+
+export function filterResult(result) {
+	delete result.state;
+	delete result.publisher;
+	delete result.lastUpdated;
+	return result;
 }

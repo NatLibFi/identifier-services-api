@@ -3032,7 +3032,6 @@
         },
         "required": [
           "name",
-          "activity",
           "postalAddress",
           "classification"
         ]
@@ -3434,7 +3433,8 @@
               "frequency": {
                 "oneOf": [
                   {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^other_\\w+"
                   },
                   {
                     "type": "string",
@@ -3549,7 +3549,7 @@
               "firstNumber",
               "frequency",
               "type",
-              "format"
+              "formatDetails"
             ]
           }
         ]
@@ -3711,6 +3711,7 @@
             "oneOf": [
               {
                 "type": "string",
+                "pattern": "^other_\\w+",
                 "enum": [
                   "pdf",
                   "epub",

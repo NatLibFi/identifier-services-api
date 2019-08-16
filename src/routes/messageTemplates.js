@@ -27,22 +27,23 @@
  */
 
 import {Router} from 'express';
-import {default as bodyParse} from './utils';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db) {
+export default function (db, passportMiddlewares) {
 	const templates = templatesFactory({url: API_URL});
+
 	return new Router()
-		.post('/', bodyParse(), create)
+		.use(passportMiddlewares)
+		.post('/', create)
 		.get('/:id', read)
-		.put('/:id', bodyParse(), update)
+		.put('/:id', update)
 		.delete('/:id', remove)
-		.post('/query', bodyParse(), query);
+		.post('/query', query);
 
 	async function create(req, res, next) {
 		try {
-			const result = await templates.create(db, req.body);
+			const result = await templates.create(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -52,7 +53,7 @@ export default function (db) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.read(db, id);
+			const result = await templates.read(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -62,7 +63,7 @@ export default function (db) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.update(db, id, req.body);
+			const result = await templates.update(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -72,7 +73,7 @@ export default function (db) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.remove(db, id);
+			const result = await templates.remove(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -80,8 +81,9 @@ export default function (db) {
 	}
 
 	async function query(req, res, next) {
+		let result;
 		try {
-			const result = await templates.query(db, req.body);
+			result = await templates.query(db, req.body, req.user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);

@@ -1,5 +1,4 @@
 
-/* eslint-disable no-console */
 /**
 *
 * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -31,7 +30,7 @@
 import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
 
-export default function () {
+export function bodyParse() {
 	validateContentType({
 		type: ['application/json']
 	});
@@ -39,3 +38,4 @@ export default function () {
 		type: ['application/json']
 	});
 }
+

@@ -25,14 +25,21 @@
  * for the JavaScript code in this file.
  *
  */
+import {Router} from 'express';
+import HttpStatus from 'http-status';
 
-import {mergeTypes} from 'merge-graphql-schemas';
+export default function (passportMiddlewares) {
+	return new Router()
+		.post('/', passportMiddlewares.credentials, authenticate)
+		.get('/', passportMiddlewares.token, read);
 
-import User from './users';
-import Publisher from './publishers';
-import Publication from './publications';
-import IdentifierRanges from './identifier-ranges';
-import MessageTemplates from './message-templates';
+	function authenticate(req, res) {
+		res.set('Token', req.user);
+		res.sendStatus(HttpStatus.NO_CONTENT);
+	}
 
-const typeDefs = [User, Publisher, Publication, IdentifierRanges, MessageTemplates];
-export default mergeTypes(typeDefs, {all: true});
+	function read(req, res) {
+		res.json(req.user);
+		res.sendStatus(HttpStatus.OK);
+	}
+}

@@ -28,69 +28,63 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasSystemPermission, hasPublisherAdminPermission} from './utils';
+import {hasAdminPermission, hasSystemPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
-const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
+const publisherRequestsInterface = interfaceFactory('PublisherRequest', 'PublisherRequestContent');
 
 export default function () {
 	return {
-		create,
-		read,
-		update,
-		query
+		createRequest,
+		readRequest,
+		updateRequest,
+		removeRequest,
+		queryRequests
 	};
 
-	async function create(db, doc, user) {
+	async function createRequest(db, doc, user) {
 		if (hasSystemPermission(user)) {
-			const result = await publisherInterface.create(db, doc, user);
+			const result = await publisherRequestsInterface.create(db, doc, user);
 			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function read(db, id, user) {
-		let protectedProperties;
-		if (user === undefined) {
-			protectedProperties = {
-				publicationDetails: 0,
-				language: 0,
-				metadataDelivery: 0,
-				primaryContact: 0,
-				activity: 0
-			};
-		}
-
-		const result = await publisherInterface.read(db, id, protectedProperties);
-		if (user === undefined && result.postalAddress.public === true) {
+	async function readRequest(db, id, user) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.read(db, id);
 			return result;
 		}
 
-		if (user === undefined && result.postalAddress.public === false) {
-			const {postalAddress, ...rest} = result;
-			return rest;
-		}
-
-		if (hasPublisherAdminPermission(user)) {
-			protectedProperties = {
-				publicationDetails: 0,
-				metadataDelivery: 0,
-				activity: 0
-			};
-		}
-
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function update(db, id, doc, user) {
-		const result = await publisherInterface.update(db, id, doc, user);
-		return result;
+	async function updateRequest(db, id, doc, user) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function query(db, {queries, offset}) {
-		const result = await publisherInterface.query(db, {queries, offset});
-		return result;
+	async function removeRequest(db, id, user) {
+		if (hasSystemPermission(user)) {
+			const result = await publisherRequestsInterface.remove(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function queryRequests(db, {queries, offset}, user) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const result = await publisherRequestsInterface.query(db, {queries, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

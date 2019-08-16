@@ -26,11 +26,15 @@
  * for the JavaScript code in this file.
  *
  */
-import {graphql} from 'graphql';
-import schema from '../graphql';
-import HttpStatus from 'http-status';
+
+import interfaceFactory from './interfaceModules';
+import {hasAdminPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
-const objectId = require('mongodb').ObjectId;
+import HttpStatus from 'http-status';
+
+const rangesISBNInterface = interfaceFactory('IdentifierRangesISBN', 'RangeIsbnContent');
+const rangesISMNInterface = interfaceFactory('IdentifierRangesISMN', 'RangeIsmnContent');
+const rangesISSNInterface = interfaceFactory('IdentifierRangesISSN', 'RangeIssnContent');
 
 export default function () {
 	return {
@@ -48,382 +52,111 @@ export default function () {
 		queryIssn
 	};
 
-	async function createIsbn(db, isbnData) {
-		const query = `
-			mutation($input: ISBNInput){
-				createISBN(input: $input) {
-					prefix
-					language
-					rangeStart
-					rangeEnd
-				}
-			}
-		`;
-		const createISBN = async (args, db) => {
-			const newISBN = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			const result = await db.collection('IdentifierRangesISBN').insertOne(newISBN);
-			return result.ops[0];
-		};
-
-		const result = await graphql(schema, query, {createISBN}, db, {input: isbnData});
-		if (result.errors) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
+	async function createIsbn(db, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.create(db, doc, user);
+			return result;
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readIsbn(db, id) {
-		const query = `
-			{
-				ISBN{
-					_id
-					prefix
-					language
-					rangeStart
-					rangeEnd
-					publisher
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISBN = async (undefined, ctx) => {
-			const {id, db} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISBN doesnot exists');
-			}
-
-			const result = await db.collection('IdentifierRangesISBN').findOne(objectId(id));
+	async function readIsbn(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.read(db, id, user);
 			return result;
-		};
-
-		const result = await graphql(schema, query, {ISBN}, {id, db});
-		if (result.data.ISBN === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function updateIsbn(db, id, data) {
-		const query = `
-			mutation($input: ISBNInput){
-				updateISBN(input: $input) {
-					prefix
-					language
-					rangeStart
-					rangeEnd
-				}
-			}
-		`;
-		const updateISBN = async (args, cxt) => {
-			const {db, id} = cxt;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISBN doesnot exists');
-			}
-
-			const isbnUpdate = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			await db
-				.collection('IdentifierRangesISBN')
-				.findOneAndUpdate({_id: objectId(id)}, {$set: isbnUpdate}, {upsert: true});
-			const result = await db.collection('IdentifierRangesISBN').findOne(objectId(id));
+	async function updateIsbn(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.update(db, id, doc, user);
 			return result;
-		};
-
-		const result = await graphql(schema, query, {updateISBN}, {db, id}, {input: data});
-		return result;
-	}
-
-	async function queryIsbn(db) {
-		const query = `
-			{
-				ISBNs{
-					_id
-					prefix
-					language
-					rangeStart
-					rangeEnd
-					publisher
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISBNs = async (undefined, db) => {
-			const result = await db.collection('IdentifierRangesISBN').find().toArray();
-			return result;
-		};
-
-		const result = await graphql(schema, query, {ISBNs}, db);
-		return result;
-	}
-
-	async function createIsmn(db, data) {
-		const query = `
-			mutation($input: ISMNInput){
-				createISMN(input: $input) {
-					prefix
-					rangeStart
-					rangeEnd
-				}
-			}
-		`;
-		const createISMN = async (args, db) => {
-			const newISMN = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			const result = await db.collection('IdentifierRangesISMN').insertOne(newISMN);
-			return result.ops[0];
-		};
-
-		const result = await graphql(schema, query, {createISMN}, db, {input: data});
-		if (result.errors) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readIsmn(db, id) {
-		const query = `
-			{
-				ISMN{
-					_id
-					prefix
-					rangeStart
-					rangeEnd
-					publisher
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISMN = async (undefined, ctx) => {
-			const {id, db} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISMN doesnot exists');
-			}
-
-			const result = await db.collection('IdentifierRangesISMN').findOne(objectId(id));
+	async function queryIsbn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISBNInterface.query(db, {query, offset});
 			return result;
-		};
-
-		const result = await graphql(schema, query, {ISMN}, {id, db});
-		if (result.data.ISMN === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function updateIsmn(db, id, data) {
-		const query = `
-			mutation($input: ISMNInput){
-				updateISMN(input: $input) {
-					prefix
-					rangeStart
-					rangeEnd
-				}
-			}
-		`;
-		const updateISMN = async (args, cxt) => {
-			const {db, id} = cxt;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISMN doesnot exists');
-			}
-
-			const ismnUpdate = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			await db.collection('IdentifierRangesISMN').findOneAndUpdate({_id: objectId(id)}, {$set: ismnUpdate}, {upsert: true});
-			const result = await db.collection('IdentifierRangesISMN').findOne(objectId(id));
+	async function createIsmn(db, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.create(db, doc, user);
 			return result;
-		};
-
-		const result = await graphql(schema, query, {updateISMN}, {db, id}, {input: data});
-		return result;
-	}
-
-	async function queryIsmn(db) {
-		const query = `
-			{
-				ISMNs{
-					_id
-					prefix
-					rangeStart
-					rangeEnd
-					publisher
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISMNs = async (undefined, db) => {
-			const result = await db.collection('IdentifierRangesISMN').find().toArray();
-			return result;
-		};
-
-		const result = await graphql(schema, query, {ISMNs}, db);
-		return result;
-	}
-
-	async function createIssn(db, data) {
-		const query = `
-			mutation($input: ISSNInput){
-				createISSN(input: $input) {
-					rangeStart
-					rangeEnd
-					active
-					reservedCount
-				}
-			}
-		`;
-		const createISSN = async (args, db) => {
-			const newISSN = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			const result = await db.collection('IdentifierRangesISSN').insertOne(newISSN);
-			return result.ops[0];
-		};
-
-		const result = await graphql(schema, query, {createISSN}, db, {input: data});
-		if (result.errors) {
-			throw new ApiError(HttpStatus.BAD_REQUEST);
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function readIssn(db, id) {
-		const query = `
-			{
-				ISSN{
-					_id
-					rangeStart
-					rangeEnd
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISSN = async (undefined, ctx) => {
-			const {id, db} = ctx;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISSN doesnot exists');
-			}
-
-			const result = await db.collection('IdentifierRangesISSN').findOne(objectId(id));
+	async function readIsmn(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.read(db, id, user);
 			return result;
-		};
-
-		const result = await graphql(schema, query, {ISSN}, {id, db});
-		if (result.data.ISSN === null) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function updateIssn(db, id, data) {
-		const query = `
-			mutation($input: ISSNInput){
-				updateISSN(input: $input) {
-					rangeStart
-					rangeEnd
-					active
-				}
-			}
-		`;
-		const updateISSN = async (args, cxt) => {
-			const {db, id} = cxt;
-			if (!objectId.isValid(id)) {
-				throw new Error('ISSN doesnot exists');
-			}
-
-			const issnUpdate = {
-				...args.input,
-				lastUpdated: {
-					...args.input.lastUpdated,
-					timestamp: new Date()
-				}
-			};
-			await db.collection('IdentifierRangesISSN').findOneAndUpdate({_id: objectId(id)}, {$set: issnUpdate}, {upsert: true});
-			const result = await db.collection('IdentifierRangesISSN').findOne(objectId(id));
+	async function updateIsmn(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.update(db, id, doc, user);
 			return result;
-		};
+		}
 
-		const result = await graphql(schema, query, {updateISSN}, {db, id}, {input: data});
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIssn(db) {
-		const query = `
-			{
-				ISSNs{
-					_id
-					rangeStart
-					rangeEnd
-					active
-					reservedCount
-					lastUpdated {
-						timestamp
-						user
-					}
-				}
-			}
-		`;
-		const ISSNs = async (undefined, db) => {
-			const result = await db
-				.collection('IdentifierRangesISSN').find().toArray();
+	async function queryIsmn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.query(db, {query, offset});
 			return result;
-		};
+		}
 
-		const result = await graphql(schema, query, {ISSNs}, db);
-		return result;
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function createIssn(db, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.create(db, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function readIssn(db, id, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISMNInterface.read(db, id, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function updateIssn(db, id, doc, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.update(db, id, doc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function queryIssn(db, {query, offset}, user) {
+		if (hasAdminPermission(user)) {
+			const result = await rangesISSNInterface.query(db, {query, offset});
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

@@ -28,12 +28,13 @@
 import {Router} from 'express';
 import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
-import {default as bodyParse} from './utils';
+import {bodyParse} from '../utils';
 
-export default function (db) {
+export default function (db, passportMiddlewares) {
 	const ranges = rangesFactory({url: API_URL});
 
 	return new Router()
+		.use(passportMiddlewares.token)
 		.post('/isbn', bodyParse(), createIsbn)
 		.get('/isbn/:id', readIsbn)
 		.put('/isbn/:id', bodyParse(), updateIsbn)
@@ -53,7 +54,7 @@ export default function (db) {
 
 	async function createIsbn(req, res, next) {
 		try {
-			const result = await ranges.createIsbn(db, req.body);
+			const result = await ranges.createIsbn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,7 +64,7 @@ export default function (db) {
 	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsbn(db, id);
+			const result = await ranges.readIsbn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -73,7 +74,7 @@ export default function (db) {
 	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsbn(db, id, req.body);
+			const result = await ranges.updateIsbn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -82,7 +83,7 @@ export default function (db) {
 
 	async function queryIsbn(req, res, next) {
 		try {
-			const result = await ranges.queryIsbn(db);
+			const result = await ranges.queryIsbn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -93,7 +94,7 @@ export default function (db) {
 
 	async function createIsmn(req, res, next) {
 		try {
-			const result = await ranges.createIsmn(db, req.body);
+			const result = await ranges.createIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -103,7 +104,7 @@ export default function (db) {
 	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIsmn(db, id);
+			const result = await ranges.readIsmn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -113,7 +114,7 @@ export default function (db) {
 	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIsmn(db, id, req.body);
+			const result = await ranges.updateIsmn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -122,7 +123,7 @@ export default function (db) {
 
 	async function queryIsmn(req, res, next) {
 		try {
-			const result = await ranges.queryIsmn(db);
+			const result = await ranges.queryIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -133,7 +134,7 @@ export default function (db) {
 
 	async function createIssn(req, res, next) {
 		try {
-			const result = await ranges.createIssn(db, req.body);
+			const result = await ranges.createIssn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -143,7 +144,7 @@ export default function (db) {
 	async function readIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.readIssn(db, id);
+			const result = await ranges.readIssn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -153,7 +154,7 @@ export default function (db) {
 	async function updateIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await ranges.updateIssn(db, id, req.body);
+			const result = await ranges.updateIssn(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -162,7 +163,7 @@ export default function (db) {
 
 	async function queryIssn(req, res, next) {
 		try {
-			const result = await ranges.queryIssn(db);
+			const result = await ranges.queryIssn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

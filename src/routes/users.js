@@ -31,25 +31,21 @@ import {Router} from 'express';
 import {usersFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db) {
+export default function (db, passportMiddlewares) {
 	const users = usersFactory({url: API_URL});
 
 	return new Router()
+		.use(passportMiddlewares)
 		.post('/', create)
 		.get('/:id', read)
 		.put('/:id', update)
 		.delete('/:id', remove)
 		.post('/:id/password', changePwd)
-		.post('/query', query)
-		.post('/requests', createRequest)
-		.get('/requests/:id', readRequest)
-		.delete('/requests/:id', removeRequest)
-		.put('/requests/:id', updateRequest)
-		.post('/requests/query', queryRequest);
+		.post('/query', query);
 
 	async function create(req, res, next) {
 		try {
-			const result = await users.create(db, req.body);
+			const result = await users.create(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			return next(err);
@@ -59,7 +55,7 @@ export default function (db) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.read(db, id);
+			const result = await users.read(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -69,7 +65,7 @@ export default function (db) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.update(db, id, req.body);
+			const result = await users.update(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -79,7 +75,7 @@ export default function (db) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.remove(db, id);
+			const result = await users.remove(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -96,55 +92,7 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await users.query(db);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function createRequest(req, res, next) {
-		try {
-			const result = await users.createRequest(db, req.body);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function readRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.readRequest(db, id);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.updateRequest(db, id, req.body);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function removeRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.removeRequest(db, id);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	async function queryRequest(req, res, next) {
-		try {
-			const result = await users.queryRequest(db);
+			const result = await users.query(db, req.body, req.user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);
