@@ -44,7 +44,7 @@ import {
 	createRangesRouter,
 	authenticationRouter
 } from './routes';
-import {bodyParse} from '../src/routes/utils';
+import {bodyParse} from './utils';
 import {
 	ENABLE_PROXY,
 	MONGO_URI, HTTP_PORT,

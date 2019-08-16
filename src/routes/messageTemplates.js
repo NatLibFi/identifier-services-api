@@ -27,7 +27,6 @@
  */
 
 import {Router} from 'express';
-import {bodyParse} from './utils';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
@@ -36,11 +35,11 @@ export default function (db, passportMiddlewares) {
 
 	return new Router()
 		.use(passportMiddlewares)
-		.post('/', bodyParse(), create)
+		.post('/', create)
 		.get('/:id', read)
-		.put('/:id', bodyParse(), update)
+		.put('/:id', update)
 		.delete('/:id', remove)
-		.post('/query', bodyParse(), query);
+		.post('/query', query);
 
 	async function create(req, res, next) {
 		try {

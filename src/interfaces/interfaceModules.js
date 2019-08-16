@@ -97,9 +97,8 @@ export default function (collectionName, collectionContent) {
 	}
 
 	async function query(db, {queries, offset}) {
-		
 		if (offset) {
-			if(queries.length > 0){
+			if (queries.length > 0) {
 				const result = await queries.reduce((acc, {query}) => {
 					return doQuery({
 						...formatQuery(query),
@@ -107,9 +106,10 @@ export default function (collectionName, collectionContent) {
 							_id: {$gt: new ObjectId(offset)}
 						}]
 					});
-				},[]);
+				}, []);
 				return result;
 			}
+
 			return doQuery({
 				...formatQuery(query),
 				$and: [{
@@ -117,6 +117,7 @@ export default function (collectionName, collectionContent) {
 				}]
 			});
 		}
+
 		const result = queries.reduce((acc, {query}) => {
 			return doQuery(formatQuery(query));
 		}, []);
