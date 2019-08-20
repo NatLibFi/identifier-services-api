@@ -17,7 +17,7 @@
   "version": "1.0.0",
   "main": "./dist/index.js",
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "scripts": {
     "start": "node ./dist/index",
@@ -43,6 +43,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "moment": "^2.24.0",
+    "mongodb": "^3.3.0",
     "path": "^0.12.7"
   },
   "devDependencies": {
@@ -92,7 +93,7 @@
         "@babel/preset-env",
         {
           "targets": {
-            "node": "8"
+            "node": "10"
           }
         }
       ]
