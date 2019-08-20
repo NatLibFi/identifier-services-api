@@ -55,7 +55,7 @@ export function convertLanguage(language) {
 }
 
 export function getValidator(schemaName) {
-	const str = readFileSync('src/api.json', 'utf8')
+	const str = readFileSync('api.json', 'utf8')
 		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 	const obj = JSON.parse(str);
