@@ -224,7 +224,7 @@ export default function (collectionName, collectionContent) {
 	}
 
 	function getValidator(schemaName) {
-		const str = readFileSync('src/api.json', 'utf8')
+		const str = readFileSync('api.json', 'utf8')
 			.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 		const obj = JSON.parse(str);
