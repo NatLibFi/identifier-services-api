@@ -4,6 +4,9 @@ const {readEnvironmentVariable, parseBoolean} = Utils;
 export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8080'
 });
+
+export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {defaultValue: '["http://localhost:8000"]'});
+
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
 	defaultValue: 8080,
 	format: v => Number(v)

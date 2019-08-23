@@ -75,8 +75,8 @@ export default function () {
 	// 	return result;
 	// }
 
-	async function queryISSN(db, {query, offset}, user) {
-		const result = await publicationsIssnInterface.query(db, {query, offset});
+	async function queryISSN(db, {queries, offset}, user) {
+		const result = await publicationsIssnInterface.query(db, {queries, offset});
 
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
