@@ -83,7 +83,9 @@ export default function () {
 		}
 
 		if (user) {
-			return result.results.filter(item => item.publisher === user.id);
+			const newResult = result.results.filter(item => item.publisher === user.id);
+			result.results = newResult;
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

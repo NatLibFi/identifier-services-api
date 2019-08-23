@@ -82,8 +82,8 @@ export default function () {
 	// 	throw new ApiError(HttpStatus.FORBIDDEN);
 	// }
 
-	async function queryIsbnIsmn(db, {query, offset}, user) {
-		const result = await publicationsIsbnIsmnInterface.query(db, {query, offset});
+	async function queryIsbnIsmn(db, {queries, offset}, user) {
+		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
 
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
