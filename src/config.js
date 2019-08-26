@@ -5,7 +5,10 @@ export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8080'
 });
 
-export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {defaultValue: 'http://localhost:8080'});
+export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {
+	defaultValue: ['http://localhost:8080'],
+	format: JSON.parse
+});
 
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
 	defaultValue: 8080,
