@@ -46,6 +46,7 @@ import {
 } from './routes';
 import {bodyParse} from './utils';
 import {
+	whiteList,
 	ENABLE_PROXY,
 	MONGO_URI, HTTP_PORT,
 	USER_AGENT_LOGGING_BLACKLIST,
@@ -70,11 +71,28 @@ export default async function run() {
 		},
 		localUsers: PASSPORT_LOCAL_USERS
 	});
+
+	const corsOptions = {
+		origin: (origin, callback) => {
+			if (origin === undefined) {
+				callback(null, true);
+			} else {
+				const originIsWhitelisted = whiteList.indexOf(origin) !== -1;
+				if (!originIsWhitelisted) {
+					Logger.log('info', `Request from origin ${origin} is not whitelisted.`);
+				}
+
+				callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+			}
+		},
+		credentials: true
+	};
+
 	app.enable('trust proxy', ENABLE_PROXY);
 	app.use(createExpressLogger({
 		skip: r => USER_AGENT_LOGGING_BLACKLIST.includes(r.get('User-Agent'))
 	}));
-	app.use(cors());
+	app.use(cors(corsOptions));
 	app.use(bodyParse());
 
 	app.use('/templates', createMessageTemplate(db, passportMiddlewares.token));

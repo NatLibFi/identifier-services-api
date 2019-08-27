@@ -31,6 +31,7 @@ const {ObjectId} = require('mongodb');
 const Ajv = require('ajv');
 const moment = require('moment');
 const {readFileSync} = require('fs');
+const path = require('path');
 
 export default function (collectionName, collectionContent) {
 	const QUERY_LIMIT = 5;
@@ -224,7 +225,7 @@ export default function (collectionName, collectionContent) {
 	}
 
 	function getValidator(schemaName) {
-		const str = readFileSync('api.json', 'utf8')
+		const str = readFileSync(path.join(__dirname, '..', 'api.json'), 'utf8')
 			.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 		const obj = JSON.parse(str);
