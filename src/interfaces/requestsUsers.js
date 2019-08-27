@@ -49,7 +49,8 @@ export default function () {
 	}
 
 	async function readRequest(db, id, user) {
-		const result = await userInterface.read(db, id);
+		const protectedProperties = {_id: 0};
+		const result = await userInterface.read(db, id, protectedProperties);
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}
