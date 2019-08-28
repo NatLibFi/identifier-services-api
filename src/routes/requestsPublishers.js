@@ -33,8 +33,8 @@ import {API_URL} from '../config';
 export default function (db, passportMiddlewares) {
 	const publisherRequests = publisherRequestsFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddlewares.token)
 		.post('/', createRequest)
+		.use(passportMiddlewares.token)
 		.get('/:id', readRequest)
 		.put('/:id', updateRequest)
 		.delete('/:id', removeRequest)

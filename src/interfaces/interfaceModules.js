@@ -53,7 +53,7 @@ export default function (collectionName, collectionContent) {
 			...doc,
 			lastUpdated: {
 				timestamp: moment().format(),
-				user: user.id
+				user: user ? user.id : undefined
 			}
 		});
 		return insertedId.toString();
