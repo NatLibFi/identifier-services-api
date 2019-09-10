@@ -43,13 +43,10 @@ export default function () {
 		queryRequests
 	};
 
-	async function createRequest(db, doc, user) {
-		if (hasSystemPermission(user)) {
-			const result = await publisherRequestsInterface.create(db, doc, user);
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
+	async function createRequest(db, doc) {
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
+		const result = await publisherRequestsInterface.create(db, newDoc);
+		return result;
 	}
 
 	async function readRequest(db, id, user) {
