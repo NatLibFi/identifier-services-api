@@ -71,8 +71,7 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		const body = req.body;
 		try {
-			const result = await publisherRequests.updateRequest(db, id, body, req.user);
-			res.json(result);
+			return publisherRequests.updateRequest(db, id, body, req.user);
 		} catch (err) {
 			next(err);
 		}

@@ -50,7 +50,7 @@ export default function (db, passportMiddlewares) {
 	async function create(req, res, next) {
 		try {
 			const result = await publishers.create(db, req.body, req.user);
-			res.json(result);
+			res.status(201).json(result);
 		} catch (err) {
 			next(err);
 		}
