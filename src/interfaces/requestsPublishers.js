@@ -44,7 +44,7 @@ export default function () {
 	};
 
 	async function createRequest(db, doc) {
-		const newDoc = {...doc, state: 'new'};
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
 		const result = await publisherRequestsInterface.create(db, newDoc);
 		return result;
 	}
