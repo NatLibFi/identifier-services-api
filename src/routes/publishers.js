@@ -29,6 +29,7 @@
 import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
+import HttpStatus from 'http-status';
 
 export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
@@ -50,7 +51,7 @@ export default function (db, passportMiddlewares) {
 	async function create(req, res, next) {
 		try {
 			const result = await publishers.create(db, req.body, req.user);
-			res.json(result);
+			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
 		}
