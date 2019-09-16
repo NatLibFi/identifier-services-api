@@ -59,8 +59,16 @@ export default function () {
 	}
 
 	async function updateRequest(db, id, doc, user) {
+		let newDoc;
+		if (doc.backgroundTask) {
+			delete doc.backgroundTask;
+			newDoc = doc;
+		} else {
+			newDoc = {...doc, backgroundProcessingState: 'pending'};
+		}
+
 		if (hasSystemPermission(user) || hasAdminPermission(user)) {
-			const result = await publisherRequestsInterface.update(db, id, doc, user);
+			const result = await publisherRequestsInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
