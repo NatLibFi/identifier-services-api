@@ -52,7 +52,7 @@ export default function (collectionName, collectionContent) {
 		const {insertedId} = await db.collection(collectionName).insertOne({
 			...doc,
 			lastUpdated: {
-				timestamp: moment().format(),
+				timestamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
 				user: user ? user.id : undefined
 			}
 		});
@@ -77,7 +77,7 @@ export default function (collectionName, collectionContent) {
 		}, {
 			...doc,
 			lastUpdated: {
-				timestamp: moment().format(),
+				timestamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
 				user: user.id
 			}
 		});
