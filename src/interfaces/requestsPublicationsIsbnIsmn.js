@@ -44,13 +44,10 @@ export default function () {
 		queryRequestIsbnIsmn
 	};
 
-	async function createRequestIsbnIsmn(db, doc, user) {
-		if (hasSystemPermission(user)) {
-			const result = await publicationsRequestsIsbnIsmnInterface.create(db, doc, user);
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
+	async function createRequestIsbnIsmn(db, doc) {
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
+		const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc);
+		return result;
 	}
 
 	async function readRequestIsbnIsmn(db, id, user) {
