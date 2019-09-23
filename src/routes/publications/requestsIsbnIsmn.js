@@ -34,8 +34,8 @@ import {API_URL} from '../../config';
 export default function (db, passportMiddleware) {
 	const publications = publicationIsbnIsmnRequestsFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddleware)
 		.post('/', bodyParse(), createRequest)
+		.use(passportMiddleware)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
 		.put('/:id', bodyParse(), updateRequest)
@@ -43,7 +43,7 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createRequestIsbnIsmn(db, req.body, req.user);
+			const result = await publications.createRequestIsbnIsmn(db, req.body);
 			res.json(result);
 		} catch (err) {
 			next(err);

@@ -2782,9 +2782,10 @@
           "state": {
             "type": "string",
             "enum": [
-              "pending",
+              "new",
               "inProgress",
-              "processed"
+              "accepeted",
+              "rejected"
             ]
           },
           "id": {
@@ -3087,7 +3088,7 @@
       "Publisher": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ResourceMetadata"
+            "$ref": "#/components/schemas/d"
           },
           {
             "$ref": "#/components/schemas/PublisherContent"
@@ -3136,7 +3137,7 @@
       "PublisherRequest": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ResourceMetadata"
+            "$ref": "#/components/schemas/d"
           },
           {
             "$ref": "#/components/schemas/PublisherRequestContent"
@@ -3338,7 +3339,7 @@
       "PublicationIsbnIsmn": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ResourceMetadata"
+            "$ref": "#/components/schemas/d"
           },
           {
             "$ref": "#/components/schemas/PublicationIsbnIsmnContent"
@@ -3400,7 +3401,7 @@
       "PublicationIsbnIsmnRequest": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ResourceMetadata"
+            "$ref": "#/components/schemas/d"
           },
           {
             "$ref": "#/components/schemas/PublicationIsbnIsmnRequestContent"
@@ -3557,7 +3558,7 @@
       "PublicationIssn": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ResourceMetadata"
+            "$ref": "#/components/schemas/d"
           },
           {
             "$ref": "#/components/schemas/PublicationIssnContent"
@@ -3763,7 +3764,7 @@
         ]
       },
       "SeriesDetails": {
-        "oneOf": [
+        "anyOf": [
           {
             "type": "object",
             "properties": {
