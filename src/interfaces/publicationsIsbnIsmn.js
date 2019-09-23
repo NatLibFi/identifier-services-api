@@ -56,7 +56,6 @@ export default function () {
 	}
 
 	async function readIsbnIsmn(db, id, user) {
-		console.log(id, user);
 		const result = await publicationsIsbnIsmnInterface.read(db, id);
 		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
 			return result;
