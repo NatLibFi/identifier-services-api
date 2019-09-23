@@ -67,14 +67,16 @@ export default function () {
 	}
 
 	async function updateRequestIsbnIsmn(db, id, doc, user) {
+		let newDoc;
+		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequestIsbnIsmn(db, id, user);
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
 		if (user && readResult.publisher === user.id) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
 			return filterResult(result);
 		}
 
@@ -90,8 +92,8 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequestIsbnIsmn(db, {query, offset}, user) {
-		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {query, offset});
+	async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
+		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}

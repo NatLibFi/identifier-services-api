@@ -89,8 +89,8 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryRequestISSN(db, {query, offset}, user) {
-		const result = await publicationsRequestsIssnInterface.query(db, {query, offset});
+	async function queryRequestISSN(db, {queries, offset}, user) {
+		const result = await publicationsRequestsIssnInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}

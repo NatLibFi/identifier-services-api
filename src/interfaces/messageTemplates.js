@@ -45,7 +45,7 @@ export default function () {
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNAUTHORIZED);
 	}
 
 	async function read(db, id, user) {
@@ -54,7 +54,7 @@ export default function () {
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNAUTHORIZED);
 	}
 
 	async function update(db, id, doc, user) {
@@ -63,7 +63,7 @@ export default function () {
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNAUTHORIZED);
 	}
 
 	async function remove(db, id, user) {
@@ -72,7 +72,7 @@ export default function () {
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNAUTHORIZED);
 	}
 
 	async function query(db, {queries, offset}, user) {
@@ -81,6 +81,6 @@ export default function () {
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNAUTHORIZED);
 	}
 }

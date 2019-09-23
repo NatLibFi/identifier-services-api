@@ -30,6 +30,7 @@ import {Router} from 'express';
 import {bodyParse} from '../../utils';
 import {publicationIsbnIsmnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
+import HttpStatus from 'http-status';
 
 export default function (db, passportMiddleware) {
 	const publications = publicationIsbnIsmnRequestsFactory({url: API_URL});
@@ -39,7 +40,7 @@ export default function (db, passportMiddleware) {
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
 		.put('/:id', bodyParse(), updateRequest)
-		.post('/', bodyParse(), queryRequest);
+		.post('/query', bodyParse(), queryRequest);
 
 	async function createRequest(req, res, next) {
 		try {
@@ -74,7 +75,7 @@ export default function (db, passportMiddleware) {
 		const id = req.params.id;
 		try {
 			const result = await publications.updateRequestIsbnIsmn(db, id, req.body, req.user);
-			res.json(result);
+			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
 		}

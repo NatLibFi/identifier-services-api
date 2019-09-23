@@ -54,6 +54,7 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		try {
 			const result = await templates.read(db, id, req.user);
+			console.log(result)
 			res.json(result);
 		} catch (err) {
 			next(err);
