@@ -39,7 +39,7 @@ export default function (db, passportMiddleware) {
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
 		.put('/:id', bodyParse(), updateRequest)
-		.post('/', bodyParse(), queryRequest);
+		.post('/query', bodyParse(), queryRequest);
 
 	async function createRequest(req, res, next) {
 		try {
