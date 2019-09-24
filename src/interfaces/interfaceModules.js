@@ -72,7 +72,7 @@ export default function (collectionName, collectionContent) {
 	async function update(db, id, doc, user) {
 		validateDoc(format(doc));
 
-		await db.collection(collectionName).findOneAndReplace({
+		return db.collection(collectionName).findOneAndReplace({
 			_id: new ObjectId(id)
 		}, {
 			...doc,

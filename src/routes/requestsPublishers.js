@@ -29,6 +29,7 @@
 import {Router} from 'express';
 import {publisherRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
+import HttpStatus from 'http-status';
 
 export default function (db, passportMiddlewares) {
 	const publisherRequests = publisherRequestsFactory({url: API_URL});
@@ -71,7 +72,8 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		const body = req.body;
 		try {
-			return publisherRequests.updateRequest(db, id, body, req.user);
+			const result = publisherRequests.updateRequest(db, id, body, req.user);
+			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
 		}

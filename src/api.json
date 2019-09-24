@@ -2784,7 +2784,7 @@
             "enum": [
               "new",
               "inProgress",
-              "accepeted",
+              "accepted",
               "rejected"
             ]
           },

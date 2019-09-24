@@ -64,14 +64,16 @@ export default function () {
 	}
 
 	async function updateRequestIsbnIsmn(db, id, doc, user) {
+		let newDoc;
+		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequestIsbnIsmn(db, id, user);
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
 		if (user && readResult.publisher === user.id) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
 			return filterResult(result);
 		}
 
