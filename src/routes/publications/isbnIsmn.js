@@ -30,6 +30,7 @@ import {Router} from 'express';
 import {bodyParse} from '../../utils';
 import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
+import HttpStatus from 'http-status';
 
 export default function (db, passportMiddleware) {
 	const publications = publicationsIsbnIsmnFactory({url: API_URL});
@@ -43,7 +44,7 @@ export default function (db, passportMiddleware) {
 	async function create(req, res, next) {
 		try {
 			const result = await publications.createIsbnIsmn(db, req.body, req.user);
-			res.json(result);
+			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
 		}

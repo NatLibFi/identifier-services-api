@@ -44,7 +44,6 @@ export default function () {
 
 	async function createIsbnIsmn(db, doc, user) {
 		if (hasAdminPermission(user)) {
-			doc.state = 'pending';
 			doc.publisher = user.id;
 			doc.metadataReference =	'string';
 			doc.associatedRange = 'string';
