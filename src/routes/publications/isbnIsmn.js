@@ -64,7 +64,7 @@ export default function (db, passportMiddleware) {
 		const id = req.params.id;
 		try {
 			const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
-			res.json(result);
+			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
 		}
