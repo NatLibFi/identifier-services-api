@@ -43,13 +43,10 @@ export default function () {
 		queryRequestISSN
 	};
 
-	async function createRequestISSN(db, doc, user) {
-		if (hasSystemPermission(user)) {
-			const result = await publicationsRequestsIssnInterface.create(db, doc, user);
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
+	async function createRequestISSN(db, doc) {
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
+		const result = await publicationsRequestsIssnInterface.create(db, newDoc);
+		return result;
 	}
 
 	async function readRequestISSN(db, id, user) {
