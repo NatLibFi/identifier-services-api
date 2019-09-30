@@ -34,7 +34,7 @@ const {readFileSync} = require('fs');
 const path = require('path');
 
 export default function (collectionName, collectionContent) {
-	const QUERY_LIMIT = 5;
+	const QUERY_LIMIT = 10;
 
 	const validate = getValidator(collectionContent);
 
