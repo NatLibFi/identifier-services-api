@@ -27,6 +27,8 @@
  *
  */
 
+import {QUERY_LIMIT} from '../config';
+
 const {ObjectId} = require('mongodb');
 const Ajv = require('ajv');
 const moment = require('moment');
@@ -34,8 +36,6 @@ const {readFileSync} = require('fs');
 const path = require('path');
 
 export default function (collectionName, collectionContent) {
-	const QUERY_LIMIT = 5;
-
 	const validate = getValidator(collectionContent);
 
 	return {

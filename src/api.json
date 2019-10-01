@@ -2782,10 +2782,10 @@
           "state": {
             "type": "string",
             "enum": [
-              "new",
+              "pending",
               "inProgress",
-              "accepted",
-              "rejected"
+              "processed",
+              "failed"
             ]
           },
           "id": {
@@ -3088,7 +3088,7 @@
       "Publisher": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/d"
+            "$ref": "#/components/schemas/ResourceMetadata"
           },
           {
             "$ref": "#/components/schemas/PublisherContent"
@@ -3137,7 +3137,7 @@
       "PublisherRequest": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/d"
+            "$ref": "#/components/schemas/ResourceMetadata"
           },
           {
             "$ref": "#/components/schemas/PublisherRequestContent"
@@ -3288,9 +3288,7 @@
           {
             "$ref": "#/components/schemas/PublicationIsbnIsmnBase"
           },
-          {
-            "$ref": "#/components/schemas/MetadataReference"
-          },
+          
           {
             "oneOf": [
               {
@@ -3304,6 +3302,9 @@
                       "music",
                       "other"
                     ]
+                  },
+                  "metadataReference": {
+                    "$ref": "#/components/schemas/MetadataReference"
                   }
                 },
                 "required": [
@@ -3339,7 +3340,7 @@
       "PublicationIsbnIsmn": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/d"
+            "$ref": "#/components/schemas/ResourceMetadata"
           },
           {
             "$ref": "#/components/schemas/PublicationIsbnIsmnContent"
@@ -3351,7 +3352,7 @@
                 "type": "string"
               },
               "metadataReference": {
-                "type": "string"
+                "$ref": "#/components/schemas/MetadataReference"
               },
               "id": {
                 "description": "Identifier of the publication",
@@ -3373,10 +3374,10 @@
       "PublicationIsbnIsmnRequestContent": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/RequestMetadata"
+            "$ref": "#/components/schemas/PublicationIsbnIsmnContent"
           },
           {
-            "$ref": "#/components/schemas/PublicationIsbnIsmnContent"
+            "$ref": "#/components/schemas/RequestMetadata"
           },
           {
             "type": "object",
@@ -3401,7 +3402,7 @@
       "PublicationIsbnIsmnRequest": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/d"
+            "$ref": "#/components/schemas/ResourceMetadata"
           },
           {
             "$ref": "#/components/schemas/PublicationIsbnIsmnRequestContent"
@@ -3413,14 +3414,15 @@
           {
             "$ref": "#/components/schemas/PublicationBase"
           },
-          {
-            "$ref": "#/components/schemas/MetadataReference"
-          },
+          
           {
             "type": "object",
             "properties": {
               "manufacturer": {
                 "type": "string"
+              },
+              "metadataReference": {
+                "$ref": "#/components/schemas/MetadataReference"
               },
               "city": {
                 "type": "string"
@@ -3558,7 +3560,7 @@
       "PublicationIssn": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/d"
+            "$ref": "#/components/schemas/ResourceMetadata"
           },
           {
             "$ref": "#/components/schemas/PublicationIssnContent"
@@ -3570,7 +3572,7 @@
                 "type": "string"
               },
               "metadataReference": {
-                "type": "string"
+                "$ref": "#/components/schemas/MetadataReference"
               },
               "id": {
                 "description": "Identifier of the publication",
