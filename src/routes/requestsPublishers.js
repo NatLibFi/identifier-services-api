@@ -34,8 +34,8 @@ import HttpStatus from 'http-status';
 export default function (db, passportMiddlewares) {
 	const publisherRequests = publisherRequestsFactory({url: API_URL});
 	return new Router()
-		.post('/', createRequest)
 		.use(passportMiddlewares.token)
+		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.put('/:id', updateRequest)
 		.delete('/:id', removeRequest)

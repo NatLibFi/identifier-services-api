@@ -43,10 +43,12 @@ export default function () {
 		queryRequestISSN
 	};
 
-	async function createRequestISSN(db, doc) {
+	async function createRequestISSN(db, doc, user) {
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
-		const result = await publicationsRequestsIssnInterface.create(db, newDoc);
-		return result;
+		if (hasSystemPermission(user)) {
+			const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
+			return result;
+		}
 	}
 
 	async function readRequestISSN(db, id, user) {

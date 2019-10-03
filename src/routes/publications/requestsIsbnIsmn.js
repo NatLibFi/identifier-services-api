@@ -35,8 +35,8 @@ import HttpStatus from 'http-status';
 export default function (db, passportMiddleware) {
 	const publications = publicationIsbnIsmnRequestsFactory({url: API_URL});
 	return new Router()
-		.post('/', bodyParse(), createRequest)
 		.use(passportMiddleware)
+		.post('/', bodyParse(), createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
 		.put('/:id', bodyParse(), updateRequest)
@@ -44,7 +44,7 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createRequestIsbnIsmn(db, req.body);
+			const result = await publications.createRequestIsbnIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
