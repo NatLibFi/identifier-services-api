@@ -43,10 +43,12 @@ export default function () {
 		queryRequests
 	};
 
-	async function createRequest(db, doc) {
+	async function createRequest(db, doc, user) {
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
-		const result = await publisherRequestsInterface.create(db, newDoc);
-		return result;
+		if (hasSystemPermission(user)) {
+			const result = await publisherRequestsInterface.create(db, newDoc, user);
+			return result;
+		}
 	}
 
 	async function readRequest(db, id, user) {

@@ -44,12 +44,11 @@ export default function () {
 	};
 
 	async function createRequestISSN(db, doc, user) {
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
 		if (hasSystemPermission(user)) {
-			const result = await publicationsRequestsIssnInterface.create(db, doc, user);
+			const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
 			return result;
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readRequestISSN(db, id, user) {
