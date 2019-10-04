@@ -28,18 +28,22 @@
 import {Router} from 'express';
 import HttpStatus from 'http-status';
 
-export default function (passportMiddlewares) {
+export default function (db, passportMiddlewares) {
 	return new Router()
 		.post('/', passportMiddlewares.credentials, authenticate)
 		.get('/', passportMiddlewares.token, read);
 
 	function authenticate(req, res) {
-		res.set('Token', req.user);
-		res.sendStatus(HttpStatus.NO_CONTENT);
+		res.set('Token', req.user).sendStatus(HttpStatus.NO_CONTENT);
 	}
 
-	function read(req, res) {
-		res.json(req.user);
-		res.sendStatus(HttpStatus.OK);
+	async function read(req, res, next) {
+		try {
+			const response = await db.collection('userMetadata').findOne({id: req.user.id});
+			const result = {...req.user, ...response};
+			res.json(result).sendStatus(HttpStatus.OK);
+		} catch (err) {
+			next(err);
+		}
 	}
 }

@@ -28,7 +28,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasSystemPermission, hasPublisherAdminPermission} from './utils';
+import {hasAdminPermission, hasPublisherAdminPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
@@ -43,7 +43,7 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasSystemPermission(user)) {
+		if (hasAdminPermission(user)) {
 			const result = await publisherInterface.create(db, doc, user);
 			return result;
 		}

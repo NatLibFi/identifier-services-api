@@ -98,7 +98,8 @@ export default function () {
 		}
 
 		if (user) {
-			return result.results.filter(item => item.publisher === user.id && filterResult(item));
+			const response = await db.collection('userMetadata').findOne({id: user.id});
+			return {results: result.results.filter(item => item.publisher === response.id && filterResult(item))};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
