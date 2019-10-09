@@ -49,6 +49,8 @@ export default function () {
 			const result = await publisherRequestsInterface.create(db, newDoc, user);
 			return result;
 		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readRequest(db, id, user) {
