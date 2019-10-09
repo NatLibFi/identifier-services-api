@@ -28,9 +28,11 @@
 
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import fs from 'fs';
 
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
 import interfaceFactory from './interfaceModules';
+import {PASSPORT_LOCAL} from '../config';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
 
@@ -46,6 +48,26 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasAdminPermission(user)) {
+			const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+			const data = JSON.parse(res);
+			const newData = {
+				id: doc.id,
+				password: Math.random().toString(36).slice(2),
+				name: {
+					givenName: doc.givenName,
+					familyName: doc.familyName
+				},
+				displayName: `${doc.givenName} ${doc.familyName}`,
+				emails: [{value: doc.email, type: 'work'}],
+				organization: [],
+				groups: [`${doc.role}`]
+			};
+			if (containsObject(newData, data)) {
+				throw new ApiError(HttpStatus.CONFLICT);
+			}
+
+			data.push(newData);
+			fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
 			const result = await userInterface.create(db, doc, user);
 			return result;
 		}
@@ -102,3 +124,6 @@ export default function () {
 	}
 }
 
+function containsObject(obj, list) {
+	return list.some(item => item.id === obj.id);
+}

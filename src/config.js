@@ -23,6 +23,7 @@ export const MONGO_URI = readEnvironmentVariable('MONGO_URI', {
 	defaultValue: 'mongodb://localhost:27017/db'
 });
 export const PASSPORT_LOCAL_USERS = readEnvironmentVariable('PASSPORT_LOCAL_USERS');
+export const PASSPORT_LOCAL = readEnvironmentVariable('PASSPORT_LOCAL');
 
 export const MONGO_DEBUG = readEnvironmentVariable('MONGO_DEBUG', {
 	defaultValue: false,
