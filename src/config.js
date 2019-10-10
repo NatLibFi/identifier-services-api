@@ -11,7 +11,7 @@ export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {
 });
 
 export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
-	defaultValue: 5
+	defaultValue: 5, format: v => Number(v)
 });
 
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
