@@ -99,7 +99,7 @@ export default function () {
 
 	async function readIsmn(db, id, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.read(db, id, user);
+			const result = await rangesISMNInterface.read(db, id);
 			return result;
 		}
 
@@ -115,9 +115,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIsmn(db, {query, offset}, user) {
+	async function queryIsmn(db, {queries, offset}, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.query(db, {query, offset});
+			const result = await rangesISMNInterface.query(db, {queries, offset});
 			return result;
 		}
 
@@ -135,7 +135,7 @@ export default function () {
 
 	async function readIssn(db, id, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.read(db, id, user);
+			const result = await rangesISSNInterface.read(db, id);
 			return result;
 		}
 
@@ -151,9 +151,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIssn(db, {query, offset}, user) {
+	async function queryIssn(db, {queries, offset}, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISSNInterface.query(db, {query, offset});
+			const result = await rangesISSNInterface.query(db, {queries, offset});
 			return result;
 		}
 
