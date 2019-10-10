@@ -26,7 +26,10 @@
  *
  */
 
-const {readFileSync} = require('fs');
+import {ApiError} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
+import fs from 'fs';
+
 const Ajv = require('ajv');
 
 export function hasPermission(profile, user) {
@@ -55,7 +58,7 @@ export function convertLanguage(language) {
 }
 
 export function getValidator(schemaName) {
-	const str = readFileSync('api.json', 'utf8')
+	const str = fs.readFileSync('api.json', 'utf8')
 		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 	const obj = JSON.parse(str);
@@ -73,4 +76,33 @@ export function filterResult(result) {
 	delete result.publisher;
 	delete result.lastUpdated;
 	return result;
+}
+
+export function createCrowdUser({PASSPORT_LOCAL, doc}) {
+	const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	const data = JSON.parse(res);
+
+	const newData = {
+		id: doc.email,
+		password: Math.random().toString(36).slice(2),
+		name: {
+			givenName: doc.givenName,
+			familyName: doc.familyName
+		},
+		displayName: `${doc.givenName} ${doc.familyName}`,
+		emails: [{value: doc.email, type: 'work'}],
+		organization: [],
+		groups: [`${doc.role}`]
+	};
+
+	if (containsObject(newData, data)) {
+		throw new ApiError(HttpStatus.CONFLICT);
+	}
+
+	data.push(newData);
+	fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
+	return null;
+	function containsObject(obj, list) {
+		return list.some(item => item.id === obj.id);
+	}
 }
