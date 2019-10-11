@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createCrowdUser} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, readCrowdUser, createCrowdUser} from './utils';
 import interfaceFactory from './interfaceModules';
 import {PASSPORT_LOCAL} from '../config';
 
@@ -58,8 +58,9 @@ export default function () {
 
 	async function read(db, id, user) {
 		const result = await userInterface.read(db, id);
+		const crowdResult = await readCrowdUser({PASSPORT_LOCAL: PASSPORT_LOCAL, email: result.email});
 		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
-			return result;
+			return {...result, ...crowdResult};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

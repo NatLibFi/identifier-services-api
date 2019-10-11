@@ -89,7 +89,7 @@ export function createCrowdUser({PASSPORT_LOCAL, doc}) {
 			givenName: doc.givenName,
 			familyName: doc.familyName
 		},
-		displayName: `${doc.givenName} ${doc.familyName}`,
+		displayName: `${doc.givenName}${doc.familyName}`,
 		emails: [{value: doc.email, type: 'work'}],
 		organization: [],
 		groups: [`${doc.role}`]
@@ -105,4 +105,11 @@ export function createCrowdUser({PASSPORT_LOCAL, doc}) {
 	function containsObject(obj, list) {
 		return list.some(item => item.id === obj.id);
 	}
+}
+
+export function readCrowdUser({PASSPORT_LOCAL, email}) {
+	const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	const data = JSON.parse(res);
+	const user = (data.filter(item => item.id === email))[0];
+	return user;
 }
