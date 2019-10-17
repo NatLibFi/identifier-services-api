@@ -85,7 +85,8 @@ export default function (db, passportMiddlewares) {
 
 	async function changePwd(req, res, next) {
 		try {
-			res.json(req.body);
+			const result = await users.changePwd(req.body, req.user);
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}

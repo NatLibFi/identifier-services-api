@@ -86,9 +86,10 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function changePwd(user) {
+	async function changePwd(doc, user) {
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return null;
+			const {localUser} = local();
+			return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

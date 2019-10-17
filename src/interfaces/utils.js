@@ -82,7 +82,8 @@ export function local() {
 	return {
 		localUser: {
 			create,
-			read
+			read,
+			update
 		}
 	};
 	function create({PASSPORT_LOCAL, doc}) {
@@ -121,12 +122,20 @@ export function local() {
 		return user;
 	}
 
-	function update({PASSPORT_LOCAL, doc}) {
-		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf8');
-		const data = JSON.parse(res);
-		const dataToUpdate = {
-			...doc,	
-		}
+	function update({PASSPORT_LOCAL, user}) {
+		const {email, newPassword} = user;
+		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const newPassportLocalList = passportLocalList.map(passport => {
+			if (passport.id === email) {
+				return {...passport, password: newPassword};
+			}
+
+			return passport;
+		});
+
+		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
+		return HttpStatus.OK;
 	}
 }
 
