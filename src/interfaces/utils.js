@@ -78,38 +78,64 @@ export function filterResult(result) {
 	return result;
 }
 
-export function createCrowdUser({PASSPORT_LOCAL, doc}) {
-	const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-	const data = JSON.parse(res);
-
-	const newData = {
-		id: doc.email,
-		password: Math.random().toString(36).slice(2),
-		name: {
-			givenName: doc.givenName,
-			familyName: doc.familyName
-		},
-		displayName: `${doc.givenName}${doc.familyName}`,
-		emails: [{value: doc.email, type: 'work'}],
-		organization: [],
-		groups: [`${doc.role}`]
+export function local() {
+	return {
+		localUser: {
+			create,
+			read,
+			update
+		}
 	};
+	function create({PASSPORT_LOCAL, doc}) {
+		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const data = JSON.parse(res);
 
-	if (containsObject(newData, data)) {
-		throw new ApiError(HttpStatus.CONFLICT);
+		const newData = {
+			id: doc.email,
+			password: Math.random().toString(36).slice(2),
+			name: {
+				givenName: doc.givenName,
+				familyName: doc.familyName
+			},
+			displayName: `${doc.givenName}${doc.familyName}`,
+			emails: [{value: doc.email, type: 'work'}],
+			organization: [],
+			groups: [`${doc.role}`]
+		};
+
+		if (containsObject(newData, data)) {
+			throw new ApiError(HttpStatus.CONFLICT);
+		}
+
+		data.push(newData);
+		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
+		return null;
+		function containsObject(obj, list) {
+			return list.some(item => item.id === obj.id);
+		}
 	}
 
-	data.push(newData);
-	fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
-	return null;
-	function containsObject(obj, list) {
-		return list.some(item => item.id === obj.id);
+	function read({PASSPORT_LOCAL, email}) {
+		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const data = JSON.parse(res);
+		const user = (data.filter(item => item.id === email))[0];
+		return user;
+	}
+
+	function update({PASSPORT_LOCAL, user}) {
+		const {email, newPassword} = user;
+		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const newPassportLocalList = passportLocalList.map(passport => {
+			if (passport.id === email) {
+				return {...passport, password: newPassword};
+			}
+
+			return passport;
+		});
+
+		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
+		return HttpStatus.OK;
 	}
 }
 
-export function readCrowdUser({PASSPORT_LOCAL, email}) {
-	const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-	const data = JSON.parse(res);
-	const user = (data.filter(item => item.id === email))[0];
-	return user;
-}

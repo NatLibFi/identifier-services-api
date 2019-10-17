@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, readCrowdUser, createCrowdUser} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, local} from './utils';
 import interfaceFactory from './interfaceModules';
 import {PASSPORT_LOCAL} from '../config';
 
@@ -47,7 +47,8 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasAdminPermission(user)) {
-			await createCrowdUser({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
+			const {localUser} = local();
+			await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
 			const newDoc = {...doc, id: doc.email};
 			const result = await userInterface.create(db, newDoc, user);
 			return result;
@@ -58,9 +59,10 @@ export default function () {
 
 	async function read(db, id, user) {
 		const result = await userInterface.read(db, id);
-		const crowdResult = await readCrowdUser({PASSPORT_LOCAL: PASSPORT_LOCAL, email: result.email});
+		const {localUser} = local();
+		const localResult = await localUser.read({PASSPORT_LOCAL: PASSPORT_LOCAL, email: result.email});
 		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
-			return {...result, ...crowdResult};
+			return {...result, ...localResult};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -84,9 +86,10 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function changePwd(user) {
+	async function changePwd(doc, user) {
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return null;
+			const {localUser} = local();
+			return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
