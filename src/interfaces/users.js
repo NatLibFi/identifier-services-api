@@ -29,10 +29,9 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, local} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission,createLinkAndSendEmail, local} from './utils';
 import interfaceFactory from './interfaceModules';
 import {PASSPORT_LOCAL} from '../config';
-import {createLinkAndSendEmail} from './utils';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
 
