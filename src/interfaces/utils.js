@@ -141,11 +141,11 @@ export function local() {
 	}
 
 	function update({PASSPORT_LOCAL, user}) {
-		const {email, newPassword} = user;
+		const {id, newPassword} = user;
 		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		const newPassportLocalList = passportLocalList.map(passport => {
-			if (passport.id === email) {
+			if (passport.id === id) {
 				return {...passport, password: newPassword};
 			}
 
@@ -169,8 +169,7 @@ export async function createLinkAndSendEmail(type, request) {
 		role: type
 	};
 	const privateData = {
-		email: request.email,
-		id: request.email
+		id: request.id
 	};
 	const token = await jwtEncrypt.generateJWT(
 		jwtDetails,
