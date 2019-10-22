@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, local} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local} from './utils';
 import interfaceFactory from './interfaceModules';
 import {PASSPORT_LOCAL} from '../config';
 
@@ -87,12 +87,17 @@ export default function () {
 	}
 
 	async function changePwd(doc, user) {
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const {localUser} = local();
-			return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
-		}
+		if (doc.newPassword) {
+			if (hasAdminPermission(user) || hasSystemPermission(user)) {
+				const {localUser} = local();
+				return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} else {
+			const result = await createLinkAndSendEmail('users', doc);
+			return result;
+		}
 	}
 
 	async function query(db, {queries, offset}, user) {

@@ -26,11 +26,29 @@
  *
  */
 
-import {ApiError} from '@natlibfi/identifier-services-commons';
+import {ApiError, Utils, createApiClient} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import fs from 'fs';
+import * as jwtEncrypt from 'jwt-token-encrypt';
+
+import {
+	PRIVATE_KEY_URL,
+	UI_URL, SMTP_URL,
+	API_EMAIL,
+	API_URL,
+	API_USERNAME,
+	API_PASSWORD,
+	API_CLIENT_USER_AGENT
+} from '../config';
+
+const {sendEmail} = Utils;
 
 const Ajv = require('ajv');
+
+const client = createApiClient({
+	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
+	userAgent: API_CLIENT_USER_AGENT
+});
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
@@ -139,3 +157,45 @@ export function local() {
 	}
 }
 
+export async function createLinkAndSendEmail(type, request) {
+	const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+	const encryption = JSON.parse(res);
+
+	const jwtDetails = {
+		secret: 'this is a secret',
+		expiresIn: '24h'
+	};
+	const publicData = {
+		role: type
+	};
+	const privateData = {
+		email: request.email,
+		id: request.email
+	};
+	const token = await jwtEncrypt.generateJWT(
+		jwtDetails,
+		publicData,
+		encryption[0],
+		privateData
+	);
+
+	const link = `${UI_URL}/${type}/passwordReset/${token}`;
+	const result = await sendEmail({
+		name: 'change password',
+		args: {link: link},
+		getTemplate: getTemplate,
+		SMTP_URL: SMTP_URL,
+		API_EMAIL: API_EMAIL
+	});
+	return result;
+}
+
+export async function getTemplate(query, cache) {
+	const key = JSON.stringify(query);
+	if (key in cache) {
+		return cache[key];
+	}
+
+	cache[key] = await client.templates.getTemplate(query);
+	return cache[key];
+}

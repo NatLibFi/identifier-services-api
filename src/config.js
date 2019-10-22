@@ -5,6 +5,13 @@ export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8080'
 });
 
+export const SMTP_URL = readEnvironmentVariable('SMTP_URL');
+export const API_EMAIL = readEnvironmentVariable('API_EMAIL');
+
+export const API_CLIENT_USER_AGENT = readEnvironmentVariable('API_CLIENT_USER_AGENT', {defaultValue: '_RECORD-IMPORT-CONTROLLER'});
+export const API_USERNAME = readEnvironmentVariable('API_USERNAME');
+export const API_PASSWORD = readEnvironmentVariable('API_PASSWORD');
+
 export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {
 	defaultValue: ['http://localhost:8080'],
 	format: JSON.parse
@@ -24,6 +31,9 @@ export const MONGO_URI = readEnvironmentVariable('MONGO_URI', {
 });
 export const PASSPORT_LOCAL_USERS = readEnvironmentVariable('PASSPORT_LOCAL_USERS');
 export const PASSPORT_LOCAL = readEnvironmentVariable('PASSPORT_LOCAL');
+
+export const PRIVATE_KEY_URL = readEnvironmentVariable('PRIVATE_KEY_URL');
+export const UI_URL = readEnvironmentVariable('UI_URL', {defaultValue: 'http://localhost:8080'});
 
 export const MONGO_DEBUG = readEnvironmentVariable('MONGO_DEBUG', {
 	defaultValue: false,
