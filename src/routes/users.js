@@ -87,7 +87,11 @@ export default function (db, passportMiddlewares) {
 		const doc = {...req.body, id: req.params.id};
 		try {
 			const result = await users.changePwd(doc, req.user);
-			res.json(result);
+			if (result === undefined) {
+				res.json(HttpStatus.CREATED);
+			} else {
+				res.json(result);
+			}
 		} catch (err) {
 			next(err);
 		}

@@ -157,36 +157,45 @@ export function local() {
 	}
 }
 
-export async function createLinkAndSendEmail(type, request) {
-	const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-	const encryption = JSON.parse(res);
+export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
+	const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	const passportLocalList = JSON.parse(readResponse);
+	return passportLocalList.reduce(async (acc, passport) => {
+		if (passport.id === request.id) {
+			const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+			const encryption = JSON.parse(res);
 
-	const jwtDetails = {
-		secret: 'this is a secret',
-		expiresIn: '24h'
-	};
-	const publicData = {
-		role: type
-	};
-	const privateData = {
-		id: request.id
-	};
-	const token = await jwtEncrypt.generateJWT(
-		jwtDetails,
-		publicData,
-		encryption[0],
-		privateData
-	);
+			const jwtDetails = {
+				secret: 'This',
+				expiresIn: '24h'
+			};
 
-	const link = `${UI_URL}/${type}/passwordReset/${token}`;
-	const result = await sendEmail({
-		name: 'change password',
-		args: {link: link},
-		getTemplate: getTemplate,
-		SMTP_URL: SMTP_URL,
-		API_EMAIL: API_EMAIL
-	});
-	return result;
+			const privateData = {
+				id: request.id
+			};
+			const token = await jwtEncrypt.generateJWT(
+				jwtDetails,
+				undefined,
+				encryption[0],
+				privateData
+			);
+
+			const link = `${UI_URL}/users/passwordReset/${token}`;
+			const result = await sendEmail({
+				name: 'change password',
+				args: {link: link},
+				getTemplate: getTemplate,
+				SMTP_URL: SMTP_URL,
+				API_EMAIL: API_EMAIL
+			});
+
+			acc = result;
+			return acc;
+		}
+
+		acc = new ApiError(HttpStatus.NOT_FOUND);
+		return acc;
+	}, {});
 }
 
 export async function getTemplate(query, cache) {

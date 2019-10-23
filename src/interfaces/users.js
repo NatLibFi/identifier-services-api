@@ -31,7 +31,7 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local} from './utils';
 import interfaceFactory from './interfaceModules';
-import {PASSPORT_LOCAL} from '../config';
+import {PASSPORT_LOCAL, PRIVATE_KEY_URL} from '../config';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
 
@@ -95,7 +95,11 @@ export default function () {
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
 		} else {
-			const result = await createLinkAndSendEmail('users', doc);
+			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
+			if (result !== undefined && result.status === 404) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		}
 	}
