@@ -32,7 +32,6 @@ import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
 
 import {
-	PRIVATE_KEY_URL,
 	UI_URL, SMTP_URL,
 	API_EMAIL,
 	API_URL,
