@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -226,6 +225,7 @@ export default function (collectionName, collectionContent) {
 
 	function getValidator(schemaName) {
 		const str = readFileSync(path.join(__dirname, '..', 'api.json'), 'utf8')
+			// eslint-disable-next-line prefer-regex-literals
 			.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 		const obj = JSON.parse(str);
