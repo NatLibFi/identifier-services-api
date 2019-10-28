@@ -32,20 +32,36 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 import interfaceFactory from './interfaceModules';
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
 
-const userInterface = interfaceFactory('usersRequest', 'UserRequestContent');
+const userInterface = interfaceFactory('usersRequest', 'UserRequest');
+const userInitialInterface = interfaceFactory('usersRequest', 'UserRequestContent');
 
 export default function () {
 	return {
 		createRequest,
 		readRequest,
+		updateInitialRequest,
 		updateRequest,
 		removeRequest,
 		queryRequest
 	};
 
 	async function createRequest(db, doc, user) {
-		const result = await userInterface.create(db, doc, user);
-		return result;
+		if (hasPublisherAdminPermission(user)) {
+			const newDoc = {
+				...doc,
+				state: 'new',
+				backgroundProcessingState: 'pending',
+				role: 'publisher',
+				publisher: user.id,
+				preferences: {
+					defaultLanguage: 'fin'
+				}
+			};
+			const result = await userInitialInterface.create(db, newDoc, user);
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readRequest(db, id, user) {
@@ -63,15 +79,33 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function updateRequest(db, id, doc, user) {
+	async function updateInitialRequest(db, id, doc, user) {
+		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequest(db, id, user);
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await userInterface.update(db, id, doc, user);
+			const result = await userInitialInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
 		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
-			const result = await userInterface.update(db, id, doc, user);
+			const result = await userInitialInterface.update(db, id, newDoc, user);
+			delete result.state;
+			return result;
+		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
+	}
+
+	async function updateRequest(db, id, doc, user) {
+		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
+		const readResult = await readRequest(db, id, user);
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			const result = await userInitialInterface.update(db, id, newDoc, user);
+			return result;
+		}
+
+		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
+			const result = await userInitialInterface.update(db, id, newDoc, user);
 			delete result.state;
 			return result;
 		}
@@ -95,7 +129,10 @@ export default function () {
 		}
 
 		if (hasPublisherAdminPermission(user)) {
-			return result.results.filter(item => item.publisher === user.id && delete item.state);
+			const newResult = result.results.filter(item => item.publisher === user.id && delete item.state);
+			return {
+				...result, results: newResult
+			};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

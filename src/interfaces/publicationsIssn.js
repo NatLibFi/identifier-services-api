@@ -84,8 +84,9 @@ export default function () {
 
 		if (user) {
 			const newResult = result.results.filter(item => item.publisher === user.id);
-			result.results = newResult;
-			return result;
+			return {
+				...result, results: newResult
+			};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

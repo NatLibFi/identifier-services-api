@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -32,9 +31,9 @@ import {hasAdminPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
-const rangesISBNInterface = interfaceFactory('IdentifierRangesISBN', 'RangeIsbnContent');
-const rangesISMNInterface = interfaceFactory('IdentifierRangesISMN', 'RangeIsmnContent');
-const rangesISSNInterface = interfaceFactory('IdentifierRangesISSN', 'RangeIssnContent');
+const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
+const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
+const rangesISSNInterface = interfaceFactory('RangeIssnContent', 'RangeIssnContent');
 
 export default function () {
 	return {
@@ -63,7 +62,7 @@ export default function () {
 
 	async function readIsbn(db, id, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISBNInterface.read(db, id, user);
+			const result = await rangesISBNInterface.read(db, id);
 			return result;
 		}
 
@@ -79,9 +78,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIsbn(db, {query, offset}, user) {
+	async function queryIsbn(db, {queries, offset}, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISBNInterface.query(db, {query, offset});
+			const result = await rangesISBNInterface.query(db, {queries, offset});
 			return result;
 		}
 
@@ -99,7 +98,7 @@ export default function () {
 
 	async function readIsmn(db, id, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.read(db, id, user);
+			const result = await rangesISMNInterface.read(db, id);
 			return result;
 		}
 
@@ -115,9 +114,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIsmn(db, {query, offset}, user) {
+	async function queryIsmn(db, {queries, offset}, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.query(db, {query, offset});
+			const result = await rangesISMNInterface.query(db, {queries, offset});
 			return result;
 		}
 
@@ -135,7 +134,7 @@ export default function () {
 
 	async function readIssn(db, id, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISMNInterface.read(db, id, user);
+			const result = await rangesISSNInterface.read(db, id);
 			return result;
 		}
 
@@ -151,9 +150,9 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function queryIssn(db, {query, offset}, user) {
+	async function queryIssn(db, {queries, offset}, user) {
 		if (hasAdminPermission(user)) {
-			const result = await rangesISSNInterface.query(db, {query, offset});
+			const result = await rangesISSNInterface.query(db, {queries, offset});
 			return result;
 		}
 

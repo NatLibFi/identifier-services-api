@@ -29,6 +29,7 @@
 import {Router} from 'express';
 
 import {usersFactory} from '../interfaces';
+import HttpStatus from 'http-status';
 import {API_URL} from '../config';
 
 export default function (db, passportMiddlewares) {
@@ -46,7 +47,7 @@ export default function (db, passportMiddlewares) {
 	async function create(req, res, next) {
 		try {
 			const result = await users.create(db, req.body, req.user);
-			res.json(result);
+			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			return next(err);
 		}
@@ -83,8 +84,14 @@ export default function (db, passportMiddlewares) {
 	}
 
 	async function changePwd(req, res, next) {
+		const doc = {...req.body, id: req.params.id};
 		try {
-			res.json(req.body);
+			const result = await users.changePwd(doc, req.user);
+			if (result === undefined) {
+				res.json(HttpStatus.CREATED);
+			} else {
+				res.json(result);
+			}
 		} catch (err) {
 			next(err);
 		}

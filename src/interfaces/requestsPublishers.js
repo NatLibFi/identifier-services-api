@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow-restricted-names */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -49,6 +48,8 @@ export default function () {
 			const result = await publisherRequestsInterface.create(db, newDoc, user);
 			return result;
 		}
+
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function readRequest(db, id, user) {
