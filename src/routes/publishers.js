@@ -30,6 +30,7 @@ import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
+import {combineUserInfo} from '../utils';
 
 export default function (db, passportMiddlewares) {
 	const publishers = publishersFactory({url: API_URL});
@@ -50,7 +51,8 @@ export default function (db, passportMiddlewares) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await publishers.create(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publishers.create(db, req.body, user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
@@ -70,7 +72,8 @@ export default function (db, passportMiddlewares) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.update(db, id, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publishers.update(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);

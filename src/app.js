@@ -64,8 +64,8 @@ export default async function run() {
 
 	const passportMiddlewares = await generatePassportMiddlewares({
 		crowd: {
-			// AppName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
-			// url: CROWD_URL, useCache: true, fetchGroupMembership: true
+			appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
+			url: CROWD_URL, useCache: true, fetchGroupMembership: true
 		},
 		localUsers: PASSPORT_LOCAL_USERS
 	});

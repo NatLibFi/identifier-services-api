@@ -27,7 +27,7 @@
  */
 
 import {Router} from 'express';
-import {bodyParse} from '../../utils';
+import {bodyParse, combineUserInfo} from '../../utils';
 import {publicationIsbnIsmnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
@@ -44,7 +44,8 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createRequestIsbnIsmn(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.createRequestIsbnIsmn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -54,7 +55,8 @@ export default function (db, passportMiddleware) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readRequestIsbnIsmn(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.readRequestIsbnIsmn(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -64,7 +66,8 @@ export default function (db, passportMiddleware) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.removeRequestIsbnIsmn(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.removeRequestIsbnIsmn(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -74,7 +77,8 @@ export default function (db, passportMiddleware) {
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.updateRequestIsbnIsmn(db, id, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.updateRequestIsbnIsmn(db, id, req.body, user);
 			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
@@ -83,7 +87,8 @@ export default function (db, passportMiddleware) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const result = await publications.queryRequestIsbnIsmn(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.queryRequestIsbnIsmn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);

@@ -30,6 +30,7 @@ import {Router} from 'express';
 import {publisherRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
+import {combineUserInfo} from '../utils';
 
 export default function (db, passportMiddlewares) {
 	const publisherRequests = publisherRequestsFactory({url: API_URL});
@@ -43,7 +44,8 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publisherRequests.createRequest(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publisherRequests.createRequest(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -52,7 +54,8 @@ export default function (db, passportMiddlewares) {
 
 	async function readRequest(req, res, next) {
 		try {
-			const result = await publisherRequests.readRequest(db, req.params.id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publisherRequests.readRequest(db, req.params.id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -61,7 +64,8 @@ export default function (db, passportMiddlewares) {
 
 	async function removeRequest(req, res, next) {
 		try {
-			const result = await publisherRequests.removeRequest(db, req.params.id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publisherRequests.removeRequest(db, req.params.id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -72,7 +76,8 @@ export default function (db, passportMiddlewares) {
 		const id = req.params.id;
 		const body = req.body;
 		try {
-			const result = publisherRequests.updateRequest(db, id, body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = publisherRequests.updateRequest(db, id, body, user);
 			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
@@ -81,7 +86,8 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequests(req, res, next) {
 		try {
-			const result = await publisherRequests.queryRequests(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publisherRequests.queryRequests(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);

@@ -30,6 +30,7 @@ import {Router} from 'express';
 
 import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
+import {combineUserInfo} from '../utils';
 
 export default function (db, passportMiddlewares) {
 	const usersRequests = usersRequestsFactory({url: API_URL});
@@ -44,7 +45,8 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await usersRequests.createRequest(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await usersRequests.createRequest(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -54,7 +56,8 @@ export default function (db, passportMiddlewares) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await usersRequests.readRequest(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await usersRequests.readRequest(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -67,9 +70,11 @@ export default function (db, passportMiddlewares) {
 			let result;
 			if (req.body.initialRequest) {
 				delete req.body.initialRequest;
-				result = await usersRequests.updateInitialRequest(db, id, req.body, req.user);
+				const user = combineUserInfo({db: db, user: req.user});
+				result = await usersRequests.updateInitialRequest(db, id, req.body, user);
 			} else {
-				result = await usersRequests.updateRequest(db, id, req.body, req.user);
+				const user = combineUserInfo({db: db, user: req.user});
+				result = await usersRequests.updateRequest(db, id, req.body, user);
 			}
 
 			res.json(result);
@@ -90,7 +95,8 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const result = await usersRequests.queryRequest(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await usersRequests.queryRequest(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);

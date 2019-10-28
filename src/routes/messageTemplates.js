@@ -29,6 +29,7 @@
 import {Router} from 'express';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
+import {combineUserInfo} from '../utils';
 
 export default function (db, passportMiddlewares) {
 	const templates = templatesFactory({url: API_URL});
@@ -43,7 +44,8 @@ export default function (db, passportMiddlewares) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await templates.create(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await templates.create(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -53,7 +55,8 @@ export default function (db, passportMiddlewares) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.read(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await templates.read(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,7 +66,8 @@ export default function (db, passportMiddlewares) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.update(db, id, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await templates.update(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -73,7 +77,8 @@ export default function (db, passportMiddlewares) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await templates.remove(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await templates.remove(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -83,7 +88,8 @@ export default function (db, passportMiddlewares) {
 	async function query(req, res, next) {
 		let result;
 		try {
-			result = await templates.query(db, req.body, req.user, req.query);
+			const user = combineUserInfo({db: db, user: req.user});
+			result = await templates.query(db, req.body, user, req.query);
 			res.json(result);
 		} catch (err) {
 			next(err);

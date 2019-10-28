@@ -27,7 +27,7 @@
  */
 
 import {Router} from 'express';
-import {bodyParse} from '../../utils';
+import {bodyParse, combineUserInfo} from '../../utils';
 import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
@@ -43,7 +43,8 @@ export default function (db, passportMiddleware) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await publications.createIsbnIsmn(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.createIsbnIsmn(db, req.body, user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
@@ -53,7 +54,8 @@ export default function (db, passportMiddleware) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readIsbnIsmn(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.readIsbnIsmn(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,7 +65,8 @@ export default function (db, passportMiddleware) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.updateIsbnIsmn(db, id, req.body, user);
 			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
@@ -73,7 +76,8 @@ export default function (db, passportMiddleware) {
 	// Async function remove(req, res, next) {
 	// 	const id = req.params.id;
 	// 	try {
-	// 		const result = await publications.removeIsbnIsmn(db, id, req.user);
+	// 		const user = combineUserInfo({db: db, user: req.user});
+	// 		const result = await publications.removeIsbnIsmn(db, id, user);
 	// 		res.json(result);
 	// 	} catch (err) {
 	// 		next(err);
@@ -82,7 +86,8 @@ export default function (db, passportMiddleware) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await publications.queryIsbnIsmn(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.queryIsbnIsmn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);

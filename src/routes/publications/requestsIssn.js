@@ -27,7 +27,7 @@
  */
 
 import {Router} from 'express';
-import {bodyParse} from '../../utils';
+import {bodyParse, combineUserInfo} from '../../utils';
 import {publicationIssnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
@@ -43,7 +43,8 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await publications.createRequestISSN(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.createRequestISSN(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -53,7 +54,8 @@ export default function (db, passportMiddleware) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.readRequestISSN(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.readRequestISSN(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,7 +65,8 @@ export default function (db, passportMiddleware) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.removeRequestISSN(db, id, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.removeRequestISSN(db, id, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -73,7 +76,8 @@ export default function (db, passportMiddleware) {
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publications.updateRequestISSN(db, id, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.updateRequestISSN(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -82,7 +86,8 @@ export default function (db, passportMiddleware) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const result = await publications.queryRequestISSN(db, req.body, req.user);
+			const user = combineUserInfo({db: db, user: req.user});
+			const result = await publications.queryRequestISSN(db, req.body, user);
 			res.json(result);
 		} catch (err) {
 			next(err);
