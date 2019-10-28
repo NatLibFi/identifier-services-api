@@ -54,7 +54,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIsbn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.createIsbn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -65,7 +65,7 @@ export default function (db, passportMiddlewares) {
 	async function readIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.readIsbn(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -76,7 +76,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIsbn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.updateIsbn(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -86,7 +86,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsbn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.queryIsbn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -98,7 +98,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIsmn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.createIsmn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -109,7 +109,7 @@ export default function (db, passportMiddlewares) {
 	async function readIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.readIsmn(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -120,7 +120,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIsmn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.updateIsmn(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -130,7 +130,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIsmn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.queryIsmn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -142,7 +142,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createIssn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.createIssn(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -153,7 +153,7 @@ export default function (db, passportMiddlewares) {
 	async function readIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.readIssn(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -164,7 +164,7 @@ export default function (db, passportMiddlewares) {
 	async function updateIssn(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.updateIssn(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -174,7 +174,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryIssn(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await ranges.queryIssn(db, req.body, user);
 			res.json(result);
 		} catch (err) {

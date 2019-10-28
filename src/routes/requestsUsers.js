@@ -45,7 +45,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await usersRequests.createRequest(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -56,7 +56,7 @@ export default function (db, passportMiddlewares) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await usersRequests.readRequest(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -70,10 +70,10 @@ export default function (db, passportMiddlewares) {
 			let result;
 			if (req.body.initialRequest) {
 				delete req.body.initialRequest;
-				const user = combineUserInfo({db: db, user: req.user});
+				const user = await combineUserInfo({db: db, user: req.user});
 				result = await usersRequests.updateInitialRequest(db, id, req.body, user);
 			} else {
-				const user = combineUserInfo({db: db, user: req.user});
+				const user = await combineUserInfo({db: db, user: req.user});
 				result = await usersRequests.updateRequest(db, id, req.body, user);
 			}
 
@@ -95,7 +95,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await usersRequests.queryRequest(db, req.body, user);
 			res.json(result);
 		} catch (err) {

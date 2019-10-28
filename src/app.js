@@ -48,26 +48,25 @@ import {
 	ENABLE_PROXY,
 	MONGO_URI, HTTP_PORT,
 	USER_AGENT_LOGGING_BLACKLIST,
-	// CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD,
+	CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD,
 	PASSPORT_LOCAL_USERS
 } from './config';
 
 const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 const {Crowd: {generatePassportMiddlewares}} = Authentication;
-
 export default async function run() {
 	const Logger = createLogger();
 	const app = express();
-	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true});
+	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 	const connection = await client.connect();
 	const db = connection.db();
 
 	const passportMiddlewares = await generatePassportMiddlewares({
 		crowd: {
 			appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
-			url: CROWD_URL, useCache: true, fetchGroupMembership: true
-		},
-		localUsers: PASSPORT_LOCAL_USERS
+			url: `${CROWD_URL}/rest`, useCache: true, fetchGroupMembership: true
+		}
+		// LocalUsers: PASSPORT_LOCAL_USERS
 	});
 
 	const corsOptions = {

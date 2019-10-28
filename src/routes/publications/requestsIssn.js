@@ -43,7 +43,7 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publications.createRequestISSN(db, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -54,7 +54,7 @@ export default function (db, passportMiddleware) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publications.readRequestISSN(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -65,7 +65,7 @@ export default function (db, passportMiddleware) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publications.removeRequestISSN(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -76,7 +76,7 @@ export default function (db, passportMiddleware) {
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publications.updateRequestISSN(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -86,7 +86,7 @@ export default function (db, passportMiddleware) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publications.queryRequestISSN(db, req.body, user);
 			res.json(result);
 		} catch (err) {

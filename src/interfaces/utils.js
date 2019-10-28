@@ -30,14 +30,19 @@ import {ApiError, Utils, createApiClient} from '@natlibfi/identifier-services-co
 import HttpStatus from 'http-status';
 import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
+import CrowdClient from 'atlassian-crowd-client';
 
 import {
-	UI_URL, SMTP_URL,
+	UI_URL,
+	SMTP_URL,
 	API_EMAIL,
 	API_URL,
 	API_USERNAME,
 	API_PASSWORD,
-	API_CLIENT_USER_AGENT
+	API_CLIENT_USER_AGENT,
+	CROWD_URL,
+	CROWD_APP_NAME,
+	CROWD_APP_PASSWORD
 } from '../config';
 
 const {sendEmail} = Utils;
@@ -47,6 +52,14 @@ const Ajv = require('ajv');
 const client = createApiClient({
 	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
 	userAgent: API_CLIENT_USER_AGENT
+});
+
+const crowdCli = new CrowdClient({
+	baseUrl: CROWD_URL,
+	application: {
+		name: CROWD_APP_NAME,
+		password: CROWD_APP_PASSWORD
+	}
 });
 
 export function hasPermission(profile, user) {
@@ -67,7 +80,7 @@ export function hasSystemPermission(user) {
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisher-admin']}}, user);
+	return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
 }
 
 export function convertLanguage(language) {
@@ -76,7 +89,8 @@ export function convertLanguage(language) {
 
 export function getValidator(schemaName) {
 	const str = fs.readFileSync('api.json', 'utf8')
-		.replace(/#\/components\/schemas/gm, 'defs#/definitions');
+		// eslint-disable-next-line prefer-regex-literals
+		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
 
 	const obj = JSON.parse(str);
 
@@ -153,6 +167,34 @@ export function local() {
 
 		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
 		return HttpStatus.OK;
+	}
+}
+
+export function crowd() {
+	return {
+		crowdUser: {
+			read,
+			create
+		}
+
+	};
+
+	async function read({id}) {
+		const response = await crowdCli.user.get(id);
+		return response;
+	}
+
+	async function create({doc}) {
+		const newData = {
+			firstname: doc.givenName,
+			lastname: doc.lastname,
+			displayName: `${doc.givenName} ${doc.lastname}`,
+			email: doc.email,
+			username: doc.email,
+			password: {value: doc.password},
+			active: true,
+			attributes: []
+		};
 	}
 }
 

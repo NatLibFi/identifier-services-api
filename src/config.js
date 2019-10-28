@@ -12,6 +12,10 @@ export const API_CLIENT_USER_AGENT = readEnvironmentVariable('API_CLIENT_USER_AG
 export const API_USERNAME = readEnvironmentVariable('API_USERNAME');
 export const API_PASSWORD = readEnvironmentVariable('API_PASSWORD');
 
+export const CROWD_URL = readEnvironmentVariable('CROWD_URL');
+export const CROWD_APP_NAME = readEnvironmentVariable('CROWD_APP_NAME');
+export const CROWD_APP_PASSWORD = readEnvironmentVariable('CROWD_APP_PASSWORD');
+
 export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {
 	defaultValue: ['http://localhost:8080'],
 	format: JSON.parse

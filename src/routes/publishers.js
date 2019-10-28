@@ -51,7 +51,7 @@ export default function (db, passportMiddlewares) {
 
 	async function create(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publishers.create(db, req.body, user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
@@ -62,7 +62,12 @@ export default function (db, passportMiddlewares) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await publishers.read(db, id, req.user);
+			let user;
+			if (req.user !== undefined) {
+				user = await combineUserInfo({db: db, user: req.user});
+			}
+
+			const result = await publishers.read(db, id, req.user === undefined ? undefined : user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -72,7 +77,7 @@ export default function (db, passportMiddlewares) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await publishers.update(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {

@@ -47,7 +47,7 @@ export default function (db, passportMiddlewares) {
 
 	async function create(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.create(db, req.body, user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
@@ -58,7 +58,7 @@ export default function (db, passportMiddlewares) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.read(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -69,7 +69,7 @@ export default function (db, passportMiddlewares) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.update(db, id, req.body, user);
 			res.json(result);
 		} catch (err) {
@@ -80,7 +80,7 @@ export default function (db, passportMiddlewares) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.remove(db, id, user);
 			res.json(result);
 		} catch (err) {
@@ -91,7 +91,7 @@ export default function (db, passportMiddlewares) {
 	async function changePwd(req, res, next) {
 		const doc = {...req.body, id: req.params.id};
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.changePwd(doc, user);
 			if (result === undefined) {
 				res.json(HttpStatus.CREATED);
@@ -105,7 +105,7 @@ export default function (db, passportMiddlewares) {
 
 	async function query(req, res, next) {
 		try {
-			const user = combineUserInfo({db: db, user: req.user});
+			const user = await combineUserInfo({db: db, user: req.user});
 			const result = await users.query(db, req.body, user, req.query);
 			res.json(result);
 		} catch (err) {
