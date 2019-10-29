@@ -38,8 +38,3 @@ export function bodyParse() {
 		type: ['application/json']
 	});
 }
-
-export async function combineUserInfo({db, user}) {
-	const response = await db.collection('userMetadata').findOne({id: user.id});
-	return {...user, ...response};
-}

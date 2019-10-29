@@ -30,13 +30,12 @@ import {Router} from 'express';
 
 import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
-import {combineUserInfo} from '../utils';
 
-export default function (db, passportMiddlewares) {
+export default function (db, combineUserInfo) {
 	const usersRequests = usersRequestsFactory({url: API_URL});
 
 	return new Router()
-		.use(passportMiddlewares)
+		.use(combineUserInfo)
 		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
@@ -45,8 +44,7 @@ export default function (db, passportMiddlewares) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await usersRequests.createRequest(db, req.body, user);
+			const result = await usersRequests.createRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -56,8 +54,7 @@ export default function (db, passportMiddlewares) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await usersRequests.readRequest(db, id, user);
+			const result = await usersRequests.readRequest(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -70,11 +67,9 @@ export default function (db, passportMiddlewares) {
 			let result;
 			if (req.body.initialRequest) {
 				delete req.body.initialRequest;
-				const user = await combineUserInfo({db: db, user: req.user});
-				result = await usersRequests.updateInitialRequest(db, id, req.body, user);
+				result = await usersRequests.updateInitialRequest(db, id, req.body, req.user);
 			} else {
-				const user = await combineUserInfo({db: db, user: req.user});
-				result = await usersRequests.updateRequest(db, id, req.body, user);
+				result = await usersRequests.updateRequest(db, id, req.body, req.user);
 			}
 
 			res.json(result);
@@ -95,8 +90,7 @@ export default function (db, passportMiddlewares) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await usersRequests.queryRequest(db, req.body, user);
+			const result = await usersRequests.queryRequest(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

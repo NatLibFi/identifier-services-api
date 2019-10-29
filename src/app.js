@@ -48,12 +48,15 @@ import {
 	ENABLE_PROXY,
 	MONGO_URI, HTTP_PORT,
 	USER_AGENT_LOGGING_BLACKLIST,
-	CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD,
+	CROWD_URL,
+	CROWD_APP_NAME,
+	CROWD_APP_PASSWORD,
 	PASSPORT_LOCAL_USERS
 } from './config';
 
 const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 const {Crowd: {generatePassportMiddlewares}} = Authentication;
+
 export default async function run() {
 	const Logger = createLogger();
 	const app = express();
@@ -65,8 +68,8 @@ export default async function run() {
 		crowd: {
 			appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
 			url: `${CROWD_URL}/rest`, useCache: true, fetchGroupMembership: true
-		}
-		// LocalUsers: PASSPORT_LOCAL_USERS
+		},
+		localUsers: PASSPORT_LOCAL_USERS
 	});
 
 	const corsOptions = {
@@ -92,21 +95,27 @@ export default async function run() {
 	app.use(cors(corsOptions));
 	app.use(bodyParse());
 
-	app.use('/templates', createMessageTemplate(db, passportMiddlewares.token));
-	app.use('/users', createUsersRouter(db, passportMiddlewares.token));
-	app.use('/requests/users', createRequestsUsersRouter(db, passportMiddlewares.token));
-	app.use('/publishers', createPublishersRouter(db, passportMiddlewares));
-	app.use('/requests/publishers', createPublishersRequestsRouter(db, passportMiddlewares));
-	app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
-	app.use('/requests/publications/isbn-ismn', createRequestsPublicationsRouterIsbnIsmn(db, passportMiddlewares.token));
-	app.use('/publications/issn', createPublicationsRouterIssn(db, passportMiddlewares.token));
-	app.use('/requests/publications/issn', createRequestsPublicationsRouterIssn(db, passportMiddlewares.token));
-	app.use('/ranges', createRangesRouter(db, passportMiddlewares));
+	app.use('/templates', passportMiddlewares.token, createMessageTemplate(db, combineUserInfo));
+	app.use('/users', passportMiddlewares.token, createUsersRouter(db, combineUserInfo));
+	app.use('/requests/users', passportMiddlewares.token, createRequestsUsersRouter(db, combineUserInfo));
+	app.use('/publishers', createPublishersRouter(db, passportMiddlewares, combineUserInfo));
+	app.use('/requests/publishers', passportMiddlewares.token, createPublishersRequestsRouter(db, combineUserInfo));
+	app.use('/publications/isbn-ismn', passportMiddlewares.token, createPublicationsRouterIsbnIsmn(db, combineUserInfo));
+	app.use('/requests/publications/isbn-ismn', passportMiddlewares.token, createRequestsPublicationsRouterIsbnIsmn(db, combineUserInfo));
+	app.use('/publications/issn', passportMiddlewares.token, createPublicationsRouterIssn(db, combineUserInfo));
+	app.use('/requests/publications/issn', passportMiddlewares.token, createRequestsPublicationsRouterIssn(db, combineUserInfo));
+	app.use('/ranges', passportMiddlewares.token, createRangesRouter(db, combineUserInfo));
 	app.use('/auth', authenticationRouter(db, passportMiddlewares));
 
 	const server = app.listen(HTTP_PORT, () => {
 		Logger.log('info', 'Started identifier-services-api');
 	});
+
+	async function combineUserInfo(req, res, next) {
+		const response = await db.collection('userMetadata').findOne({id: req.user.id});
+		req.user = {...req.user, ...response};
+		next();
+	}
 
 	registerSignalHandlers();
 

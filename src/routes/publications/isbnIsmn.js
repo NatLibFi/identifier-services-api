@@ -27,15 +27,15 @@
  */
 
 import {Router} from 'express';
-import {bodyParse, combineUserInfo} from '../../utils';
+import {bodyParse} from '../../utils';
 import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
 
-export default function (db, passportMiddleware) {
+export default function (db, combineUserInfo) {
 	const publications = publicationsIsbnIsmnFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddleware)
+		.use(combineUserInfo)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
@@ -43,8 +43,7 @@ export default function (db, passportMiddleware) {
 
 	async function create(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.createIsbnIsmn(db, req.body, user);
+			const result = await publications.createIsbnIsmn(db, req.body, req.user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
@@ -54,8 +53,7 @@ export default function (db, passportMiddleware) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.readIsbnIsmn(db, id, user);
+			const result = await publications.readIsbnIsmn(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -65,8 +63,7 @@ export default function (db, passportMiddleware) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.updateIsbnIsmn(db, id, req.body, user);
+			const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
 			res.json(result).status(HttpStatus.OK);
 		} catch (err) {
 			next(err);
@@ -86,8 +83,7 @@ export default function (db, passportMiddleware) {
 
 	async function query(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.queryIsbnIsmn(db, req.body, user);
+			const result = await publications.queryIsbnIsmn(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

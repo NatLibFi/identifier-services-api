@@ -30,14 +30,14 @@ import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
-import {combineUserInfo} from '../utils';
 
-export default function (db, passportMiddlewares) {
+export default function (db, passportMiddlewares, combineUserInfo) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
 		.get('/:id', authenticated, read)
 		.post('/query', query)
 		.use(passportMiddlewares.token)
+		.use(combineUserInfo)
 		.post('/', create)
 		.put('/:id', update);
 
@@ -51,8 +51,7 @@ export default function (db, passportMiddlewares) {
 
 	async function create(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publishers.create(db, req.body, user);
+			const result = await publishers.create(db, req.body, req.user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
@@ -62,12 +61,7 @@ export default function (db, passportMiddlewares) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			let user;
-			if (req.user !== undefined) {
-				user = await combineUserInfo({db: db, user: req.user});
-			}
-
-			const result = await publishers.read(db, id, req.user === undefined ? undefined : user);
+			const result = await publishers.read(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -77,8 +71,7 @@ export default function (db, passportMiddlewares) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publishers.update(db, id, req.body, user);
+			const result = await publishers.update(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

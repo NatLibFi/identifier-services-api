@@ -27,14 +27,14 @@
  */
 
 import {Router} from 'express';
-import {bodyParse, combineUserInfo} from '../../utils';
+import {bodyParse} from '../../utils';
 import {publicationIssnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function (db, passportMiddleware) {
+export default function (db, combineUserInfo) {
 	const publications = publicationIssnRequestsFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddleware)
+		.use(combineUserInfo)
 		.post('/', bodyParse(), createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
@@ -43,8 +43,7 @@ export default function (db, passportMiddleware) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.createRequestISSN(db, req.body, user);
+			const result = await publications.createRequestISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -54,8 +53,7 @@ export default function (db, passportMiddleware) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.readRequestISSN(db, id, user);
+			const result = await publications.readRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -65,8 +63,7 @@ export default function (db, passportMiddleware) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.removeRequestISSN(db, id, user);
+			const result = await publications.removeRequestISSN(db, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -76,8 +73,7 @@ export default function (db, passportMiddleware) {
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.updateRequestISSN(db, id, req.body, user);
+			const result = await publications.updateRequestISSN(db, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -86,8 +82,7 @@ export default function (db, passportMiddleware) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const user = await combineUserInfo({db: db, user: req.user});
-			const result = await publications.queryRequestISSN(db, req.body, user);
+			const result = await publications.queryRequestISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
