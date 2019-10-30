@@ -31,6 +31,7 @@ import HttpStatus from 'http-status';
 import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
 import CrowdClient from 'atlassian-crowd-client';
+import User from 'atlassian-crowd-client/lib/models/user';
 
 import {
 	UI_URL,
@@ -185,58 +186,83 @@ export function crowd() {
 	}
 
 	async function create({doc}) {
-		const newData = {
-			firstname: doc.givenName,
-			lastname: doc.lastname,
-			displayName: `${doc.givenName} ${doc.lastname}`,
-			email: doc.email,
-			username: doc.email,
-			password: {value: doc.password},
-			active: true,
-			attributes: []
-		};
+		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
+		const response = await crowdCli.user.create(payload);
+		return response;
 	}
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
-	const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-	const passportLocalList = JSON.parse(readResponse);
-	return passportLocalList.reduce(async (acc, passport) => {
-		if (passport.id === request.id) {
-			const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-			const encryption = JSON.parse(res);
+	const response = await crowdCli.user.get(request);
+	if (response) {
+		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+		const encryption = JSON.parse(res);
+		const jwtDetails = {
+			secret: 'This',
+			expiresIn: '24h'
+		};
+		const privateData = {
+			id: request.id
+		};
+		const token = await jwtEncrypt.generateJWT(
+			jwtDetails,
+			undefined,
+			encryption[0],
+			privateData
+		);
+		const link = `${UI_URL}/users/passwordReset/${token}`;
 
-			const jwtDetails = {
-				secret: 'This',
-				expiresIn: '24h'
-			};
+		const result = sendEmail({
+			name: 'change password',
+			args: {link: link},
+			getTemplate: getTemplate,
+			SMTP_URL: SMTP_URL,
+			API_EMAIL: API_EMAIL
+		});
+		console.log(result);
+		return result;
+	}
 
-			const privateData = {
-				id: request.id
-			};
-			const token = await jwtEncrypt.generateJWT(
-				jwtDetails,
-				undefined,
-				encryption[0],
-				privateData
-			);
+	throw new ApiError(HttpStatus.NOT_FOUND);
 
-			const link = `${UI_URL}/users/passwordReset/${token}`;
-			const result = await sendEmail({
-				name: 'change password',
-				args: {link: link},
-				getTemplate: getTemplate,
-				SMTP_URL: SMTP_URL,
-				API_EMAIL: API_EMAIL
-			});
+	// const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	// const passportLocalList = JSON.parse(readResponse);
+	// return passportLocalList.reduce(async (acc, passport) => {
+	// 	if (passport.id === request.id) {
+	// 		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+	// 		const encryption = JSON.parse(res);
 
-			acc = result;
-			return acc;
-		}
+	// 		const jwtDetails = {
+	// 			secret: 'This',
+	// 			expiresIn: '24h'
+	// 		};
 
-		acc = new ApiError(HttpStatus.NOT_FOUND);
-		return acc;
-	}, {});
+	// 		const privateData = {
+	// 			id: request.id
+	// 		};
+	// 		const token = await jwtEncrypt.generateJWT(
+	// 			jwtDetails,
+	// 			undefined,
+	// 			encryption[0],
+	// 			privateData
+	// 		);
+
+	// 		const link = `${UI_URL}/users/passwordReset/${token}`;
+	// 		const result = await sendEmail({
+	// 			name: 'change password',
+	// 			args: {link: link},
+	// 			getTemplate: getTemplate,
+	// 			SMTP_URL: SMTP_URL,
+	// 			API_EMAIL: API_EMAIL
+	// 		});
+
+	// 		acc = result;
+	// 		return acc;
+	// 	}
+
+	// 	acc = new ApiError(HttpStatus.NOT_FOUND);
+	// 	return acc;
+	// }, {});
 }
 
 export async function getTemplate(query, cache) {

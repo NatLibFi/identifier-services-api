@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local} from './utils';
+import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
 import interfaceFactory from './interfaceModules';
 import {PASSPORT_LOCAL, PRIVATE_KEY_URL} from '../config';
 
@@ -47,8 +47,10 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasAdminPermission(user)) {
-			const {localUser} = local();
-			await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
+			// const {localUser} = local();
+			// await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
+			const {crowdUser} = crowd();
+			await crowdUser.create({doc: doc});
 			const newDoc = {...doc, id: doc.email};
 			const result = await userInterface.create(db, newDoc, user);
 			return result;
@@ -95,7 +97,7 @@ export default function () {
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
 		} else {
-			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
+			const result = await createLinkAndSendEmail({request: doc.id, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
 			if (result !== undefined && result.status === 404) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
