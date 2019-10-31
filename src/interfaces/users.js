@@ -46,7 +46,7 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		if (hasSystemPermission(user)) {
 			// const {localUser} = local();
 			// await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
 			const {crowdUser} = crowd();
@@ -71,7 +71,7 @@ export default function () {
 	}
 
 	async function update(db, id, doc, user) {
-		if (hasAdminPermission(user)) {
+		if (hasSystemPermission(user)) {
 			const result = await userInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -80,7 +80,7 @@ export default function () {
 	}
 
 	async function remove(db, id, user) {
-		if (hasAdminPermission(user)) {
+		if (hasSystemPermission(user)) {
 			const result = await userInterface.remove(db, id);
 			return result;
 		}
@@ -97,7 +97,7 @@ export default function () {
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
 		} else {
-			const result = await createLinkAndSendEmail({request: doc.id, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
+			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
 			if (result !== undefined && result.status === 404) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
@@ -108,7 +108,7 @@ export default function () {
 
 	async function query(db, {queries, offset}, user) {
 		const result = await userInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user)) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}
 

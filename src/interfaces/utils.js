@@ -193,7 +193,7 @@ export function crowd() {
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
-	const response = await crowdCli.user.get(request);
+	const response = await crowdCli.user.get(request.id);
 	if (response) {
 		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
 		const encryption = JSON.parse(res);
@@ -219,7 +219,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 			SMTP_URL: SMTP_URL,
 			API_EMAIL: API_EMAIL
 		});
-		console.log(result);
 		return result;
 	}
 
