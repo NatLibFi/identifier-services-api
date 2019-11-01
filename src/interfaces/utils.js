@@ -50,18 +50,18 @@ const {sendEmail} = Utils;
 
 const Ajv = require('ajv');
 
-const client = createApiClient({
-	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
-	userAgent: API_CLIENT_USER_AGENT
-});
-
-const crowdCli = new CrowdClient({
-	baseUrl: CROWD_URL,
-	application: {
-		name: CROWD_APP_NAME,
-		password: CROWD_APP_PASSWORD
-	}
-});
+const client = CROWD_URL ?
+	new CrowdClient({
+		baseUrl: CROWD_URL,
+		application: {
+			name: CROWD_APP_NAME,
+			password: CROWD_APP_PASSWORD
+		}
+	}) :
+	createApiClient({
+		url: API_URL, username: API_USERNAME, password: API_PASSWORD,
+		userAgent: API_CLIENT_USER_AGENT
+	});
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
@@ -175,26 +175,75 @@ export function crowd() {
 	return {
 		crowdUser: {
 			read,
-			create
+			create,
+			update
 		}
 
 	};
 
 	async function read({id}) {
-		const response = await crowdCli.user.get(id);
+		const response = await client.user.get(id);
 		return response;
 	}
 
 	async function create({doc}) {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
-		const response = await crowdCli.user.create(payload);
+		const response = await client.user.create(payload);
 		return response;
+	}
+
+	async function update({doc}) {
+		const userCheckResponse = await client.user.get(doc.id);
+		if (userCheckResponse) {
+			const response = await client.user.password.set(doc.id, doc.newPassword);
+			console.log(response);
+		}
 	}
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
-	const response = await crowdCli.user.get(request.id);
+	if (PASSPORT_LOCAL) {
+		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		return passportLocalList.reduce(async (acc, passport) => {
+			if (passport.id === request.id) {
+				const token = await encryptToken(PRIVATE_KEY_URL, request);
+				const link = `${UI_URL}/users/passwordReset/${token}`;
+				const result = await sendEmail({
+					name: 'change password',
+					args: {link: link},
+					getTemplate: getTemplate,
+					SMTP_URL: SMTP_URL,
+					API_EMAIL: API_EMAIL
+				});
+
+				acc = result;
+				return acc;
+			}
+
+			acc = new ApiError(HttpStatus.NOT_FOUND);
+			return acc;
+		}, {});
+	}
+
+	const response = await client.user.get(request.id);
 	if (response) {
+		const token = await encryptToken(PRIVATE_KEY_URL, request);
+		console.log(token);
+		const link = `${UI_URL}/users/passwordReset/${token}`;
+		const result = sendEmail({
+			name: 'change password',
+			args: {link: link},
+			getTemplate: getTemplate,
+			SMTP_URL: SMTP_URL,
+			API_EMAIL: API_EMAIL
+		});
+		return result;
+	}
+
+	throw new ApiError(HttpStatus.NOT_FOUND);
+
+	async function encryptToken() {
 		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
 		const encryption = JSON.parse(res);
 		const jwtDetails = {
@@ -210,58 +259,8 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 			encryption[0],
 			privateData
 		);
-		const link = `${UI_URL}/users/passwordReset/${token}`;
-
-		const result = sendEmail({
-			name: 'change password',
-			args: {link: link},
-			getTemplate: getTemplate,
-			SMTP_URL: SMTP_URL,
-			API_EMAIL: API_EMAIL
-		});
-		return result;
+		return token;
 	}
-
-	throw new ApiError(HttpStatus.NOT_FOUND);
-
-	// const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-	// const passportLocalList = JSON.parse(readResponse);
-	// return passportLocalList.reduce(async (acc, passport) => {
-	// 	if (passport.id === request.id) {
-	// 		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-	// 		const encryption = JSON.parse(res);
-
-	// 		const jwtDetails = {
-	// 			secret: 'This',
-	// 			expiresIn: '24h'
-	// 		};
-
-	// 		const privateData = {
-	// 			id: request.id
-	// 		};
-	// 		const token = await jwtEncrypt.generateJWT(
-	// 			jwtDetails,
-	// 			undefined,
-	// 			encryption[0],
-	// 			privateData
-	// 		);
-
-	// 		const link = `${UI_URL}/users/passwordReset/${token}`;
-	// 		const result = await sendEmail({
-	// 			name: 'change password',
-	// 			args: {link: link},
-	// 			getTemplate: getTemplate,
-	// 			SMTP_URL: SMTP_URL,
-	// 			API_EMAIL: API_EMAIL
-	// 		});
-
-	// 		acc = result;
-	// 		return acc;
-	// 	}
-
-	// 	acc = new ApiError(HttpStatus.NOT_FOUND);
-	// 	return acc;
-	// }, {});
 }
 
 export async function getTemplate(query, cache) {

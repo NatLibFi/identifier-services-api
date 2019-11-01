@@ -47,10 +47,14 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasSystemPermission(user)) {
-			// const {localUser} = local();
-			// await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
-			const {crowdUser} = crowd();
-			await crowdUser.create({doc: doc});
+			if (PASSPORT_LOCAL) {
+				const {localUser} = local();
+				await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
+			} else {
+				const {crowdUser} = crowd();
+				await crowdUser.create({doc: doc});
+			}
+
 			const newDoc = {...doc, id: doc.email};
 			const result = await userInterface.create(db, newDoc, user);
 			return result;
@@ -91,11 +95,16 @@ export default function () {
 	async function changePwd(doc, user) {
 		if (doc.newPassword) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
-				const {localUser} = local();
-				return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
-			}
+				if (PASSPORT_LOCAL) {
+					const {localUser} = local();
+					return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
+				}
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
+				const {crowdUser} = crowd();
+				await crowdUser.update({doc});
+			} else {
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
 		} else {
 			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
 			if (result !== undefined && result.status === 404) {
