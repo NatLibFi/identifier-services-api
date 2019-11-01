@@ -90,8 +90,7 @@ export function convertLanguage(language) {
 
 export function getValidator(schemaName) {
 	const str = fs.readFileSync('api.json', 'utf8')
-		// eslint-disable-next-line prefer-regex-literals
-		.replace(new RegExp('#/components/schemas', 'gm'), 'defs#/definitions');
+		.replace(/#\/components\/schemas/gm, 'defs#/definitions');
 
 	const obj = JSON.parse(str);
 
@@ -196,7 +195,7 @@ export function crowd() {
 		const userCheckResponse = await client.user.get(doc.id);
 		if (userCheckResponse) {
 			const response = await client.user.password.set(doc.id, doc.newPassword);
-			console.log(response);
+			return response;
 		}
 	}
 }
@@ -229,7 +228,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 	const response = await client.user.get(request.id);
 	if (response) {
 		const token = await encryptToken(PRIVATE_KEY_URL, request);
-		console.log(token);
 		const link = `${UI_URL}/users/passwordReset/${token}`;
 		const result = sendEmail({
 			name: 'change password',
