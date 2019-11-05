@@ -64,11 +64,18 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
-		const result = await userInterface.read(db, id);
-		const {localUser} = local();
-		const localResult = await localUser.read({PASSPORT_LOCAL: PASSPORT_LOCAL, email: result.email});
-		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
-			return {...result, ...localResult};
+		const response = await userInterface.read(db, id);
+		let result;
+		if (PASSPORT_LOCAL) {
+			const {localUser} = local();
+			result = await localUser.read({PASSPORT_LOCAL: PASSPORT_LOCAL, email: response.email});
+		} else {
+			const {crowdUser} = crowd();
+			result = await crowdUser.read({id: response.id});
+		}
+
+		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
+			return {...response, ...result};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -84,7 +91,16 @@ export default function () {
 	}
 
 	async function remove(db, id, user) {
-		if (hasSystemPermission(user)) {
+		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+			const response = await userInterface.read(db, id);
+			if (PASSPORT_LOCAL) {
+				const {localUser} = local();
+				await localUser.remove({PASSPORT_LOCAL: PASSPORT_LOCAL, id: response.id});
+			} else {
+				const {crowdUser} = crowd();
+				await crowdUser.remove({id: response.id});
+			}
+
 			const result = await userInterface.remove(db, id);
 			return result;
 		}

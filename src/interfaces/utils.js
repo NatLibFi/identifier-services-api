@@ -114,7 +114,8 @@ export function local() {
 		localUser: {
 			create,
 			read,
-			update
+			update,
+			remove
 		}
 	};
 	function create({PASSPORT_LOCAL, doc}) {
@@ -168,6 +169,14 @@ export function local() {
 		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
 		return HttpStatus.OK;
 	}
+
+	function remove({PASSPORT_LOCAL, id}) {
+		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const result = passportLocalList.filter(item => item.id !== id);
+		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(result, null, 4), 'utf-8');
+		return HttpStatus.OK;
+	}
 }
 
 export function crowd() {
@@ -175,7 +184,8 @@ export function crowd() {
 		crowdUser: {
 			read,
 			create,
-			update
+			update,
+			remove
 		}
 
 	};
@@ -188,6 +198,8 @@ export function crowd() {
 	async function create({doc}) {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
 		const response = await client.user.create(payload);
+		console.log(payload);
+		// const addToGroupResponse = await client.user.groups.add();
 		return response;
 	}
 
@@ -197,6 +209,10 @@ export function crowd() {
 			const response = await client.user.password.set(doc.id, doc.newPassword);
 			return response;
 		}
+	}
+
+	async function remove({id}) {
+		return id;
 	}
 }
 
