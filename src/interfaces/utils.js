@@ -217,45 +217,43 @@ export function crowd() {
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
-	if (PASSPORT_LOCAL_USERS) {
-		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		return passportLocalList.reduce(async (acc, passport) => {
-			if (passport.id === request.id) {
-				const token = await encryptToken(PRIVATE_KEY_URL, request);
-				const link = `${UI_URL}/users/passwordReset/${token}`;
-				const result = await sendEmail({
-					name: 'change password',
-					args: {link: link},
-					getTemplate: getTemplate,
-					SMTP_URL: SMTP_URL,
-					API_EMAIL: API_EMAIL
-				});
+	if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+		const response = await client.user.get(request.id);
+		if (response) {
+			const token = await encryptToken(PRIVATE_KEY_URL, request);
+			const link = `${UI_URL}/users/passwordReset/${token}`;
+			const result = sendEmail({
+				name: 'change password',
+				args: {link: link},
+				getTemplate: getTemplate,
+				SMTP_URL: SMTP_URL,
+				API_EMAIL: API_EMAIL
+			});
+			return result;
+		}
+	}
 
-				acc = result;
-				return acc;
-			}
+	const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
+	const passportLocalList = JSON.parse(readResponse);
+	return passportLocalList.reduce(async (acc, passport) => {
+		if (passport.id === request.id) {
+			const token = await encryptToken(PRIVATE_KEY_URL, request);
+			const link = `${UI_URL}/users/passwordReset/${token}`;
+			const result = await sendEmail({
+				name: 'change password',
+				args: {link: link},
+				getTemplate: getTemplate,
+				SMTP_URL: SMTP_URL,
+				API_EMAIL: API_EMAIL
+			});
 
-			acc = new ApiError(HttpStatus.NOT_FOUND);
+			acc = result;
 			return acc;
-		}, {});
-	}
+		}
 
-	const response = await client.user.get(request.id);
-	if (response) {
-		const token = await encryptToken(PRIVATE_KEY_URL, request);
-		const link = `${UI_URL}/users/passwordReset/${token}`;
-		const result = sendEmail({
-			name: 'change password',
-			args: {link: link},
-			getTemplate: getTemplate,
-			SMTP_URL: SMTP_URL,
-			API_EMAIL: API_EMAIL
-		});
-		return result;
-	}
-
-	throw new ApiError(HttpStatus.NOT_FOUND);
+		acc = new ApiError(HttpStatus.NOT_FOUND);
+		return acc;
+	}, {});
 
 	async function encryptToken() {
 		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');

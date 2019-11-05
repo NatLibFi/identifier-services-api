@@ -31,7 +31,7 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
 import interfaceFactory from './interfaceModules';
-import {PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
+import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
 
@@ -47,12 +47,12 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasSystemPermission(user)) {
-			if (PASSPORT_LOCAL_USERS) {
-				const {localUser} = local();
-				await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
-			} else {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
 				await crowdUser.create({doc: doc});
+			} else {
+				const {localUser} = local();
+				await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
 			}
 
 			const newDoc = {...doc, id: doc.email};
@@ -66,12 +66,12 @@ export default function () {
 	async function read(db, id, user) {
 		const response = await userInterface.read(db, id);
 		let result;
-		if (PASSPORT_LOCAL_USERS) {
-			const {localUser} = local();
-			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
-		} else {
+		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 			const {crowdUser} = crowd();
 			result = await crowdUser.read({id: response.id});
+		} else {
+			const {localUser} = local();
+			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
 		}
 
 		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
@@ -93,12 +93,12 @@ export default function () {
 	async function remove(db, id, user) {
 		if (hasSystemPermission(user) || hasAdminPermission(user)) {
 			const response = await userInterface.read(db, id);
-			if (PASSPORT_LOCAL_USERS) {
-				const {localUser} = local();
-				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.id});
-			} else {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
 				await crowdUser.remove({id: response.id});
+			} else {
+				const {localUser} = local();
+				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.id});
 			}
 
 			const result = await userInterface.remove(db, id);
@@ -111,13 +111,13 @@ export default function () {
 	async function changePwd(doc, user) {
 		if (doc.newPassword) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
-				if (PASSPORT_LOCAL_USERS) {
-					const {localUser} = local();
-					return localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, user: doc});
+				if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+					const {crowdUser} = crowd();
+					await crowdUser.update({doc});
 				}
 
-				const {crowdUser} = crowd();
-				await crowdUser.update({doc});
+				const {localUser} = local();
+				await localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, user: doc});
 			} else {
 				throw new ApiError(HttpStatus.FORBIDDEN);
 			}
