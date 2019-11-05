@@ -31,10 +31,9 @@ import {bodyParse} from '../../utils';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function (db, combineUserInfo) {
+export default function (db) {
 	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
-		.use(combineUserInfo)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)

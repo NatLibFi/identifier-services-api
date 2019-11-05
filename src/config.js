@@ -13,13 +13,13 @@ export const API_USERNAME = readEnvironmentVariable('API_USERNAME');
 export const API_PASSWORD = readEnvironmentVariable('API_PASSWORD');
 
 export const CROWD_URL = readEnvironmentVariable('CROWD_URL', {
-	defaultValue: null
+	defaultValue: ''
 });
 export const CROWD_APP_NAME = readEnvironmentVariable('CROWD_APP_NAME', {
-	defaultValue: null
+	defaultValue: ''
 });
 export const CROWD_APP_PASSWORD = readEnvironmentVariable('CROWD_APP_PASSWORD', {
-	defaultValue: null
+	defaultValue: ''
 });
 
 export const whiteList = readEnvironmentVariable('CORS_WHITELIST', {
@@ -40,9 +40,6 @@ export const MONGO_URI = readEnvironmentVariable('MONGO_URI', {
 	defaultValue: 'mongodb://localhost:27017/db'
 });
 export const PASSPORT_LOCAL_USERS = readEnvironmentVariable('PASSPORT_LOCAL_USERS', {
-	defaultValue: null
-});
-export const PASSPORT_LOCAL = readEnvironmentVariable('PASSPORT_LOCAL', {
 	defaultValue: null
 });
 

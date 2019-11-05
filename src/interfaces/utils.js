@@ -118,8 +118,8 @@ export function local() {
 			remove
 		}
 	};
-	function create({PASSPORT_LOCAL, doc}) {
-		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	function create({PASSPORT_LOCAL_USERS, doc}) {
+		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
 
 		const newData = {
@@ -140,23 +140,23 @@ export function local() {
 		}
 
 		data.push(newData);
-		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(data, null, 4), 'utf-8');
 		return null;
 		function containsObject(obj, list) {
 			return list.some(item => item.id === obj.id);
 		}
 	}
 
-	function read({PASSPORT_LOCAL, email}) {
-		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	function read({PASSPORT_LOCAL_USERS, email}) {
+		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
 		const user = (data.filter(item => item.id === email))[0];
 		return user;
 	}
 
-	function update({PASSPORT_LOCAL, user}) {
+	function update({PASSPORT_LOCAL_USERS, user}) {
 		const {id, newPassword} = user;
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		const newPassportLocalList = passportLocalList.map(passport => {
 			if (passport.id === id) {
@@ -166,15 +166,15 @@ export function local() {
 			return passport;
 		});
 
-		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
 		return HttpStatus.OK;
 	}
 
-	function remove({PASSPORT_LOCAL, id}) {
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	function remove({PASSPORT_LOCAL_USERS, id}) {
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		const result = passportLocalList.filter(item => item.id !== id);
-		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(result, null, 4), 'utf-8');
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(result, null, 4), 'utf-8');
 		return HttpStatus.OK;
 	}
 }
@@ -199,7 +199,7 @@ export function crowd() {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
 		const response = await client.user.create(payload);
 		console.log(payload);
-		// const addToGroupResponse = await client.user.groups.add();
+		// Const addToGroupResponse = await client.user.groups.add();
 		return response;
 	}
 
@@ -216,9 +216,9 @@ export function crowd() {
 	}
 }
 
-export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
-	if (PASSPORT_LOCAL) {
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
+	if (PASSPORT_LOCAL_USERS) {
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		return passportLocalList.reduce(async (acc, passport) => {
 			if (passport.id === request.id) {
@@ -285,4 +285,8 @@ export async function getTemplate(query, cache) {
 
 	cache[key] = await client.templates.getTemplate(query);
 	return cache[key];
+}
+
+function formatUrl(url) {
+	return url.replace(/^file:\/\//, '');
 }

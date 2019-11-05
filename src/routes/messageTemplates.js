@@ -30,11 +30,10 @@ import {Router} from 'express';
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db, combineUserInfo) {
+export default function (db) {
 	const templates = templatesFactory({url: API_URL});
 
 	return new Router()
-		.use(combineUserInfo)
 		.post('/', create)
 		.get('/:id', read)
 		.put('/:id', update)

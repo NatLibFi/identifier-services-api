@@ -32,10 +32,9 @@ import {publicationIsbnIsmnRequestsFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
 
-export default function (db, combineUserInfo) {
+export default function (db) {
 	const publications = publicationIsbnIsmnRequestsFactory({url: API_URL});
 	return new Router()
-		.use(combineUserInfo)
 		.post('/', bodyParse(), createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)

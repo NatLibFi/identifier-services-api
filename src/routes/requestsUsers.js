@@ -31,11 +31,10 @@ import {Router} from 'express';
 import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db, combineUserInfo) {
+export default function (db) {
 	const usersRequests = usersRequestsFactory({url: API_URL});
 
 	return new Router()
-		.use(combineUserInfo)
 		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)

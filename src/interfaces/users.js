@@ -31,7 +31,7 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
 import interfaceFactory from './interfaceModules';
-import {PASSPORT_LOCAL, PRIVATE_KEY_URL} from '../config';
+import {PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
 
 const userInterface = interfaceFactory('userMetadata', 'UserContent');
 
@@ -47,9 +47,9 @@ export default function () {
 
 	async function create(db, doc, user) {
 		if (hasSystemPermission(user)) {
-			if (PASSPORT_LOCAL) {
+			if (PASSPORT_LOCAL_USERS) {
 				const {localUser} = local();
-				await localUser.create({PASSPORT_LOCAL: PASSPORT_LOCAL, doc: doc});
+				await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
 			} else {
 				const {crowdUser} = crowd();
 				await crowdUser.create({doc: doc});
@@ -66,9 +66,9 @@ export default function () {
 	async function read(db, id, user) {
 		const response = await userInterface.read(db, id);
 		let result;
-		if (PASSPORT_LOCAL) {
+		if (PASSPORT_LOCAL_USERS) {
 			const {localUser} = local();
-			result = await localUser.read({PASSPORT_LOCAL: PASSPORT_LOCAL, email: response.email});
+			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
 		} else {
 			const {crowdUser} = crowd();
 			result = await crowdUser.read({id: response.id});
@@ -93,9 +93,9 @@ export default function () {
 	async function remove(db, id, user) {
 		if (hasSystemPermission(user) || hasAdminPermission(user)) {
 			const response = await userInterface.read(db, id);
-			if (PASSPORT_LOCAL) {
+			if (PASSPORT_LOCAL_USERS) {
 				const {localUser} = local();
-				await localUser.remove({PASSPORT_LOCAL: PASSPORT_LOCAL, id: response.id});
+				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.id});
 			} else {
 				const {crowdUser} = crowd();
 				await crowdUser.remove({id: response.id});
@@ -111,9 +111,9 @@ export default function () {
 	async function changePwd(doc, user) {
 		if (doc.newPassword) {
 			if (hasAdminPermission(user) || hasSystemPermission(user)) {
-				if (PASSPORT_LOCAL) {
+				if (PASSPORT_LOCAL_USERS) {
 					const {localUser} = local();
-					return localUser.update({PASSPORT_LOCAL: PASSPORT_LOCAL, user: doc});
+					return localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, user: doc});
 				}
 
 				const {crowdUser} = crowd();
@@ -122,7 +122,7 @@ export default function () {
 				throw new ApiError(HttpStatus.FORBIDDEN);
 			}
 		} else {
-			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL: PASSPORT_LOCAL});
+			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
 			if (result !== undefined && result.status === 404) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
