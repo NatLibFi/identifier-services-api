@@ -74,7 +74,7 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
-		if (hasAdminPermission(user)) {
+		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			const result = await templateInterface.query(db, {queries, offset});
 			return result;
 		}

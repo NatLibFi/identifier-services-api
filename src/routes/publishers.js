@@ -31,12 +31,13 @@ import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
 
-export default function (db, passportMiddlewares) {
+export default function (db, passportMiddlewares, combineUserInfo) {
 	const publishers = publishersFactory({url: API_URL});
 	return new Router()
 		.get('/:id', authenticated, read)
 		.post('/query', query)
 		.use(passportMiddlewares.token)
+		.use(combineUserInfo)
 		.post('/', create)
 		.put('/:id', update);
 

@@ -30,24 +30,38 @@ import {ApiError, Utils, createApiClient} from '@natlibfi/identifier-services-co
 import HttpStatus from 'http-status';
 import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
+import CrowdClient from 'atlassian-crowd-client';
+import User from 'atlassian-crowd-client/lib/models/user';
 
 import {
-	UI_URL, SMTP_URL,
+	UI_URL,
+	SMTP_URL,
 	API_EMAIL,
 	API_URL,
 	API_USERNAME,
 	API_PASSWORD,
-	API_CLIENT_USER_AGENT
+	API_CLIENT_USER_AGENT,
+	CROWD_URL,
+	CROWD_APP_NAME,
+	CROWD_APP_PASSWORD
 } from '../config';
 
 const {sendEmail} = Utils;
 
 const Ajv = require('ajv');
 
-const client = createApiClient({
-	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
-	userAgent: API_CLIENT_USER_AGENT
-});
+const client = CROWD_URL ?
+	new CrowdClient({
+		baseUrl: CROWD_URL,
+		application: {
+			name: CROWD_APP_NAME,
+			password: CROWD_APP_PASSWORD
+		}
+	}) :
+	createApiClient({
+		url: API_URL, username: API_USERNAME, password: API_PASSWORD,
+		userAgent: API_CLIENT_USER_AGENT
+	});
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
@@ -67,7 +81,7 @@ export function hasSystemPermission(user) {
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisher-admin']}}, user);
+	return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
 }
 
 export function convertLanguage(language) {
@@ -100,11 +114,12 @@ export function local() {
 		localUser: {
 			create,
 			read,
-			update
+			update,
+			remove
 		}
 	};
-	function create({PASSPORT_LOCAL, doc}) {
-		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	function create({PASSPORT_LOCAL_USERS, doc}) {
+		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
 
 		const newData = {
@@ -125,23 +140,23 @@ export function local() {
 		}
 
 		data.push(newData);
-		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(data, null, 4), 'utf-8');
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(data, null, 4), 'utf-8');
 		return null;
 		function containsObject(obj, list) {
 			return list.some(item => item.id === obj.id);
 		}
 	}
 
-	function read({PASSPORT_LOCAL, email}) {
-		const res = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+	function read({PASSPORT_LOCAL_USERS, email}) {
+		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
 		const user = (data.filter(item => item.id === email))[0];
 		return user;
 	}
 
-	function update({PASSPORT_LOCAL, user}) {
+	function update({PASSPORT_LOCAL_USERS, user}) {
 		const {id, newPassword} = user;
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		const newPassportLocalList = passportLocalList.map(passport => {
 			if (passport.id === id) {
@@ -151,34 +166,78 @@ export function local() {
 			return passport;
 		});
 
-		fs.writeFileSync(`${PASSPORT_LOCAL}`, JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
+		return HttpStatus.OK;
+	}
+
+	function remove({PASSPORT_LOCAL_USERS, id}) {
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const result = passportLocalList.filter(item => item.id !== id);
+		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(result, null, 4), 'utf-8');
 		return HttpStatus.OK;
 	}
 }
 
-export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL}) {
-	const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+export function crowd() {
+	return {
+		crowdUser: {
+			read,
+			create,
+			update,
+			remove
+		}
+
+	};
+
+	async function read({id}) {
+		const response = await client.user.get(id);
+		return response;
+	}
+
+	async function create({doc}) {
+		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
+		const response = await client.user.create(payload);
+		console.log(payload);
+		// Const addToGroupResponse = await client.user.groups.add();
+		return response;
+	}
+
+	async function update({doc}) {
+		const userCheckResponse = await client.user.get(doc.id);
+		if (userCheckResponse) {
+			const response = await client.user.password.set(doc.id, doc.newPassword);
+			return response;
+		}
+	}
+
+	async function remove({id}) {
+		return id;
+	}
+}
+
+export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
+	if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+		const response = await client.user.get(request.id);
+		if (response) {
+			const token = await encryptToken(PRIVATE_KEY_URL, request);
+			const link = `${UI_URL}/users/passwordReset/${token}`;
+			const result = sendEmail({
+				name: 'change password',
+				args: {link: link},
+				getTemplate: getTemplate,
+				SMTP_URL: SMTP_URL,
+				API_EMAIL: API_EMAIL
+			});
+			return result;
+		}
+	}
+
+	const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 	const passportLocalList = JSON.parse(readResponse);
 	return passportLocalList.reduce(async (acc, passport) => {
 		if (passport.id === request.id) {
-			const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-			const encryption = JSON.parse(res);
-
-			const jwtDetails = {
-				secret: 'This',
-				expiresIn: '24h'
-			};
-
-			const privateData = {
-				id: request.id
-			};
-			const token = await jwtEncrypt.generateJWT(
-				jwtDetails,
-				undefined,
-				encryption[0],
-				privateData
-			);
-
+			const token = await encryptToken(PRIVATE_KEY_URL, request);
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = await sendEmail({
 				name: 'change password',
@@ -195,6 +254,25 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 		acc = new ApiError(HttpStatus.NOT_FOUND);
 		return acc;
 	}, {});
+
+	async function encryptToken() {
+		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+		const encryption = JSON.parse(res);
+		const jwtDetails = {
+			secret: 'This',
+			expiresIn: '24h'
+		};
+		const privateData = {
+			id: request.id
+		};
+		const token = await jwtEncrypt.generateJWT(
+			jwtDetails,
+			undefined,
+			encryption[0],
+			privateData
+		);
+		return token;
+	}
 }
 
 export async function getTemplate(query, cache) {
@@ -205,4 +283,8 @@ export async function getTemplate(query, cache) {
 
 	cache[key] = await client.templates.getTemplate(query);
 	return cache[key];
+}
+
+function formatUrl(url) {
+	return url.replace(/^file:\/\//, '');
 }

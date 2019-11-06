@@ -32,10 +32,9 @@ import {publicationsIsbnIsmnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
 
-export default function (db, passportMiddleware) {
+export default function (db) {
 	const publications = publicationsIsbnIsmnFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddleware)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
@@ -73,7 +72,8 @@ export default function (db, passportMiddleware) {
 	// Async function remove(req, res, next) {
 	// 	const id = req.params.id;
 	// 	try {
-	// 		const result = await publications.removeIsbnIsmn(db, id, req.user);
+	// 		const user = await combineUserInfo({db: db, user: req.user});
+	// 		const result = await publications.removeIsbnIsmn(db, id, user);
 	// 		res.json(result);
 	// 	} catch (err) {
 	// 		next(err);

@@ -31,10 +31,9 @@ import {bodyParse} from '../../utils';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
 
-export default function (db, passportMiddleware) {
+export default function (db) {
 	const publications = publicationsIssnFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddleware)
 		.post('/', bodyParse(), create)
 		.get('/:id', read)
 		.put('/:id', bodyParse(), update)
@@ -72,7 +71,8 @@ export default function (db, passportMiddleware) {
 	// Async function remove(req, res, next) {
 	// 	const id = req.params.id;
 	// 	try {
-	// 		const result = await publications.removeISSN(db, id, req.user);
+	// 		const user = await combineUserInfo({db: db, user: req.user});
+	// 		const result = await publications.removeISSN(db, id, user);
 	// 		res.json(result);
 	// 	} catch (err) {
 	// 		next(err);

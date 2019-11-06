@@ -31,10 +31,9 @@ import {publisherRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
 
-export default function (db, passportMiddlewares) {
+export default function (db) {
 	const publisherRequests = publisherRequestsFactory({url: API_URL});
 	return new Router()
-		.use(passportMiddlewares.token)
 		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.put('/:id', updateRequest)

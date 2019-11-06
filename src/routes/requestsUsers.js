@@ -31,11 +31,10 @@ import {Router} from 'express';
 import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db, passportMiddlewares) {
+export default function (db) {
 	const usersRequests = usersRequestsFactory({url: API_URL});
 
 	return new Router()
-		.use(passportMiddlewares)
 		.post('/', createRequest)
 		.get('/:id', readRequest)
 		.delete('/:id', removeRequest)
