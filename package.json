@@ -33,6 +33,7 @@
     "watch:dev": "cross-env DEBUG=1 nodemon -w src --exec 'babel-node src/index.js'"
   },
   "dependencies": {
+    "@babel/core": "^7.7.2",
     "@natlibfi/express-validate-content-type": "^1.0.1",
     "@natlibfi/identifier-services-commons": "git+https://github.com/natlibfi/identifier-services-commons.git#feature/apiError",
     "@natlibfi/melinda-commons": "^7.0.2",
@@ -50,7 +51,6 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.2",
     "@babel/helpers": "^7.7.0",
     "@babel/node": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
