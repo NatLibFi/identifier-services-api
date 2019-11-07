@@ -192,15 +192,14 @@ export function crowd() {
 
 	async function read({id}) {
 		const response = await client.user.get(id);
-		return response;
+		return {...response, groups: await getUserGroup(id)};
 	}
 
 	async function create({doc}) {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
 		const response = await client.user.create(payload);
-		console.log(payload);
-		// Const addToGroupResponse = await client.user.groups.add();
-		return response;
+		await client.user.groups.add(response.email, doc.role);
+		return {...response, groups: await getUserGroup(response.username)};
 	}
 
 	async function update({doc}) {
@@ -211,8 +210,18 @@ export function crowd() {
 		}
 	}
 
-	async function remove({id}) {
-		return id;
+	async function remove({id, role}) {
+		await client.user.groups.remove(id, role);
+		const response = await client.user.remove(id);
+		return response;
+	}
+
+	async function getUserGroup(id) {
+		// Const nestedGroup = await client.user.groups.list(id, 'nested');
+		const directGroup = await client.user.groups.list(id, 'direct');
+		// DirectGroup.concat(nestedGroup)
+		// Retruning Only direct Group for this project
+		return directGroup;
 	}
 }
 

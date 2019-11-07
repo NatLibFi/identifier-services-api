@@ -74,7 +74,7 @@ export default function () {
 			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
 		}
 
-		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
+		if (hasAdminPermission(user) || hasSystemPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
 			return {...response, ...result};
 		}
 
@@ -95,7 +95,7 @@ export default function () {
 			const response = await userInterface.read(db, id);
 			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
-				await crowdUser.remove({id: response.id});
+				await crowdUser.remove({id: response.id, role: response.role});
 			} else {
 				const {localUser} = local();
 				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.id});
@@ -132,7 +132,16 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
-		const result = await userInterface.query(db, {queries, offset});
+		let result;
+		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+			const {crowdUser} = crowd();
+			result = await crowdUser.query({id: response.id});
+		} else {
+			const {localUser} = local();
+			result = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
+		}
+
+		const dbResponse = await userInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}
