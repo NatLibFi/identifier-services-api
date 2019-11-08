@@ -29,7 +29,7 @@
 import {ApiError, Utils, createApiClient} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import fs from 'fs';
-import * as jwtEncrypt from 'jwt-token-encrypt';
+import jose from 'jose';
 import CrowdClient from 'atlassian-crowd-client';
 import User from 'atlassian-crowd-client/lib/models/user';
 
@@ -50,18 +50,18 @@ const {sendEmail} = Utils;
 
 const Ajv = require('ajv');
 
-const client = CROWD_URL ?
-	new CrowdClient({
-		baseUrl: CROWD_URL,
-		application: {
-			name: CROWD_APP_NAME,
-			password: CROWD_APP_PASSWORD
-		}
-	}) :
-	createApiClient({
-		url: API_URL, username: API_USERNAME, password: API_PASSWORD,
-		userAgent: API_CLIENT_USER_AGENT
-	});
+const crowdClient = new CrowdClient({
+	baseUrl: CROWD_URL,
+	application: {
+		name: CROWD_APP_NAME,
+		password: CROWD_APP_PASSWORD
+	}
+});
+
+const localClient =	createApiClient({
+	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
+	userAgent: API_CLIENT_USER_AGENT
+});
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
@@ -115,7 +115,8 @@ export function local() {
 			create,
 			read,
 			update,
-			remove
+			remove,
+			query
 		}
 	};
 	function create({PASSPORT_LOCAL_USERS, doc}) {
@@ -177,6 +178,13 @@ export function local() {
 		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(result, null, 4), 'utf-8');
 		return HttpStatus.OK;
 	}
+
+	function query({PASSPORT_LOCAL_USERS}) {
+		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const result = passportLocalList.map(item => item.id);
+		return result;
+	}
 }
 
 export function crowd() {
@@ -185,42 +193,59 @@ export function crowd() {
 			read,
 			create,
 			update,
-			remove
+			remove,
+			query
 		}
 
 	};
 
 	async function read({id}) {
-		const response = await client.user.get(id);
-		return response;
+		const response = await crowdClient.user.get(id);
+		return {...response, groups: await getUserGroup(id)};
 	}
 
 	async function create({doc}) {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
-		const response = await client.user.create(payload);
-		console.log(payload);
-		// Const addToGroupResponse = await client.user.groups.add();
-		return response;
+		const response = await crowdClient.user.create(payload);
+		await crowdClient.user.groups.add(response.email, doc.role);
+		return {...response, groups: await getUserGroup(response.username)};
 	}
 
 	async function update({doc}) {
-		const userCheckResponse = await client.user.get(doc.id);
+		const userCheckResponse = await crowdClient.user.get(doc.id);
 		if (userCheckResponse) {
-			const response = await client.user.password.set(doc.id, doc.newPassword);
+			const response = await crowdClient.user.password.set(doc.id, doc.newPassword);
 			return response;
 		}
 	}
 
-	async function remove({id}) {
-		return id;
+	async function remove({id, role}) {
+		await crowdClient.user.groups.remove(id, role);
+		const response = await crowdClient.user.remove(id);
+		return response;
+	}
+
+	async function query() {
+		const users = await crowdClient.search.user('');
+		return users;
+	}
+
+	async function getUserGroup(id) {
+		// Const nestedGroup = await client.user.groups.list(id, 'nested');
+		const directGroup = await crowdClient.user.groups.list(id, 'direct');
+		// DirectGroup.concat(nestedGroup)
+		// Retruning Only direct Group for this project
+		return directGroup;
 	}
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
+	const {JWK, JWE} = jose;
+	const key = JWK.asKey(fs.readFileSync(PRIVATE_KEY_URL));
 	if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
-		const response = await client.user.get(request.id);
+		const response = await crowdClient.user.get(request.id);
 		if (response) {
-			const token = await encryptToken(PRIVATE_KEY_URL, request);
+			const token = await JWE.encrypt(request.id, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = sendEmail({
 				name: 'change password',
@@ -237,7 +262,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 	const passportLocalList = JSON.parse(readResponse);
 	return passportLocalList.reduce(async (acc, passport) => {
 		if (passport.id === request.id) {
-			const token = await encryptToken(PRIVATE_KEY_URL, request);
+			const token = JWE.encrypt(request.id, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = await sendEmail({
 				name: 'change password',
@@ -254,25 +279,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 		acc = new ApiError(HttpStatus.NOT_FOUND);
 		return acc;
 	}, {});
-
-	async function encryptToken() {
-		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-		const encryption = JSON.parse(res);
-		const jwtDetails = {
-			secret: 'This',
-			expiresIn: '24h'
-		};
-		const privateData = {
-			id: request.id
-		};
-		const token = await jwtEncrypt.generateJWT(
-			jwtDetails,
-			undefined,
-			encryption[0],
-			privateData
-		);
-		return token;
-	}
 }
 
 export async function getTemplate(query, cache) {
@@ -281,7 +287,7 @@ export async function getTemplate(query, cache) {
 		return cache[key];
 	}
 
-	cache[key] = await client.templates.getTemplate(query);
+	cache[key] = await localClient.templates.getTemplate(query);
 	return cache[key];
 }
 
