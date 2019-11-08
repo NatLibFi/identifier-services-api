@@ -254,7 +254,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 				SMTP_URL: SMTP_URL,
 				API_EMAIL: API_EMAIL
 			});
-
 			return result;
 		}
 	}
