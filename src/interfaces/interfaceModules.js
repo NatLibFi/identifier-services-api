@@ -145,6 +145,7 @@ export default function (collectionName, collectionContent) {
 					}
 				});
 				function processData(doc) {
+					doc.userId = doc.id;
 					doc.id = doc._id.toString();
 					delete doc._id;
 					results.push(doc);

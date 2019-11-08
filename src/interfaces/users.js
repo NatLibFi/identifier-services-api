@@ -132,22 +132,28 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
-		let result;
+		let response;
 		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 			const {crowdUser} = crowd();
-			result = await crowdUser.query({id: response.id});
+			response = await crowdUser.query();
 		} else {
 			const {localUser} = local();
-			result = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
+			response = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
 		}
 
 		const dbResponse = await userInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return result;
+			const results = dbResponse.results.filter(item => {
+				if (response.includes(item.userId)) {
+					return item;
+				}
+			})
+			return {...dbResponse, queryDocCount: results.length, results: results};
 		}
 
 		if (hasPublisherAdminPermission(user)) {
-			return result.results.filter(item => item.publisher === user.id);
+			const result = response.results.filter(item => item.publisher === user.id);
+			return {...result, dbResponse}
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
