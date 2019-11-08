@@ -51,17 +51,17 @@ const {sendEmail} = Utils;
 const Ajv = require('ajv');
 
 const crowdClient = new CrowdClient({
-		baseUrl: CROWD_URL,
-		application: {
-			name: CROWD_APP_NAME,
-			password: CROWD_APP_PASSWORD
-		}
-	});
+	baseUrl: CROWD_URL,
+	application: {
+		name: CROWD_APP_NAME,
+		password: CROWD_APP_PASSWORD
+	}
+});
 
 const localClient =	createApiClient({
-		url: API_URL, username: API_USERNAME, password: API_PASSWORD,
-		userAgent: API_CLIENT_USER_AGENT
-	});
+	url: API_URL, username: API_USERNAME, password: API_PASSWORD,
+	userAgent: API_CLIENT_USER_AGENT
+});
 
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
@@ -182,7 +182,7 @@ export function local() {
 	function query({PASSPORT_LOCAL_USERS}) {
 		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
-		const result = passportLocalList.map(item => item.id)
+		const result = passportLocalList.map(item => item.id);
 		return result;
 	}
 }
@@ -224,7 +224,7 @@ export function crowd() {
 		const response = await crowdClient.user.remove(id);
 		return response;
 	}
-	
+
 	async function query() {
 		const users = await crowdClient.search.user('');
 		return users;
@@ -241,11 +241,11 @@ export function crowd() {
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
 	const {JWK, JWE} = jose;
-	const key = JWK.asKey(fs.readFileSync(PRIVATE_KEY_URL))
+	const key = JWK.asKey(fs.readFileSync(PRIVATE_KEY_URL));
 	if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 		const response = await crowdClient.user.get(request.id);
 		if (response) {
-			const token = await JWE.encrypt(request.id, key, {kid: key.kid})
+			const token = await JWE.encrypt(request.id, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = sendEmail({
 				name: 'change password',
@@ -263,7 +263,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 	const passportLocalList = JSON.parse(readResponse);
 	return passportLocalList.reduce(async (acc, passport) => {
 		if (passport.id === request.id) {
-			const token = JWE.encrypt(request.id, key, {kid: key.kid})
+			const token = JWE.encrypt(request.id, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = await sendEmail({
 				name: 'change password',
@@ -280,25 +280,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 		acc = new ApiError(HttpStatus.NOT_FOUND);
 		return acc;
 	}, {});
-
-	async function encryptToken() {
-		const res = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-		const encryption = JSON.parse(res);
-		const jwtDetails = {
-			secret: 'This',
-			expiresIn: '24h'
-		};
-		const privateData = {
-			id: request.id
-		};
-		const token = await jwtEncrypt.generateJWT(
-			jwtDetails,
-			undefined,
-			encryption[0],
-			privateData
-		);
-		return token;
-	}
 }
 
 export async function getTemplate(query, cache) {
@@ -306,6 +287,7 @@ export async function getTemplate(query, cache) {
 	if (key in cache) {
 		return cache[key];
 	}
+
 	cache[key] = await localClient.templates.getTemplate(query);
 	return cache[key];
 }

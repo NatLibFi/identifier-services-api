@@ -143,17 +143,19 @@ export default function () {
 
 		const dbResponse = await userInterface.query(db, {queries, offset});
 		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const results = dbResponse.results.filter(item => {
-				if (response.includes(item.userId)) {
-					return item;
-				}
-			})
+			const results = dbResponse.results.filter(item => response.includes(item.userId) && item);
 			return {...dbResponse, queryDocCount: results.length, results: results};
 		}
 
 		if (hasPublisherAdminPermission(user)) {
-			const result = response.results.filter(item => item.publisher === user.id);
-			return {...result, dbResponse}
+			const results = dbResponse.results.filter(item => {
+				if (response.includes(item.userId) && item.publisher === user.id) {
+					return item;
+				}
+
+				return null;
+			});
+			return {...dbResponse, queryDocCount: results.length, results: results};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
