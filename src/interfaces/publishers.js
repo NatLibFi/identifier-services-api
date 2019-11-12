@@ -51,6 +51,7 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
+		console.log('user', user)
 		let protectedProperties;
 		if (user === undefined) {
 			protectedProperties = {

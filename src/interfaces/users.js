@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
+import {removeGroupPrefix, hasPermission, hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
 import interfaceFactory from './interfaceModules';
 import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
 
@@ -64,6 +64,7 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const response = await userInterface.read(db, id);
 		let result;
 		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
@@ -132,6 +133,8 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		console.log('user', user)
 		let response;
 		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 			const {crowdUser} = crowd();
@@ -160,4 +163,5 @@ export default function () {
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
+
 }

@@ -63,6 +63,73 @@ const localClient =	createApiClient({
 	userAgent: API_CLIENT_USER_AGENT
 });
 
+export function removeGroupPrefix(user) {
+	return user.groups.map(item => item.split('-').pop().replace('$', '', 'g'));
+}
+
+const permissions = {
+	users: {
+		create: ['system'],
+		read: ['system', 'admin', 'publisherAdmin'],
+		update: ['system'],
+		remove: ['system', 'admin'],
+		changePwd: ['system', 'admin'],
+		query: ['system', 'admin']
+	},
+	userRequests: {
+		createRequest: ['publisherAdmin'],
+		readRequest: ['system', 'admin', 'publisherAdmin'],
+		updateInitialRequest: ['system', 'admin', 'publisherAdmin'],
+		updateRequest: ['system', 'admin', 'publisherAdmin'],
+		removeRequest: ['system'],
+		queryRequest: ['system', 'admin', 'publisherAdmin']
+	},
+	publishers: {
+		create: ['admin'],
+		read: ['all'],
+		update: ['publisherAdmin'],
+		query: ['all']
+	},
+	publisherRequests: {
+		createRequest: ['system'],
+		readRequest: ['system', 'admin'],
+		updateRequest: ['system', 'admin'],
+		removeRequest: ['system'],
+		queryRequests: ['system', 'admin']
+	},
+	publicationIsbnIsmn: {
+		createIsbnIsmn: ['system'],
+		readIsbnIsmn: ['system', 'admin'],
+		updateIsbnIsmn: ['system', 'admin'],
+		queryIsbnIsmn: ['system', 'admin']
+	},
+	publicationIsbnIsmnRequests: {
+		createRequestIsbnIsmn: ['system'],
+		readRequestIsbnIsmn: ['system', 'admin'],
+		updateRequestIsbnIsmn: ['system', 'admin'],
+		removeRequestIsbnIsmn: ['system'],
+		queryRequestIsbnIsmn: ['system', 'admin']
+	},
+	publicationIssn: {
+		createISSN: ['admin'],
+		readISSN: ['admin', 'publisheradmin'],
+		updateISSN: ['system', 'admin'],
+		queryISSN: ['system', 'admin']
+	},
+	publicationIssnRequests: {
+		createRequestISSN: ['system'],
+		readRequestISSN: ['system', 'admin'],
+		updateRequestISSN: ['system', 'admin'],
+		removeRequestISSN: ['system'],
+		queryRequestISSN: ['system', 'admin']
+	}
+};
+
+// export function hasPermission(type, command, userGroups, permittedGroups = []) {
+// 	const commandPermissions = permissions[type][command];
+// 	console.log('com', commandPermissions)
+// }
+
 export function hasPermission(profile, user) {
 	const permitted = profile.auth.role.some(profileRole => {
 		return user.groups.some(
@@ -81,7 +148,7 @@ export function hasSystemPermission(user) {
 }
 
 export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
+	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
 }
 
 export function convertLanguage(language) {
