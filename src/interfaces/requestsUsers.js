@@ -30,7 +30,7 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
+import {removeGroupPrefix, hasPermission} from './utils';
 
 const userInterface = interfaceFactory('usersRequest', 'UserRequest');
 const userInitialInterface = interfaceFactory('usersRequest', 'UserRequestContent');
@@ -46,7 +46,8 @@ export default function () {
 	};
 
 	async function createRequest(db, doc, user) {
-		if (hasPublisherAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'userRequests', 'createRequest')) {
 			const newDoc = {
 				...doc,
 				state: 'new',
@@ -65,14 +66,15 @@ export default function () {
 	}
 
 	async function readRequest(db, id, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const protectedProperties = {_id: 0};
 		const result = await userInterface.read(db, id, protectedProperties);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return result;
-		}
+		if (hasPermission(user, 'userRequests', 'readRequest')) {
+			if (user.role === 'publisher-admin' && result.publisher === user.id) {
+				delete result.state;
+				return result;
+			}
 
-		if (hasPublisherAdminPermission(user) && result.publisher === user.id) {
-			delete result.state;
 			return result;
 		}
 
@@ -80,16 +82,17 @@ export default function () {
 	}
 
 	async function updateInitialRequest(db, id, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequest(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			return result;
-		}
+		if (hasPermission(user, 'userRequests', 'updateInitialRequest')) {
+			if (user.role === 'publisher-admin' && readResult.publisher === user.id) {
+				const result = await userInitialInterface.update(db, id, newDoc, user);
+				delete result.state;
+				return result;
+			}
 
-		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
 			const result = await userInitialInterface.update(db, id, newDoc, user);
-			delete result.state;
 			return result;
 		}
 
@@ -97,16 +100,17 @@ export default function () {
 	}
 
 	async function updateRequest(db, id, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequest(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			return result;
-		}
+		if (hasPermission(user, 'userRequests', 'updateRequest')) {
+			if (user.role === 'publisher-admin' && readResult.publisher === user.id) {
+				const result = await userInitialInterface.update(db, id, newDoc, user);
+				delete result.state;
+				return result;
+			}
 
-		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
 			const result = await userInitialInterface.update(db, id, newDoc, user);
-			delete result.state;
 			return result;
 		}
 
@@ -114,7 +118,8 @@ export default function () {
 	}
 
 	async function removeRequest(db, id, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'userRequests', 'removeRequest')) {
 			const result = await userInterface.remove(db, id);
 			return result;
 		}
@@ -123,16 +128,17 @@ export default function () {
 	}
 
 	async function queryRequest(db, {queries, offset}, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await userInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return result;
-		}
+		if (hasPermission(user, 'userRequests', 'queryRequest')) {
+			if (user.role === 'publisher-admin') {
+				const newResult = result.results.filter(item => item.publisher === user.id && delete item.state);
+				return {
+					...result, results: newResult
+				};
+			}
 
-		if (hasPublisherAdminPermission(user)) {
-			const newResult = result.results.filter(item => item.publisher === user.id && delete item.state);
-			return {
-				...result, results: newResult
-			};
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

@@ -27,7 +27,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission} from './utils';
+import {removeGroupPrefix, hasPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
@@ -52,7 +52,8 @@ export default function () {
 	};
 
 	async function createIsbn(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'createIsbn')) {
 			const result = await rangesISBNInterface.create(db, doc, user);
 			return result;
 		}
@@ -61,7 +62,8 @@ export default function () {
 	}
 
 	async function readIsbn(db, id, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'readIsbn')) {
 			const result = await rangesISBNInterface.read(db, id);
 			return result;
 		}
@@ -70,7 +72,8 @@ export default function () {
 	}
 
 	async function updateIsbn(db, id, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'updateIsbn')) {
 			const result = await rangesISBNInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -79,7 +82,8 @@ export default function () {
 	}
 
 	async function queryIsbn(db, {queries, offset}, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'queryIsbn')) {
 			const result = await rangesISBNInterface.query(db, {queries, offset});
 			return result;
 		}
@@ -88,7 +92,8 @@ export default function () {
 	}
 
 	async function createIsmn(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'createIsmn')) {
 			const result = await rangesISMNInterface.create(db, doc, user);
 			return result;
 		}
@@ -97,7 +102,8 @@ export default function () {
 	}
 
 	async function readIsmn(db, id, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'readIsmn')) {
 			const result = await rangesISMNInterface.read(db, id);
 			return result;
 		}
@@ -106,7 +112,8 @@ export default function () {
 	}
 
 	async function updateIsmn(db, id, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'updateIsmn')) {
 			const result = await rangesISMNInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -115,7 +122,8 @@ export default function () {
 	}
 
 	async function queryIsmn(db, {queries, offset}, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'queryIsmn')) {
 			const result = await rangesISMNInterface.query(db, {queries, offset});
 			return result;
 		}
@@ -124,7 +132,8 @@ export default function () {
 	}
 
 	async function createIssn(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'createIssn')) {
 			const result = await rangesISSNInterface.create(db, doc, user);
 			return result;
 		}
@@ -133,7 +142,8 @@ export default function () {
 	}
 
 	async function readIssn(db, id, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'readIssn')) {
 			const result = await rangesISSNInterface.read(db, id);
 			return result;
 		}
@@ -142,7 +152,8 @@ export default function () {
 	}
 
 	async function updateIssn(db, id, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'updateIssn')) {
 			const result = await rangesISSNInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -151,7 +162,8 @@ export default function () {
 	}
 
 	async function queryIssn(db, {queries, offset}, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'ranges', 'queryIssn')) {
 			const result = await rangesISSNInterface.query(db, {queries, offset});
 			return result;
 		}

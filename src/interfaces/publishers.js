@@ -27,7 +27,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasPublisherAdminPermission} from './utils';
+import {removeGroupPrefix, hasPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
@@ -42,7 +42,8 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'publishers', 'create')) {
 			const result = await publisherInterface.create(db, doc, user);
 			return result;
 		}
@@ -51,7 +52,6 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
-		console.log('user', user)
 		let protectedProperties;
 		if (user === undefined) {
 			protectedProperties = {
@@ -73,7 +73,7 @@ export default function () {
 			return rest;
 		}
 
-		if (hasPublisherAdminPermission(user)) {
+		if (user.role === 'publisher-admin') {
 			protectedProperties = {
 				publicationDetails: 0,
 				metadataDelivery: 0,
@@ -85,6 +85,7 @@ export default function () {
 	}
 
 	async function update(db, id, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publisherInterface.update(db, id, doc, user);
 		return result;
 	}

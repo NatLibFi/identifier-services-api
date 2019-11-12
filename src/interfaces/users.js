@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {removeGroupPrefix, hasPermission, hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
+import {removeGroupPrefix, hasPermission, createLinkAndSendEmail, local, crowd} from './utils';
 import interfaceFactory from './interfaceModules';
 import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
 
@@ -46,7 +46,8 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'users', 'create')) {
 			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
 				await crowdUser.create({doc: doc});
@@ -75,7 +76,7 @@ export default function () {
 			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
 		}
 
-		if (hasAdminPermission(user) || hasSystemPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
+		if (hasPermission(user, 'users', 'read') && response.id === user.id) {
 			return {...response, ...result};
 		}
 
@@ -83,7 +84,8 @@ export default function () {
 	}
 
 	async function update(db, id, doc, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'users', update)) {
 			const result = await userInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -92,7 +94,8 @@ export default function () {
 	}
 
 	async function remove(db, id, user) {
-		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'users', 'remove')) {
 			const response = await userInterface.read(db, id);
 			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
@@ -110,8 +113,9 @@ export default function () {
 	}
 
 	async function changePwd(doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		if (doc.newPassword) {
-			if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			if (hasPermission(user, 'users', 'changePwd')) {
 				if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 					const {crowdUser} = crowd();
 					await crowdUser.update({doc});
@@ -134,7 +138,6 @@ export default function () {
 
 	async function query(db, {queries, offset}, user) {
 		user = {...user, groups: removeGroupPrefix(user)};
-		console.log('user', user)
 		let response;
 		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 			const {crowdUser} = crowd();
@@ -145,23 +148,22 @@ export default function () {
 		}
 
 		const dbResponse = await userInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'users', 'query')) {
+			if (user.role === 'publisher-admin') {
+				const results = dbResponse.results.filter(item => {
+					if (response.includes(item.userId) && item.publisher === user.id) {
+						return item;
+					}
+
+					return null;
+				});
+				return {...dbResponse, queryDocCount: results.length, results: results};
+			}
+
 			const results = dbResponse.results.filter(item => response.includes(item.userId) && item);
-			return {...dbResponse, queryDocCount: results.length, results: results};
-		}
-
-		if (hasPublisherAdminPermission(user)) {
-			const results = dbResponse.results.filter(item => {
-				if (response.includes(item.userId) && item.publisher === user.id) {
-					return item;
-				}
-
-				return null;
-			});
 			return {...dbResponse, queryDocCount: results.length, results: results};
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
-
 }

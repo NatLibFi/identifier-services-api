@@ -29,7 +29,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, filterResult} from './utils';
+import {removeGroupPrefix, filterResult, hasPermission} from './utils';
 import interfaceFactory from './interfaceModules';
 
 const publicationsRequestsIssnInterface = interfaceFactory('PublicationRequest_ISSN', 'PublicationIssnRequestContent');
@@ -44,16 +44,18 @@ export default function () {
 	};
 
 	async function createRequestISSN(db, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
-		if (hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
 			const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
 			return result;
 		}
 	}
 
 	async function readRequestISSN(db, id, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsRequestsIssnInterface.read(db, id);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIssnRequests', 'readRequestISSN')) {
 			return result;
 		}
 
@@ -65,8 +67,9 @@ export default function () {
 	}
 
 	async function updateRequestISSN(db, id, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const readResult = await readRequestISSN(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIssnRequests', 'updateRequestISSN')) {
 			const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -80,7 +83,8 @@ export default function () {
 	}
 
 	async function removeRequestISSN(db, id, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'publicationIssnRequests', 'readRequestISSN')) {
 			const result = await publicationsRequestsIssnInterface.remove(db, id);
 			return result;
 		}
@@ -89,8 +93,9 @@ export default function () {
 	}
 
 	async function queryRequestISSN(db, {queries, offset}, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsRequestsIssnInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIssnRequests', 'queryRequestISSN')) {
 			return result;
 		}
 

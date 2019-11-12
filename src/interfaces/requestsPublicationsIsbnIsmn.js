@@ -30,7 +30,7 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasAdminPermission, hasSystemPermission, filterResult} from './utils';
+import {removeGroupPrefix, filterResult, hasPermission} from './utils';
 import interfaceFactory from './interfaceModules';
 
 const publicationsRequestsIsbnIsmnInterface = interfaceFactory('PublicationRequest_ISBN_ISMN', 'PublicationIsbnIsmnRequestContent');
@@ -45,16 +45,18 @@ export default function () {
 	};
 
 	async function createRequestIsbnIsmn(db, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
-		if (hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
 			const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc);
 			return result;
 		}
 	}
 
 	async function readRequestIsbnIsmn(db, id, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsRequestsIsbnIsmnInterface.read(db, id);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'readRequestIsbnIsmn')) {
 			return result;
 		}
 
@@ -66,10 +68,11 @@ export default function () {
 	}
 
 	async function updateRequestIsbnIsmn(db, id, doc, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		let newDoc;
 		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequestIsbnIsmn(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'updateRequestIsbnIsmn')) {
 			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
 			return result;
 		}
@@ -83,7 +86,8 @@ export default function () {
 	}
 
 	async function removeRequestIsbnIsmn(db, id, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'removeRequestIsbnIsmn')) {
 			const result = await publicationsRequestsIsbnIsmnInterface.remove(db, id);
 			return result;
 		}
@@ -92,8 +96,9 @@ export default function () {
 	}
 
 	async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
 			return result;
 		}
 

@@ -74,7 +74,7 @@ const permissions = {
 		update: ['system'],
 		remove: ['system', 'admin'],
 		changePwd: ['system', 'admin'],
-		query: ['system', 'admin']
+		query: ['system', 'admin', 'publisherAdmin']
 	},
 	userRequests: {
 		createRequest: ['publisherAdmin'],
@@ -122,33 +122,37 @@ const permissions = {
 		updateRequestISSN: ['system', 'admin'],
 		removeRequestISSN: ['system'],
 		queryRequestISSN: ['system', 'admin']
+	},
+	messageTemplates: {
+		create: ['admin'],
+		read: ['admin'],
+		update: ['system', 'admin'],
+		remove: ['admin'],
+		query: ['system', 'admin']
+	},
+	ranges: {
+		createIsbn: ['admin'],
+		readIsbn: ['admin'],
+		updateIsbn: ['admin'],
+		queryIsbn: ['admin'],
+		createIsmn: ['admin'],
+		readIsmn: ['admin'],
+		updateIsmn: ['admin'],
+		queryIsmn: ['admin'],
+		createIssn: ['admin'],
+		readIssn: ['admin'],
+		updateIssn: ['admin'],
+		queryIssn: ['admin']
 	}
 };
 
-// export function hasPermission(type, command, userGroups, permittedGroups = []) {
-// 	const commandPermissions = permissions[type][command];
-// 	console.log('com', commandPermissions)
-// }
-
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.role.some(profileRole => {
+export function hasPermission(user, type, command) {
+	const permitted = permissions[type][command].some(role => {
 		return user.groups.some(
-			userRole => userRole === profileRole
+			userRole => userRole === role
 		);
 	});
 	return permitted;
-}
-
-export function hasAdminPermission(user) {
-	return hasPermission({auth: {role: ['admin']}}, user);
-}
-
-export function hasSystemPermission(user) {
-	return hasPermission({auth: {role: ['system']}}, user);
-}
-
-export function hasPublisherAdminPermission(user) {
-	return hasPermission({auth: {role: ['publisherAdmin']}}, user);
 }
 
 export function convertLanguage(language) {

@@ -30,15 +30,22 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasSystemPermission} from './utils';
+import {removeGroupPrefix, hasPermission} from './utils';
 
 const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
 export default function () {
-	return {create, read, update, remove, query};
+	return {
+		create,
+		read,
+		update,
+		remove,
+		query
+	};
 
 	async function create(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'messageTemplates', 'create')) {
 			const result = await templateInterface.create(db, doc, user);
 			return result;
 		}
@@ -47,7 +54,8 @@ export default function () {
 	}
 
 	async function read(db, id, user) {
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'messageTemplates', 'read')) {
 			const result = await templateInterface.read(db, id);
 			return result;
 		}
@@ -56,7 +64,8 @@ export default function () {
 	}
 
 	async function update(db, id, doc, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'messageTemplates', 'update')) {
 			const result = await templateInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -65,7 +74,8 @@ export default function () {
 	}
 
 	async function remove(db, id, user) {
-		if (hasAdminPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'messageTemplates', 'remove')) {
 			const result = await templateInterface.remove(db, id);
 			return result;
 		}
@@ -74,7 +84,8 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'messageTemplates', 'query')) {
 			const result = await templateInterface.query(db, {queries, offset});
 			return result;
 		}

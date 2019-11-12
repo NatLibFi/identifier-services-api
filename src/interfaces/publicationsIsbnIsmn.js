@@ -30,7 +30,7 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasPublisherAdminPermission, hasSystemPermission} from './utils';
+import {removeGroupPrefix, hasPermission} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 
@@ -43,7 +43,8 @@ export default function () {
 	};
 
 	async function createIsbnIsmn(db, doc, user) {
-		if (hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
 			doc.publisher = user.id;
 			doc.metadataReference =	{state: 'pending'};
 			doc.associatedRange = 'string';
@@ -55,8 +56,9 @@ export default function () {
 	}
 
 	async function readIsbnIsmn(db, id, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsIsbnIsmnInterface.read(db, id);
-		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn') && result.publisher === user.id) {
 			return result;
 		}
 
@@ -64,7 +66,8 @@ export default function () {
 	}
 
 	async function updateIsbnIsmn(db, id, doc, user) {
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		user = {...user, groups: removeGroupPrefix(user)};
+		if (hasPermission(user, 'publicationIsbnIsmn', 'updateIsbnIsmn')) {
 			const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -82,9 +85,9 @@ export default function () {
 	// }
 
 	async function queryIsbnIsmn(db, {queries, offset}, user) {
+		user = {...user, groups: removeGroupPrefix(user)};
 		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
-
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
 			return result;
 		}
 
