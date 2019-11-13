@@ -147,7 +147,8 @@ const permissions = {
 };
 
 export function hasPermission(user, type, command) {
-	const permitted = permissions[type][command].some(role => {
+	const commandPermissions = permissions[type][command];
+	const permitted = commandPermissions.includes('all') || commandPermissions.some(role => {
 		return user.groups.some(
 			userRole => userRole === role
 		);
