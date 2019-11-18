@@ -73,18 +73,18 @@ export function hasPermission(profile, user) {
 }
 
 export function hasAdminPermission(user) {
-	// return hasPermission({auth: {role: ['admin']}}, user);
-	return true;
+	// Return hasPermission({auth: {role: ['admin']}}, user);
+	return Boolean(user);
 }
 
 export function hasSystemPermission(user) {
-	// return hasPermission({auth: {role: ['system']}}, user);
-	return true;
+	// Return hasPermission({auth: {role: ['system']}}, user);
+	return Boolean(user);
 }
 
 export function hasPublisherAdminPermission(user) {
-	// return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
-	return true;
+	// Return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
+	return Boolean(user);
 }
 
 export function convertLanguage(language) {
