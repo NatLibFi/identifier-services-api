@@ -2918,7 +2918,7 @@
             "$ref": "#/components/schemas/RequestMetadata"
           },
           {
-            "$ref": "#/components/schemas/UserContent"
+            "$ref": "#/components/schemas/UserCreation"
           }
         ]
       },
