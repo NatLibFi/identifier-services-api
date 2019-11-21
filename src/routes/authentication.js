@@ -40,7 +40,7 @@ export default function (db, passportMiddlewares) {
 
 	async function read(req, res, next) {
 		try {
-			const response = await db.collection('userMetadata').findOne({$or: [{userId: req.user.id}, {id: req.user.id}]});
+			const response = await db.collection('userMetadata').findOne({id: req.user.id});
 			const result = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
 			res.json(result).sendStatus(HttpStatus.OK);
 		} catch (err) {

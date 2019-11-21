@@ -138,9 +138,15 @@ export default function (collectionName) {
 					}
 				});
 				function processData(doc) {
-					doc.id = doc._id.toString();
-					delete doc._id;
-					results.push(doc);
+					if (collectionName === 'userMetadata') {
+						doc.mongoId = doc._id.toString();
+						delete doc._id;
+						results.push(doc);
+					} else {
+						doc.id = doc._id.toString();
+						delete doc._id;
+						results.push(doc);
+					}
 				}
 			});
 		}

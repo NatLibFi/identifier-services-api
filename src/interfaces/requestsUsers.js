@@ -29,10 +29,12 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
+import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS} from '../config';
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc} from './utils';
+import {hasPermission, validateDoc, crowd, local} from './utils';
 
 const userInterface = interfaceFactory('usersRequest');
+const userMetadataInterface = interfaceFactory('userMetadata');
 
 export default function () {
 	return {
@@ -44,24 +46,81 @@ export default function () {
 	};
 
 	async function createRequest(db, doc, user) {
-		if (hasPermission(user, 'userRequests', 'createRequest')) {
-			const newDoc = {
-				...doc,
-				state: 'new',
-				backgroundProcessingState: 'pending',
-				preferences: {
-					defaultLanguage: 'fin'
-				},
-				role: 'publisher',
-				userId: doc.SSOId ? doc.SSOId : doc.email,
-				publisher: user._id.toString()
-			};
-			validateDoc(newDoc, 'UserRequestContent');
-			const result = await userInterface.create(db, newDoc, user);
-			return result;
+		let isUserExist;
+		if (doc.userId) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExist = allCrowdUsers.includes(doc.userId);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+				isUserExist = allLocalUsers.includes(doc.userId);
+			}
+
+			if (isUserExist) {
+				if (hasPermission(user, 'userRequests', 'createRequest')) {
+					const newDoc = {
+						...doc,
+						state: 'new',
+						backgroundProcessingState: 'pending',
+						preferences: {
+							defaultLanguage: 'fin'
+						},
+						role: 'publisher',
+						publisher: user.publisher
+					};
+					validateDoc(newDoc, 'UserRequestContent');
+					const result = await userInterface.create(db, newDoc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		if (doc.email) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExist = allCrowdUsers.includes(doc.email);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+				isUserExist = allLocalUsers.includes(doc.email);
+			}
+		}
+
+		const queries = [{
+			query: {id: doc.email}
+		}];
+		const response = await userMetadataInterface.query(db, {queries});
+
+		console.log('res', response)
+		if (isUserExist || (response.results.length > 0 && doc.email === response.results[0].id)) {
+			throw new ApiError(HttpStatus.CONFLICT);
+		} else {
+			if (hasPermission(user, 'userRequests', 'createRequest')) {
+				const newDoc = {
+					...doc,
+					state: 'new',
+					backgroundProcessingState: 'pending',
+					preferences: {
+						defaultLanguage: 'fin'
+					},
+					role: 'publisher',
+					userId: doc.email,
+					publisher: user.publisher
+				};
+				validateDoc(newDoc, 'UserRequestContent');
+				const result = await userInterface.create(db, newDoc, user);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		}
 	}
 
 	async function readRequest(db, id, user) {
@@ -77,9 +136,8 @@ export default function () {
 	async function updateRequest(db, id, doc, user) {
 		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		if (newDoc.initialRequest) {
+			delete newDoc.initialRequest;
 			validateDoc(newDoc, 'UserRequestContent');
-		} else {
-			validateDoc(newDoc, 'UserRequest');
 		}
 
 		if (hasPermission(user, 'userRequests', 'updateRequest')) {

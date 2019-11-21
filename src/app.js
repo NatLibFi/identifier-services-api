@@ -112,7 +112,7 @@ export default async function run() {
 	});
 
 	async function combineUserInfo(req, res, next) {
-		const response = await db.collection('userMetadata').findOne({userId: req.user.id});
+		const response = await db.collection('userMetadata').findOne({id: req.user.id});
 		req.user = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
 		next();
 	}

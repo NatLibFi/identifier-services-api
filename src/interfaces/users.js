@@ -47,35 +47,51 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (doc.SSOId) {
-			// ¤¤¤¤¤¤¤¤¤¤¤¤ Validate SSOId remains ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
-			doc.userId = doc.SSOId;
-			const {role, givenName, familyName, SSOId, email, ...rest} = {...doc};
-			const result = await userInterface.create(db, rest, user);
-			return result;
-		}
-
-		doc.userId = doc.email;
-		validateDoc(doc, 'UserContent');
-		if (hasPermission(user, 'users', 'create')) {
-			try {
-				if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
-					const {crowdUser} = crowd();
-					await crowdUser.create({doc: doc});
-				} else {
-					const {localUser} = local();
-					await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+		let isUserExit;
+		if (doc.email) {
+			doc.id = doc.email;
+			validateDoc(doc, 'UserContent');
+			if (hasPermission(user, 'users', 'create')) {
+				try {
+					if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+						const {crowdUser} = crowd();
+						await crowdUser.create({doc: doc});
+					} else {
+						const {localUser} = local();
+						await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+					}
+				} catch (err) {
+					throw new ApiError(err.status);
 				}
-			} catch (err) {
-				throw new ApiError(err.status);
+
+				const {role, givenName, familyName, email, ...rest} = {...doc};
+				const result = await userInterface.create(db, rest, user);
+				return result;
 			}
 
-			const {role, givenName, familyName, email, ...rest} = {...doc};
-			const result = await userInterface.create(db, rest, user);
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		if (doc.userId && !doc.email) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExit = allCrowdUsers.includes(doc.userId);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+				isUserExit = allLocalUsers.includes(doc.userId);
+			}
+
+			if (isUserExit) {
+				doc.id = doc.userId;
+				const {role, givenName, familyName, userId, email, ...rest} = {...doc};
+				const result = await userInterface.create(db, rest, user);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function read(db, id, user) {
