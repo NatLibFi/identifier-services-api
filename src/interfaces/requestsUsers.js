@@ -74,23 +74,6 @@ export default function () {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	// Async function updateInitialRequest(db, id, doc, user) {
-	// 	const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-	// 	const readResult = await readRequest(db, id, user);
-	// 	if (hasPermission(user, 'userRequests', 'updateInitialRequest')) {
-	// 		if (user.role === 'publisher-admin' && readResult.publisher === user._id.toString()) {
-	// 			const result = await userInitialInterface.update(db, id, newDoc, user);
-	// 			delete result.state;
-	// 			return result;
-	// 		}
-
-	// 		const result = await userInitialInterface.update(db, id, newDoc, user);
-	// 		return result;
-	// 	}
-
-	// 	throw new ApiError(HttpStatus.FORBIDDEN);
-	// }
-
 	async function updateRequest(db, id, doc, user) {
 		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		if (newDoc.initialRequest) {
@@ -99,14 +82,7 @@ export default function () {
 			validateDoc(newDoc, 'UserRequest');
 		}
 
-		const readResult = await readRequest(db, id, user);
 		if (hasPermission(user, 'userRequests', 'updateRequest')) {
-			if (user.role === 'publisher-admin' && readResult.publisher === user._id.toString()) {
-				const result = await userInterface.update(db, id, newDoc, user);
-				delete result.state;
-				return result;
-			}
-
 			const result = await userInterface.update(db, id, newDoc, user);
 			return result;
 		}

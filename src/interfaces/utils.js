@@ -77,8 +77,7 @@ const permissions = {
 	userRequests: {
 		createRequest: ['publisher-admin'],
 		readRequest: ['system', 'admin', 'publisher-admin'],
-		updateInitialRequest: ['system', 'admin', 'publisher-admin'],
-		updateRequest: ['system', 'admin', 'publisher-admin'],
+		updateRequest: ['system', 'admin'],
 		removeRequest: ['system'],
 		queryRequest: ['system', 'admin', 'publisher-admin']
 	},
@@ -89,7 +88,7 @@ const permissions = {
 		query: ['all']
 	},
 	publisherRequests: {
-		createRequest: ['system'],
+		createRequest: ['all'],
 		readRequest: ['system', 'admin'],
 		updateRequest: ['system', 'admin'],
 		removeRequest: ['system'],
