@@ -64,7 +64,7 @@ export default function () {
 					throw new ApiError(err.status);
 				}
 
-				const {role, givenName, familyName, email, ...rest} = {...doc};
+				const {role, givenName, userId, familyName, email, ...rest} = {...doc};
 				const result = await userInterface.create(db, rest, user);
 				return result;
 			}
