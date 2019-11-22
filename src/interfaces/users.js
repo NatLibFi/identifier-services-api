@@ -102,7 +102,7 @@ export default function () {
 			result = await crowdUser.read({id: response.userId ? response.userId : response.id});
 		} else {
 			const {localUser} = local();
-			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.userId ? response.userId : response.id}); // Delete id later
+			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, value: response.userId ? response.userId : response.id}); // Delete id later
 			result = {...result, role: mapGroupToRole(result.groups)};
 		}
 
@@ -156,7 +156,10 @@ export default function () {
 				throw new ApiError(HttpStatus.FORBIDDEN);
 			}
 		} else {
-			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+			const {localUser} = local();
+			const response = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, value: doc.id});
+			const email = response.emails[0].value;
+			const result = await createLinkAndSendEmail({request: {...doc, email: email}, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
 			if (result !== undefined && result.status === 404) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}

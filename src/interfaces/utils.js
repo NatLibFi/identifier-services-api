@@ -122,7 +122,7 @@ const permissions = {
 	},
 	messageTemplates: {
 		create: ['admin'],
-		read: ['admin'],
+		read: ['admin', 'system'],
 		update: ['system', 'admin'],
 		remove: ['admin'],
 		query: ['system', 'admin']
@@ -200,10 +200,10 @@ export function local() {
 		}
 	}
 
-	function read({PASSPORT_LOCAL_USERS, email}) {
+	function read({PASSPORT_LOCAL_USERS, value}) {
 		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
-		const user = (data.filter(item => item.id === email))[0];
+		const user = (data.filter(item => item.id === value))[0];
 		return user;
 	}
 
@@ -309,7 +309,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 				args: {link: link},
 				getTemplate: getTemplate,
 				SMTP_URL: SMTP_URL,
-				API_EMAIL: API_EMAIL
+				API_EMAIL: request.email
 			});
 			return result;
 		}
@@ -317,27 +317,29 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 
 	const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 	const passportLocalList = JSON.parse(readResponse);
+	const passportArray = passportLocalList.map(item => item.id);
 	return passportLocalList.reduce(async (acc, passport) => {
-		if (passport.id === request.id) {
-			const payload = jose.JWT.sign(request, key, {
-				expiresIn: '24 hours',
-				iat: true
-			});
-			const token = JWE.encrypt(payload, key, {kid: key.kid});
-			const link = `${UI_URL}/users/passwordReset/${token}`;
-			const result = await sendEmail({
-				name: 'change password',
-				args: {link: link},
-				getTemplate: getTemplate,
-				SMTP_URL: SMTP_URL,
-				API_EMAIL: API_EMAIL
-			});
-
-			acc = result;
-			return acc;
+		if (passportArray.includes(request.id)) {
+			if (passport.id === request.id) {
+				const payload = jose.JWT.sign(request, key, {
+					expiresIn: '24 hours',
+					iat: true
+				});
+				const token = JWE.encrypt(payload, key, {kid: key.kid});
+				const link = `${UI_URL}/users/passwordReset/${token}`;
+				const result = await sendEmail({
+					name: 'change password',
+					args: {link: link},
+					getTemplate: getTemplate,
+					SMTP_URL: SMTP_URL,
+					API_EMAIL: request.email
+				});
+				acc = result;	
+			}
+		} else {
+			acc = new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		acc = new ApiError(HttpStatus.NOT_FOUND);
 		return acc;
 	}, {});
 }
