@@ -175,7 +175,6 @@ export function local() {
 	function create({PASSPORT_LOCAL_USERS, doc}) {
 		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
-console.log('********', doc)
 		const newData = {
 			id: doc.email,
 			password: Math.random().toString(36).slice(2),

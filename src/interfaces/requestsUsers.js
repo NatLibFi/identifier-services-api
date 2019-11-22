@@ -59,23 +59,12 @@ export default function () {
 			}
 
 			if (isUserExist) {
-				if (hasPermission(user, 'userRequests', 'createRequest')) {
-					const newDoc = {
-						...doc,
-						state: 'new',
-						backgroundProcessingState: 'pending',
-						preferences: {
-							defaultLanguage: 'fin'
-						},
-						role: 'publisher',
-						publisher: user.publisher
-					};
-					validateDoc(newDoc, 'UserRequestContent');
-					const result = await userInterface.create(db, newDoc, user);
-					return result;
+				const response = await checkDuplication(userInterface);
+				if (response.results.length > 0 && doc.userId === response.results[0].userId) {
+					throw new ApiError(HttpStatus.CONFLICT);
+				} else {
+					return formatUserAndCreate();
 				}
-
-				throw new ApiError(HttpStatus.FORBIDDEN);
 			}
 
 			throw new ApiError(HttpStatus.NOT_FOUND);
@@ -93,15 +82,23 @@ export default function () {
 			}
 		}
 
-		const queries = [{
-			query: {id: doc.email}
-		}];
-		const response = await userMetadataInterface.query(db, {queries});
+		const response = await checkDuplication(userMetadataInterface);
 
-		console.log('res', response)
 		if (isUserExist || (response.results.length > 0 && doc.email === response.results[0].id)) {
 			throw new ApiError(HttpStatus.CONFLICT);
 		} else {
+			return formatUserAndCreate();
+		}
+
+		async function checkDuplication(interfaceName) {
+			const queries = [{
+				query: {$or: [{id: doc.email ? doc.email : doc.userId}, {userId: doc.userId ? doc.userId : doc.email}]}
+			}];
+			const response = await interfaceName.query(db, {queries: queries});
+			return response;
+		}
+
+		async function formatUserAndCreate() {
 			if (hasPermission(user, 'userRequests', 'createRequest')) {
 				const newDoc = {
 					...doc,
@@ -111,7 +108,7 @@ export default function () {
 						defaultLanguage: 'fin'
 					},
 					role: 'publisher',
-					userId: doc.email,
+					userId: doc.userId ? doc.userId : doc.email,
 					publisher: user.publisher
 				};
 				validateDoc(newDoc, 'UserRequestContent');
