@@ -129,7 +129,7 @@ export default function (collectionName) {
 					if (results.length > 0) {
 						resolve({
 							results,
-							offset: results.slice(-1).shift().id,
+							offset: results.slice(-1).shift().mongoId ? results.slice(-1).shift().mongoId : results.slice(-1).shift().id,
 							totalDoc: totalDoc,
 							queryDocCount: queryDocCount
 						});
