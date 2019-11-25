@@ -30,10 +30,10 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {filterResult, hasPermission} from './utils';
+import {filterResult, hasPermission, validateDoc} from './utils';
 import interfaceFactory from './interfaceModules';
 
-const publicationsRequestsIsbnIsmnInterface = interfaceFactory('PublicationRequest_ISBN_ISMN', 'PublicationIsbnIsmnRequestContent');
+const publicationsRequestsIsbnIsmnInterface = interfaceFactory('PublicationRequest_ISBN_ISMN');
 
 export default function () {
 	return {
@@ -47,19 +47,26 @@ export default function () {
 	async function createRequestIsbnIsmn(db, doc, user) {
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', replyTo: user.email[0].value};
 		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
-			const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc);
+			const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc, user);
 			return result;
 		}
 	}
 
 	async function readRequestIsbnIsmn(db, id, user) {
+		let protectedProperties;
 		const result = await publicationsRequestsIsbnIsmnInterface.read(db, id);
 		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'readRequestIsbnIsmn')) {
-			return result;
-		}
+			if (user.role === 'publisher-admin' || user.role === 'publisher') {
+				protectedProperties = {
+					state: 0,
+					publisher: 0,
+					lastUpdated: 0
+				};
+				const res = await publicationsRequestsIsbnIsmnInterface.read(db, id, protectedProperties);
+				return res;
+			}
 
-		if (user && result.publisher === user.id) {
-			return filterResult(result);
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -92,14 +99,23 @@ export default function () {
 	}
 
 	async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
+		let protectedProperties;
 		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
 		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
-			return result;
-		}
+			if (user.role === 'publisher-admin' || user.role === 'publisher') {
+				protectedProperties = {
+					state: 0,
+					publisher: 0,
+					lastUpdated: 0
+				};
+				const queries = [{
+					query: {publisher: user.publisher}
+				}];
+				const response = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
+				return response;
+			}
 
-		if (user) {
-			const response = await db.collection('userMetadata').findOne({id: user.id});
-			return {results: result.results.filter(item => item.publisher === response.id && filterResult(item))};
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

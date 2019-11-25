@@ -89,7 +89,7 @@ export default function (collectionName) {
 		});
 	}
 
-	async function query(db, {queries, offset}) {
+	async function query(db, {queries, offset}, protectedProperties) {
 		if (offset) {
 			if (queries.length > 0) {
 				const result = await queries.reduce((acc, {query}) => {
@@ -120,7 +120,7 @@ export default function (collectionName) {
 			const results = [];
 			const totalDoc = await db.collection(collectionName).find({}).count();
 			const cursor = await db.collection(collectionName)
-				.find(query)
+				.find(query, {projection: protectedProperties})
 				.limit(QUERY_LIMIT);
 			const queryDocCount = await cursor.count();
 			return new Promise(resolve => {
