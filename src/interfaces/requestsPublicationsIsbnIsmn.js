@@ -46,6 +46,7 @@ export default function () {
 
 	async function createRequestIsbnIsmn(db, doc, user) {
 		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', replyTo: user.email[0].value};
+		validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent');
 		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
 			const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc, user);
 			return result;

@@ -40,7 +40,6 @@ import {formatUrl, mapRoleToGroup, mapGroupToRole} from '../utils';
 import {
 	UI_URL,
 	SMTP_URL,
-	API_EMAIL,
 	API_URL,
 	API_USERNAME,
 	API_PASSWORD,
@@ -334,7 +333,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 					SMTP_URL: SMTP_URL,
 					API_EMAIL: request.email
 				});
-				acc = result;	
+				acc = result;
 			}
 		} else {
 			acc = new ApiError(HttpStatus.NOT_FOUND);
