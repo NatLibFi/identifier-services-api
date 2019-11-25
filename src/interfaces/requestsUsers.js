@@ -159,7 +159,7 @@ export default function () {
 		if (hasPermission(user, 'userRequests', 'queryRequest')) {
 			if (user.role === 'publisher-admin') {
 				const queries = [{
-					query: {publisher: user._id.toString()}
+					query: {publisher: user.publisher}
 				}];
 				const protectedProperties = {state: 0};
 				const response = await userInterface.query(db, {queries, offset}, protectedProperties);
