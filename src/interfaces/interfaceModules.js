@@ -69,8 +69,8 @@ export default function (collectionName) {
 		}, {
 			...doc,
 			lastUpdated: {
-				timestamp: moment().toISOString(),
-				user: user.id
+				timestamp: doc.state === 'new'? doc.lastUpdated.timestamp : moment().toISOString(),
+				user: doc.state === 'new'? doc.lastUpdated.user : user.id
 			}
 		});
 
