@@ -54,7 +54,7 @@ export default function () {
 
 	async function readISSN(db, id, user) {
 		const result = await publicationsIssnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIssn', 'readISSN') && result.publisher === user.id) {
+		if (hasPermission(user, 'publicationIssn', 'readISSN')) {
 			return result;
 		}
 
@@ -84,7 +84,6 @@ export default function () {
 					query: {publisher: user.id}
 				}];
 				const response = await publicationsIssnInterface.query(db, {queries, offset});
-				console.log(response);
 				return response;
 			}
 

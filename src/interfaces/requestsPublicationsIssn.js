@@ -73,14 +73,16 @@ export default function () {
 	}
 
 	async function updateRequestISSN(db, id, doc, user) {
+		let newDoc;
+		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 		const readResult = await readRequestISSN(db, id, user);
 		if (hasPermission(user, 'publicationIssnRequests', 'updateRequestISSN')) {
-			const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIssnInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
 		if (user && readResult.publisher === user.id) {
-			const result = await publicationsRequestsIssnInterface.update(db, id, doc, user);
+			const result = await publicationsRequestsIssnInterface.update(db, id, newDoc, user);
 			return filterResult(result);
 		}
 

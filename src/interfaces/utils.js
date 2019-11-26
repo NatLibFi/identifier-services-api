@@ -107,7 +107,7 @@ const permissions = {
 		queryRequestIsbnIsmn: ['system', 'admin', 'publisher-admin', 'publisher']
 	},
 	publicationIssn: {
-		createISSN: ['admin'],
+		createISSN: ['admin', 'system'],
 		readISSN: ['admin', 'publisher-admin'],
 		updateISSN: ['system', 'admin'],
 		queryISSN: ['system', 'admin', 'publisher-admin', 'publisher']
