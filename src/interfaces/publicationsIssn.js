@@ -54,7 +54,7 @@ export default function () {
 
 	async function readISSN(db, id, user) {
 		const result = await publicationsIssnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIssn', 'readISSN') && result.publisher === user.id) {
+		if (hasPermission(user, 'publicationIssn', 'readISSN')) {
 			return result;
 		}
 
@@ -79,14 +79,15 @@ export default function () {
 		const result = await publicationsIssnInterface.query(db, {queries, offset});
 
 		if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
-			return result;
-		}
+			if (user.role === 'publisher-admin' || user.role === 'publisher') {
+				const queries = [{
+					query: {publisher: user.id}
+				}];
+				const response = await publicationsIssnInterface.query(db, {queries, offset});
+				return response;
+			}
 
-		if (user) {
-			const newResult = result.results.filter(item => item.publisher === user.id);
-			return {
-				...result, results: newResult
-			};
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

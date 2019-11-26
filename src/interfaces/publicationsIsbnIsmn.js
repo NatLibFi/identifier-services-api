@@ -56,7 +56,7 @@ export default function () {
 
 	async function readIsbnIsmn(db, id, user) {
 		const result = await publicationsIsbnIsmnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn') && result.publisher === user.id) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn')) {
 			return result;
 		}
 
@@ -84,6 +84,14 @@ export default function () {
 	async function queryIsbnIsmn(db, {queries, offset}, user) {
 		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
 		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
+			if (user.role === 'publisher-admin' || user.role === 'publisher') {
+				const queries = [{
+					query: {publisher: user.id}
+				}];
+				const response = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
+				return response;
+			}
+
 			return result;
 		}
 
