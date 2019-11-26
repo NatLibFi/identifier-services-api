@@ -28,11 +28,12 @@
 
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import fs from 'fs';
 
 import {hasPermission, createLinkAndSendEmail, local, crowd, validateDoc} from './utils';
 import interfaceFactory from './interfaceModules';
 import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
-import {mapGroupToRole} from '../utils';
+import {formatUrl, mapGroupToRole, checkRoleInGroup, mapRoleToGroup} from '../utils';
 
 const userInterface = interfaceFactory('userMetadata');
 
@@ -80,14 +81,34 @@ export default function () {
 			} else {
 				const {localUser} = local();
 				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
-				isUserExit = allLocalUsers.includes(doc.userId);
+
+				if (allLocalUsers.some(item => item.id === doc.userId)) {
+					const newLocalUsers = allLocalUsers.map(item => {
+						if (!checkRoleInGroup(item.groups)) {
+							item.groups.push(mapRoleToGroup(doc.role));
+						}
+
+						return item;
+					});
+
+					fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newLocalUsers, null, 4), 'utf-8');
+					isUserExit = true;
+				}
 			}
 
 			if (isUserExit) {
 				doc.id = doc.userId;
 				const {role, givenName, familyName, userId, email, ...rest} = {...doc};
-				const result = await userInterface.create(db, rest, user);
-				return result;
+				const queries = [{
+					query: {id: doc.id}
+				}];
+				const response = await userInterface.query(db, {queries});
+				if (response.results[0].id === doc.id) {
+					throw new ApiError(HttpStatus.CONFLICT);
+				} else {
+					const result = await userInterface.create(db, rest, user);
+					return result;
+				}
 			}
 
 			throw new ApiError(HttpStatus.NOT_FOUND);

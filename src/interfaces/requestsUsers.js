@@ -55,7 +55,7 @@ export default function () {
 			} else {
 				const {localUser} = local();
 				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
-				isUserExist = allLocalUsers.includes(doc.userId);
+				isUserExist = allLocalUsers.some(item => item.id === doc.userId);
 			}
 
 			if (isUserExist) {
@@ -78,7 +78,7 @@ export default function () {
 			} else {
 				const {localUser} = local();
 				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
-				isUserExist = allLocalUsers.includes(doc.email);
+				isUserExist = allLocalUsers.some(item => item.id === doc.email);
 			}
 		}
 
@@ -109,7 +109,7 @@ export default function () {
 					},
 					role: 'publisher',
 					userId: doc.userId ? doc.userId : doc.email,
-					replyTo: user.email[0].value,
+					replyTo: user.emails[0].value,
 					publisher: user.publisher
 				};
 				validateDoc(newDoc, 'UserRequestContent');

@@ -2773,7 +2773,8 @@
           },
           "replyTo": {
             "description": "Email address of the user which will be used to notify changes in his/her request",
-            "type":"email"
+            "type": "string",
+            "format": "email"
           }
         },
         "required": [

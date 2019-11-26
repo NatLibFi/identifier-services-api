@@ -71,6 +71,12 @@ export function mapGroupToRole(group) {
 	}, '');
 }
 
+export function checkRoleInGroup(group) {
+	const data = JSON.parse(readResponse);
+	return Object.values(data).some(value => group.includes(value)
+	);
+}
+
 export function formatUrl(url) {
 	return url.replace(/^file:\/\//, '');
 }
