@@ -233,7 +233,7 @@ export function local() {
 	function query({PASSPORT_LOCAL_USERS}) {
 		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
-		const result = passportLocalList.map(item => item.id);
+		const result = passportLocalList.map(item => item);
 		return result;
 	}
 }
