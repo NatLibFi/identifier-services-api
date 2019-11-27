@@ -81,7 +81,7 @@ export default function () {
 		if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
 				const queries = [{
-					query: {publisher: user.id}
+					query: {publisher: user.publisher}
 				}];
 				const response = await publicationsIssnInterface.query(db, {queries, offset});
 				return response;

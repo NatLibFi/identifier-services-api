@@ -86,7 +86,7 @@ export default function () {
 		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
 				const queries = [{
-					query: {publisher: user.id}
+					query: {publisher: user.publisher}
 				}];
 				const response = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
 				return response;

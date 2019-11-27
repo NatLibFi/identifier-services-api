@@ -172,7 +172,7 @@ export default function () {
 		if (hasPermission(user, 'users', 'query')) {
 			if (user.role === 'publisher-admin') {
 				const queries = [{
-					query: {publisher: 'publisher-admin'}
+					query: {publisher: user.publisher}
 				}];
 				return userInterface.query(db, {queries, offset});
 			}
