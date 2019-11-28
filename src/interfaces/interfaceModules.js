@@ -52,11 +52,21 @@ export default function (collectionName) {
 	}
 
 	async function read(db, id, protectedProperties) {
-		const doc = await db.collection(collectionName).findOne({
-			_id: new ObjectId(id)
-		}, {
-			projection: protectedProperties
-		});
+		let doc;
+		if (collectionName === 'userMetadata') {
+			const newId = /[0-9a-fA-F]{24}/.test(id) ? new ObjectId(id) : id;
+			doc = await db.collection(collectionName).findOne({$or: 
+				[{id: newId}, {_id: newId}]
+			}, {
+				projection: protectedProperties
+			});
+		} else {
+			doc = await db.collection(collectionName).findOne({
+				_id: new ObjectId(id)
+			}, {
+				projection: protectedProperties
+			});
+		}
 
 		return doc;
 	}
