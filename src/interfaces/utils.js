@@ -127,18 +127,18 @@ const permissions = {
 		query: ['system', 'admin']
 	},
 	ranges: {
-		createIsbn: ['admin'],
-		readIsbn: ['admin'],
-		updateIsbn: ['admin'],
-		queryIsbn: ['admin'],
-		createIsmn: ['admin'],
-		readIsmn: ['admin'],
-		updateIsmn: ['admin'],
-		queryIsmn: ['admin'],
-		createIssn: ['admin'],
-		readIssn: ['admin'],
-		updateIssn: ['admin'],
-		queryIssn: ['admin']
+		createIsbn: ['admin', 'system'],
+		readIsbn: ['admin', 'system'],
+		updateIsbn: ['admin', 'system'],
+		queryIsbn: ['admin', 'system'],
+		createIsmn: ['admin', 'system'],
+		readIsmn: ['admin', 'system'],
+		updateIsmn: ['admin', 'system'],
+		queryIsmn: ['admin', 'system'],
+		createIssn: ['admin', 'system'],
+		readIssn: ['admin', 'system'],
+		updateIssn: ['admin', 'system'],
+		queryIssn: ['admin', 'system']
 	}
 };
 
