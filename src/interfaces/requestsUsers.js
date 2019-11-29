@@ -109,7 +109,7 @@ export default function () {
 					},
 					role: 'publisher',
 					userId: doc.userId ? doc.userId : doc.email,
-					replyTo: user.emails[0].value,
+					creator: user.id,
 					publisher: user.publisher
 				};
 				validateDoc(newDoc, 'UserRequestContent');

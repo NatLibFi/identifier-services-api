@@ -2771,10 +2771,9 @@
             "description": "Identifier of the resource that was created based on this request",
             "type": "string"
           },
-          "replyTo": {
-            "description": "Email address of the user which will be used to notify changes in his/her request",
-            "type": "string",
-            "format": "email"
+          "creator": {
+            "description": "UserId of the user who created the request",
+            "type": "string"
           }
         },
         "required": [

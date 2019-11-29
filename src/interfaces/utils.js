@@ -304,7 +304,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 			const token = await JWE.encrypt(payload, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = sendEmail({
-				name: 'change password',
+				name: 'forgot password',
 				args: {link: link},
 				getTemplate: getTemplate,
 				SMTP_URL: SMTP_URL,
@@ -327,7 +327,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 				const token = JWE.encrypt(payload, key, {kid: key.kid});
 				const link = `${UI_URL}/users/passwordReset/${token}`;
 				const result = await sendEmail({
-					name: 'change password',
+					name: 'forgot password',
 					args: {link: link},
 					getTemplate: getTemplate,
 					SMTP_URL: SMTP_URL,

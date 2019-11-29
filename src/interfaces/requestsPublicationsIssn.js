@@ -44,7 +44,7 @@ export default function () {
 	};
 
 	async function createRequestISSN(db, doc, user) {
-		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', replyTo: user.emails[0].value};
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
 		validateDoc(newDoc, 'PublicationIssnRequestContent');
 		if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
 			const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
