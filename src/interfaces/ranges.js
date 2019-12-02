@@ -27,13 +27,13 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission} from './utils';
+import {hasPermission, validateDoc} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
 const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
 const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
-const rangesISSNInterface = interfaceFactory('RangeIssnContent', 'RangeIssnContent');
+const rangesISSNInterface = interfaceFactory('RangeIssnContent');
 
 export default function () {
 	return {
@@ -124,6 +124,7 @@ export default function () {
 	}
 
 	async function createIssn(db, doc, user) {
+		validateDoc(doc, 'RangeIssnContent');
 		if (hasPermission(user, 'ranges', 'createIssn')) {
 			const result = await rangesISSNInterface.create(db, doc, user);
 			return result;
