@@ -307,6 +307,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 				name: 'forgot password',
 				args: {link: link},
 				getTemplate: getTemplate,
+
 				SMTP_URL: SMTP_URL,
 				API_EMAIL: request.email
 			});

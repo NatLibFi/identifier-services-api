@@ -54,9 +54,8 @@ export default function (collectionName) {
 	async function read(db, id, protectedProperties) {
 		let doc;
 		if (collectionName === 'userMetadata') {
-			const newId = /[0-9a-fA-F]{24}/.test(id) ? new ObjectId(id) : id;
-			doc = await db.collection(collectionName).findOne({$or: 
-				[{id: newId}, {_id: newId}]
+			doc = await db.collection(collectionName).findOne({
+				id: id
 			}, {
 				projection: protectedProperties
 			});
