@@ -30,7 +30,7 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasPublisherAdminPermission, hasSystemPermission} from './utils';
+import {hasPermission} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 
@@ -43,7 +43,7 @@ export default function () {
 	};
 
 	async function createIsbnIsmn(db, doc, user) {
-		if (hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
 			doc.publisher = user.id;
 			doc.metadataReference =	{state: 'pending'};
 			doc.associatedRange = 'string';
@@ -56,7 +56,7 @@ export default function () {
 
 	async function readIsbnIsmn(db, id, user) {
 		const result = await publicationsIsbnIsmnInterface.read(db, id);
-		if (hasAdminPermission(user) || (hasPublisherAdminPermission(user) && result.publisher === user.id)) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn')) {
 			return result;
 		}
 
@@ -64,7 +64,7 @@ export default function () {
 	}
 
 	async function updateIsbnIsmn(db, id, doc, user) {
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
+		if (hasPermission(user, 'publicationIsbnIsmn', 'updateIsbnIsmn')) {
 			const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -83,8 +83,15 @@ export default function () {
 
 	async function queryIsbnIsmn(db, {queries, offset}, user) {
 		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
+		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
+			if (user.role === 'publisher-admin' || user.role === 'publisher') {
+				const queries = [{
+					query: {publisher: user.publisher}
+				}];
+				const response = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
+				return response;
+			}
 
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
 			return result;
 		}
 

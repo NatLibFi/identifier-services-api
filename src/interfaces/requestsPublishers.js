@@ -27,11 +27,11 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasSystemPermission} from './utils';
+import {hasPermission, validateDoc} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
-const publisherRequestsInterface = interfaceFactory('PublisherRequest', 'PublisherRequestContent');
+const publisherRequestsInterface = interfaceFactory('PublisherRequest');
 
 export default function () {
 	return {
@@ -43,8 +43,9 @@ export default function () {
 	};
 
 	async function createRequest(db, doc, user) {
-		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending'};
-		if (hasSystemPermission(user)) {
+		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+		validateDoc(newDoc, 'PublisherRequestContent');
+		if (hasPermission(user, 'publisherRequests', 'createRequest')) {
 			const result = await publisherRequestsInterface.create(db, newDoc, user);
 			return result;
 		}
@@ -53,7 +54,7 @@ export default function () {
 	}
 
 	async function readRequest(db, id, user) {
-		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+		if (hasPermission(user, 'publisherRequests', 'readRequest')) {
 			const result = await publisherRequestsInterface.read(db, id);
 			return result;
 		}
@@ -65,7 +66,7 @@ export default function () {
 		let newDoc;
 		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 
-		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+		if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
 			const result = await publisherRequestsInterface.update(db, id, newDoc, user);
 			return result;
 		}
@@ -74,7 +75,7 @@ export default function () {
 	}
 
 	async function removeRequest(db, id, user) {
-		if (hasSystemPermission(user)) {
+		if (hasPermission(user, 'publisherRequests', 'removeRequest')) {
 			const result = await publisherRequestsInterface.remove(db, id, user);
 			return result;
 		}
@@ -83,7 +84,7 @@ export default function () {
 	}
 
 	async function queryRequests(db, {queries, offset}, user) {
-		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+		if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
 			const result = await publisherRequestsInterface.query(db, {queries, offset});
 			return result;
 		}

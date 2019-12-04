@@ -2770,6 +2770,10 @@
           "createdResource": {
             "description": "Identifier of the resource that was created based on this request",
             "type": "string"
+          },
+          "creator": {
+            "description": "UserId of the user who created the request",
+            "type": "string"
           }
         },
         "required": [
@@ -2877,7 +2881,7 @@
         ]
       },
       "UserCreation": {
-        "oneOf": [
+        "anyOf": [
           {
             "$ref": "#/components/schemas/UserContent"
           },
@@ -3358,6 +3362,9 @@
                 "description": "Identifier of the publication",
                 "type": "string"
               },
+              "identifier": {
+                "type": "string"
+              },
               "associatedRange": {
                 "description": "Identifier of the identifier range resource this publication is associated with",
                 "type": "string"
@@ -3580,6 +3587,9 @@
               },
               "associatedRange": {
                 "description": "Identifier of the identifier range resource this publication is associated with",
+                "type": "string"
+              },
+              "identifier": {
                 "type": "string"
               }
             },

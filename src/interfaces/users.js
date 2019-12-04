@@ -28,12 +28,14 @@
 
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
+import fs from 'fs';
 
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission, createLinkAndSendEmail, local, crowd} from './utils';
+import {hasPermission, createLinkAndSendEmail, local, crowd, validateDoc} from './utils';
 import interfaceFactory from './interfaceModules';
 import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL} from '../config';
+import {formatUrl, mapGroupToRole, checkRoleInGroup, mapRoleToGroup} from '../utils';
 
-const userInterface = interfaceFactory('userMetadata', 'UserContent');
+const userInterface = interfaceFactory('userMetadata');
 
 export default function () {
 	return {
@@ -46,21 +48,71 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasSystemPermission(user)) {
-			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
-				const {crowdUser} = crowd();
-				await crowdUser.create({doc: doc});
-			} else {
-				const {localUser} = local();
-				await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+		let isUserExit;
+		if (doc.email) {
+			doc.id = doc.email;
+			validateDoc(doc, 'UserContent');
+			if (hasPermission(user, 'users', 'create')) {
+				try {
+					if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+						const {crowdUser} = crowd();
+						await crowdUser.create({doc: doc});
+					} else {
+						const {localUser} = local();
+						await localUser.create({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+					}
+				} catch (err) {
+					throw new ApiError(err.status);
+				}
+
+				const {role, givenName, userId, familyName, email, ...rest} = {...doc};
+				const result = await userInterface.create(db, rest, user);
+				return result;
 			}
 
-			const newDoc = {...doc, id: doc.email};
-			const result = await userInterface.create(db, newDoc, user);
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		if (doc.userId && !doc.email) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExit = allCrowdUsers.includes(doc.userId);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+
+				if (allLocalUsers.some(item => item.id === doc.userId)) {
+					const newLocalUsers = allLocalUsers.map(item => {
+						if (!checkRoleInGroup(item.groups)) {
+							item.groups.push(mapRoleToGroup(doc.role));
+						}
+
+						return item;
+					});
+
+					fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newLocalUsers, null, 4), 'utf-8');
+					isUserExit = true;
+				}
+			}
+
+			if (isUserExit) {
+				doc.id = doc.userId;
+				const {role, givenName, familyName, userId, email, ...rest} = {...doc};
+				const queries = [{
+					query: {id: doc.id}
+				}];
+				const response = await userInterface.query(db, {queries});
+				if (response.results[0].id === doc.id) {
+					throw new ApiError(HttpStatus.CONFLICT);
+				} else {
+					const result = await userInterface.create(db, rest, user);
+					return result;
+				}
+			}
+
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	async function read(db, id, user) {
@@ -68,13 +120,15 @@ export default function () {
 		let result;
 		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 			const {crowdUser} = crowd();
-			result = await crowdUser.read({id: response.id});
+			result = await crowdUser.read({id: response.userId ? response.userId : response.id});
 		} else {
 			const {localUser} = local();
-			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, email: response.email});
+			result = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, value: response.userId ? response.userId : response.id}); // Delete id later
+			result = {...result, role: mapGroupToRole(result.groups)};
 		}
 
-		if (hasAdminPermission(user) || hasSystemPermission(user) || (hasPublisherAdminPermission(user) && response.publisher === user.id)) {
+		if (hasPermission(user, 'users', 'read')) {
+			// Need to filter user information after combining and before returning to clientSide
 			return {...response, ...result};
 		}
 
@@ -82,7 +136,8 @@ export default function () {
 	}
 
 	async function update(db, id, doc, user) {
-		if (hasSystemPermission(user)) {
+		validateDoc(doc, 'UserContent');
+		if (hasPermission(user, 'users', update)) {
 			const result = await userInterface.update(db, id, doc, user);
 			return result;
 		}
@@ -91,14 +146,14 @@ export default function () {
 	}
 
 	async function remove(db, id, user) {
-		if (hasSystemPermission(user) || hasAdminPermission(user)) {
+		if (hasPermission(user, 'users', 'remove')) {
 			const response = await userInterface.read(db, id);
 			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 				const {crowdUser} = crowd();
-				await crowdUser.remove({id: response.id, role: response.role});
+				await crowdUser.remove({id: response.userId ? response.userId : response.id});
 			} else {
 				const {localUser} = local();
-				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.id});
+				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
 			}
 
 			const result = await userInterface.remove(db, id);
@@ -110,7 +165,7 @@ export default function () {
 
 	async function changePwd(doc, user) {
 		if (doc.newPassword) {
-			if (hasAdminPermission(user) || hasSystemPermission(user)) {
+			if (hasPermission(user, 'users', 'changePwd')) {
 				if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
 					const {crowdUser} = crowd();
 					await crowdUser.update({doc});
@@ -122,7 +177,10 @@ export default function () {
 				throw new ApiError(HttpStatus.FORBIDDEN);
 			}
 		} else {
-			const result = await createLinkAndSendEmail({request: doc, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+			const {localUser} = local();
+			const response = await localUser.read({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, value: doc.id});
+			const email = response.emails[0].value;
+			const result = await createLinkAndSendEmail({request: {...doc, email: email}, PRIVATE_KEY_URL: PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
 			if (result !== undefined && result.status === 404) {
 				throw new ApiError(HttpStatus.NOT_FOUND);
 			}
@@ -132,30 +190,15 @@ export default function () {
 	}
 
 	async function query(db, {queries, offset}, user) {
-		let response;
-		if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
-			const {crowdUser} = crowd();
-			response = await crowdUser.query();
-		} else {
-			const {localUser} = local();
-			response = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
-		}
+		if (hasPermission(user, 'users', 'query')) {
+			if (user.role === 'publisher-admin') {
+				const queries = [{
+					query: {publisher: user.publisher}
+				}];
+				return userInterface.query(db, {queries, offset});
+			}
 
-		const dbResponse = await userInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const results = dbResponse.results.filter(item => response.includes(item.userId) && item);
-			return {...dbResponse, queryDocCount: results.length, results: results};
-		}
-
-		if (hasPublisherAdminPermission(user)) {
-			const results = dbResponse.results.filter(item => {
-				if (response.includes(item.userId) && item.publisher === user.id) {
-					return item;
-				}
-
-				return null;
-			});
-			return {...dbResponse, queryDocCount: results.length, results: results};
+			return userInterface.query(db, {queries, offset});
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

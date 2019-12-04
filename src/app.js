@@ -42,7 +42,7 @@ import {
 	createRangesRouter,
 	authenticationRouter
 } from './routes';
-import {bodyParse} from './utils';
+import {bodyParse, mapGroupToRole} from './utils';
 import {
 	whiteList,
 	ENABLE_PROXY,
@@ -113,7 +113,7 @@ export default async function run() {
 
 	async function combineUserInfo(req, res, next) {
 		const response = await db.collection('userMetadata').findOne({id: req.user.id});
-		req.user = {...req.user, ...response};
+		req.user = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
 		next();
 	}
 

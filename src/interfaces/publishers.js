@@ -27,7 +27,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasPublisherAdminPermission} from './utils';
+import {hasPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
@@ -42,7 +42,7 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasAdminPermission(user)) {
+		if (hasPermission(user, 'publishers', 'create')) {
 			const result = await publisherInterface.create(db, doc, user);
 			return result;
 		}
@@ -72,7 +72,7 @@ export default function () {
 			return rest;
 		}
 
-		if (hasPublisherAdminPermission(user)) {
+		if (user.role === 'publisher-admin') {
 			protectedProperties = {
 				publicationDetails: 0,
 				metadataDelivery: 0,

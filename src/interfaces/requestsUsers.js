@@ -29,67 +29,102 @@
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
+import {CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS} from '../config';
 import interfaceFactory from './interfaceModules';
-import {hasAdminPermission, hasSystemPermission, hasPublisherAdminPermission} from './utils';
+import {hasPermission, validateDoc, crowd, local} from './utils';
 
-const userInterface = interfaceFactory('usersRequest', 'UserRequest');
-const userInitialInterface = interfaceFactory('usersRequest', 'UserRequestContent');
+const userInterface = interfaceFactory('usersRequest');
+const userMetadataInterface = interfaceFactory('userMetadata');
 
 export default function () {
 	return {
 		createRequest,
 		readRequest,
-		updateInitialRequest,
 		updateRequest,
 		removeRequest,
 		queryRequest
 	};
 
 	async function createRequest(db, doc, user) {
-		if (hasPublisherAdminPermission(user)) {
-			const newDoc = {
-				...doc,
-				state: 'new',
-				backgroundProcessingState: 'pending',
-				role: 'publisher',
-				publisher: user.id,
-				preferences: {
-					defaultLanguage: 'fin'
+		let isUserExist;
+		if (doc.userId) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExist = allCrowdUsers.includes(doc.userId);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+				isUserExist = allLocalUsers.some(item => item.id === doc.userId);
+			}
+
+			if (isUserExist) {
+				const response = await checkDuplication(userInterface);
+				if (response.results.length > 0 && doc.userId === response.results[0].userId) {
+					throw new ApiError(HttpStatus.CONFLICT);
+				} else {
+					return formatUserAndCreate();
 				}
-			};
-			const result = await userInitialInterface.create(db, newDoc, user);
-			return result;
+			}
+
+			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		if (doc.email) {
+			if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+				const {crowdUser} = crowd();
+				const allCrowdUsers = await crowdUser.query();
+				isUserExist = allCrowdUsers.includes(doc.email);
+			} else {
+				const {localUser} = local();
+				const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS});
+				isUserExist = allLocalUsers.some(item => item.id === doc.email);
+			}
+		}
+
+		const response = await checkDuplication(userMetadataInterface);
+
+		if (isUserExist || (response.results.length > 0 && doc.email === response.results[0].id)) {
+			throw new ApiError(HttpStatus.CONFLICT);
+		} else {
+			return formatUserAndCreate();
+		}
+
+		async function checkDuplication(interfaceName) {
+			const queries = [{
+				query: {$or: [{id: doc.email ? doc.email : doc.userId}, {userId: doc.userId ? doc.userId : doc.email}]}
+			}];
+			const response = await interfaceName.query(db, {queries: queries});
+			return response;
+		}
+
+		async function formatUserAndCreate() {
+			if (hasPermission(user, 'userRequests', 'createRequest')) {
+				const newDoc = {
+					...doc,
+					state: 'new',
+					backgroundProcessingState: 'pending',
+					preferences: {
+						defaultLanguage: 'fin'
+					},
+					role: 'publisher',
+					userId: doc.userId ? doc.userId : doc.email,
+					creator: user.id,
+					publisher: user.publisher
+				};
+				validateDoc(newDoc, 'UserRequestContent');
+				const result = await userInterface.create(db, newDoc, user);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		}
 	}
 
 	async function readRequest(db, id, user) {
-		const protectedProperties = {_id: 0};
+		let protectedProperties = user.role === 'publisher-admin' ? {_id: 0, state: 0} : {_id: 0};
 		const result = await userInterface.read(db, id, protectedProperties);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return result;
-		}
-
-		if (hasPublisherAdminPermission(user) && result.publisher === user.id) {
-			delete result.state;
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-	}
-
-	async function updateInitialRequest(db, id, doc, user) {
-		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-		const readResult = await readRequest(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			return result;
-		}
-
-		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			delete result.state;
+		if (hasPermission(user, 'userRequests', 'readRequest')) {
 			return result;
 		}
 
@@ -98,15 +133,13 @@ export default function () {
 
 	async function updateRequest(db, id, doc, user) {
 		const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-		const readResult = await readRequest(db, id, user);
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			return result;
+		if (newDoc.initialRequest) {
+			delete newDoc.initialRequest;
+			validateDoc(newDoc, 'UserRequestContent');
 		}
 
-		if (hasPublisherAdminPermission(user) && readResult.publisher === user.id) {
-			const result = await userInitialInterface.update(db, id, newDoc, user);
-			delete result.state;
+		if (hasPermission(user, 'userRequests', 'updateRequest')) {
+			const result = await userInterface.update(db, id, newDoc, user);
 			return result;
 		}
 
@@ -114,7 +147,7 @@ export default function () {
 	}
 
 	async function removeRequest(db, id, user) {
-		if (hasSystemPermission(user)) {
+		if (hasPermission(user, 'userRequests', 'removeRequest')) {
 			const result = await userInterface.remove(db, id);
 			return result;
 		}
@@ -124,15 +157,17 @@ export default function () {
 
 	async function queryRequest(db, {queries, offset}, user) {
 		const result = await userInterface.query(db, {queries, offset});
-		if (hasAdminPermission(user) || hasSystemPermission(user)) {
-			return result;
-		}
+		if (hasPermission(user, 'userRequests', 'queryRequest')) {
+			if (user.role === 'publisher-admin') {
+				const queries = [{
+					query: {publisher: user.publisher}
+				}];
+				const protectedProperties = {state: 0};
+				const response = await userInterface.query(db, {queries, offset}, protectedProperties);
+				return response;
+			}
 
-		if (hasPublisherAdminPermission(user)) {
-			const newResult = result.results.filter(item => item.publisher === user.id && delete item.state);
-			return {
-				...result, results: newResult
-			};
+			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

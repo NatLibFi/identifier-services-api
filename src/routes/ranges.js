@@ -29,6 +29,7 @@ import {Router} from 'express';
 import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
 import {bodyParse} from '../utils';
+import HttpStatus from 'http-status';
 
 export default function (db) {
 	const ranges = rangesFactory({url: API_URL});
@@ -134,7 +135,7 @@ export default function (db) {
 	async function createIssn(req, res, next) {
 		try {
 			const result = await ranges.createIssn(db, req.body, req.user);
-			res.json(result);
+			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
 		}

@@ -29,6 +29,10 @@
 
 import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
+import fs from 'fs';
+import {GROUPS_AND_ROLES} from './config';
+
+const readResponse = fs.readFileSync(formatUrl(GROUPS_AND_ROLES), 'utf-8');
 
 export function bodyParse() {
 	validateContentType({
@@ -37,4 +41,42 @@ export function bodyParse() {
 	return bodyParser.json({
 		type: ['application/json']
 	});
+}
+
+export function mapRoleToGroup(role) {
+	const data = JSON.parse(readResponse);
+	return Object.keys(data).reduce((acc, key) => {
+		if (role === key) {
+			acc = data[key];
+		}
+
+		return acc;
+	}, '');
+}
+
+export function mapGroupToRole(group) {
+	const data = JSON.parse(readResponse);
+	return Object.values(data).reduce((acc, value) => {
+		if (group.includes(value)) {
+			acc = Object.keys(data).reduce((accumulate, key) => {
+				if (data[key] === value) {
+					accumulate = key;
+				}
+
+				return accumulate;
+			});
+		}
+
+		return acc;
+	}, '');
+}
+
+export function checkRoleInGroup(group) {
+	const data = JSON.parse(readResponse);
+	return Object.values(data).some(value => group.includes(value)
+	);
+}
+
+export function formatUrl(url) {
+	return url.replace(/^file:\/\//, '');
 }

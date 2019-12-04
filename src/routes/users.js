@@ -98,7 +98,7 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await users.query(db, req.body, req.user, req.query);
+			const result = await users.query(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

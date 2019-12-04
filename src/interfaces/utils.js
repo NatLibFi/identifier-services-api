@@ -31,12 +31,15 @@ import HttpStatus from 'http-status';
 import fs from 'fs';
 import jose from 'jose';
 import CrowdClient from 'atlassian-crowd-client';
+const Ajv = require('ajv');
+const {readFileSync} = require('fs');
+const path = require('path');
 import User from 'atlassian-crowd-client/lib/models/user';
 
+import {formatUrl, mapRoleToGroup, mapGroupToRole} from '../utils';
 import {
 	UI_URL,
 	SMTP_URL,
-	API_EMAIL,
 	API_URL,
 	API_USERNAME,
 	API_PASSWORD,
@@ -47,8 +50,6 @@ import {
 } from '../config';
 
 const {sendEmail} = Utils;
-
-const Ajv = require('ajv');
 
 const crowdClient = new CrowdClient({
 	baseUrl: CROWD_URL,
@@ -63,46 +64,94 @@ const localClient =	createApiClient({
 	userAgent: API_CLIENT_USER_AGENT
 });
 
-export function hasPermission(profile, user) {
-	const permitted = profile.auth.role.some(profileRole => {
-		return user.groups.some(
-			userRole => userRole === profileRole
-		);
+const permissions = {
+	users: {
+		create: ['system', 'admin'],
+		read: ['system', 'admin', 'publisher-admin'],
+		update: ['system'],
+		remove: ['system', 'admin'],
+		changePwd: ['system', 'admin'],
+		query: ['system', 'admin', 'publisher-admin']
+	},
+	userRequests: {
+		createRequest: ['publisher-admin'],
+		readRequest: ['system', 'admin', 'publisher-admin'],
+		updateRequest: ['system', 'admin'],
+		removeRequest: ['system'],
+		queryRequest: ['system', 'admin', 'publisher-admin']
+	},
+	publishers: {
+		create: ['admin'],
+		read: ['all'],
+		update: ['publisher-admin'],
+		query: ['all']
+	},
+	publisherRequests: {
+		createRequest: ['all'],
+		readRequest: ['system', 'admin'],
+		updateRequest: ['system', 'admin'],
+		removeRequest: ['system'],
+		queryRequests: ['system', 'admin']
+	},
+	publicationIsbnIsmn: {
+		createIsbnIsmn: ['system', 'publisher-admin', 'publisher'],
+		readIsbnIsmn: ['admin', 'publisher-admin'],
+		updateIsbnIsmn: ['system', 'admin'],
+		queryIsbnIsmn: ['system', 'admin', 'publisher-admin', 'publisher']
+	},
+	publicationIsbnIsmnRequests: {
+		createRequestIsbnIsmn: ['system', 'publisher-admin', 'publisher'],
+		readRequestIsbnIsmn: ['system', 'admin', 'publisher-admin', 'publisher'],
+		updateRequestIsbnIsmn: ['system', 'admin'],
+		removeRequestIsbnIsmn: ['system'],
+		queryRequestIsbnIsmn: ['system', 'admin', 'publisher-admin', 'publisher']
+	},
+	publicationIssn: {
+		createISSN: ['admin', 'system'],
+		readISSN: ['admin', 'publisher-admin'],
+		updateISSN: ['system', 'admin'],
+		queryISSN: ['system', 'admin', 'publisher-admin', 'publisher']
+	},
+	publicationIssnRequests: {
+		createRequestISSN: ['system', 'publisher-admin', 'publisher'],
+		readRequestISSN: ['system', 'admin', 'publisher-admin', 'publisher'],
+		updateRequestISSN: ['system', 'admin'],
+		removeRequestISSN: ['system'],
+		queryRequestISSN: ['system', 'admin', 'publisher-admin', 'publisher']
+	},
+	messageTemplates: {
+		create: ['admin'],
+		read: ['admin', 'system'],
+		update: ['system', 'admin'],
+		remove: ['admin'],
+		query: ['system', 'admin']
+	},
+	ranges: {
+		createIsbn: ['admin', 'system'],
+		readIsbn: ['admin', 'system'],
+		updateIsbn: ['admin', 'system'],
+		queryIsbn: ['admin', 'system'],
+		createIsmn: ['admin', 'system'],
+		readIsmn: ['admin', 'system'],
+		updateIsmn: ['admin', 'system'],
+		queryIsmn: ['admin', 'system'],
+		createIssn: ['admin', 'system'],
+		readIssn: ['admin', 'system'],
+		updateIssn: ['admin', 'system'],
+		queryIssn: ['admin', 'system']
+	}
+};
+
+export function hasPermission(user, type, command) {
+	const commandPermissions = permissions[type][command];
+	const permitted = commandPermissions.includes('all') || commandPermissions.some(role => {
+		return user.role === role;
 	});
 	return permitted;
 }
 
-export function hasAdminPermission(user) {
-	// Return hasPermission({auth: {role: ['admin']}}, user);
-	return Boolean(user);
-}
-
-export function hasSystemPermission(user) {
-	// Return hasPermission({auth: {role: ['system']}}, user);
-	return Boolean(user);
-}
-
-export function hasPublisherAdminPermission(user) {
-	// Return hasPermission({auth: {role: ['publisher-admin', 'publisherAdmin']}}, user);
-	return Boolean(user);
-}
-
 export function convertLanguage(language) {
 	return language === 'fi' ? 'fin' : (language === 'sv' ? 'swe' : 'eng');
-}
-
-export function getValidator(schemaName) {
-	const str = fs.readFileSync('api.json', 'utf8')
-		.replace(/#\/components\/schemas/gm, 'defs#/definitions');
-
-	const obj = JSON.parse(str);
-
-	return new Ajv({allErrors: true})
-		.addSchema({
-			$id: 'defs',
-			definitions: obj.components.schemas
-		})
-		.compile(obj.components.schemas[schemaName]);
 }
 
 export function filterResult(result) {
@@ -125,7 +174,6 @@ export function local() {
 	function create({PASSPORT_LOCAL_USERS, doc}) {
 		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
-
 		const newData = {
 			id: doc.email,
 			password: Math.random().toString(36).slice(2),
@@ -136,7 +184,7 @@ export function local() {
 			displayName: `${doc.givenName}${doc.familyName}`,
 			emails: [{value: doc.email, type: 'work'}],
 			organization: [],
-			groups: [`${doc.role}`]
+			groups: [mapRoleToGroup(doc.role)]
 		};
 
 		if (containsObject(newData, data)) {
@@ -151,10 +199,10 @@ export function local() {
 		}
 	}
 
-	function read({PASSPORT_LOCAL_USERS, email}) {
+	function read({PASSPORT_LOCAL_USERS, value}) {
 		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const data = JSON.parse(res);
-		const user = (data.filter(item => item.id === email))[0];
+		const user = (data.filter(item => item.id === value))[0];
 		return user;
 	}
 
@@ -185,7 +233,7 @@ export function local() {
 	function query({PASSPORT_LOCAL_USERS}) {
 		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
-		const result = passportLocalList.map(item => item.id);
+		const result = passportLocalList.map(item => item);
 		return result;
 	}
 }
@@ -210,7 +258,7 @@ export function crowd() {
 	async function create({doc}) {
 		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
 		const response = await crowdClient.user.create(payload);
-		await crowdClient.user.groups.add(response.email, doc.role);
+		await crowdClient.user.groups.add(response.email, mapRoleToGroup(doc.role));
 		return {...response, groups: await getUserGroup(response.username)};
 	}
 
@@ -222,8 +270,9 @@ export function crowd() {
 		}
 	}
 
-	async function remove({id, role}) {
-		await crowdClient.user.groups.remove(id, role);
+	async function remove({id}) {
+		const group = await getUserGroup(id);
+		await crowdClient.user.groups.remove(id, mapGroupToRole(group));
 		const response = await crowdClient.user.remove(id);
 		return response;
 	}
@@ -255,11 +304,12 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 			const token = await JWE.encrypt(payload, key, {kid: key.kid});
 			const link = `${UI_URL}/users/passwordReset/${token}`;
 			const result = sendEmail({
-				name: 'change password',
+				name: 'forgot password',
 				args: {link: link},
 				getTemplate: getTemplate,
+
 				SMTP_URL: SMTP_URL,
-				API_EMAIL: API_EMAIL
+				API_EMAIL: request.email
 			});
 			return result;
 		}
@@ -267,27 +317,29 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
 
 	const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 	const passportLocalList = JSON.parse(readResponse);
+	const passportArray = passportLocalList.map(item => item.id);
 	return passportLocalList.reduce(async (acc, passport) => {
-		if (passport.id === request.id) {
-			const payload = jose.JWT.sign(request, key, {
-				expiresIn: '24 hours',
-				iat: true
-			});
-			const token = JWE.encrypt(payload, key, {kid: key.kid});
-			const link = `${UI_URL}/users/passwordReset/${token}`;
-			const result = await sendEmail({
-				name: 'change password',
-				args: {link: link},
-				getTemplate: getTemplate,
-				SMTP_URL: SMTP_URL,
-				API_EMAIL: API_EMAIL
-			});
-
-			acc = result;
-			return acc;
+		if (passportArray.includes(request.id)) {
+			if (passport.id === request.id) {
+				const payload = jose.JWT.sign(request, key, {
+					expiresIn: '24 hours',
+					iat: true
+				});
+				const token = JWE.encrypt(payload, key, {kid: key.kid});
+				const link = `${UI_URL}/users/passwordReset/${token}`;
+				const result = await sendEmail({
+					name: 'forgot password',
+					args: {link: link},
+					getTemplate: getTemplate,
+					SMTP_URL: SMTP_URL,
+					API_EMAIL: request.email
+				});
+				acc = result;
+			}
+		} else {
+			acc = new ApiError(HttpStatus.NOT_FOUND);
 		}
 
-		acc = new ApiError(HttpStatus.NOT_FOUND);
 		return acc;
 	}, {});
 }
@@ -302,6 +354,22 @@ export async function getTemplate(query, cache) {
 	return cache[key];
 }
 
-function formatUrl(url) {
-	return url.replace(/^file:\/\//, '');
+export function validateDoc(doc, collectionContent) {
+	const validate = getValidator(collectionContent);
+	if (!validate(doc)) {
+		throw new Error(JSON.stringify(validate.errors, undefined, 2));
+	}
+}
+
+function getValidator(schemaName) {
+	const str = readFileSync(path.join(__dirname, '..', 'api.json'), 'utf8')
+		.replace(/#\/components\/schemas/gm, 'defs#/definitions');
+	const obj = JSON.parse(str);
+
+	return new Ajv({allErrors: true})
+		.addSchema({
+			$id: 'defs',
+			definitions: obj.components.schemas
+		})
+		.compile(obj.components.schemas[schemaName]);
 }
