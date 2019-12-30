@@ -26,10 +26,8 @@
  *
  */
 
-import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-import {hasPermission, validateDoc} from './utils';
 
 export default function () {
 	return {
@@ -58,25 +56,19 @@ export default function () {
 	}
 
 	async function update(userProvider, id, doc, user) {
-		validateDoc(doc, 'UserContent');
-		if (hasPermission(user, 'users', update)) {
-			const result = await userProvider.update(id, doc, user);
-			return result;
+		try {
+			return userProvider.update(id, doc, user);
+		} catch (err) {
+			throw new ApiError(err.status);
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function remove(userProvider, id, user) {
-		if (hasPermission(user, 'users', 'remove')) {
-			try {
-				await userProvider.remove(id);
-			} catch (err) {
-				throw new ApiError(err.status);
-			}
+		try {
+			return userProvider.remove(id, user);
+		} catch (err) {
+			throw new ApiError(err.status);
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function changePwd(userProvider, doc, user) {

@@ -5,20 +5,14 @@
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         },
         {
             "id":"admin",
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         },
         {
             "id":"publisher-admin",
@@ -26,10 +20,7 @@
             "preferences": {
                 "defaultLanguage": "eng"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         },
         {
             "id":"publisher",
@@ -37,10 +28,7 @@
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         }
 
     ]

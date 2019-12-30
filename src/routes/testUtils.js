@@ -37,6 +37,7 @@ import {join as joinPath} from 'path';
 import {ApiError} from '@natlibfi/identifier-services-commons/dist/error';
 import base64 from 'base-64';
 import generateUserProvider from '../../test-fixtures/mockUserProvider';
+import { response } from 'express';
 
 chai.use(chaiHttp);
 
@@ -97,34 +98,36 @@ export default ({rootPath}) => {
 							await mongoFixtures.populate([sub, 'dbContents.json']);
 							const token = await auth(username, password);
 							if (expectedPayload) {
-								if (payloadData) {
-									const response = await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`).send(payloadData);
-									expect(response).to.have.status(expectedStatus);
-									if (expectedStatus === HttpStatus.OK) {
-										expect(response.body).to.eql(expectedPayload);
-									}
-								} else {
-									const response = await requester[method](requestUrl)
+								const response = payloadData ?
+									await requester[method](requestUrl)
+										.set('Authorization', `Bearer ${token}`).send(payloadData) :
+									await requester[method](requestUrl)
 										.set('Authorization', `Bearer ${token}`);
-									expect(response).to.have.status(expectedStatus);
-									if (expectedStatus === HttpStatus.OK) {
-										expect(response.body).to.eql(expectedPayload);
-									}
+								expect(response).to.have.status(expectedStatus);
+								if (expectedStatus === HttpStatus.OK) {
+									expect(response.body).to.eql(expectedPayload);
 								}
 							}
 
 							if (expectedDb) {
-								const response = await requester[method](requestUrl)
-									.set('Authorization', `Bearer ${token}`).send(payloadData);
+								const response = payloadData ?
+									await requester[method](requestUrl)
+										.set('Authorization', `Bearer ${token}`).send(payloadData) :
+									await requester[method](requestUrl)
+										.set('Authorization', `Bearer ${token}`);
 								expect(response).to.have.status(expectedStatus);
-								const db = await mongoFixtures.dump();
-								expect(formatDump(db, collectionName)).to.eql(expectedDb);
+								if (response.status === HttpStatus.OK) {
+									const db = await mongoFixtures.dump();
+									expect(formatDump(db, collectionName)).to.eql(expectedDb);
+								}
 							}
 
-							if (!expectedDb && !payloadExpected) {
-								const response = await requester[method](requestUrl)
-									.set('Authorization', `Bearer ${token}`).send(payloadData);
+							if (expectedDb === undefined && payloadExpected === undefined) {
+								const response = method === 'delete' ?
+									await requester[method](requestUrl)
+										.set('Authorization', `Bearer ${token}`) :
+									await requester[method](requestUrl)
+										.set('Authorization', `Bearer ${token}`).send(payloadData);
 								expect(response).to.have.status(expectedStatus);
 							}
 						});
@@ -154,12 +157,9 @@ export default ({rootPath}) => {
 							components: [subDir, dbExpected],
 							reader: READERS.JSON
 						});
-
-						if (payload) {
-							return {descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb, payloadData};
-						}
-
-						return {descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb};
+						return payload ?
+							{descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb, payloadData} :
+							{descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb};
 					}
 
 					if (payloadExpected) {
@@ -167,14 +167,14 @@ export default ({rootPath}) => {
 							components: [subDir, 'expectedPayload.json'],
 							reader: READERS.JSON
 						});
-						if (payload) {
-							return {expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadData};
-						}
-
-						return {expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus};
+						return payload ?
+							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadData} :
+							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus};
 					}
 
-					return {descr, requestUrl, method, username, password, expectedStatus, payloadData};
+					if (dbExpected === undefined && payloadExpected === false) {
+						return {descr, requestUrl, method, username, password, expectedStatus, payloadData};
+					}
 				} catch (err) {
 					if (err.code === 'ENOENT') {
 						return {descr, requestUrl};

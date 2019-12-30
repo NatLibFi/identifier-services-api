@@ -81,6 +81,8 @@ export default function (collectionName) {
 				timestamp: doc.state === 'new' ? doc.lastUpdated.timestamp : moment().toISOString(),
 				user: doc.state === 'new' ? doc.lastUpdated.user : user.id
 			}
+		}, {
+			returnNewDocument: true
 		});
 
 		function format(obj) {
@@ -94,7 +96,7 @@ export default function (collectionName) {
 
 	async function remove(db, id) {
 		const query = ObjectId.isValid(id) ? {_id: new ObjectId(id)} : {id: id};
-		await db.collection(collectionName).findOneAndDelete(query);
+		return db.collection(collectionName).findOneAndDelete(query);
 	}
 
 	async function query(db, {queries, offset}, protectedProperties) {

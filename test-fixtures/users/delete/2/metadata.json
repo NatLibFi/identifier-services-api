@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail because publisherAdmin doesn't have enough authority",                                                                                  
+    "requestUrl": "/users/publisher",
+    "collectionName": "userMetadata",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh ",
+    "expectedStatus": 401,
+    "method": "delete",
+    "payloadExpected": false
+}

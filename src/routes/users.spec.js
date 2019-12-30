@@ -342,5 +342,7 @@ describe('app', () => {
 		describe('#create', generateTestSuite('users', 'create'));
 		describe('#changePwd', generateTestSuite('users', 'changePwd'));
 		describe('#query', generateTestSuite('users', 'query'));
+		describe('#delete', generateTestSuite('users', 'delete'));
+		describe('#update', generateTestSuite('users', 'update'));
 	});
 });

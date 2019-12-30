@@ -144,10 +144,14 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 	async function remove(db, id, user) {
 		if (hasPermission(user, 'users', 'remove')) {
 			const response = await userInterface.read(db, id);
-			const {localUser} = local();
-			await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
-			const result = await userInterface.remove(db, id);
-			return result;
+			if (response === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			} else {
+				const {localUser} = local();
+				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
+				const result = await userInterface.remove(db, id);
+				return result;
+			}
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

@@ -5,10 +5,15 @@
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
+        },
+        {
+            "id":"publisher-admin",
+            "publisher": "foobar",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
         }
     ]
 }

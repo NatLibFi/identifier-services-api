@@ -102,6 +102,10 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 				}
 			}
 
+			if (!doc.userId && !doc.email) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
 			throw new ApiError(HttpStatus.NOT_FOUND);
 		}
 	}
@@ -130,23 +134,35 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function update(db, id, doc, user) {
+	async function update(id, doc, user) {
 		validateDoc(doc, 'UserContent');
-		if (hasPermission(user, 'users', update)) {
-			const result = await userInterface.update(db, id, doc, user);
+		if (hasPermission(user, 'users', 'update')) {
+			try {
+				const {localUser} = local();
+				await localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+			} catch (err) {
+				throw new ApiError(err.status);
+			}
+
+			const {role, givenName, userId, familyName, email, ...rest} = {...doc};
+			const result = await userInterface.update(db, id, rest, user);
 			return result;
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
-	async function remove(db, id, user) {
+	async function remove(id, user) {
 		if (hasPermission(user, 'users', 'remove')) {
 			const response = await userInterface.read(db, id);
-			const {localUser} = local();
-			await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
-			const result = await userInterface.remove(db, id);
-			return result;
+			if (response === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			} else {
+				const {localUser} = local();
+				await localUser.remove({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
+				const result = await userInterface.remove(db, id);
+				return result;
+			}
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -158,7 +174,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 			if (hasPermission(user, 'users', 'changePwd')) {
 				const {localUser} = local();
 				// Changes made for unit test original should  not return anything
-				return localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, user: doc});
+				return localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -239,15 +255,16 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 			return user;
 		}
 
-		function update({PASSPORT_LOCAL_USERS, user}) {
-			const {id, newPassword} = user;
+		function update({PASSPORT_LOCAL_USERS, doc}) {
+			const {id, newPassword} = doc;
 			const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
 			const passportLocalList = JSON.parse(readResponse);
 			const newPassportLocalList = passportLocalList.map(passport => {
-				if (passport.id === id) {
+				if (newPassword && passport.id === id) {
 					return {...passport, password: newPassword};
 				}
 
+				passport = doc;
 				return passport;
 			});
 
