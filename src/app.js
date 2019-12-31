@@ -112,7 +112,7 @@ export default async function run() {
 
 	app.use('/templates', passportMiddlewares.token, combineUserInfo, createMessageTemplate(db));
 	app.use('/users', passportMiddlewares.token, combineUserInfo, createUsersRouter(userProvider));
-	app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(db));
+	app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(userProvider));
 	app.use('/publishers', createPublishersRouter(db, passportMiddlewares, combineUserInfo));
 	app.use('/requests/publishers', passportMiddlewares.token, combineUserInfo, createPublishersRequestsRouter(db));
 	app.use('/publications/isbn-ismn', passportMiddlewares.token, combineUserInfo, createPublicationsRouterIsbnIsmn(db));

@@ -28,7 +28,6 @@
 
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-
 export default function () {
 	return {
 		create,

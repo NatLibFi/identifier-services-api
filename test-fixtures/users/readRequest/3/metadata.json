@@ -1,0 +1,9 @@
+{
+    "descr": "Should fail because the resource does not exist",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4c19",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 404
+}

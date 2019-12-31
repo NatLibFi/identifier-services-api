@@ -37,7 +37,6 @@ import {join as joinPath} from 'path';
 import {ApiError} from '@natlibfi/identifier-services-commons/dist/error';
 import base64 from 'base-64';
 import generateUserProvider from '../../test-fixtures/mockUserProvider';
-import { response } from 'express';
 
 chai.use(chaiHttp);
 
@@ -126,8 +125,13 @@ export default ({rootPath}) => {
 								const response = method === 'delete' ?
 									await requester[method](requestUrl)
 										.set('Authorization', `Bearer ${token}`) :
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`).send(payloadData);
+									(
+										payloadData ?
+											await requester[method](requestUrl)
+												.set('Authorization', `Bearer ${token}`).send(payloadData) :
+											await requester[method](requestUrl)
+												.set('Authorization', `Bearer ${token}`)
+									);
 								expect(response).to.have.status(expectedStatus);
 							}
 						});
@@ -169,7 +173,7 @@ export default ({rootPath}) => {
 						});
 						return payload ?
 							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadData} :
-							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus};
+							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadExpected};
 					}
 
 					if (dbExpected === undefined && payloadExpected === false) {

@@ -1,7 +1,7 @@
 {
     "userId": "foo.bar@foo.bar",
     "publishers": "5dde33ad22f69862179e3d22",
-    "creator": "pubisher-admin",
+    "creator": "publisher-admin",
     "givenName": "Barbar",
     "familyName": "Bar",
     "email": "foo.bar@foo.bar",
