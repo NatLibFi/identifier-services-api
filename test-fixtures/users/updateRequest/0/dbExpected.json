@@ -15,10 +15,7 @@
             "preferences": {
                 "defaultLanguage": "eng"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         },
         {
             "userId": "publisher@foo.bar",
@@ -36,38 +33,14 @@
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         }
     ],
     "userMetadata": [
         {
-            "id": "system",
-            "preferences": {
-                "defaultLanguage": "fin"
-            },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
-        },
-        {
             "id": "admin",
             "preferences": {
                 "defaultLanguage": "fin"
-            },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
-        },
-        {
-            "id": "publisher-admin",
-            "publisher": "foobar",
-            "preferences": {
-                "defaultLanguage": "eng"
             },
             "lastUpdated": {
                 "timestamp": "838383838",

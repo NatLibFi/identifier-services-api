@@ -10,33 +10,9 @@
             "email": "foo.bar@foo.bar",
             "state": "processed",
             "backgroundProcessingState": "processed",
-            "notes": [
-                "This is a note"
-            ],
+            "notes":["This is a note"],
             "preferences": {
                 "defaultLanguage": "eng"
-            },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
-        },
-        {
-            "_id": "5cd3e9e5f2376736726e4d23",
-            "userId": "publisher@foo.bar",
-            "publisher": "5dde33ad22f69862179e3d22",
-            "creator": "publisher-admin",
-            "givenName": "test",
-            "familyName": "publisher",
-            "email": "publisher@foo.bar",
-            "role": "publisher",
-            "state": "new",
-            "backgroundProcessingState": "pending",
-            "notes": [
-                "This is a note"
-            ],
-            "preferences": {
-                "defaultLanguage": "fin"
             },
             "lastUpdated": {
                 "timestamp": "838383838",
@@ -47,9 +23,21 @@
     "userMetadata": [
         {
             "_id": "5cd90e696a1e930789dfaa48",
-            "id": "admin",
+            "id":"admin",
             "preferences": {
-                "defaultLanguage": "fin"
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        },
+        {
+            "_id": "5cd90e696a1e930789dfaa50",
+            "id":"publisher",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "preferences": {
+                "defaultLanguage": "eng"
             },
             "lastUpdated": {
                 "timestamp": "838383838",

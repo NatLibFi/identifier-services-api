@@ -38,10 +38,8 @@ describe('app', () => {
 		describe('#readRequest', generateTestSuite('users', 'readRequest'));
 		describe('#createRequest', generateTestSuite('users', 'createRequest'));
 		describe('#deleteRequest', generateTestSuite('users', 'deleteRequest'));
-		// describe('#changePwd', generateTestSuite('users', 'changePwd'));
-		// describe('#query', generateTestSuite('users', 'query'));
-		// describe('#delete', generateTestSuite('users', 'delete'));
-		// describe('#update', generateTestSuite('users', 'update'));
+		describe('#queryRequest', generateTestSuite('users', 'queryRequest'));
+		describe('#updateRequest', generateTestSuite('users', 'updateRequest'));
 	});
 });
 

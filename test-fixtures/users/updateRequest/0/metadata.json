@@ -1,0 +1,11 @@
+{
+    "descr": "Should query succeesfully, admin can suceessfully update all usersRequest",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4d23",
+    "collectionName": "usersRequest",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json"
+}

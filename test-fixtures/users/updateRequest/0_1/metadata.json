@@ -1,0 +1,11 @@
+{
+    "descr": "Should query succeesfully, system can suceessfully update all usersRequest",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4d23",
+    "collectionName": "usersRequest",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "put",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json"
+}

@@ -1,0 +1,10 @@
+{
+    "descr": "Should query succeesfully, admin can suceessfully query all usersRequest",
+    "requestUrl": "/requests/users/query",
+    "collectionName": "usersRequest",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}
