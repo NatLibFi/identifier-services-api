@@ -321,7 +321,11 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 	async function removeRequest(id, user) {
 		if (hasPermission(user, 'userRequests', 'removeRequest')) {
 			const result = await usersRequestInterface.remove(db, id);
-			return result;
+			if (result.value === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			} else {
+				return result;
+			}
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -329,7 +333,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 
 	async function queryRequest(doc, user) {
 		if (Object.keys(doc).length === 0) {
-			throw new ApiError(HttpStatus.BAD_REQUEST)
+			throw new ApiError(HttpStatus.BAD_REQUEST);
 		} else {
 			const {queries, offset} = doc;
 			const result = await usersRequestInterface.query(db, {queries, offset});

@@ -15,18 +15,12 @@
             "preferences": {
                 "defaultLanguage": "eng"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         },
         {
-            "userId": "publisher@foo.bar",
+            "userId": "publisher",
             "publisher": "5dde33ad22f69862179e3d22",
             "creator": "publisher-admin",
-            "givenName": "test",
-            "familyName": "publisher",
-            "email": "publisher@foo.bar",
             "role": "publisher",
             "state": "new",
             "backgroundProcessingState": "pending",
@@ -36,10 +30,7 @@
             "preferences": {
                 "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "lastUpdated": {}
         }
     ],
     "userMetadata": [

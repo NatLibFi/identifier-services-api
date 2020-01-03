@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail not enought authority",
+    "requestUrl": "/requests/users",
+    "collectionName": "usersRequest",
+    "username": "publisher",
+    "password": "opbmm52su1",
+    "expectedStatus": 403,
+    "method": "post",
+    "payload": "payload.json",
+    "payloadExpected": false
+}

@@ -1,6 +1,6 @@
 {
-    "creator": "pubisher-admin",
-    "userId": "publisher@foo.bar",
+    "creator": "publisher-admin",
+    "userId": "publisher",
     "notes":["This is a note"],
     "lastUpdated": {
         "timestamp": "838383838",

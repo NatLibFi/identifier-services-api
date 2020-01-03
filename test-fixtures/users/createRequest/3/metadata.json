@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail because payload is empty",
+    "requestUrl": "/requests/users",
+    "collectionName": "usersRequest",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "expectedStatus": 422,
+    "method": "post",
+    "payload": "payload.json",
+    "payloadExpected": false
+}

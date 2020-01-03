@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed using SSOID",
+    "requestUrl": "/requests/users",
+    "collectionName": "usersRequest",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "expectedStatus": 200,
+    "method": "post",
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json"
+}

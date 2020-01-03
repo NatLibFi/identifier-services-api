@@ -36,7 +36,8 @@ describe('app', () => {
 
 	describe('users', () => {
 		describe('#readRequest', generateTestSuite('users', 'readRequest'));
-		// describe('#create', generateTestSuite('users', 'create'));
+		describe('#createRequest', generateTestSuite('users', 'createRequest'));
+		describe('#deleteRequest', generateTestSuite('users', 'deleteRequest'));
 		// describe('#changePwd', generateTestSuite('users', 'changePwd'));
 		// describe('#query', generateTestSuite('users', 'query'));
 		// describe('#delete', generateTestSuite('users', 'delete'));
