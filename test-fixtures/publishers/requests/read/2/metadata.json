@@ -1,8 +1,10 @@
 {
-    "descr": "Should succeed, admin should not read publishers",
+    "descr": "Should fail, incorrect parameters",
     "requestUrl": "/requests/publishers/foo",
+    "collectionName": "PublisherRequest",
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",
     "method": "get",
-    "expectedStatus": 400
+    "expectedStatus": 400,
+    "payloadExpected": false
 }

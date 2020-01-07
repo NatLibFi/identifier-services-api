@@ -1,4 +1,5 @@
- {
+
+{
     "lastUpdated": {
         "user": "foo"
     },
@@ -12,7 +13,7 @@
             "email": "foo.bar@foo.bar"
         }
     ],
-    "name": "sanjog",
+    "name": "rojak",
     "language": "fin",
     "metadataDelivery": "external",
     "email": "asiakaspalvelu@otava.fi",
@@ -22,20 +23,13 @@
         "Kustannusosakeyhtiö Nemo"
     ],
     "notes": [
-        "T3RhdmEgb24gb3N0YW51dCBNb3JlZW5pbiBrdXN0YW5udXN0b2ltaW5uYW4sIG11dHRhIE1vcmVlbmkgamF0a2FhIG9tYWxsYSBuaW1lbGzDpMOkbiBqYSB0dW5udWtzaWxsYWFuLiA0LjEyLjE0L0tQICAgS3VzdGFudGFqYW4gaWxtb2l0dXM6IEFuaXRhIEZpbGltb25vZmYgaG9pdGFhIHlsZWlzZW4gcHVvbGVuIGtpcmpvamVuIElTQk4tbnVtZXJvaW5uaXQ7IE90YXZhLCBMaWtlIGphIE1vcmVlbmkuIC0gT3BwaWtpcmpvamVuIG9zYWx0YSBJU0JOLXlodGV5c2hlbmtpbMO2IG9uIFRpaW5hIEtpdmlzdMO2LCB0aWluYS5raXZpc3RvQG90YXZhLmZpLCAwNTAgMzg5IDQ1OTAuIDE4LjUuMjAxNi9LUC4gSmF0a29zc2EgTW9yZWVuaSBrw6R5dHTDpMOkIE90YXZhbiB0dW5udWtzaWEuIDI3LjIuMjAxOC9IUgo=",
-        "T3RhdmEgb24gb3N0YW51dCBOZW1vbi4gT2hlc3NhIFDDpGl2aSBIdWphc2VuIHZhc3RhdXM6IE5lbW8gdG9pbWlpIE90YXZhbiBzaXPDpGxsw6Qgb21hbmEgYnJhbmRpbsOkw6RuLCBtdXR0YSBrw6R5dHTDpMOkIE90YXZhbiBJU0JuOmnDpCwga29za2Egc2Ugb24gb3NhIEt1c3Rhbm51c29zYWtleWh0acO2IE90YXZhYS4KTGlzw6R0aWV0b2phIGFzaWFzdGE6IFRpZXRvcGFsdmVsdXDDpMOkbGxpa2vDtiBNaW5uYSBIZXJ0dHVhaW5lbiB0YWkgTmVtb24gb21hIGt1c3Rhbm51c3DDpMOkbGxpa2vDtiBNaWthIFNpaW1lcy4gICBUZXJ2ZWlzaW4gUMOkaXZpIEh1amFuZW4"
+        "foo",
+        "foo"
     ],
     "activity": {
         "active": true,
         "yearInactivated": null
     },
-    "postalAddress": {
-        "address":"foo",
-        "city":"foo",
-        "zip":"foo",
-        "public:": false
-    },
-    "classification": ["foo"],
     "streetAddress": {
         "address": "Uudenmaankatu 10",
         "city": "Helsinki",

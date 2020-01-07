@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed, admin can suceessfully update publishersRequest",
+    "requestUrl": "/requests/publishers/5cdff4db937aed356a2b5817",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "collectionName": "PublisherRequest",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json",
+    "payloadExpected": false
+}

@@ -38,6 +38,9 @@ describe('app', () => {
 		describe('#create', generateTestSuite('publishers', 'create'));
 		describe('#update', generateTestSuite('publishers', 'update'));
 		describe('#query', generateTestSuite('publishers', 'query'));
-		describe('#read requests', generateTestSuite('publishers', '/requests/read'));
+		describe('#readRequests', generateTestSuite('publishers', '/requests/read'));
+		describe('#createRequests', generateTestSuite('publishers', '/requests/create'));
+		describe('#updateRequests', generateTestSuite('publishers', '/requests/update'));
+		describe('#queryRequests', generateTestSuite('publishers', '/requests/query'));
 	});
 });

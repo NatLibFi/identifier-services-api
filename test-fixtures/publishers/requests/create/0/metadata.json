@@ -1,10 +1,10 @@
 {
     "descr": "Should succeed, system can suceessfully create publishers",
-    "requestUrl": "/publishers",
+    "requestUrl": "/requests/publishers",
     "username": "system",
     "password": "fCjHs1BHYn8yf4mAODOU",
     "method": "post",
-    "collectionName": "PublisherMetadata",
+    "collectionName": "PublisherRequest",
     "expectedStatus": 201,
     "dbExpected": "dbExpected.json",
     "payload": "payload.json",

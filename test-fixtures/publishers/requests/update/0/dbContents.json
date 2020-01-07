@@ -1,5 +1,14 @@
 
 {
+    "userMetadata": [
+        {
+            "id":"system",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ],
     "PublisherRequest": [
         {
             "_id": "5cdff4db937aed356a2b5817",

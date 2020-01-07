@@ -3,6 +3,7 @@
     "requestUrl": "/publishers/query",
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",
+    "collectionName": "PublisherMetadata",
     "method": "post",
     "expectedStatus": 200,
     "payload": "payload.json"

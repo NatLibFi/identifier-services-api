@@ -1,8 +1,8 @@
 {
     "descr": "Should succeed, publisher can be suceessfully updated",
     "requestUrl": "/publishers/5cdfe76e46c65d23f7cf94d3",
-    "username": "tasks",
-    "password": "J22omfqCU8ZgCrrKrOOB",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
     "method": "put",
     "collectionName": "PublisherMetadata",
     "expectedStatus": 200,

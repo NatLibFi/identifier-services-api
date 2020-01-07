@@ -43,35 +43,56 @@ export default function () {
 	};
 
 	async function createRequest(db, doc, user) {
-		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
-		validateDoc(newDoc, 'PublisherRequestContent');
-		if (hasPermission(user, 'publisherRequests', 'createRequest')) {
-			const result = await publisherRequestsInterface.create(db, newDoc, user);
-			return result;
-		}
+		try {
+			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+			if (validateDoc(newDoc, 'PublisherRequestContent')) {
+				if (hasPermission(user, 'publisherRequests', 'createRequest')) {
+					const result = await publisherRequestsInterface.create(db, newDoc, user);
+					return result;
+				}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			} else {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function readRequest(db, id, user) {
-		if (hasPermission(user, 'publisherRequests', 'readRequest')) {
-			const result = await publisherRequestsInterface.read(db, id);
-			return result;
-		}
+		try {
+			if (hasPermission(user, 'publisherRequests', 'readRequest')) {
+				const result = await publisherRequestsInterface.read(db, id);
+				return result;
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function updateRequest(db, id, doc, user) {
-		let newDoc;
-		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
+		try {
+			let newDoc;
+			newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 
-		if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
-			const result = await publisherRequestsInterface.update(db, id, newDoc, user);
-			return result;
+			if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
+				const result = await publisherRequestsInterface.update(db, id, newDoc, user);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function removeRequest(db, id, user) {
@@ -84,11 +105,17 @@ export default function () {
 	}
 
 	async function queryRequests(db, {queries, offset}, user) {
-		if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
-			const result = await publisherRequestsInterface.query(db, {queries, offset});
-			return result;
-		}
+		try {
+			if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
+				const result = await publisherRequestsInterface.query(db, {queries, offset});
+				return result;
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
+		}
 	}
 }
