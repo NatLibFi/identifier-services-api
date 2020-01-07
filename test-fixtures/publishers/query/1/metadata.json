@@ -1,0 +1,7 @@
+{
+    "descr": "Should succeed, publisher query is public",
+    "requestUrl": "/publishers/query",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

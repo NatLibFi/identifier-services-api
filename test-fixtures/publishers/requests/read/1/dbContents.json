@@ -1,21 +1,27 @@
 {
-    "PublisherMetadata": [{},
+    "PublisherRequest": [
         {
+            "_id":"5cdff4db937aed356a2b5817",
             "lastUpdated":{},
+            "state": "foo",
             "name": "foo",
             "postalAddress": {
-                "address":"foo",
-                "city":"foo",
-                "zip":"foo",
-                "public:": false
+                "public": false,
+                "address": "foo",
+                "city": "foo",
+                "zip": "foo"
             },
             "classification": ["foo"],
-            "metadataDelivery": "manual",
-            "primaryContact": ["foobar", "foo"],
+            "metadataDelivery": "foo",
+            
+            "publicationDetails": {
+                "frequency": 111
+            },
+            "primaryContact": ["foobar", "foo"],			
             "activity":{
                 "active": true,
                 "yearInactivated": 111
-            }   
+            }
         }
     ],
     "userMetadata": [
@@ -28,3 +34,4 @@
         }
     ]
 }
+

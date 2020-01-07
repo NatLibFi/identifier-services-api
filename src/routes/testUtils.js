@@ -100,8 +100,11 @@ export default ({rootPath}) => {
 								const response = payloadData ?
 									await requester[method](requestUrl)
 										.set('Authorization', `Bearer ${token}`).send(payloadData) :
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`);
+									(
+										token === undefined ? await requester[method](requestUrl) :
+											await requester[method](requestUrl)
+												.set('Authorization', `Bearer ${token}`)
+									);
 								expect(response).to.have.status(expectedStatus);
 								if (expectedStatus === HttpStatus.OK) {
 									expect(response.body).to.eql(expectedPayload);

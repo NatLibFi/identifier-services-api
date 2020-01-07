@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can suceessfully read publishers",
+    "requestUrl": "/requests/publishers/5cdff4db937aed356a2b5817",
+    "username": "tasks",
+    "password": "J22omfqCU8ZgCrrKrOOB",
+    "method": "get",
+    "expectedStatus": 200
+}

@@ -80,7 +80,7 @@ const permissions = {
 		queryRequest: ['system', 'admin', 'publisher-admin']
 	},
 	publishers: {
-		create: ['admin'],
+		create: ['admin', 'system'],
 		read: ['all'],
 		update: ['publisher-admin'],
 		query: ['all']
@@ -225,9 +225,11 @@ export async function getTemplate(query, cache) {
 
 export function validateDoc(doc, collectionContent) {
 	const validate = getValidator(collectionContent);
-	if (!validate(doc)) {
-		throw new Error(JSON.stringify(validate.errors, undefined, 2));
+	if (validate(doc)) {
+		return validate;
 	}
+
+	throw new Error(JSON.stringify(validate.errors, undefined, 2));
 }
 
 function getValidator(schemaName) {

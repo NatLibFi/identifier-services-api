@@ -1,0 +1,31 @@
+
+{
+    "PublisherMetadata": [
+        {
+			"_id":"5dd69c4d1c9d440000d04f84",
+			"lastUpdated":{
+				"timestamp":"foo",
+				"user": "foo"
+			},
+			"name": "foo",
+			"postalAddress": {
+				"public": false,
+				"address": "foo",
+				"city": "foo",
+				"zip": "foo"
+			},
+			"classification": ["foo"],
+			"metadataDelivery": "foo",
+			
+			"publicationDetails": {
+				"frequency": 111
+			},
+			"primaryContact": ["foobar", "foo"],			
+			"activity":{
+				"active": true,
+				"yearInactivated": 111
+			}
+		}
+    ]
+}
+

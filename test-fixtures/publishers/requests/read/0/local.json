@@ -1,0 +1,135 @@
+[
+    {
+        "id": "admin",
+        "password": "gM3RsfxAr7e5VwsSPAC6",
+        "name": {
+            "givenName": "Sanjog",
+            "familyName": "Shrestha"
+        },
+        "displayName": "Sanjog",
+        "emails": [
+            {
+                "value": "sanjogstha7@gmail.com",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-admin"
+        ]
+    },
+    {
+        "id": "ui",
+        "password": "fCjHs1BHYn8yf4mAODOU",
+        "name": {
+            "givenName": "Test",
+            "familyName": "UI"
+        },
+        "displayName": "Test UI",
+        "emails": [
+            {
+                "value": "ui@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-system"
+        ]
+    },
+    {
+        "id": "tasks",
+        "password": "J22omfqCU8ZgCrrKrOOB",
+        "name": {
+            "givenName": "Test",
+            "familyName": "Tasks"
+        },
+        "displayName": "Test UI",
+        "emails": [
+            {
+                "value": "tasks@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-system"
+        ]
+    },
+    {
+        "id": "sanjogstha7@gmail.com",
+        "password": "4fkdmjv5c4f",
+        "name": {
+            "givenName": "sanjog",
+            "familyName": "shrestha"
+        },
+        "displayName": "sanjogshrestha",
+        "emails": [
+            {
+                "value": "sanjogstha7@gmail.com",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisherAdmin"
+        ]
+    },
+    {
+        "id": "rojak.amatya@helsinki.fi",
+        "password": "0l1gq69q6nxh",
+        "name": {
+            "givenName": "sanjog",
+            "familyName": "shrestha"
+        },
+        "displayName": "sanjogshrestha",
+        "emails": [
+            {
+                "value": "rojak.amatya@helsinki.fi",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisherAdmin"
+        ]
+    },
+    {
+        "id": "rojak_a@hotmail.com",
+        "password": "atawnk1nh5u",
+        "name": {
+            "givenName": "my name ",
+            "familyName": "is zero"
+        },
+        "displayName": "my name is zero",
+        "emails": [
+            {
+                "value": "rojak_a@hotmail.com",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisher"
+        ]
+    },
+    {
+        "id": "sanjog.shrestha@helsinki.fi",
+        "password": "foyf6zy63p",
+        "name": {
+            "givenName": "ss",
+            "familyName": "ee"
+        },
+        "displayName": "ssee",
+        "emails": [
+            {
+                "value": "sanjog.shrestha@helsinki.fi",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisher"
+        ]
+    }
+]

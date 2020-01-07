@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail to create publisher because content is not provided",
+    "requestUrl": "/publishers",
+    "username": "tasks",
+    "password": "J22omfqCU8ZgCrrKrOOB",
+    "method": "post",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

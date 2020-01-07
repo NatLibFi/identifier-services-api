@@ -25,7 +25,5 @@
         "city": "Helsinki",
         "zip": "00120"
     },
-    "lastUpdated": {
-        "user": "foobar"
-    }
+    "lastUpdated": {}
 }

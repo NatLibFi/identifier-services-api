@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, publisher can be suceessfully updated",
+    "requestUrl": "/publishers/5cdfe76e46c65d23f7cf94d3",
+    "username": "tasks",
+    "password": "J22omfqCU8ZgCrrKrOOB",
+    "method": "put",
+    "collectionName": "PublisherMetadata",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json"
+}

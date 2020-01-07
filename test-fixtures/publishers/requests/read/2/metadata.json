@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin should not read publishers",
+    "requestUrl": "/requests/publishers/foo",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 400
+}
