@@ -1,0 +1,10 @@
+{
+    "descr": "Should fails, resources does not exist",
+    "requestUrl": "/templates/5cd92f43f2032c672cf75887",
+    "collectionName": "MessageTemplate",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 404,
+    "payloadExpected": false
+}

@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, admin can suceessfully create message templates",
+    "requestUrl": "/templates",
+    "collectionName": "MessageTemplate",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 201,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

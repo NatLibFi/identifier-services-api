@@ -26,11 +26,10 @@
  *
  */
 
-import interfaceFactory from './interfaceModules';
-import {hasPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
-import {validateDoc} from './utils';
+import interfaceFactory from './interfaceModules';
+import {hasPermission, validateDoc} from './utils';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
 

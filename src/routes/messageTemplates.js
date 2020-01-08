@@ -27,6 +27,8 @@
  */
 
 import {Router} from 'express';
+import HttpStatus from 'http-status';
+
 import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
@@ -43,7 +45,7 @@ export default function (db) {
 	async function create(req, res, next) {
 		try {
 			const result = await templates.create(db, req.body, req.user);
-			res.json(result);
+			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			next(err);
 		}

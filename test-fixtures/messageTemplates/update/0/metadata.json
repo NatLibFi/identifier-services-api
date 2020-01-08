@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, admin can suceessfully edit message templates",
+    "requestUrl": "/templates/5cd92f4af2032c672cf75888",
+    "collectionName": "MessageTemplate",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 200,
+    "payload": "payload.json",
+    "payloadExpected": false
+}
