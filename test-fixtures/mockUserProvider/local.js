@@ -175,7 +175,6 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 	}
 
 	async function changePwd(doc, user) {
-
 		if (doc.newPassword) {
 			if (hasPermission(user, 'users', 'changePwd')) {
 				const {localUser} = local();
@@ -213,7 +212,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 				return userMetadataInterface.query(db, {queries, offset});
 			}
 
-			throw new ApiError(HttpStatus.UNAUTHORIZED);
+			throw new ApiError(HttpStatus.FORBIDDEN);
 		}
 	}
 

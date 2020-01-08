@@ -5,7 +5,7 @@
     "username": "publisher",
     "password": "opbmm52su1",
     "method": "post",
-    "expectedStatus": 401,
+    "expectedStatus": 403,
     "payload": "payload.json",
     "payloadExpected": false
 }
