@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, admin can suceessfully read ranges",
+    "requestUrl": "/ranges/isbn/5cd90b2c89d0546340068667",
+    "collectionName": "RangeIsbnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 200
+}

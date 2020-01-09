@@ -1,0 +1,10 @@
+{ 
+    "prefix": "updateValue",
+    "rangeEnd": 100,
+    "active": false,
+    "publisher": "foo",
+    "reservedCount": 100,
+    "lastUpdated": {
+        "user": "foo"
+    }
+}

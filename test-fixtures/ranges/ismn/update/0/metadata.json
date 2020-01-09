@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, admin can suceessfully edit/update Ismn Ranges",
+    "requestUrl": "/ranges/ismn/5cd90b2c89d0546340068668",
+    "collectionName": "RangeIsmnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 200,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json"
+}

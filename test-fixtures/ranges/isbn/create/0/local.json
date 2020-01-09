@@ -1,0 +1,78 @@
+[
+    {
+        "id": "admin",
+        "password": "gM3RsfxAr7e5VwsSPAC6",
+        "name": {
+            "givenName": "test",
+            "familyName": "admin"
+        },
+        "displayName": "testAdmin",
+        "emails": [
+            {
+                "value": "admin@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-admin"
+        ]
+    },
+    {
+        "id": "system",
+        "password": "fCjHs1BHYn8yf4mAODOU",
+        "name": {
+            "givenName": "test",
+            "familyName": "system"
+        },
+        "displayName": "testSystem",
+        "emails": [
+            {
+                "value": "system@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-system"
+        ]
+    },
+    {
+        "id": "publisher-admin",
+        "password": "0l1gq69q6nxh",
+        "name": {
+            "givenName": "test",
+            "familyName": "publisherAdmin"
+        },
+        "displayName": "testPublisherAdmin",
+        "emails": [
+            {
+                "value": "publisherAdmin@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisherAdmin"
+        ]
+    },
+    {
+        "id": "publisher",
+        "password": "opbmm52su1",
+        "name": {
+            "givenName": "test",
+            "familyName": "publisher"
+        },
+        "displayName": "testPublisher",
+        "emails": [
+            {
+                "value": "publisher@foo.bar",
+                "type": "work"
+            }
+        ],
+        "organization": [],
+        "groups": [
+            "identifier-services-test-publisher"
+        ]
+    }
+]

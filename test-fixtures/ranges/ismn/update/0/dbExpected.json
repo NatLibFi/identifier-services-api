@@ -1,14 +1,24 @@
 {
-    "IdentifierRangesISMN": [
+    "RangeIsmnContent": [
         { 
             "prefix": "updateValue",
-            "rangeStart": 100,
-            "rangeEnd": 100,
+            "rangeStart": "100",
+            "rangeEnd": "100",
             "active": false,
             "publisher": "foo",
             "reservedCount": 100,
+            "lastUpdated": {}
+        }
+    ],
+    "userMetadata": [
+        {
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
             "lastUpdated": {
-                "user": "foo"
+                "timestamp": "838383838",
+                "user": "bar"
             }
         }
     ]

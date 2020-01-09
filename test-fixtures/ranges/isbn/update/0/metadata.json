@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, admins are able to modify Isbn ranges",
+    "requestUrl": "/ranges/isbn/5cd90b2c89d0546340068667",
+    "collectionName": "RangeIsbnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 200,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

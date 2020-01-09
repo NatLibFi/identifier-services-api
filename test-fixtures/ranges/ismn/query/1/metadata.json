@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, publisherAdmin do not  have enough privilege to query Isbn Ranges",
+    "requestUrl": "/ranges/ismn/query",
+    "collectionName": "RangeIsbnContent",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "post",
+    "expectedStatus": 403,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

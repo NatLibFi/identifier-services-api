@@ -121,6 +121,10 @@ export default function () {
 		try {
 			if (hasPermission(user, 'messageTemplates', 'query')) {
 				const result = await templateInterface.query(db, {queries, offset});
+				if (result.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
 				return result;
 			}
 
