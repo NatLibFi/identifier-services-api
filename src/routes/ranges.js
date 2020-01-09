@@ -143,8 +143,12 @@ export default function (db) {
 
 	async function createIssn(req, res, next) {
 		try {
-			const result = await ranges.createIssn(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
+			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else {
+				const result = await ranges.createIssn(db, req.body, req.user);
+				res.status(HttpStatus.CREATED).json(result);
+			}
 		} catch (err) {
 			next(err);
 		}

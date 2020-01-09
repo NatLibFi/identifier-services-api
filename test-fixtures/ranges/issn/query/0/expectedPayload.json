@@ -1,0 +1,18 @@
+{
+    "offset": "5cd90b2c89d0546340068667",
+    "queryDocCount": 1,
+    "totalDoc": 1,
+    "results": [
+        {
+            "id": "5cd90b2c89d0546340068667",
+            "rangeStart": "550",
+            "rangeEnd": "889",
+            "active": false,
+            "reservedCount": 339,
+            "lastUpdated": {
+                "timestamp": "2019-05-03T09:17:46.412",
+                "user": "foo"
+            }
+        }
+    ]
+}
