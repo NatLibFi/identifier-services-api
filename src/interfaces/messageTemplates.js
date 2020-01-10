@@ -47,7 +47,9 @@ export default function () {
 		try {
 			if (Object.keys(doc).length === 0) {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else if (validateDoc(doc, 'MessageTemplateContent')) {
+			}
+
+			if (validateDoc(doc, 'MessageTemplateContent')) {
 				if (hasPermission(user, 'messageTemplates', 'create')) {
 					const result = await templateInterface.create(db, doc, user);
 					return result;

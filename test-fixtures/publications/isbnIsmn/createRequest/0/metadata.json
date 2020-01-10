@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed, publisher-admin can create request for publications Isbnismn.",
+    "requestUrl": "/requests/publications/isbn-ismn",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "post",
+    "expectedStatus": 201,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json",
+    "payloadExpected": false
+}

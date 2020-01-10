@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, admin can suceessfully read IsbnIsmn",
+    "requestUrl": "/publications/isbn-ismn/5ce29b5559757f4cfc1f62c3",
+    "collectionName": "Publication_ISBN_ISMN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 200
+}

@@ -1,48 +1,43 @@
 {
     "PublicationRequest_ISBN_ISMN": [
         {
-            "title": "The Mines",
-            "language": "Fin",
-            "state": "finished",
-            "publisher":"National Library",
-            "publicationTime": "2019-08-01T00:00:00.000",
-            "type": "painettu julkaisu",
+            "language": "fin",
+            "isPublic": true,
+            "title": "upload payload",
+            "publicationTime": "2019-09-26T12:43:41.422Z",
+            "type": "map",
             "authors": [
                 {
-                    "givenName": "Daniel",
-                    "familyName": "Yushick",
-                    "role": "author"
+                    "role": "author",
+                    "givenName": "fdf",
+                    "familyName": "dfdf"
                 }
             ],
-            "printDetails": {
-                "manufacturer": "Daniel Yuschick"
+            "role": "author",
+            "seriesDetails": {
+                "volume": 4,
+                "title": "dsfsf"
+            },
+            "formatDetails": {
+                "fileFormat": "pdf",
+                "format": "electronic"
+            },
+            "publisher": "foo",
+            "state": "accepted",
+            "lastUpdated": {},
+            "backgroundProcessingState": "processed"
+        }
+    ],
+    "userMetadata": [
+        {
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "foo"
             },
             "lastUpdated": {
-                "timestamp": "2019-05-20T12:17:23.996Z",
-                "user": "user"
+                "timestamp": "838383838",
+                "user": "bar"
             }
-        },
-        {
-                "title": "The Mines",
-                "language": "KOR",
-                "state": "finished",
-                "publisher":"National Library",
-                "publicationTime": "2019-08-01T00:00:00.000",
-                "type": "painettu julkaisu",
-                "authors": [
-                    {
-                        "givenName": "Daniel",
-                        "familyName": "Yushick",
-                        "role": "author"
-                    }
-                ],
-                "printDetails": {
-                    "manufacturer": "Daniel Yuschick"
-                },
-                "lastUpdated": {
-                    "timestamp": "2019-05-20T12:17:23.996Z",
-                    "user": "user"
-                }
-            }
+        }
     ]
 }

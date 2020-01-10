@@ -30,7 +30,7 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission} from './utils';
+import {hasPermission, validateDoc} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 
@@ -43,33 +43,79 @@ export default function () {
 	};
 
 	async function createIsbnIsmn(db, doc, user) {
-		if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
-			doc.publisher = user.id;
-			doc.metadataReference =	{state: 'pending'};
-			doc.associatedRange = 'string';
-			const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			if (validateDoc(doc, 'PublicationIsbnIsmnContent')) {
+				if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
+					doc.publisher = user.id;
+					doc.metadataReference =	{state: 'pending'};
+					doc.associatedRange = 'string';
+					const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function readIsbnIsmn(db, id, user) {
-		const result = await publicationsIsbnIsmnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn')) {
-			return result;
-		}
+		try {
+			const result = await publicationsIsbnIsmnInterface.read(db, id);
+			if (hasPermission(user, 'publicationIsbnIsmn', 'readIsbnIsmn')) {
+				if (result === null) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+				if (user.role === 'publisher-admin') {
+					if (user.publisher === result.publisher) {
+						return result;
+					}
+
+					throw new ApiError(HttpStatus.FORBIDDEN);
+				}
+
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
+		}
 	}
 
 	async function updateIsbnIsmn(db, id, doc, user) {
-		if (hasPermission(user, 'publicationIsbnIsmn', 'updateIsbnIsmn')) {
-			const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			if (validateDoc(doc, 'PublicationIsbnIsmnContent')) {
+				if (hasPermission(user, 'publicationIsbnIsmn', 'updateIsbnIsmn')) {
+					const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	// Async function removeIsbnIsmn(db, id) {
@@ -83,12 +129,20 @@ export default function () {
 
 	async function queryIsbnIsmn(db, {queries, offset}, user) {
 		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
+		if (result.results.length === 0) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
+
 		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
 				const queries = [{
 					query: {publisher: user.publisher}
 				}];
 				const response = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
+				if (response.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
 				return response;
 			}
 

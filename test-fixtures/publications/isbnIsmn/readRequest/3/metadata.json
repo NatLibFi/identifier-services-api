@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, publisher-admin can only read request associated with them.",
+    "requestUrl": "/requests/publications/isbn-ismn/5ce29b5559757f4cfc1f62c3",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "get",
+    "expectedStatus": 403,
+    "payloadExpected": false
+}

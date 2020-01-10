@@ -44,7 +44,6 @@ export default function (userProvider) {
 	async function createRequest(req, res, next) {
 		try {
 			const result = await usersRequests.createRequest(userProvider, req.body, req.user);
-			console.log(result);
 			res.json(result);
 		} catch (err) {
 			next(err);
