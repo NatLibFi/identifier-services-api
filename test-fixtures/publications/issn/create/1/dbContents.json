@@ -2,7 +2,8 @@
     "userMetadata": [
         {
             "_id": "5cd90e696a1e930789dfaa48",
-            "id":"system",
+            "id":"publisher-admin",
+            "publisher": "5dcebad7d05e8545d96e9899",
             "preferences": {
                 "defaultLanguage": "foo"
             },

@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, admin can read Publication Issn.",
+    "requestUrl": "/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "Publication_ISSN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 200
+}

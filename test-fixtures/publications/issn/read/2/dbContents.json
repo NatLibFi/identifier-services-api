@@ -36,7 +36,7 @@
         {
             "_id": "5cd90e696a1e930789dfaa48",
             "id": "publisher-admin",
-            "publisher": "5dcebad7d05e8545d96e9899",
+            "publisher": "5dcebad7d05e8545d96e9888",
             "preferences": {
                 "defaultLanguage": "foo"
             },
