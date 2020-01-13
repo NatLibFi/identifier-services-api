@@ -184,6 +184,5 @@ export default function () {
 				throw new ApiError(err.status);
 			}
 		}
-
 	}
 }
