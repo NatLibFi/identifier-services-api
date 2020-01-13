@@ -1,6 +1,6 @@
 {
-    "descr": "Should succeed, admin can suceessfully query Publication Issn",
-    "requestUrl": "/publications/issn/query",
+    "descr": "Should succeed, admin can suceessfully query Publication Issn Requests",
+    "requestUrl": "/requests/publications/issn/query",
     "collectionName": "Publication_ISSN",
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",

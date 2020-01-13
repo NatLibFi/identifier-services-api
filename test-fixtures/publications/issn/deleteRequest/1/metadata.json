@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail, admin cannot delete Publication Isbnismn Requests.",
+    "requestUrl": "/requests/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "PublicationRequest_ISSN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "delete",
+    "expectedStatus": 403,
+    "payloadExpected": false
+}

@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, system can remove request for publications Isbnismn.",
+    "requestUrl": "/requests/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "PublicationRequest_ISSN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "delete",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "payloadExpected": false
+}

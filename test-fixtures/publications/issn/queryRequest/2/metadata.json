@@ -1,6 +1,6 @@
 {
     "descr": "Should succeed, publisheradmin can view records from the publisher they are associated with",
-    "requestUrl": "/publications/issn/query",
+    "requestUrl": "/requests/publications/issn/query",
     "collectionName": "Publication_ISSN",
     "username": "publisher-admin",
     "password": "0l1gq69q6nxh",

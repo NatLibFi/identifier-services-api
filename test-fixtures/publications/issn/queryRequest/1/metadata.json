@@ -1,6 +1,6 @@
 {
     "descr": "Should fail, because resource does not exists.",
-    "requestUrl": "/publications/issn/query",
+    "requestUrl": "/requests/publications/issn/query",
     "collectionName": "Publication_ISSN",
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",

@@ -38,7 +38,6 @@
         {
             "_id": "5cd90e696a1e930789dfaa48",
             "id":"publisher-admin",
-            "publisher": "5cd90e696a1e930789df0000",
             "preferences": {
                 "defaultLanguage": "foo"
             },

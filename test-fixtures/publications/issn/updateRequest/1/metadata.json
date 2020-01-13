@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, becase resource could not be found",
+    "requestUrl": "/requests/publications/issn/5dde4fb418346c0c00f2bbd3",
+    "collectionName": "PublicationRequest_ISSN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 404,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

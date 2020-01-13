@@ -1,29 +1,44 @@
 {
     "PublicationRequest_ISSN": [
         {
-            "title": "Tiede Asema",
-            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
-            "year": 2019,
-            "frequency": "Neljä kertaa vuodessa",
             "language": "eng",
-            "type": "painettu julkaisu",
-            "state": "Finished",
-            "lastUpdated": {
-                "timestamp": "2019-05-13T08:29:56.632Z",
-                "user": "barfoo"
-            }
-        },
+            "title": "updated",
+            "city": "updated",
+            "firstYear": 32432,
+            "firstNumber": 324324,
+            "frequency": "yearly",
+            "type": "yearly",
+            "formatDetails": {
+                "format": "printed"
+            },
+            "previousPublication": {
+                "lastYear": 2343,
+                "lastNumber": 23434,
+                "title": "dfsf",
+                "identifier": "2432"
+            },
+            "seriesDetails": {
+                "mainSeries": {
+                    "title": "dsf",
+                    "identifier": "wew3223"
+                }
+            },
+            "publisher": "5dcebad7d05e8545d96e9899",
+            "state": "new",
+            "backgroundProcessingState": "processed",
+            "creator": "rojak.amatya@helsinki.fi",
+            "lastUpdated": {}
+        }
+    ],
+    "userMetadata": [
         {
-            "title": "Tiede Halli",
-            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
-            "year": 2019,
-            "frequency": "Neljä kertaa vuodessa",
-            "language": "eng",
-            "type": "painettu julkaisu",
-            "state": "Finished",
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
             "lastUpdated": {
-                "timestamp": "2019-05-13T08:29:56.632Z",
-                "user": "barfoo"
+                "timestamp": "838383838",
+                "user": "bar"
             }
         }
     ]

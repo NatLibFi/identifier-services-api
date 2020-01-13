@@ -367,7 +367,8 @@ describe('app', () => {
 		describe('#query', generateTestSuite('issn', 'query'));
 		describe('#createRequest', generateTestSuite('issn', 'createRequest'));
 		describe('#readRequest', generateTestSuite('issn', 'readRequest'));
-		// describe('#updateRequest', generateTestSuite('issn', 'updateRequest'));
-		// describe('#deleteRequest', generateTestSuite('issn', 'deleteRequest'));
+		describe('#deleteRequest', generateTestSuite('issn', 'deleteRequest'));
+		describe('#updateRequest', generateTestSuite('issn', 'updateRequest'));
+		describe('#queryRequest', generateTestSuite('issn', 'queryRequest'));
 	});
 });

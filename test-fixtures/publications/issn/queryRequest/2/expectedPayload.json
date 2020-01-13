@@ -1,38 +1,34 @@
 {
-    "offset": "5cd92b2197477f5addc0d293",
+    "offset": "5dde4fb418346c0c00f2bbd3",
     "queryDocCount": 1,
     "totalDoc": 1,
     "results": [
         {
-            "id": "5cd92b2197477f5addc0d293",
+            "id": "5dde4fb418346c0c00f2bbd3",
             "language": "eng",
-            "title": "The balck",
-            "subtitle": "haddi",
-            "city": "Kathmandu",
-            "firstYear": 34,
-            "firstNumber": 22,
-            "frequency": "monthly",
-            "type": "daily",
+            "title": "dddd",
+            "city": "dsfsdfd",
+            "firstYear": 32432,
+            "firstNumber": 324324,
+            "frequency": "yearly",
+            "type": "yearly",
             "formatDetails": {
-                "format": "cd"
+                "format": "printed"
             },
             "previousPublication": {
-                "lastYear": 22,
-                "lastNumber": 33,
-                "title": "Polluted water",
-                "identifier": "889"
+                "lastYear": 2343,
+                "lastNumber": 23434,
+                "title": "dfsf",
+                "identifier": "2432"
             },
             "seriesDetails": {
                 "mainSeries": {
-                    "title": "small street",
-                    "identifier": "54"
+                    "title": "dsf",
+                    "identifier": "wew3223"
                 }
             },
-            "publisher": "5cd90e696a1e930789df0000",
-            "lastUpdated": {
-                "timestamp": "2019-11-27T07:45:31.154Z",
-                "user": "tasks"
-            }
+            "backgroundProcessingState": "processed",
+            "creator": "rojak.amatya@helsinki.fi"
         }
     ]
 }
