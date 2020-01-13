@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, payload is empty or not provided",
+    "requestUrl": "/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "Publication_ISSN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "put",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

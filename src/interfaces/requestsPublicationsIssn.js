@@ -44,32 +44,63 @@ export default function () {
 	};
 
 	async function createRequestISSN(db, doc, user) {
-		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
-		validateDoc(newDoc, 'PublicationIssnRequestContent');
-		if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
-			const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
-			return result;
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+			if (validateDoc(newDoc, 'PublicationIssnRequestContent')) {
+				if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
+					const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
 	async function readRequestISSN(db, id, user) {
-		let protectedProperties;
-		const result = await publicationsRequestsIssnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIssnRequests', 'readRequestISSN')) {
-			if (user.role === 'publisher-admin' || user.role === 'publisher') {
-				protectedProperties = {
-					state: 0,
-					publisher: 0,
-					lastUpdated: 0
-				};
-				const res = await publicationsRequestsIssnInterface.read(db, id, protectedProperties);
-				return res;
+		try {
+			let protectedProperties;
+			const result = await publicationsRequestsIssnInterface.read(db, id);
+			if (hasPermission(user, 'publicationIssnRequests', 'readRequestISSN')) {
+				if (result === null) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
+				if (user.role === 'publisher-admin' || user.role === 'publisher') {
+					if (user.publisher === result.publisher) {
+						protectedProperties = {
+							state: 0,
+							publisher: 0,
+							lastUpdated: 0
+						};
+						const res = await publicationsRequestsIssnInterface.read(db, id, protectedProperties);
+						/* eslint max-depth: ["error", 5] */
+						/* eslint-env es6 */
+						if (res === null) {
+							throw new ApiError(HttpStatus.NOT_FOUND);
+						}
+
+						return res;
+					}
+
+					throw new ApiError(HttpStatus.FORBIDDEN);
+				}
+
+				return result;
 			}
 
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			throw new ApiError(err.status);
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateRequestISSN(db, id, doc, user) {

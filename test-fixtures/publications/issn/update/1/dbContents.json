@@ -1,29 +1,47 @@
 {
     "Publication_ISSN": [
         {
-            "_id": "5ce29b5559757f4cfc1f62c3",
-            "title": "Tiede Asema",
-            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
-            "year": 2009,
-            "frequency": "Neljä kertaa vuodessa",
-            "language": "eng",
-            "type": "painettu julkaisu",
+            "_id": "5cd92b2197477f5addc0d293",
+            "language": "fin",
+            "title": "The balck Original",
+            "subtitle": "haddi",
+            "city": "Kathmandu",
+            "firstYear": 34,
+            "firstNumber": 22,
+            "frequency": "monthly",
+            "type": "daily",
+            "formatDetails": {
+                "format": "cd"
+            },
+            "previousPublication": {
+                "lastYear": 22,
+                "lastNumber": 33,
+                "title": "Polluted water",
+                "identifier": "889"
+            },
+            "seriesDetails": {
+                "mainSeries": {
+                    "title": "small street",
+                    "identifier": "54"
+                }
+            },
+            "publisher": "5dcebad7d05e8545d96e9899",
             "lastUpdated": {
-                "timestamp": "2019-05-13T08:29:56.632Z",
-                "user": "barfoo"
+                "timestamp": "2019-11-27T07:45:31.154Z",
+                "user": "tasks"
             }
-        },
+        }
+    ],
+    "userMetadata": [
         {
-            "_id": "5ce29b5559757f4cfc1f6456",
-            "title": "Tiede Asema",
-            "publisher": "7cfcc6d9b3854e398df6c7b6f532a5e8",
-            "year": 2019,
-            "frequency": "Neljä kertaa vuodessa",
-            "language": "eng",
-            "type": "painettu julkaisu",
+            "_id": "5cd90e696a1e930789dfaa48",
+            "id":"publisher-admin",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
             "lastUpdated": {
-                "timestamp": "2019-05-13T08:29:56.632Z",
-                "user": "barfoo"
+                "timestamp": "838383838",
+                "user": "bar"
             }
         }
     ]

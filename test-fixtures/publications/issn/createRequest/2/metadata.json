@@ -1,0 +1,9 @@
+{
+    "descr": "Should fail, because user is unauthorized",
+    "requestUrl": "/requests/publications/issn",
+    "collectionName": "PublicationRequest_ISSN",
+    "method": "post",
+    "expectedStatus": 401,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

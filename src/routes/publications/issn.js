@@ -31,6 +31,7 @@ import HttpStatus from 'http-status';
 import {bodyParse} from '../../utils';
 import {publicationsIssnFactory} from '../../interfaces';
 import {API_URL} from '../../config';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db) {
 	const publications = publicationsIssnFactory({url: API_URL});
@@ -82,6 +83,10 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
+			if (Object.keys(req.body).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
 			const result = await publications.queryISSN(db, req.body, req.user);
 			res.json(result);
 		} catch (err) {

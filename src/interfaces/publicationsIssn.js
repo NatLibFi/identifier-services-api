@@ -94,12 +94,26 @@ export default function () {
 	}
 
 	async function updateISSN(db, id, doc, user) {
-		if (hasPermission(user, 'publicationIssn', 'updateISSN')) {
-			const result = await publicationsIssnInterface.update(db, id, doc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			if (validateDoc(doc, 'PublicationIssnContent')) {
+				if (hasPermission(user, 'publicationIssn', 'updateISSN')) {
+					const result = await publicationsIssnInterface.update(db, id, doc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	// Async function removeISSN(db, id) {
@@ -109,6 +123,9 @@ export default function () {
 
 	async function queryISSN(db, {queries, offset}, user) {
 		const result = await publicationsIssnInterface.query(db, {queries, offset});
+		if (result.results.length === 0) {
+			throw new ApiError(HttpStatus.NOT_FOUND);
+		}
 
 		if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
@@ -116,10 +133,18 @@ export default function () {
 					query: {publisher: user.publisher}
 				}];
 				const response = await publicationsIssnInterface.query(db, {queries, offset});
+				if (response.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
 				return response;
 			}
 
 			return result;
+		}
+
+		if (user) {
+			return result.results.filter(item => item.publisher === user.id);
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);

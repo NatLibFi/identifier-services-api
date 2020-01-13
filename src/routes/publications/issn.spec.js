@@ -363,10 +363,10 @@ describe('app', () => {
 	describe('publications', () => {
 		describe('#read', generateTestSuite('issn', 'read'));
 		describe('#create', generateTestSuite('issn', 'create'));
-		// describe('#update', generateTestSuite('issn', 'update'));
-		// describe('#query', generateTestSuite('issn', 'query'));
-		// describe('#createRequest', generateTestSuite('issn', 'createRequest'));
-		// describe('#readRequest', generateTestSuite('issn', 'readRequest'));
+		describe('#update', generateTestSuite('issn', 'update'));
+		describe('#query', generateTestSuite('issn', 'query'));
+		describe('#createRequest', generateTestSuite('issn', 'createRequest'));
+		describe('#readRequest', generateTestSuite('issn', 'readRequest'));
 		// describe('#updateRequest', generateTestSuite('issn', 'updateRequest'));
 		// describe('#deleteRequest', generateTestSuite('issn', 'deleteRequest'));
 	});

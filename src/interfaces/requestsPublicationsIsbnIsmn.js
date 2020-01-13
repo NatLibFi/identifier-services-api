@@ -153,25 +153,39 @@ export default function () {
 	}
 
 	async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
-		let protectedProperties;
-		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
-			if (user.role === 'publisher-admin' || user.role === 'publisher') {
-				protectedProperties = {
-					state: 0,
-					publisher: 0,
-					lastUpdated: 0
-				};
-				const queries = [{
-					query: {publisher: user.publisher}
-				}];
-				const response = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
-				return response;
+		try {
+			let protectedProperties;
+			const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
+			if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
+				if (user.role === 'publisher-admin' || user.role === 'publisher') {
+					protectedProperties = {
+						state: 0,
+						publisher: 0,
+						lastUpdated: 0
+					};
+					const queries = [{
+						query: {publisher: user.publisher}
+					}];
+					const response = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
+					if (response.results.length === 0) {
+						throw new ApiError(HttpStatus.NOT_FOUND);
+					}
+
+					return response;
+				}
+
+				if (result.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
+				return result;
 			}
 
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

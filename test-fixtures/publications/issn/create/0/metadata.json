@@ -1,5 +1,5 @@
 {
-    "descr": "Should succeed, admin can read Publication Issn.",
+    "descr": "Should succeed, system can create Publication Issn.",
     "requestUrl": "/publications/issn",
     "collectionName": "Publication_ISSN",
     "username": "system",

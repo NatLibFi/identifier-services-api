@@ -42,5 +42,6 @@ describe('app', () => {
 		describe('#readRequest', generateTestSuite('isbnIsmn', 'readRequest'));
 		describe('#updateRequest', generateTestSuite('isbnIsmn', 'updateRequest'));
 		describe('#deleteRequest', generateTestSuite('isbnIsmn', 'deleteRequest'));
+		describe('#queryRequest', generateTestSuite('isbnIsmn', 'queryRequest'));
 	});
 });
