@@ -43,6 +43,7 @@ import {
 	createRequestsPublicationsRouterIssn,
 	createMessageTemplate,
 	createRangesRouter,
+	createApiDocRouter,
 	authenticationRouter
 } from './routes';
 import {bodyParse, mapGroupToRole} from './utils';
@@ -110,6 +111,7 @@ export default async function run() {
 	app.use(cors(corsOptions));
 	app.use(bodyParse());
 
+	app.use('/', createApiDocRouter());
 	app.use('/templates', passportMiddlewares.token, combineUserInfo, createMessageTemplate(db));
 	app.use('/users', passportMiddlewares.token, combineUserInfo, createUsersRouter(userProvider));
 	app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(userProvider));

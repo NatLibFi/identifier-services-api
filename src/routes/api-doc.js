@@ -26,15 +26,16 @@
  *
  */
 
-export {default as createUsersRouter} from './users';
-export {default as createRequestsUsersRouter} from './requestsUsers';
-export {default as createPublishersRouter} from './publishers';
-export {default as createPublishersRequestsRouter} from './requestsPublishers';
-export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
-export {default as createRequestsPublicationsRouterIsbnIsmn} from './publications/requestsIsbnIsmn';
-export {default as createPublicationsRouterIssn} from './publications/issn';
-export {default as createRequestsPublicationsRouterIssn} from './publications/requestsIssn';
-export {default as createMessageTemplate} from './messageTemplates';
-export {default as createRangesRouter} from './ranges';
-export {default as createApiDocRouter} from './api-doc';
-export {default as authenticationRouter} from './authentication';
+import fs from 'fs';
+import path from 'path';
+import {Router} from 'express';
+
+export default function () {
+	const apiDoc = fs.readFileSync(path.join(__dirname, '..', 'api.json'), 'utf8');
+
+	return new Router()
+		.get('/', (req, res) => {
+			res.set('Content-Type', 'application/json');
+			res.send(apiDoc);
+		});
+}
