@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed, system can create publications Isbnismn.",
+    "requestUrl": "/publications/isbn-ismn",
+    "collectionName": "Publication_ISBN_ISMN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "post",
+    "expectedStatus": 201,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json",
+    "payloadExpected": false
+}

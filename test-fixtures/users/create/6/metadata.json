@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail because payload is invalid",
+    "requestUrl": "/users",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "method": "post",
+    "payloadExpected": false
+}

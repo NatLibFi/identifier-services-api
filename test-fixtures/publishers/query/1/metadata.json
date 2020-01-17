@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, publisher query is public",
+    "requestUrl": "/publishers/query",
+    "method": "post",
+    "collectionName": "PublisherMetadata",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, admin can suceessfully query Publication Isbnismn Requests",
+    "requestUrl": "/requests/publications/isbn-ismn/query",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

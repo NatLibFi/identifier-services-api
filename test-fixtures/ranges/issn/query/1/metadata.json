@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, publisherAdmin do not have enough privilege to query Issn ranges",
+    "requestUrl": "/ranges/issn/query",
+    "collectionName": "RangeIssnContent",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "post",
+    "expectedStatus": 403,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

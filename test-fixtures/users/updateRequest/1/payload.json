@@ -1,10 +1,21 @@
 {
-    "_id": "5cdc1706d435475787f4751d",
-    "publishers": [
-        "fubar"
+    "userId": "publisher@foo.bar",
+    "publisher": "5dde33ad22f69862179e3d22",
+    "creator": "publisher-admin",
+    "givenName": "test",
+    "familyName": "publisher",
+    "email": "publisher@foo.bar",
+    "role": "publisher",
+    "state": "new",
+    "backgroundProcessingState": "pending",
+    "notes": [
+        "This is a note to all the one out there"
     ],
-    "givenName": "Barbar",
-    "familyName": "Bar",
-    "email": "foo.bar@foo.bar",
-    "state": "processed"
+    "preferences": {
+        "defaultLanguage": "fin"
+    },
+    "lastUpdated": {
+        "timestamp": "838383838",
+        "user": "bar"
+    }
 }

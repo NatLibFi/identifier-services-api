@@ -45,80 +45,147 @@ export default function () {
 	};
 
 	async function createRequestIsbnIsmn(db, doc, user) {
-		const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
-		validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent');
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
-			const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc, user);
-			return result;
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+
+			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+			if (validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent')) {
+				if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
+					const result = await publicationsRequestsIsbnIsmnInterface.create(db, newDoc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
 	async function readRequestIsbnIsmn(db, id, user) {
-		let protectedProperties;
-		const result = await publicationsRequestsIsbnIsmnInterface.read(db, id);
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'readRequestIsbnIsmn')) {
-			if (user.role === 'publisher-admin' || user.role === 'publisher') {
-				protectedProperties = {
-					state: 0,
-					publisher: 0,
-					lastUpdated: 0
-				};
-				const res = await publicationsRequestsIsbnIsmnInterface.read(db, id, protectedProperties);
-				return res;
+		try {
+			let protectedProperties;
+			const result = await publicationsRequestsIsbnIsmnInterface.read(db, id);
+			if (hasPermission(user, 'publicationIsbnIsmnRequests', 'readRequestIsbnIsmn')) {
+				if (result === null) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
+				if (user.role === 'publisher-admin' || user.role === 'publisher') {
+					if (user.publisher === result.publisher) {
+						protectedProperties = {
+							state: 0,
+							publisher: 0,
+							lastUpdated: 0
+						};
+						const res = await publicationsRequestsIsbnIsmnInterface.read(db, id, protectedProperties);
+						/* eslint max-depth: ["error", 5] */
+						/* eslint-env es6 */
+						if (res === null) {
+							throw new ApiError(HttpStatus.NOT_FOUND);
+						}
+
+						return res;
+					}
+
+					throw new ApiError(HttpStatus.FORBIDDEN);
+				}
+
+				return result;
 			}
 
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			throw new ApiError(err.status);
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function updateRequestIsbnIsmn(db, id, doc, user) {
-		let newDoc;
-		newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-		const readResult = await readRequestIsbnIsmn(db, id, user);
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'updateRequestIsbnIsmn')) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
 
-		if (user && readResult.publisher === user.id) {
-			const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
-			return filterResult(result);
-		}
+			let newDoc;
+			newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
+			if (validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent')) {
+				const readResult = await readRequestIsbnIsmn(db, id, user);
+				if (hasPermission(user, 'publicationIsbnIsmnRequests', 'updateRequestIsbnIsmn')) {
+					const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
+					return result;
+				}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+				if (user && readResult.publisher === user.id) {
+					const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
+					return filterResult(result);
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function removeRequestIsbnIsmn(db, id, user) {
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'removeRequestIsbnIsmn')) {
-			const result = await publicationsRequestsIsbnIsmnInterface.remove(db, id);
-			return result;
-		}
+		try {
+			if (hasPermission(user, 'publicationIsbnIsmnRequests', 'removeRequestIsbnIsmn')) {
+				const result = await publicationsRequestsIsbnIsmnInterface.remove(db, id);
+				return result;
+			}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
+		}
 	}
 
 	async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
-		let protectedProperties;
-		const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
-		if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
-			if (user.role === 'publisher-admin' || user.role === 'publisher') {
-				protectedProperties = {
-					state: 0,
-					publisher: 0,
-					lastUpdated: 0
-				};
-				const queries = [{
-					query: {publisher: user.publisher}
-				}];
-				const response = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
-				return response;
+		try {
+			let protectedProperties;
+			const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
+			if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
+				if (user.role === 'publisher-admin' || user.role === 'publisher') {
+					protectedProperties = {
+						state: 0,
+						publisher: 0,
+						lastUpdated: 0
+					};
+					const queries = [{
+						query: {publisher: user.publisher}
+					}];
+					const response = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
+					if (response.results.length === 0) {
+						throw new ApiError(HttpStatus.NOT_FOUND);
+					}
+
+					return response;
+				}
+
+				if (result.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
+
+				return result;
 			}
 
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
 		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 }

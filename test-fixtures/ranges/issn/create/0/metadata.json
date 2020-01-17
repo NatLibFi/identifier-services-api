@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed, admin can suceessfully create Issn Ranges",
+    "requestUrl": "/ranges/issn",
+    "collectionName": "RangeIssnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 201,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json"
+}

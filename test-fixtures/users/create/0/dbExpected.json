@@ -1,20 +1,19 @@
 {
     "userMetadata": [
         {
-            "userId":"foo foo",
+            "id": "admin",
             "preferences": {
-                "defaultLanguage": "foo"
+                "defaultLanguage": "eng"
             },
-            "lastUpdated": {
-            }
+            "lastUpdated": {}
         },
         {
-            "userId":"foobar",
+            "id": "testPublisher@foo.bar",
+            "publisher": "admin",
             "preferences": {
-                "defaultLanguage": "foo"
+                "defaultLanguage": "eng"
             },
-            "lastUpdated": {
-            }
+            "lastUpdated": {}
         }
     ]
 }

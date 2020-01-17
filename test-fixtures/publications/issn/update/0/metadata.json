@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed, system can edit/update Publication Issn.",
+    "requestUrl": "/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "Publication_ISSN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "put",
+    "expectedStatus": 200,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json",
+    "payloadExpected": false
+}

@@ -1,0 +1,39 @@
+{
+    "userMetadata": [
+        {
+            "_id": "5cd90e696a1e930789dfaa48",
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        },
+        {
+            "_id": "5cd90e696a1e930789dfaa49",
+            "id":"publisher-admin",
+            "publisher": "5dd69c4d1c9d440000d04f8a",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        },
+        {
+            "_id": "5cd90e696a1e930789dfaa50",
+            "id":"pubisher",
+            "publisher": "5dd69c4d1c9d440000d04f8a",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    ]
+}

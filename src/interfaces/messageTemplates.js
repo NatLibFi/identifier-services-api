@@ -30,7 +30,7 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission} from './utils';
+import {hasPermission, validateDoc} from './utils';
 
 const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
@@ -44,47 +44,97 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasPermission(user, 'messageTemplates', 'create')) {
-			const result = await templateInterface.create(db, doc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
 
-		throw new ApiError(HttpStatus.UNAUTHORIZED);
+			if (validateDoc(doc, 'MessageTemplateContent')) {
+				if (hasPermission(user, 'messageTemplates', 'create')) {
+					const result = await templateInterface.create(db, doc, user);
+					return result;
+				}
+
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			} else {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function read(db, id, user) {
-		if (hasPermission(user, 'messageTemplates', 'read')) {
-			const result = await templateInterface.read(db, id);
-			return result;
-		}
+		try {
+			if (hasPermission(user, 'messageTemplates', 'read')) {
+				const result = await templateInterface.read(db, id);
+				if (result === null) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
 
-		throw new ApiError(HttpStatus.UNAUTHORIZED);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
+		}
 	}
 
 	async function update(db, id, doc, user) {
-		if (hasPermission(user, 'messageTemplates', 'update')) {
-			const result = await templateInterface.update(db, id, doc, user);
-			return result;
-		}
+		try {
+			if (Object.keys(doc).length === 0) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else if (validateDoc(doc, 'MessageTemplateContent')) {
+				if (hasPermission(user, 'messageTemplates', 'update')) {
+					const result = await templateInterface.update(db, id, doc, user);
+					return result;
+				}
 
-		throw new ApiError(HttpStatus.UNAUTHORIZED);
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			}
+
+			throw new ApiError(HttpStatus.BAD_REQUEST);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function remove(db, id, user) {
 		if (hasPermission(user, 'messageTemplates', 'remove')) {
 			const result = await templateInterface.remove(db, id);
+			if (result.value === null) {
+				throw new ApiError(HttpStatus.NOT_FOUND);
+			}
+
 			return result;
 		}
 
-		throw new ApiError(HttpStatus.UNAUTHORIZED);
+		throw new ApiError(HttpStatus.FORBIDDEN);
 	}
 
 	async function query(db, {queries, offset}, user) {
-		if (hasPermission(user, 'messageTemplates', 'query')) {
-			const result = await templateInterface.query(db, {queries, offset});
-			return result;
-		}
+		try {
+			if (hasPermission(user, 'messageTemplates', 'query')) {
+				const result = await templateInterface.query(db, {queries, offset});
+				if (result.results.length === 0) {
+					throw new ApiError(HttpStatus.NOT_FOUND);
+				}
 
-		throw new ApiError(HttpStatus.UNAUTHORIZED);
+				return result;
+			}
+
+			throw new ApiError(HttpStatus.FORBIDDEN);
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status);
+			}
+		}
 	}
 }

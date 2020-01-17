@@ -31,7 +31,7 @@ import {Router} from 'express';
 import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 
-export default function (db) {
+export default function (userProvider) {
 	const usersRequests = usersRequestsFactory({url: API_URL});
 
 	return new Router()
@@ -43,7 +43,7 @@ export default function (db) {
 
 	async function createRequest(req, res, next) {
 		try {
-			const result = await usersRequests.createRequest(db, req.body, req.user);
+			const result = await usersRequests.createRequest(userProvider, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -53,7 +53,7 @@ export default function (db) {
 	async function readRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await usersRequests.readRequest(db, id, req.user);
+			const result = await usersRequests.readRequest(userProvider, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -63,7 +63,7 @@ export default function (db) {
 	async function updateRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await usersRequests.updateRequest(db, id, req.body, req.user);
+			const result = await usersRequests.updateRequest(userProvider, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -73,7 +73,7 @@ export default function (db) {
 	async function removeRequest(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await usersRequests.removeRequest(db, id);
+			const result = await usersRequests.removeRequest(userProvider, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -82,7 +82,7 @@ export default function (db) {
 
 	async function queryRequest(req, res, next) {
 		try {
-			const result = await usersRequests.queryRequest(db, req.body, req.user);
+			const result = await usersRequests.queryRequest(userProvider, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

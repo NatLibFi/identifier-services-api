@@ -1,0 +1,9 @@
+{
+    "descr": "Should fail, not enough authority, publisher-admin cannot read admin",
+    "requestUrl": "/users/admin",
+    "collectionName": "userMetadata",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "get",
+    "expectedStatus": 401
+}

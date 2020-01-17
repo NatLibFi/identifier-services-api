@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, admin can suceessfully query all publishers",
+    "requestUrl": "/publishers/query",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "collectionName": "PublisherMetadata",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

@@ -1,5 +1,5 @@
 {
-    "IdentifierRangesISBN": [
+    "RangeIsbnContent": [
         {
             "_id": "5cd90b2c89d0546340068667",
             "prefix": "978",
@@ -12,6 +12,19 @@
             "lastUpdated": {
                 "timestamp": "2019-05-03T09:17:46.412",
                 "user": "barfoo"
+            }
+        }
+    ],
+    "userMetadata": [
+        {
+            "_id": "5cd90e696a1e930789dfaa48",
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
             }
         }
     ]

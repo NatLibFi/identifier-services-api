@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, system can read Publication IsbnIsmn Requests.",
+    "requestUrl": "/requests/publications/isbn-ismn/5ce29b5559757f4cfc1f62c3",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "get",
+    "expectedStatus": 200
+}

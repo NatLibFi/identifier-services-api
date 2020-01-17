@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail because publisherAdmin doesn't have enough authority to update usersRequest",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4d23",
+    "collectionName": "usersRequest",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "put",
+    "expectedStatus": 403,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json"
+}

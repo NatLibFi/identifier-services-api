@@ -1,0 +1,37 @@
+{
+    "PublisherRequest": [
+        {
+            "_id":"5cdff4db937aed356a2b5817",
+            "lastUpdated":{},
+            "state": "foo",
+            "name": "foo",
+            "postalAddress": {
+                "public": false,
+                "address": "foo",
+                "city": "foo",
+                "zip": "foo"
+            },
+            "classification": ["foo"],
+            "metadataDelivery": "foo",
+            
+            "publicationDetails": {
+                "frequency": 111
+            },
+            "primaryContact": ["foobar", "foo"],			
+            "activity":{
+                "active": true,
+                "yearInactivated": 111
+            }
+        }
+    ],
+    "userMetadata": [
+        {
+            "id":"publisher-admin",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ]
+}
+

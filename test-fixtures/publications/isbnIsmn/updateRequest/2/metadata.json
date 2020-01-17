@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, because resources not found",
+    "requestUrl": "/requests/publications/isbn-ismn/5ce29b5559757f4cfc1f62c3",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 404,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

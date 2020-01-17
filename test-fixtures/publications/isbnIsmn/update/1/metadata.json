@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, because payload is invalid",
+    "requestUrl": "/publications/isbn-ismn/5ce29b5559757f4cfc1f62c3",
+    "collectionName": "Publication_ISBN_ISMN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "put",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

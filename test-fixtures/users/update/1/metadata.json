@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed direct create User by Admin without SSOID",
+    "requestUrl": "/users/5cd90e696a1e930789dfaa50",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 201,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json",
+    "method": "post",
+    "skip": true
+}

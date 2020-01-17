@@ -1,0 +1,19 @@
+{
+    "data": {
+        "usersRequest": null,
+        "userMetadata": [
+            {
+                "_id": "5cd90e696a1e930789dfaa49",
+                "id": "publisher-admin",
+                "publisher": "foobar",
+                "preferences": {
+                    "defaultLanguage": "eng"
+                },
+                "lastUpdated": {
+                    "timestamp": "838383838",
+                    "user": "bar"
+                }
+            }
+        ]
+    }
+}

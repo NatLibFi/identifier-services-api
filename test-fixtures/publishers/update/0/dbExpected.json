@@ -1,4 +1,13 @@
 {
+    "userMetadata": [
+        {
+            "id":"system",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ],
     "PublisherMetadata": [
         {
             "name": "rojak",
@@ -27,9 +36,7 @@
                 "city": "Helsinki",
                 "zip": "00120"
             },
-            "lastUpdated": {
-                "user": "foobar"
-            }
+            "lastUpdated": {}
         }
     ]
 }

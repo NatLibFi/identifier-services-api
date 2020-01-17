@@ -1,0 +1,11 @@
+{
+    "_id": "5cd90e696a1e930789dfaa49",
+    "email": "testPublisher@foo.bar",
+    "givenName": "test",
+    "familyName": "publisher",
+    "role": "publisher",
+    "publisher": "5cd90e696a1e930789dfaa34",
+    "preferences": {
+        "defaultLanguage": "eng"
+    }
+}

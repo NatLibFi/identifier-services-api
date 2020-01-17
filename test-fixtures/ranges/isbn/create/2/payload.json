@@ -1,10 +1,9 @@
 {            
-    "language": "foo",
+    "prefix": "foo",
+    "language": "cow",
     "rangeStart": 100,
-    "rangeEnd": 100,
+    "rangeEnd": "100",
     "active": false,
-    "publisher": "foo",
-    "reservedCount": 100,
     "lastUpdated": {
         "user": "foo"
     }

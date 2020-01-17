@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, publisher-damin cannot edit/update Publication Issn.",
+    "requestUrl": "/publications/issn/5cd92b2197477f5addc0d293",
+    "collectionName": "Publication_ISSN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "put",
+    "expectedStatus": 403,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

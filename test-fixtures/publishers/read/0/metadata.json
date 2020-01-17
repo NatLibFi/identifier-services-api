@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, admin can suceessfully read publishers",
+    "requestUrl": "/publishers/5dd69c4d1c9d440000d04f84",
+    "collectionName": "PublisherMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 200
+}

@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, admin can suceessfully query Publication Issn Requests",
+    "requestUrl": "/requests/publications/issn/query",
+    "collectionName": "Publication_ISSN",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

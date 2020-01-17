@@ -32,7 +32,7 @@ import {usersFactory} from '../interfaces';
 import HttpStatus from 'http-status';
 import {API_URL} from '../config';
 
-export default function (db) {
+export default function (userProvider) {
 	const users = usersFactory({url: API_URL});
 
 	return new Router()
@@ -45,7 +45,7 @@ export default function (db) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await users.create(db, req.body, req.user);
+			const result = await users.create(userProvider, req.body, req.user);
 			res.status(HttpStatus.CREATED).json(result);
 		} catch (err) {
 			return next(err);
@@ -55,7 +55,7 @@ export default function (db) {
 	async function read(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.read(db, id, req.user);
+			const result = await users.read(userProvider, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -65,7 +65,7 @@ export default function (db) {
 	async function update(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.update(db, id, req.body, req.user);
+			const result = await users.update(userProvider, id, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -75,7 +75,7 @@ export default function (db) {
 	async function remove(req, res, next) {
 		const id = req.params.id;
 		try {
-			const result = await users.remove(db, id, req.user);
+			const result = await users.remove(userProvider, id, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);
@@ -85,7 +85,7 @@ export default function (db) {
 	async function changePwd(req, res, next) {
 		const doc = {...req.body, id: req.params.id};
 		try {
-			const result = await users.changePwd(doc, req.user);
+			const result = await users.changePwd(userProvider, doc, req.user);
 			if (result === undefined) {
 				res.json(HttpStatus.CREATED);
 			} else {
@@ -98,7 +98,7 @@ export default function (db) {
 
 	async function query(req, res, next) {
 		try {
-			const result = await users.query(db, req.body, req.user);
+			const result = await users.query(userProvider, req.body, req.user);
 			res.json(result);
 		} catch (err) {
 			next(err);

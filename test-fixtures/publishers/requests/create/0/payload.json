@@ -29,6 +29,13 @@
         "active": true,
         "yearInactivated": null
     },
+    "postalAddress": {
+        "address":"foo",
+        "city":"foo",
+        "zip":"foo",
+        "public:": false
+    },
+    "classification": ["foo"],
     "streetAddress": {
         "address": "Uudenmaankatu 10",
         "city": "Helsinki",

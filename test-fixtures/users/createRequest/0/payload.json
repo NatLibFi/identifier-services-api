@@ -1,16 +1,11 @@
 {
-    "publishers": [
-        "fubar"
-    ],
-    "userId": "foobar",
-    "givenName": "Barbar",
-    "familyName": "Bar",
-    "email": "foo.bar@foo.bar",
-    "state": "processed",
+    "creator": "pubisher-admin",
+    "givenName": "FooBar",
+    "familyName": "Foo",
+    "email": "bar_bar@foo.foo",
     "notes":["This is a note"],
     "lastUpdated": {
         "timestamp": "838383838",
         "user": "bar"
     }
-
 }

@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed updating user",
+    "requestUrl": "/users/5cd90e696a1e930789dfaa50",
+    "collectionName": "userMetadata",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "expectedStatus": 201,
+    "dbExpected": "dbExpected.json",
+    "payload": "payload.json",
+    "method": "put"
+}

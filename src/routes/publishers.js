@@ -30,6 +30,7 @@ import {Router} from 'express';
 import {publishersFactory} from '../interfaces';
 import {API_URL} from '../config';
 import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db, passportMiddlewares, combineUserInfo) {
 	const publishers = publishersFactory({url: API_URL});
@@ -51,8 +52,12 @@ export default function (db, passportMiddlewares, combineUserInfo) {
 
 	async function create(req, res, next) {
 		try {
-			const result = await publishers.create(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
+			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else {
+				const result = await publishers.create(db, req.body, req.user);
+				res.status(HttpStatus.CREATED).json(result);
+			}
 		} catch (err) {
 			next(err);
 		}

@@ -1,0 +1,12 @@
+{
+    "descr": "Should succeed, system can create Publication Issn.",
+    "requestUrl": "/publications/issn",
+    "collectionName": "Publication_ISSN",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "post",
+    "expectedStatus": 201,
+    "payload": "payload.json",
+    "dbExpected": "dbExpected.json",
+    "payloadExpected": false
+}

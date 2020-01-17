@@ -1,0 +1,28 @@
+{
+    "_id": "5cd90e696a1e930789dfaa49",
+    "preferences": {
+        "defaultLanguage": "eng"
+    },
+    "lastUpdated": {
+        "timestamp": "838383838",
+        "user": "bar"
+    },
+    "id": "publisher-admin",
+    "name": {
+        "givenName": "test",
+        "familyName": "publisherAdmin"
+    },
+    "displayName": "testPublisherAdmin",
+    "emails": [
+        {
+            "value": "publisherAdmin@foo.bar",
+            "type": "work"
+        }
+    ],
+    "publisher": "foobar",
+    "organization": [],
+    "groups": [
+        "identifier-services-test-publisherAdmin"
+    ],
+    "role": "publisher-admin"
+}

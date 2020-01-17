@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail because payload provided is empty",
+    "requestUrl": "/users",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 400,
+    "method": "post",
+    "payloadExpected": false
+}

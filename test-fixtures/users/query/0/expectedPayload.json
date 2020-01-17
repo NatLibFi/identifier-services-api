@@ -1,0 +1,18 @@
+{
+    "offset": "5cd90e696a1e930789dfaa48",
+    "queryDocCount": 1,
+    "totalDoc": 1,
+    "results": [
+        {
+            "mongoId": "5cd90e696a1e930789dfaa48",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            },
+            "id": "admin"          
+        }
+    ]
+}

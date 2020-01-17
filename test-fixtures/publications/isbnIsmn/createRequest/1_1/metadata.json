@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, because payload is not provided or empty.",
+    "requestUrl": "/requests/publications/isbn-ismn",
+    "collectionName": "Publication_ISBN_ISMN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "post",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

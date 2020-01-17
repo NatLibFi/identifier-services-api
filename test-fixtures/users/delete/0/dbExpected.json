@@ -1,13 +1,19 @@
 {
     "userMetadata": [
         {
-            "userId":"foobar",
+            "id":"admin",
             "preferences": {
-                "defaultLanguage": "foo"
+                "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "timestamp": "838383838"
-            }
+            "lastUpdated": {}
+        },
+        {
+            "id":"publisher-admin",
+            "publisher": "foobar",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
         }
     ]
 }

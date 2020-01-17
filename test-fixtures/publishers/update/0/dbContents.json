@@ -1,4 +1,13 @@
 {
+    "userMetadata": [
+        {
+            "id":"system",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ],
     "PublisherMetadata": [
         {
             "_id": "5cdfe76e46c65d23f7cf94d3",
@@ -28,9 +37,7 @@
                 "city": "Helsinki",
                 "zip": "00120"
             },
-            "lastUpdated": {
-                "user": "foobar"
-            }
+            "lastUpdated": {}
         }
-    ]
+    ] 
 }

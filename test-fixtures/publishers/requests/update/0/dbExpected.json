@@ -1,11 +1,19 @@
 
 {
+    "userMetadata": [
+        {
+            "id":"system",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ],
     "PublisherRequest": [
         {
-            "lastUpdated": {
-                "user": "foo"
-            },
+            "lastUpdated": {},
             "state": "processed",
+            "backgroundProcessingState": "pending",
             "publisherId": "83c5867cf8984cf297b5e6aed72492ac",
             "publicationEstimate": 1000,
             "primaryContact": [

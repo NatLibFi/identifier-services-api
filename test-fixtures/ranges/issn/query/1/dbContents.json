@@ -1,0 +1,28 @@
+{
+    "RangeIssnContent": [
+        {
+            "_id": "5cd90b2c89d0546340068667",
+            "rangeStart": "550",
+            "rangeEnd": "889",
+            "active": false,
+            "reservedCount": 339,
+            "lastUpdated": {
+                "timestamp": "2019-05-03T09:17:46.412",
+                "user": "foo"
+            }
+        }
+    ],
+    "userMetadata": [
+        {
+            "_id": "5cd90e696a1e930789dfaa48",
+            "id":"publisher-admin",
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    ]
+}

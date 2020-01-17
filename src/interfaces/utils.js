@@ -34,9 +34,8 @@ import CrowdClient from 'atlassian-crowd-client';
 const Ajv = require('ajv');
 const {readFileSync} = require('fs');
 const path = require('path');
-import User from 'atlassian-crowd-client/lib/models/user';
 
-import {formatUrl, mapRoleToGroup, mapGroupToRole} from '../utils';
+import {formatUrl} from '../utils';
 import {
 	UI_URL,
 	SMTP_URL,
@@ -81,7 +80,7 @@ const permissions = {
 		queryRequest: ['system', 'admin', 'publisher-admin']
 	},
 	publishers: {
-		create: ['admin'],
+		create: ['admin', 'system'],
 		read: ['all'],
 		update: ['publisher-admin'],
 		query: ['all']
@@ -94,7 +93,7 @@ const permissions = {
 		queryRequests: ['system', 'admin']
 	},
 	publicationIsbnIsmn: {
-		createIsbnIsmn: ['system', 'publisher-admin', 'publisher'],
+		createIsbnIsmn: ['admin', 'system'],
 		readIsbnIsmn: ['admin', 'publisher-admin'],
 		updateIsbnIsmn: ['system', 'admin'],
 		queryIsbnIsmn: ['system', 'admin', 'publisher-admin', 'publisher']
@@ -159,136 +158,6 @@ export function filterResult(result) {
 	delete result.publisher;
 	delete result.lastUpdated;
 	return result;
-}
-
-export function local() {
-	return {
-		localUser: {
-			create,
-			read,
-			update,
-			remove,
-			query
-		}
-	};
-	function create({PASSPORT_LOCAL_USERS, doc}) {
-		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const data = JSON.parse(res);
-		const newData = {
-			id: doc.email,
-			password: Math.random().toString(36).slice(2),
-			name: {
-				givenName: doc.givenName,
-				familyName: doc.familyName
-			},
-			displayName: `${doc.givenName}${doc.familyName}`,
-			emails: [{value: doc.email, type: 'work'}],
-			organization: [],
-			groups: [mapRoleToGroup(doc.role)]
-		};
-
-		if (containsObject(newData, data)) {
-			throw new ApiError(HttpStatus.CONFLICT);
-		}
-
-		data.push(newData);
-		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(data, null, 4), 'utf-8');
-		return null;
-		function containsObject(obj, list) {
-			return list.some(item => item.id === obj.id);
-		}
-	}
-
-	function read({PASSPORT_LOCAL_USERS, value}) {
-		const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const data = JSON.parse(res);
-		const user = (data.filter(item => item.id === value))[0];
-		return user;
-	}
-
-	function update({PASSPORT_LOCAL_USERS, user}) {
-		const {id, newPassword} = user;
-		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		const newPassportLocalList = passportLocalList.map(passport => {
-			if (passport.id === id) {
-				return {...passport, password: newPassword};
-			}
-
-			return passport;
-		});
-
-		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newPassportLocalList, null, 4), 'utf-8');
-		return HttpStatus.OK;
-	}
-
-	function remove({PASSPORT_LOCAL_USERS, id}) {
-		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		const result = passportLocalList.filter(item => item.id !== id);
-		fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(result, null, 4), 'utf-8');
-		return HttpStatus.OK;
-	}
-
-	function query({PASSPORT_LOCAL_USERS}) {
-		const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		const result = passportLocalList.map(item => item);
-		return result;
-	}
-}
-
-export function crowd() {
-	return {
-		crowdUser: {
-			read,
-			create,
-			update,
-			remove,
-			query
-		}
-
-	};
-
-	async function read({id}) {
-		const response = await crowdClient.user.get(id);
-		return {...response, groups: await getUserGroup(id)};
-	}
-
-	async function create({doc}) {
-		const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36).slice(2));
-		const response = await crowdClient.user.create(payload);
-		await crowdClient.user.groups.add(response.email, mapRoleToGroup(doc.role));
-		return {...response, groups: await getUserGroup(response.username)};
-	}
-
-	async function update({doc}) {
-		const userCheckResponse = await crowdClient.user.get(doc.id);
-		if (userCheckResponse) {
-			const response = await crowdClient.user.password.set(doc.id, doc.newPassword);
-			return response;
-		}
-	}
-
-	async function remove({id}) {
-		const group = await getUserGroup(id);
-		await crowdClient.user.groups.remove(id, mapGroupToRole(group));
-		const response = await crowdClient.user.remove(id);
-		return response;
-	}
-
-	async function query() {
-		const users = await crowdClient.search.user('');
-		return users;
-	}
-
-	async function getUserGroup(id) {
-		// Const nestedGroup = await client.user.groups.list(id, 'nested');
-		const directGroup = await crowdClient.user.groups.list(id, 'direct');
-		// DirectGroup.concat(nestedGroup)
-		// Retruning Only direct Group for this project
-		return directGroup;
-	}
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
@@ -356,9 +225,11 @@ export async function getTemplate(query, cache) {
 
 export function validateDoc(doc, collectionContent) {
 	const validate = getValidator(collectionContent);
-	if (!validate(doc)) {
-		throw new Error(JSON.stringify(validate.errors, undefined, 2));
+	if (validate(doc)) {
+		return validate;
 	}
+
+	throw new Error(JSON.stringify(validate.errors, undefined, 2));
 }
 
 function getValidator(schemaName) {

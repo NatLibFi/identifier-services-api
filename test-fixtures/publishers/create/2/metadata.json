@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail to create publisher because of invalid syntax",
+    "requestUrl": "/publishers",
+    "username": "tasks",
+    "password": "J22omfqCU8ZgCrrKrOOB",
+    "collectionName": "PublisherMetadata",
+    "method": "post",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

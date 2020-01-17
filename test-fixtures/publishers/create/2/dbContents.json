@@ -1,3 +1,12 @@
 {
+    "userMetadata": [
+        {
+            "id":"system",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        }
+    ],
     "PublisherMetadata": [{}]
 }

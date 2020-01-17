@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, admin can suceessfully query Issn ranges",
+    "requestUrl": "/ranges/issn/query",
+    "collectionName": "RangeIssnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

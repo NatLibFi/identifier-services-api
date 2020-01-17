@@ -26,10 +26,10 @@
  *
  */
 
-import interfaceFactory from './interfaceModules';
-import {hasPermission} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
+import interfaceFactory from './interfaceModules';
+import {hasPermission, validateDoc} from './utils';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
 
@@ -42,12 +42,22 @@ export default function () {
 	};
 
 	async function create(db, doc, user) {
-		if (hasPermission(user, 'publishers', 'create')) {
-			const result = await publisherInterface.create(db, doc, user);
-			return result;
-		}
+		try {
+			if (validateDoc(doc, 'PublisherContent')) {
+				if (hasPermission(user, 'publishers', 'create')) {
+					const result = await publisherInterface.create(db, doc, user);
+					return result;
+				}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+				throw new ApiError(HttpStatus.FORBIDDEN);
+			} else {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			}
+		} catch (err) {
+			if (err) {
+				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async function read(db, id, user) {

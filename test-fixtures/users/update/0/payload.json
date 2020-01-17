@@ -1,9 +1,12 @@
 {
-    "userId":"foobar",
+    "_id": "5cd90e696a1e930789dfaa50",
+    "id":"publisher",
+    "email": "testPublisher@foo.bar",
+    "givenName": "test",
+    "familyName": "publisher",
+    "role": "publisher",
+    "publisher": "foobar",
     "preferences": {
-        "defaultLanguage": "bar"
-    },
-    "lastUpdated": {
-        "user": "bar"
+        "defaultLanguage": "fin"
     }
 }

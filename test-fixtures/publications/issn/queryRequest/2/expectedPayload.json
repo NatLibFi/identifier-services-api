@@ -1,0 +1,34 @@
+{
+    "offset": "5dde4fb418346c0c00f2bbd3",
+    "queryDocCount": 1,
+    "totalDoc": 1,
+    "results": [
+        {
+            "id": "5dde4fb418346c0c00f2bbd3",
+            "language": "eng",
+            "title": "dddd",
+            "city": "dsfsdfd",
+            "firstYear": 32432,
+            "firstNumber": 324324,
+            "frequency": "yearly",
+            "type": "yearly",
+            "formatDetails": {
+                "format": "printed"
+            },
+            "previousPublication": {
+                "lastYear": 2343,
+                "lastNumber": 23434,
+                "title": "dfsf",
+                "identifier": "2432"
+            },
+            "seriesDetails": {
+                "mainSeries": {
+                    "title": "dsf",
+                    "identifier": "wew3223"
+                }
+            },
+            "backgroundProcessingState": "processed",
+            "creator": "rojak.amatya@helsinki.fi"
+        }
+    ]
+}

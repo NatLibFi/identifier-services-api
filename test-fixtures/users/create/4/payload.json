@@ -1,0 +1,8 @@
+{
+    "_id": "5cd90e696a1e930789dfaa49",
+    "userId": "incorrectSSOID",
+    "publisher": "foo",
+    "preferences": {
+        "defaultLanguage": "eng"
+    }
+}

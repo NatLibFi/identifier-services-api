@@ -1,0 +1,11 @@
+{
+    "descr": "Should fails, payload not provided",
+    "requestUrl": "/requests/publishers",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "post",
+    "collectionName": "PublisherRequest",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

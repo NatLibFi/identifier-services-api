@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, because payload is empty / payload not found",
+    "requestUrl": "/ranges/issn/5cd90b2c89d0546340068668",
+    "collectionName": "RangeIssnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

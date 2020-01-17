@@ -1,30 +1,47 @@
 {
     "usersRequest": [
         {
-            "publishers": [
-                "fubar"
-            ],
-            "userId": "foo",
+            "userId": "foo.bar@foo.bar",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "creator": "pubisher-admin",
             "givenName": "Barbar",
             "familyName": "Bar",
             "email": "foo.bar@foo.bar",
             "state": "processed",
-            "notes":["This is a note"],
-            "lastUpdated": {
-                "timestamp": "838383838",
-                "user": "bar"
-            }
+            "backgroundProcessingState": "processed",
+            "notes": [
+                "This is a note"
+            ],
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
         },
         {
-            "publishers": [
-                "fubarboo"
+            "userId": "publisher@foo.bar",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "creator": "publisher-admin",
+            "givenName": "test",
+            "familyName": "publisher",
+            "email": "publisher@foo.bar",
+            "role": "publisher",
+            "state": "new",
+            "backgroundProcessingState": "pending",
+            "notes": [
+                "This is a note to all the one out there"
             ],
-            "userId": "foo",
-            "givenName": "Barbar",
-            "familyName": "Bar",
-            "email": "foo.bar@foo.bar",
-            "state": "processed",
-            "notes":["This is a note"],
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
+            "lastUpdated": {}
+        }
+    ],
+    "userMetadata": [
+        {
+            "id": "admin",
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
             "lastUpdated": {
                 "timestamp": "838383838",
                 "user": "bar"

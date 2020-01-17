@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail because admin do not have permission to delete userRequest",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4d23",
+    "collectionName": "usersRequest",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 403,
+    "method": "delete",
+    "dbExpected": "dbExpected.json"
+}

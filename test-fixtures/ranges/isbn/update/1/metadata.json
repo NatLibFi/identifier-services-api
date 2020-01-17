@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, payload is empty",
+    "requestUrl": "/ranges/isbn/5cd90b2c89d0546340068667",
+    "collectionName": "RangeIsbnContent",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "put",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

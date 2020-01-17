@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, system can change password",
+    "requestUrl": "/users/publisher/password",
+    "collectionName": "userMetadata",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "method": "post",
+    "expectedStatus": 200,
+    "payload": "payload.json"
+}

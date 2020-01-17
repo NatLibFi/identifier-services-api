@@ -1,0 +1,49 @@
+{
+    "usersRequest": [
+        {
+            "userId": "foo.bar@foo.bar",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "creator": "pubisher-admin",
+            "givenName": "Barbar",
+            "familyName": "Bar",
+            "email": "foo.bar@foo.bar",
+            "state": "processed",
+            "backgroundProcessingState": "processed",
+            "notes": [
+                "This is a note"
+            ],
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        },
+        {
+            "userId": "publisher",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "creator": "publisher-admin",
+            "role": "publisher",
+            "state": "new",
+            "backgroundProcessingState": "pending",
+            "notes": [
+                "This is a note"
+            ],
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
+            "lastUpdated": {}
+        }
+    ],
+    "userMetadata": [
+        {
+            "id": "publisher-admin",
+            "publisher": "5dde33ad22f69862179e3d22",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    ]
+}

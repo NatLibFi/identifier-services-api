@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed because system has permission to delete userRequest",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726ed4d233",
+    "collectionName": "usersRequest",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "expectedStatus": 404,
+    "method": "delete",
+    "dbExpected": "dbExpected.json"
+}

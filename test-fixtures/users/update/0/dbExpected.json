@@ -1,13 +1,35 @@
 {
     "userMetadata": [
         {
-            "userId":"foobar",
+            "id":"system",
             "preferences": {
-                "defaultLanguage": "bar"
+                "defaultLanguage": "fin"
             },
-            "lastUpdated": {
-                "user":"bar"
-            }
+            "lastUpdated": {}
+        },
+        {
+            "id":"admin",
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
+            "lastUpdated": {}
+        },
+        {
+            "id":"publisher-admin",
+            "publisher": "foobar",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {}
+        },
+        {
+            "id":"publisher",
+            "publisher": "foobar",
+            "preferences": {
+                "defaultLanguage": "fin"
+            },
+            "lastUpdated": {}
         }
+
     ]
 }

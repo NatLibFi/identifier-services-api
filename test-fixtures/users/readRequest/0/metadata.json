@@ -1,0 +1,10 @@
+{
+    "descr": "Should succeed, admin can suceessfully read users requests",
+    "requestUrl": "/requests/users/5cd3e9e5f2376736726e4c19",
+    "collectionName": "usersRequest",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "get",
+    "expectedStatus": 200,
+    "skip": true
+}

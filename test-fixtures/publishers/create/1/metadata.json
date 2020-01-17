@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail to create publisher because content is not provided",
+    "requestUrl": "/publishers",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
+    "collectionName": "PublisherMetadata",
+    "method": "post",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

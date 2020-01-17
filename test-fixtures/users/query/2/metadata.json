@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, publisher do not have enough authority",
+    "requestUrl": "/users/query",
+    "collectionName": "userMetadata",
+    "username": "publisher",
+    "password": "opbmm52su1",
+    "method": "post",
+    "expectedStatus": 403,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

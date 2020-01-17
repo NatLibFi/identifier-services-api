@@ -1,6 +1,7 @@
 { 
-    "rangeStart": 111,
-    "rangeEnd": 100,
+    "prefix": "foo",
+    "rangeStart": "111",
+    "rangeEnd": "100",
     "active": false,
     "reservedCount": 100,
     "lastUpdated": {

@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail because users doesn't exist",                                                                                  
+    "requestUrl": "/users/foobar",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 404,
+    "method": "delete",
+    "payloadExpected": false
+}

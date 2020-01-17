@@ -1,6 +1,11 @@
 {
-    "userId": "foobar",
+    "_id": "5cd90e696a1e930789dfaa49",
+    "email": "testPublisher@foo.bar",
+    "givenName": "test",
+    "familyName": "publisher",
+    "role": "publisher",
+    "publisher": "admin",
     "preferences": {
-        "defaultLanguage": "foo"
+        "defaultLanguage": "eng"
     }
 }

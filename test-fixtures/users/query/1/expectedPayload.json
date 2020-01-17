@@ -1,0 +1,31 @@
+{
+    "offset": "5cd90e696a1e930789dfaa50",
+    "queryDocCount": 2,
+    "totalDoc": 3,
+    "results": [
+        {
+            "mongoId": "5cd90e696a1e930789dfaa49",
+            "id":"publisher-admin",
+            "publisher": "5dd69c4d1c9d440000d04f8a",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        },
+        {
+            "mongoId": "5cd90e696a1e930789dfaa50",
+            "id":"pubisher",
+            "publisher": "5dd69c4d1c9d440000d04f8a",
+            "preferences": {
+                "defaultLanguage": "eng"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    ]
+}

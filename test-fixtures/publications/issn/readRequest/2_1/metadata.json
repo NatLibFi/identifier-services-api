@@ -1,0 +1,9 @@
+{
+    "descr": "Should succeed, publisher-admin can only read Publication Issn Requests associated with them.",
+    "requestUrl": "/requests/publications/issn/5dde4fb418346c0c00f2bbd3",
+    "collectionName": "PublicationRequest_ISSN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "get",
+    "expectedStatus": 200
+}

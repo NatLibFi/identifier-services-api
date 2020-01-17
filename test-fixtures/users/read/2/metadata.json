@@ -1,0 +1,9 @@
+{
+    "descr": "Should fail because the parameter is incorrect",
+    "requestUrl": "/users/foooobbbbbadmin",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "0l1gq69q6nxh",
+    "expectedStatus": 401,
+    "method": "get"
+}

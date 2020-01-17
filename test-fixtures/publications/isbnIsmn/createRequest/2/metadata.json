@@ -1,0 +1,9 @@
+{
+    "descr": "Should fail, user unauthorized",
+    "requestUrl": "/requests/publications/isbn-ismn",
+    "collectionName": "PublicationRequest_ISBN_ISMN",
+    "method": "post",
+    "expectedStatus": 401,
+    "payload": "payload.json",
+    "payloadExpected": false
+}

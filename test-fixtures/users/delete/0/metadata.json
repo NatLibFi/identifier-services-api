@@ -1,0 +1,11 @@
+{
+    "descr": "Should succeed deleting user by Admin",
+    "requestUrl": "/users/publisher",
+    "collectionName": "userMetadata",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
+    "method": "delete",
+    "skip": true
+}

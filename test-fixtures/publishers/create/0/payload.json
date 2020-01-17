@@ -1,23 +1,19 @@
 {
-    "name": "foo",
-    "language": "foo",
-    "metadataDelivery": "foo",
-    "primaryContact": ["foobar", "foo"],
-    "email":"foo@bar.com",
-    "phone": "foo",
-    "website": "foo",
-    "streetAddress":{
-        "address": "foo",
-        "city": "foo",
-        "zip": "foo"
+    "lastUpdated":{
+        "user": "foo"
     },
-    "aliases": ["foo"],
+    "name": "foo",
+    "postalAddress": {
+        "address":"foo",
+        "city":"foo",
+        "zip":"foo",
+        "public:": false
+    },
+    "classification": ["foo"],
+    "metadataDelivery": "manual",
+    "primaryContact": ["foobar", "foo"],
     "activity":{
         "active": true,
         "yearInactivated": 111
-    },
-    "notes": ["foo", "bar"],
-    "lastUpdated":{
-        "user": "foo"
-    }
+    }   
 }

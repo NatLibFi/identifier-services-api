@@ -30,6 +30,7 @@ import {rangesFactory} from '../interfaces';
 import {API_URL} from '../config';
 import {bodyParse} from '../utils';
 import HttpStatus from 'http-status';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db) {
 	const ranges = rangesFactory({url: API_URL});
@@ -54,8 +55,12 @@ export default function (db) {
 
 	async function createIsbn(req, res, next) {
 		try {
-			const result = await ranges.createIsbn(db, req.body, req.user);
-			res.json(result);
+			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else {
+				const result = await ranges.createIsbn(db, req.body, req.user);
+				res.status(HttpStatus.CREATED).json(result);
+			}
 		} catch (err) {
 			next(err);
 		}
@@ -94,8 +99,12 @@ export default function (db) {
 
 	async function createIsmn(req, res, next) {
 		try {
-			const result = await ranges.createIsmn(db, req.body, req.user);
-			res.json(result);
+			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else {
+				const result = await ranges.createIsmn(db, req.body, req.user);
+				res.status(HttpStatus.CREATED).json(result);
+			}
 		} catch (err) {
 			next(err);
 		}
@@ -134,8 +143,12 @@ export default function (db) {
 
 	async function createIssn(req, res, next) {
 		try {
-			const result = await ranges.createIssn(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
+			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+				throw new ApiError(HttpStatus.BAD_REQUEST);
+			} else {
+				const result = await ranges.createIssn(db, req.body, req.user);
+				res.status(HttpStatus.CREATED).json(result);
+			}
 		} catch (err) {
 			next(err);
 		}

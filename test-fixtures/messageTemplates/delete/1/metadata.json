@@ -1,0 +1,10 @@
+{
+    "descr": "Should fail, because of incorrect parameter not records found.",
+    "requestUrl": "/templates/5cd92f4af2032c672cf75444",
+    "collectionName": "MessageTemplate",
+    "username": "admin",
+    "password": "gM3RsfxAr7e5VwsSPAC6",
+    "method": "delete",
+    "expectedStatus": 404,
+    "payloadExpected": false
+}

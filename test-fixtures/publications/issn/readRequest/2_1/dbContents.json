@@ -1,0 +1,51 @@
+{
+    "PublicationRequest_ISSN": [
+        {
+            "_id": "5dde4fb418346c0c00f2bbd3",
+            "language": "eng",
+            "title": "dddd",
+            "city": "dsfsdfd",
+            "firstYear": 32432,
+            "firstNumber": 324324,
+            "frequency": "yearly",
+            "type": "yearly",
+            "formatDetails": {
+                "format": "printed"
+            },
+            "previousPublication": {
+                "lastYear": 2343,
+                "lastNumber": 23434,
+                "title": "dfsf",
+                "identifier": "2432"
+            },
+            "seriesDetails": {
+                "mainSeries": {
+                    "title": "dsf",
+                    "identifier": "wew3223"
+                }
+            },
+            "publisher": "5dcebad7d05e8545d96e9899",
+            "state": "new",
+            "backgroundProcessingState": "processed",
+            "creator": "rojak.amatya@helsinki.fi",
+            "lastUpdated": {
+                "timestamp": "2019-11-27T10:28:04.914Z",
+                "user": "rojak.amatya@helsinki.fi"
+            }
+        }
+    ],
+    "userMetadata": [
+        {
+            "_id": "5cd90e696a1e930789dfaa48",
+            "id":"publisher-admin",
+            "publisher": "5dcebad7d05e8545d96e9899",
+            "preferences": {
+                "defaultLanguage": "foo"
+            },
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            }
+        }
+    ]
+}

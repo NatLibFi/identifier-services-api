@@ -2,9 +2,9 @@
     "IdentifierRangesISBN": [
         { 
             "prefix": "updateValue",
-            "language": "foo",
-            "rangeStart": 100,
-            "rangeEnd": 100,
+            "language": "fin",
+            "rangeStart": "100",
+            "rangeEnd": "100",
             "active": false,
             "publisher": "foo",
             "reservedCount": 100,

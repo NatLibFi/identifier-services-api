@@ -1,0 +1,9 @@
+{
+    "creator": "publisher-admin",
+    "userId": "publisher",
+    "notes":["This is a note"],
+    "lastUpdated": {
+        "timestamp": "838383838",
+        "user": "bar"
+    }
+}

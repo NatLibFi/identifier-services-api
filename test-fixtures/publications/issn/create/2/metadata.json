@@ -1,0 +1,11 @@
+{
+    "descr": "Should fail, because payload is invalid.",
+    "requestUrl": "/publications/issn",
+    "collectionName": "Publication_ISSN",
+    "username": "publisher-admin",
+    "password": "0l1gq69q6nxh",
+    "method": "post",
+    "expectedStatus": 400,
+    "payload": "payload.json",
+    "payloadExpected": false
+}
