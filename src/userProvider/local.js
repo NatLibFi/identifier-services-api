@@ -406,7 +406,6 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 					return {...passport, password: newPassword};
 				}
 
-				passport = doc;
 				return passport;
 			});
 

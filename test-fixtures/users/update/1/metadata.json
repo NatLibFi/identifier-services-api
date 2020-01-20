@@ -4,7 +4,7 @@
     "collectionName": "userMetadata",
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",
-    "expectedStatus": 201,
+    "expectedStatus": 200,
     "dbExpected": "dbExpected.json",
     "payload": "payload.json",
     "method": "post",

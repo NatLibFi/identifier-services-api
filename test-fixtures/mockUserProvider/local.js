@@ -141,21 +141,24 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 	}
 
 	async function update(id, doc, user) {
-		validateDoc(doc, 'UserContent');
-		if (hasPermission(user, 'users', 'update')) {
-			try {
-				const {localUser} = local();
-				await localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
-			} catch (err) {
-				throw new ApiError(err.status);
+		if (validateDoc(doc, 'UserContent')) {
+			if (hasPermission(user, 'users', 'update')) {
+				try {
+					const {localUser} = local();
+					await localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+				} catch (err) {
+					throw new ApiError(err.status);
+				}
+
+				const {role, givenName, userId, familyName, email, _id, ...rest} = {...doc};
+				const result = await userMetadataInterface.update(db, id, rest, user);
+				return result;
 			}
 
-			const {role, givenName, userId, familyName, email, ...rest} = {...doc};
-			const result = await userMetadataInterface.update(db, id, rest, user);
-			return result;
+			throw new ApiError(HttpStatus.FORBIDDEN);
 		}
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
+		throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
 	async function remove(id, user) {
@@ -179,7 +182,8 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 			if (hasPermission(user, 'users', 'changePwd')) {
 				const {localUser} = local();
 				// Changes made for unit test original should  not return anything
-				return localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+				const result = localUser.update({PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS, doc: doc});
+				return result;
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -406,7 +410,6 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 					return {...passport, password: newPassword};
 				}
 
-				passport = doc;
 				return passport;
 			});
 
