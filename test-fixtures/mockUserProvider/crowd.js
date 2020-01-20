@@ -218,7 +218,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
 		async function remove({id}) {
 			const group = await getUserGroup(id);
-			await crowdClient.user.groups.remove(id, mapGroupToRole(group));
+			await crowdClient.user.groups.remove(id, group);
 			const response = await crowdClient.user.remove(id);
 			return response;
 		}

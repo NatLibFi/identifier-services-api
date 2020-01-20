@@ -171,7 +171,6 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 		} else {
 			const {crowdUser} = crowd();
 			const response = await crowdUser.read({id: doc.id});
-			console.log(response);
 			// ************ DO SOMETHING HERE NOT COMLETE ******************
 			const email = response.emails[0].value;
 			const result = await createLinkAndSendEmail({request: {...doc, email: email}, PRIVATE_KEY_URL: PRIVATE_KEY_URL});
@@ -374,7 +373,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
 		async function remove({id}) {
 			const group = await getUserGroup(id);
-			await crowdClient.user.groups.remove(id, mapGroupToRole(group));
+			await crowdClient.user.groups.remove(id, group);
 			const response = await crowdClient.user.remove(id);
 			return response;
 		}
