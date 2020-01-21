@@ -1,8 +1,8 @@
 {
     "descr": "Should fail to create publisher because of invalid syntax",
     "requestUrl": "/publishers",
-    "username": "tasks",
-    "password": "J22omfqCU8ZgCrrKrOOB",
+    "username": "system",
+    "password": "fCjHs1BHYn8yf4mAODOU",
     "collectionName": "PublisherMetadata",
     "method": "post",
     "expectedStatus": 400,

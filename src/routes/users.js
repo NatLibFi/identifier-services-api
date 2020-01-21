@@ -86,11 +86,7 @@ export default function (userProvider) {
 		const doc = {...req.body, id: req.params.id};
 		try {
 			const result = await users.changePwd(userProvider, doc, req.user);
-			if (result === undefined) {
-				res.json(HttpStatus.CREATED);
-			} else {
-				res.json(result);
-			}
+			res.json(result);
 		} catch (err) {
 			next(err);
 		}
