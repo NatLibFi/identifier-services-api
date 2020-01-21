@@ -35,7 +35,7 @@ import fs from 'fs';
 
 import {hasPermission, getTemplate, validateDoc} from '../interfaces/utils';
 import interfaceFactory from '../interfaces/interfaceModules';
-import {mapGroupToRole, mapRoleToGroup} from '../utils';
+import {mapRoleToGroup} from '../utils';
 import {UI_URL, SMTP_URL} from '../config';
 
 const userMetadataInterface = interfaceFactory('userMetadata');
