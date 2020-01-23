@@ -35,7 +35,7 @@ import fs from 'fs';
 
 import {hasPermission, getTemplate, validateDoc} from '../../src/interfaces/utils';
 import interfaceFactory from '../../src/interfaces/interfaceModules';
-import {mapGroupToRole, mapRoleToGroup} from '../../src/utils';
+import {mapRoleToGroup} from '../../src/utils';
 import {UI_URL, SMTP_URL} from '../../src/config';
 
 const userInterface = interfaceFactory('userMetadata');
@@ -218,7 +218,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
 		async function remove({id}) {
 			const group = await getUserGroup(id);
-			await crowdClient.user.groups.remove(id, mapGroupToRole(group));
+			await crowdClient.user.groups.remove(id, group);
 			const response = await crowdClient.user.remove(id);
 			return response;
 		}
