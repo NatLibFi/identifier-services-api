@@ -166,10 +166,6 @@ export default function () {
 					return publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
 				}
 
-				if (result.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
 				return result;
 			}
 
