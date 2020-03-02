@@ -51,8 +51,7 @@ export default function () {
 
 			if (validateDoc(doc, 'PublicationIssnContent')) {
 				if (hasPermission(user, 'publicationIssn', 'createISSN')) {
-					const result = await publicationsIssnInterface.create(db, doc, user);
-					return result;
+					return publicationsIssnInterface.create(db, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -101,8 +100,7 @@ export default function () {
 
 			if (validateDoc(doc, 'PublicationIssnContent')) {
 				if (hasPermission(user, 'publicationIssn', 'updateISSN')) {
-					const result = await publicationsIssnInterface.update(db, id, doc, user);
-					return result;
+					return publicationsIssnInterface.update(db, id, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -123,21 +121,12 @@ export default function () {
 
 	async function queryISSN(db, {queries, offset}, user) {
 		const result = await publicationsIssnInterface.query(db, {queries, offset});
-		if (result.results.length === 0) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
 		if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
 				const queries = [{
 					query: {publisher: user.publisher}
 				}];
-				const response = await publicationsIssnInterface.query(db, {queries, offset});
-				if (response.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
-				return response;
+				return publicationsIssnInterface.query(db, {queries, offset});
 			}
 
 			return result;

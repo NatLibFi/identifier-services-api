@@ -53,8 +53,7 @@ export default function () {
 					doc.publisher = user.id;
 					doc.metadataReference =	{state: 'pending'};
 					doc.associatedRange = 'string';
-					const result = await publicationsIsbnIsmnInterface.create(db, doc, user);
-					return result;
+					return publicationsIsbnIsmnInterface.create(db, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -103,8 +102,7 @@ export default function () {
 
 			if (validateDoc(doc, 'PublicationIsbnIsmnContent')) {
 				if (hasPermission(user, 'publicationIsbnIsmn', 'updateIsbnIsmn')) {
-					const result = await publicationsIsbnIsmnInterface.update(db, id, doc, user);
-					return result;
+					return publicationsIsbnIsmnInterface.update(db, id, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -129,21 +127,12 @@ export default function () {
 
 	async function queryIsbnIsmn(db, {queries, offset}, user) {
 		const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
-		if (result.results.length === 0) {
-			throw new ApiError(HttpStatus.NOT_FOUND);
-		}
-
 		if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
 			if (user.role === 'publisher-admin' || user.role === 'publisher') {
 				const queries = [{
 					query: {publisher: user.publisher}
 				}];
-				const response = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
-				if (response.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
-				return response;
+				return publicationsIsbnIsmnInterface.query(db, {queries, offset});
 			}
 
 			return result;

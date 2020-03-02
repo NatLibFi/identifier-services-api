@@ -56,8 +56,7 @@ export default function () {
 		try {
 			if (validateDoc(doc, 'RangeIsbnContent')) {
 				if (hasPermission(user, 'ranges', 'createIsbn')) {
-					const result = await rangesISBNInterface.create(db, doc, user);
-					return result;
+					return rangesISBNInterface.create(db, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -98,8 +97,7 @@ export default function () {
 
 			if (validate(doc, 'RangeIsbnContent')) {
 				if (hasPermission(user, 'ranges', 'updateIsbn')) {
-					const result = await rangesISBNInterface.update(db, id, doc, user);
-					return result;
+					return rangesISBNInterface.update(db, id, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -117,10 +115,6 @@ export default function () {
 		try {
 			if (hasPermission(user, 'ranges', 'queryIsbn')) {
 				const result = await rangesISBNInterface.query(db, {queries, offset});
-				if (result.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
 				return result;
 			}
 
@@ -136,8 +130,7 @@ export default function () {
 		try {
 			if (validateDoc(doc, 'RangeIsmnContent')) {
 				if (hasPermission(user, 'ranges', 'createIsmn')) {
-					const result = await rangesISMNInterface.create(db, doc, user);
-					return result;
+					return rangesISMNInterface.create(db, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -178,8 +171,7 @@ export default function () {
 
 			if (validateDoc(doc, 'RangeIsmnContent')) {
 				if (hasPermission(user, 'ranges', 'updateIsmn')) {
-					const result = await rangesISMNInterface.update(db, id, doc, user);
-					return result;
+					return rangesISMNInterface.update(db, id, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -196,12 +188,7 @@ export default function () {
 	async function queryIsmn(db, {queries, offset}, user) {
 		try {
 			if (hasPermission(user, 'ranges', 'queryIsmn')) {
-				const result = await rangesISMNInterface.query(db, {queries, offset});
-				if (result.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
-				return result;
+				return rangesISMNInterface.query(db, {queries, offset});
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -258,8 +245,7 @@ export default function () {
 
 			if (validateDoc(doc, 'RangeIsmnContent')) {
 				if (hasPermission(user, 'ranges', 'updateIssn')) {
-					const result = await rangesISSNInterface.update(db, id, doc, user);
-					return result;
+					return rangesISSNInterface.update(db, id, doc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -276,12 +262,7 @@ export default function () {
 	async function queryIssn(db, {queries, offset}, user) {
 		try {
 			if (hasPermission(user, 'ranges', 'queryIssn')) {
-				const result = await rangesISSNInterface.query(db, {queries, offset});
-				if (result.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
-
-				return result;
+				return rangesISSNInterface.query(db, {queries, offset});
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);

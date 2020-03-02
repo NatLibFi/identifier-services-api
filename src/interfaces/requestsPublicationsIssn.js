@@ -52,8 +52,7 @@ export default function () {
 			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
 			if (validateDoc(newDoc, 'PublicationIssnRequestContent')) {
 				if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
-					const result = await publicationsRequestsIssnInterface.create(db, newDoc, user);
-					return result;
+					return publicationsRequestsIssnInterface.create(db, newDoc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -114,8 +113,7 @@ export default function () {
 			const readResult = await readRequestISSN(db, id, user);
 			if (validateDoc(newDoc, 'PublicationIssnRequestContent')) {
 				if (hasPermission(user, 'publicationIssnRequests', 'updateRequestISSN')) {
-					const result = await publicationsRequestsIssnInterface.update(db, id, newDoc, user);
-					return result;
+					return publicationsRequestsIssnInterface.update(db, id, newDoc, user);
 				}
 
 				if (user && readResult.publisher === user.id) {
@@ -137,8 +135,7 @@ export default function () {
 	async function removeRequestISSN(db, id, user) {
 		try {
 			if (hasPermission(user, 'publicationIssnRequests', 'removeRequestISSN')) {
-				const result = await publicationsRequestsIssnInterface.remove(db, id);
-				return result;
+				return publicationsRequestsIssnInterface.remove(db, id);
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -163,16 +160,7 @@ export default function () {
 					const queries = [{
 						query: {publisher: user.publisher}
 					}];
-					const response = await publicationsRequestsIssnInterface.query(db, {queries, offset}, protectedProperties);
-					if (response.results.length === 0) {
-						throw new ApiError(HttpStatus.NOT_FOUND);
-					}
-
-					return response;
-				}
-
-				if (result.results.length === 0) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
+					return publicationsRequestsIssnInterface.query(db, {queries, offset}, protectedProperties);
 				}
 
 				return result;

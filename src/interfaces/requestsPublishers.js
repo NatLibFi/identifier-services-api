@@ -47,8 +47,7 @@ export default function () {
 			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
 			if (validateDoc(newDoc, 'PublisherRequestContent')) {
 				if (hasPermission(user, 'publisherRequests', 'createRequest')) {
-					const result = await publisherRequestsInterface.create(db, newDoc, user);
-					return result;
+					return publisherRequestsInterface.create(db, newDoc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
@@ -65,8 +64,7 @@ export default function () {
 	async function readRequest(db, id, user) {
 		try {
 			if (hasPermission(user, 'publisherRequests', 'readRequest')) {
-				const result = await publisherRequestsInterface.read(db, id);
-				return result;
+				return publisherRequestsInterface.read(db, id);
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -83,8 +81,7 @@ export default function () {
 			newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 
 			if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
-				const result = await publisherRequestsInterface.update(db, id, newDoc, user);
-				return result;
+				return publisherRequestsInterface.update(db, id, newDoc, user);
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);
@@ -97,8 +94,7 @@ export default function () {
 
 	async function removeRequest(db, id, user) {
 		if (hasPermission(user, 'publisherRequests', 'removeRequest')) {
-			const result = await publisherRequestsInterface.remove(db, id, user);
-			return result;
+			return publisherRequestsInterface.remove(db, id, user);
 		}
 
 		throw new ApiError(HttpStatus.FORBIDDEN);
@@ -107,8 +103,7 @@ export default function () {
 	async function queryRequests(db, {queries, offset}, user) {
 		try {
 			if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
-				const result = await publisherRequestsInterface.query(db, {queries, offset});
-				return result;
+				return publisherRequestsInterface.query(db, {queries, offset});
 			}
 
 			throw new ApiError(HttpStatus.FORBIDDEN);

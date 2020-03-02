@@ -33,7 +33,7 @@ describe('app', () => {
 	const generateTestSuite = testSuiteFactory({
 		rootPath: [__dirname, '..', '..', 'test-fixtures']
 	});
-	describe('publishers', () => {
+	describe('templates', () => {
 		describe('#read', generateTestSuite('messageTemplates', 'read'));
 		describe('#create', generateTestSuite('messageTemplates', 'create'));
 		describe('#delete', generateTestSuite('messageTemplates', 'delete'));

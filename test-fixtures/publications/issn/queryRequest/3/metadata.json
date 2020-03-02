@@ -5,7 +5,6 @@
     "username": "publisher-admin",
     "password": "0l1gq69q6nxh",
     "method": "post",
-    "expectedStatus": 404,
-    "payload": "payload.json",
-    "payloadExpected": false
+    "expectedStatus": 200,
+    "payload": "payload.json"
 }
