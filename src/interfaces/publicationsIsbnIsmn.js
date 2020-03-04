@@ -52,7 +52,6 @@ export default function () {
 				if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
 					doc.publisher = user.id;
 					doc.metadataReference =	{state: 'pending'};
-					doc.associatedRange = 'string';
 					return publicationsIsbnIsmnInterface.create(db, doc, user);
 				}
 
