@@ -51,6 +51,7 @@ export default function () {
 
 			if (validateDoc(doc, 'PublicationIssnContent')) {
 				if (hasPermission(user, 'publicationIssn', 'createISSN')) {
+					doc.metadataReference =	{state: 'pending'};
 					return publicationsIssnInterface.create(db, doc, user);
 				}
 
