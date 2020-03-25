@@ -41,6 +41,8 @@ export default function (collectionName) {
 	};
 
 	async function create(db, doc, user) {
+		// Avoid insert if there is duplicate identifier
+		db.collection('Publication_ISSN').createIndex({identifier: 1}, {unique: true});
 		const {insertedId} = await db.collection(collectionName).insertOne({
 			...doc,
 			lastUpdated: {
@@ -72,7 +74,6 @@ export default function (collectionName) {
 
 	async function update(db, id, doc, user) {
 		format(doc);
-
 		return db.collection(collectionName).findOneAndReplace({
 			_id: new ObjectId(id)
 		}, {
@@ -84,7 +85,6 @@ export default function (collectionName) {
 		}, {
 			returnNewDocument: true
 		});
-
 		function format(obj) {
 			return Object.keys(obj)
 				.filter(k => !['lastUpdated', 'user'].includes(k))
