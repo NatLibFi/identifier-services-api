@@ -49,8 +49,9 @@ export default function () {
     try {
       const rangeQueries = {queries: [{query: {active: true}}], offset: null};
       const identifierLists = await rangesISSNInterface.query(db, rangeQueries);
+      const index = 0;
       const {results} = identifierLists;
-      const activeRange = results[0];
+      const activeRange = results[index];
       const queries = [
         {
           query: {associatedRange: activeRange.id}
@@ -113,7 +114,7 @@ export default function () {
     }
   }
 
-  async function updateISSN(db, id, doc, user) {
+  function updateISSN(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);

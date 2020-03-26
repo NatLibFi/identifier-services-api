@@ -338,7 +338,6 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
   let result;// eslint-disable-line functional/no-let
   passportLocalList.forEach(async passport => {
     if (passportArray.includes(request.id)) {
-      console.log(request);
       if (passport.id === request.id) { // eslint-disable-line functional/no-conditional-statement
         result = await setPayloadTokenNLink();
         return result;
@@ -346,7 +345,7 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
       throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
-    async function setPayloadTokenNLink() {
+    function setPayloadTokenNLink() {
       const payload = jose.JWT.sign(request, key, {
         expiresIn: '24 hours',
         iat: true
@@ -369,9 +368,7 @@ export async function getTemplate(query, cache) {
   if (key in cache) {
     return cache[key];
   }
-
-  cache[key] = await localClient.templates.getTemplate(query);
-  return cache[key];
+  return {...cache, [key]: await localClient.templates.getTemplate(query)};
 }
 
 export function validateDoc(doc, collectionContent) {

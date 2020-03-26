@@ -42,7 +42,7 @@ export default function () {
     queryRequests
   };
 
-  async function createRequest(db, doc, user) {
+  function createRequest(db, doc, user) {
     try {
       const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
       if (validateDoc(newDoc, 'PublisherRequestContent')) {
@@ -63,7 +63,9 @@ export default function () {
     try {
       if (hasPermission(user, 'publisherRequests', 'readRequest')) {
         const result = await publisherRequestsInterface.read(db, id);
-        return result;
+        if (result) {
+          return result;
+        }
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -74,7 +76,7 @@ export default function () {
     }
   }
 
-  async function updateRequest(db, id, doc, user) {
+  function updateRequest(db, id, doc, user) {
     try {
       const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 
@@ -90,7 +92,7 @@ export default function () {
     }
   }
 
-  async function removeRequest(db, id, user) {
+  function removeRequest(db, id, user) {
     if (hasPermission(user, 'publisherRequests', 'removeRequest')) {
       return publisherRequestsInterface.remove(db, id, user);
     }
@@ -98,7 +100,7 @@ export default function () {
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
-  async function queryRequests(db, {queries, offset}, user) {
+  function queryRequests(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
         return publisherRequestsInterface.query(db, {queries, offset});

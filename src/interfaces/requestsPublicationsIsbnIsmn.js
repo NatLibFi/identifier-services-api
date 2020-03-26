@@ -44,7 +44,7 @@ export default function () {
     queryRequestIsbnIsmn
   };
 
-  async function createRequestIsbnIsmn(db, doc, user) {
+  function createRequestIsbnIsmn(db, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -118,7 +118,7 @@ export default function () {
         }
 
         if (user && readResult.publisher === user.id) {
-          const result = await publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
+          const result = publicationsRequestsIsbnIsmnInterface.update(db, id, newDoc, user);
           return filterResult(result);
         }
 
@@ -133,7 +133,7 @@ export default function () {
     }
   }
 
-  async function removeRequestIsbnIsmn(db, id, user) {
+  function removeRequestIsbnIsmn(db, id, user) {
     try {
       if (hasPermission(user, 'publicationIsbnIsmnRequests', 'removeRequestIsbnIsmn')) {
         return publicationsRequestsIsbnIsmnInterface.remove(db, id);

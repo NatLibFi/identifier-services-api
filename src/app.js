@@ -89,20 +89,17 @@ export default async function run() {
   });
 
   const corsOptions = {
-    origin: (origin, callback) => {
-      if (origin === undefined) {
-        callback(null, true);
-      } else {
-        const originIsWhitelisted = whiteList.indexOf(origin) !== -1;
-        if (!originIsWhitelisted) {
-          Logger.log('info', `Request from origin ${origin} is not whitelisted.`);
-        }
-
-        callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
-      }
-    },
+    origin: (origin, callback) => origin === undefined ? callback(null, true) : whiteListCB(origin, callback),
     credentials: true
   };
+
+  function whiteListCB(origin, callback) {
+    const originIsWhitelisted = whiteList.indexOf(origin) !== -1;
+    if (!originIsWhitelisted) {
+      return Logger.log('info', `Request from origin ${origin} is not whitelisted.`);
+    }
+    callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+  }
 
   app.enable('trust proxy', ENABLE_PROXY);
   app.use(createExpressLogger({
@@ -137,11 +134,12 @@ export default async function run() {
       if (response === null) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.NOT_FOUND);
       }
-
-      req.user = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
-      next();
+      const role = mapGroupToRole(req.user.groups);
+      // eslint-disable-next-line require-atomic-updates
+      req.user = {...req.user, role, ...response}; // eslint-disable-line functional/immutable-data
+      return next();
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 

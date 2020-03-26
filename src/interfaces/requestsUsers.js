@@ -37,7 +37,7 @@ export default function () {
     queryRequest
   };
 
-  async function createRequest(userProvider, doc, user) {
+  function createRequest(userProvider, doc, user) {
     try {
       return userProvider.createRequest(doc, user);
     } catch (err) {
@@ -45,7 +45,7 @@ export default function () {
     }
   }
 
-  async function readRequest(userProvider, id, user) {
+  function readRequest(userProvider, id, user) {
     try {
       return userProvider.readRequest(id, user);
     } catch (err) {
@@ -53,7 +53,7 @@ export default function () {
     }
   }
 
-  async function updateRequest(userProvider, id, doc, user) {
+  function updateRequest(userProvider, id, doc, user) {
     try {
       return userProvider.updateRequest(id, doc, user);
     } catch (err) {
@@ -61,7 +61,7 @@ export default function () {
     }
   }
 
-  async function removeRequest(userProvider, id, user) {
+  function removeRequest(userProvider, id, user) {
     try {
       return userProvider.removeRequest(id, user);
     } catch (err) {
@@ -69,7 +69,7 @@ export default function () {
     }
   }
 
-  async function queryRequest(userProvider, doc, user) {
+  function queryRequest(userProvider, doc, user) {
     try {
       return userProvider.queryRequest(doc, user);
     } catch (err) {

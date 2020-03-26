@@ -46,7 +46,7 @@ export default function (db) {
       const result = await publications.createISSN(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -56,7 +56,7 @@ export default function (db) {
       const result = await publications.readISSN(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -66,7 +66,7 @@ export default function (db) {
       const result = await publications.updateISSN(db, id, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -83,6 +83,7 @@ export default function (db) {
 
   async function query(req, res, next) {
     try {
+      console.log('------------')
       if (Object.keys(req.body).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
@@ -90,7 +91,7 @@ export default function (db) {
       const result = await publications.queryISSN(db, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 }

@@ -47,7 +47,6 @@ export default function (db, passportMiddlewares, combineUserInfo) {
     if ('authorization' in req.headers) {
       return passportMiddlewares.token(req, res, next);
     }
-
     next();
   }
 
@@ -56,7 +55,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
       const result = await publications.createIsbnIsmn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -66,7 +65,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
       const result = await publications.readIsbnIsmn(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -76,7 +75,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
       const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
       res.json(result).status(HttpStatus.OK);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -99,7 +98,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
       const result = await publications.queryIsbnIsmn(db, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 }

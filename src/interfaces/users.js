@@ -38,7 +38,7 @@ export default function () {
     query
   };
 
-  async function create(userProvider, doc, user) {
+  function create(userProvider, doc, user) {
     try {
       return userProvider.create(doc, user);
     } catch (err) {
@@ -46,7 +46,7 @@ export default function () {
     }
   }
 
-  async function read(userProvider, id, user) {
+  function read(userProvider, id, user) {
     try {
       return userProvider.read(id, user);
     } catch (err) {
@@ -54,7 +54,7 @@ export default function () {
     }
   }
 
-  async function update(userProvider, id, doc, user) {
+  function update(userProvider, id, doc, user) {
     try {
       return userProvider.update(id, doc, user);
     } catch (err) {
@@ -62,7 +62,7 @@ export default function () {
     }
   }
 
-  async function remove(userProvider, id, user) {
+  function remove(userProvider, id, user) {
     try {
       return userProvider.remove(id, user);
     } catch (err) {
@@ -70,7 +70,7 @@ export default function () {
     }
   }
 
-  async function changePwd(userProvider, doc, user) {
+  function changePwd(userProvider, doc, user) {
     try {
       return userProvider.changePwd(doc, user); // Changes made during unit test if problem persist `await` instead of `return`
     } catch (err) {
@@ -78,7 +78,7 @@ export default function () {
     }
   }
 
-  async function query(userProvider, doc, user) {
+  function query(userProvider, doc, user) {
     try {
       return userProvider.query(doc, user);
     } catch (err) {

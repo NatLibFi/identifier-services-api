@@ -42,7 +42,7 @@ export default function () {
     queryIsbnIsmn
   };
 
-  async function createIsbnIsmn(db, doc, user) {
+  function createIsbnIsmn(db, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -98,7 +98,7 @@ export default function () {
     }
   }
 
-  async function updateIsbnIsmn(db, id, doc, user) {
+  function updateIsbnIsmn(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);

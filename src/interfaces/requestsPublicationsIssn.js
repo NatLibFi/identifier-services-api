@@ -43,7 +43,7 @@ export default function () {
     queryRequestISSN
   };
 
-  async function createRequestISSN(db, doc, user) {
+  function createRequestISSN(db, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -115,7 +115,7 @@ export default function () {
         }
 
         if (user && readResult.publisher === user.id) {
-          const result = await publicationsRequestsIssnInterface.update(db, id, newDoc, user);
+          const result = publicationsRequestsIssnInterface.update(db, id, newDoc, user);
           return filterResult(result);
         }
 
@@ -130,7 +130,7 @@ export default function () {
     }
   }
 
-  async function removeRequestISSN(db, id, user) {
+  function removeRequestISSN(db, id, user) {
     try {
       if (hasPermission(user, 'publicationIssnRequests', 'removeRequestISSN')) {
         return publicationsRequestsIssnInterface.remove(db, id);

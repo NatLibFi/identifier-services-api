@@ -52,7 +52,7 @@ export default function () {
     queryIssn
   };
 
-  async function createIsbn(db, doc, user) {
+  function createIsbn(db, doc, user) {
     try {
       if (validateDoc(doc, 'RangeIsbnContent')) {
         if (hasPermission(user, 'ranges', 'createIsbn')) {
@@ -89,7 +89,7 @@ export default function () {
     }
   }
 
-  async function updateIsbn(db, id, doc, user) {
+  function updateIsbn(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -111,11 +111,10 @@ export default function () {
     }
   }
 
-  async function queryIsbn(db, {queries, offset}, user) {
+  function queryIsbn(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIsbn')) {
-        const result = await rangesISBNInterface.query(db, {queries, offset});
-        return result;
+        return rangesISBNInterface.query(db, {queries, offset});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -126,7 +125,7 @@ export default function () {
     }
   }
 
-  async function createIsmn(db, doc, user) {
+  function createIsmn(db, doc, user) {
     try {
       if (validateDoc(doc, 'RangeIsmnContent')) {
         if (hasPermission(user, 'ranges', 'createIsmn')) {
@@ -163,7 +162,7 @@ export default function () {
     }
   }
 
-  async function updateIsmn(db, id, doc, user) {
+  function updateIsmn(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -185,7 +184,7 @@ export default function () {
     }
   }
 
-  async function queryIsmn(db, {queries, offset}, user) {
+  function queryIsmn(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIsmn')) {
         return rangesISMNInterface.query(db, {queries, offset});
@@ -237,7 +236,7 @@ export default function () {
     }
   }
 
-  async function updateIssn(db, id, doc, user) {
+  function updateIssn(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -259,7 +258,7 @@ export default function () {
     }
   }
 
-  async function queryIssn(db, {queries, offset}, user) {
+  function queryIssn(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
         return rangesISSNInterface.query(db, {queries, offset});

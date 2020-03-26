@@ -47,7 +47,7 @@ export default function (db) {
       const result = await publications.createRequestIsbnIsmn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -57,7 +57,7 @@ export default function (db) {
       const result = await publications.readRequestIsbnIsmn(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -67,7 +67,7 @@ export default function (db) {
       const result = await publications.removeRequestIsbnIsmn(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -77,7 +77,7 @@ export default function (db) {
       const result = await publications.updateRequestIsbnIsmn(db, id, req.body, req.user);
       res.json(result).status(HttpStatus.OK);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -90,7 +90,7 @@ export default function (db) {
       const result = await publications.queryRequestIsbnIsmn(db, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 }

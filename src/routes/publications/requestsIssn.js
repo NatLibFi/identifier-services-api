@@ -47,7 +47,7 @@ export default function (db) {
       const result = await publications.createRequestISSN(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -57,7 +57,7 @@ export default function (db) {
       const result = await publications.readRequestISSN(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -67,7 +67,7 @@ export default function (db) {
       const result = await publications.removeRequestISSN(db, id, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -77,7 +77,7 @@ export default function (db) {
       const result = await publications.updateRequestISSN(db, id, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -90,7 +90,7 @@ export default function (db) {
       const result = await publications.queryRequestISSN(db, req.body, req.user);
       res.json(result);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 }

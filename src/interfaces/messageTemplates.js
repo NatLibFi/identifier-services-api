@@ -81,13 +81,13 @@ export default function () {
     }
   }
 
-  async function update(db, id, doc, user) {
+  function update(db, id, doc, user) {
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       } else if (validateDoc(doc, 'MessageTemplateContent')) {
         if (hasPermission(user, 'messageTemplates', 'update')) {
-          return await templateInterface.update(db, id, doc, user);
+          return templateInterface.update(db, id, doc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);

@@ -51,26 +51,22 @@ export default function (collectionName) {
     return insertedId.toString();
   }
 
-  async function read(db, id, protectedProperties) {
-    let doc;
+  function read(db, id, protectedProperties) {
     if (collectionName === 'userMetadata') {
-      doc = await db.collection(collectionName).findOne({
+      return db.collection(collectionName).findOne({
         id
       }, {
         projection: protectedProperties
       });
-    } else {
-      doc = await db.collection(collectionName).findOne({
-        _id: new ObjectId(id)
-      }, {
-        projection: protectedProperties
-      });
     }
-
-    return doc;
+    return db.collection(collectionName).findOne({
+      _id: new ObjectId(id)
+    }, {
+      projection: protectedProperties
+    });
   }
 
-  async function update(db, id, doc, user) {
+  function update(db, id, doc, user) {
     format(doc);
 
     return db.collection(collectionName).findOneAndReplace({
@@ -95,7 +91,7 @@ export default function (collectionName) {
     }
   }
 
-  async function remove(db, id) {
+  function remove(db, id) {
     const query = ObjectId.isValid(id) ? {_id: new ObjectId(id)} : {id};
     return db.collection(collectionName).findOneAndDelete(query);
   }
@@ -137,27 +133,28 @@ export default function (collectionName) {
       const queryDocCount = await cursor.count();
       return new Promise(resolve => {
         cursor.on('data', processData);
-        cursor.on('end', () => {
-          if (results.length > 0) {
-            resolve({
-              results,
-              offset: results.slice(-1).shift().mongoId ? results.slice(-1).shift().mongoId : results.slice(-1).shift().id,
-              totalDoc,
-              queryDocCount
-            });
-          } else {
-            resolve({results});
-          }
-        });
+        cursor.on('end', () => results.length > 0
+          ? resolve({results,
+            offset: results.slice(-1).shift().mongoId ? results.slice(-1).shift().mongoId : results.slice(-1).shift().id,
+            totalDoc,
+            queryDocCount})
+          : resolve({results}));
         function processData(doc) {
           if (collectionName === 'userMetadata') {
-            doc.mongoId = doc._id.toString();
-            delete doc._id;
-            results.push(doc);
-          } else {
-            doc.id = doc._id.toString();
-            delete doc._id;
-            results.push(doc);
+            const filteredDoc = {...filterDoc(doc), mongoId: doc._id.toString()};
+            results.push(filteredDoc); // eslint-disable-line functional/immutable-data
+            return;
+          }
+          const filteredDoc = {...filterDoc(doc), id: doc._id.toString()};
+          results.push(filteredDoc); // eslint-disable-line functional/immutable-data
+
+          function filterDoc(doc) {
+            return Object.entries(doc)
+              .filter(([key]) => key === '_id' === false)
+              .reduce((acc, [
+                key,
+                value
+              ]) => ({...acc, [key]: value}), {});
           }
         }
       });
@@ -167,16 +164,15 @@ export default function (collectionName) {
       if (Object.keys(query).length === 0) {
         return query;
       }
-
       return Object.keys(query).reduce((acc, key) => {
         if (key === '$or') {
-          const propertyQueries = query[key].map(o => {
-            const [
-              key,
-              value
-            ] = Object.entries(o).shift();
-            return convert(key, value);
-          });
+          const propertyQueries = query[key].map(o => Object.entries(o).reduce((accum, [
+            key,
+            value
+          ]) => {
+            const result = convert(key, value);
+            return {...accum, ...result};
+          }, {}));
           return {
             ...acc,
             $or: propertyQueries
@@ -197,12 +193,10 @@ export default function (collectionName) {
                 }
               };
             }
-
-            const [
+            return Object.entries(value).reduce((accum, [
               key1,
               value1
-            ] = Object.entries(value).shift();
-            return {[`${key}.${key1}`]: value1};
+            ]) => ({...accum, [`${key}.${key1}`]: value1}), {});
             // Doesnot support at this moment
             // Return {
             // [key]: Object.entries(value).reduce((acc, [subKey, subValue]) => {
@@ -219,15 +213,13 @@ export default function (collectionName) {
           };
 
           function getComparisonOperator(value) {
-            switch (typeof value) {
-            case 'string':
+            if (typeof value === 'string') {
               return {$regex: value, $options: 'i'};
-            case 'boolean':
-            case 'number':
-              return value;
-            default:
-              throw new Array('Invalid query');
             }
+            if (typeof value === 'boolean' || typeof value === 'number') {
+              return value;
+            }
+            throw new Array('Invalid query');
           }
         }
       }, {});

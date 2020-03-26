@@ -41,7 +41,7 @@ export default function () {
     query
   };
 
-  async function create(db, doc, user) {
+  function create(db, doc, user) {
     try {
       if (validateDoc(doc, 'PublisherContent')) {
         if (hasPermission(user, 'publishers', 'create')) {
@@ -59,15 +59,9 @@ export default function () {
 
   async function read(db, id, user) {
     let protectedProperties; // eslint-disable-line functional/no-let
-    if (user === undefined) { // eslint-disable-line functional/no-conditional-statement
-      protectedProperties = {
-        publicationDetails: 0,
-        language: 0,
-        metadataDelivery: 0,
-        primaryContact: 0,
-        activity: 0
-      };
-    }
+    protectedProperties = user === undefined
+      ? {publicationDetails: 0, language: 0, metadataDelivery: 0, primaryContact: 0, activity: 0}
+      : protectedProperties;
 
     const result = await publisherInterface.read(db, id, protectedProperties);
     if (user === undefined && result.postalAddress.public === true) {
@@ -75,28 +69,29 @@ export default function () {
     }
 
     if (user === undefined && result.postalAddress.public === false) {
-      const {postalAddress, ...rest} = result;
-      return rest;
+      const filteredResult = filterResult(result);
+      return filteredResult;
     }
-
-    if (user.role === 'publisher-admin') { // eslint-disable-line functional/no-conditional-statement
-      protectedProperties = {
-        publicationDetails: 0,
-        metadataDelivery: 0,
-        activity: 0
-      };
-    }
+    protectedProperties = user.role === 'publisher-admin'
+      ? {publicationDetails: 0, metadataDelivery: 0, activity: 0}
+      : protectedProperties;
 
     return result;
+    function filterResult(result) {
+      return Object.entries(result)
+        .filter(([key]) => key === 'postalAddress' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
+    }
   }
 
-  async function update(db, id, doc, user) {
-    const result = await publisherInterface.update(db, id, doc, user);
-    return result;
+  function update(db, id, doc, user) {
+    return publisherInterface.update(db, id, doc, user);
   }
 
-  async function query(db, {queries, offset}) {
-    const result = await publisherInterface.query(db, {queries, offset});
-    return result;
+  function query(db, {queries, offset}) {
+    return publisherInterface.query(db, {queries, offset});
   }
 }

@@ -90,7 +90,6 @@ export default ({rootPath}) => {
 
             const app = await startApp();
             requester = chai.request(app).keepOpen();
-
             await mongoFixtures.populate([
               sub,
               'dbContents.json'
@@ -211,9 +210,16 @@ export default ({rootPath}) => {
     }
 
     function formatDump(dump, collectionName) {
-      dump[collectionName].forEach(doc => Object.values(doc).forEach(field => Object.keys(field).filter(item => item === 'timestamp' || item === 'user')
-        .forEach(i => delete doc.lastUpdated[i])));
-      return dump;
+      const result = dump[collectionName].map(doc => filterDoc(doc));
+      return {...dump, [collectionName]: result};
+
+      function filterDoc(doc) {
+        return Object.entries(doc)
+          .reduce((acc, [
+            k,
+            value
+          ]) => k === 'lastUpdated' ? {...acc, [k]: {}} : {...acc, [k]: value}, {});
+      }
     }
   };
 };

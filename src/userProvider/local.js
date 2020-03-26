@@ -53,50 +53,46 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
   };
 
   async function create(doc, user) {
-    let isUserExit;
+    let isUserExit;// eslint-disable-line functional/no-let
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     } else {
       if (doc.email) {
-        doc.id = doc.email;
-        validateDoc(doc, 'UserContent');
+        const newDoc = {...doc, id: doc.email};
+        validateDoc(newDoc, 'UserContent');
         if (hasPermission(user, 'users', 'create')) {
           try {
             const {localUser} = local();
-            await localUser.create({PASSPORT_LOCAL_USERS, doc});
+            await localUser.create({PASSPORT_LOCAL_USERS, doc: newDoc});
           } catch (err) {
             throw new ApiError(err.status);
           }
-
-          const {role, givenName, userId, familyName, email, ...rest} = {...doc};
-          const result = await userMetadataInterface.create(db, rest, user);
-          return result;
+          const filteredDoc = filterDoc(newDoc);
+          return userMetadataInterface.create(db, filteredDoc, user);
         }
-
         throw new ApiError(HttpStatus.FORBIDDEN);
       }
 
       if (doc.userId && !doc.email) {
         const {localUser} = local();
         const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS});
-
         if (allLocalUsers.some(item => item.id === doc.userId)) {
           const newLocalUsers = allLocalUsers.map(item => {
             if (!checkRoleInGroup(item.groups)) {
-              item.groups.push(mapRoleToGroup(doc.role));
+              return item.groups.concat(mapRoleToGroup(doc.role));
             }
-
             return item;
           });
 
           fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(newLocalUsers, null, 4), 'utf-8');
           isUserExit = true;
+          return;
         }
       }
 
       if (isUserExit) {
-        doc.id = doc.userId;
-        const {role, givenName, familyName, userId, email, ...rest} = {...doc};
+        const newDoc = {...doc, id: doc.userId};
+        const filteredDoc = filterDoc(newDoc);
         const queries = [
           {
             query: {id: doc.id}
@@ -105,60 +101,82 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
         const response = await userMetadataInterface.query(db, {queries});
         if (response.results[0].id === doc.id) { // eslint-disable-line functional/no-conditional-statement
           throw new ApiError(HttpStatus.CONFLICT);
-        } else {
-          const result = await userMetadataInterface.create(db, rest, user);
-          return result;
         }
+        return userMetadataInterface.create(db, filteredDoc, user);
       }
-
       if (!doc.userId && !doc.email) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-
       throw new ApiError(HttpStatus.NOT_FOUND);
+    }
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === 'role' === false)
+        .filter(([key]) => key === 'givenName' === false)
+        .filter(([key]) => key === 'familyName' === false)
+        .filter(([key]) => key === 'userId' === false)
+        .filter(([key]) => key === 'email' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
   }
 
   async function read(id, user) {
     const response = await userMetadataInterface.read(db, id);
-    let result;
     const {localUser} = local();
-    result = await localUser.read({PASSPORT_LOCAL_USERS, value: response.userId ? response.userId : response.id}); // Delete id later
-    result = {...result, role: mapGroupToRole(result.groups)};
+    const result = await localUser.read({PASSPORT_LOCAL_USERS, value: response.userId ? response.userId : response.id}); // Delete id later
+    const newResult = {...result, role: mapGroupToRole(result.groups)};
 
     if (hasPermission(user, 'users', 'read')) {
       // Need to filter user information after combining and before returning to clientSide
-      delete result.password;
+      const filteredDoc = filterDoc(newResult);
       if (user.role === 'publisher-admin') {
-        if (user.id === result.publisher || user.id === result.id) {
-          return {...response, ...result};
+        if (user.id === filteredDoc.publisher || user.id === filteredDoc.id) {
+          return {...response, ...filteredDoc};
         }
-
         throw new ApiError(HttpStatus.UNAUTHORIZED);
       }
-
-      return {...response, ...result};
+      return {...response, ...filteredDoc};
     }
-
     throw new ApiError(HttpStatus.FORBIDDEN);
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === 'password' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
+    }
   }
 
-  async function update(id, doc, user) {
+  function update(id, doc, user) {
     validateDoc(doc, 'UserContent');
     if (hasPermission(user, 'users', update)) {
       try {
         const {localUser} = local();
-        await localUser.update({PASSPORT_LOCAL_USERS, doc});
+        localUser.update({PASSPORT_LOCAL_USERS, doc});
       } catch (err) {
         throw new ApiError(err.status);
       }
-
-      const {role, givenName, userId, familyName, email, ...rest} = {...doc};
-      const result = await userMetadataInterface.update(db, id, rest, user);
-      return result;
+      const filteredDoc = filterDoc(doc);
+      return userMetadataInterface.update(db, id, filteredDoc, user);
     }
-
     throw new ApiError(HttpStatus.FORBIDDEN);
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === 'role' === false)
+        .filter(([key]) => key === 'givenName' === false)
+        .filter(([key]) => key === 'familyName' === false)
+        .filter(([key]) => key === '_id' === false)
+        .filter(([key]) => key === 'userId' === false)
+        .filter(([key]) => key === 'email' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
+    }
   }
 
   async function remove(id, user) {
@@ -169,11 +187,9 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
       } else {
         const {localUser} = local();
         await localUser.remove({PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
-        const result = await userMetadataInterface.remove(db, id);
-        return result;
+        return userMetadataInterface.remove(db, id);
       }
     }
-
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
@@ -181,81 +197,75 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
     if (doc.newPassword) {
       if (hasPermission(user, 'users', 'changePwd')) {
         const {localUser} = local();
-        await localUser.update({PASSPORT_LOCAL_USERS, user: doc});
-      } else {
-        throw new ApiError(HttpStatus.FORBIDDEN);
+        return localUser.update({PASSPORT_LOCAL_USERS, user: doc});
       }
-    } else {
-      const {localUser} = local();
-      const response = await localUser.read({PASSPORT_LOCAL_USERS, value: doc.id});
-      const email = response.emails[0].value;
-      const result = await createLinkAndSendEmail({request: {...doc, email}, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS});
-      if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
-      }
-
-      return result;
-    }
-  }
-
-  async function query(doc, user) {
-    if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
-      throw new ApiError(HttpStatus.BAD_REQUEST);
-    } else {
-      const {queries, offset} = doc;
-      if (hasPermission(user, 'users', 'query')) {
-        if (user.role === 'publisher-admin') {
-          const queries = [
-            {
-              query: {publisher: user.publisher}
-            }
-          ];
-          return userMetadataInterface.query(db, {queries, offset});
-        }
-
-        return userMetadataInterface.query(db, {queries, offset});
-      }
-
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
+    const {localUser} = local();
+    const response = await localUser.read({PASSPORT_LOCAL_USERS, value: doc.id});
+    const email = response.emails[0].value;
+    const result = await createLinkAndSendEmail({request: {...doc, email}, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS});
+    if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    }
+
+    return result;
+  }
+
+  function query(doc, user) {
+    if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+    const {queries, offset} = doc;
+    if (hasPermission(user, 'users', 'query')) {
+      if (user.role === 'publisher-admin') {
+        const queries = [
+          {
+            query: {publisher: user.publisher}
+          }
+        ];
+        return userMetadataInterface.query(db, {queries, offset});
+      }
+      return userMetadataInterface.query(db, {queries, offset});
+    }
+    throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
   async function createRequest(doc, user) {
-    let isUserExist;
+    let isUserExist;// eslint-disable-line functional/no-let
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
-    } else {
-      if (doc.userId && !doc.email) {
-        const {localUser} = local();
-        const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS});
-        isUserExist = allLocalUsers.some(item => item.id === doc.userId);
+    }
+    if (doc.userId && !doc.email) {
+      const {localUser} = local();
+      const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS});
+      isUserExist = allLocalUsers.some(item => item.id === doc.userId);
 
-        if (isUserExist) {
-          const response = await checkDuplication(usersRequestInterface);
-          if (response.results.length > 0 && doc.userId === response.results[0].userId) { // eslint-disable-line functional/no-conditional-statement
-            throw new ApiError(HttpStatus.CONFLICT);
-          } else {
-            return formatUserAndCreate();
-          }
+      if (isUserExist) {
+        const response = await checkDuplication(usersRequestInterface);
+        if (response.results.length > 0 && doc.userId === response.results[0].userId) { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(HttpStatus.CONFLICT);
         }
-
-        throw new ApiError(HttpStatus.NOT_FOUND);
-      }
-
-      if (doc.email) {
-        const {localUser} = local();
-        const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS});
-        isUserExist = allLocalUsers.some(item => item.id === doc.email);
-      }
-
-      const response = await checkDuplication(usersRequestInterface);
-
-      if (isUserExist || response.results.length > 0 && doc.email === response.results[0].id) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.CONFLICT);
-      } else {
         return formatUserAndCreate();
       }
+
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
+
+    if (doc.email) { // eslint-disable-line functional/no-conditional-statement
+      const {localUser} = local();
+      const allLocalUsers = await localUser.query({PASSPORT_LOCAL_USERS});
+      isUserExist = allLocalUsers.some(item => item.id === doc.email);
+    }
+
+    const response = await checkDuplication(usersRequestInterface);
+    const checkUser = response.results.length > 0 && doc.email === response.results[0].id;
+    if (isUserExist || checkUser) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.CONFLICT);
+    } else {
+      return formatUserAndCreate();
+    }
+
 
     async function checkDuplication(interfaceName) {
       const queries = [
@@ -270,7 +280,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
       return response;
     }
 
-    async function formatUserAndCreate() {
+    function formatUserAndCreate() {
       if (hasPermission(user, 'userRequests', 'createRequest')) {
         const newDoc = {
           ...doc,
@@ -285,8 +295,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
           publisher: user.publisher
         };
         validateDoc(newDoc, 'UserRequestContent');
-        const result = await usersRequestInterface.create(db, newDoc, user);
-        return result;
+        return usersRequestInterface.create(db, newDoc, user);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -311,19 +320,27 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
-  async function updateRequest(id, doc, user) {
+  function updateRequest(id, doc, user) {
     const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
     if (newDoc.initialRequest) { // eslint-disable-line functional/no-conditional-statement
-      delete newDoc.initialRequest;
-      validateDoc(newDoc, 'UserRequestContent');
+      const filteredDoc = filterDoc(newDoc);
+      validateDoc(filteredDoc, 'UserRequestContent');
+      if (hasPermission(user, 'userRequests', 'updateRequest')) {
+        return usersRequestInterface.update(db, id, filteredDoc, user);
+      }
     }
-
     if (hasPermission(user, 'userRequests', 'updateRequest')) {
-      const result = await usersRequestInterface.update(db, id, newDoc, user);
-      return result;
+      return usersRequestInterface.update(db, id, newDoc, user);
     }
-
     throw new ApiError(HttpStatus.FORBIDDEN);
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === 'initialRequest' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
+    }
   }
 
   async function removeRequest(id, user) {
@@ -356,10 +373,8 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
           const response = await usersRequestInterface.query(db, {queries, offset}, protectedProperties);
           return response;
         }
-
         return result;
       }
-
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
   }
@@ -394,7 +409,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
         throw new ApiError(HttpStatus.CONFLICT);
       }
 
-      data.push(newData);
+      data.concat(newData);
       fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(data, null, 4), 'utf-8');
       return null;
       function containsObject(obj, list) {
@@ -405,7 +420,8 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
     function read({PASSPORT_LOCAL_USERS, value}) {
       const res = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
       const data = JSON.parse(res);
-      const user = data.filter(item => item.id === value)[0];
+      const index = 0;
+      const user = data.filter(item => item.id === value)[index];
       return user;
     }
 
@@ -417,7 +433,6 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
         if (newPassword && passport.id === id) {
           return {...passport, password: newPassword};
         }
-
         return passport;
       });
 
