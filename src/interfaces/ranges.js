@@ -57,6 +57,25 @@ export default function () {
 		try {
 			if (validateDoc(doc, 'RangeIsbnContent')) {
 				if (hasPermission(user, 'ranges', 'createIsbn')) {
+					const queries = [{
+						query: {}
+					}];
+					const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
+					const ranges = rangeIsbnLlist.results.map(item => {
+						return {
+							rangeStart: item.rangeStart,
+							rangeEnd: item.rangeEnd
+						};
+					});
+					const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
+					// Check whether entered range exist in existing ranges
+					const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
+					const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
+					// Cehck if the entered range conflict with existing ranges
+					if (checkArray.some(item => item === true)) {
+						throw new ApiError(HttpStatus.CONFLICT);
+					}
+
 					return rangesISBNInterface.create(db, doc, user);
 				}
 
@@ -131,6 +150,25 @@ export default function () {
 		try {
 			if (validateDoc(doc, 'RangeIsmnContent')) {
 				if (hasPermission(user, 'ranges', 'createIsmn')) {
+					const queries = [{
+						query: {}
+					}];
+					const rangeIsmnLlist = await rangesISMNInterface.query(db, {queries});
+					const ranges = rangeIsmnLlist.results.map(item => {
+						return {
+							rangeStart: item.rangeStart,
+							rangeEnd: item.rangeEnd
+						};
+					});
+					const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
+					// Check whether entered range exist in existing ranges
+					const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
+					const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
+					// Cehck if the entered range conflict with existing ranges
+					if (checkArray.some(item => item === true)) {
+						throw new ApiError(HttpStatus.CONFLICT);
+					}
+
 					return rangesISMNInterface.create(db, doc, user);
 				}
 

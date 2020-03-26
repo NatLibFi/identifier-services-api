@@ -3677,10 +3677,7 @@
               "language": {
                 "type": "string"
               }
-            },
-            "required": [
-              "language"
-            ]
+            }
           }
         ]
       },
