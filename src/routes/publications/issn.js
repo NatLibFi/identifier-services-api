@@ -83,7 +83,6 @@ export default function (db) {
 
   async function query(req, res, next) {
     try {
-      console.log('------------')
       if (Object.keys(req.body).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
