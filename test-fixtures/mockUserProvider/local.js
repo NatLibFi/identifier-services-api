@@ -195,12 +195,12 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
   async function remove(id, user) {
     if (hasPermission(user, 'users', 'remove')) {
       const response = await userMetadataInterface.read(db, id);
-      if (response === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (response) {
+        const {localUser} = local();
+        localUser.remove({PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
+        return userMetadataInterface.remove(db, id);
       }
-      const {localUser} = local();
-      localUser.remove({PASSPORT_LOCAL_USERS, id: response.userId ? response.userId : response.id});
-      return userMetadataInterface.remove(db, id);
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
     throw new ApiError(HttpStatus.FORBIDDEN);

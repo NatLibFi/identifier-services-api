@@ -66,11 +66,11 @@ export default function () {
     try {
       if (hasPermission(user, 'messageTemplates', 'read')) {
         const result = await templateInterface.read(db, id);
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
         }
 
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

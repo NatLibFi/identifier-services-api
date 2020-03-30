@@ -135,8 +135,7 @@ export default async function run() {
         throw new ApiError(HttpStatus.NOT_FOUND);
       }
       const role = mapGroupToRole(req.user.groups);
-      // eslint-disable-next-line require-atomic-updates
-      req.user = {...req.user, role, ...response}; // eslint-disable-line functional/immutable-data
+      req.user = {...req.user, role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
       return next();
     } catch (err) {
       return next(err);

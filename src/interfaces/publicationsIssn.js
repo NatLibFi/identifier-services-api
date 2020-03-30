@@ -91,19 +91,18 @@ export default function () {
     try {
       const result = await publicationsIssnInterface.read(db, id);
       if (hasPermission(user, 'publicationIssn', 'readISSN')) {
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
-        }
+        if (result) {
+          if (user.role === 'publisher-admin') {
+            if (user.publisher === result.publisher) {
+              return result;
+            }
 
-        if (user.role === 'publisher-admin') {
-          if (user.publisher === result.publisher) {
-            return result;
+            throw new ApiError(HttpStatus.FORBIDDEN);
           }
 
-          throw new ApiError(HttpStatus.FORBIDDEN);
+          return result;
         }
-
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

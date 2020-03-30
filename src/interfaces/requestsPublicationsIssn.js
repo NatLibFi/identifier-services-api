@@ -68,31 +68,25 @@ export default function () {
     try {
       const result = await publicationsRequestsIssnInterface.read(db, id);
       if (hasPermission(user, 'publicationIssnRequests', 'readRequestISSN')) {
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
-        }
-
-        if (user.role === 'publisher-admin' || user.role === 'publisher') {
-          if (user.publisher === result.publisher) {
-            const protectedProperties = {
-              state: 0,
-              publisher: 0,
-              lastUpdated: 0
-            };
-            const res = await publicationsRequestsIssnInterface.read(db, id, protectedProperties);
-            /* eslint max-depth: ["error", 5] */
-            /* eslint-env es6 */
-            if (res === null) { // eslint-disable-line functional/no-conditional-statement
+        if (result) {
+          if (user.role === 'publisher-admin' || user.role === 'publisher') {
+            if (user.publisher === result.publisher) {
+              const protectedProperties = {
+                state: 0,
+                publisher: 0,
+                lastUpdated: 0
+              };
+              const res = await publicationsRequestsIssnInterface.read(db, id, protectedProperties);
+              if (res) {
+                return res;
+              }
               throw new ApiError(HttpStatus.NOT_FOUND);
             }
-
-            return res;
+            throw new ApiError(HttpStatus.FORBIDDEN);
           }
-
-          throw new ApiError(HttpStatus.FORBIDDEN);
+          return result;
         }
-
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

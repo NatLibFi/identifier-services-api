@@ -74,11 +74,10 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsbn')) {
         const result = await rangesISBNInterface.read(db, id);
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
         }
-
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -147,11 +146,10 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsmn')) {
         const result = await rangesISMNInterface.read(db, id);
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
         }
-
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -221,11 +219,10 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIssn')) {
         const result = await rangesISSNInterface.read(db, id);
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
+        if (result) {
+          return result;
         }
-
-        return result;
+        throw new ApiError(HttpStatus.NOT_FOUND);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
