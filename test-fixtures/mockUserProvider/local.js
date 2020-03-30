@@ -363,10 +363,10 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
   async function removeRequest(id, user) {
     if (hasPermission(user, 'userRequests', 'removeRequest')) {
       const result = await usersRequestInterface.remove(db, id);
-      if (result.value === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (result.value) {
+        return result;
       }
-      return result;
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
     throw new ApiError(HttpStatus.FORBIDDEN);

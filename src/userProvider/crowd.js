@@ -159,12 +159,12 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
   async function remove(id, user) {
     if (hasPermission(user, 'users', 'remove')) {
       const response = await userMetadataInterface.read(db, id);
-      if (response === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (response) {
+        const {crowdUser} = crowd();
+        await crowdUser.remove({id: response.userId ? response.userId : response.id});
+        return userMetadataInterface.remove(db, id);
       }
-      const {crowdUser} = crowd();
-      await crowdUser.remove({id: response.userId ? response.userId : response.id});
-      return userMetadataInterface.remove(db, id);
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
@@ -314,10 +314,10 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
   async function removeRequest(id, user) {
     if (hasPermission(user, 'userRequests', 'removeRequest')) {
       const result = await usersRequestInterface.remove(db, id);
-      if (result.value === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (result.value) {
+        return result;
       }
-      return result;
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
     throw new ApiError(HttpStatus.FORBIDDEN);

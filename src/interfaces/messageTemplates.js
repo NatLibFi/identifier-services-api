@@ -104,11 +104,10 @@ export default function () {
   async function remove(db, id, user) {
     if (hasPermission(user, 'messageTemplates', 'remove')) {
       const result = await templateInterface.remove(db, id);
-      if (result.value === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (result.value) {
+        return result;
       }
-
-      return result;
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
     throw new ApiError(HttpStatus.FORBIDDEN);

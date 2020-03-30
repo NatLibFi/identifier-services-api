@@ -131,12 +131,12 @@ export default async function run() {
   async function combineUserInfo(req, res, next) {
     try {
       const response = await db.collection('userMetadata').findOne({id: req.user.id});
-      if (response === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (response) {
+        const role = mapGroupToRole(req.user.groups);
+        req.user = {...req.user, role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
+        return next();
       }
-      const role = mapGroupToRole(req.user.groups);
-      req.user = {...req.user, role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
-      return next();
+      throw new ApiError(HttpStatus.NOT_FOUND);
     } catch (err) {
       return next(err);
     }

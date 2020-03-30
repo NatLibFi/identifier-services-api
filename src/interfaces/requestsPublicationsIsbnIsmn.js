@@ -145,11 +145,10 @@ export default function () {
 
   async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
     try {
-      let protectedProperties; // eslint-disable-line functional/no-let
       const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
       if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
         if (user.role === 'publisher-admin' || user.role === 'publisher') {
-          protectedProperties = {
+          const protectedProperties = {
             state: 0,
             publisher: 0,
             lastUpdated: 0

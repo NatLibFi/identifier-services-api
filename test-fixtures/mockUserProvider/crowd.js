@@ -152,12 +152,12 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
   async function remove(db, id, user) {
     if (hasPermission(user, 'users', 'remove')) {
       const response = await userInterface.read(db, id);
-      if (response === null) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.NOT_FOUND);
+      if (response) {
+        const {crowdUser} = crowd();
+        await crowdUser.remove({id: response.userId ? response.userId : response.id});
+        return userInterface.remove(db, id);
       }
-      const {crowdUser} = crowd();
-      await crowdUser.remove({id: response.userId ? response.userId : response.id});
-      return userInterface.remove(db, id);
+      throw new ApiError(HttpStatus.NOT_FOUND);
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
