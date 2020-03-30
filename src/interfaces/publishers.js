@@ -58,10 +58,7 @@ export default function () {
   }
 
   async function read(db, id, user) {
-    let protectedProperties; // eslint-disable-line functional/no-let
-    protectedProperties = user === undefined
-      ? {publicationDetails: 0, language: 0, metadataDelivery: 0, primaryContact: 0, activity: 0}
-      : protectedProperties;
+    const protectedProperties = determineProtectedProperties();
 
     const result = await publisherInterface.read(db, id, protectedProperties);
     if (user === undefined && result.postalAddress.public === true) {
@@ -72,9 +69,15 @@ export default function () {
       const filteredResult = filterResult(result);
       return filteredResult;
     }
-    protectedProperties = user.role === 'publisher-admin'
-      ? {publicationDetails: 0, metadataDelivery: 0, activity: 0}
-      : protectedProperties;
+
+    function determineProtectedProperties() {
+      if (user === undefined) {
+        return {publicationDetails: 0, language: 0, metadataDelivery: 0, primaryContact: 0, activity: 0};
+      }
+      if (user.role === 'publisher-admin') {
+        return {publicationDetails: 0, metadataDelivery: 0, activity: 0};
+      }
+    }
 
     return result;
     function filterResult(result) {

@@ -304,8 +304,18 @@ export function convertLanguage(language) {
 }
 
 export function filterResult(result) {
-  const {state, publisher, lastUpdated, ...rest} = {...result};// eslint-disable-line no-unused-vars
-  return rest;
+  return filterDoc(result);
+
+  function filterDoc(doc) {
+    return Object.entries(doc)
+      .filter(([key]) => key === 'state' === false)
+      .filter(([key]) => key === 'publisher' === false)
+      .filter(([key]) => key === 'lastUpdated' === false)
+      .reduce((acc, [
+        key,
+        value
+      ]) => ({...acc, [key]: value}), {});
+  }
 }
 
 export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT_LOCAL_USERS}) {
@@ -335,11 +345,10 @@ export async function createLinkAndSendEmail({request, PRIVATE_KEY_URL, PASSPORT
   const readResponse = fs.readFileSync(formatUrl(PASSPORT_LOCAL_USERS), 'utf-8');
   const passportLocalList = JSON.parse(readResponse);
   const passportArray = passportLocalList.map(item => item.id);
-  let result;// eslint-disable-line functional/no-let
   passportLocalList.forEach(async passport => {
     if (passportArray.includes(request.id)) {
       if (passport.id === request.id) { // eslint-disable-line functional/no-conditional-statement
-        result = await setPayloadTokenNLink();
+        const result = await setPayloadTokenNLink();
         return result;
       }
       throw new ApiError(HttpStatus.NOT_FOUND);

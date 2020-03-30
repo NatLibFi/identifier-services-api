@@ -208,14 +208,13 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
   }
 
   async function createRequest(doc, user) {
-    let isUserExist; // eslint-disable-line functional/no-let
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
     }
     if (doc.userId && !doc.email) {
       const {crowdUsers} = crowd();
       const allCrowdUsers = await crowdUsers.query();
-      isUserExist = allCrowdUsers.includes(doc.userId);
+      const isUserExist = allCrowdUsers.includes(doc.userId);
 
       if (isUserExist) {
         const response = await checkDuplication(usersRequestInterface);
@@ -231,7 +230,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
     const {crowdUsers} = crowd();
     const allCrowdUsers = await crowdUsers.query();
-    isUserExist = doc.email ? allCrowdUsers.includes(doc.email) : isUserExist;
+    const isUserExist = doc.email && allCrowdUsers.includes(doc.email);
 
     const response = checkDuplication(usersRequestInterface);
     const isDuplicate = response.results.length > 0 && doc.email === response.results[0].id;
