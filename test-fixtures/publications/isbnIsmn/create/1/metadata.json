@@ -5,7 +5,7 @@
     "username": "publisher-admin",
     "password": "0l1gq69q6nxh",
     "method": "post",
-    "expectedStatus": 403,
+    "expectedStatus": 201,
     "payload": "payload.json",
     "dbExpected": "dbExpected.json",
     "payloadExpected": false

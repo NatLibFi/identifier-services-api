@@ -33,153 +33,150 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db) {
-	const ranges = rangesFactory({url: API_URL});
+  const ranges = rangesFactory({url: API_URL});
 
-	return new Router()
-		.post('/isbn', bodyParse(), createIsbn)
-		.get('/isbn/:id', readIsbn)
-		.put('/isbn/:id', bodyParse(), updateIsbn)
-		.post('/isbn/query', bodyParse(), queryIsbn)
+  return new Router()
+    .post('/isbn', bodyParse(), createIsbn)
+    .get('/isbn/:id', readIsbn)
+    .put('/isbn/:id', bodyParse(), updateIsbn)
+    .post('/isbn/query', bodyParse(), queryIsbn)
 
-		.post('/ismn', bodyParse(), createIsmn)
-		.get('/ismn/:id', readIsmn)
-		.put('/ismn/:id', bodyParse(), updateIsmn)
-		.post('/ismn/query', bodyParse(), queryIsmn)
+    .post('/ismn', bodyParse(), createIsmn)
+    .get('/ismn/:id', readIsmn)
+    .put('/ismn/:id', bodyParse(), updateIsmn)
+    .post('/ismn/query', bodyParse(), queryIsmn)
 
-		.post('/issn', bodyParse(), createIssn)
-		.get('/issn/:id', readIssn)
-		.put('/issn/:id', bodyParse(), updateIssn)
-		.post('/issn/query', bodyParse(), queryIssn);
+    .post('/issn', bodyParse(), createIssn)
+    .get('/issn/:id', readIssn)
+    .put('/issn/:id', bodyParse(), updateIssn)
+    .post('/issn/query', bodyParse(), queryIssn);
 
-	// ISBN routes
+  // ISBN routes
 
-	async function createIsbn(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else {
-				const result = await ranges.createIsbn(db, req.body, req.user);
-				res.status(HttpStatus.CREATED).json(result);
-			}
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createIsbn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIsbn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readIsbn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.readIsbn(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readIsbn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readIsbn(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateIsbn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.updateIsbn(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateIsbn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateIsbn(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryIsbn(req, res, next) {
-		try {
-			const result = await ranges.queryIsbn(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function queryIsbn(req, res, next) {
+    try {
+      const result = await ranges.queryIsbn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	// ISMN routes
+  // ISMN routes
 
-	async function createIsmn(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else {
-				const result = await ranges.createIsmn(db, req.body, req.user);
-				res.status(HttpStatus.CREATED).json(result);
-			}
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createIsmn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIsmn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readIsmn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.readIsmn(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readIsmn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readIsmn(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateIsmn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.updateIsmn(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateIsmn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateIsmn(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryIsmn(req, res, next) {
-		try {
-			const result = await ranges.queryIsmn(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function queryIsmn(req, res, next) {
+    try {
+      const result = await ranges.queryIsmn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	// ISSN routes
+  // ISSN routes
 
-	async function createIssn(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else {
-				const result = await ranges.createIssn(db, req.body, req.user);
-				res.status(HttpStatus.CREATED).json(result);
-			}
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createIssn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIssn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readIssn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.readIssn(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readIssn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readIssn(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateIssn(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await ranges.updateIssn(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateIssn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateIssn(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryIssn(req, res, next) {
-		try {
-			const result = await ranges.queryIssn(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function queryIssn(req, res, next) {
+    try {
+      const result = await ranges.queryIssn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

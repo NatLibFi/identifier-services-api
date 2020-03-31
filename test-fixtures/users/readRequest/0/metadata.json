@@ -5,6 +5,5 @@
     "username": "admin",
     "password": "gM3RsfxAr7e5VwsSPAC6",
     "method": "get",
-    "expectedStatus": 200,
-    "skip": true
+    "expectedStatus": 200
 }

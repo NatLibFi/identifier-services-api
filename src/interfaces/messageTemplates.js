@@ -35,99 +35,95 @@ import {hasPermission, validateDoc} from './utils';
 const templateInterface = interfaceFactory('MessageTemplate', 'MessageTemplateContent');
 
 export default function () {
-	return {
-		create,
-		read,
-		update,
-		remove,
-		query
-	};
+  return {
+    create,
+    read,
+    update,
+    remove,
+    query
+  };
 
-	async function create(db, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  async function create(db, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      if (validateDoc(doc, 'MessageTemplateContent')) {
+        if (hasPermission(user, 'messageTemplates', 'create')) {
+          return await templateInterface.create(db, doc, user);
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-			if (validateDoc(doc, 'MessageTemplateContent')) {
-				if (hasPermission(user, 'messageTemplates', 'create')) {
-					return templateInterface.create(db, doc, user);
-				}
+  async function read(db, id, user) {
+    try {
+      if (hasPermission(user, 'messageTemplates', 'read')) {
+        const result = await templateInterface.read(db, id);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			} else {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
 
-	async function read(db, id, user) {
-		try {
-			if (hasPermission(user, 'messageTemplates', 'read')) {
-				const result = await templateInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-				return result;
-			}
+  function update(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      } else if (validateDoc(doc, 'MessageTemplateContent')) {
+        if (hasPermission(user, 'messageTemplates', 'update')) {
+          return templateInterface.update(db, id, doc, user);
+        }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-	async function update(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else if (validateDoc(doc, 'MessageTemplateContent')) {
-				if (hasPermission(user, 'messageTemplates', 'update')) {
-					return templateInterface.update(db, id, doc, user);
-				}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+  async function remove(db, id, user) {
+    if (hasPermission(user, 'messageTemplates', 'remove')) {
+      const result = await templateInterface.remove(db, id);
+      if (result.value) {
+        return result;
+      }
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+    throw new ApiError(HttpStatus.FORBIDDEN);
+  }
 
-	async function remove(db, id, user) {
-		if (hasPermission(user, 'messageTemplates', 'remove')) {
-			const result = await templateInterface.remove(db, id);
-			if (result.value === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
+  async function query(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'messageTemplates', 'query')) {
+        return await templateInterface.query(db, {queries, offset});
+      }
 
-			return result;
-		}
-
-		throw new ApiError(HttpStatus.FORBIDDEN);
-	}
-
-	async function query(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'messageTemplates', 'query')) {
-				return templateInterface.query(db, {queries, offset});
-			}
-
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 }

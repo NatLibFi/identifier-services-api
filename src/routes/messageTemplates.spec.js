@@ -30,14 +30,19 @@
 import testSuiteFactory from './testUtils';
 
 describe('app', () => {
-	const generateTestSuite = testSuiteFactory({
-		rootPath: [__dirname, '..', '..', 'test-fixtures']
-	});
-	describe('templates', () => {
-		describe('#read', generateTestSuite('messageTemplates', 'read'));
-		describe('#create', generateTestSuite('messageTemplates', 'create'));
-		describe('#delete', generateTestSuite('messageTemplates', 'delete'));
-		describe('#update', generateTestSuite('messageTemplates', 'update'));
-		describe('#query', generateTestSuite('messageTemplates', 'query'));
-	});
+  const generateTestSuite = testSuiteFactory({
+    rootPath: [
+      __dirname,
+      '..',
+      '..',
+      'test-fixtures'
+    ]
+  });
+  describe('templates', () => {
+    describe('#read', generateTestSuite('messageTemplates', 'read'));
+    describe('#create', generateTestSuite('messageTemplates', 'create'));
+    describe('#delete', generateTestSuite('messageTemplates', 'delete'));
+    describe('#update', generateTestSuite('messageTemplates', 'update'));
+    describe('#query', generateTestSuite('messageTemplates', 'query'));
+  });
 });
