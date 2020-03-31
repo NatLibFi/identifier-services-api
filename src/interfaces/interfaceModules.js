@@ -51,19 +51,27 @@ export default function (collectionName) {
     return insertedId.toString();
   }
 
-  function read(db, id, protectedProperties) {
+  async function read(db, id, protectedProperties) {
     if (collectionName === 'userMetadata') {
-      return db.collection(collectionName).findOne({
+      const result = await db.collection(collectionName).findOne({
         id
       }, {
         projection: protectedProperties
       });
+      if (result) {
+        return result;
+      }
+      return undefined;
     }
-    return db.collection(collectionName).findOne({
+    const result = await db.collection(collectionName).findOne({
       _id: new ObjectId(id)
     }, {
       projection: protectedProperties
     });
+    if (result) {
+      return result;
+    }
+    return undefined;
   }
 
   function update(db, id, doc, user) {
@@ -91,9 +99,13 @@ export default function (collectionName) {
     }
   }
 
-  function remove(db, id) {
+  async function remove(db, id) {
     const query = ObjectId.isValid(id) ? {_id: new ObjectId(id)} : {id};
-    return db.collection(collectionName).findOneAndDelete(query);
+    const result = await db.collection(collectionName).findOneAndDelete(query);
+    if (result) {
+      return result;
+    }
+    return undefined;
   }
 
   async function query(db, {queries, offset}, protectedProperties) {

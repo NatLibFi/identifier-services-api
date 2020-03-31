@@ -409,7 +409,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
 
       data.concat(newData);
       fs.writeFileSync(formatUrl(PASSPORT_LOCAL_USERS), JSON.stringify(data, null, 4), 'utf-8');
-      return null;
+
       function containsObject(obj, list) {
         return list.some(item => item.id === obj.id);
       }
