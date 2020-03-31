@@ -48,8 +48,7 @@ export default function () {
 			if (Object.keys(doc).length === 0) {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
 			}
-
-			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: getCreator()};
 			if (validateDoc(newDoc, 'PublicationIssnRequestContent')) {
 				if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
 					return publicationsRequestsIssnInterface.create(db, newDoc, user);
@@ -61,6 +60,12 @@ export default function () {
 			if (err) {
 				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
 			}
+		}
+
+		function getCreator() {
+			return Object.keys(doc.publisher).length > 0
+				? doc.publisher.publisherEmail
+				: userId
 		}
 	}
 
