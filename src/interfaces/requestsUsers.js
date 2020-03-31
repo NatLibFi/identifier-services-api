@@ -29,52 +29,52 @@
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
-	return {
-		createRequest,
-		readRequest,
-		updateRequest,
-		removeRequest,
-		queryRequest
-	};
+  return {
+    createRequest,
+    readRequest,
+    updateRequest,
+    removeRequest,
+    queryRequest
+  };
 
-	async function createRequest(userProvider, doc, user) {
-		try {
-			return userProvider.createRequest(doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function createRequest(userProvider, doc, user) {
+    try {
+      return userProvider.createRequest(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function readRequest(userProvider, id, user) {
-		try {
-			return userProvider.readRequest(id, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function readRequest(userProvider, id, user) {
+    try {
+      return userProvider.readRequest(id, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function updateRequest(userProvider, id, doc, user) {
-		try {
-			return userProvider.updateRequest(id, doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function updateRequest(userProvider, id, doc, user) {
+    try {
+      return userProvider.updateRequest(id, doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function removeRequest(userProvider, id, user) {
-		try {
-			return userProvider.removeRequest(id, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function removeRequest(userProvider, id, user) {
+    try {
+      return userProvider.removeRequest(id, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function queryRequest(userProvider, doc, user) {
-		try {
-			return userProvider.queryRequest(doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function queryRequest(userProvider, doc, user) {
+    try {
+      return userProvider.queryRequest(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 }
 

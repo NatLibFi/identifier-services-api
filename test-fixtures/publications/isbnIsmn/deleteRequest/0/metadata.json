@@ -7,6 +7,5 @@
     "method": "delete",
     "expectedStatus": 200,
     "dbExpected": "dbExpected.json",
-    "payloadExpected": false,
-    "skip": true
+    "payloadExpected": false
 }
