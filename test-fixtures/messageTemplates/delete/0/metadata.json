@@ -6,5 +6,6 @@
     "password": "gM3RsfxAr7e5VwsSPAC6",
     "method": "delete",
     "expectedStatus": 200,
+    "dbExpected": "dbExpected.json",
     "payloadExpected": false
 }

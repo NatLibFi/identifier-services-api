@@ -3554,6 +3554,16 @@
                     "$ref": "#/components/schemas/SeriesDetails"
                   }
                 }
+              },
+              "publisher": {
+                "type": "string"
+              },
+              "associatedRange": {
+                "description": "Identifier of the identifier range resource this publication is associated with",
+                "type": "string"
+              },
+              "identifier": {
+                "type": "string"
               }
             },
             "required": [
@@ -3562,7 +3572,8 @@
               "firstNumber",
               "frequency",
               "type",
-              "formatDetails"
+              "formatDetails",
+              "publisher"
             ]
           }
         ]
@@ -3578,9 +3589,6 @@
           {
             "type": "object",
             "properties": {
-              "publisher": {
-                "type": "string"
-              },
               "metadataReference": {
                 "$ref": "#/components/schemas/MetadataReference"
               },
@@ -3598,8 +3606,7 @@
             },
             "required": [
               "id",
-              "associatedRange",
-              "publisher"
+              "associatedRange"
             ]
           }
         ]

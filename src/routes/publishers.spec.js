@@ -28,17 +28,22 @@
 import testSuiteFactory from './testUtils';
 
 describe('app', () => {
-	const generateTestSuite = testSuiteFactory({
-		rootPath: [__dirname, '..', '..', 'test-fixtures']
-	});
-	describe('publishers', () => {
-		describe('#read', generateTestSuite('publishers', 'read'));
-		describe('#create', generateTestSuite('publishers', 'create'));
-		describe('#update', generateTestSuite('publishers', 'update'));
-		describe('#query', generateTestSuite('publishers', 'query'));
-		describe('#readRequests', generateTestSuite('publishers', '/requests/read'));
-		describe('#createRequests', generateTestSuite('publishers', '/requests/create'));
-		describe('#updateRequests', generateTestSuite('publishers', '/requests/update'));
-		describe('#queryRequests', generateTestSuite('publishers', '/requests/query'));
-	});
+  const generateTestSuite = testSuiteFactory({
+    rootPath: [
+      __dirname,
+      '..',
+      '..',
+      'test-fixtures'
+    ]
+  });
+  describe('publishers', () => {
+    describe('#read', generateTestSuite('publishers', 'read'));
+    describe('#create', generateTestSuite('publishers', 'create'));
+    describe('#update', generateTestSuite('publishers', 'update'));
+    describe('#query', generateTestSuite('publishers', 'query'));
+    describe('#readRequests', generateTestSuite('publishers', '/requests/read'));
+    describe('#createRequests', generateTestSuite('publishers', '/requests/create'));
+    describe('#updateRequests', generateTestSuite('publishers', '/requests/update'));
+    describe('#queryRequests', generateTestSuite('publishers', '/requests/query'));
+  });
 });

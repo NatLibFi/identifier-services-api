@@ -33,64 +33,72 @@ import {API_URL} from '../../config';
 import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
-export default function (db) {
-	const publications = publicationsIsbnIsmnFactory({url: API_URL});
-	return new Router()
-		.post('/', bodyParse(), create)
-		.get('/:id', read)
-		.put('/:id', bodyParse(), update)
-		.post('/query', bodyParse(), query);
+export default function (db, passportMiddlewares, combineUserInfo) {
+  const publications = publicationsIsbnIsmnFactory({url: API_URL});
+  return new Router()
+    .post('/', bodyParse(), authenticated, combineUserInfo, create)
+    .use(passportMiddlewares.token)
+    .use(combineUserInfo)
+    .get('/:id', read)
+    .put('/:id', bodyParse(), update)
+    .post('/query', bodyParse(), query);
 
-	async function create(req, res, next) {
-		try {
-			const result = await publications.createIsbnIsmn(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  function authenticated(req, res, next) {
+    if ('authorization' in req.headers) {
+      return passportMiddlewares.token(req, res, next);
+    }
+    next();
+  }
 
-	async function read(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.readIsbnIsmn(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function create(req, res, next) {
+    try {
+      const result = await publications.createIsbnIsmn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function update(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
-			res.json(result).status(HttpStatus.OK);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function read(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publications.readIsbnIsmn(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	// Async function remove(req, res, next) {
-	// 	const id = req.params.id;
-	// 	try {
-	// 		const user = await combineUserInfo({db: db, user: req.user});
-	// 		const result = await publications.removeIsbnIsmn(db, id, user);
-	// 		res.json(result);
-	// 	} catch (err) {
-	// 		next(err);
-	// 	}
-	// }
+  async function update(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publications.updateIsbnIsmn(db, id, req.body, req.user);
+      res.json(result).status(HttpStatus.OK);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function query(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  // Async function remove(req, res, next) {
+  // Const id = req.params.id;
+  // Try {
+  // Const result = await publications.removeIsbnIsmn(db, id, user);
+  // Res.json(result);
+  // } catch (err) {
+  // Next(err);
+  // }
+  // }
 
-			const result = await publications.queryIsbnIsmn(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function query(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+
+      const result = await publications.queryIsbnIsmn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

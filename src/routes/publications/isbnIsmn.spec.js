@@ -30,18 +30,25 @@
 import testSuiteFactory from '../testUtils';
 
 describe('app', () => {
-	const generateTestSuite = testSuiteFactory({
-		rootPath: [__dirname, '..', '..', '..', 'test-fixtures', 'publications']
-	});
-	describe('publications', () => {
-		describe('#read', generateTestSuite('isbnIsmn', 'read'));
-		describe('#create', generateTestSuite('isbnIsmn', 'create'));
-		describe('#update', generateTestSuite('isbnIsmn', 'update'));
-		describe('#query', generateTestSuite('isbnIsmn', 'query'));
-		describe('#createRequest', generateTestSuite('isbnIsmn', 'createRequest'));
-		describe('#readRequest', generateTestSuite('isbnIsmn', 'readRequest'));
-		describe('#updateRequest', generateTestSuite('isbnIsmn', 'updateRequest'));
-		describe('#deleteRequest', generateTestSuite('isbnIsmn', 'deleteRequest'));
-		describe('#queryRequest', generateTestSuite('isbnIsmn', 'queryRequest'));
-	});
+  const generateTestSuite = testSuiteFactory({
+    rootPath: [
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'test-fixtures',
+      'publications'
+    ]
+  });
+  describe('publications', () => {
+    describe('#read', generateTestSuite('isbnIsmn', 'read'));
+    describe('#create', generateTestSuite('isbnIsmn', 'create'));
+    describe('#update', generateTestSuite('isbnIsmn', 'update'));
+    describe('#query', generateTestSuite('isbnIsmn', 'query'));
+    describe('#createRequest', generateTestSuite('isbnIsmn', 'createRequest'));
+    describe('#readRequest', generateTestSuite('isbnIsmn', 'readRequest'));
+    describe('#updateRequest', generateTestSuite('isbnIsmn', 'updateRequest'));
+    describe('#deleteRequest', generateTestSuite('isbnIsmn', 'deleteRequest'));
+    describe('#queryRequest', generateTestSuite('isbnIsmn', 'queryRequest'));
+  });
 });
