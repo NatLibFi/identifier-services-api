@@ -50,7 +50,7 @@ export default function () {
 				throw new ApiError(HttpStatus.BAD_REQUEST);
 			}
 
-			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: getCreator(user)};
 			if (validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent')) {
 				if (hasPermission(user, 'publicationIsbnIsmnRequests', 'createRequestIsbnIsmn')) {
 					return publicationsRequestsIsbnIsmnInterface.create(db, newDoc, user);
@@ -64,6 +64,12 @@ export default function () {
 			if (err) {
 				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
 			}
+		}
+
+		function getCreator(user) {
+			return Object.keys(doc.publisher).length > 0 ?
+				doc.publisher.publisherEmail :
+				user.id;
 		}
 	}
 

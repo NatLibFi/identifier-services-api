@@ -98,10 +98,11 @@ export default function () {
 			}
 
 			const range = doc.type === 'music' ? getRange(ismnRangeList.results) : getRange(isbnRangeList.results);
+
 			const identifier = [];
 			if (doc.formatDetails.format === 'electronic' || doc.formatDetails.format === 'printed') {
 				identifier.push({
-					id: calculateIdentifier(range, newIdentifierTitle),
+					id: range && calculateIdentifier(range, newIdentifierTitle),
 					type: doc.formatDetails.format
 				});
 			}
@@ -109,7 +110,7 @@ export default function () {
 			if (doc.formatDetails.format === 'printed-and-electronic') {
 				for (let i = 0; i < 2; i++) {
 					identifier.push({
-						id: calculateIdentifier(range, newIdentifierTitle + i),
+						id: range && calculateIdentifier(range, newIdentifierTitle + i),
 						type: i === 0 ? 'printed' : 'electronic'
 					});
 				}
@@ -117,14 +118,14 @@ export default function () {
 
 			const newDoc = {
 				...doc,
-				associatedRange: range.id,
+				associatedRange: range && range.id,
 				identifier: identifier
 			};
 
-			if (validateDoc(newDoc, 'PublicationIsbnIsmnContent')) {
+			if (validateDoc(user.role === 'system' ? doc : newDoc, 'PublicationIsbnIsmnContent')) {
 				if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
 					newDoc.metadataReference =	{state: 'pending'};
-					return publicationsIsbnIsmnInterface.create(db, newDoc, user);
+					return publicationsIsbnIsmnInterface.create(db, user.role === 'system' ? doc : newDoc, user);
 				}
 
 				throw new ApiError(HttpStatus.FORBIDDEN);
