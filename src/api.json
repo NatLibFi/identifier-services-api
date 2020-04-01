@@ -3555,9 +3555,6 @@
                   }
                 }
               },
-              "publisher": {
-                "type": "string"
-              },
               "associatedRange": {
                 "description": "Identifier of the identifier range resource this publication is associated with",
                 "type": "string"
@@ -3572,8 +3569,7 @@
               "firstNumber",
               "frequency",
               "type",
-              "formatDetails",
-              "publisher"
+              "formatDetails"
             ]
           }
         ]
@@ -3589,6 +3585,9 @@
           {
             "type": "object",
             "properties": {
+              "publisher": {
+                "type": "string"
+              },
               "metadataReference": {
                 "$ref": "#/components/schemas/MetadataReference"
               },
@@ -3606,7 +3605,8 @@
             },
             "required": [
               "id",
-              "associatedRange"
+              "associatedRange",
+              "publisher"
             ]
           }
         ]
