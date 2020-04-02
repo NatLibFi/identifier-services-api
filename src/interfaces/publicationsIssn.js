@@ -47,8 +47,13 @@ export default function () {
 
   async function createISSN(db, doc, user) {
     try {
+
       if (doc.publicationType) {
-        const filteredDoc = filterDoc(doc);
+        const newDoc = {
+          ...doc,
+          metadataReference: {state: 'pending'}
+        };
+        const filteredDoc = filterDoc(newDoc);
         if (validateDoc(filteredDoc, 'PublicationIssnContent')) {
           return publicationsIssnInterface.create(db, filteredDoc, user);
         }

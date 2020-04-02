@@ -109,15 +109,22 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
     function filterDoc(doc) {
       return Object.entries(doc)
-        .filter(([key]) => key === 'role' === false)
-        .filter(([key]) => key === 'givenName' === false)
-        .filter(([key]) => key === 'userId' === false)
-        .filter(([key]) => key === 'familyName' === false)
-        .filter(([key]) => key === 'email' === false)
+        .filter(filter)
         .reduce((acc, [
           key,
           value
         ]) => ({...acc, [key]: value}), {});
+
+      function filter(key) {
+        const allowedKeys = [
+          'role',
+          'givenName',
+          'familyName',
+          'userId',
+          'email'
+        ];
+        return allowedKeys.includes(key) === false;
+      }
     }
   }
 
