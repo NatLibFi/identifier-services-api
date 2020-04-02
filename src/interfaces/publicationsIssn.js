@@ -47,6 +47,14 @@ export default function () {
 
   async function createISSN(db, doc, user) {
     try {
+      if (doc.publicationType) {
+        const filteredDoc = filterDoc(doc);
+        if (validateDoc(filteredDoc, 'PublicationIssnContent')) {
+          return publicationsIssnInterface.create(db, filteredDoc, user);
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
       const rangeQueries = {queries: [{query: {active: true}}], offset: null};
       const identifierLists = await rangesISSNInterface.query(db, rangeQueries);
       const index = 0;
@@ -68,22 +76,25 @@ export default function () {
       };
       if (validateDoc(newDoc, 'PublicationIssnContent')) {
         if (hasPermission(user, 'publicationIssn', 'createISSN')) {
-          if (user.role === 'publisher' || user.role === 'publisher-admin') {
-            const newDocWithPublisher = {...newDoc, publisher: user.publisher};
-            return publicationsIssnInterface.create(db, newDocWithPublisher, user);
-          }
-
-          return publicationsIssnInterface.create(db, newDoc, user);
+          const newDocWithPublisher = {...newDoc, publisher: user.publisher};
+          return publicationsIssnInterface.create(db, newDocWithPublisher, user);
         }
-
         throw new ApiError(HttpStatus.FORBIDDEN);
       }
-
       throw new ApiError(HttpStatus.BAD_REQUEST);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
+    }
+
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === 'publicationType' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
   }
 
