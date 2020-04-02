@@ -308,13 +308,19 @@ export function filterResult(result) {
 
   function filterDoc(doc) {
     return Object.entries(doc)
-      .filter(([key]) => key === 'state' === false)
-      .filter(([key]) => key === 'publisher' === false)
-      .filter(([key]) => key === 'lastUpdated' === false)
+      .filter(filter)
       .reduce((acc, [
         key,
         value
       ]) => ({...acc, [key]: value}), {});
+  }
+  function filter(key) {
+    const allowedKeys = [
+      'state',
+      'publisher',
+      'lastUpdated'
+    ];
+    return allowedKeys.includes(key) === false;
   }
 }
 
