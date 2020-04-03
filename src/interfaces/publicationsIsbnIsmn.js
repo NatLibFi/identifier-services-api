@@ -67,7 +67,7 @@ export default function () {
 
 		// Get ranges according to the associated user
 		function getRange(ranges) {
-			return ranges.find(item => item.associatePublisher.some(range => range === user.id));
+			return ranges.find(item => item.associatePublisher && item.associatePublisher.some(range => range === user.id));
 		}
 
 		function calculateIdentifier(range, title) {
