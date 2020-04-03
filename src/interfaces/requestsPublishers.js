@@ -34,83 +34,83 @@ import HttpStatus from 'http-status';
 const publisherRequestsInterface = interfaceFactory('PublisherRequest');
 
 export default function () {
-	return {
-		createRequest,
-		readRequest,
-		updateRequest,
-		removeRequest,
-		queryRequests
-	};
+  return {
+    createRequest,
+    readRequest,
+    updateRequest,
+    removeRequest,
+    queryRequests
+  };
 
-	async function createRequest(db, doc, user) {
-		try {
-			const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
-			if (validateDoc(newDoc, 'PublisherRequestContent')) {
-				if (hasPermission(user, 'publisherRequests', 'createRequest')) {
-					return publisherRequestsInterface.create(db, newDoc, user);
-				}
+  function createRequest(db, doc, user) {
+    try {
+      const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: user.id};
+      if (validateDoc(newDoc, 'PublisherRequestContent')) {
+        if (hasPermission(user, 'publisherRequests', 'createRequest')) {
+          return publisherRequestsInterface.create(db, newDoc, user);
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			} else {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+  async function readRequest(db, id, user) {
+    try {
+      if (hasPermission(user, 'publisherRequests', 'readRequest')) {
+        const result = await publisherRequestsInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+      }
 
-	async function readRequest(db, id, user) {
-		try {
-			if (hasPermission(user, 'publisherRequests', 'readRequest')) {
-				return publisherRequestsInterface.read(db, id);
-			}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+  function updateRequest(db, id, doc, user) {
+    try {
+      const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
 
-	async function updateRequest(db, id, doc, user) {
-		try {
-			let newDoc;
-			newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
+      if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
+        return publisherRequestsInterface.update(db, id, newDoc, user);
+      }
 
-			if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
-				return publisherRequestsInterface.update(db, id, newDoc, user);
-			}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+  function removeRequest(db, id, user) {
+    if (hasPermission(user, 'publisherRequests', 'removeRequest')) {
+      return publisherRequestsInterface.remove(db, id, user);
+    }
 
-	async function removeRequest(db, id, user) {
-		if (hasPermission(user, 'publisherRequests', 'removeRequest')) {
-			return publisherRequestsInterface.remove(db, id, user);
-		}
+    throw new ApiError(HttpStatus.FORBIDDEN);
+  }
 
-		throw new ApiError(HttpStatus.FORBIDDEN);
-	}
+  function queryRequests(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
+        return publisherRequestsInterface.query(db, {queries, offset});
+      }
 
-	async function queryRequests(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
-				return publisherRequestsInterface.query(db, {queries, offset});
-			}
-
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 }

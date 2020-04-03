@@ -37,239 +37,235 @@ const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnConte
 const rangesISSNInterface = interfaceFactory('RangeIssnContent');
 
 export default function () {
-	return {
-		createIsbn,
-		readIsbn,
-		updateIsbn,
-		queryIsbn,
-		createIsmn,
-		readIsmn,
-		updateIsmn,
-		queryIsmn,
-		createIssn,
-		readIssn,
-		updateIssn,
-		queryIssn
-	};
+  return {
+    createIsbn,
+    readIsbn,
+    updateIsbn,
+    queryIsbn,
+    createIsmn,
+    readIsmn,
+    updateIsmn,
+    queryIsmn,
+    createIssn,
+    readIssn,
+    updateIssn,
+    queryIssn
+  };
 
-	async function createIsbn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIsbnContent')) {
-				if (hasPermission(user, 'ranges', 'createIsbn')) {
-					return rangesISBNInterface.create(db, doc, user);
-				}
+  function createIsbn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIsbnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsbn')) {
+          return rangesISBNInterface.create(db, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function readIsbn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIsbn')) {
-				const result = await rangesISBNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+  async function readIsbn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIsbn')) {
+        const result = await rangesISBNInterface.read(db, id);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
 
-				return result;
-			}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+  function updateIsbn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-	async function updateIsbn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+      if (validate(doc, 'RangeIsbnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIsbn')) {
+          return rangesISBNInterface.update(db, id, doc, user);
+        }
 
-			if (validate(doc, 'RangeIsbnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIsbn')) {
-					return rangesISBNInterface.update(db, id, doc, user);
-				}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+  function queryIsbn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIsbn')) {
+        return rangesISBNInterface.query(db, {queries, offset});
+      }
 
-	async function queryIsbn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIsbn')) {
-				const result = await rangesISBNInterface.query(db, {queries, offset});
-				return result;
-			}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+  function createIsmn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsmn')) {
+          return rangesISMNInterface.create(db, doc, user);
+        }
 
-	async function createIsmn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'createIsmn')) {
-					return rangesISMNInterface.create(db, doc, user);
-				}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+  async function readIsmn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIsmn')) {
+        const result = await rangesISMNInterface.read(db, id);
+        if (result) { // eslint-disable-line functional/no-conditional-statement
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
 
-	async function readIsmn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIsmn')) {
-				const result = await rangesISMNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-				return result;
-			}
+  function updateIsmn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIsmn')) {
+          return rangesISMNInterface.update(db, id, doc, user);
+        }
 
-	async function updateIsmn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIsmn')) {
-					return rangesISMNInterface.update(db, id, doc, user);
-				}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+  function queryIsmn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIsmn')) {
+        return rangesISMNInterface.query(db, {queries, offset});
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function queryIsmn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIsmn')) {
-				return rangesISMNInterface.query(db, {queries, offset});
-			}
+  async function createIssn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIssnContent')) {
+        if (hasPermission(user, 'ranges', 'createIssn')) {
+          const result = await rangesISSNInterface.create(db, doc, user);
+          return result;
+        }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-	async function createIssn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIssnContent')) {
-				if (hasPermission(user, 'ranges', 'createIssn')) {
-					const result = await rangesISSNInterface.create(db, doc, user);
-					return result;
-				}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+  async function readIssn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIssn')) {
+        const result = await rangesISSNInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function readIssn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIssn')) {
-				const result = await rangesISSNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+  function updateIssn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-				return result;
-			}
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIssn')) {
+          return rangesISSNInterface.update(db, id, doc, user);
+        }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-	async function updateIssn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIssn')) {
-					return rangesISSNInterface.update(db, id, doc, user);
-				}
+  function queryIssn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIssn')) {
+        return rangesISSNInterface.query(db, {queries, offset});
+      }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
-
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
-
-	async function queryIssn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIssn')) {
-				return rangesISSNInterface.query(db, {queries, offset});
-			}
-
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 }

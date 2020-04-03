@@ -32,60 +32,60 @@ import {usersRequestsFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function (userProvider) {
-	const usersRequests = usersRequestsFactory({url: API_URL});
+  const usersRequests = usersRequestsFactory({url: API_URL});
 
-	return new Router()
-		.post('/', createRequest)
-		.get('/:id', readRequest)
-		.delete('/:id', removeRequest)
-		.put('/:id', updateRequest)
-		.post('/query', queryRequest);
+  return new Router()
+    .post('/', createRequest)
+    .get('/:id', readRequest)
+    .delete('/:id', removeRequest)
+    .put('/:id', updateRequest)
+    .post('/query', queryRequest);
 
-	async function createRequest(req, res, next) {
-		try {
-			const result = await usersRequests.createRequest(userProvider, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createRequest(req, res, next) {
+    try {
+      const result = await usersRequests.createRequest(userProvider, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await usersRequests.readRequest(userProvider, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await usersRequests.readRequest(userProvider, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await usersRequests.updateRequest(userProvider, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await usersRequests.updateRequest(userProvider, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function removeRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await usersRequests.removeRequest(userProvider, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function removeRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await usersRequests.removeRequest(userProvider, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryRequest(req, res, next) {
-		try {
-			const result = await usersRequests.queryRequest(userProvider, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function queryRequest(req, res, next) {
+    try {
+      const result = await usersRequests.queryRequest(userProvider, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

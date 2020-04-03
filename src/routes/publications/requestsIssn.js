@@ -34,63 +34,63 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db) {
-	const publications = publicationIssnRequestsFactory({url: API_URL});
-	return new Router()
-		.post('/', bodyParse(), createRequest)
-		.get('/:id', readRequest)
-		.delete('/:id', removeRequest)
-		.put('/:id', bodyParse(), updateRequest)
-		.post('/query', bodyParse(), queryRequest);
+  const publications = publicationIssnRequestsFactory({url: API_URL});
+  return new Router()
+    .post('/', bodyParse(), createRequest)
+    .get('/:id', readRequest)
+    .delete('/:id', removeRequest)
+    .put('/:id', bodyParse(), updateRequest)
+    .post('/query', bodyParse(), queryRequest);
 
-	async function createRequest(req, res, next) {
-		try {
-			const result = await publications.createRequestISSN(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createRequest(req, res, next) {
+    try {
+      const result = await publications.createRequestISSN(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.readRequestISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publications.readRequestISSN(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function removeRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.removeRequestISSN(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function removeRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publications.removeRequestISSN(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publications.updateRequestISSN(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateRequest(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publications.updateRequestISSN(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryRequest(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  async function queryRequest(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-			const result = await publications.queryRequestISSN(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+      const result = await publications.queryRequestISSN(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

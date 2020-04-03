@@ -33,62 +33,61 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db, passportMiddlewares, combineUserInfo) {
-	const publishers = publishersFactory({url: API_URL});
-	return new Router()
-		.get('/:id', authenticated, read)
-		.post('/query', query)
-		.use(passportMiddlewares.token)
-		.use(combineUserInfo)
-		.post('/', create)
-		.put('/:id', update);
+  const publishers = publishersFactory({url: API_URL});
+  return new Router()
+    .get('/:id', authenticated, read)
+    .post('/query', query)
+    .use(passportMiddlewares.token)
+    .use(combineUserInfo)
+    .post('/', create)
+    .put('/:id', update);
 
-	function authenticated(req, res, next) {
-		if ('authorization' in req.headers) {
-			return passportMiddlewares.token(req, res, next);
-		}
+  function authenticated(req, res, next) {
+    if ('authorization' in req.headers) {
+      return passportMiddlewares.token(req, res, next);
+    }
 
-		next();
-	}
+    next();
+  }
 
-	async function create(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else {
-				const result = await publishers.create(db, req.body, req.user);
-				res.status(HttpStatus.CREATED).json(result);
-			}
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function create(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await publishers.create(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function read(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publishers.read(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function read(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publishers.read(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function update(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await publishers.update(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function update(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await publishers.update(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function query(req, res, next) {
-		try {
-			const result = await publishers.query(db, req.body);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function query(req, res, next) {
+    try {
+      const result = await publishers.query(db, req.body);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

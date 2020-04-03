@@ -6,5 +6,6 @@
     "password": "fCjHs1BHYn8yf4mAODOU",
     "method": "post",
     "expectedStatus": 200,
-    "payload": "payload.json"
+    "payload": "payload.json",
+    "skip": true
 }

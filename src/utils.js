@@ -35,48 +35,33 @@ import {GROUPS_AND_ROLES} from './config';
 const readResponse = fs.readFileSync(formatUrl(GROUPS_AND_ROLES), 'utf-8');
 
 export function bodyParse() {
-	validateContentType({
-		type: ['application/json']
-	});
-	return bodyParser.json({
-		type: ['application/json']
-	});
+  validateContentType({
+    type: ['application/json']
+  });
+  return bodyParser.json({
+    type: ['application/json']
+  });
 }
 
 export function mapRoleToGroup(role) {
-	const data = JSON.parse(readResponse);
-	return Object.keys(data).reduce((acc, key) => {
-		if (role === key) {
-			acc = data[key];
-		}
-
-		return acc;
-	}, '');
+  const data = JSON.parse(readResponse);
+  return Object.values(data).find(() => {
+    const key = Object.keys(data).find(k => k === role);
+    return data[key];
+  });
 }
 
 export function mapGroupToRole(group) {
-	const data = JSON.parse(readResponse);
-	return Object.values(data).reduce((acc, value) => {
-		if (group.includes(value)) {
-			acc = Object.keys(data).reduce((accumulate, key) => {
-				if (data[key] === value) {
-					accumulate = key;
-				}
-
-				return accumulate;
-			});
-		}
-
-		return acc;
-	}, '');
+  const data = JSON.parse(readResponse);
+  const value = Object.values(data).find(v => group.includes(v));
+  return Object.keys(data).find(key => data[key] === value);
 }
 
 export function checkRoleInGroup(group) {
-	const data = JSON.parse(readResponse);
-	return Object.values(data).some(value => group.includes(value)
-	);
+  const data = JSON.parse(readResponse);
+  return Object.values(data).some(value => group.includes(value));
 }
 
 export function formatUrl(url) {
-	return url.replace(/^file:\/\//, '');
+  return url.replace(/^file:\/\//u, '');
 }

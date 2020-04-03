@@ -30,15 +30,20 @@
 import testSuiteFactory from './testUtils';
 
 describe('app', () => {
-	const generateTestSuite = testSuiteFactory({
-		rootPath: [__dirname, '..', '..', 'test-fixtures']
-	});
+  const generateTestSuite = testSuiteFactory({
+    rootPath: [
+      __dirname,
+      '..',
+      '..',
+      'test-fixtures'
+    ]
+  });
 
-	describe('users', () => {
-		describe('#readRequest', generateTestSuite('users', 'readRequest'));
-		describe('#createRequest', generateTestSuite('users', 'createRequest'));
-		describe('#deleteRequest', generateTestSuite('users', 'deleteRequest'));
-		describe('#queryRequest', generateTestSuite('users', 'queryRequest'));
-		describe('#updateRequest', generateTestSuite('users', 'updateRequest'));
-	});
+  describe('users', () => {
+    describe('#readRequest', generateTestSuite('users', 'readRequest'));
+    describe('#createRequest', generateTestSuite('users', 'createRequest'));
+    describe('#deleteRequest', generateTestSuite('users', 'deleteRequest'));
+    describe('#queryRequest', generateTestSuite('users', 'queryRequest'));
+    describe('#updateRequest', generateTestSuite('users', 'updateRequest'));
+  });
 });
