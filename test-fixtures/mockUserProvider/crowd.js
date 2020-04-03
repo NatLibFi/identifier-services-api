@@ -108,7 +108,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
           value
         ]) => ({...acc, [key]: value}), {});
 
-      function filter(key) {
+      function filter([key]) {
         const allowedKeys = [
           'role',
           'givenName',
