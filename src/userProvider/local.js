@@ -117,7 +117,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
           value
         ]) => ({...acc, [key]: value}), {});
 
-      function filter(key) {
+      function filter([key]) {
         const allowedKeys = [
           'role',
           'givenName',
@@ -179,7 +179,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
           value
         ]) => ({...acc, [key]: value}), {});
 
-      function filter(key) {
+      function filter([key]) {
         const allowedKeys = [
           'role',
           'givenName',

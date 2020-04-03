@@ -314,7 +314,7 @@ export function filterResult(result) {
         value
       ]) => ({...acc, [key]: value}), {});
 
-    function filter(key) {
+    function filter([key]) {
       const allowedKeys = [
         'state',
         'publisher',
