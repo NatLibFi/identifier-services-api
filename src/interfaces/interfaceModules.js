@@ -41,8 +41,6 @@ export default function (collectionName) {
   };
 
   async function create(db, doc, user) {
-    // Avoid insert if there is duplicate identifier
-    db.collection('Publication_ISSN').createIndex({identifier: 1}, {unique: true});
     const {insertedId} = await db.collection(collectionName).insertOne({
       ...doc,
       lastUpdated: {
