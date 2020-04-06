@@ -408,3 +408,12 @@ function getValidator(schemaName) {
     })
     .compile(obj.components.schemas[schemaName]);
 }
+
+export function validateRange(rangeList, doc) {
+  const rangeEnds = rangeList.results.map(item => item.rangeEnd);
+  const arrBool = rangeEnds.map(item => Number(doc.rangeStart) > Number(item));
+  if (arrBool.some(item => item === false) || Number(doc.rangeEnd) < Number(doc.rangeStart)) { // eslint-disable-line functional/no-conditional-statement
+    throw new ApiError(HttpStatus.CONFLICT);
+  }
+  return true;
+}

@@ -27,11 +27,10 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc} from './utils';
+import {hasPermission, validateDoc, validateRange} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import {validate} from '@natlibfi/identifier-services-commons/dist/validate';
-import _ from 'lodash';
 
 const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
 const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
@@ -63,20 +62,10 @@ export default function () {
             }
           ];
           const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
-          const ranges = rangeIsbnLlist.results.map(item => ({
-            rangeStart: item.rangeStart,
-            rangeEnd: item.rangeEnd
-          }));
-          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-          // Check whether entered range exist in existing ranges
-          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-          // Cehck if the entered range conflict with existing ranges
-          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
-            throw new ApiError(HttpStatus.CONFLICT);
+          if (validateRange(rangeIsbnLlist, doc)) {
+            return rangesISBNInterface.create(db, doc, user);
           }
 
-          return rangesISBNInterface.create(db, doc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -156,20 +145,10 @@ export default function () {
             }
           ];
           const rangeIsmnLlist = await rangesISMNInterface.query(db, {queries});
-          const ranges = rangeIsmnLlist.results.map(item => ({
-            rangeStart: item.rangeStart,
-            rangeEnd: item.rangeEnd
-          }));
-          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-          // Check whether entered range exist in existing ranges
-          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-          // Cehck if the entered range conflict with existing ranges
-          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
-            throw new ApiError(HttpStatus.CONFLICT);
+          if (validateRange(rangeIsmnLlist, doc)) {
+            return rangesISMNInterface.create(db, doc, user);
           }
 
-          return rangesISMNInterface.create(db, doc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -248,21 +227,16 @@ export default function () {
             }
           ];
           const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
-          const ranges = rangeIssnLlist.results.map(item => ({
-            rangeStart: item.rangeStart,
-            rangeEnd: item.rangeEnd
-          }));
-          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-          // Check whether entered range exist in existing ranges
-          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-          // Cehck if the entered range conflict with existing ranges
-          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
-            throw new ApiError(HttpStatus.CONFLICT);
+          const isActiveRange = rangeIssnLlist.results.some(item => item.active === true);
+
+          if (isActiveRange === true) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
           }
 
-          const result = await rangesISSNInterface.create(db, doc, user);
-          return result;
+          if (validateRange(rangeIssnLlist, doc)) {
+            return rangesISSNInterface.create(db, doc, user);
+          }
+
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
