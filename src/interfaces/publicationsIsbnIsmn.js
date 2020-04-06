@@ -33,6 +33,8 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
+const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
+const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
 
 export default function () {
   return {
@@ -42,22 +44,80 @@ export default function () {
     queryIsbnIsmn
   };
 
-  function createIsbnIsmn(db, doc, user) {
+  async function createIsbnIsmn(db, doc, user) {
+    const query = [
+      {
+        query: {active: true}
+      }
+    ];
+    const queryPubIsbn = [
+      {
+        query: {$or: [
+          {type: 'book'},
+          {type: 'dissertation'},
+          {type: 'map'}
+        ]}
+      }
+    ];
+    const queryPubIsmn = [
+      {
+        query: {$or: [{type: 'music'}]}
+      }
+    ];
+    const isbnRangeList = await rangesISBNInterface.query(db, {queries: query});
+    const ismnRangeList = await rangesISMNInterface.query(db, {queries: query});
+    // Get list of publication according to type either music or book...
+    const publicationList = await publicationsIsbnIsmnInterface.query(db, {queries: doc.type === 'music' ? queryPubIsmn : queryPubIsbn});
+    const publicationIdentifier = publicationList.results.map(item => item.identifier);
+    const identiferTitle = publicationIdentifier.reduce((acc, cVal) => acc.concat(cVal), []);
+    // Get list of title if identifiers
+    const slicedTitle = identiferTitle.map(item => item.id.slice(11, 15)); // ['0001', '0002', '0003']
+    const intIdentifierTitle = slicedTitle.map(item => Number(item));
+    const newIdentifierTitle = Math.max(...intIdentifierTitle) + 1;
+
+    // Get ranges according to the associated user
+    function getRange(ranges) {
+      return ranges.find(item => item.associatePublisher && item.associatePublisher.some(range => range === user.id));
+    }
+
+    function calculateIsbnIsmnIdentifier(range, title) {
+      const beforeCheckDigit = `${range.prefix}${title}`;
+      const split = beforeCheckDigit.split('');
+      const calculateMultiply = split.map((item, i) => {
+        if (i === 0 || i % 2 === 0) {
+          return Number(item);
+        }
+
+        return Number(item * 3);
+      });
+      const addTotal = calculateMultiply.reduce((acc, val) => acc + val, 0);
+      const remainder = addTotal % 10;
+      const checkDigit = 10 - remainder;
+      const formatIdentifier = `${beforeCheckDigit.slice(0, 3)}-${
+        beforeCheckDigit.slice(3, 6)}-${
+        beforeCheckDigit.slice(6, 8)}-${
+        beforeCheckDigit.slice(8, 12)}-${
+        checkDigit}`;
+      return formatIdentifier;
+    }
+
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
 
-      if (validateDoc(doc, 'PublicationIsbnIsmnContent')) {
-        if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
-          if (user.role === 'publisher' || user.role === 'publisher-admin') {
-            const newDoc = {...doc, publisher: user.publisher, metadataReference: {state: 'pending'}};
-            return publicationsIsbnIsmnInterface.create(db, newDoc, user);
-          }
+      const range = doc.type === 'music' ? getRange(ismnRangeList.results) : getRange(isbnRangeList.results);
 
-          // Background task will send publisher id
-          const newDoc = {...doc, metadataReference: {state: 'pending'}};
-          return publicationsIsbnIsmnInterface.create(db, newDoc, user);
+      const newDoc = {
+        ...doc,
+        associatedRange: range && range.id,
+        metadataReference: {state: 'pending'},
+        identifier: range && calculateIdentifier({newIdentifierTitle, range, doc})
+      };
+
+      if (validateDoc(user.role === 'system' ? doc : newDoc, 'PublicationIsbnIsmnContent')) {
+        if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
+          return publicationsIsbnIsmnInterface.create(db, user.role === 'system' ? doc : newDoc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -67,6 +127,27 @@ export default function () {
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    function calculateIdentifier({newIdentifierTitle, range, doc}) {
+      if (doc.formatDetails.format === 'electronic' || doc.formatDetails.format === 'printed') {
+        return {
+          id: calculateIsbnIsmnIdentifier(range, newIdentifierTitle),
+          type: doc.formatDetails.format
+        };
+      }
+
+      if (doc.formatDetails.format === 'printed-and-electronic') {
+        const identifier = [
+          newIdentifierTitle,
+          newIdentifierTitle + 1
+        ];
+        const res = identifier.map((item, i) => ({
+          id: calculateIsbnIsmnIdentifier(range, item),
+          type: i === 0 ? 'printed' : 'electronic'
+        }));
+        return res;
       }
     }
   }
@@ -118,15 +199,14 @@ export default function () {
     }
   }
 
-  // Async function removeIsbnIsmn(db, id) {
-  // If (hasAdminPermission(user) || hasSystemPermission(user)) {
-  // eslint-disable-next-line no-tabs
-  // 		Const result = await publicationsIsbnIsmnInterface.remove(db, id);
-  // Return result;
-  // }
+  /* Async function removeIsbnIsmn(db, id) {
+  if (hasAdminPermission(user) || hasSystemPermission(user)) {
+    const result = await publicationsIsbnIsmnInterface.remove(db, id);
+    return result;
+  }
 
-  // Throw new ApiError(HttpStatus.FORBIDDEN);
-  // }
+  throw new ApiError(HttpStatus.FORBIDDEN);
+  } */
 
   async function queryIsbnIsmn(db, {queries, offset}, user) {
     const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});

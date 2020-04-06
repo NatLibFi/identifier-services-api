@@ -1,8 +1,8 @@
 {
-    "descr": "Should succeed, publisher-admin can create publications Isbnismn.",
+    "descr": "Should succeed, publisher-admin/publisher can create publications Isbnismn.",
     "requestUrl": "/publications/isbn-ismn",
     "collectionName": "Publication_ISBN_ISMN",
-    "username": "publisher-admin",
+    "username": "some@gmail.com",
     "password": "0l1gq69q6nxh",
     "method": "post",
     "expectedStatus": 201,

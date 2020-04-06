@@ -3,8 +3,7 @@
     "userMetadata": [
         {
             "_id": "5cd90e696a1e930789dfaa48",
-            "id":"publisher-admin",
-            "publisher": "5d8cb5a8320e9015459a9999",
+            "id":"some@gmail.com",
             "preferences": {
                 "defaultLanguage": "foo"
             },
@@ -13,5 +12,17 @@
                 "user": "bar"
             }
         }
-    ]
+    ],
+    "RangeIsbnContent": [{
+        "_id": "5d9efa8a1c9d440000811111",
+        "lastUpdated": {
+            "timestamp": "838383838",
+            "user": "bar"
+        },
+        "prefix": "97895151",
+        "rangeStart": "5000",
+        "rangeEnd": "6000",
+        "active": true,
+        "associatePublisher": ["some@gmail.com"]
+    }]
 }

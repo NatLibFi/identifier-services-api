@@ -70,6 +70,8 @@ export default async function run() {
   const client = new MongoClient(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
   const connection = await client.connect();
   const db = connection.db();
+  // Avoid insert if there is duplicate identifier
+  db.collection('Publication_ISSN').createIndex({identifier: 1}, {unique: true});
 
   const passportMiddlewares = await generatePassportMiddlewares({
     crowd: {
