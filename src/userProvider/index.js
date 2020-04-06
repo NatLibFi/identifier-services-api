@@ -30,13 +30,13 @@ import local from './local';
 import crowd from './crowd';
 
 export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
-	if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
-		return crowd({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE_KEY_URL, db});
-	}
+  if (CROWD_URL && CROWD_APP_NAME && CROWD_APP_PASSWORD) {
+    return crowd({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE_KEY_URL, db});
+  }
 
-	if (PASSPORT_LOCAL_USERS) {
-		return local({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db});
-	}
+  if (PASSPORT_LOCAL_USERS) {
+    return local({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db});
+  }
 
-	throw new Error('No configuration for passport strategies');
+  throw new Error('No configuration for passport strategies');
 }

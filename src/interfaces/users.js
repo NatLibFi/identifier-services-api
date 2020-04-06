@@ -29,60 +29,60 @@
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function () {
-	return {
-		create,
-		read,
-		update,
-		remove,
-		changePwd,
-		query
-	};
+  return {
+    create,
+    read,
+    update,
+    remove,
+    changePwd,
+    query
+  };
 
-	async function create(userProvider, doc, user) {
-		try {
-			return userProvider.create(doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function create(userProvider, doc, user) {
+    try {
+      return userProvider.create(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function read(userProvider, id, user) {
-		try {
-			return userProvider.read(id, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function read(userProvider, id, user) {
+    try {
+      return userProvider.read(id, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function update(userProvider, id, doc, user) {
-		try {
-			return userProvider.update(id, doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function update(userProvider, id, doc, user) {
+    try {
+      return userProvider.update(id, doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function remove(userProvider, id, user) {
-		try {
-			return userProvider.remove(id, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function remove(userProvider, id, user) {
+    try {
+      return userProvider.remove(id, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function changePwd(userProvider, doc, user) {
-		try {
-			return userProvider.changePwd(doc, user); // Changes made during unit test if problem persist `await` instead of `return`
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function changePwd(userProvider, doc, user) {
+    try {
+      return userProvider.changePwd(doc, user); // Changes made during unit test if problem persist `await` instead of `return`
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 
-	async function query(userProvider, doc, user) {
-		try {
-			return userProvider.query(doc, user);
-		} catch (err) {
-			throw new ApiError(err.status);
-		}
-	}
+  function query(userProvider, doc, user) {
+    try {
+      return userProvider.query(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
 }

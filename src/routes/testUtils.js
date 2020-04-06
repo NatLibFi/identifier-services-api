@@ -31,7 +31,7 @@ import chaiHttp from 'chai-http';
 import HttpStatus from 'http-status';
 import fixtureFactory, {READERS} from '@natlibfi/fixura';
 import mongoFixturesFactory from '@natlibfi/fixura-mongo';
-import startApp, {__RewireAPI__ as RewireAPI} from '../app'; // eslint-disable-line import/named
+import startApp, {__RewireAPI__ as RewireAPI} from '../app';
 import {readdirSync} from 'fs';
 import {join as joinPath} from 'path';
 import {ApiError} from '@natlibfi/identifier-services-commons/dist/error';
@@ -41,170 +41,185 @@ import generateUserProvider from '../../test-fixtures/mockUserProvider';
 chai.use(chaiHttp);
 
 export default ({rootPath}) => {
-	let requester;
-	let mongoFixtures;
+  let requester;// eslint-disable-line functional/no-let
+  let mongoFixtures;// eslint-disable-line functional/no-let
 
-	after(() => {
-		RewireAPI.__ResetDependency__('MONGO_URI');
-	});
+  after(() => {
+    RewireAPI.__ResetDependency__('MONGO_URI');
+  });
 
-	afterEach(async () => {
-		await requester.close();
-		await mongoFixtures.close();
-		RewireAPI.__ResetDependency__('MONGO_URI');
-		RewireAPI.__ResetDependency__('PASSPORT_LOCAL_USERS');
-	});
+  afterEach(async () => {
+    await requester.close();
+    await mongoFixtures.close();
+    RewireAPI.__ResetDependency__('MONGO_URI');
+    RewireAPI.__ResetDependency__('PASSPORT_LOCAL_USERS');
+  });
 
-	return (...args) => {
-		return async () => {
-			const dir = rootPath.concat(args);
-			const {getFixture} = fixtureFactory({root: dir});
-			const subDirs = readdirSync(joinPath.apply(undefined, dir));
-			return iterate();
+  return (...args) => () => {
+    const dir = rootPath.concat(args);
+    const {getFixture} = fixtureFactory({root: dir});
+    const subDirs = readdirSync(joinPath(...dir));
+    return iterate();
+    function iterate() {
+      subDirs.forEach(sub => {
+        const PASSPORT_LOCAL_USERS = `file://${joinPath(...dir)}/${sub}/local.json`;
+        if (sub) {
+          const {
+            descr,
+            skip,
+            expectedPayload,
+            requestUrl,
+            method,
+            username,
+            password,
+            expectedStatus,
+            expectedDb,
+            payloadData,
+            payloadExpected,
+            collectionName
+          } = getData(sub);
 
-			async function iterate() {
-				const sub = subDirs.shift();
-				const PASSPORT_LOCAL_USERS = `file://${joinPath.apply(undefined, dir)}/${sub}/local.json`;
+          if (skip) {
+            return it.skip(`${sub} ${descr}`);
+          }
+          return it(`${sub} ${descr}`, async () => {
+            mongoFixtures = await mongoFixturesFactory({rootPath: dir, useObjectId: true});
+            RewireAPI.__Rewire__('MONGO_URI', await mongoFixtures.getConnectionString());
+            RewireAPI.__Rewire__('PASSPORT_LOCAL_USERS', PASSPORT_LOCAL_USERS);
+            RewireAPI.__Rewire__('generateUserProvider', generateUserProvider);
 
-				if (sub) {
-					const {
-						descr,
-						skip,
-						expectedPayload,
-						requestUrl,
-						method,
-						username,
-						password,
-						expectedStatus,
-						expectedDb,
-						payloadData,
-						payloadExpected,
-						collectionName
-					} = getData(sub);
+            const app = await startApp();
+            requester = chai.request(app).keepOpen();
+            await mongoFixtures.populate([
+              sub,
+              'dbContents.json'
+            ]);
+            const token = await auth(username, password);
+            if (expectedPayload) {
+              const conditionalRequest = token === undefined
+                ? await requester[method](requestUrl)
+                : await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`);
 
-					if (skip) {
-						it.skip(`${sub} ${descr}`);
-					} else {
-						it(`${sub} ${descr}`, async () => {
-							mongoFixtures = await mongoFixturesFactory({rootPath: dir, useObjectId: true});
-							RewireAPI.__Rewire__('MONGO_URI', await mongoFixtures.getConnectionString());
-							RewireAPI.__Rewire__('PASSPORT_LOCAL_USERS', PASSPORT_LOCAL_USERS);
-							RewireAPI.__Rewire__('generateUserProvider', generateUserProvider);
+              const response = payloadData
+                ? await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`)
+                  .send(payloadData)
+                : conditionalRequest;
+              expect(response).to.have.status(expectedStatus);
+              if (expectedStatus === HttpStatus.OK) {
+                return expect(response.body).to.eql(expectedPayload);
+              }
+            }
 
-							const app = await startApp();
-							requester = chai.request(app).keepOpen();
+            if (expectedDb) {
+              const response = payloadData
+                ? await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`)
+                  .send(payloadData)
+                : await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`);
+              expect(response).to.have.status(expectedStatus);
+              if (response.status === HttpStatus.OK) {
+                const db = await mongoFixtures.dump();
+                return expect(formatDump(db, collectionName)).to.eql(expectedDb);
+              }
+            }
 
-							await mongoFixtures.populate([sub, 'dbContents.json']);
-							const token = await auth(username, password);
-							if (expectedPayload) {
-								const response = payloadData ?
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`).send(payloadData) :
-									(
-										token === undefined ? await requester[method](requestUrl) :
-											await requester[method](requestUrl)
-												.set('Authorization', `Bearer ${token}`)
-									);
-								expect(response).to.have.status(expectedStatus);
-								if (expectedStatus === HttpStatus.OK) {
-									expect(response.body).to.eql(expectedPayload);
-								}
-							}
+            if (expectedDb === undefined && payloadExpected === undefined) {
+              const conditionalRequest = payloadData
+                ? await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`)
+                  .send(payloadData)
+                : await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`);
 
-							if (expectedDb) {
-								const response = payloadData ?
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`).send(payloadData) :
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`);
-								expect(response).to.have.status(expectedStatus);
-								if (response.status === HttpStatus.OK) {
-									const db = await mongoFixtures.dump();
-									expect(formatDump(db, collectionName)).to.eql(expectedDb);
-								}
-							}
+              const response = method === 'delete'
+                ? await requester[method](requestUrl)
+                  .set('Authorization', `Bearer ${token}`)
+                : conditionalRequest;
+              return expect(response).to.have.status(expectedStatus);
+            }
+          });
+        }
+      });
+    }
 
-							if (expectedDb === undefined && payloadExpected === undefined) {
-								const response = method === 'delete' ?
-									await requester[method](requestUrl)
-										.set('Authorization', `Bearer ${token}`) :
-									(
-										payloadData ?
-											await requester[method](requestUrl)
-												.set('Authorization', `Bearer ${token}`).send(payloadData) :
-											await requester[method](requestUrl)
-												.set('Authorization', `Bearer ${token}`)
-									);
-								expect(response).to.have.status(expectedStatus);
-							}
-						});
-					}
+    function getData(subDir) {
+      const {descr, collectionName, requestUrl, method, skip, username, password, expectedStatus, dbExpected, payload, payloadExpected = true} = getFixture({
+        components: [
+          subDir,
+          'metadata.json'
+        ],
+        reader: READERS.JSON
+      });
+      const payloadData = payload && getFixture({
+        components: [
+          subDir,
+          payload
+        ],
+        reader: READERS.JSON
+      });
 
-					iterate();
-				}
-			}
+      if (skip) {
+        return {descr, skip};
+      }
 
-			function getData(subDir) {
-				const {descr, collectionName, requestUrl, method, skip, username, password, expectedStatus, dbExpected, payload, payloadExpected = true} = getFixture({
-					components: [subDir, 'metadata.json'],
-					reader: READERS.JSON
-				});
-				const payloadData = payload && getFixture({
-					components: [subDir, payload],
-					reader: READERS.JSON
-				});
+      try {
+        if (dbExpected) {
+          const expectedDb = getFixture({
+            components: [
+              subDir,
+              dbExpected
+            ],
+            reader: READERS.JSON
+          });
+          return payload
+            ? {descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb, payloadData}
+            : {descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb};
+        }
 
-				if (skip) {
-					return {descr, skip};
-				}
+        if (payloadExpected) {
+          const expectedPayload = getFixture({
+            components: [
+              subDir,
+              'expectedPayload.json'
+            ],
+            reader: READERS.JSON
+          });
+          return payload
+            ? {expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadData}
+            : {expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadExpected};
+        }
 
-				try {
-					if (dbExpected) {
-						const expectedDb = getFixture({
-							components: [subDir, dbExpected],
-							reader: READERS.JSON
-						});
-						return payload ?
-							{descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb, payloadData} :
-							{descr, collectionName, requestUrl, method, username, password, expectedStatus, expectedDb};
-					}
+        if (dbExpected === undefined && payloadExpected === false) {
+          return {descr, requestUrl, method, username, password, expectedStatus, payloadData};
+        }
+      } catch (err) {
+        if (err.code === 'ENOENT') {
+          return {descr, requestUrl};
+        }
 
-					if (payloadExpected) {
-						const expectedPayload = getFixture({
-							components: [subDir, 'expectedPayload.json'],
-							reader: READERS.JSON
-						});
-						return payload ?
-							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadData} :
-							{expectedPayload, descr, collectionName, requestUrl, method, username, password, expectedStatus, payloadExpected};
-					}
+        throw new ApiError(err.status);
+      }
+    }
 
-					if (dbExpected === undefined && payloadExpected === false) {
-						return {descr, requestUrl, method, username, password, expectedStatus, payloadData};
-					}
-				} catch (err) {
-					if (err.code === 'ENOENT') {
-						return {descr, requestUrl};
-					}
+    async function auth(username, password) {
+      const result = await requester.post('/auth').set('Authorization', `Basic ${base64.encode(`${username}:${password}`)}`);
+      return result.headers.token;
+    }
 
-					throw new ApiError(err.status);
-				}
-			}
+    function formatDump(dump, collectionName) {
+      const result = dump[collectionName].map(doc => filterDoc(doc));
+      return {...dump, [collectionName]: result};
 
-			async function auth(username, password) {
-				const result = await requester.post('/auth').set('Authorization', 'Basic ' + base64.encode(username + ':' + password)
-				);
-				return result.headers.token;
-			}
-
-			function formatDump(dump, collectionName) {
-				dump[collectionName].forEach(doc =>
-					Object.values(doc).forEach(field => Object.keys(field).filter(item =>
-						item === 'timestamp' || item === 'user'
-					).forEach(i => delete doc.lastUpdated[i]))
-				);
-				return dump;
-			}
-		};
-	};
+      function filterDoc(doc) {
+        return Object.entries(doc)
+          .reduce((acc, [
+            k,
+            value
+          ]) => k === 'lastUpdated' ? {...acc, [k]: {}} : {...acc, [k]: value}, {});
+      }
+    }
+  };
 };

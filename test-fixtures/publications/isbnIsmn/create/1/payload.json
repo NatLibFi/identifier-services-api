@@ -20,12 +20,16 @@
         "format": "electronic"
     },
     "id": "5d8cb5a8320e9015459a6b00",
-    "publisher": "5d8cb5a8320e9015459a9999",
     "metadataReference": {
-        "state": "inProgress",
-        "id": "f2da7837-5d4f-41de-a181-b35465a9a256"
+        "state": "pending"
     },
     "associatedRange": "string",
+    "identifier": [
+        {
+            "id": "string",
+            "type": "string"
+        }
+    ],
     "lastUpdated": {
         "timestamp": "2019-09-26T13:22:19.932Z",
         "user": "foo"

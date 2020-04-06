@@ -3365,8 +3365,20 @@
                 "description": "Identifier of the publication",
                 "type": "string"
               },
+              
               "identifier": {
-                "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties":{
+                    "id": {
+                      "type":"string"
+                    },
+                    "type": {
+                      "type":"string"
+                    }
+                  }
+                }
               },
               "associatedRange": {
                 "description": "Identifier of the identifier range resource this publication is associated with",
@@ -3554,6 +3566,13 @@
                     "$ref": "#/components/schemas/SeriesDetails"
                   }
                 }
+              },
+              "associatedRange": {
+                "description": "Identifier of the identifier range resource this publication is associated with",
+                "type": "string"
+              },
+              "identifier": {
+                "type": "string"
               }
             },
             "required": [

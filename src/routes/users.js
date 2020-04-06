@@ -33,71 +33,71 @@ import HttpStatus from 'http-status';
 import {API_URL} from '../config';
 
 export default function (userProvider) {
-	const users = usersFactory({url: API_URL});
+  const users = usersFactory({url: API_URL});
 
-	return new Router()
-		.post('/', create)
-		.get('/:id', read)
-		.put('/:id', update)
-		.delete('/:id', remove)
-		.post('/:id/password', changePwd)
-		.post('/query', query);
+  return new Router()
+    .post('/', create)
+    .get('/:id', read)
+    .put('/:id', update)
+    .delete('/:id', remove)
+    .post('/:id/password', changePwd)
+    .post('/query', query);
 
-	async function create(req, res, next) {
-		try {
-			const result = await users.create(userProvider, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
-		} catch (err) {
-			return next(err);
-		}
-	}
+  async function create(req, res, next) {
+    try {
+      const result = await users.create(userProvider, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function read(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.read(userProvider, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function read(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await users.read(userProvider, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function update(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.update(userProvider, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function update(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await users.update(userProvider, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function remove(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await users.remove(userProvider, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function remove(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await users.remove(userProvider, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function changePwd(req, res, next) {
-		const doc = {...req.body, id: req.params.id};
-		try {
-			const result = await users.changePwd(userProvider, doc, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function changePwd(req, res, next) {
+    const doc = {...req.body, id: req.params.id};
+    try {
+      const result = await users.changePwd(userProvider, doc, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function query(req, res, next) {
-		try {
-			const result = await users.query(userProvider, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function query(req, res, next) {
+    try {
+      const result = await users.query(userProvider, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

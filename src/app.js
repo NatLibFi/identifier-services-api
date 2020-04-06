@@ -33,30 +33,30 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
 import {
-	createUsersRouter,
-	createRequestsUsersRouter,
-	createPublishersRouter,
-	createPublishersRequestsRouter,
-	createPublicationsRouterIsbnIsmn,
-	createRequestsPublicationsRouterIsbnIsmn,
-	createPublicationsRouterIssn,
-	createRequestsPublicationsRouterIssn,
-	createMessageTemplate,
-	createRangesRouter,
-	createApiDocRouter,
-	authenticationRouter
+  createUsersRouter,
+  createRequestsUsersRouter,
+  createPublishersRouter,
+  createPublishersRequestsRouter,
+  createPublicationsRouterIsbnIsmn,
+  createRequestsPublicationsRouterIsbnIsmn,
+  createPublicationsRouterIssn,
+  createRequestsPublicationsRouterIssn,
+  createMessageTemplate,
+  createRangesRouter,
+  createApiDocRouter,
+  authenticationRouter
 } from './routes';
 import {bodyParse, mapGroupToRole} from './utils';
 import {
-	whiteList,
-	ENABLE_PROXY,
-	MONGO_URI, HTTP_PORT,
-	USER_AGENT_LOGGING_BLACKLIST,
-	CROWD_URL,
-	CROWD_APP_NAME,
-	CROWD_APP_PASSWORD,
-	PASSPORT_LOCAL_USERS,
-	PRIVATE_KEY_URL
+  whiteList,
+  ENABLE_PROXY,
+  MONGO_URI, HTTP_PORT,
+  USER_AGENT_LOGGING_BLACKLIST,
+  CROWD_URL,
+  CROWD_APP_NAME,
+  CROWD_APP_PASSWORD,
+  PASSPORT_LOCAL_USERS,
+  PRIVATE_KEY_URL
 } from './config';
 
 import generateUserProvider from './userProvider';
@@ -65,97 +65,96 @@ const {createLogger, createExpressLogger, handleInterrupt} = Utils;
 const {Crowd: {generatePassportMiddlewares}} = Authentication;
 
 export default async function run() {
-	const Logger = createLogger();
-	const app = express();
-	const client = new MongoClient(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-	const connection = await client.connect();
-	const db = connection.db();
+  const Logger = createLogger();
+  const app = express();
+  const client = new MongoClient(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+  const connection = await client.connect();
+  const db = connection.db();
+  // Avoid insert if there is duplicate identifier
+  db.collection('Publication_ISSN').createIndex({identifier: 1}, {unique: true});
 
-	const passportMiddlewares = await generatePassportMiddlewares({
-		crowd: {
-			appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
-			url: `${CROWD_URL}/rest`, useCache: true, fetchGroupMembership: true
-		},
-		localUsers: PASSPORT_LOCAL_USERS
-	});
+  const passportMiddlewares = await generatePassportMiddlewares({
+    crowd: {
+      appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
+      url: `${CROWD_URL}/rest`, useCache: true, fetchGroupMembership: true
+    },
+    localUsers: PASSPORT_LOCAL_USERS
+  });
 
-	const userProvider = generateUserProvider({
-		CROWD_URL: CROWD_URL,
-		CROWD_APP_NAME: CROWD_APP_NAME,
-		CROWD_APP_PASSWORD: CROWD_APP_PASSWORD,
-		PASSPORT_LOCAL_USERS: PASSPORT_LOCAL_USERS,
-		PRIVATE_KEY_URL: PRIVATE_KEY_URL,
-		db: db
-	});
+  const userProvider = generateUserProvider({
+    CROWD_URL,
+    CROWD_APP_NAME,
+    CROWD_APP_PASSWORD,
+    PASSPORT_LOCAL_USERS,
+    PRIVATE_KEY_URL,
+    db
+  });
 
-	const corsOptions = {
-		origin: (origin, callback) => {
-			if (origin === undefined) {
-				callback(null, true);
-			} else {
-				const originIsWhitelisted = whiteList.indexOf(origin) !== -1;
-				if (!originIsWhitelisted) {
-					Logger.log('info', `Request from origin ${origin} is not whitelisted.`);
-				}
+  const corsOptions = {
+    origin: (origin, callback) => origin === undefined ? callback(null, true) : whiteListCB(origin, callback),
+    credentials: true
+  };
 
-				callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
-			}
-		},
-		credentials: true
-	};
+  function whiteListCB(origin, callback) {
+    const originIsWhitelisted = whiteList.indexOf(origin) !== -1;
+    if (!originIsWhitelisted) {
+      return Logger.log('info', `Request from origin ${origin} is not whitelisted.`);
+    }
+    callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+  }
 
-	app.enable('trust proxy', ENABLE_PROXY);
-	app.use(createExpressLogger({
-		skip: r => USER_AGENT_LOGGING_BLACKLIST.includes(r.get('User-Agent'))
-	}));
-	app.use(cors(corsOptions));
-	app.use(bodyParse());
+  app.enable('trust proxy', ENABLE_PROXY);
+  app.use(createExpressLogger({
+    skip: r => USER_AGENT_LOGGING_BLACKLIST.includes(r.get('User-Agent'))
+  }));
+  app.use(cors(corsOptions));
+  app.use(bodyParse());
 
-	app.use('/', createApiDocRouter());
-	app.use('/templates', passportMiddlewares.token, combineUserInfo, createMessageTemplate(db));
-	app.use('/users', passportMiddlewares.token, combineUserInfo, createUsersRouter(userProvider));
-	app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(userProvider));
-	app.use('/publishers', createPublishersRouter(db, passportMiddlewares, combineUserInfo));
-	app.use('/requests/publishers', passportMiddlewares.token, combineUserInfo, createPublishersRequestsRouter(db));
-	app.use('/publications/isbn-ismn', passportMiddlewares.token, combineUserInfo, createPublicationsRouterIsbnIsmn(db));
-	app.use('/requests/publications/isbn-ismn', passportMiddlewares.token, combineUserInfo, createRequestsPublicationsRouterIsbnIsmn(db));
-	app.use('/publications/issn', passportMiddlewares.token, combineUserInfo, createPublicationsRouterIssn(db));
-	app.use('/requests/publications/issn', passportMiddlewares.token, combineUserInfo, createRequestsPublicationsRouterIssn(db));
-	app.use('/ranges', passportMiddlewares.token, combineUserInfo, createRangesRouter(db));
-	app.use('/auth', authenticationRouter(db, passportMiddlewares));
+  app.use('/', createApiDocRouter());
+  app.use('/templates', passportMiddlewares.token, combineUserInfo, createMessageTemplate(db));
+  app.use('/users', passportMiddlewares.token, combineUserInfo, createUsersRouter(userProvider));
+  app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(userProvider));
+  app.use('/publishers', createPublishersRouter(db, passportMiddlewares, combineUserInfo));
+  app.use('/requests/publishers', passportMiddlewares.token, combineUserInfo, createPublishersRequestsRouter(db));
+  app.use('/publications/isbn-ismn', createPublicationsRouterIsbnIsmn(db, passportMiddlewares, combineUserInfo));
+  app.use('/requests/publications/isbn-ismn', passportMiddlewares.token, combineUserInfo, createRequestsPublicationsRouterIsbnIsmn(db));
+  app.use('/publications/issn', passportMiddlewares.token, combineUserInfo, createPublicationsRouterIssn(db));
+  app.use('/requests/publications/issn', passportMiddlewares.token, combineUserInfo, createRequestsPublicationsRouterIssn(db));
+  app.use('/ranges', passportMiddlewares.token, combineUserInfo, createRangesRouter(db));
+  app.use('/auth', authenticationRouter(db, passportMiddlewares));
 
-	const server = app.listen(HTTP_PORT, () => {
-		Logger.log('info', 'Started identifier-services-api');
-	});
+  const server = app.listen(HTTP_PORT, () => {
+    Logger.log('info', 'Started identifier-services-api');
+  });
 
-	registerSignalHandlers();
-	return server;
+  registerSignalHandlers();
+  return server;
 
-	async function combineUserInfo(req, res, next) {
-		try {
-			const response = await db.collection('userMetadata').findOne({id: req.user.id});
-			if (response === null) {
-				throw new ApiError(HttpStatus.NOT_FOUND);
-			}
+  async function combineUserInfo(req, res, next) {
+    try {
+      const response = await db.collection('userMetadata').findOne({id: req.user.id});
+      if (response) {
+        const role = mapGroupToRole(req.user.groups);
+        req.user = {...req.user, role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
+        return next();
+      }
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-			req.user = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
-			next();
-		} catch (err) {
-			next(err);
-		}
-	}
+  function registerSignalHandlers() {
+    process
+      .on('SIGINT', handle)
+      .on('uncaughtException', handle)
+      .on('unhandledRejection', handle)
+    // Nodemon
+      .on('SIGUSR2', handle);
 
-	function registerSignalHandlers() {
-		process
-			.on('SIGINT', handle)
-			.on('uncaughtException', handle)
-			.on('unhandledRejection', handle)
-		// Nodemon
-			.on('SIGUSR2', handle);
-
-		function handle(arg) {
-			server.close();
-			handleInterrupt(arg);
-		}
-	}
+    function handle(arg) {
+      server.close();
+      handleInterrupt(arg);
+    }
+  }
 }

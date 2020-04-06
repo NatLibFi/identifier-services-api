@@ -38,296 +38,296 @@ const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnConte
 const rangesISSNInterface = interfaceFactory('RangeIssnContent');
 
 export default function () {
-	return {
-		createIsbn,
-		readIsbn,
-		updateIsbn,
-		queryIsbn,
-		createIsmn,
-		readIsmn,
-		updateIsmn,
-		queryIsmn,
-		createIssn,
-		readIssn,
-		updateIssn,
-		queryIssn
-	};
+  return {
+    createIsbn,
+    readIsbn,
+    updateIsbn,
+    queryIsbn,
+    createIsmn,
+    readIsmn,
+    updateIsmn,
+    queryIsmn,
+    createIssn,
+    readIssn,
+    updateIssn,
+    queryIssn
+  };
 
-	async function createIsbn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIsbnContent')) {
-				if (hasPermission(user, 'ranges', 'createIsbn')) {
-					const queries = [{
-						query: {}
-					}];
-					const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
-					const ranges = rangeIsbnLlist.results.map(item => {
-						return {
-							rangeStart: item.rangeStart,
-							rangeEnd: item.rangeEnd
-						};
-					});
-					const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-					// Check whether entered range exist in existing ranges
-					const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-					const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-					// Cehck if the entered range conflict with existing ranges
-					if (checkArray.some(item => item === true)) {
-						throw new ApiError(HttpStatus.CONFLICT);
-					}
+  async function createIsbn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIsbnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsbn')) {
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
+          const ranges = rangeIsbnLlist.results.map(item => ({
+            rangeStart: item.rangeStart,
+            rangeEnd: item.rangeEnd
+          }));
+          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
+          // Check whether entered range exist in existing ranges
+          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
+          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
+          // Cehck if the entered range conflict with existing ranges
+          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.CONFLICT);
+          }
 
-					return rangesISBNInterface.create(db, doc, user);
-				}
+          return rangesISBNInterface.create(db, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function readIsbn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIsbn')) {
-				const result = await rangesISBNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+  async function readIsbn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIsbn')) {
+        const result = await rangesISBNInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
 
-				return result;
-			}
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function updateIsbn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  function updateIsbn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-			if (validate(doc, 'RangeIsbnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIsbn')) {
-					return rangesISBNInterface.update(db, id, doc, user);
-				}
+      if (validate(doc, 'RangeIsbnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIsbn')) {
+          return rangesISBNInterface.update(db, id, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function queryIsbn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIsbn')) {
-				const result = await rangesISBNInterface.query(db, {queries, offset});
-				return result;
-			}
+  async function queryIsbn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIsbn')) {
+        const result = await rangesISBNInterface.query(db, {queries, offset});
+        return result;
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function createIsmn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'createIsmn')) {
-					const queries = [{
-						query: {}
-					}];
-					const rangeIsmnLlist = await rangesISMNInterface.query(db, {queries});
-					const ranges = rangeIsmnLlist.results.map(item => {
-						return {
-							rangeStart: item.rangeStart,
-							rangeEnd: item.rangeEnd
-						};
-					});
-					const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-					// Check whether entered range exist in existing ranges
-					const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-					const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-					// Cehck if the entered range conflict with existing ranges
-					if (checkArray.some(item => item === true)) {
-						throw new ApiError(HttpStatus.CONFLICT);
-					}
+  async function createIsmn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsmn')) {
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIsmnLlist = await rangesISMNInterface.query(db, {queries});
+          const ranges = rangeIsmnLlist.results.map(item => ({
+            rangeStart: item.rangeStart,
+            rangeEnd: item.rangeEnd
+          }));
+          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
+          // Check whether entered range exist in existing ranges
+          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
+          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
+          // Cehck if the entered range conflict with existing ranges
+          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.CONFLICT);
+          }
 
-					return rangesISMNInterface.create(db, doc, user);
-				}
+          return rangesISMNInterface.create(db, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function readIsmn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIsmn')) {
-				const result = await rangesISMNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+  async function readIsmn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIsmn')) {
+        const result = await rangesISMNInterface.read(db, id);
+        if (result === null) { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(HttpStatus.NOT_FOUND);
+        }
 
-				return result;
-			}
+        return result;
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function updateIsmn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  function updateIsmn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIsmn')) {
-					return rangesISMNInterface.update(db, id, doc, user);
-				}
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIsmn')) {
+          return rangesISMNInterface.update(db, id, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function queryIsmn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIsmn')) {
-				return rangesISMNInterface.query(db, {queries, offset});
-			}
+  function queryIsmn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIsmn')) {
+        return rangesISMNInterface.query(db, {queries, offset});
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function createIssn(db, doc, user) {
-		try {
-			if (validateDoc(doc, 'RangeIssnContent')) {
-				if (hasPermission(user, 'ranges', 'createIssn')) {
-					const queries = [{
-						query: {}
-					}];
-					const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
-					const ranges = rangeIssnLlist.results.map(item => {
-						return {
-							rangeStart: item.rangeStart,
-							rangeEnd: item.rangeEnd
-						};
-					});
-					const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
-					// Check whether entered range exist in existing ranges
-					const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
-					const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
-					// Cehck if the entered range conflict with existing ranges
-					if (checkArray.some(item => item === true)) {
-						throw new ApiError(HttpStatus.CONFLICT);
-					}
+  async function createIssn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeIssnContent')) {
+        if (hasPermission(user, 'ranges', 'createIssn')) {
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
+          const ranges = rangeIssnLlist.results.map(item => ({
+            rangeStart: item.rangeStart,
+            rangeEnd: item.rangeEnd
+          }));
+          const docRange = _.range(doc.rangeStart, doc.rangeEnd, 1);
+          // Check whether entered range exist in existing ranges
+          const checkRange = docRange.map(num => ranges.map(item => _.inRange(num, Number(item.rangeStart), Number(item.rangeEnd) + 1)));
+          const checkArray = checkRange.reduce((acc, val) => acc.concat(val), []);
+          // Cehck if the entered range conflict with existing ranges
+          if (checkArray.some(item => item === true)) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.CONFLICT);
+          }
 
-					const result = await rangesISSNInterface.create(db, doc, user);
-					return result;
-				}
+          const result = await rangesISSNInterface.create(db, doc, user);
+          return result;
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function readIssn(db, id, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'readIssn')) {
-				const result = await rangesISSNInterface.read(db, id);
-				if (result === null) {
-					throw new ApiError(HttpStatus.NOT_FOUND);
-				}
+  async function readIssn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIssn')) {
+        const result = await rangesISSNInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
 
-				return result;
-			}
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 
-	async function updateIssn(db, id, doc, user) {
-		try {
-			if (Object.keys(doc).length === 0) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			}
+  function updateIssn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
-			if (validateDoc(doc, 'RangeIsmnContent')) {
-				if (hasPermission(user, 'ranges', 'updateIssn')) {
-					return rangesISSNInterface.update(db, id, doc, user);
-				}
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIssn')) {
+          return rangesISSNInterface.update(db, id, doc, user);
+        }
 
-				throw new ApiError(HttpStatus.FORBIDDEN);
-			}
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
 
-			throw new ApiError(HttpStatus.BAD_REQUEST);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
 
-	async function queryIssn(db, {queries, offset}, user) {
-		try {
-			if (hasPermission(user, 'ranges', 'queryIssn')) {
-				return rangesISSNInterface.query(db, {queries, offset});
-			}
+  function queryIssn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIssn')) {
+        return rangesISSNInterface.query(db, {queries, offset});
+      }
 
-			throw new ApiError(HttpStatus.FORBIDDEN);
-		} catch (err) {
-			if (err) {
-				throw new ApiError(err.status);
-			}
-		}
-	}
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
 }

@@ -33,62 +33,61 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 export default function (db) {
-	const publisherRequests = publisherRequestsFactory({url: API_URL});
-	return new Router()
-		.post('/', createRequest)
-		.get('/:id', readRequest)
-		.put('/:id', updateRequest)
-		.delete('/:id', removeRequest)
-		.post('/query', queryRequests);
+  const publisherRequests = publisherRequestsFactory({url: API_URL});
+  return new Router()
+    .post('/', createRequest)
+    .get('/:id', readRequest)
+    .put('/:id', updateRequest)
+    .delete('/:id', removeRequest)
+    .post('/query', queryRequests);
 
-	async function createRequest(req, res, next) {
-		try {
-			if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-				throw new ApiError(HttpStatus.BAD_REQUEST);
-			} else {
-				const result = await publisherRequests.createRequest(db, req.body, req.user);
-				res.status(HttpStatus.CREATED).json(result);
-			}
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function createRequest(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await publisherRequests.createRequest(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function readRequest(req, res, next) {
-		try {
-			const result = await publisherRequests.readRequest(db, req.params.id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function readRequest(req, res, next) {
+    try {
+      const result = await publisherRequests.readRequest(db, req.params.id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function removeRequest(req, res, next) {
-		try {
-			const result = await publisherRequests.removeRequest(db, req.params.id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function removeRequest(req, res, next) {
+    try {
+      const result = await publisherRequests.removeRequest(db, req.params.id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function updateRequest(req, res, next) {
-		const id = req.params.id;
-		const body = req.body;
-		try {
-			const result = await publisherRequests.updateRequest(db, id, body, req.user);
-			res.json(result).status(HttpStatus.OK);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function updateRequest(req, res, next) {
+    const {id} = req.params;
+    const {body} = req;
+    try {
+      const result = await publisherRequests.updateRequest(db, id, body, req.user);
+      res.json(result).status(HttpStatus.OK);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function queryRequests(req, res, next) {
-		try {
-			const result = await publisherRequests.queryRequests(db, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function queryRequests(req, res, next) {
+    try {
+      const result = await publisherRequests.queryRequests(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

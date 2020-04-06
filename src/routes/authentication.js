@@ -30,21 +30,21 @@ import HttpStatus from 'http-status';
 import {mapGroupToRole} from '../utils';
 
 export default function (db, passportMiddlewares) {
-	return new Router()
-		.post('/', passportMiddlewares.credentials, authenticate)
-		.get('/', passportMiddlewares.token, read);
+  return new Router()
+    .post('/', passportMiddlewares.credentials, authenticate)
+    .get('/', passportMiddlewares.token, read);
 
-	function authenticate(req, res) {
-		res.set('Token', req.user).sendStatus(HttpStatus.NO_CONTENT);
-	}
+  function authenticate(req, res) {
+    res.set('Token', req.user).sendStatus(HttpStatus.NO_CONTENT);
+  }
 
-	async function read(req, res, next) {
-		try {
-			const response = await db.collection('userMetadata').findOne({id: req.user.id});
-			const result = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
-			res.json(result).sendStatus(HttpStatus.OK);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function read(req, res, next) {
+    try {
+      const response = await db.collection('userMetadata').findOne({id: req.user.id});
+      const result = {...req.user, role: mapGroupToRole(req.user.groups), ...response};
+      res.json(result).sendStatus(HttpStatus.OK);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

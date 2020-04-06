@@ -33,61 +33,60 @@ import {templatesFactory} from '../interfaces';
 import {API_URL} from '../config';
 
 export default function (db) {
-	const templates = templatesFactory({url: API_URL});
+  const templates = templatesFactory({url: API_URL});
 
-	return new Router()
-		.post('/', create)
-		.get('/:id', read)
-		.put('/:id', update)
-		.delete('/:id', remove)
-		.post('/query', query);
+  return new Router()
+    .post('/', create)
+    .get('/:id', read)
+    .put('/:id', update)
+    .delete('/:id', remove)
+    .post('/query', query);
 
-	async function create(req, res, next) {
-		try {
-			const result = await templates.create(db, req.body, req.user);
-			res.status(HttpStatus.CREATED).json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function create(req, res, next) {
+    try {
+      const result = await templates.create(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function read(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await templates.read(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function read(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await templates.read(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function update(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await templates.update(db, id, req.body, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function update(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await templates.update(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function remove(req, res, next) {
-		const id = req.params.id;
-		try {
-			const result = await templates.remove(db, id, req.user);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function remove(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await templates.remove(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
-	async function query(req, res, next) {
-		let result;
-		try {
-			result = await templates.query(db, req.body, req.user, req.query);
-			res.json(result);
-		} catch (err) {
-			next(err);
-		}
-	}
+  async function query(req, res, next) {
+    try {
+      const result = await templates.query(db, req.body, req.user, req.query);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }

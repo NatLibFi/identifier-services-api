@@ -1,4 +1,39 @@
 {
+    "Publication_ISSN": [
+        {
+            "_id": "5cd92b2197477f5addc0d292",
+            "language": "eng",
+            "title": "The white",
+            "subtitle": "laddu",
+            "city": "Patan",
+            "firstYear": 34,
+            "firstNumber": 22,
+            "frequency": "monthly",
+            "type": "daily",
+            "formatDetails": {
+                "format": "cd"
+            },
+            "previousPublication": {
+                "lastYear": 22,
+                "lastNumber": 33,
+                "title": "Polluted water",
+                "identifier": "889"
+            },
+            "seriesDetails": {
+                "mainSeries": {
+                    "title": "small street",
+                    "identifier": "54"
+                }
+            },
+            "publisher": "5dcebad7d05e8545d96e9899",
+            "associatedRange": "5d9efa8a1c9d440000811111",
+            "identifier": "1234-3455",
+            "lastUpdated": {
+                "timestamp": "2019-11-27T07:45:31.154Z",
+                "user": "tasks"
+            }
+        }
+    ],
     "userMetadata": [
         {
             "_id": "5cd90e696a1e930789dfaa48",
@@ -11,6 +46,19 @@
                 "timestamp": "838383838",
                 "user": "bar"
             }
+        }
+    ],
+    "RangeIssnContent": [
+        {
+            "_id": "5d9efa8a1c9d440000811111",
+            "lastUpdated": {
+                "timestamp": "838383838",
+                "user": "bar"
+            },
+            "prefix": "1234",
+            "rangeStart": "501",
+            "rangeEnd": "555",
+            "active": true
         }
     ]
 }
