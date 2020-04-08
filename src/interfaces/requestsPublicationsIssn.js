@@ -49,7 +49,7 @@ export default function () {
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
 
-      const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: getCreator()};
+      const newDoc = {...doc, state: 'new', backgroundProcessingState: 'pending', creator: getCreator(), publicationType: 'issn'};
       if (validateDoc(newDoc, 'PublicationIssnRequestContent')) {
         if (hasPermission(user, 'publicationIssnRequests', 'createRequestISSN')) {
           return publicationsRequestsIssnInterface.create(db, newDoc, user);
