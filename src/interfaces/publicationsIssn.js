@@ -53,9 +53,8 @@ export default function () {
           ...doc,
           metadataReference: {state: 'pending'}
         };
-        const filteredDoc = filterDoc(newDoc);
-        if (validateDoc(filteredDoc, 'PublicationIssnContent')) {
-          return publicationsIssnInterface.create(db, filteredDoc, user);
+        if (validateDoc(newDoc, 'PublicationIssnContent')) {
+          return publicationsIssnInterface.create(db, newDoc, user);
         }
         throw new ApiError(HttpStatus.FORBIDDEN);
       }
@@ -91,15 +90,6 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
-    }
-
-    function filterDoc(doc) {
-      return Object.entries(doc)
-        .filter(([key]) => key === 'publicationType' === false)
-        .reduce((acc, [
-          key,
-          value
-        ]) => ({...acc, [key]: value}), {});
     }
   }
 
