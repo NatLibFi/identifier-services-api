@@ -46,6 +46,9 @@ export default function () {
   };
 
   async function createIsbnIsmn(db, doc, user) {
+    if (doc.request) {
+      return publicationsIsbnIsmnInterface.create(db, doc, user);
+    }
     // Get publisher associate with authenticated user
     const publisher = await publisherInterface.read(db, user.publisher);
     // Get range assigned to this publisher
@@ -66,9 +69,9 @@ export default function () {
         publicationType: 'isbn-ismn'
       };
 
-      if (validateDoc(user.role === 'system' ? doc : newDoc, 'PublicationIsbnIsmnContent')) {
+      if (validateDoc(newDoc, 'PublicationIsbnIsmnContent')) {
         if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
-          return publicationsIsbnIsmnInterface.create(db, user.role === 'system' ? doc : newDoc, user);
+          return publicationsIsbnIsmnInterface.create(db, newDoc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
