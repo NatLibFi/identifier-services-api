@@ -35,6 +35,7 @@ import {hasPermission, validateDoc} from './utils';
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
 const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
+const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
 
 export default function () {
   return {
@@ -45,39 +46,53 @@ export default function () {
   };
 
   async function createIsbnIsmn(db, doc, user) {
-    const query = [
-      {
-        query: {active: true}
-      }
-    ];
-    const queryPubIsbn = [
-      {
-        query: {$or: [
-          {type: 'book'},
-          {type: 'dissertation'},
-          {type: 'map'}
-        ]}
-      }
-    ];
-    const queryPubIsmn = [
-      {
-        query: {$or: [{type: 'music'}]}
-      }
-    ];
-    const isbnRangeList = await rangesISBNInterface.query(db, {queries: query});
-    const ismnRangeList = await rangesISMNInterface.query(db, {queries: query});
-    // Get list of publication according to type either music or book...
-    const publicationList = await publicationsIsbnIsmnInterface.query(db, {queries: doc.type === 'music' ? queryPubIsmn : queryPubIsbn});
-    const publicationIdentifier = publicationList.results.map(item => item.identifier);
-    const identiferTitle = publicationIdentifier.reduce((acc, cVal) => acc.concat(cVal), []);
-    // Get list of title if identifiers
-    const slicedTitle = identiferTitle.map(item => item.id.slice(11, 15)); // ['0001', '0002', '0003']
-    const intIdentifierTitle = slicedTitle.map(item => Number(item));
-    const newIdentifierTitle = Math.max(...intIdentifierTitle) + 1;
+    // Get publisher associate with authenticated user
+    const publisher = await publisherInterface.read(db, user.publisher);
+    // Get range assigned to this publisher
+    const range = doc.type === 'music' ? await rangesISMNInterface.read(db, publisher.ismnRange) : await rangesISBNInterface.read(db, publisher.isbnRange);
+    // Get publications associated with this range
+    const publicationList = await publicationsIsbnIsmnInterface.query(db, {queries: [{query: doc.type === 'music' ? {associatedRange: publisher.ismnRange} : {associatedRange: publisher.isbnRange}}]});
+    const newIdentifierTitle = calculateIdentifierTitle(publicationList, range);
 
-    // Get ranges according to the associated user
-    function getRange(ranges) {
-      return ranges.find(item => item.associatePublisher && item.associatePublisher.some(range => range === user.id));
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const newDoc = {
+        ...doc,
+        associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange,
+        metadataReference: {state: 'pending'},
+        identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
+        publicationType: 'isbn-ismn'
+      };
+
+      if (validateDoc(user.role === 'system' ? doc : newDoc, 'PublicationIsbnIsmnContent')) {
+        if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
+          return publicationsIsbnIsmnInterface.create(db, user.role === 'system' ? doc : newDoc, user);
+        }
+
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    function calculateIdentifierTitle(publicationList, range) {
+      if (publicationList.results.length === 0) {
+        return range.rangeStart;
+      }
+
+      const publicationIdentifier = publicationList.results.map(item => item.identifier);
+      const identiferTitle = publicationIdentifier.reduce((acc, cVal) => acc.concat(cVal), []);
+      // Get list of title if identifiers
+      const slicedTitle = identiferTitle.map(item => item.id.slice(11, 15)); // ['0001', '0002', '0003']
+      const intIdentifierTitle = slicedTitle.map(item => Number(item));
+      const newIdentifierTitle = Math.max(...intIdentifierTitle) + 1;
+      return newIdentifierTitle;
     }
 
     function calculateIsbnIsmnIdentifier(range, title) {
@@ -101,41 +116,14 @@ export default function () {
       return formatIdentifier;
     }
 
-    try {
-      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.BAD_REQUEST);
-      }
-
-      const range = doc.type === 'music' ? getRange(ismnRangeList.results) : getRange(isbnRangeList.results);
-
-      const newDoc = {
-        ...doc,
-        associatedRange: range && range.id,
-        metadataReference: {state: 'pending'},
-        identifier: range && calculateIdentifier({newIdentifierTitle, range, doc})
-      };
-
-      if (validateDoc(user.role === 'system' ? doc : newDoc, 'PublicationIsbnIsmnContent')) {
-        if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
-          return publicationsIsbnIsmnInterface.create(db, user.role === 'system' ? doc : newDoc, user);
-        }
-
-        throw new ApiError(HttpStatus.FORBIDDEN);
-      }
-
-      throw new ApiError(HttpStatus.BAD_REQUEST);
-    } catch (err) {
-      if (err) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-      }
-    }
-
     function calculateIdentifier({newIdentifierTitle, range, doc}) {
       if (doc.formatDetails.format === 'electronic' || doc.formatDetails.format === 'printed') {
-        return {
-          id: calculateIsbnIsmnIdentifier(range, newIdentifierTitle),
-          type: doc.formatDetails.format
-        };
+        return [
+          {
+            id: calculateIsbnIsmnIdentifier(range, newIdentifierTitle),
+            type: doc.formatDetails.format
+          }
+        ];
       }
 
       if (doc.formatDetails.format === 'printed-and-electronic') {
