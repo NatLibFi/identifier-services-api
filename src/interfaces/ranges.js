@@ -27,7 +27,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc} from './utils';
+import {hasPermission, validateDoc, validateRange} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import {validate} from '@natlibfi/identifier-services-commons/dist/validate';
@@ -52,11 +52,20 @@ export default function () {
     queryIssn
   };
 
-  function createIsbn(db, doc, user) {
+  async function createIsbn(db, doc, user) {
     try {
       if (validateDoc(doc, 'RangeIsbnContent')) {
         if (hasPermission(user, 'ranges', 'createIsbn')) {
-          return rangesISBNInterface.create(db, doc, user);
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
+          if (validateRange(rangeIsbnLlist, doc)) {
+            return rangesISBNInterface.create(db, doc, user);
+          }
+
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -74,10 +83,11 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsbn')) {
         const result = await rangesISBNInterface.read(db, id);
-        if (result) { // eslint-disable-line functional/no-conditional-statement
+        if (result) {
           return result;
         }
         throw new ApiError(HttpStatus.NOT_FOUND);
+
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -110,10 +120,11 @@ export default function () {
     }
   }
 
-  function queryIsbn(db, {queries, offset}, user) {
+  async function queryIsbn(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIsbn')) {
-        return rangesISBNInterface.query(db, {queries, offset});
+        const result = await rangesISBNInterface.query(db, {queries, offset});
+        return result;
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -124,11 +135,20 @@ export default function () {
     }
   }
 
-  function createIsmn(db, doc, user) {
+  async function createIsmn(db, doc, user) {
     try {
       if (validateDoc(doc, 'RangeIsmnContent')) {
         if (hasPermission(user, 'ranges', 'createIsmn')) {
-          return rangesISMNInterface.create(db, doc, user);
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIsmnLlist = await rangesISMNInterface.query(db, {queries});
+          if (validateRange(rangeIsmnLlist, doc)) {
+            return rangesISMNInterface.create(db, doc, user);
+          }
+
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -146,10 +166,11 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsmn')) {
         const result = await rangesISMNInterface.read(db, id);
-        if (result) { // eslint-disable-line functional/no-conditional-statement
-          return result;
+        if (result === null) { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(HttpStatus.NOT_FOUND);
         }
-        throw new ApiError(HttpStatus.NOT_FOUND);
+
+        return result;
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -200,8 +221,22 @@ export default function () {
     try {
       if (validateDoc(doc, 'RangeIssnContent')) {
         if (hasPermission(user, 'ranges', 'createIssn')) {
-          const result = await rangesISSNInterface.create(db, doc, user);
-          return result;
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
+          const isActiveRange = rangeIssnLlist.results.some(item => item.active === true);
+
+          if (isActiveRange === true) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+          }
+
+          if (validateRange(rangeIssnLlist, doc)) {
+            return rangesISSNInterface.create(db, doc, user);
+          }
+
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -223,6 +258,7 @@ export default function () {
           return result;
         }
         throw new ApiError(HttpStatus.NOT_FOUND);
+
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
