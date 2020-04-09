@@ -411,8 +411,8 @@ function getValidator(schemaName) {
 
 export function validateRange(rangeList, doc) {
   const rangeEnds = rangeList.results.map(item => item.rangeEnd);
-  const arrBool = rangeEnds.map(item => Number(doc.rangeStart) > Number(item));
-  if (arrBool.some(item => item === false) || Number(doc.rangeEnd) < Number(doc.rangeStart)) { // eslint-disable-line functional/no-conditional-statement
+  const arrBool = rangeEnds.every(item => Number(doc.rangeStart) > Number(item));
+  if (arrBool === false || Number(doc.rangeEnd) < Number(doc.rangeStart)) { // eslint-disable-line functional/no-conditional-statement
     throw new ApiError(HttpStatus.CONFLICT);
   }
   return true;
