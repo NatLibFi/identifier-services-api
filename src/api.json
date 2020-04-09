@@ -2764,6 +2764,10 @@
               "rejected"
             ]
           },
+          "request": {
+            "description": "Id of the request, the resource is created from",
+            "type": "string"
+          },
           "rejectionReason": {
             "type": "string"
           },
@@ -2961,6 +2965,10 @@
           "website": {
             "type": "string",
             "description": "URL of the publisher's public website"
+          },
+          "request": {
+            "description": "Id of the request, the resource is created from",
+            "type": "string"
           },
           "aliases": {
             "type": "array",
@@ -3161,6 +3169,10 @@
             "$ref": "#/components/schemas/Language"
           },
           "additionalDetails": {
+            "type": "string"
+          },
+          "request": {
+            "description": "Id of the request, the resource is created from",
             "type": "string"
           },
           "publicationType": {
