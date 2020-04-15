@@ -2716,6 +2716,10 @@
               }
             }
           },
+          "request": {
+            "description": "Id of the request, the resource is created from",
+            "type": "string"
+          },
           "notes": {
             "type": "array",
             "items": {

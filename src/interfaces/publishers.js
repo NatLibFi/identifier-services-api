@@ -58,18 +58,34 @@ export default function () {
   }
 
   async function read(db, id, user) {
-    const protectedProperties = determineProtectedProperties();
+    try {
+      const protectedProperties = determineProtectedProperties();
 
-    const result = await publisherInterface.read(db, id, protectedProperties);
-    if (user === undefined && result.postalAddress.public === true) {
-      return result;
+      const result = await publisherInterface.read(db, id, protectedProperties);
+      if (result) {
+        if (user === undefined && result.postalAddress.public === true) {
+          return result;
+        }
+        if (user === undefined && result.postalAddress.public === false) {
+          const filteredResult = filterResult(result);
+          return filteredResult;
+        }
+        return result;
+      }
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
     }
-
-    if (user === undefined && result.postalAddress.public === false) {
-      const filteredResult = filterResult(result);
-      return filteredResult;
+    function filterResult(result) {
+      return Object.entries(result)
+        .filter(([key]) => key === 'postalAddress' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
-
     function determineProtectedProperties() {
       if (user === undefined) {
         return {publicationDetails: 0, language: 0, metadataDelivery: 0, primaryContact: 0, activity: 0};
@@ -79,15 +95,6 @@ export default function () {
       }
     }
 
-    return result;
-    function filterResult(result) {
-      return Object.entries(result)
-        .filter(([key]) => key === 'postalAddress' === false)
-        .reduce((acc, [
-          key,
-          value
-        ]) => ({...acc, [key]: value}), {});
-    }
   }
 
   function update(db, id, doc, user) {

@@ -48,7 +48,7 @@ export default function () {
   async function createISSN(db, doc, user) {
     try {
 
-      if (doc.publicationType) {
+      if (doc.request) {
         const newDoc = {
           ...doc,
           metadataReference: {state: 'pending'}
