@@ -1,6 +1,16 @@
 {
     "RangeIsbnContent": [
-        {}
+        {                       
+            "_id": "5cd90e696a1e930789dfaa11",
+            "prefix": "12345",
+            "language": "fin",
+            "rangeStart": "1000",
+            "rangeEnd": "2000",
+            "active": false,
+            "lastUpdated": {
+                "user": "foo"
+            }
+        }
     ],
     "userMetadata": [
         {

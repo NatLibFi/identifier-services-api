@@ -392,7 +392,6 @@ export function validateDoc(doc, collectionContent) {
   if (validate(doc)) {
     return validate;
   }
-
   throw new Error(JSON.stringify(validate.errors, undefined, 2));
 }
 
