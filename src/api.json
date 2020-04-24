@@ -3204,6 +3204,9 @@
                 "format": "date-time",
                 "description": "Last update timestamp in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
               },
+              "classification": {
+                "type":"string"
+              },
               "isPublic": {
                 "type": "boolean"
               },
@@ -3472,7 +3475,7 @@
                 "type": "number"
               },
               "firstNumber": {
-                "type": "number"
+                "type": "string"
               },
               "frequency": {
                 "oneOf": [
@@ -3499,7 +3502,8 @@
               "type": {
                 "oneOf": [
                   {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^other_\\w+"
                   },
                   {
                     "type": "string",
@@ -3566,7 +3570,7 @@
                         "type": "number"
                       },
                       "lastNumber": {
-                        "type": "number"
+                        "type": "string"
                       }
                     }
                   }
