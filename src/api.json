@@ -2942,7 +2942,6 @@
       },
       "PublisherBaseContent": {
         "type": "object",
-        "description": "Publisher Base for Issn",
         "properties": {
           "name": {
             "type": "string",
@@ -3018,6 +3017,14 @@
                 "type": "string",
                 "description": "URL of the publisher's public website"
               },
+              "publisherType": {
+                "type":"string",
+                "description": "indication whether a publisher resource represent a university publisher or other",
+                "enum": [
+                  "university",
+                  "other"
+                ]
+              },
               "classification": {
                 "type": "array",
                 "minItems": 1,
@@ -3055,7 +3062,8 @@
               }
             },
             "required":[
-              "classification"
+              "classification",
+              "publisherType"
             ]
           }
         ]
@@ -3204,7 +3212,7 @@
                 "format": "date-time",
                 "description": "Last update timestamp in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
               },
-              "classification": {
+              "isbnClassification": {
                 "type":"string"
               },
               "isPublic": {
@@ -3430,6 +3438,20 @@
                 "oneOf": [
                   {
                     "$ref": "#/components/schemas/PublisherBase"
+                  },
+                  {
+                    "properties": {
+                      "university": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "university",
+                      "city"
+                    ]
                   },
                   {
                     "type": "string"
