@@ -1,9 +1,20 @@
 {
-    "RangeIsmnContent": [{},
+    "RangeIsmnContent": [
+        {                       
+            "_id": "5cd90e696a1e930789dfaa11",
+            "prefix": "1234",
+            "language": "fin",
+            "rangeStart": "100",
+            "rangeEnd": "200",
+            "active": false,
+            "lastUpdated": {
+                "user": "foo"
+            }
+        },
         {            
             "prefix": "foo",
-            "rangeStart": "100",
-            "rangeEnd": "100",
+            "rangeStart": "201",
+            "rangeEnd": "300",
             "active": false,
             "publisher": "foo",
             "reservedCount": 100,
