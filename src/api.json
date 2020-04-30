@@ -3213,7 +3213,10 @@
                 "description": "Last update timestamp in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
               },
               "isbnClassification": {
-                "type":"string"
+                "type":"array",
+                "items":{
+                  "$ref": "#/components/schemas/isbnClassificationCodes"
+                }
               },
               "isPublic": {
                 "type": "boolean"
@@ -3948,6 +3951,15 @@
           930,
           940,
           950
+        ]
+      },
+      "isbnClassificationCodes": {
+        "type":"string",
+        "enum":[
+          1,
+          2,
+          3,
+          4
         ]
       }
     }

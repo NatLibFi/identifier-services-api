@@ -167,7 +167,7 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsmn')) {
         const result = await rangesISMNInterface.read(db, id);
-        if (result) { // eslint-disable-line functional/no-conditional-statement
+        if (result) {
           return result;
         }
         throw new ApiError(HttpStatus.NOT_FOUND);
