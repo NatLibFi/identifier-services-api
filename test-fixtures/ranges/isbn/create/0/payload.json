@@ -1,8 +1,8 @@
 {            
-    "prefix": "foo",
+    "prefix": "12345",
     "language": "fin",
-    "rangeStart": "100",
-    "rangeEnd": "100",
+    "rangeStart": "2001",
+    "rangeEnd": "3000",
     "active": false,
     "lastUpdated": {
         "user": "foo"

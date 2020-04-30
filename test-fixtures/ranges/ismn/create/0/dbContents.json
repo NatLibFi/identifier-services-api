@@ -1,5 +1,17 @@
 {
-    "RangeIsmnContent": [{}],
+    "RangeIsmnContent": [
+        {                       
+            "_id": "5cd90e696a1e930789dfaa11",
+            "prefix": "1234",
+            "language": "fin",
+            "rangeStart": "100",
+            "rangeEnd": "200",
+            "active": false,
+            "lastUpdated": {
+                "user": "foo"
+            }
+        }
+    ],
     "userMetadata": [
         {
             "_id": "5cd90e696a1e930789dfaa48",

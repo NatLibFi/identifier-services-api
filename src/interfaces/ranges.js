@@ -63,7 +63,8 @@ export default function () {
           ];
           const rangeIsbnLlist = await rangesISBNInterface.query(db, {queries});
           if (validateRange(rangeIsbnLlist, doc)) {
-            return rangesISBNInterface.create(db, doc, user);
+            const result = await rangesISBNInterface.create(db, doc, user);
+            return result;
           }
 
         }
@@ -166,11 +167,11 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'readIsmn')) {
         const result = await rangesISMNInterface.read(db, id);
-        if (result === null) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.NOT_FOUND);
+        if (result) {
+          return result;
         }
+        throw new ApiError(HttpStatus.NOT_FOUND);
 
-        return result;
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

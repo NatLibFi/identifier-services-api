@@ -61,13 +61,20 @@ export default function () {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-      const newDoc = {
-        ...doc,
-        associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange,
-        metadataReference: {state: 'pending'},
-        identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
-        publicationType: 'isbn-ismn'
-      };
+
+      const newDoc = doc.isPublic
+        ? {
+          ...doc,
+          associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange,
+          identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
+          metadataReference: {state: 'pending'},
+          publicationType: 'isbn-ismn'
+        }
+        : {
+          ...doc,
+          metadataReference: {state: 'pending'},
+          publicationType: 'isbn-ismn'
+        };
 
       if (validateDoc(newDoc, 'PublicationIsbnIsmnContent')) {
         if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
@@ -88,7 +95,6 @@ export default function () {
       if (publicationList.results.length === 0) {
         return range.rangeStart;
       }
-
       const publicationIdentifier = publicationList.results.map(item => item.identifier);
       const identiferTitle = publicationIdentifier.reduce((acc, cVal) => acc.concat(cVal), []);
       // Get list of title if identifiers

@@ -5,15 +5,15 @@
             "title": "updated",
             "city": "updated",
             "firstYear": 32432,
-            "firstNumber": 324324,
+            "firstNumber": "324324",
             "frequency": "yearly",
-            "type": "yearly",
+            "type": "journal",
             "formatDetails": {
                 "format": "printed"
             },
             "previousPublication": {
                 "lastYear": 2343,
-                "lastNumber": 23434,
+                "lastNumber": "23434",
                 "title": "dfsf",
                 "identifier": "2432"
             },
