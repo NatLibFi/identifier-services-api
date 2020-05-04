@@ -108,12 +108,13 @@ export default function (collectionName) {
     return undefined;
   }
 
-  async function query(db, {queries, offset, calculateIssn}, protectedProperties) {
-    if (calculateIssn) {
+  async function query(db, {queries, offset, calculateIdentifier}, protectedProperties) {
+    if (calculateIdentifier) {
       return db.collection(collectionName)
         .aggregate([
           {$unwind: '$identifier'},
-          {$sort: {'identifier.index': -1}}
+          {$sort: {'identifier.index': -1}},
+          {$limit: QUERY_LIMIT}
         ])
         .toArray();
     }
