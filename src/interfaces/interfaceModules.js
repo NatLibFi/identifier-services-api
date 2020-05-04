@@ -108,7 +108,16 @@ export default function (collectionName) {
     return undefined;
   }
 
-  async function query(db, {queries, offset}, protectedProperties) {
+  async function query(db, {queries, offset, calculateIssn}, protectedProperties) {
+    if (calculateIssn) {
+      return db.collection(collectionName)
+        .aggregate([
+          {$unwind: '$identifier'},
+          {$sort: {'identifier.index': -1}}
+        ])
+        .toArray();
+    }
+
     if (offset) {
       if (queries.length > 0) {
         const result = await queries.reduce((acc, {query}) => doQuery({

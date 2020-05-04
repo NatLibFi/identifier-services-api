@@ -3395,6 +3395,9 @@
                     },
                     "type": {
                       "type":"string"
+                    },
+                    "index": {
+                      "type": "number"
                     }
                   }
                 }
@@ -3472,12 +3475,12 @@
                 "type": "number"
               },
               "firstNumber": {
-                "type": "number"
+                "type": "string"
               },
               "frequency": {
+                "type": "string",
                 "oneOf": [
                   {
-                    "type": "string",
                     "pattern": "^other_\\w+"
                   },
                   {
@@ -3497,12 +3500,12 @@
                 ]
               },
               "type": {
-                "oneOf": [
+                "type": "string",
+                "anyOf": [
                   {
                     "type": "string"
                   },
                   {
-                    "type": "string",
                     "enum": [
                       "journal",
                       "newsletter",
@@ -3539,7 +3542,8 @@
                       "format": {
                         "type": "string",
                         "enum": [
-                          "electronic"
+                          "electronic",
+                          "printed-and-electronic"
                         ]
                       },
                       "url": {
@@ -3566,7 +3570,7 @@
                         "type": "number"
                       },
                       "lastNumber": {
-                        "type": "number"
+                        "type": "string"
                       }
                     }
                   }
@@ -3591,7 +3595,18 @@
                 "type": "string"
               },
               "identifier": {
-                "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties":{
+                    "id": {
+                      "type":"string"
+                    },
+                    "type": {
+                      "type":"string"
+                    }
+                  }
+                }
               }
             },
             "required": [
