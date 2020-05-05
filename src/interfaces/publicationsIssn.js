@@ -68,9 +68,9 @@ export default function () {
           query: {associatedRange: activeRange.id}
         }
       ];
-      const publicationList = await publicationsIssnInterface.query(db, {queries, offset: null});
-      const array = publicationList.results.map(item => item.identifier);
-      const newPublication = calculateNewISSN(array);
+      const publicationList = await publicationsIssnInterface.query(db, {queries, offset: null, calculateIdentifier: true});
+      const array = publicationList.reduce((acc, item) => acc.concat(item.identifier), []);
+      const newPublication = calculateNewISSN({array, format: doc.formatDetails.format});
       const newDoc = {
         ...doc,
         metadataReference: {state: 'pending'},
