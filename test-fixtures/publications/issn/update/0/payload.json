@@ -4,15 +4,15 @@
     "subtitle": "haddi",
     "city": "Kathmandu",
     "firstYear": 34,
-    "firstNumber": 22,
+    "firstNumber": "22",
     "frequency": "monthly",
-    "type": "daily",
+    "type": "journal",
     "formatDetails": {
         "format": "cd"
     },
     "previousPublication": {
         "lastYear": 22,
-        "lastNumber": 33,
+        "lastNumber": "33",
         "title": "Polluted water",
         "identifier": "889"
     },

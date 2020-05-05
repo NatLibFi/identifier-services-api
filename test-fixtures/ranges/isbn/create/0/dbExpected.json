@@ -1,10 +1,20 @@
 {
-    "IdentifierRangesISBN": [{},
+    "IdentifierRangesISBN": [
         {            
-            "prefix": "foo",
+            "prefix": "12345",
             "language": "fin",
-            "rangeStart": "100",
-            "rangeEnd": "100",
+            "rangeStart": "1000",
+            "rangeEnd": "2000",
+            "active": false,
+            "lastUpdated": {
+                "user": "foo"
+            }
+        },
+        {            
+            "prefix": "12345",
+            "language": "fin",
+            "rangeStart": "2001",
+            "rangeEnd": "3000",
             "active": false,
             "lastUpdated": {
                 "user": "foo"

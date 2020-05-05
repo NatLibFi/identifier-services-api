@@ -4,6 +4,7 @@
         {
             "_id": "5cd90e696a1e930789dfaa48",
             "id":"some@gmail.com",
+            "publisher": "5dd69c4d1c9d440000d04f84",
             "preferences": {
                 "defaultLanguage": "foo"
             },
@@ -13,16 +14,46 @@
             }
         }
     ],
-    "RangeIsbnContent": [{
-        "_id": "5d9efa8a1c9d440000811111",
-        "lastUpdated": {
-            "timestamp": "838383838",
-            "user": "bar"
-        },
-        "prefix": "97895151",
-        "rangeStart": "5000",
-        "rangeEnd": "6000",
-        "active": true,
-        "associatePublisher": ["some@gmail.com"]
-    }]
+    "PublisherMetadata": [
+        {
+			"_id":"5dd69c4d1c9d440000d04f84",
+			"lastUpdated":{
+				"timestamp":"foo",
+				"user": "foo"
+			},
+			"name": "foo",
+			"postalAddress": {
+				"public": false,
+				"address": "foo",
+				"city": "foo",
+				"zip": "foo"
+			},
+			"classification": ["foo"],
+			"metadataDelivery": "foo",
+			
+			"publicationDetails": {
+				"frequency": 111
+            },
+            "isbnRange": "5cd90b2c89d0546340068667",
+			"primaryContact": ["foobar", "foo"],			
+			"activity":{
+				"active": true,
+				"yearInactivated": 111
+			}
+		}
+    ],
+    "RangeIsbnContent": [
+        {
+            "_id": "5cd90b2c89d0546340068667",
+            "prefix": "12345",
+            "language": "eng",
+            "rangeStart": "1000",
+            "rangeEnd": "2000",
+            "active": true,
+            "lastUpdated": {
+                "timestamp": "2019-05-03T09:17:46.412",
+                "user": "barfoo"
+            }
+        }
+    ]
 }

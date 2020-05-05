@@ -47,7 +47,6 @@ export default function () {
 
   async function createISSN(db, doc, user) {
     try {
-
       if (doc.request) {
         const newDoc = {
           ...doc,
