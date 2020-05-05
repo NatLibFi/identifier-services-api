@@ -113,7 +113,7 @@ export default function (collectionName) {
       return db.collection(collectionName)
         .aggregate([
           {$unwind: '$identifier'},
-          {$sort: {'identifier.index': -1}},
+          {$sort: {'identifier': -1}},
           {$limit: QUERY_LIMIT}
         ])
         .toArray();
