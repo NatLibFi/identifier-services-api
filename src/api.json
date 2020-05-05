@@ -3620,8 +3620,19 @@
 				  "type": "string"
 				},
 				"identifier": {
-				  "type": "string"
-				}
+					"type": "array",
+					"items": {
+					  "type": "object",
+					  "properties":{
+						"id": {
+						  "type":"string"
+						},
+						"type": {
+						  "type":"string"
+						}
+					  }
+					}
+				  }
 			  },
 			  "required": [
 				"city",
