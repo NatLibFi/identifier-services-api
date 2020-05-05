@@ -3031,7 +3031,8 @@
 				  "items": {
 					"oneOf": [
 					  {
-						"type": "string"
+						"type": "string",
+						"pattern": "^other_\\w+"
 					  },
 					  {
 						"$ref": "#/components/schemas/ClassificationCodes"
