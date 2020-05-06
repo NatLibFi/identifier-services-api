@@ -112,6 +112,7 @@ export default function (collectionName) {
     if (calculateIdentifier) {
       return db.collection(collectionName)
         .aggregate([
+          {$match: queries},
           {$unwind: '$identifier'},
           {$sort: {'identifier': -1}},
           {$limit: QUERY_LIMIT}
