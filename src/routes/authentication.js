@@ -28,13 +28,17 @@
 import {Router} from 'express';
 import HttpStatus from 'http-status';
 import {mapGroupToRole} from '../utils';
+import base64 from 'base-64';
 
 export default function (db, passportMiddlewares) {
   return new Router()
-    .post('/', passportMiddlewares.credentials, authenticate)
+    .post('/', authenticate)
     .get('/', passportMiddlewares.token, read);
 
   function authenticate(req, res) {
+    const string = req.headers.authorization.slice(5);
+    // eslint-disable-next-line no-console
+    console.log(base64.decode(string));
     res.set('Token', req.user).sendStatus(HttpStatus.NO_CONTENT);
   }
 
