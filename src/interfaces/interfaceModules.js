@@ -115,7 +115,7 @@ export default function (collectionName) {
           {$match: queries},
           {$unwind: '$identifier'},
           {$sort: {'identifier': -1}},
-          {$limit: QUERY_LIMIT}
+          {$limit: 1}
         ])
         .toArray();
     }

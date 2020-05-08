@@ -55,7 +55,7 @@ export default function () {
         if (validateDoc(newDoc, 'PublicationIssnContent')) {
           return publicationsIssnInterface.create(db, newDoc, user);
         }
-        throw new ApiError(HttpStatus.FORBIDDEN);
+        throw new ApiError(HttpStatus.BAD_REQUEST);
       }
 
       const rangeQueries = {queries: [{query: {active: true}}], offset: null};
@@ -63,11 +63,7 @@ export default function () {
       const index = 0;
       const {results} = identifierLists;
       const activeRange = results[index];
-      const queries = [
-        {
-          query: {associatedRange: activeRange.id}
-        }
-      ];
+      const queries = {associatedRange: activeRange.id};
       const publicationList = await publicationsIssnInterface.query(db, {queries, offset: null, calculateIdentifier: true});
       const array = publicationList.reduce((acc, item) => acc.concat(item.identifier), []);
       const newPublication = calculateNewISSN({array, format: doc.formatDetails.format});
@@ -145,8 +141,8 @@ export default function () {
   // Return result;
   // }
 
-  async function queryISSN(db, {queries, offset}, user) {
-    const result = await publicationsIssnInterface.query(db, {queries, offset});
+  async function queryISSN(db, {queries, offset, calculateIdentifier}, user) {
+    const result = await publicationsIssnInterface.query(db, {queries, offset, calculateIdentifier});
     if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
       if (user.role === 'publisher-admin' || user.role === 'publisher') {
         const queries = [
