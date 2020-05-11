@@ -65,7 +65,7 @@ export default function () {
       const activeRange = results[index];
       const queries = {associatedRange: activeRange.id};
       const [publicationList] = await publicationsIssnInterface.query(db, {queries, offset: null, calculateIdentifier: true});
-      const newPublication = calculateNewISSN({prevIdentifier: publicationList, format: doc.formatDetails.format, activeRange});
+      const newPublication = calculateNewISSN({prevIdentifier: publicationList && publicationList.identifier, subtype: 'issn', format: doc.formatDetails.format, activeRange});
       const newDoc = {
         ...doc,
         metadataReference: {state: 'pending'},
