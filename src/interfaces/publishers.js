@@ -43,9 +43,10 @@ export default function () {
 
   function create(db, doc, user) {
     try {
-      if (validateDoc(doc, 'PublisherContent')) {
+      if (doc.requestPublicationType === 'issn' ? validateDoc(doc, 'PublisherBaseContent') : validateDoc(doc, 'PublisherContent')) {
         if (hasPermission(user, 'publishers', 'create')) {
-          return publisherInterface.create(db, doc, user);
+          const newDoc = filterResult(doc);
+          return publisherInterface.create(db, newDoc, user);
         }
         throw new ApiError(HttpStatus.FORBIDDEN);
       }
@@ -54,6 +55,14 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
+    }
+    function filterResult(result) {
+      return Object.entries(result)
+        .filter(([key]) => key === 'requestPublicationType' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
   }
 

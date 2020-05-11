@@ -3569,7 +3569,8 @@
 						"format": {
 						  "type": "string",
 						  "enum": [
-							"electronic"
+							"electronic",
+							"printed-and-electronic"
 						  ]
 						},
 						"url": {
@@ -3672,7 +3673,18 @@
 				  "type": "string"
 				},
 				"identifier": {
-				  "type": "string"
+					"type": "array",
+					"items": {
+					  "type": "object",
+					  "properties":{
+						"id": {
+						  "type":"string"
+						},
+						"type": {
+						  "type":"string"
+						}
+					  }
+					}
 				}
 			  },
 			  "required": [
