@@ -54,8 +54,9 @@ export default function () {
     // Get range assigned to this publisher
     const range = doc.type === 'music' ? await rangesISMNInterface.read(db, publisher.ismnRange) : await rangesISBNInterface.read(db, publisher.isbnRange);
     // Get publications associated with this range
-    const publicationList = await publicationsIsbnIsmnInterface.query(db, {queries: [{query: doc.type === 'music' ? {associatedRange: publisher.ismnRange} : {associatedRange: publisher.isbnRange}}]});
-    const newIdentifierTitle = calculateIdentifierTitle(publicationList, range);
+    const latestPublication = await publicationsIsbnIsmnInterface.query(db, {queries: {associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange}, offset: null, calculateIdentifier: true});
+
+    const newIdentifierTitle = calculateIdentifierTitle(latestPublication, range);
 
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
@@ -91,16 +92,12 @@ export default function () {
       }
     }
 
-    function calculateIdentifierTitle(publicationList, range) {
-      if (publicationList.results.length === 0) {
+    function calculateIdentifierTitle(latestPublication, range) {
+      if (latestPublication.length === 0) {
         return range.rangeStart;
       }
-      const publicationIdentifier = publicationList.results.map(item => item.identifier);
-      const identiferTitle = publicationIdentifier.reduce((acc, cVal) => acc.concat(cVal), []);
-      // Get list of title if identifiers
-      const slicedTitle = identiferTitle.map(item => item.id.slice(11, 15)); // ['0001', '0002', '0003']
-      const intIdentifierTitle = slicedTitle.map(item => Number(item));
-      const newIdentifierTitle = Math.max(...intIdentifierTitle) + 1;
+      const slicedTitle = latestPublication[0].identifier.id.slice(11, 15); // '0001'
+      const newIdentifierTitle = Number(slicedTitle) + 1;
       return newIdentifierTitle;
     }
 
