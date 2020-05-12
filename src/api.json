@@ -2616,6 +2616,59 @@
 			"familyName"
 		  ]
 		},
+		"University": {
+			"type": "object",
+		  "properties": {
+			"universityName": {
+			  "type": "string"
+			},
+			"universityCity": {
+			  "type": "string"
+			}
+		  },
+		  "required": [
+				"universityName",
+				"universityCity"
+		  ]
+		},
+		"DissertationPublisher": {
+			"type": "object",
+		  "properties": {
+			"firstName": {
+			  "type": "string"
+			},
+			"lastName": {
+			  "type": "string"
+			},
+			"address": {
+			  "type": "string"
+			},
+			"postCode": {
+			  "type": "string"
+			},
+			"city": {
+			  "type": "string"
+			},
+			"country": {
+			  "type": "string"
+			},
+			"telephone": {
+			  "type": "string"
+			},
+			"contactEmail": {
+			  "type": "string"
+			}
+		  },
+		  "required": [
+			"firstName",
+			"lastName",
+			"address",
+			"postCode",
+			"city",
+			"country",
+			"contactEmail"
+		  ]
+		},
 		"Contact": {
 		  "allOf": [
 			{
@@ -3017,14 +3070,6 @@
 				  "type": "string",
 				  "description": "URL of the publisher's public website"
 				},
-				"publisherType": {
-				  "type":"string",
-				  "description": "indication whether a publisher resource represent a university publisher or other",
-				  "enum": [
-					"university",
-					"other"
-				  ]
-				},
 				"classification": {
 				  "type": "array",
 				  "minItems": 1,
@@ -3063,8 +3108,7 @@
 				}
 			  },
 			  "required":[
-				"classification",
-				"publisherType"
+				"classification"
 			  ]
 			}
 		  ]
@@ -3443,19 +3487,14 @@
 					  "$ref": "#/components/schemas/PublisherBase"
 					},
 					{
-					  "type":"object",
-					  "properties": {
-						"university": {
-						  "type": "string"
-						},
-						"city": {
-						  "type": "string"
-						}
-					  },
-					  "required": [
-						"university",
-						"city"
-					  ]
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/DissertationPublisher"
+							},
+							{
+								"$ref": "#/components/schemas/University"
+							}
+						]
 					},
 					{
 					  "type": "string"
