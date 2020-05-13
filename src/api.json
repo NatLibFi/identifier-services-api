@@ -2619,55 +2619,44 @@
 		"University": {
 			"type": "object",
 		  "properties": {
-			"universityName": {
-			  "type": "string"
-			},
-			"universityCity": {
-			  "type": "string"
-			}
-		  },
-		  "required": [
-				"universityName",
-				"universityCity"
-		  ]
-		},
-		"DissertationPublisher": {
-			"type": "object",
-		  "properties": {
-			"firstName": {
-			  "type": "string"
-			},
-			"lastName": {
-			  "type": "string"
-			},
-			"address": {
-			  "type": "string"
-			},
-			"postCode": {
+			"name": {
 			  "type": "string"
 			},
 			"city": {
 			  "type": "string"
-			},
-			"country": {
-			  "type": "string"
-			},
-			"telephone": {
-			  "type": "string"
-			},
-			"contactEmail": {
-			  "type": "string"
 			}
 		  },
 		  "required": [
-			"firstName",
-			"lastName",
-			"address",
-			"postCode",
-			"city",
-			"country",
-			"contactEmail"
+				"name",
+				"city"
 		  ]
+		},
+		"DissertationPublisher": {
+			"allOf": [
+				{
+					"$ref": "#/components/schemas/PostalAddress"
+				},
+		   {
+				"$ref": "#/components/schemas/Contact"
+			 },
+			 {
+			  "type": "object",
+			  "properties": {
+				"country": {
+				  "type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"University": {
+					"$ref": "#/components/schemas/University"
+				}
+			  },
+			  "required": [
+				"country"
+			  ]
+			}	
+			]
 		},
 		"Contact": {
 		  "allOf": [
@@ -3487,14 +3476,7 @@
 					  "$ref": "#/components/schemas/PublisherBase"
 					},
 					{
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/DissertationPublisher"
-							},
-							{
-								"$ref": "#/components/schemas/University"
-							}
-						]
+						"$ref": "#/components/schemas/DissertationPublisher"
 					},
 					{
 					  "type": "string"
