@@ -3004,28 +3004,10 @@
 			  "type": "string",
 			  "description": "Phone number of the publisher"
 			},
-			"aliases": {
-			  "type": "array",
-			  "items": {
-				"type": "string",
-				"description": "alternate name"
-			  },
-			  "description": "A list of alternative publisher's names"
-			},
 			"postalAddress": {
 			  "allOf": [
 				{
 				  "$ref": "#/components/schemas/PostalAddress"
-				},
-				{
-				  "type": "object",
-				  "properties": {
-					"public": {
-					  "description": "Whether postal address is public or not",
-					  "type": "boolean",
-					  "default": false
-					}
-				  }
 				}
 			  ]
 			}
@@ -3271,7 +3253,7 @@
 					  "type": "object",
 					  "properties": {
 						"volume": {
-						  "type": "number"
+						  "type": "string"
 						}
 					  }
 					}
@@ -3472,15 +3454,45 @@
 			  "properties": {
 				"publisher": {
 				  "oneOf": [
-					{
-					  "$ref": "#/components/schemas/PublisherBase"
-					},
-					{
-						"$ref": "#/components/schemas/DissertationPublisher"
-					},
-					{
-					  "type": "string"
-					}
+						{
+							"allOf": [
+								{
+									"$ref": "#/components/schemas/PublisherBaseContent"
+								},
+								{
+									"type": "object",
+									"properties": {
+										"publicationDetails": {
+											"type": "object",
+											"properties": {
+											"frequency": {
+												"description": "Estimated number of publications per year",
+												"type": "number"
+											},
+											"previouslyPublished"	: {
+												"type": "boolean"
+											},
+											"publishingActivities": {
+												"type": "string",
+												"enum": ["occasional", "continuous"]
+											}
+											},
+											"required": [
+											"frequency",
+											"previouslyPublished",
+											"publishingActivities"
+											]
+										}
+									}
+								}
+							]
+						},
+						{
+							"$ref": "#/components/schemas/DissertationPublisher"
+						},
+						{
+							"type": "string"
+						}
 				  ]
 				}
 			  },
@@ -3727,16 +3739,16 @@
 			{
 			  "type": "object",
 			  "properties": {
-				"publisher": {
-				  "oneOf": [
-					{
-					  "$ref": "#/components/schemas/PublisherBaseContent"
-					},
-					{
-					  "type": "string"
+					"publisher": {
+						"oneOf": [
+						{
+							"$ref": "#/components/schemas/PublisherBaseContent"
+						},
+						{
+							"type": "string"
+						}
+						]
 					}
-				  ]
-				}
 			  },
 			  "required": [
 				"publisher"
@@ -3840,7 +3852,8 @@
 				  "enum": [
 					"pdf",
 					"epub",
-					"cd"
+					"cd",
+					"mp3"
 				  ]
 				},
 				{
