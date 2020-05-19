@@ -57,11 +57,11 @@ export default function () {
       }
     }
     function validate (doc) {
-      if (doc.requestPublicationType === 'issn') {
-        return validateDoc(doc, 'PublisherBaseContent');
+      if (doc.requestPublicationType === 'issn' || doc.requestPublicationType === 'isbn-ismn') {
+        return validateDoc(doc, 'PublisherISBN_ISMN_ISSN');
       }
       if (doc.requestPublicationType === 'dissertation') {
-        return validateDoc(doc, 'University');
+        return validateDoc(doc, 'Publisher_ISBN_ISMN_Dissertation');
       }
       return validateDoc(doc, 'PublisherContent');
     }
