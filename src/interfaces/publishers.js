@@ -43,7 +43,7 @@ export default function () {
 
   function create(db, doc, user) {
     try {
-      if (doc.requestPublicationType === 'issn' ? validateDoc(doc, 'PublisherBaseContent') : validateDoc(doc, 'PublisherContent')) {
+      if (validate(doc)) {
         if (hasPermission(user, 'publishers', 'create')) {
           const newDoc = filterResult(doc);
           return publisherInterface.create(db, newDoc, user);
@@ -56,6 +56,16 @@ export default function () {
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
     }
+    function validate (doc) {
+      if (doc.requestPublicationType === 'issn' || doc.requestPublicationType === 'isbn-ismn') {
+        return validateDoc(doc, 'PublisherISBN_ISMN_ISSN');
+      }
+      if (doc.requestPublicationType === 'dissertation') {
+        return validateDoc(doc, 'Publisher_ISBN_ISMN_Dissertation');
+      }
+      return validateDoc(doc, 'PublisherContent');
+    }
+
     function filterResult(result) {
       return Object.entries(result)
         .filter(([key]) => key === 'requestPublicationType' === false)
@@ -114,3 +124,4 @@ export default function () {
     return publisherInterface.query(db, {queries, offset});
   }
 }
+
