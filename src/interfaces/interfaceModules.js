@@ -109,7 +109,7 @@ export default function (collectionName) {
   }
 
   async function query(db, {queries, offset, calculateIdentifier}, protectedProperties) {
-    if (calculateIdentifier) {
+    if (calculateIdentifier) { // Applies only for ISBN-ISMN/ISSN while calculating identifier
       return db.collection(collectionName)
         .aggregate([
           {$match: queries},
