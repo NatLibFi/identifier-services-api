@@ -2643,15 +2643,11 @@
 					},
 					"city": {
 						"type": "string"
-					},
-					"publisherType": {
-						"type": "string"
 					}
 				},
 				"required": [
 					"name",
-					"city",
-					"publisherType"
+					"city"
 				]
 			},
 			"Author": {
@@ -2682,9 +2678,6 @@
 				"type": "object",
 				"properties": {
 					"address": {
-						"type": "string"
-					},
-					"addressDetails": {
 						"type": "string"
 					},
 					"city": {
@@ -3180,9 +3173,6 @@
 					"language": {
 						"$ref": "#/components/schemas/Language"
 					},
-					"additionalDetails": {
-						"type": "string"
-					},
 					"publicationType": {
 						"type": "string"
 					}
@@ -3445,7 +3435,11 @@
 																"type": "number"
 															},
 															"previouslyPublished": {
-																"type": "boolean"
+																"type": "string",
+																"enum": [
+																	"yes",
+																	"no"
+																]
 															},
 															"publishingActivities": {
 																"type": "string",
