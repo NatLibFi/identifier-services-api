@@ -67,7 +67,7 @@ export default function () {
     }
     function getCreator(user) {
       return Object.keys(doc.publisher).length > 0
-        ? doc.publisher.publisherEmail || doc.publisher.contactEmail
+        ? doc.publisher.publisherEmail || doc.publisher.email
         : user.id;
     }
   }

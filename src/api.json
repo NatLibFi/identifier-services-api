@@ -2643,15 +2643,11 @@
 					},
 					"city": {
 						"type": "string"
-					},
-					"publisherType": {
-						"type": "string"
 					}
 				},
 				"required": [
 					"name",
-					"city",
-					"publisherType"
+					"city"
 				]
 			},
 			"Author": {
@@ -2682,9 +2678,6 @@
 				"type": "object",
 				"properties": {
 					"address": {
-						"type": "string"
-					},
-					"addressDetails": {
 						"type": "string"
 					},
 					"city": {
@@ -3007,15 +3000,7 @@
 								"properties": {
 									"frequency": {
 										"description": "Estimated number of publications per year",
-										"type": "object",
-										"properties": {
-											"currentYear": {
-												"type": "number"
-											},
-											"nextYear": {
-												"type": "number"
-											}
-										}
+										"type": "number"
 									}
 								},
 								"required": [
@@ -3187,9 +3172,6 @@
 					},
 					"language": {
 						"$ref": "#/components/schemas/Language"
-					},
-					"additionalDetails": {
-						"type": "string"
 					},
 					"publicationType": {
 						"type": "string"
@@ -3450,7 +3432,15 @@
 														"properties": {
 															"frequency": {
 																"description": "Estimated number of publications per year",
-																"type": "number"
+																"type": "object",
+																"properties": {
+																	"currentYear": {
+																		"type": "number"
+																	},
+																	"nextYear": {
+																		"type": "number"
+																	}
+																}
 															},
 															"previouslyPublished": {
 																"type": "boolean"
