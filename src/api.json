@@ -3435,11 +3435,7 @@
 																"type": "number"
 															},
 															"previouslyPublished": {
-																"type": "string",
-																"enum": [
-																	"yes",
-																	"no"
-																]
+																"type": "boolean"
 															},
 															"publishingActivities": {
 																"type": "string",
