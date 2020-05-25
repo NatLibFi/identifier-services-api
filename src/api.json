@@ -3000,7 +3000,15 @@
 								"properties": {
 									"frequency": {
 										"description": "Estimated number of publications per year",
-										"type": "number"
+										"type": "object",
+										"properties": {
+											"currentYear": {
+												"type": "number"
+											},
+											"nextYear": {
+												"type": "number"
+											}
+										}
 									}
 								},
 								"required": [
