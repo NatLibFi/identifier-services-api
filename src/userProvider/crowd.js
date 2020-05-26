@@ -132,13 +132,13 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     const response = await userMetadataInterface.read(db, id);
     const {crowdUser} = crowd();
     const result = await crowdUser.read({id: response.userId ? response.userId : response.id});
-    console.log('..................', result); // eslint-disable-line no-console
+    console.log('..................', response); // eslint-disable-line no-console
     if (hasPermission(user, 'users', 'read')) {
       // Need to filter user information after combining and before returning to clientSide
       const filteredDoc = filterDoc(result);
       if (user.role === 'publisher-admin') {
         console.log(user.id, '--------------', result); // eslint-disable-line no-console
-        if (user.id === filteredDoc.publisher || user.id === filteredDoc.id) {
+        if (user.id === response.publisher || user.id === response.id) {
           return {...response, ...filteredDoc};
         }
         throw new ApiError(HttpStatus.UNAUTHORIZED);
