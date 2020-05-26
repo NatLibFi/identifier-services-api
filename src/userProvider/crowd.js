@@ -137,6 +137,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       // Need to filter user information after combining and before returning to clientSide
       const filteredDoc = filterDoc(result);
       if (user.role === 'publisher-admin') {
+        console.log(user.id, '--------------', filteredDoc); // eslint-disable-line no-console
         if (user.id === filteredDoc.publisher || user.id === filteredDoc.id) {
           return {...response, ...filteredDoc};
         }
