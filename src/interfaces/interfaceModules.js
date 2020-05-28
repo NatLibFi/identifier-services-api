@@ -122,11 +122,13 @@ export default function (collectionName) {
 
     if (offset) {
       if (queries.length > 0) {
-        const result = await queries.reduce((acc, {query}) => doQuery({
+        const [{query}] = queries;
+
+        const result = await doQuery({
           ...formatQuery(query, {
             _id: {$gt: new ObjectId(offset)}
           })
-        }), []);
+        });
         return result;
       }
       return doQuery({
