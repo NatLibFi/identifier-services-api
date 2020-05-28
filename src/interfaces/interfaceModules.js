@@ -123,16 +123,12 @@ export default function (collectionName) {
     if (offset) {
       if (queries.length > 0) {
         const result = await queries.reduce((acc, {query}) => doQuery({
-          ...formatQuery(query),
-          $and: [
-            {
-              _id: {$gt: new ObjectId(offset)}
-            }
-          ]
+          ...formatQuery(query, {
+            _id: {$gt: new ObjectId(offset)}
+          })
         }), []);
         return result;
       }
-
       return doQuery({
         ...formatQuery(query),
         $and: [
@@ -183,7 +179,7 @@ export default function (collectionName) {
       });
     }
 
-    function formatQuery(query) {
+    function formatQuery(query, addQuery) {
       if (Object.keys(query).length === 0) {
         return query;
       }
@@ -203,10 +199,19 @@ export default function (collectionName) {
         }
 
         const propertyQuery = convert(key, query[key]);
+
+        function concatQuery() {
+          if ('$and' in acc) {
+            return addQuery ? acc.$and.concat(propertyQuery, addQuery) : acc.$and.concat(propertyQuery);
+          }
+          return [propertyQuery];
+        }
+
         return {
           ...acc,
-          $and: '$and' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
+          $and: concatQuery()
         };
+
         function convert(key, value) {
           if (typeof value === 'object') {
             if (Array.isArray(value)) {
