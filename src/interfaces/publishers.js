@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -38,7 +40,8 @@ export default function () {
     create,
     read,
     update,
-    query
+    query,
+    queryAll
   };
 
   function create(db, doc, user) {
@@ -123,5 +126,9 @@ export default function () {
   function query(db, {queries, offset}) {
     return publisherInterface.query(db, {queries, offset});
   }
-}
 
+  function queryAll(db) {
+    return publisherInterface.queryAll(db);
+  }
+
+}

@@ -1,3 +1,4 @@
+
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -37,6 +38,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
   return new Router()
     .get('/:id', authenticated, read)
     .post('/query', query)
+    .get('/query/all', queryAll)
     .use(passportMiddlewares.token)
     .use(combineUserInfo)
     .post('/', create)
@@ -85,6 +87,15 @@ export default function (db, passportMiddlewares, combineUserInfo) {
   async function query(req, res, next) {
     try {
       const result = await publishers.query(db, req.body);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryAll(req, res, next) {
+    try {
+      const result = await publishers.queryAll(db);
       res.json(result);
     } catch (err) {
       return next(err);
