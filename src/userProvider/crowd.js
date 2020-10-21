@@ -75,40 +75,49 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       if (hasPermission(user, 'users', 'create')) {
         try {
           const {crowdUser} = crowd();
-          await crowdUser.create({newDoc});
+          await crowdUser.create({doc: newDoc});
         } catch (err) {
           throw new ApiError(err.status);
         }
         const filteredDoc = filterDoc(newDoc);
-        return userMetadataInterface.create(db, filteredDoc, user);
+        const resp = await userMetadataInterface.create(db, filteredDoc, user);
+        return resp;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
 
-    if (doc.userId && !doc.email) {
-      const {crowdUser} = crowd();
-      const crowdUserResponse = await crowdUser.read({id: doc.userId});
-      if (crowdUserResponse) {
-        const newDoc = {
-          ...doc,
-          id: doc.userId,
-          email: crowdUserResponse.email
-        };
-        const filteredDoc = filterDoc(newDoc);
-        const queries = [
-          {
-            query: {id: newDoc.id}
+    if (doc.userId && !doc.email) { // eslint-disable-line functional/no-conditional-statement
+      try {
+        const {crowdUser} = crowd();
+        const crowdUserResponse = await crowdUser.read({id: doc.userId});
+        if (crowdUserResponse) {
+          const newDoc = {
+            ...doc,
+            id: doc.userId,
+            email: crowdUserResponse.email
+          };
+          const filteredDoc = filterDoc(newDoc);
+          const queries = [
+            {
+              query: {id: newDoc.id}
+            }
+          ];
+          const response = await userMetadataInterface.query(db, {queries});
+          if (response.results.length !== 0 && response.results[0].id === newDoc.id) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.CONFLICT);
+          } else {
+            const response = await userMetadataInterface.create(db, filteredDoc, user);
+            return response;
           }
-        ];
-        const response = await userMetadataInterface.query(db, {queries});
-        if (response.results.length !== 0 && response.results[0].id === newDoc.id) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.CONFLICT);
-        } else {
-          return userMetadataInterface.create(db, filteredDoc, user);
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      } catch (err) {
+        if (err.type === 'USER_NOT_FOUND') { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(HttpStatus.NOT_FOUND);
+        } else { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(err.status);
         }
       }
-
-      throw new ApiError(HttpStatus.NOT_FOUND);
     }
     function filterDoc(doc) {
       return Object.entries(doc)
