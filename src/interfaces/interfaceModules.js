@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -37,7 +38,8 @@ export default function (collectionName) {
     read,
     update,
     remove,
-    query
+    query,
+    queryAll
   };
 
   async function create(db, doc, user) {
@@ -157,10 +159,12 @@ export default function (collectionName) {
       return new Promise(resolve => {
         cursor.on('data', processData);
         cursor.on('end', () => results.length > 0
-          ? resolve({results,
+          ? resolve({
+            results,
             offset: results.slice(-1).shift().mongoId ? results.slice(-1).shift().mongoId : results.slice(-1).shift().id,
             totalDoc,
-            queryDocCount})
+            queryDocCount
+          })
           : resolve({results}));
         function processData(doc) {
           if (collectionName === 'userMetadata') {
@@ -246,6 +250,20 @@ export default function (collectionName) {
           }
         }
       }, {});
+    }
+  }
+
+  async function queryAll(db) {
+    const result = await db.collection(collectionName).find({})
+      .toArray();
+    if (result) {
+      return result.reduce((acc, item) => {
+        acc = [ // eslint-disable-line no-param-reassign
+          ...acc,
+          {value: item._id, label: item.name}
+        ];
+        return acc;
+      }, []);
     }
   }
 }

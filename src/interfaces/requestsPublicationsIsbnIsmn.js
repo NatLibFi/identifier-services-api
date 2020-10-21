@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 
 /**
  *
@@ -80,14 +81,14 @@ export default function () {
 
 
           if (user.role === 'publisher-admin' || user.role === 'publisher') {
-            if (user.publisher === result.publisher) {
+            if (user.publisher === result.publisher) { // eslint-disable-line max-depth
               const protectedProperties = {
                 state: 0,
                 publisher: 0,
                 lastUpdated: 0
               };
               const res = await publicationsRequestsIsbnIsmnInterface.read(db, id, protectedProperties);
-              if (res) {
+              if (res) { // eslint-disable-line max-depth
                 return res;
               }
               throw new ApiError(HttpStatus.NOT_FOUND);

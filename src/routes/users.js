@@ -46,7 +46,9 @@ export default function (userProvider) {
   async function create(req, res, next) {
     try {
       const result = await users.create(userProvider, req.body, req.user);
-      res.status(HttpStatus.CREATED).json(result);
+      if (result) {
+        return res.status(HttpStatus.CREATED).json(result);
+      }
     } catch (err) {
       return next(err);
     }

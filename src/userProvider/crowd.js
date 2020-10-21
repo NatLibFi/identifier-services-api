@@ -1,3 +1,4 @@
+/* eslint-disable max-statements, max-lines */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -74,38 +75,49 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       if (hasPermission(user, 'users', 'create')) {
         try {
           const {crowdUser} = crowd();
-          await crowdUser.create({newDoc});
+          await crowdUser.create({doc: newDoc});
         } catch (err) {
           throw new ApiError(err.status);
         }
         const filteredDoc = filterDoc(newDoc);
-        return userMetadataInterface.create(db, filteredDoc, user);
+        const resp = await userMetadataInterface.create(db, filteredDoc, user);
+        return resp;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
 
-    if (doc.userId && !doc.email) {
-      const {crowdUser} = crowd();
-      const allCrowdUsers = await crowdUser.query();
-      const isUserExit = allCrowdUsers.includes(doc.userId);
-
-      if (isUserExit) {
-        const newDoc = {...doc, id: doc.userId};
-        const filteredDoc = filterDoc(newDoc);
-        const queries = [
-          {
-            query: {id: newDoc.id}
+    if (doc.userId && !doc.email) { // eslint-disable-line functional/no-conditional-statement
+      try {
+        const {crowdUser} = crowd();
+        const crowdUserResponse = await crowdUser.read({id: doc.userId});
+        if (crowdUserResponse) {
+          const newDoc = {
+            ...doc,
+            id: doc.userId,
+            email: crowdUserResponse.email
+          };
+          const filteredDoc = filterDoc(newDoc);
+          const queries = [
+            {
+              query: {id: newDoc.id}
+            }
+          ];
+          const response = await userMetadataInterface.query(db, {queries});
+          if (response.results.length !== 0 && response.results[0].id === newDoc.id) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.CONFLICT);
+          } else {
+            const response = await userMetadataInterface.create(db, filteredDoc, user);
+            return response;
           }
-        ];
-        const response = await userMetadataInterface.query(db, {queries});
-        if (response.results[0].id === newDoc.id) { // eslint-disable-line functional/no-conditional-statement
-          throw new ApiError(HttpStatus.CONFLICT);
-        } else {
-          return userMetadataInterface.create(db, filteredDoc, user);
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      } catch (err) {
+        if (err.type === 'USER_NOT_FOUND') { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(HttpStatus.NOT_FOUND);
+        } else { // eslint-disable-line functional/no-conditional-statement
+          throw new ApiError(err.status);
         }
       }
-
-      throw new ApiError(HttpStatus.NOT_FOUND);
     }
     function filterDoc(doc) {
       return Object.entries(doc)
@@ -128,10 +140,15 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
   }
 
+  // eslint-disable-next-line max-statements
   async function read(id, user) {
     const response = await userMetadataInterface.read(db, id);
     const {crowdUser} = crowd();
-    const result = await crowdUser.read({id: response.userId ? response.userId : response.id});
+    const result = await crowdUser.read({
+      id:
+        // eslint-disable-next-line no-nested-ternary
+        response === undefined ? id : response.userId ? response.userId : response.id
+    });
     if (hasPermission(user, 'users', 'read')) {
       // Need to filter user information after combining and before returning to clientSide
       const filteredDoc = filterDoc(result);
@@ -167,7 +184,9 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       const response = await userMetadataInterface.read(db, id);
       if (response) {
         const {crowdUser} = crowd();
-        await crowdUser.remove({id: response.userId ? response.userId : response.id});
+        await crowdUser.remove({
+          id: response.userId ? response.userId : response.id
+        });
         return userMetadataInterface.remove(db, id);
       }
       throw new ApiError(HttpStatus.NOT_FOUND);
@@ -175,6 +194,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
+  // eslint-disable-next-line max-statements
   async function changePwd(doc, user) {
     if (doc.newPassword) {
       if (hasPermission(user, 'users', 'changePwd')) { // eslint-disable-line functional/no-conditional-statement
@@ -187,7 +207,10 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     const response = await crowdUser.read({id: doc.id});
     // ************ DO SOMETHING HERE NOT COMLETE ******************
     const email = response.emails[0].value;
-    const result = await createLinkAndSendEmail({request: {...doc, email}, PRIVATE_KEY_URL});
+    const result = await createLinkAndSendEmail({
+      request: {...doc, email},
+      PRIVATE_KEY_URL
+    });
     if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.NOT_FOUND);
     }
@@ -248,10 +271,12 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     function checkDuplication(interfaceName) {
       const queries = [
         {
-          query: {$or: [
-            {id: doc.email ? doc.email : doc.userId},
-            {userId: doc.userId ? doc.userId : doc.email}
-          ]}
+          query: {
+            $or: [
+              {id: doc.email ? doc.email : doc.userId},
+              {userId: doc.userId ? doc.userId : doc.email}
+            ]
+          }
         }
       ];
       return interfaceName.query(db, {queries});
@@ -298,10 +323,11 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
   }
 
   function updateRequest(id, doc, user) {
-    const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-    const conditionalDoc = newDoc.initialRequest
-      ? deleteInitialRequest(newDoc)
-      : newDoc;
+    const newDoc = {
+      ...doc,
+      backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'
+    };
+    const conditionalDoc = newDoc.initialRequest ? deleteInitialRequest(newDoc) : newDoc;
     validateDoc(conditionalDoc, 'UserRequestContent');
     if (hasPermission(user, 'userRequests', 'updateRequest')) {
       return usersRequestInterface.update(db, id, conditionalDoc, user);
@@ -329,6 +355,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
+  // eslint-disable-next-line max-statements
   async function queryRequest(doc, user) {
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -360,7 +387,6 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
         remove,
         query
       }
-
     };
 
     async function read({id}) {
@@ -369,13 +395,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
 
     async function create({doc}) {
-      const payload = new User(
-        doc.givenName, doc.familyName,
-        `${doc.givenName} ${doc.familyName}`,
-        doc.email, doc.email, Math.random()
-          .toString(36)
-          .slice(2)
-      );
+      const payload = new User(doc.givenName, doc.familyName, `${doc.givenName} ${doc.familyName}`, doc.email, doc.email, Math.random().toString(36)
+        .slice(2));
       const response = await crowdClient.user.create(payload);
       await crowdClient.user.groups.add(response.email, mapRoleToGroup(doc.role));
       return {...response, groups: await getUserGroup(response.username)};
