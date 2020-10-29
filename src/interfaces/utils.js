@@ -75,7 +75,11 @@ const permissions = {
       'admin',
       'publisher-admin'
     ],
-    update: ['system'],
+    update: [
+      'system',
+      'admin',
+      'publisher-admin'
+    ],
     remove: [
       'system',
       'admin'

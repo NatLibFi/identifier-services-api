@@ -36,7 +36,7 @@ import fs from 'fs';
 
 import {hasPermission, getTemplate, validateDoc} from '../interfaces/utils';
 import interfaceFactory from '../interfaces/interfaceModules';
-import {mapRoleToGroup} from '../utils';
+import {mapRoleToGroup, mapGroupToRole} from '../utils';
 import {UI_URL, SMTP_URL} from '../config';
 
 const userMetadataInterface = interfaceFactory('userMetadata');
@@ -171,12 +171,60 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
   }
 
-  function update(id, doc, user) {
-    validateDoc(doc, 'UserContent');
-    if (hasPermission(user, 'users', update)) {
-      return userMetadataInterface.update(db, id, doc, user);
+  async function update(id, doc, user) {
+    try {
+      validateDoc({...doc, role: mapGroupToRole(doc.groups[0])}, 'UserContent');
+      if (hasPermission(user, 'users', 'update')) {
+        const allowedKeys = [
+          '_id',
+          'preferences',
+          'lastUpdated',
+          'publisher',
+          'displayname',
+          'firstname',
+          'lastname'
+        ];
+        const crowdPortion = filterDoc(doc, allowedKeys);
+        const {crowdUser} = crowd();
+        const response = await crowdUser.update({doc: crowdPortion});
+        if (response) {
+          const allowedMongoKeys = [
+            '_id',
+            'role',
+            'groups',
+            'displayName',
+            'givenName',
+            'familyName',
+            'email',
+            'username',
+            'displayname',
+            'firstname',
+            'lastname',
+            'attributes',
+            'active'
+          ];
+          return userMetadataInterface.update(db, doc._id, filterDoc(doc, allowedMongoKeys, true), user);
+        }
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      throw new ApiError(err);
     }
-    throw new ApiError(HttpStatus.FORBIDDEN);
+
+    function filterDoc(doc, allowedKeys, mongo) {
+      const accumulate = mongo ? {} : {role: mapGroupToRole(doc.groups[0])};
+      return Object.entries(doc)
+        .filter(filter)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), accumulate);
+
+      function filter([key]) {
+        return allowedKeys.includes(key) === false;
+      }
+    }
   }
 
   async function remove(id, user) {
@@ -199,7 +247,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (doc.newPassword) {
       if (hasPermission(user, 'users', 'changePwd')) { // eslint-disable-line functional/no-conditional-statement
         const {crowdUser} = crowd();
-        await crowdUser.update({doc});
+        await crowdUser.updatePwd({doc});
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
@@ -384,6 +432,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
         read,
         create,
         update,
+        updatePwd,
         remove,
         query
       }
@@ -403,6 +452,13 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
 
     async function update({doc}) {
+      const payload = new User(doc.givenName, doc.familyName, doc.displayName, doc.email, doc.username, Math.random().toString(36)
+        .slice(2));
+      const response = await crowdClient.user.update(doc.username, payload);
+      return response;
+    }
+
+    async function updatePwd({doc}) {
       const userCheckResponse = await crowdClient.user.get(doc.id);
       if (userCheckResponse) {
         const response = await crowdClient.user.password.set(doc.id, doc.newPassword);
