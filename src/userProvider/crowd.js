@@ -289,8 +289,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
     }
     if (doc.userId && !doc.email) {
-      const {crowdUsers} = crowd();
-      const allCrowdUsers = await crowdUsers.query();
+      const {crowdUser} = crowd();
+      const allCrowdUsers = await crowdUser.query();
       const isUserExist = allCrowdUsers.includes(doc.userId);
 
       if (isUserExist) {
@@ -305,11 +305,11 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
-    const {crowdUsers} = crowd();
-    const allCrowdUsers = await crowdUsers.query();
+    const {crowdUser} = crowd();
+    const allCrowdUsers = await crowdUser.query();
     const isUserExist = doc.email && allCrowdUsers.includes(doc.email);
 
-    const response = checkDuplication(usersRequestInterface);
+    const response = await checkDuplication(usersRequestInterface);
     const isDuplicate = response.results.length > 0 && doc.email === response.results[0].id;
     if (isUserExist || isDuplicate) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.CONFLICT);
