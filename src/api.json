@@ -2980,6 +2980,18 @@
 								"$ref": "#/components/schemas/PostalAddress"
 							}
 						]
+					},
+					"publisherCategory" :{
+						"description": "The publisher's metadata delivery type. Either manual or external.",
+						"type": "string",
+						"enum": [
+							"private person",
+							"association/corporation/organisation",
+							"city/municipality",
+							"school",
+							"clerical organisation"
+						],
+						"default": "manual"
 					}
 				},
 				"required": [
