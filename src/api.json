@@ -2965,6 +2965,14 @@
 					"language": {
 						"$ref": "#/components/schemas/Language"
 					},
+					"givenName": {
+						"type": "string",
+						"description": "Primary contact name"
+					},
+					"familyName": {
+						"type": "string",
+						"description": "Primary contact family name"
+					},
 					"email": {
 						"type": "string",
 						"format": "email",
@@ -3091,14 +3099,6 @@
 								],
 								"default": "manual"
 							},
-							"primaryContact": {
-								"type": "array",
-								"items": {
-									"type": "string",
-									"minItems": 1,
-									"description": "Primary contact points. An array of strings which can be email addresses or user identifiers."
-								}
-							},
 							"activity": {
 								"description": "Whether the publisher is active or not.",
 								"type": "object",
@@ -3115,7 +3115,6 @@
 							}
 						},
 						"required": [
-							"primaryContact",
 							"metadataDelivery",
 							"activity"
 						]
@@ -3139,35 +3138,6 @@
 					},
 					{
 						"$ref": "#/components/schemas/PublisherBase"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"primaryContact": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"properties": {
-										"givenName": {
-											"type": "string"
-										},
-										"familyName": {
-											"type": "string"
-										},
-										"email": {
-											"type": "string",
-											"format": "email"
-										}
-									},
-									"required": [
-										"email"
-									]
-								}
-							}
-						},
-						"required": [
-							"primaryContact"
-						]
 					}
 				]
 			},
