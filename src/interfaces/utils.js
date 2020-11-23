@@ -246,6 +246,26 @@ const permissions = {
     ]
   },
   ranges: {
+    queryRanges: [
+      'admin',
+      'system'
+    ],
+    createIsbnIsmn: [
+      'admin',
+      'system'
+    ],
+    querySubRanges: [
+      'admin',
+      'system'
+    ],
+    queryRangesIsbnIsmnBatch: [
+      'admin',
+      'system'
+    ],
+    queryRangesIdentifier: [
+      'admin',
+      'system'
+    ],
     createIsbn: [
       'admin',
       'system'
@@ -420,4 +440,29 @@ export function validateRange(rangeList, doc) {
     throw new ApiError(HttpStatus.CONFLICT);
   }
   return true;
+}
+
+export function formatPayloadCreateIsbnIsmn(doc) {
+  const {category, prefix, langGroup, rangeStart, rangeEnd, idOld} = doc;
+  const maxlength = Number(category);
+  const baseObj = {
+    prefix,
+    langGroup,
+    category,
+    rangeStart,
+    rangeEnd,
+    free: (Number(rangeEnd) - Number(rangeStart)).toString(),
+    next: rangeStart,
+    taken: '0',
+    canceled: '0',
+    active: true,
+    isClosed: false,
+    idOld
+  };
+
+  if (rangeStart.length > maxlength || rangeEnd.length > maxlength) { // eslint-disable-line functional/no-conditional-statement
+    throw new ApiError(HttpStatus.BAD_REQUEST);
+  }
+
+  return baseObj;
 }

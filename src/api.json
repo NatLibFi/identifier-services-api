@@ -3758,9 +3758,6 @@
 			"RangeBase": {
 				"type": "object",
 				"properties": {
-					"prefix": {
-						"type": "string"
-					},
 					"rangeStart": {
 						"type": "string"
 					},
@@ -3770,16 +3767,29 @@
 					"active": {
 						"type": "boolean",
 						"default": true
+					},
+					"free": {
+						"type": "string"
+					},
+					"taken": {
+						"type": "string"
+					},
+					"next": {
+						"type": "string"
+					},
+					"isClosed": {
+						"type": "boolean"
+					},
+					"idOld": {
+						"type": "string"
 					}
 				},
 				"required": [
-					"prefix",
 					"rangeStart",
-					"rangeEnd",
-					"active"
+					"rangeEnd"
 				]
 			},
-			"RangeIsbnContent": {
+			"RangeIsbnIsmnContent": {
 				"allOf": [
 					{
 						"$ref": "#/components/schemas/RangeBase"
@@ -3787,28 +3797,152 @@
 					{
 						"type": "object",
 						"properties": {
-							"language": {
+							"langGroup": {
 								"type": "string"
+							},
+							"prefix": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string"
+							},
+							"cancelled": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"prefix",
+							"langGroup",
+							"category"
+						]
+					}
+				]
+			},
+			"RangeIsbnIsmn": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBaseContent"
+					},
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"created": {
+								"type": "string",
+								"format": "date-time",
+								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+							},
+							"createdBy": {
+								"type": "string",
+								"description": "Name of user who created it"
 							}
 						}
 					}
 				]
 			},
-			"RangeIsmnContent": {
-				"$ref": "#/components/schemas/RangeBase"
-			},
-			"RangeIssnContent": {
-				"$ref": "#/components/schemas/RangeBase"
-			},
-			"RangeIsbn": {
+			"RangeIsbnContent": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/ResourceMetadata"
+						"$ref": "#/components/schemas/RangeIsbnIsmn"
 					},
 					{
-						"$ref": "#/components/schemas/RangeIsbnContent"
+						"type": "object",
+						"properties": {
+							"publisherId": {
+								"type": "string"
+							},
+							"publisherIdentifier": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"publisherId"
+						]
 					}
 				]
+			},
+			"RangeIsmnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"langGroup": {
+								"type": "string"
+							},
+							"prefix": {
+								"type": "string"
+							},
+							"cancelled": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"prefix",
+							"langGroup"
+						]
+					}
+				]
+			},
+			"RangeIssnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"block": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"block"
+						]
+					}
+				]
+			},
+			"RangeBatch": {
+				"type": "object",
+				"properties": {
+					"identifierType" : {
+						"type": "string",
+						"enum": ["ISBN", "ISSN"]
+					},
+					"identifierCount": {
+						"type": "number"
+					},
+					"identifierCanceledCount": {
+						"type": "number"
+					},
+					"identifierCanceledUsedCount": {
+						"type": "number"
+					},
+					"identifierDeletedCount": {
+						"type": "number"
+					},
+					"publisherId": {
+						"type": "string"
+					},
+					"publicationId": {
+						"type": "string"
+					},
+					"publisherIdentifierRangeId": {
+						"type": "string"
+					},
+					"created": {
+						"type": "string",
+						"format": "date-time",
+						"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+					},
+					"createdBy": {
+						"type": "string"
+					}
+				}
 			},
 			"RangeIsmn": {
 				"allOf": [

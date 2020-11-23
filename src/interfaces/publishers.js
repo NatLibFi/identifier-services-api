@@ -128,7 +128,14 @@ export default function () {
   }
 
   function queryAll(db) {
-    return publisherInterface.queryAll(db);
+    const result = publisherInterface.queryAll(db);
+    return result.reduce((acc, item) => {
+      acc = [ // eslint-disable-line no-param-reassign
+        ...acc,
+        {value: item._id, label: item.name}
+      ];
+      return acc;
+    }, []);
   }
 
 }
