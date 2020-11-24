@@ -253,17 +253,20 @@ export default function (collectionName) {
     }
   }
 
-  async function queryAll(db) {
-    const result = await db.collection(collectionName).find({})
+  async function queryAll(db, protectedProperties) {
+    const result = await db.collection(collectionName).find({}, {projection: protectedProperties})
       .toArray();
     if (result) {
-      return result.reduce((acc, item) => {
-        acc = [ // eslint-disable-line no-param-reassign
-          ...acc,
-          {value: item._id, label: item.name}
-        ];
-        return acc;
-      }, []);
+      return result.map(item => filterDoc(item));
+    }
+
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === '_id' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
   }
 }

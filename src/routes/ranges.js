@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -36,6 +37,11 @@ export default function (db) {
   const ranges = rangesFactory({url: API_URL});
 
   return new Router()
+    .post('/query', bodyParse(), queryRanges)
+    .post('/query/subRange', bodyParse(), querySubRanges)
+    .post('/query/isbnIsmnBatch', bodyParse(), queryRangesIsbnIsmnBatch)
+    .post('/query/identifier', bodyParse(), queryRangesIdentifier)
+    .post('/', bodyParse(), createIsbnIsmn)
     .post('/isbn', bodyParse(), createIsbn)
     .get('/isbn/:id', readIsbn)
     .put('/isbn/:id', bodyParse(), updateIsbn)
@@ -50,6 +56,54 @@ export default function (db) {
     .get('/issn/:id', readIssn)
     .put('/issn/:id', bodyParse(), updateIssn)
     .post('/issn/query', bodyParse(), queryIssn);
+
+  async function queryRanges(req, res, next) {
+    try {
+      const result = await ranges.queryRanges(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function querySubRanges(req, res, next) {
+    try {
+      const result = await ranges.querySubRanges(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryRangesIsbnIsmnBatch(req, res, next) {
+    try {
+      const result = await ranges.queryRangesIsbnIsmnBatch(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryRangesIdentifier(req, res, next) {
+    try {
+      const result = await ranges.queryRangesIdentifier(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createIsbnIsmn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIsbnIsmn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
   // ISBN routes
 

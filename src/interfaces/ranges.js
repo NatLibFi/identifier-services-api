@@ -28,17 +28,28 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, validateRange} from './utils';
+import {hasPermission, validateDoc, validateRange, formatPayloadCreateIsbnIsmn} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import {validate} from '@natlibfi/identifier-services-commons/dist/validate';
+const moment = require('moment');
 
+
+const rangesIsbnIsmnInterface = interfaceFactory('RangeIsbnIsmn');
+const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
+const rangesIsbnIsmnBatchInterface = interfaceFactory('RangeIsbnIsmnBatch');
+const rangesIdentifierInterface = interfaceFactory('Identifier');
 const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
 const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
 const rangesISSNInterface = interfaceFactory('RangeIssnContent');
 
 export default function () {
   return {
+    queryRanges,
+    querySubRanges,
+    queryRangesIsbnIsmnBatch,
+    queryRangesIdentifier,
+    createIsbnIsmn,
     createIsbn,
     readIsbn,
     updateIsbn,
@@ -52,6 +63,95 @@ export default function () {
     updateIssn,
     queryIssn
   };
+
+  async function queryRanges(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryRanges')) {
+        const result = await rangesIsbnIsmnInterface.query(db, {queries, offset});
+        return result;
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function createIsbnIsmn(db, doc, user) {
+    const newDoc = formatPayloadCreateIsbnIsmn(doc);
+    try {
+      if (validateDoc(newDoc, 'RangeIsbnIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsbnIsmn')) {
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          await rangesIsbnIsmnInterface.query(db, {queries});
+          // TO DO Check if ranges already exist
+          const result = await rangesIsbnIsmnInterface.create(db, {
+            ...newDoc,
+            created: moment().format('yyyy-MM-DDTHH:mm:ss.SSZ')
+              .toString(),
+            createdBy: user.id
+          }, user);
+          return result;
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  async function querySubRanges(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'querySubRanges')) {
+        const result = await rangesSubIsbnIsmnInterface.query(db, {queries, offset});
+        return result;
+      }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function queryRangesIsbnIsmnBatch(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryRangesIsbnIsmnBatch')) {
+        const result = await rangesIsbnIsmnBatchInterface.query(db, {queries, offset});
+        return result;
+      }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function queryRangesIdentifier(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryRangesIdentifier')) {
+        const result = await rangesIdentifierInterface.query(db, {queries, offset});
+        return result;
+      }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
 
   async function createIsbn(db, doc, user) {
     try {
