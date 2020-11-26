@@ -38,28 +38,38 @@ export default function (db) {
 
   return new Router()
     .post('/query', bodyParse(), queryRanges)
+    .get('/range/:id', readRange)
+    .post('/range/:id', bodyParse(), updateRange)
     .post('/query/subRange', bodyParse(), querySubRanges)
+    .get('/subRange/:id', readSubRange)
+    .post('/subRange', bodyParse(), createSubRange)
     .post('/query/isbnIsmnBatch', bodyParse(), queryRangesIsbnIsmnBatch)
     .post('/query/identifier', bodyParse(), queryRangesIdentifier)
-    .post('/', bodyParse(), createIsbnIsmn)
-    .post('/isbn', bodyParse(), createIsbn)
-    .get('/isbn/:id', readIsbn)
-    .put('/isbn/:id', bodyParse(), updateIsbn)
-    .post('/isbn/query', bodyParse(), queryIsbn)
-
-    .post('/ismn', bodyParse(), createIsmn)
-    .get('/ismn/:id', readIsmn)
-    .put('/ismn/:id', bodyParse(), updateIsmn)
-    .post('/ismn/query', bodyParse(), queryIsmn)
-
-    .post('/issn', bodyParse(), createIssn)
-    .get('/issn/:id', readIssn)
-    .put('/issn/:id', bodyParse(), updateIssn)
-    .post('/issn/query', bodyParse(), queryIssn);
+    .post('/', bodyParse(), createIsbnIsmn);
 
   async function queryRanges(req, res, next) {
     try {
       const result = await ranges.queryRanges(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function readRange(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readRange(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function updateRange(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateRange(db, id, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
@@ -74,6 +84,26 @@ export default function (db) {
       return next(err);
     }
   }
+
+  async function readSubRange(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readSubRange(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createSubRange(req, res, next) {
+    try {
+      const result = await ranges.createSubRange(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
 
   async function queryRangesIsbnIsmnBatch(req, res, next) {
     try {
@@ -100,135 +130,6 @@ export default function (db) {
       }
       const result = await ranges.createIsbnIsmn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  // ISBN routes
-
-  async function createIsbn(req, res, next) {
-    try {
-      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.BAD_REQUEST);
-      }
-      const result = await ranges.createIsbn(db, req.body, req.user);
-      res.status(HttpStatus.CREATED).json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function readIsbn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.readIsbn(db, id, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function updateIsbn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.updateIsbn(db, id, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function queryIsbn(req, res, next) {
-    try {
-      const result = await ranges.queryIsbn(db, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  // ISMN routes
-
-  async function createIsmn(req, res, next) {
-    try {
-      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.BAD_REQUEST);
-      }
-      const result = await ranges.createIsmn(db, req.body, req.user);
-      res.status(HttpStatus.CREATED).json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function readIsmn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.readIsmn(db, id, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function updateIsmn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.updateIsmn(db, id, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function queryIsmn(req, res, next) {
-    try {
-      const result = await ranges.queryIsmn(db, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  // ISSN routes
-
-  async function createIssn(req, res, next) {
-    try {
-      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(HttpStatus.BAD_REQUEST);
-      }
-      const result = await ranges.createIssn(db, req.body, req.user);
-      res.status(HttpStatus.CREATED).json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function readIssn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.readIssn(db, id, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function updateIssn(req, res, next) {
-    const {id} = req.params;
-    try {
-      const result = await ranges.updateIssn(db, id, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function queryIssn(req, res, next) {
-    try {
-      const result = await ranges.queryIssn(db, req.body, req.user);
-      res.json(result);
     } catch (err) {
       return next(err);
     }
