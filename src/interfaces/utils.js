@@ -483,36 +483,36 @@ export function formatPayloadCreateIsbnIsmn(doc) {
   return baseObj;
 }
 
-export function calculatePublisherIdentifier({payload, prefix, langGroup, rangeStart, category}) {
+export function calculatePublisherIdentifier({payload, prefix, langGroup, next, category}) {
   switch (category) {
   case '1':
     return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${rangeStart}0000`
+      publisherIdentifier: `${prefix}-${langGroup}-${next}0000`,
+      ...payload
 
     };
   case '2':
     return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${rangeStart}000`
+      publisherIdentifier: `${prefix}-${langGroup}-${next}000`,
+      ...payload
 
     };
   case '3':
     return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${rangeStart}00`
+      publisherIdentifier: `${prefix}-${langGroup}-${next}00`,
+      ...payload
 
     };
   case '4':
     return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${rangeStart}0`
+      publisherIdentifier: `${prefix}-${langGroup}-${next}0`,
+      ...payload
 
     };
   case '5':
     return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${rangeStart}`
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      ...payload
 
     };
   default:

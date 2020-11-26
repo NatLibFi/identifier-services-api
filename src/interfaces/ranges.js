@@ -178,7 +178,7 @@ export default function () {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
         const range = await rangesIsbnIsmnInterface.read(db, rangeId);
         if (range) {
-          const {prefix, langGroup, rangeEnd, rangeStart, category, next, free, taken} = range;
+          const {prefix, langGroup, rangeEnd, category, next, free, taken} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
               publisherId: id,
@@ -194,10 +194,10 @@ export default function () {
               active: true,
               closed: false,
               idOld: '',
-              created: moment(),
+              created: moment().format(),
               createdBy: user.id
             };
-            const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, rangeStart, category});
+            const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
             const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
             const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) + 1}`, taken: `${Number(taken) + 1}`};
             const response = await updateRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
