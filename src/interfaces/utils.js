@@ -487,33 +487,48 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
   switch (category) {
   case '1':
     return {
-      publisherIdentifier: `${prefix}-${langGroup}-${next}0000`,
-      ...payload
-
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '00000',
+      rangeEnd: '99999',
+      free: '100000',
+      next: '00001'
     };
   case '2':
     return {
-      publisherIdentifier: `${prefix}-${langGroup}-${next}000`,
-      ...payload
-
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '0000',
+      rangeEnd: '9999',
+      free: '10000',
+      next: '0001'
     };
   case '3':
     return {
-      publisherIdentifier: `${prefix}-${langGroup}-${next}00`,
-      ...payload
-
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '000',
+      rangeEnd: '999',
+      free: '1000',
+      next: '001'
     };
   case '4':
     return {
-      publisherIdentifier: `${prefix}-${langGroup}-${next}0`,
-      ...payload
-
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '00',
+      rangeEnd: '99',
+      free: '100',
+      next: '01'
     };
   case '5':
     return {
+      ...payload,
       publisherIdentifier: `${prefix}-${langGroup}-${next}`,
-      ...payload
-
+      rangeStart: '0',
+      rangeEnd: '9',
+      free: '10',
+      next: '1'
     };
   default:
     return null;

@@ -28,7 +28,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier} from './utils';
+import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, getRangeEnd, getRangeStart} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 const moment = require('moment');
@@ -177,20 +177,22 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
         const range = await rangesIsbnIsmnInterface.read(db, rangeId);
+        console.log(range);
         if (range) {
           const {prefix, langGroup, rangeEnd, category, next, free, taken} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
+              publisherIdentifier: '', // Value Changes after calculation
               publisherId: id,
               isbnIsmnRangeId: rangeId,
               category: '1',
-              rangeStart: '0',
-              rangeEnd: `9`,
-              free: '',
+              rangeStart: '', // Value Changes after calculation
+              rangeEnd: '', // Value Changes after calculation
+              free: '', // Value Changes after calculation
               taken: '0',
               canceled: '0',
               deleted: '0',
-              next: `1`,
+              next: ``, // Value Changes after calculation
               active: true,
               closed: false,
               idOld: '',
@@ -199,6 +201,8 @@ export default function () {
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
             const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
+
+            // Values to Update Big Block
             const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) + 1}`, taken: `${Number(taken) + 1}`};
             const response = await updateRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
             // eslint-disable-next-line max-depth
