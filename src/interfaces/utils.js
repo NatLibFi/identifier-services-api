@@ -250,11 +250,27 @@ const permissions = {
       'admin',
       'system'
     ],
+    readRange: [
+      'admin',
+      'system'
+    ],
     createIsbnIsmn: [
       'admin',
       'system'
     ],
+    updateRange: [
+      'admin',
+      'system'
+    ],
     querySubRanges: [
+      'admin',
+      'system'
+    ],
+    readSubRange: [
+      'admin',
+      'system'
+    ],
+    createSubRange: [
       'admin',
       'system'
     ],
@@ -465,4 +481,56 @@ export function formatPayloadCreateIsbnIsmn(doc) {
   }
 
   return baseObj;
+}
+
+export function calculatePublisherIdentifier({payload, prefix, langGroup, next, category}) {
+  switch (category) {
+  case '1':
+    return {
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '00000',
+      rangeEnd: '99999',
+      free: '100000',
+      next: '00000'
+    };
+  case '2':
+    return {
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '0000',
+      rangeEnd: '9999',
+      free: '10000',
+      next: '0000'
+    };
+  case '3':
+    return {
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '000',
+      rangeEnd: '999',
+      free: '1000',
+      next: '000'
+    };
+  case '4':
+    return {
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '00',
+      rangeEnd: '99',
+      free: '100',
+      next: '00'
+    };
+  case '5':
+    return {
+      ...payload,
+      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      rangeStart: '0',
+      rangeEnd: '9',
+      free: '10',
+      next: '0'
+    };
+  default:
+    return null;
+  }
 }
