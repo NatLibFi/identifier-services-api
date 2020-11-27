@@ -28,7 +28,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, getRangeEnd, getRangeStart} from './utils';
+import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 const moment = require('moment');
@@ -177,7 +177,6 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
         const range = await rangesIsbnIsmnInterface.read(db, rangeId);
-        console.log(range);
         if (range) {
           const {prefix, langGroup, rangeEnd, category, next, free, taken} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
