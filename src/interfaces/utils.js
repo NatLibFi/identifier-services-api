@@ -492,7 +492,7 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
       rangeStart: '00000',
       rangeEnd: '99999',
       free: '100000',
-      next: '00001'
+      next: '00000'
     };
   case '2':
     return {
@@ -501,7 +501,7 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
       rangeStart: '0000',
       rangeEnd: '9999',
       free: '10000',
-      next: '0001'
+      next: '0000'
     };
   case '3':
     return {
@@ -510,7 +510,7 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
       rangeStart: '000',
       rangeEnd: '999',
       free: '1000',
-      next: '001'
+      next: '000'
     };
   case '4':
     return {
@@ -519,7 +519,7 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
       rangeStart: '00',
       rangeEnd: '99',
       free: '100',
-      next: '01'
+      next: '00'
     };
   case '5':
     return {
@@ -528,7 +528,7 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
       rangeStart: '0',
       rangeEnd: '9',
       free: '10',
-      next: '1'
+      next: '0'
     };
   default:
     return null;
