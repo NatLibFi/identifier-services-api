@@ -1275,7 +1275,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsbn"
+									"$ref": "#/components/schemas/RangeIsbnIsmn"
 								}
 							}
 						}
@@ -1321,7 +1321,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsbn"
+										"$ref": "#/components/schemas/RangeIsbnIsmn"
 									}
 								}
 							}
@@ -1358,7 +1358,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RangeIsmnContent"
+								"$ref": "#/components/schemas/RangeIsbnIsmnContent"
 							}
 						}
 					}
@@ -1424,7 +1424,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsmn"
+									"$ref": "#/components/schemas/RangeIsbnIsmn"
 								}
 							}
 						}
@@ -1470,7 +1470,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsmn"
+										"$ref": "#/components/schemas/RangeIsbnIsmn"
 									}
 								}
 							}
@@ -3574,11 +3574,14 @@
 										"type": "object",
 										"properties": {
 											"format": {
-												"type": "string",
-												"enum": [
-													"printed",
-													"cd"
-												]
+												"type": "array",
+												"items": {
+													"type": "string",
+													"enum": [
+														"printed",
+														"cd"
+													]
+												}
 											}
 										},
 										"required": [
@@ -3589,11 +3592,14 @@
 										"type": "object",
 										"properties": {
 											"format": {
-												"type": "string",
-												"enum": [
-													"electronic",
-													"printed-and-electronic"
-												]
+												"type": "array",
+												"items": {
+													"type": "string",
+													"enum": [
+														"electronic",
+														"printed-and-electronic"
+													]
+												}
 											},
 											"url": {
 												"type": "string",
@@ -3818,10 +3824,70 @@
 					}
 				]
 			},
+			"SubRangeIsbnIsmnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"category": {
+								"type": "string"
+							},
+							"canceled": {
+								"type": "string"
+							},
+							"deleted": {
+								"type": "boolean"
+							},
+							"publisherIdentifier": {
+								"type": "string"
+							},
+							"publisherId": {
+								"type": "string"
+							},
+							"isbnIsmnRangeId": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"publisherIdentifier",
+							"publisherId",
+							"isbnIsmnRangeId",
+							"category"
+						]
+					}
+				]
+			},
 			"RangeIsbnIsmn": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/RangeBaseContent"
+						"$ref": "#/components/schemas/RangeIsbnIsmnContent"
+					},
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"created": {
+								"type": "string",
+								"format": "date-time",
+								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+							},
+							"createdBy": {
+								"type": "string",
+								"description": "Name of user who created it"
+							}
+						}
+					}
+				]
+			},
+			"SubRangeIsbnIsmn": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SubRangeIsbnIsmnContent"
 					},
 					{
 						"$ref": "#/components/schemas/ResourceMetadata"
@@ -3944,16 +4010,6 @@
 					}
 				}
 			},
-			"RangeIsmn": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/ResourceMetadata"
-					},
-					{
-						"$ref": "#/components/schemas/RangeIsmnContent"
-					}
-				]
-			},
 			"RangeIssn": {
 				"allOf": [
 					{
@@ -3968,21 +4024,25 @@
 				"type": "object",
 				"properties": {
 					"fileFormat": {
-						"oneOf": [
-							{
-								"type": "string",
-								"pattern": "^other_\\w+",
-								"enum": [
-									"pdf",
-									"epub",
-									"cd",
-									"mp3"
-								]
-							},
-							{
-								"type": "string"
-							}
-						]
+						"type": "array",
+						"items": {
+							"oneOf": [
+								{
+									"type": "string",
+									"pattern": "^other_\\w+",
+									"enum": [
+										"pdf",
+										"epub",
+										"cd",
+										"mp3"
+									]
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+
 					}
 				},
 				"required": [
@@ -3992,19 +4052,22 @@
 			"PrintedPublicationDetails": {
 				"properties": {
 					"printFormat": {
-						"oneOf": [
-							{
-								"type": "string",
-								"enum": [
-									"paperback",
-									"hardback",
-									"spiral-binding",
-									{
-										"type": "string"
-									}
-								]
-							}
-						]
+						"type": "array",
+						"items": {
+							"oneOf": [
+								{
+									"type": "string",
+									"enum": [
+										"paperback",
+										"hardback",
+										"spiral-binding",
+										{
+											"type": "string"
+										}
+									]
+								}
+							]
+						}
 					},
 					"manufacturer": {
 						"type": "string"

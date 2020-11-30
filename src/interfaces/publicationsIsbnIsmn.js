@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -51,12 +52,15 @@ export default function () {
     }
     // Get publisher associate with authenticated user
     const publisher = await publisherInterface.read(db, user.publisher);
-    // Get range assigned to this publisher
-    const range = doc.type === 'music' ? await rangesISMNInterface.read(db, publisher.ismnRange) : await rangesISBNInterface.read(db, publisher.isbnRange);
-    // Get publications associated with this range
-    const latestPublication = await publicationsIsbnIsmnInterface.query(db, {queries: {associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange}, offset: null, calculateIdentifier: true});
 
-    const newIdentifierTitle = calculateIdentifierTitle(latestPublication, range);
+    /* { NEED A NEW CALCUALATION TO GET IDENTIFIER....
+         *** LINES ARE COMMENTED OUT BECAUSE THE WAY TO GET AN IDENTIFIER RANGES CHANGES SO IT CREATES ERRORS }*/
+    // Get range assigned to this publisher
+    // ***const range = doc.type === 'music' ? await rangesISMNInterface.read(db, publisher.ismnRange) : await rangesISBNInterface.read(db, publisher.isbnRange);
+    // Get publications associated with this range
+    // ***const latestPublication = await publicationsIsbnIsmnInterface.query(db, {queries: {associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange}, offset: null, calculateIdentifier: true});
+
+    // ***const newIdentifierTitle = calculateIdentifierTitle(latestPublication, range);
 
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
@@ -67,7 +71,7 @@ export default function () {
         ? {
           ...doc,
           associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange,
-          identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
+          // ***identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
           metadataReference: {state: 'pending'},
           publicationType: 'isbn-ismn'
         }
