@@ -314,8 +314,8 @@ export default function () {
           if (currentIdentifier.results) {
             const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
               ...isbnIsmn,
-              associatedRange: currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, type: currentIdentifier.publicationType})),
-              identifier: currentIdentifier.results.map(item => item.identifier)
+              associatedRange: currentIdentifier.results.map(item => item.publisherIdentifierRangeId),
+              identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
             };
             const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
             return finalResult;
