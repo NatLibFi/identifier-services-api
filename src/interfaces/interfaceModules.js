@@ -262,7 +262,6 @@ export default function (collectionName) {
 
     function filterDoc(doc) {
       return Object.entries(doc)
-        .filter(([key]) => key === '_id' === false)
         .reduce((acc, [
           key,
           value

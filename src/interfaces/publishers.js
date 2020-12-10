@@ -127,8 +127,8 @@ export default function () {
     return publisherInterface.query(db, {queries, offset});
   }
 
-  function queryAll(db) {
-    const result = publisherInterface.queryAll(db);
+  async function queryAll(db) {
+    const result = await publisherInterface.queryAll(db);
     return result.reduce((acc, item) => {
       acc = [ // eslint-disable-line no-param-reassign
         ...acc,

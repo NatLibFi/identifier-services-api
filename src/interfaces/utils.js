@@ -1,4 +1,5 @@
 /* eslint-disable max-statements, max-lines */
+/* eslint-disable no-param-reassign */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -278,6 +279,14 @@ const permissions = {
       'admin',
       'system'
     ],
+    readRangesIsbnIsmnBatch: [
+      'admin',
+      'system'
+    ],
+    createRangesIsbnIsmnBatch: [
+      'admin',
+      'system'
+    ],
     queryRangesIdentifier: [
       'admin',
       'system'
@@ -428,8 +437,8 @@ export async function getTemplate(query, cache) {
   return {...cache, [key]: await localClient.templates.getTemplate(query)};
 }
 
-export function validateDoc(doc, collectionContent) {
-  const validate = getValidator(collectionContent);
+export function validateDoc(doc, schemaName) {
+  const validate = getValidator(schemaName);
   if (validate(doc)) {
     return validate;
   }
@@ -533,4 +542,60 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
   default:
     return null;
   }
+}
+
+export function manageFormatDetails(formatDetails) {
+  const {fileFormat, printFormat} = formatDetails;
+  if (fileFormat && printFormat) {
+    return [
+      ...fileFormat,
+      ...printFormat
+    ];
+  } else if (fileFormat) {
+    return [...fileFormat];
+  } else if (printFormat) {
+    return [...printFormat];
+  }
+}
+
+export function calculatePublicationIdentifier(publisherIdentifier, index) {
+  const prefix = publisherIdentifier.slice(0, 3);
+  const langGroup = publisherIdentifier.slice(4, 7);
+  const range = publisherIdentifier.slice(8);
+  const combineArray = `${prefix}${langGroup}${range}${index}`.split('');
+  const checkdigit = combineArray.reduce((acc, char, i) => {
+    const mode = 10;
+    if (i % 2) { // eslint-disable-line functional/no-conditional-statement
+      acc += Number(char) * 1;
+    } else { // eslint-disable-line functional/no-conditional-statement
+      acc += Number(char) * 3;
+    }
+    const remainder = acc % mode;
+    return mode - remainder;
+  }, 0);
+
+  switch (combineArray.length) {
+  case 7:
+    return `${prefix}-${langGroup}-${range}-0000${index}-${checkdigit}`;
+  case 8:
+    return `${prefix}-${langGroup}-${range}-000${index}-${checkdigit}`;
+  case 9:
+    return `${prefix}-${langGroup}-${range}-00${index}-${checkdigit}`;
+  case 10:
+    return `${prefix}-${langGroup}-${range}-0${index}-${checkdigit}`;
+  case 11:
+    return `${prefix}-${langGroup}-${range}-${index}-${checkdigit}`;
+  default:
+    return `${prefix}-${langGroup}-${range}-${index}-${checkdigit}`;
+  }
+}
+
+export function updateNext(prevNext, count) {
+  const {length} = prevNext;
+  let sum; // eslint-disable-line functional/no-let
+  sum = `${Number(prevNext) + count}`;
+  for (let x = 0; sum.length < length; x++) { // eslint-disable-line functional/no-loop-statement, no-plusplus, functional/no-let
+    sum = `0${sum}`;
+  }
+  return sum;
 }

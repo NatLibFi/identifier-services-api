@@ -1,4 +1,6 @@
-/* eslint-disable max-statements, max-lines */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable max-depth */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -28,16 +30,17 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier} from './utils';
+import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, manageFormatDetails, calculatePublicationIdentifier, updateNext} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 const moment = require('moment');
-
 
 const rangesIsbnIsmnInterface = interfaceFactory('RangeIsbnIsmn');
 const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
 const rangesIsbnIsmnBatchInterface = interfaceFactory('RangeIsbnIsmnBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
+const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
+
 
 export default function () {
   return {
@@ -49,6 +52,8 @@ export default function () {
     readSubRange,
     createSubRange,
     queryRangesIsbnIsmnBatch,
+    readRangesIsbnIsmnBatch,
+    createRangesIsbnIsmnBatch,
     queryRangesIdentifier
   };
 
@@ -199,16 +204,19 @@ export default function () {
               createdBy: user.id
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
-            const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
+            if (validateDoc(newDoc, 'SubRangeIsbnIsmnContent')) {
+              const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
 
-            // Values to Update Big Block
-            const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) + 1}`, taken: `${Number(taken) + 1}`};
-            const response = await updateRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
-            // eslint-disable-next-line max-depth
-            if (response) {
-              return result;
+              // Values to Update Big Block
+              const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) + 1}`, taken: `${Number(taken) + 1}`};
+              const response = await updateRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
+              // eslint-disable-next-line max-depth
+              if (response) {
+                return result;
+              }
+              throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ApiError(HttpStatus.BAD_REQUEST);
           }
           throw new ApiError(HttpStatus.NOT_FOUND);
         }
@@ -224,12 +232,97 @@ export default function () {
     }
   }
 
+
   async function queryRangesIsbnIsmnBatch(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsbnIsmnBatch')) {
         const result = await rangesIsbnIsmnBatchInterface.query(db, {queries, offset});
         return result;
       }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function readRangesIsbnIsmnBatch(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readRangesIsbnIsmnBatch')) {
+        const result = await rangesIsbnIsmnBatchInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function createRangesIsbnIsmnBatch(db, doc, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'createRangesIsbnIsmnBatch')) {
+        const {id, isbnIsmn, publisherId} = doc;
+        const subRangeInfo = await rangesSubIsbnIsmnInterface.read(db, id);
+        const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
+        // Condition if next + count is still inside rangeEnd needs to know the condition if not
+        if (subRangeInfo.next + formatDetailsArray.length <= subRangeInfo.rangeEnd) {
+          const batch = {
+            identifierType: isbnIsmn.type === 'music' ? 'ISMN' : 'ISBN',
+            identifierCount: formatDetailsArray.length,
+            identifierCanceledCount: 0,
+            identifierDeletedCount: 0,
+            publisherId,
+            publicationId: isbnIsmn._id,
+            publisherIdentifierRangeId: id,
+            created: moment().format(),
+            createdBy: user.id
+          };
+          const batchId = await rangesIsbnIsmnBatchInterface.create(db, batch, user);
+          const responseBatch = await rangesIsbnIsmnBatchInterface.read(db, batchId);
+
+          // Calculate Publication identifier and create ranges for respective formatDetails in One batch
+          formatDetailsArray.map(async (item, index) => {
+            const payload = {
+              identifier: calculatePublicationIdentifier(subRangeInfo.publisherIdentifier, index),
+              identifierBatchId: batchId,
+              publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
+              publicationType: item
+            };
+            const result = await rangesIdentifierInterface.create(db, payload, user);
+            if (result) {
+              const subRangedoc = {
+                ...subRangeInfo,
+                free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
+                next: updateNext(subRangeInfo.next, formatDetailsArray.length)
+              };
+              return rangesSubIsbnIsmnInterface.update(db, id, subRangedoc, user);
+            }
+          });
+
+          const queries = [
+            {
+              query: {publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId}
+            }
+          ];
+          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
+          if (currentIdentifier.results) {
+            const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
+              ...isbnIsmn,
+              associatedRange: currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, type: currentIdentifier.publicationType})),
+              identifier: currentIdentifier.results.map(item => item.identifier)
+            };
+            const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
+            return finalResult;
+          }
+        }
+      }
+
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement

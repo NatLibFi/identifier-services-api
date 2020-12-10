@@ -3317,6 +3317,20 @@
 									},
 									"metadataReference": {
 										"$ref": "#/components/schemas/MetadataReference"
+									},
+									"identifier": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
 									}
 								},
 								"required": [
@@ -3337,6 +3351,20 @@
 										"properties": {
 											"scale": {
 												"type": "string"
+											}
+										}
+									},
+									"identifier": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
 											}
 										}
 									}
@@ -3369,20 +3397,6 @@
 							"id": {
 								"description": "Identifier of the publication",
 								"type": "string"
-							},
-							"identifier": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "string"
-										},
-										"type": {
-											"type": "string"
-										}
-									}
-								}
 							},
 							"associatedRange": {
 								"description": "Identifier of the identifier range resource this publication is associated with",
@@ -3484,6 +3498,24 @@
 										"type": "string"
 									}
 								]
+							},
+							"associatedRange": {
+								"description": "Id of the identifier range resource this publication is associated with",
+								"type": "string"
+							},
+							"identifier": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										}
+									}
+								}
 							}
 						},
 						"required": [
@@ -3839,7 +3871,7 @@
 								"type": "string"
 							},
 							"deleted": {
-								"type": "boolean"
+								"type": "string"
 							},
 							"publisherIdentifier": {
 								"type": "string"
@@ -3905,52 +3937,6 @@
 								"description": "Name of user who created it"
 							}
 						}
-					}
-				]
-			},
-			"RangeIsbnContent": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/RangeIsbnIsmn"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"publisherId": {
-								"type": "string"
-							},
-							"publisherIdentifier": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"publisherId"
-						]
-					}
-				]
-			},
-			"RangeIsmnContent": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/RangeBase"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"langGroup": {
-								"type": "string"
-							},
-							"prefix": {
-								"type": "string"
-							},
-							"cancelled": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"prefix",
-							"langGroup"
-						]
 					}
 				]
 			},
