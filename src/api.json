@@ -1275,7 +1275,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsbn"
+									"$ref": "#/components/schemas/RangeIsbnIsmn"
 								}
 							}
 						}
@@ -1321,7 +1321,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsbn"
+										"$ref": "#/components/schemas/RangeIsbnIsmn"
 									}
 								}
 							}
@@ -1358,7 +1358,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RangeIsmnContent"
+								"$ref": "#/components/schemas/RangeIsbnIsmnContent"
 							}
 						}
 					}
@@ -1424,7 +1424,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsmn"
+									"$ref": "#/components/schemas/RangeIsbnIsmn"
 								}
 							}
 						}
@@ -1470,7 +1470,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsmn"
+										"$ref": "#/components/schemas/RangeIsbnIsmn"
 									}
 								}
 							}
@@ -3317,6 +3317,20 @@
 									},
 									"metadataReference": {
 										"$ref": "#/components/schemas/MetadataReference"
+									},
+									"identifier": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
 									}
 								},
 								"required": [
@@ -3337,6 +3351,20 @@
 										"properties": {
 											"scale": {
 												"type": "string"
+											}
+										}
+									},
+									"identifier": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"type": {
+													"type": "string"
+												}
 											}
 										}
 									}
@@ -3369,20 +3397,6 @@
 							"id": {
 								"description": "Identifier of the publication",
 								"type": "string"
-							},
-							"identifier": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "string"
-										},
-										"type": {
-											"type": "string"
-										}
-									}
-								}
 							},
 							"associatedRange": {
 								"description": "Identifier of the identifier range resource this publication is associated with",
@@ -3484,6 +3498,24 @@
 										"type": "string"
 									}
 								]
+							},
+							"associatedRange": {
+								"description": "Id of the identifier range resource this publication is associated with",
+								"type": "string"
+							},
+							"identifier": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										}
+									}
+								}
 							}
 						},
 						"required": [
@@ -3574,11 +3606,14 @@
 										"type": "object",
 										"properties": {
 											"format": {
-												"type": "string",
-												"enum": [
-													"printed",
-													"cd"
-												]
+												"type": "array",
+												"items": {
+													"type": "string",
+													"enum": [
+														"printed",
+														"cd"
+													]
+												}
 											}
 										},
 										"required": [
@@ -3589,11 +3624,14 @@
 										"type": "object",
 										"properties": {
 											"format": {
-												"type": "string",
-												"enum": [
-													"electronic",
-													"printed-and-electronic"
-												]
+												"type": "array",
+												"items": {
+													"type": "string",
+													"enum": [
+														"electronic",
+														"printed-and-electronic"
+													]
+												}
 											},
 											"url": {
 												"type": "string",
@@ -3818,10 +3856,46 @@
 					}
 				]
 			},
+			"SubRangeIsbnIsmnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"category": {
+								"type": "string"
+							},
+							"canceled": {
+								"type": "string"
+							},
+							"deleted": {
+								"type": "string"
+							},
+							"publisherIdentifier": {
+								"type": "string"
+							},
+							"publisherId": {
+								"type": "string"
+							},
+							"isbnIsmnRangeId": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"publisherIdentifier",
+							"publisherId",
+							"isbnIsmnRangeId",
+							"category"
+						]
+					}
+				]
+			},
 			"RangeIsbnIsmn": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/RangeBaseContent"
+						"$ref": "#/components/schemas/RangeIsbnIsmnContent"
 					},
 					{
 						"$ref": "#/components/schemas/ResourceMetadata"
@@ -3842,49 +3916,27 @@
 					}
 				]
 			},
-			"RangeIsbnContent": {
+			"SubRangeIsbnIsmn": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/RangeIsbnIsmn"
+						"$ref": "#/components/schemas/SubRangeIsbnIsmnContent"
+					},
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
 					},
 					{
 						"type": "object",
 						"properties": {
-							"publisherId": {
-								"type": "string"
+							"created": {
+								"type": "string",
+								"format": "date-time",
+								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
 							},
-							"publisherIdentifier": {
-								"type": "string"
+							"createdBy": {
+								"type": "string",
+								"description": "Name of user who created it"
 							}
-						},
-						"required": [
-							"publisherId"
-						]
-					}
-				]
-			},
-			"RangeIsmnContent": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/RangeBase"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"langGroup": {
-								"type": "string"
-							},
-							"prefix": {
-								"type": "string"
-							},
-							"cancelled": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"prefix",
-							"langGroup"
-						]
+						}
 					}
 				]
 			},
@@ -3944,16 +3996,6 @@
 					}
 				}
 			},
-			"RangeIsmn": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/ResourceMetadata"
-					},
-					{
-						"$ref": "#/components/schemas/RangeIsmnContent"
-					}
-				]
-			},
 			"RangeIssn": {
 				"allOf": [
 					{
@@ -3968,21 +4010,25 @@
 				"type": "object",
 				"properties": {
 					"fileFormat": {
-						"oneOf": [
-							{
-								"type": "string",
-								"pattern": "^other_\\w+",
-								"enum": [
-									"pdf",
-									"epub",
-									"cd",
-									"mp3"
-								]
-							},
-							{
-								"type": "string"
-							}
-						]
+						"type": "array",
+						"items": {
+							"oneOf": [
+								{
+									"type": "string",
+									"pattern": "^other_\\w+",
+									"enum": [
+										"pdf",
+										"epub",
+										"cd",
+										"mp3"
+									]
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+
 					}
 				},
 				"required": [
@@ -3992,19 +4038,22 @@
 			"PrintedPublicationDetails": {
 				"properties": {
 					"printFormat": {
-						"oneOf": [
-							{
-								"type": "string",
-								"enum": [
-									"paperback",
-									"hardback",
-									"spiral-binding",
-									{
-										"type": "string"
-									}
-								]
-							}
-						]
+						"type": "array",
+						"items": {
+							"oneOf": [
+								{
+									"type": "string",
+									"enum": [
+										"paperback",
+										"hardback",
+										"spiral-binding",
+										{
+											"type": "string"
+										}
+									]
+								}
+							]
+						}
 					},
 					"manufacturer": {
 						"type": "string"

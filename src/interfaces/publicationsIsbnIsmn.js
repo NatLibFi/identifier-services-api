@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+/* eslint-disable max-statements */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -33,9 +35,6 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
-const rangesISBNInterface = interfaceFactory('RangeIsbnContent', 'RangeIsbnContent');
-const rangesISMNInterface = interfaceFactory('RangeIsmnContent', 'RangeIsmnContent');
-const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
 
 export default function () {
   return {
@@ -45,19 +44,11 @@ export default function () {
     queryIsbnIsmn
   };
 
-  async function createIsbnIsmn(db, doc, user) {
+  function createIsbnIsmn(db, doc, user) {
     if (doc.request) {
       return publicationsIsbnIsmnInterface.create(db, doc, user);
     }
     // Get publisher associate with authenticated user
-    const publisher = await publisherInterface.read(db, user.publisher);
-    // Get range assigned to this publisher
-    const range = doc.type === 'music' ? await rangesISMNInterface.read(db, publisher.ismnRange) : await rangesISBNInterface.read(db, publisher.isbnRange);
-    // Get publications associated with this range
-    const latestPublication = await publicationsIsbnIsmnInterface.query(db, {queries: {associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange}, offset: null, calculateIdentifier: true});
-
-    const newIdentifierTitle = calculateIdentifierTitle(latestPublication, range);
-
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -66,8 +57,6 @@ export default function () {
       const newDoc = doc.isPublic
         ? {
           ...doc,
-          associatedRange: doc.type === 'music' ? publisher.ismnRange : publisher.isbnRange,
-          identifier: calculateIdentifier({newIdentifierTitle, range, doc}),
           metadataReference: {state: 'pending'},
           publicationType: 'isbn-ismn'
         }
@@ -89,59 +78,6 @@ export default function () {
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
-      }
-    }
-
-    function calculateIdentifierTitle(latestPublication, range) {
-      if (latestPublication.length === 0) {
-        return range.rangeStart;
-      }
-      const slicedTitle = latestPublication[0].identifier.id.slice(11, 15); // '0001'
-      const newIdentifierTitle = Number(slicedTitle) + 1;
-      return newIdentifierTitle;
-    }
-
-    function calculateIsbnIsmnIdentifier(range, title) {
-      const beforeCheckDigit = `${range.prefix}${title}`;
-      const split = beforeCheckDigit.split('');
-      const calculateMultiply = split.map((item, i) => {
-        if (i === 0 || i % 2 === 0) {
-          return Number(item);
-        }
-
-        return Number(item * 3);
-      });
-      const addTotal = calculateMultiply.reduce((acc, val) => acc + val, 0);
-      const remainder = addTotal % 10;
-      const checkDigit = 10 - remainder;
-      const formatIdentifier = `${beforeCheckDigit.slice(0, 3)}-${
-        beforeCheckDigit.slice(3, 6)}-${
-        beforeCheckDigit.slice(6, 8)}-${
-        beforeCheckDigit.slice(8, 12)}-${
-        checkDigit}`;
-      return formatIdentifier;
-    }
-
-    function calculateIdentifier({newIdentifierTitle, range, doc}) {
-      if (doc.formatDetails.format === 'electronic' || doc.formatDetails.format === 'printed') {
-        return [
-          {
-            id: calculateIsbnIsmnIdentifier(range, newIdentifierTitle),
-            type: doc.formatDetails.format
-          }
-        ];
-      }
-
-      if (doc.formatDetails.format === 'printed-and-electronic') {
-        const identifier = [
-          newIdentifierTitle,
-          newIdentifierTitle + 1
-        ];
-        const res = identifier.map((item, i) => ({
-          id: calculateIsbnIsmnIdentifier(range, item),
-          type: i === 0 ? 'printed' : 'electronic'
-        }));
-        return res;
       }
     }
   }
