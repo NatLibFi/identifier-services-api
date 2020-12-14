@@ -3399,8 +3399,19 @@
 								"type": "string"
 							},
 							"associatedRange": {
-								"description": "Identifier of the identifier range resource this publication is associated with",
-								"type": "string"
+								"description": "Array of Identifiers of the identifier range resource this publication is associated with",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"subRange": {
+											"type": "string"
+										}
+									}
+								}
 							}
 						},
 						"required": [
@@ -3500,8 +3511,19 @@
 								]
 							},
 							"associatedRange": {
-								"description": "Id of the identifier range resource this publication is associated with",
-								"type": "string"
+								"description": "Array of Identifiers of the identifier range resource this publication is associated with",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"subRange": {
+											"type": "string"
+										}
+									}
+								}
 							},
 							"identifier": {
 								"type": "array",
@@ -3678,8 +3700,19 @@
 								}
 							},
 							"associatedRange": {
-								"description": "Identifier of the identifier range resource this publication is associated with",
-								"type": "string"
+								"description": "Array of Identifiers of the identifier range resource this publication is associated with",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"subRange": {
+											"type": "string"
+										}
+									}
+								}
 							},
 							"identifier": {
 								"type": "array",
@@ -3729,8 +3762,19 @@
 								"type": "string"
 							},
 							"associatedRange": {
-								"description": "Identifier of the identifier range resource this publication is associated with",
-								"type": "string"
+								"description": "Array of Identifiers of the identifier range resource this publication is associated with",
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"subRange": {
+											"type": "string"
+										}
+									}
+								}
 							},
 							"identifier": {
 								"type": "array",
