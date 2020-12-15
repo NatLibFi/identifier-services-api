@@ -567,27 +567,28 @@ export function calculatePublicationIdentifier(publisherIdentifier, index) {
   const langGroup = publisherIdentifier.slice(4, 7);
   const range = publisherIdentifier.slice(8);
   const combineArray = `${prefix}${langGroup}${range}${index}`.split('');
-  const checkdigit = combineArray.reduce((acc, char, i) => {
-    const mode = 10;
+  const mode = 10;
+  const sum = combineArray.reduce((acc, char, i) => {
     if (i % 2) { // eslint-disable-line functional/no-conditional-statement
       acc += Number(char) * 1;
     } else { // eslint-disable-line functional/no-conditional-statement
       acc += Number(char) * 3;
     }
-    const remainder = acc % mode;
-    return mode - remainder;
+    return acc;
   }, 0);
 
+  const remainder = sum % mode;
+  const checkdigit = mode - remainder;
   switch (combineArray.length) {
-  case 7:
-    return `${prefix}-${langGroup}-${range}-0000${index}-${checkdigit}`;
   case 8:
-    return `${prefix}-${langGroup}-${range}-000${index}-${checkdigit}`;
+    return `${prefix}-${langGroup}-${range}-0000${index}-${checkdigit}`;
   case 9:
-    return `${prefix}-${langGroup}-${range}-00${index}-${checkdigit}`;
+    return `${prefix}-${langGroup}-${range}-000${index}-${checkdigit}`;
   case 10:
-    return `${prefix}-${langGroup}-${range}-0${index}-${checkdigit}`;
+    return `${prefix}-${langGroup}-${range}-00${index}-${checkdigit}`;
   case 11:
+    return `${prefix}-${langGroup}-${range}-0${index}-${checkdigit}`;
+  case 12:
     return `${prefix}-${langGroup}-${range}-${index}-${checkdigit}`;
   default:
     return `${prefix}-${langGroup}-${range}-${index}-${checkdigit}`;
