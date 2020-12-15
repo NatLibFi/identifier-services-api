@@ -54,6 +54,7 @@ export default function () {
     queryRangesIsbnIsmnBatch,
     readRangesIsbnIsmnBatch,
     createRangesIsbnIsmnBatch,
+    readRangesIdentifier,
     queryRangesIdentifier
   };
 
@@ -314,7 +315,7 @@ export default function () {
           if (currentIdentifier.results) {
             const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
               ...isbnIsmn,
-              associatedRange: currentIdentifier.results.map(item => item.publisherIdentifierRangeId),
+              associatedRange: currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier})),
               identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
             };
             const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
@@ -323,6 +324,24 @@ export default function () {
         }
       }
 
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+
+  async function readRangesIdentifier(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readRangesIdentifier')) {
+        const result = await rangesIdentifierInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
