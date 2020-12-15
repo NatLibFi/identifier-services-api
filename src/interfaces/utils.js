@@ -287,6 +287,10 @@ const permissions = {
       'admin',
       'system'
     ],
+    readRangesIdentifier: [
+      'admin',
+      'system'
+    ],
     queryRangesIdentifier: [
       'admin',
       'system'

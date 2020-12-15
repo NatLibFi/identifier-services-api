@@ -54,6 +54,7 @@ export default function () {
     queryRangesIsbnIsmnBatch,
     readRangesIsbnIsmnBatch,
     createRangesIsbnIsmnBatch,
+    readRangesIdentifier,
     queryRangesIdentifier
   };
 
@@ -323,6 +324,24 @@ export default function () {
         }
       }
 
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+
+  async function readRangesIdentifier(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readRangesIdentifier')) {
+        const result = await rangesIdentifierInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
