@@ -3861,9 +3861,6 @@
 					},
 					"isClosed": {
 						"type": "boolean"
-					},
-					"idOld": {
-						"type": "string"
 					}
 				},
 				"required": [

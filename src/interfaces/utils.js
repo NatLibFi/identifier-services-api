@@ -472,7 +472,7 @@ export function validateRange(rangeList, doc) {
 }
 
 export function formatPayloadCreateIsbnIsmn(doc) {
-  const {category, prefix, langGroup, rangeStart, rangeEnd, idOld} = doc;
+  const {category, prefix, langGroup, rangeStart, rangeEnd} = doc;
   const maxlength = Number(category);
   const baseObj = {
     prefix,
@@ -485,8 +485,7 @@ export function formatPayloadCreateIsbnIsmn(doc) {
     taken: '0',
     canceled: '0',
     active: true,
-    isClosed: false,
-    idOld
+    isClosed: false
   };
 
   if (rangeStart.length > maxlength || rangeEnd.length > maxlength) { // eslint-disable-line functional/no-conditional-statement

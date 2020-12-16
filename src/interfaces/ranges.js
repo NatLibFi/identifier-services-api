@@ -200,7 +200,6 @@ export default function () {
               next: ``, // Value Changes after calculation
               active: true,
               closed: false,
-              idOld: '',
               created: moment().format(),
               createdBy: user.id
             };
