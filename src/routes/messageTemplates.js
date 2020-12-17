@@ -40,7 +40,8 @@ export default function (db) {
     .get('/:id', read)
     .put('/:id', update)
     .delete('/:id', remove)
-    .post('/query', query);
+    .post('/query', query)
+    .get('/query/all', queryAll);
 
   async function create(req, res, next) {
     try {
@@ -89,4 +90,14 @@ export default function (db) {
       return next(err);
     }
   }
+
+  async function queryAll(req, res, next) {
+    try {
+      const result = await templates.queryAll(db, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
 }

@@ -244,6 +244,10 @@ const permissions = {
     query: [
       'system',
       'admin'
+    ],
+    queryAll: [
+      'system',
+      'admin'
     ]
   },
   ranges: {

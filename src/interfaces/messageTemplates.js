@@ -40,7 +40,8 @@ export default function () {
     read,
     update,
     remove,
-    query
+    query,
+    queryAll
   };
 
   async function create(db, doc, user) {
@@ -76,7 +77,7 @@ export default function () {
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(err.status);
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
     }
   }
@@ -117,6 +118,27 @@ export default function () {
     try {
       if (hasPermission(user, 'messageTemplates', 'query')) {
         return await templateInterface.query(db, {queries, offset});
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function queryAll(db, user) {
+    try {
+      if (hasPermission(user, 'messageTemplates', 'queryAll')) {
+        const result = await templateInterface.queryAll(db);
+        return result.reduce((acc, item) => {
+          acc = [ // eslint-disable-line no-param-reassign
+            ...acc,
+            {value: item._id, label: item.name}
+          ];
+          return acc;
+        }, []);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

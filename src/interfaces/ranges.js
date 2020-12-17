@@ -287,7 +287,7 @@ export default function () {
           const responseBatch = await rangesIsbnIsmnBatchInterface.read(db, batchId);
           // Calculate Publication identifier and create ranges for respective formatDetails in One batch
           formatDetailsArray.map(async (item, index) => {
-            const calculateNextValue = `${subRangeInfo.publicationType}-${subRangeInfo.next}`;
+            const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
             const payload = {
               identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index),
               identifierBatchId: batchId,
