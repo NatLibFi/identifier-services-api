@@ -190,7 +190,7 @@ export default function () {
               publisherIdentifier: '', // Value Changes after calculation
               publisherId: id,
               isbnIsmnRangeId: rangeId,
-              category: '1',
+              category,
               rangeStart: '', // Value Changes after calculation
               rangeEnd: '', // Value Changes after calculation
               free: '', // Value Changes after calculation
@@ -200,7 +200,6 @@ export default function () {
               next: ``, // Value Changes after calculation
               active: true,
               closed: false,
-              idOld: '',
               created: moment().format(),
               createdBy: user.id
             };
@@ -286,11 +285,11 @@ export default function () {
           };
           const batchId = await rangesIsbnIsmnBatchInterface.create(db, batch, user);
           const responseBatch = await rangesIsbnIsmnBatchInterface.read(db, batchId);
-
           // Calculate Publication identifier and create ranges for respective formatDetails in One batch
           formatDetailsArray.map(async (item, index) => {
+            const calculateNextValue = `${subRangeInfo.publicationType}-${subRangeInfo.next}`;
             const payload = {
-              identifier: calculatePublicationIdentifier(subRangeInfo.publisherIdentifier, index),
+              identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index),
               identifierBatchId: batchId,
               publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
               publicationType: item
@@ -299,6 +298,7 @@ export default function () {
             if (result) {
               const subRangedoc = {
                 ...subRangeInfo,
+                taken: `${Number(subRangeInfo.taken) + 1}`,
                 free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
                 next: updateNext(subRangeInfo.next, formatDetailsArray.length)
               };
