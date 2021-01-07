@@ -129,11 +129,13 @@ export default function () {
 
   async function queryAll(db) {
     const result = await publisherInterface.queryAll(db);
-    return result.reduce((acc, item) => {
-      acc = [ // eslint-disable-line no-param-reassign
-        ...acc,
-        {value: item._id, label: item.name}
-      ];
+    return result.reduce((acc, item) => { // eslint-disable-line array-callback-return
+      if (item.publisherType === 'P' || item.publisherType === 'A') { // eslint-disable-line functional/no-conditional-statement
+        acc = [ // eslint-disable-line no-param-reassign
+          ...acc,
+          {value: item._id, label: item.name}
+        ];
+      }
       return acc;
     }, []);
   }

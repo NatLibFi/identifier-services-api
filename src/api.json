@@ -2989,6 +2989,15 @@
 							}
 						]
 					},
+					"publisherType": {
+						"description": "Catagorize publisher whether it is public or private.",
+						"type": "string",
+						"enum": [
+							"P",
+							"A",
+							"T"
+						]
+					},
 					"publisherCategory" :{
 						"description": "The publisher's metadata delivery type. Either manual or external.",
 						"type": "string",
