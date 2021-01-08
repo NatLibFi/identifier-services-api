@@ -308,7 +308,7 @@ export default function () {
 
           const queries = [
             {
-              query: {publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId}
+              query: {publisherIdentifierRangeId: batchId}
             }
           ];
           const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
