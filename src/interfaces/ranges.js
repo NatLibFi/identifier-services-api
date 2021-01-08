@@ -308,14 +308,14 @@ export default function () {
 
           const queries = [
             {
-              query: {publisherIdentifierRangeId: batchId}
+              query: {identifierBatchId: batchId}
             }
           ];
           const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
           if (currentIdentifier.results) {
             const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
               ...isbnIsmn,
-              associatedRange: currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier})),
+              associatedRange: filterDuplicateValueInArray(currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier}))),
               identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
             };
             const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
@@ -332,6 +332,9 @@ export default function () {
     }
   }
 
+  function filterDuplicateValueInArray(arr) {
+    return arr.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+  }
 
   async function readRangesIdentifier(db, id, user) {
     try {
