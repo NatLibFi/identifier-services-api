@@ -45,11 +45,11 @@ export default function () {
   };
 
   function createIsbnIsmn(db, doc, user) {
-    if (doc.request) {
-      return publicationsIsbnIsmnInterface.create(db, doc, user);
-    }
-    // Get publisher associate with authenticated user
     try {
+      if (doc.request) {
+        return publicationsIsbnIsmnInterface.create(db, doc, user);
+      }
+      // Get publisher associate with authenticated user
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
@@ -138,8 +138,8 @@ export default function () {
   throw new ApiError(HttpStatus.FORBIDDEN);
   } */
 
-  async function queryIsbnIsmn(db, {queries, offset, calculateIdentifier}, user) {
-    const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset, calculateIdentifier});
+  async function queryIsbnIsmn(db, {queries, offset}, user) {
+    const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset});
     if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
       if (user.role === 'publisher-admin' || user.role === 'publisher') {
         const queries = [

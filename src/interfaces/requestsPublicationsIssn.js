@@ -66,7 +66,7 @@ export default function () {
     }
     function getCreator() {
       return Object.keys(doc.publisher).length > 0
-        ? doc.publisher.publisherEmail
+        ? doc.publisher.publisherEmail || doc.publisher.email
         : user.id;
     }
   }

@@ -1,5 +1,5 @@
 {
-    "RangeIssnContent": [
+    "RangeIssn": [
         { 
             "prefix": "foo",
             "rangeStart": "111",

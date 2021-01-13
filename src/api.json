@@ -3634,44 +3634,69 @@
 							"formatDetails": {
 								"oneOf": [
 									{
-										"type": "object",
-										"properties": {
-											"format": {
-												"type": "array",
-												"items": {
-													"type": "string",
-													"enum": [
-														"printed",
-														"cd"
-													]
-												}
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/ElectronicPublicationDetails"
+											},
+											{
+												"type": "object",
+												"properties": {
+													"format": {
+														"type": "string",
+														"enum": [
+															"electronic"
+														]
+													}
+												},
+												"required": [
+													"format"
+												]
 											}
-										},
-										"required": [
-											"format"
 										]
 									},
 									{
-										"type": "object",
-										"properties": {
-											"format": {
-												"type": "array",
-												"items": {
-													"type": "string",
-													"enum": [
-														"electronic",
-														"printed-and-electronic"
-													]
-												}
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/PrintedPublicationDetails"
 											},
-											"url": {
-												"type": "string",
-												"format": "uri"
+											{
+												"type": "object",
+												"properties": {
+													"format": {
+														"type": "string",
+														"enum": [
+															"printed"
+														]
+													}
+												},
+												"required": [
+													"format"
+												]
 											}
-										},
-										"required": [
-											"format",
-											"url"
+										]
+									},
+									{
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/ElectronicPublicationDetails"
+											},
+											{
+												"$ref": "#/components/schemas/PrintedPublicationDetails"
+											},
+											{
+												"type": "object",
+												"properties": {
+													"format": {
+														"type": "string",
+														"enum": [
+															"printed-and-electronic"
+														]
+													}
+												},
+												"required": [
+													"format"
+												]
+											}
 										]
 									}
 								]
@@ -3877,6 +3902,30 @@
 					"rangeEnd"
 				]
 			},
+			"RangeBaseISSN": {
+				"type": "object",
+				"properties": {
+					"prefix": {
+						"type": "string"
+					},
+					"rangeStart": {
+						"type": "string"
+					},
+					"rangeEnd": {
+						"type": "string"
+					},
+					"active": {
+						"type": "boolean",
+						"default": true
+					}
+				},
+				"required": [
+					"prefix",
+					"rangeStart",
+					"rangeEnd",
+					"active"
+				]
+			},
 			"RangeIsbnIsmnContent": {
 				"allOf": [
 					{
@@ -3993,18 +4042,10 @@
 			"RangeIssnContent": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/RangeBase"
+						"$ref": "#/components/schemas/RangeBaseISSN"
 					},
 					{
-						"type": "object",
-						"properties": {
-							"block": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"block"
-						]
+						"$ref": "#/components/schemas/ResourceMetadata"
 					}
 				]
 			},
@@ -4013,7 +4054,7 @@
 				"properties": {
 					"identifierType" : {
 						"type": "string",
-						"enum": ["ISBN", "ISSN"]
+						"enum": ["ISBN", "ISMN"]
 					},
 					"identifierCount": {
 						"type": "number"

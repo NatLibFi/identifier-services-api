@@ -30,7 +30,7 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, manageFormatDetails, calculatePublicationIdentifier, updateNext} from './utils';
+import {hasPermission, validateDoc, validateRange, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, manageFormatDetails, calculatePublicationIdentifier, updateNext} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 const moment = require('moment');
@@ -40,7 +40,7 @@ const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
 const rangesIsbnIsmnBatchInterface = interfaceFactory('RangeIsbnIsmnBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
-
+const rangesISSNInterface = interfaceFactory('RangeIssn');
 
 export default function () {
   return {
@@ -55,7 +55,11 @@ export default function () {
     readRangesIsbnIsmnBatch,
     createRangesIsbnIsmnBatch,
     readRangesIdentifier,
-    queryRangesIdentifier
+    queryRangesIdentifier,
+    createIssn,
+    readIssn,
+    updateIssn,
+    queryIssn
   };
 
   async function queryRanges(db, {queries, offset}, user) {
@@ -359,6 +363,93 @@ export default function () {
         const result = await rangesIdentifierInterface.query(db, {queries, offset});
         return result;
       }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+  async function createIssn(db, doc, user) {
+    try {
+      if (validateDoc(doc, 'RangeBaseISSN')) {
+        if (hasPermission(user, 'ranges', 'createIssn')) {
+          const queries = [
+            {
+              query: {}
+            }
+          ];
+          const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
+          const isActiveRange = rangeIssnLlist.results.some(item => item.active === true);
+
+          if (isActiveRange === true) { // eslint-disable-line functional/no-conditional-statement
+            throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+          }
+
+          if (validateRange(rangeIssnLlist, doc)) {
+            return rangesISSNInterface.create(db, doc, user);
+          }
+
+        }
+
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  async function readIssn(db, id, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'readIssn')) {
+        const result = await rangesISSNInterface.read(db, id);
+        if (result) {
+          return result;
+        }
+        throw new ApiError(HttpStatus.NOT_FOUND);
+
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function updateIssn(db, id, doc, user) {
+    try {
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+
+      if (validateDoc(doc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'updateIssn')) {
+          return rangesISSNInterface.update(db, id, doc, user);
+        }
+
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  function queryIssn(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIssn')) {
+        return rangesISSNInterface.query(db, {queries, offset});
+      }
+
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
