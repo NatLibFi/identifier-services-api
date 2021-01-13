@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+/* eslint-disable max-statements */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -33,7 +35,7 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
-const rangesISSNInterface = interfaceFactory('RangeIssnContent');
+const rangesISSNInterface = interfaceFactory('RangeIssn');
 const {calculateNewISSN} = Utils;
 
 export default function () {
@@ -47,19 +49,16 @@ export default function () {
 
   async function createISSN(db, doc, user) {
     try {
-      if (doc.request) {
-        const newDoc = {
-          ...doc,
-          metadataReference: {state: 'pending'}
-        };
-        if (validateDoc(newDoc, 'PublicationIssnContent')) {
-          return publicationsIssnInterface.create(db, newDoc, user);
-        }
+      // If (doc.request) {
+      //   Return publicationsIssnInterface.create(db, doc, user);
+      // }
+
+      if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-
       const rangeQueries = {queries: [{query: {active: true}}], offset: null};
       const identifierLists = await rangesISSNInterface.query(db, rangeQueries);
+
       const index = 0;
       const {results} = identifierLists;
       const activeRange = results[index];

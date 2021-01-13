@@ -47,7 +47,12 @@ export default function (db) {
     .post('/isbnIsmnBatch', bodyParse(), createRangesIsbnIsmnBatch)
     .get('/identifier/:id', readRangesIdentifier)
     .post('/query/identifier', bodyParse(), queryRangesIdentifier)
-    .post('/', bodyParse(), createIsbnIsmn);
+    .post('/', bodyParse(), createIsbnIsmn)
+
+    .post('/issn', bodyParse(), createIssn)
+    .get('/issn/:id', readIssn)
+    .put('/issn/:id', bodyParse(), updateIssn)
+    .post('/issn/query', bodyParse(), queryIssn);
 
   async function queryRanges(req, res, next) {
     try {
@@ -150,6 +155,47 @@ export default function (db) {
     const {id} = req.params;
     try {
       const result = await ranges.readRangesIdentifier(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createIssn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIssn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function readIssn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readIssn(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function updateIssn(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateIssn(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIssn(req, res, next) {
+    try {
+      const result = await ranges.queryIssn(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

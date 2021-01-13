@@ -44,11 +44,21 @@ export default function () {
     queryAll
   };
 
-  function create(db, doc, user) {
+  async function create(db, doc, user) {
     try {
       if (validate(doc)) {
         if (hasPermission(user, 'publishers', 'create')) {
           const newDoc = filterResult(doc);
+          const publisherResponse = await publisherInterface.query(db, {queries: [
+            {
+              query: {email: newDoc.email}
+            }
+          ], offset: null});
+
+          if (publisherResponse.results.length > 0) { // eslint-disable-line functional/no-conditional-statement
+            return publisherResponse.results[0].id;
+          }
+
           return publisherInterface.create(db, newDoc, user);
         }
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -133,7 +143,7 @@ export default function () {
       if (item.publisherType === 'P' || item.publisherType === 'T') { // eslint-disable-line functional/no-conditional-statement
         acc = [ // eslint-disable-line no-param-reassign
           ...acc,
-          {value: item._id, label: item.name}
+          {value: item._id, label: `${item.name}(${item.email})`}
         ];
       }
       return acc;
