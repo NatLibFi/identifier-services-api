@@ -1209,7 +1209,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RangeIsbnContent"
+								"$ref": "#/components/schemas/RangeIsbnIsmnContent"
 							}
 						}
 					}
@@ -3917,6 +3917,21 @@
 					"active": {
 						"type": "boolean",
 						"default": true
+					},
+					"free": {
+						"type": "string"
+					},
+					"taken": {
+						"type": "string"
+					},
+					"next": {
+						"type": "string"
+					},
+					"canceled": {
+						"type": "string"
+					},					
+					"isClosed": {
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -3943,7 +3958,7 @@
 							"category": {
 								"type": "string"
 							},
-							"cancelled": {
+							"canceled": {
 								"type": "string"
 							}
 						},
@@ -4094,6 +4109,20 @@
 					},
 					{
 						"$ref": "#/components/schemas/RangeIssnContent"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"created": {
+								"type": "string",
+								"format": "date-time",
+								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+							},
+							"createdBy": {
+								"type": "string",
+								"description": "Name of user who created it"
+							}
+						}
 					}
 				]
 			},

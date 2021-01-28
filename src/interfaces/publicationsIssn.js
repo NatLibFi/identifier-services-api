@@ -29,14 +29,13 @@
  */
 
 import HttpStatus from 'http-status';
-import {ApiError, Utils} from '@natlibfi/identifier-services-commons';
+import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
 const rangesISSNInterface = interfaceFactory('RangeIssn');
-const {calculateNewISSN} = Utils;
 
 export default function () {
   return {
@@ -58,22 +57,18 @@ export default function () {
       }
       const rangeQueries = {queries: [{query: {active: true}}], offset: null};
       const identifierLists = await rangesISSNInterface.query(db, rangeQueries);
-
       const index = 0;
       const {results} = identifierLists;
       const activeRange = results[index];
-      const queries = {associatedRange: activeRange.id};
-      const [publicationList] = await publicationsIssnInterface.query(db, {queries, offset: null, calculateIdentifier: true});
-      const newPublication = calculateNewISSN({prevIdentifier: publicationList && publicationList.identifier, subtype: 'issn', format: doc.formatDetails.format, activeRange});
       const newDoc = {
         ...doc,
         metadataReference: {state: 'pending'},
-        associatedRange: activeRange.id,
-        identifier: newPublication
+        associatedRange: [{id: activeRange.id, subRange: ''}]
       };
       if (validateDoc(newDoc, 'PublicationIssnContent')) {
         if (hasPermission(user, 'publicationIssn', 'createISSN')) {
-          const newDocWithPublisher = {...newDoc, publisher: user.publisher};
+          // TO DO Fetch publisher for logined user
+          const newDocWithPublisher = {...newDoc};
           return publicationsIssnInterface.create(db, newDocWithPublisher, user);
         }
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -139,8 +134,8 @@ export default function () {
   // Return result;
   // }
 
-  async function queryISSN(db, {queries, offset, calculateIdentifier}, user) {
-    const result = await publicationsIssnInterface.query(db, {queries, offset, calculateIdentifier});
+  async function queryISSN(db, {queries, offset}, user) {
+    const result = await publicationsIssnInterface.query(db, {queries, offset});
     if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
       if (user.role === 'publisher-admin' || user.role === 'publisher') {
         const queries = [
