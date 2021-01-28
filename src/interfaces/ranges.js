@@ -40,6 +40,7 @@ const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
 const rangesIsbnIsmnBatchInterface = interfaceFactory('RangeIsbnIsmnBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
+const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
 const rangesISSNInterface = interfaceFactory('RangeIssn');
 
 export default function () {
@@ -59,7 +60,8 @@ export default function () {
     createIssn,
     readIssn,
     updateIssn,
-    queryIssn
+    queryIssn,
+    assignIssnRange
   };
 
   async function queryRanges(db, {queries, offset}, user) {
@@ -386,8 +388,17 @@ export default function () {
             throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
           }
 
-          if (validateRange(rangeIssnLlist, doc)) {
-            return rangesISSNInterface.create(db, doc, user);
+          const newDoc = {
+            ...doc,
+            next: calculateNext(doc.prefix, doc.rangeStart),
+            free: `${Number(doc.rangeEnd) - Number(doc.rangeStart)}`,
+            taken: '0',
+            active: true,
+            isClosed: false
+          };
+
+          if (validateRange(rangeIssnLlist, newDoc)) {
+            return rangesISSNInterface.create(db, newDoc, user);
           }
 
         }
@@ -454,6 +465,126 @@ export default function () {
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function assignIssnRange(db, doc, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'assignIssnRange')) {
+        const {rangeBlockId, issn} = doc;
+        const rangeDetails = await rangesISSNInterface.read(db, rangeBlockId);
+        const {formatDetails} = issn;
+        const newIssn = {
+          ...filterResult(issn),
+          associatedRange: rangeBlockId,
+          identifier: await getIdentifier(formatDetails.format, rangeDetails)
+        };
+        const issnUpdateResponse = await publicationsIssnInterface.update(db, filterResult(issn).id, newIssn, user);
+        if (issnUpdateResponse.lastErrorObject.updatedExisting) {
+          return HttpStatus.OK;
+        }
+
+        throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    function filterResult(result) {
+      return Object.entries(result)
+        .filter(([key]) => key === '_id' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
+    }
+
+    async function getIdentifier(format, rangeDetails) {
+      const {prefix, next} = rangeDetails;
+      if (format === 'printed' || format === 'electronic') {
+        const identifier = [
+          {
+            id: `${prefix}-${next}`,
+            type: format
+          }
+        ];
+        const newRangeDetails = {
+          ...filterResult(rangeDetails),
+          next: calculateNext(prefix, next.slice(0, 3), 1),
+          free: `${Number(rangeDetails.free) - 1}`,
+          taken: `${Number(rangeDetails.taken) + 1}`
+        };
+        const updateRangeDetails = await rangesISSNInterface.update(db, rangeDetails._id, newRangeDetails, user);
+        if (updateRangeDetails.lastErrorObject.updatedExisting) {
+          return identifier;
+        }
+
+        throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+      }
+      if (format === 'printed-and-electronic') {
+        const array = [
+          'printed',
+          'electronic'
+        ];
+        const identifier = array.reduce((acc, item, index) => {
+          acc.push({ // eslint-disable-line functional/immutable-data
+            id: `${prefix}-${calculateNext(prefix, next.slice(0, 3), index)}`,
+            type: item
+          });
+          return acc;
+        }, []);
+        const newRangeDetails = {
+          ...filterResult(rangeDetails),
+          next: calculateNext(prefix, next.slice(0, 3), 2),
+          free: `${Number(rangeDetails.free) - 2}`,
+          taken: `${Number(rangeDetails.taken) + 2}`
+        };
+        const updateRangeDetails = await rangesISSNInterface.update(db, rangeDetails._id, newRangeDetails, user);
+        if (updateRangeDetails.lastErrorObject.updatedExisting) {
+          return identifier;
+        }
+
+        throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+      }
+    }
+  }
+
+  function calculateNext(prefix, next, i = 0) {
+    const nextValue = formatNext(next, i);
+    const combine = prefix.concat(nextValue).split('');
+    const sum = combine.reduce((acc, item, index) => {
+      const m = (combine.length + 1 - index) * item;
+      acc = Number(acc) + Number(m); // eslint-disable-line no-param-reassign
+      return acc;
+    }, 0); // Get the remainder and calculate it to return the actual check digit
+
+    const remainder = sum % 11;
+
+    if (remainder === 0) {
+      const checkDigit = '0';
+      return `${nextValue}${checkDigit}`;
+    }
+
+    const diff = 11 - remainder;
+    const checkDigit = diff === 10 ? 'X' : diff.toString();
+    return `${nextValue}${checkDigit}`;
+
+    function formatNext(value, i) {
+      const N = Number(value) + i;
+      switch (`${N}`.length) {
+      case 3:
+        return `${N}`;
+      case 2:
+        return `0${N}`;
+      case 1:
+        return `00${N}`;
+      default:
+        return `${N}`;
       }
     }
   }

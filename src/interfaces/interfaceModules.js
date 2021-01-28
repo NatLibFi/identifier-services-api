@@ -110,18 +110,7 @@ export default function (collectionName) {
     return undefined;
   }
 
-  async function query(db, {queries, offset, calculateIdentifier}, protectedProperties) {
-    if (calculateIdentifier) { // Applies only for ISBN-ISMN/ISSN while calculating identifier
-      return db.collection(collectionName)
-        .aggregate([
-          {$match: queries},
-          {$unwind: '$identifier'},
-          {$sort: {'identifier': -1}},
-          {$limit: 1}
-        ])
-        .toArray();
-    }
-
+  async function query(db, {queries, offset}, protectedProperties) {
     if (offset) {
       if (queries.length > 0) {
         const result = await queries.reduce((acc, {query}) => doQuery({

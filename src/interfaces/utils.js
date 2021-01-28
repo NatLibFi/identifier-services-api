@@ -346,6 +346,10 @@ const permissions = {
     queryIssn: [
       'admin',
       'system'
+    ],
+    assignIssnRange: [
+      'admin',
+      'system'
     ]
   }
 };
