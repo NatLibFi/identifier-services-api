@@ -394,6 +394,7 @@ export default function () {
             free: `${Number(doc.rangeEnd) - Number(doc.rangeStart)}`,
             taken: '0',
             active: true,
+            canceled: 0,
             isClosed: false
           };
 

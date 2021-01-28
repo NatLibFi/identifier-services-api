@@ -3927,6 +3927,9 @@
 					"next": {
 						"type": "string"
 					},
+					"canceled": {
+						"type": "string"
+					},					
 					"isClosed": {
 						"type": "boolean"
 					}
@@ -3955,7 +3958,7 @@
 							"category": {
 								"type": "string"
 							},
-							"cancelled": {
+							"canceled": {
 								"type": "string"
 							}
 						},
