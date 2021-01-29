@@ -3632,74 +3632,25 @@
 								]
 							},
 							"formatDetails": {
-								"oneOf": [
-									{
-										"allOf": [
-											{
-												"$ref": "#/components/schemas/ElectronicPublicationDetails"
-											},
-											{
-												"type": "object",
-												"properties": {
-													"format": {
-														"type": "string",
-														"enum": [
-															"electronic"
-														]
-													}
+								"type": "array",
+								"items": {
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"format" : {
+													"type": "string"
 												},
-												"required": [
-													"format"
-												]
-											}
-										]
-									},
-									{
-										"allOf": [
-											{
-												"$ref": "#/components/schemas/PrintedPublicationDetails"
+												"url": {
+													"type": "string"
+												}
 											},
-											{
-												"type": "object",
-												"properties": {
-													"format": {
-														"type": "string",
-														"enum": [
-															"printed"
-														]
-													}
-												},
-												"required": [
-													"format"
-												]
-											}
-										]
-									},
-									{
-										"allOf": [
-											{
-												"$ref": "#/components/schemas/ElectronicPublicationDetails"
-											},
-											{
-												"$ref": "#/components/schemas/PrintedPublicationDetails"
-											},
-											{
-												"type": "object",
-												"properties": {
-													"format": {
-														"type": "string",
-														"enum": [
-															"printed-and-electronic"
-														]
-													}
-												},
-												"required": [
-													"format"
-												]
-											}
-										]
-									}
-								]
+											"required": [
+												"format"
+											]
+										}
+									]
+								}
 							},
 							"previousPublication": {
 								"allOf": [
