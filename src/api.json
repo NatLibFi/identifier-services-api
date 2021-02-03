@@ -3210,6 +3210,17 @@
 									"$ref": "#/components/schemas/Author"
 								}
 							},
+							"uniformDetails": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"language": {
+										"$ref": "#/components/schemas/Language"
+									}
+								}
+							},
 							"seriesDetails": {
 								"allOf": [
 									{
@@ -3562,6 +3573,14 @@
 					},
 					{
 						"$ref": "#/components/schemas/PublicationIsbnIsmnRequestContent"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"additionalInformation" : {
+								"type": "string"
+							}
+						}
 					}
 				]
 			},
@@ -3819,6 +3838,14 @@
 					},
 					{
 						"$ref": "#/components/schemas/PublicationIssnRequestContent"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"additionalInformation" : {
+								"type": "string"
+							}
+						}
 					}
 				]
 			},
