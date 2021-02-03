@@ -79,12 +79,13 @@ export default function () {
   function updateRequest(db, id, doc, user) {
     try {
       const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
-
-      if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
-        return publisherRequestsInterface.update(db, id, newDoc, user);
+      if (validateDoc(newDoc, 'PublisherRequestContent')) {
+        if (hasPermission(user, 'publisherRequests', 'updateRequest')) {
+          return publisherRequestsInterface.update(db, id, newDoc, user);
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
       }
-
-      throw new ApiError(HttpStatus.FORBIDDEN);
+      throw new ApiError(HttpStatus.BAD_REQUEST);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
