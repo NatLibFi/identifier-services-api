@@ -2714,6 +2714,20 @@
 			"ResourceMetadata": {
 				"type": "object",
 				"properties": {
+					"created": {
+						"type": "object",
+						"properties": {
+							"timestamp": {
+								"type": "string",
+								"format": "date-time",
+								"description": "Records created timestamp in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+							},
+							"user": {
+								"type": "string",
+								"description": "The id of the user who created the record."
+							}
+						}
+					},
 					"lastUpdated": {
 						"type": "object",
 						"properties": {
