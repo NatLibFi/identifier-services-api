@@ -45,6 +45,10 @@ export default function (collectionName) {
   async function create(db, doc, user) {
     const {insertedId} = await db.collection(collectionName).insertOne({
       ...doc,
+      created: {
+        ...doc.created,
+        timestamp: moment().toISOString()
+      },
       lastUpdated: {
         timestamp: moment().toISOString(),
         user: user ? user.id : undefined
