@@ -161,11 +161,7 @@ const permissions = {
     ]
   },
   publicationIsbnIsmnRequests: {
-    createRequestIsbnIsmn: [
-      'system',
-      'publisher-admin',
-      'publisher'
-    ],
+    createRequestIsbnIsmn: ['all'],
     readRequestIsbnIsmn: [
       'system',
       'admin',
@@ -207,11 +203,7 @@ const permissions = {
     ]
   },
   publicationIssnRequests: {
-    createRequestISSN: [
-      'system',
-      'publisher-admin',
-      'publisher'
-    ],
+    createRequestISSN: ['all'],
     readRequestISSN: [
       'system',
       'admin',

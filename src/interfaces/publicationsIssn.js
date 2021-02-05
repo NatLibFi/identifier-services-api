@@ -35,7 +35,6 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
-const rangesISSNInterface = interfaceFactory('RangeIssn');
 
 export default function () {
   return {
@@ -46,7 +45,7 @@ export default function () {
     queryISSN
   };
 
-  async function createISSN(db, doc, user) {
+  function createISSN(db, doc, user) {
     try {
       // If (doc.request) {
       //   Return publicationsIssnInterface.create(db, doc, user);
@@ -55,15 +54,9 @@ export default function () {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-      const rangeQueries = {queries: [{query: {active: true}}], offset: null};
-      const identifierLists = await rangesISSNInterface.query(db, rangeQueries);
-      const index = 0;
-      const {results} = identifierLists;
-      const activeRange = results[index];
       const newDoc = {
         ...doc,
-        metadataReference: {state: 'pending'},
-        associatedRange: [{id: activeRange.id, subRange: ''}]
+        metadataReference: {state: 'pending'}
       };
       if (validateDoc(newDoc, 'PublicationIssnContent')) {
         if (hasPermission(user, 'publicationIssn', 'createISSN')) {

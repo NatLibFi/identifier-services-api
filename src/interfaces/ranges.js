@@ -474,7 +474,7 @@ export default function () {
         const {formatDetails} = issn;
         const newIssn = {
           ...filterResult(issn),
-          associatedRange: rangeBlockId,
+          associatedRange: [{id: rangeBlockId, block: rangeDetails.prefix}],
           identifier: await getIdentifier(formatDetails, rangeDetails)
         };
         const issnUpdateResponse = await publicationsIssnInterface.update(db, filterResult(issn).id, newIssn, user);

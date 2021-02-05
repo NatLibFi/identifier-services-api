@@ -2824,6 +2824,9 @@
 					},
 					"id": {
 						"type": "string"
+					},
+					"status": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -3726,7 +3729,7 @@
 										"id": {
 											"type": "string"
 										},
-										"subRange": {
+										"block": {
 											"type": "string"
 										}
 									}
@@ -3788,7 +3791,7 @@
 										"id": {
 											"type": "string"
 										},
-										"subRange": {
+										"block": {
 											"type": "string"
 										}
 									}
