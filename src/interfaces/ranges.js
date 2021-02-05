@@ -33,7 +33,6 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc, validateRange, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, manageFormatDetails, calculatePublicationIdentifier, updateNext} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
-const moment = require('moment');
 
 const rangesIsbnIsmnInterface = interfaceFactory('RangeIsbnIsmn');
 const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
@@ -114,9 +113,7 @@ export default function () {
           // TO DO Check if ranges already exist
           const result = await rangesIsbnIsmnInterface.create(db, {
             ...newDoc,
-            created: moment().format('yyyy-MM-DDTHH:mm:ss.SSZ')
-              .toString(),
-            createdBy: user.id
+            created: {user: user.id}
           }, user);
           return result;
         }
@@ -206,8 +203,7 @@ export default function () {
               next: ``, // Value Changes after calculation
               active: true,
               closed: false,
-              created: moment().format(),
-              createdBy: user.id
+              created: {user: user.id}
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
             if (validateDoc(newDoc, 'SubRangeIsbnIsmnContent')) {
@@ -286,8 +282,7 @@ export default function () {
             publisherId,
             publicationId: isbnIsmn._id,
             publisherIdentifierRangeId: id,
-            created: moment().format(),
-            createdBy: user.id
+            created: {user: user.id}
           };
           const batchId = await rangesIsbnIsmnBatchInterface.create(db, batch, user);
           const responseBatch = await rangesIsbnIsmnBatchInterface.read(db, batchId);
@@ -378,7 +373,7 @@ export default function () {
         if (hasPermission(user, 'ranges', 'createIssn')) {
           const queries = [
             {
-              query: {}
+              query: {prefix: doc.prefix}
             }
           ];
           const rangeIssnLlist = await rangesISSNInterface.query(db, {queries});
@@ -395,7 +390,8 @@ export default function () {
             taken: '0',
             active: true,
             canceled: 0,
-            isClosed: false
+            isClosed: false,
+            created: {user: user.id}
           };
 
           if (validateRange(rangeIssnLlist, newDoc)) {
@@ -479,7 +475,7 @@ export default function () {
         const newIssn = {
           ...filterResult(issn),
           associatedRange: rangeBlockId,
-          identifier: await getIdentifier(formatDetails.format, rangeDetails)
+          identifier: await getIdentifier(formatDetails, rangeDetails)
         };
         const issnUpdateResponse = await publicationsIssnInterface.update(db, filterResult(issn).id, newIssn, user);
         if (issnUpdateResponse.lastErrorObject.updatedExisting) {
@@ -505,13 +501,13 @@ export default function () {
         ]) => ({...acc, [key]: value}), {});
     }
 
-    async function getIdentifier(format, rangeDetails) {
+    async function getIdentifier(formatDetails, rangeDetails) {
       const {prefix, next} = rangeDetails;
-      if (format === 'printed' || format === 'electronic') {
+      if (formatDetails.length === 1) {
         const identifier = [
           {
             id: `${prefix}-${next}`,
-            type: format
+            type: formatDetails[0].format
           }
         ];
         const newRangeDetails = {
@@ -527,11 +523,9 @@ export default function () {
 
         throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
       }
-      if (format === 'printed-and-electronic') {
-        const array = [
-          'printed',
-          'electronic'
-        ];
+
+      if (formatDetails.length > 1) {
+        const array = formatDetails.map(item => item.format);
         const identifier = array.reduce((acc, item, index) => {
           acc.push({ // eslint-disable-line functional/immutable-data
             id: `${prefix}-${calculateNext(prefix, next.slice(0, 3), index)}`,

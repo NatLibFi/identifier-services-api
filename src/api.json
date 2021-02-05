@@ -4010,13 +4010,18 @@
 						"type": "object",
 						"properties": {
 							"created": {
-								"type": "string",
-								"format": "date-time",
-								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
-							},
-							"createdBy": {
-								"type": "string",
-								"description": "Name of user who created it"
+								"type": "object",
+								"properties": {
+									"timestamp": {
+										"type": "string",
+										"format": "date-time",
+										"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+									},
+									"user": {
+										"type": "string",
+										"description": "Name of user who created it"
+									}
+								}
 							}
 						}
 					}
