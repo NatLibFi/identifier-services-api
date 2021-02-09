@@ -39,6 +39,7 @@ export default function (collectionName) {
     update,
     remove,
     query,
+    queryStatistics,
     queryAll
   };
 
@@ -259,6 +260,14 @@ export default function (collectionName) {
           key,
           value
         ]) => ({...acc, [key]: value}), {});
+    }
+  }
+
+  async function queryStatistics(db, {query}, protectedProperties) {
+    const result = await db.collection(collectionName).find(query, {projection: protectedProperties})
+      .toArray();
+    if (result) {
+      return result;
     }
   }
 }
