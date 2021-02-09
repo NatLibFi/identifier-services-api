@@ -53,6 +53,7 @@ export default function (db) {
     .get('/issn/:id', readIssn)
     .put('/issn/:id', bodyParse(), updateIssn)
     .post('/issn/query', bodyParse(), queryIssn)
+    .post('/issn/queryStatistics', bodyParse(), queryIssnStatistics)
     .post('/issn/assignRange', bodyParse(), assignIssnRange);
 
   async function queryRanges(req, res, next) {
@@ -197,6 +198,15 @@ export default function (db) {
   async function queryIssn(req, res, next) {
     try {
       const result = await ranges.queryIssn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIssnStatistics(req, res, next) {
+    try {
+      const result = await ranges.queryIssnStatistics(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

@@ -39,7 +39,8 @@ export default function (db) {
     .post('/', bodyParse(), create)
     .get('/:id', read)
     .put('/:id', bodyParse(), update)
-    .post('/query', bodyParse(), query);
+    .post('/query', bodyParse(), query)
+    .post('/queryStatistics', bodyParse(), queryIssnStatistics);
 
   async function create(req, res, next) {
     try {
@@ -88,6 +89,15 @@ export default function (db) {
       }
 
       const result = await publications.queryISSN(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIssnStatistics(req, res, next) {
+    try {
+      const result = await publications.queryIssnStatistics(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

@@ -60,6 +60,7 @@ export default function () {
     readIssn,
     updateIssn,
     queryIssn,
+    queryIssnStatistics,
     assignIssnRange
   };
 
@@ -456,6 +457,20 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
         return rangesISSNInterface.query(db, {queries, offset});
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function queryIssnStatistics(db, query, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryIssn')) {
+        return rangesISSNInterface.queryStatistics(db, query);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
