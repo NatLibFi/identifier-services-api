@@ -136,13 +136,17 @@ export default async function run() {
       const response = await db.collection('userMetadata').findOne({id: req.user.id});
       if (response) {
         const role = mapGroupToRole(req.user.groups);
-        req.user = {...req.user, role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
+        req.user = {...req.user, emails: formatEmails(req.user.emails), role, ...response}; // eslint-disable-line require-atomic-updates, functional/immutable-data
         return next();
       }
       throw new ApiError(HttpStatus.NOT_FOUND);
     } catch (err) {
       return next(err);
     }
+  }
+
+  function formatEmails(array) {
+    return array.map(email => ({...email, value: email.value.toLowerCase()}));
   }
 
   function registerSignalHandlers() {
