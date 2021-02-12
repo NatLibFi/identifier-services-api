@@ -2598,7 +2598,14 @@
 				"enum": [
 					"fin",
 					"eng",
-					"swe"
+					"swe",
+					"fre",
+					"smi",
+					"rus",
+					"esp",
+					"ger",
+					"other",
+					"bilingual"
 				]
 			},
 			"Person": {
@@ -2659,13 +2666,16 @@
 						"type": "object",
 						"properties": {
 							"role": {
-								"type": "string",
-								"enum": [
-									"author",
-									"illustrator",
-									"translator",
-									"editor"
-								]
+								"type" : "array",
+								"items": {
+									"type": "string",
+									"enum": [
+										"author",
+										"illustrator",
+										"translator",
+										"editor"
+									]
+								}
 							}
 						},
 						"required": [
