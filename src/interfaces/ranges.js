@@ -41,6 +41,8 @@ const rangesIdentifierInterface = interfaceFactory('Identifier');
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
 const rangesISSNInterface = interfaceFactory('RangeIssn');
+// Const publisherInterface = interfaceFactory('PublisherMetadata');
+
 
 export default function () {
   return {
@@ -61,6 +63,8 @@ export default function () {
     updateIssn,
     queryIssn,
     queryIssnStatistics,
+    queryIsbnIsmnStatistics,
+    queryIsbnIsmnMonthlyStatistics,
     assignIssnRange
   };
 
@@ -211,7 +215,7 @@ export default function () {
               const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
 
               // Values to Update Big Block
-              const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) + 1}`, taken: `${Number(taken) + 1}`};
+              const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) - 1}`, taken: `${Number(taken) + 1}`};
               const response = await updateRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
               // eslint-disable-next-line max-depth
               if (response) {
@@ -324,6 +328,43 @@ export default function () {
             return finalResult;
           }
         }
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function queryIsbnIsmnMonthlyStatistics(db, query, user) {
+    try {
+      // Const publisherResponse = await publisherInterface.queryStatistics(db, query);
+      // TO DO
+      // Query for different records for monthly statistics and return the values
+      // Not Completed yet
+      if (hasPermission(user, 'ranges', 'queryRanges')) {
+        const result = await rangesIsbnIsmnInterface.queryStatistics(db, query);
+        return result;
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function queryIsbnIsmnStatistics(db, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryRanges')) {
+        const rangeResponse = await rangesIsbnIsmnInterface.queryAll(db);
+        return rangeResponse.map((item) => {
+          const {prefix, langGroup, rangeStart, rangeEnd, free, taken} = item;
+          return {prefix, langGroup, rangeStart, rangeEnd, free, taken};
+        });
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

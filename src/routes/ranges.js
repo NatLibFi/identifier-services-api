@@ -48,6 +48,8 @@ export default function (db) {
     .get('/identifier/:id', readRangesIdentifier)
     .post('/query/identifier', bodyParse(), queryRangesIdentifier)
     .post('/', bodyParse(), createIsbnIsmn)
+    .post('/isbn-ismn/queryMonthlyStatistics', bodyParse(), queryIsbnIsmnMonthlyStatistics)
+    .post('/isbn-ismn/queryIsbnIsmnStatistics', bodyParse(), queryIsbnIsmnStatistics)
 
     .post('/issn', bodyParse(), createIssn)
     .get('/issn/:id', readIssn)
@@ -148,6 +150,24 @@ export default function (db) {
       }
       const result = await ranges.createIsbnIsmn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIsbnIsmnMonthlyStatistics(req, res, next) {
+    try {
+      const result = await ranges.queryIsbnIsmnMonthlyStatistics(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIsbnIsmnStatistics(req, res, next) {
+    try {
+      const result = await ranges.queryIsbnIsmnStatistics(db, req.user);
+      res.json(result);
     } catch (err) {
       return next(err);
     }
