@@ -1209,7 +1209,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RangeIsbnIsmnContent"
+								"$ref": "#/components/schemas/RangeIsbnContent"
 							}
 						}
 					}
@@ -1275,7 +1275,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsbnIsmn"
+									"$ref": "#/components/schemas/RangeIsbn"
 								}
 							}
 						}
@@ -1321,7 +1321,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsbnIsmn"
+										"$ref": "#/components/schemas/RangeIsbn"
 									}
 								}
 							}
@@ -1358,7 +1358,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RangeIsbnIsmnContent"
+								"$ref": "#/components/schemas/RangeIsbnContent"
 							}
 						}
 					}
@@ -1424,7 +1424,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RangeIsbnIsmn"
+									"$ref": "#/components/schemas/RangeIsbn"
 								}
 							}
 						}
@@ -1470,7 +1470,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsbnIsmn"
+										"$ref": "#/components/schemas/RangeIsbn"
 									}
 								}
 							}
@@ -3946,7 +3946,7 @@
 					"active"
 				]
 			},
-			"RangeIsbnIsmnContent": {
+			"RangeIsbnContent": {
 				"allOf": [
 					{
 						"$ref": "#/components/schemas/RangeBase"
@@ -3968,14 +3968,37 @@
 							}
 						},
 						"required": [
+							"prefix"
+						]
+					}
+				]
+			},
+			"RangeIsmnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"prefix": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string"
+							},
+							"canceled": {
+								"type": "string"
+							}
+						},
+						"required": [
 							"prefix",
-							"langGroup",
 							"category"
 						]
 					}
 				]
 			},
-			"SubRangeIsbnIsmnContent": {
+			"SubRangeIsbnContent": {
 				"allOf": [
 					{
 						"$ref": "#/components/schemas/RangeBase"
@@ -4011,10 +4034,10 @@
 					}
 				]
 			},
-			"RangeIsbnIsmn": {
+			"RangeIsbn": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/RangeIsbnIsmnContent"
+						"$ref": "#/components/schemas/RangeIsbnContent"
 					},
 					{
 						"$ref": "#/components/schemas/ResourceMetadata"
@@ -4040,10 +4063,10 @@
 					}
 				]
 			},
-			"SubRangeIsbnIsmn": {
+			"SubRangeIsbn": {
 				"allOf": [
 					{
-						"$ref": "#/components/schemas/SubRangeIsbnIsmnContent"
+						"$ref": "#/components/schemas/SubRangeIsbnContent"
 					},
 					{
 						"$ref": "#/components/schemas/ResourceMetadata"

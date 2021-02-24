@@ -30,34 +30,49 @@
  */
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc, validateRange, formatPayloadCreateIsbnIsmn, calculatePublisherIdentifier, manageFormatDetails, calculatePublicationIdentifier, updateNext} from './utils';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
+import {
+  hasPermission,
+  validateDoc,
+  validateRange,
+  formatPayloadCreateIsbn,
+  formatPayloadCreateIsmn,
+  calculatePublisherIdentifier,
+  manageFormatDetails,
+  calculatePublicationIdentifier,
+  updateNext
+} from './utils';
 
-const rangesIsbnIsmnInterface = interfaceFactory('RangeIsbnIsmn');
-const rangesSubIsbnIsmnInterface = interfaceFactory('SubRangeIsbnIsmn');
-const rangesIsbnIsmnBatchInterface = interfaceFactory('RangeIsbnIsmnBatch');
+const rangesIsbnInterface = interfaceFactory('RangeIsbn');
+const rangesSubIsbnInterface = interfaceFactory('SubRangeIsbn');
+const rangesIsbnBatchInterface = interfaceFactory('RangeIsbnBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
-const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
-const publicationsIssnInterface = interfaceFactory('Publication_ISSN', 'PublicationIssnContent');
+
+const rangesIsmnInterface = interfaceFactory('RangeIsmn');
+
+const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN');
+const publicationsIssnInterface = interfaceFactory('Publication_ISSN');
 const rangesISSNInterface = interfaceFactory('RangeIssn');
 // Const publisherInterface = interfaceFactory('PublisherMetadata');
 
 
 export default function () {
   return {
-    queryRanges,
+    queryIsbnRanges,
     readRange,
-    createIsbnIsmn,
+    createIsbn,
     updateRange,
     querySubRanges,
     readSubRange,
     createSubRange,
-    queryRangesIsbnIsmnBatch,
-    readRangesIsbnIsmnBatch,
-    createRangesIsbnIsmnBatch,
+    queryRangesIsbnBatch,
+    readRangesIsbnBatch,
+    createRangesIsbnBatch,
     readRangesIdentifier,
     queryRangesIdentifier,
+    createIsmn,
+    queryIsmnRanges,
     createIssn,
     readIssn,
     updateIssn,
@@ -68,10 +83,10 @@ export default function () {
     assignIssnRange
   };
 
-  async function queryRanges(db, {queries, offset}, user) {
+  async function queryIsbnRanges(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const result = await rangesIsbnIsmnInterface.query(db, {queries, offset});
+        const result = await rangesIsbnInterface.query(db, {queries, offset});
         return result;
       }
 
@@ -86,7 +101,7 @@ export default function () {
   async function readRange(db, id, user) {
     try {
       if (hasPermission(user, 'ranges', 'readRange')) {
-        const result = await rangesIsbnIsmnInterface.read(db, id);
+        const result = await rangesIsbnInterface.read(db, id);
         if (result) {
           return result;
         }
@@ -101,22 +116,22 @@ export default function () {
   }
 
 
-  async function createIsbnIsmn(db, doc, user) {
+  async function createIsbn(db, doc, user) {
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const newDoc = formatPayloadCreateIsbnIsmn(doc);
+    const newDoc = formatPayloadCreateIsbn(doc);
     try {
-      if (validateDoc(newDoc, 'RangeIsbnIsmnContent')) {
-        if (hasPermission(user, 'ranges', 'createIsbnIsmn')) {
+      if (validateDoc(newDoc, 'RangeIsbnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsbn')) {
           const queries = [
             {
               query: {}
             }
           ];
-          await rangesIsbnIsmnInterface.query(db, {queries});
+          await rangesIsbnInterface.query(db, {queries});
           // TO DO Check if ranges already exist
-          const result = await rangesIsbnIsmnInterface.create(db, {
+          const result = await rangesIsbnInterface.create(db, {
             ...newDoc,
             created: {user: user.id}
           }, user);
@@ -139,9 +154,9 @@ export default function () {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-      if (validateDoc(doc, 'RangeIsbnIsmnContent')) {
+      if (validateDoc(doc, 'RangeIsbnContent')) {
         if (hasPermission(user, 'ranges', 'updateRange')) {
-          return rangesIsbnIsmnInterface.update(db, id, doc, user);
+          return rangesIsbnInterface.update(db, id, doc, user);
         }
 
         throw new ApiError(HttpStatus.FORBIDDEN);
@@ -158,7 +173,7 @@ export default function () {
   async function querySubRanges(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
-        const result = await rangesSubIsbnIsmnInterface.query(db, {queries, offset});
+        const result = await rangesSubIsbnInterface.query(db, {queries, offset});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -172,7 +187,7 @@ export default function () {
   async function readSubRange(db, id, user) {
     try {
       if (hasPermission(user, 'ranges', 'readSubRange')) {
-        const result = await rangesSubIsbnIsmnInterface.read(db, id);
+        const result = await rangesSubIsbnInterface.read(db, id);
         if (result) {
           return result;
         }
@@ -190,14 +205,14 @@ export default function () {
     const {id, rangeId} = doc;
     try {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
-        const range = await rangesIsbnIsmnInterface.read(db, rangeId);
+        const range = await rangesIsbnInterface.read(db, rangeId);
         if (range) {
           const {prefix, langGroup, rangeEnd, category, next, free, taken} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
               publisherIdentifier: '', // Value Changes after calculation
               publisherId: id,
-              isbnIsmnRangeId: rangeId,
+              isbnRangeId: rangeId,
               category,
               rangeStart: '', // Value Changes after calculation
               rangeEnd: '', // Value Changes after calculation
@@ -211,8 +226,8 @@ export default function () {
               created: {user: user.id}
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
-            if (validateDoc(newDoc, 'SubRangeIsbnIsmnContent')) {
-              const result = await rangesSubIsbnIsmnInterface.create(db, newDoc);
+            if (validateDoc(newDoc, 'SubRangeIsbnContent')) {
+              const result = await rangesSubIsbnInterface.create(db, newDoc);
 
               // Values to Update Big Block
               const rangeToUpdate = {...range, next: `${Number(next) + 1}`, free: `${Number(free) - 1}`, taken: `${Number(taken) + 1}`};
@@ -240,10 +255,10 @@ export default function () {
   }
 
 
-  async function queryRangesIsbnIsmnBatch(db, {queries, offset}, user) {
+  async function queryRangesIsbnBatch(db, {queries, offset}, user) {
     try {
-      if (hasPermission(user, 'ranges', 'queryRangesIsbnIsmnBatch')) {
-        const result = await rangesIsbnIsmnBatchInterface.query(db, {queries, offset});
+      if (hasPermission(user, 'ranges', 'queryRangesIsbnBatch')) {
+        const result = await rangesIsbnBatchInterface.query(db, {queries, offset});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -254,10 +269,10 @@ export default function () {
     }
   }
 
-  async function readRangesIsbnIsmnBatch(db, id, user) {
+  async function readRangesIsbnBatch(db, id, user) {
     try {
-      if (hasPermission(user, 'ranges', 'readRangesIsbnIsmnBatch')) {
-        const result = await rangesIsbnIsmnBatchInterface.read(db, id);
+      if (hasPermission(user, 'ranges', 'readRangesIsbnBatch')) {
+        const result = await rangesIsbnBatchInterface.read(db, id);
         if (result) {
           return result;
         }
@@ -271,11 +286,11 @@ export default function () {
     }
   }
 
-  async function createRangesIsbnIsmnBatch(db, doc, user) {
+  async function createRangesIsbnBatch(db, doc, user) {
     try {
-      if (hasPermission(user, 'ranges', 'createRangesIsbnIsmnBatch')) {
+      if (hasPermission(user, 'ranges', 'createRangesIsbnBatch')) {
         const {id, isbnIsmn, publisherId} = doc;
-        const subRangeInfo = await rangesSubIsbnIsmnInterface.read(db, id);
+        const subRangeInfo = await rangesSubIsbnInterface.read(db, id);
         const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
         // Condition if next + count is still inside rangeEnd needs to know the condition if not
         if (subRangeInfo.next + formatDetailsArray.length <= subRangeInfo.rangeEnd) {
@@ -289,8 +304,8 @@ export default function () {
             publisherIdentifierRangeId: id,
             created: {user: user.id}
           };
-          const batchId = await rangesIsbnIsmnBatchInterface.create(db, batch, user);
-          const responseBatch = await rangesIsbnIsmnBatchInterface.read(db, batchId);
+          const batchId = await rangesIsbnBatchInterface.create(db, batch, user);
+          const responseBatch = await rangesIsbnBatchInterface.read(db, batchId);
           // Calculate Publication identifier and create ranges for respective formatDetails in One batch
           formatDetailsArray.map(async (item, index) => {
             const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
@@ -308,7 +323,7 @@ export default function () {
                 free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
                 next: updateNext(subRangeInfo.next, formatDetailsArray.length)
               };
-              return rangesSubIsbnIsmnInterface.update(db, id, subRangedoc, user);
+              return rangesSubIsbnInterface.update(db, id, subRangedoc, user);
             }
           });
 
@@ -345,7 +360,7 @@ export default function () {
       // Query for different records for monthly statistics and return the values
       // Not Completed yet
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const result = await rangesIsbnIsmnInterface.queryStatistics(db, query);
+        const result = await rangesIsbnInterface.queryStatistics(db, query);
         return result;
       }
 
@@ -360,7 +375,7 @@ export default function () {
   async function queryIsbnIsmnStatistics(db, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const rangeResponse = await rangesIsbnIsmnInterface.queryAll(db);
+        const rangeResponse = await rangesIsbnInterface.queryAll(db);
         return rangeResponse.map((item) => {
           const {prefix, langGroup, rangeStart, rangeEnd, free, taken} = item;
           return {prefix, langGroup, rangeStart, rangeEnd, free, taken};
@@ -449,6 +464,55 @@ export default function () {
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  async function createIsmn(db, doc, user) {
+    if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+    try {
+      const newDoc = formatPayloadCreateIsmn(doc);
+      if (validateDoc(newDoc, 'RangeIsmnContent')) {
+        if (hasPermission(user, 'ranges', 'createIsmn')) {
+          const query = {
+            prefix: doc.prefix,
+            category: doc.category,
+            rangeStart: doc.rangeStart
+          };
+          const queryResponse = await rangesIsmnInterface.queryStatistics(db, {query});
+          if (queryResponse.length === 0) {
+            const result = await rangesIsmnInterface.create(db, {
+              ...newDoc,
+              created: {user: user.id}
+            }, user);
+            return result;
+          }
+          throw new ApiError(HttpStatus.CONFLICT);
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
+      }
+
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  async function queryIsmnRanges(db, {queries, offset}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'queryRanges')) {
+        const result = await rangesIsmnInterface.query(db, {queries, offset});
+        return result;
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
       }
     }
   }

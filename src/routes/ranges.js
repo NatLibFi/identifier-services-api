@@ -37,17 +37,20 @@ export default function (db) {
   const ranges = rangesFactory({url: API_URL});
 
   return new Router()
-    .post('/query', bodyParse(), queryRanges)
+    .post('/query/isbn', bodyParse(), queryIsbnRanges)
+    .post('/isbn', bodyParse(), createIsbn)
     .get('/range/:id', readRange)
     .post('/range/:id', bodyParse(), updateRange)
     .post('/query/subRange', bodyParse(), querySubRanges)
     .get('/subRange/:id', readSubRange)
     .post('/subRange', bodyParse(), createSubRange)
-    .post('/query/isbnIsmnBatch', bodyParse(), queryRangesIsbnIsmnBatch)
-    .post('/isbnIsmnBatch', bodyParse(), createRangesIsbnIsmnBatch)
+    .post('/query/isbnBatch', bodyParse(), queryRangesIsbnBatch)
+    .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
     .get('/identifier/:id', readRangesIdentifier)
     .post('/query/identifier', bodyParse(), queryRangesIdentifier)
-    .post('/', bodyParse(), createIsbnIsmn)
+
+    .post('/ismn', bodyParse(), createIsmn)
+    .post('/query/ismn', bodyParse(), queryIsmnRanges)
     .post('/isbn-ismn/queryMonthlyStatistics', bodyParse(), queryIsbnIsmnMonthlyStatistics)
     .post('/isbn-ismn/queryIsbnIsmnStatistics', bodyParse(), queryIsbnIsmnStatistics)
 
@@ -58,9 +61,9 @@ export default function (db) {
     .post('/issn/queryStatistics', bodyParse(), queryIssnStatistics)
     .post('/issn/assignRange', bodyParse(), assignIssnRange);
 
-  async function queryRanges(req, res, next) {
+  async function queryIsbnRanges(req, res, next) {
     try {
-      const result = await ranges.queryRanges(db, req.body, req.user);
+      const result = await ranges.queryIsbnRanges(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
@@ -116,18 +119,18 @@ export default function (db) {
   }
 
 
-  async function queryRangesIsbnIsmnBatch(req, res, next) {
+  async function queryRangesIsbnBatch(req, res, next) {
     try {
-      const result = await ranges.queryRangesIsbnIsmnBatch(db, req.body, req.user);
+      const result = await ranges.queryRangesIsbnBatch(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
     }
   }
 
-  async function createRangesIsbnIsmnBatch(req, res, next) {
+  async function createRangesIsbnBatch(req, res, next) {
     try {
-      const result = await ranges.createRangesIsbnIsmnBatch(db, req.body, req.user);
+      const result = await ranges.createRangesIsbnBatch(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
@@ -143,13 +146,34 @@ export default function (db) {
     }
   }
 
-  async function createIsbnIsmn(req, res, next) {
+  async function createIsbn(req, res, next) {
     try {
       if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-      const result = await ranges.createIsbnIsmn(db, req.body, req.user);
+      const result = await ranges.createIsbn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createIsmn(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0 && req.body.constructor === Object) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      const result = await ranges.createIsmn(db, req.body, req.user);
+      res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIsmnRanges(req, res, next) {
+    try {
+      const result = await ranges.queryIsmnRanges(db, req.body, req.user);
+      res.json(result);
     } catch (err) {
       return next(err);
     }

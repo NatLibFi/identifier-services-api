@@ -251,10 +251,6 @@ const permissions = {
       'admin',
       'system'
     ],
-    createIsbnIsmn: [
-      'admin',
-      'system'
-    ],
     updateRange: [
       'admin',
       'system'
@@ -271,15 +267,15 @@ const permissions = {
       'admin',
       'system'
     ],
-    queryRangesIsbnIsmnBatch: [
+    queryRangesIsbnBatch: [
       'admin',
       'system'
     ],
-    readRangesIsbnIsmnBatch: [
+    readRangesIsbnBatch: [
       'admin',
       'system'
     ],
-    createRangesIsbnIsmnBatch: [
+    createRangesIsbnBatch: [
       'admin',
       'system'
     ],
@@ -471,12 +467,36 @@ export function validateRange(rangeList, doc) {
   return true;
 }
 
-export function formatPayloadCreateIsbnIsmn(doc) {
+export function formatPayloadCreateIsbn(doc) {
   const {category, prefix, langGroup, rangeStart, rangeEnd} = doc;
   const maxlength = Number(category);
   const baseObj = {
     prefix,
     langGroup,
+    category,
+    rangeStart,
+    rangeEnd,
+    free: (Number(rangeEnd) - Number(rangeStart)).toString(),
+    next: rangeStart,
+    taken: '0',
+    canceled: '0',
+    active: true,
+    isClosed: false
+  };
+
+  if (rangeStart.length > maxlength || rangeEnd.length > maxlength) { // eslint-disable-line functional/no-conditional-statement
+    throw new ApiError(HttpStatus.BAD_REQUEST);
+  }
+
+  return baseObj;
+}
+
+export function formatPayloadCreateIsmn(doc) {
+  console.log(doc)
+  const {category, prefix, rangeStart, rangeEnd} = doc;
+  const maxlength = Number(category);
+  const baseObj = {
+    prefix,
     category,
     rangeStart,
     rangeEnd,
