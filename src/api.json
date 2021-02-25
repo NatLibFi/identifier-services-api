@@ -2704,22 +2704,7 @@
 				]
 			},
 			"Organization": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/PostalAddress"
-					},
-					{
-						"type": "object",
-						"properties": {
-							"name": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"name"
-						]
-					}
-				]
+				"type": "string"
 			},
 			"ResourceMetadata": {
 				"type": "object",
@@ -3093,17 +3078,7 @@
 							"organizationDetails": {
 								"type": "object",
 								"properties": {
-									"affiliateOf": {
-										"$ref": "#/components/schemas/Organization"
-									},
-									"affiliates": {
-										"description": "A list of affiliates of the publisher and their publishing frequency per year",
-										"type": "array",
-										"items": {
-											"$ref": "#/components/schemas/Organization"
-										}
-									},
-									"distributorOf": {
+									"affiliate": {
 										"$ref": "#/components/schemas/Organization"
 									},
 									"distributor": {
@@ -4021,14 +3996,14 @@
 							"publisherId": {
 								"type": "string"
 							},
-							"isbnIsmnRangeId": {
+							"isbnRangeId": {
 								"type": "string"
 							}
 						},
 						"required": [
 							"publisherIdentifier",
 							"publisherId",
-							"isbnIsmnRangeId",
+							"isbnRangeId",
 							"category"
 						]
 					}
