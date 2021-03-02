@@ -3984,6 +3984,9 @@
 							"category": {
 								"type": "string"
 							},
+							"langGroup": {
+								"type": "string"
+							},
 							"canceled": {
 								"type": "string"
 							},
@@ -4004,6 +4007,42 @@
 							"publisherIdentifier",
 							"publisherId",
 							"isbnRangeId",
+							"category"
+						]
+					}
+				]
+			},
+			"SubRangeIsmnContent": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RangeBase"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"category": {
+								"type": "string"
+							},
+							"canceled": {
+								"type": "string"
+							},
+							"deleted": {
+								"type": "string"
+							},
+							"publisherIdentifier": {
+								"type": "string"
+							},
+							"publisherId": {
+								"type": "string"
+							},
+							"ismnRangeId": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"publisherIdentifier",
+							"publisherId",
+							"ismnRangeId",
 							"category"
 						]
 					}
@@ -4042,6 +4081,30 @@
 				"allOf": [
 					{
 						"$ref": "#/components/schemas/SubRangeIsbnContent"
+					},
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"created": {
+								"type": "string",
+								"format": "date-time",
+								"description": "date format in ISO 8601 Date time string format (YYYY-MM-DDTHH:mm:ss.sss)"
+							},
+							"createdBy": {
+								"type": "string",
+								"description": "Name of user who created it"
+							}
+						}
+					}
+				]
+			},
+			"SubRangeIsmn": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SubRangeIsmnContent"
 					},
 					{
 						"$ref": "#/components/schemas/ResourceMetadata"

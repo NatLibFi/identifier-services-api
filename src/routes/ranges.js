@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 /**
  *
@@ -39,21 +40,28 @@ export default function (db) {
   return new Router()
     .post('/query/isbn', bodyParse(), queryIsbnRanges)
     .post('/isbn', bodyParse(), createIsbn)
-    .get('/range/:id', readRange)
-    .post('/range/:id', bodyParse(), updateRange)
-    .post('/query/subRange', bodyParse(), querySubRanges)
-    .get('/subRange/:id', readSubRange)
-    .post('/subRange', bodyParse(), createSubRange)
+    .get('/range/isbn/:id', readIsbnRange)
+    .post('/range/isbn/:id', bodyParse(), updateIsbnRange)
+    .post('/query/isbn/subRange', bodyParse(), queryIsbnSubRanges)
+    .get('/isbn/subRange/:id', readIsbnSubRange)
+    .post('/isbn/subRange', bodyParse(), createIsbnSubRange)
     .post('/query/isbnBatch', bodyParse(), queryRangesIsbnBatch)
     .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
-    .get('/identifier/:id', readRangesIdentifier)
-    .post('/query/identifier', bodyParse(), queryRangesIdentifier)
 
     .post('/ismn', bodyParse(), createIsmn)
+    .post('/ismn/subRange', bodyParse(), createIsmnSubRange)
+    .get('/ismn/subRange/:id', bodyParse(), readIsmnSubRange)
+    .post('/range/ismn/:id', bodyParse(), updateIsmnRange)
     .post('/query/ismn', bodyParse(), queryIsmnRanges)
+    .post('/query/ismn/subRange', bodyParse(), queryIsmnSubRanges)
+    .post('/query/ismnBatch', bodyParse(), queryRangesIsmnBatch)
+    .post('/ismnBatch', bodyParse(), createRangesIsmnBatch)
+
+    .get('/identifier/:id', readRangesIdentifier)
     .post('/isbn-ismn/queryMonthlyStatistics', bodyParse(), queryIsbnIsmnMonthlyStatistics)
     .post('/isbn-ismn/queryIsbnIsmnStatistics', bodyParse(), queryIsbnIsmnStatistics)
 
+    .post('/query/identifier', bodyParse(), queryRangesIdentifier)
     .post('/issn', bodyParse(), createIssn)
     .get('/issn/:id', readIssn)
     .put('/issn/:id', bodyParse(), updateIssn)
@@ -70,48 +78,48 @@ export default function (db) {
     }
   }
 
-  async function readRange(req, res, next) {
+  async function readIsbnRange(req, res, next) {
     const {id} = req.params;
     try {
-      const result = await ranges.readRange(db, id, req.user);
+      const result = await ranges.readIsbnRange(db, id, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
     }
   }
 
-  async function updateRange(req, res, next) {
+  async function updateIsbnRange(req, res, next) {
     const {id} = req.params;
     try {
-      const result = await ranges.updateRange(db, id, req.body, req.user);
+      const result = await ranges.updateIsbnRange(db, id, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
     }
   }
 
-  async function querySubRanges(req, res, next) {
+  async function queryIsbnSubRanges(req, res, next) {
     try {
-      const result = await ranges.querySubRanges(db, req.body, req.user);
+      const result = await ranges.queryIsbnSubRanges(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
     }
   }
 
-  async function readSubRange(req, res, next) {
+  async function readIsbnSubRange(req, res, next) {
     const {id} = req.params;
     try {
-      const result = await ranges.readSubRange(db, id, req.user);
+      const result = await ranges.readIsbnSubRange(db, id, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
     }
   }
 
-  async function createSubRange(req, res, next) {
+  async function createIsbnSubRange(req, res, next) {
     try {
-      const result = await ranges.createSubRange(db, req.body, req.user);
+      const result = await ranges.createIsbnSubRange(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
@@ -170,9 +178,65 @@ export default function (db) {
     }
   }
 
+  async function updateIsmnRange(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.updateIsmnRange(db, id, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createIsmnSubRange(req, res, next) {
+    try {
+      const result = await ranges.createIsmnSubRange(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function readIsmnSubRange(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readIsmnSubRange(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
   async function queryIsmnRanges(req, res, next) {
     try {
       const result = await ranges.queryIsmnRanges(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryIsmnSubRanges(req, res, next) {
+    try {
+      const result = await ranges.queryIsmnSubRanges(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryRangesIsmnBatch(req, res, next) {
+    try {
+      const result = await ranges.queryRangesIsmnBatch(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function createRangesIsmnBatch(req, res, next) {
+    try {
+      const result = await ranges.createRangesIsmnBatch(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

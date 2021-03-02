@@ -287,6 +287,14 @@ const permissions = {
       'admin',
       'system'
     ],
+    queryRangesIsmnBatch: [
+      'admin',
+      'system'
+    ],
+    createRangesIsmnBatch: [
+      'admin',
+      'system'
+    ],
     createIsbn: [
       'admin',
       'system'
@@ -492,7 +500,6 @@ export function formatPayloadCreateIsbn(doc) {
 }
 
 export function formatPayloadCreateIsmn(doc) {
-  console.log(doc)
   const {category, prefix, rangeStart, rangeEnd} = doc;
   const maxlength = Number(category);
   const baseObj = {
@@ -516,55 +523,100 @@ export function formatPayloadCreateIsmn(doc) {
 }
 
 export function calculatePublisherIdentifier({payload, prefix, langGroup, next, category}) {
+  if (langGroup) { // eslint-disable-line functional/no-conditional-statement
+    switch (category) {
+    case '1':
+      return {
+        ...payload,
+        publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+        rangeStart: '00000',
+        rangeEnd: '99999',
+        free: '100000',
+        next: '00000'
+      };
+    case '2':
+      return {
+        ...payload,
+        publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+        rangeStart: '0000',
+        rangeEnd: '9999',
+        free: '10000',
+        next: '0000'
+      };
+    case '3':
+      return {
+        ...payload,
+        publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+        rangeStart: '000',
+        rangeEnd: '999',
+        free: '1000',
+        next: '000'
+      };
+    case '4':
+      return {
+        ...payload,
+        publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+        rangeStart: '00',
+        rangeEnd: '99',
+        free: '100',
+        next: '00'
+      };
+    case '5':
+      return {
+        ...payload,
+        publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+        rangeStart: '0',
+        rangeEnd: '9',
+        free: '10',
+        next: '0'
+      };
+    default:
+      return null;
+    }
+  }
+
   switch (category) {
-  case '1':
+  case '3':
     return {
       ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      publisherIdentifier: `${prefix}-${next}`,
       rangeStart: '00000',
       rangeEnd: '99999',
       free: '100000',
       next: '00000'
     };
-  case '2':
+  case '5':
     return {
       ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
-      rangeStart: '0000',
-      rangeEnd: '9999',
-      free: '10000',
-      next: '0000'
-    };
-  case '3':
-    return {
-      ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      publisherIdentifier: `${prefix}-${next}`,
       rangeStart: '000',
       rangeEnd: '999',
       free: '1000',
       next: '000'
     };
-  case '4':
+  case '6':
     return {
       ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      publisherIdentifier: `${prefix}-${next}`,
       rangeStart: '00',
       rangeEnd: '99',
       free: '100',
       next: '00'
     };
-  case '5':
+  case '7':
     return {
       ...payload,
-      publisherIdentifier: `${prefix}-${langGroup}-${next}`,
+      publisherIdentifier: `${prefix}-${next}`,
       rangeStart: '0',
       rangeEnd: '9',
       free: '10',
       next: '0'
     };
-  default:
+  default: {
     return null;
   }
+  }
+
 }
 
 export function manageFormatDetails(formatDetails) {
@@ -581,36 +633,106 @@ export function manageFormatDetails(formatDetails) {
   }
 }
 
-export function calculatePublicationIdentifier(nextValue, category, index) {
-  const prefix = nextValue.slice(0, 3);
-  const langGroup = nextValue.slice(4, 7);
-  const range = nextValue.slice(8, 8 + Number(category));
-  const next = `${Number(nextValue.slice(8 + Number(category) + 1)) + index}`;
-  const combineArray = `${prefix}${langGroup}${range}${next}`.split('');
-  const mode = 10;
-  const sum = combineArray.reduce((acc, char, i) => {
-    if (i % 2) { // eslint-disable-line functional/no-conditional-statement
-      acc += Number(char) * 1;
-    } else { // eslint-disable-line functional/no-conditional-statement
-      acc += Number(char) * 3;
-    }
-    return acc;
-  }, 0);
-
-  const remainder = sum % mode;
-  const checkdigit = mode - remainder;
-  switch (combineArray.length) {
-  case 8:
-    return `${prefix}-${langGroup}-${range}-0000${next}-${checkdigit}`;
-  case 9:
-    return `${prefix}-${langGroup}-${range}-000${next}-${checkdigit}`;
-  case 10:
-    return `${prefix}-${langGroup}-${range}-00${next}-${checkdigit}`;
-  case 11:
-    return `${prefix}-${langGroup}-${range}-0${next}-${checkdigit}`;
-  default:
-    return `${prefix}-${langGroup}-${range}-${next}-${checkdigit}`;
+export function calculatePublicationIdentifier(nextValue, category, index, publicationType) {
+  if (publicationType === 'isbn') {
+    return isbnPublicationIdentifier();
   }
+
+  if (publicationType === 'ismn') {
+    return ismnPublicationIdentifier();
+  }
+
+  function isbnPublicationIdentifier() {
+    const prefix = nextValue.slice(0, 3);
+    const langGroup = nextValue.slice(4, 7);
+    const range = nextValue.slice(8, 8 + Number(category));
+    const next = `${Number(nextValue.slice(8 + Number(category) + 1)) + index}`;
+    const combineArray = `${prefix}${langGroup}${range}${next}`.split('');
+    const mode = 10;
+    const sum = combineArray.reduce((acc, char, i) => {
+      if (i % 2) { // eslint-disable-line functional/no-conditional-statement
+        acc += Number(char) * 1;
+      } else { // eslint-disable-line functional/no-conditional-statement
+        acc += Number(char) * 3;
+      }
+      return acc;
+    }, 0);
+
+    const remainder = sum % mode;
+    const checkdigit = mode - remainder === 10 ? 0 : mode - remainder;
+
+    switch (combineArray.length) {
+    case 8:
+      return `${prefix}-${langGroup}-${range}-0000${next}-${checkdigit}`;
+    case 9:
+      return `${prefix}-${langGroup}-${range}-000${next}-${checkdigit}`;
+    case 10:
+      return `${prefix}-${langGroup}-${range}-00${next}-${checkdigit}`;
+    case 11:
+      return `${prefix}-${langGroup}-${range}-0${next}-${checkdigit}`;
+    default:
+      return `${prefix}-${langGroup}-${range}-${next}-${checkdigit}`;
+    }
+  }
+
+  function ismnPublicationIdentifier() {
+    const prefix = nextValue.slice(0, 5);
+    const publisherCode = calcPublisherCode(nextValue, category);
+    const nextPublicationCode = calcPublicationCode(nextValue, category);
+    const combineArray = `${prefix.replace(/-/ug, '')}${publisherCode}${nextPublicationCode}`.split('');
+    const mode = 10;
+    const sum = combineArray.reduce((acc, char, i) => {
+      if (i % 2) { // eslint-disable-line functional/no-conditional-statement
+        acc += Number(char) * 1;
+      } else { // eslint-disable-line functional/no-conditional-statement
+        acc += Number(char) * 3;
+      }
+      return acc;
+    }, 0);
+
+    const remainder = sum % mode;
+    const checkdigit = mode - remainder;
+
+    return `${prefix}-${publisherCode}-${nextPublicationCode}-${checkdigit}`;
+
+  }
+
+  function calcPublisherCode(n, c) {
+    switch (c) {
+    case '3':
+      return n.slice(6, 9);
+    case '5':
+      return n.slice(6, 11);
+    case '6':
+      return n.slice(6, 12);
+    case '7':
+      return n.slice(6, 13);
+    default:
+      return n.slice(6, 9);
+    }
+  }
+
+  function calcPublicationCode(n, c) {
+    switch (c) {
+    case '3':
+      return nextVal(n, 10);
+    case '5':
+      return nextVal(n, 12);
+    case '6':
+      return nextVal(n, 13);
+    case '7':
+      return nextVal(n, 14);
+    default:
+      return nextVal(n, 10);
+    }
+
+    function nextVal(n, l) {
+      const nSliced = `1${n.slice(l)}`;
+      const nNumber = Number(`${Number(nSliced) + index}`);
+      return nNumber.toString().slice(1);
+    }
+  }
+
 }
 
 export function updateNext(prevNext, count) {
