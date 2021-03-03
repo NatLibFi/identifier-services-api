@@ -254,7 +254,7 @@ export default function (db) {
 
   async function queryIsbnIsmnStatistics(req, res, next) {
     try {
-      const result = await ranges.queryIsbnIsmnStatistics(db, req.user);
+      const result = await ranges.queryIsbnIsmnStatistics(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

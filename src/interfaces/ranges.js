@@ -385,14 +385,24 @@ export default function () {
     }
   }
 
-  async function queryIsbnIsmnStatistics(db, user) {
+  async function queryIsbnIsmnStatistics(db, {query}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const rangeResponse = await rangesIsbnInterface.queryAll(db);
-        return rangeResponse.map((item) => {
-          const {prefix, langGroup, rangeStart, rangeEnd, free, taken} = item;
-          return {prefix, langGroup, rangeStart, rangeEnd, free, taken};
-        });
+        if (query === 'ISBN') {
+          const rangeResponse = await rangesIsbnInterface.queryAll(db);
+          return rangeResponse.map((item) => {
+            const {prefix, langGroup, rangeStart, rangeEnd, free, taken} = item;
+            return {prefix, langGroup, rangeStart, rangeEnd, free, taken};
+          });
+        }
+
+        if (query === 'ISMN') {
+          const rangeResponse = await rangesIsmnInterface.queryAll(db);
+          return rangeResponse.map((item) => {
+            const {prefix, rangeStart, rangeEnd, free, taken} = item;
+            return {prefix, rangeStart, rangeEnd, free, taken};
+          });
+        }
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
