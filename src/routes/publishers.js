@@ -39,6 +39,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
     .get('/:id', authenticated, read)
     .post('/query', query)
     .get('/query/all', queryAll)
+    .post('/query/all', queryAllPublishers)
     .use(passportMiddlewares.token)
     .use(combineUserInfo)
     .post('/', create)
@@ -96,6 +97,15 @@ export default function (db, passportMiddlewares, combineUserInfo) {
   async function queryAll(req, res, next) {
     try {
       const result = await publishers.queryAll(db);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryAllPublishers(req, res, next) {
+    try {
+      const result = await publishers.queryAllPublishers(db, req.body);
       res.json(result);
     } catch (err) {
       return next(err);

@@ -34,6 +34,8 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
+const rangesIsbnBatchInterface = interfaceFactory('RangeIsbnBatch');
+const rangesIsmnBatchInterface = interfaceFactory('RangeIsmnBatch');
 
 export default function () {
   return {
@@ -41,7 +43,8 @@ export default function () {
     read,
     update,
     query,
-    queryAll
+    queryAll,
+    queryAllPublishers
   };
 
   async function create(db, doc, user) {
@@ -141,4 +144,53 @@ export default function () {
     }, []);
   }
 
+  async function queryAllPublishers(db, {query}) {
+    try {
+      const {identifierType, type} = query;
+      if (type) {
+        const publishersList = await publisherInterface.queryStatistics(db, {query: type});
+        const filtered = publishersList.filter(i => i.publisherRangeId);
+        return run(db, filtered, identifierType);
+      }
+
+      const publishersList = await publisherInterface.queryAll(db);
+      const filtered = publishersList.filter(i => i.publisherRangeId);
+      return run(db, filtered, identifierType);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  async function run (db, filtered, identifierType) {
+    const rangeInterface = identifierType === 'isbn'
+      ? rangesIsbnBatchInterface
+      : rangesIsmnBatchInterface;
+    const result = await filter(filtered, async publisher => {
+      const res = await doAsyncStuff(db, publisher, rangeInterface);
+      if (res) {
+        return publisher;
+      }
+    });
+
+    return result;
+  }
+
+  // Arbitrary asynchronous function
+  async function doAsyncStuff(db, publisher, rangeInterface) {
+    const batchResult = await rangeInterface.queryAll(db);
+    const publisherRangeIdArray = publisher.publisherRangeId;
+    const res = publisherRangeIdArray.reduce((acc, id) => {
+      acc = batchResult.some(batch => batch.publisherId === id); // eslint-disable-line no-param-reassign
+      return acc;
+    }, false);
+    return res;
+  }
+
+  // Helper Function
+  async function filter(arr, callback) {
+    const fail = Symbol('symbol');
+    return (await Promise.all(arr.map(async item => await callback(item) ? item : fail))).filter(i => i !== fail);
+  }
 }

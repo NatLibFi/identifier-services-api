@@ -38,10 +38,10 @@ export default function (db) {
   const ranges = rangesFactory({url: API_URL});
 
   return new Router()
-    .post('/query/isbn', bodyParse(), queryIsbnRanges)
     .post('/isbn', bodyParse(), createIsbn)
     .get('/range/isbn/:id', readIsbnRange)
     .post('/range/isbn/:id', bodyParse(), updateIsbnRange)
+    .post('/query/isbn', bodyParse(), queryIsbnRanges)
     .post('/query/isbn/subRange', bodyParse(), queryIsbnSubRanges)
     .get('/isbn/subRange/:id', readIsbnSubRange)
     .post('/isbn/subRange', bodyParse(), createIsbnSubRange)
@@ -62,6 +62,7 @@ export default function (db) {
     .post('/isbn-ismn/queryIsbnIsmnStatistics', bodyParse(), queryIsbnIsmnStatistics)
 
     .post('/query/identifier', bodyParse(), queryRangesIdentifier)
+
     .post('/issn', bodyParse(), createIssn)
     .get('/issn/:id', readIssn)
     .put('/issn/:id', bodyParse(), updateIssn)

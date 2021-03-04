@@ -30,6 +30,18 @@
 			"description": "Operate on identifier ranges"
 		},
 		{
+			"name": "SubRanges",
+			"description": "Operate on identifier sub-ranges"
+		},
+		{
+			"name": "Batches",
+			"description": "Operate on identifier batches"
+		},
+		{
+			"name": "Identifier",
+			"description": "Operate on identifier"
+		},
+		{
 			"name": "Requests",
 			"description": "Operate on requests"
 		},
@@ -793,6 +805,106 @@
 				}
 			}
 		},
+		"/publishers/queryAll": {
+			"get": {
+				"summary": "Query All Publishers without records limit",
+				"tags": [
+					"Publishers"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Publisher"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/publishers/queryAllPublishers": {
+			"post": {
+				"summary": "Query without record limits with query as requestBody",
+				"tags": [
+					"Publishers"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Publisher"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
 		"/publications/isbn-ismn": {
 			"post": {
 				"summary": "Create a resource",
@@ -1290,13 +1402,315 @@
 						"description": "Not found"
 					}
 				}
-			}
-		},
-		"/ranges/isbn/query": {
+			},
 			"post": {
-				"summary": "Query for resources",
+				"summary": "Update for ISBN Ranges",
 				"tags": [
 					"Ranges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RangeIsbnContent"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Record updated Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RangeIsbn"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/ranges/query/isbn": {
+			"post": {
+				"summary": "Query for ISBN Ranges",
+				"tags": [
+					"Ranges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RangeIsbn"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/ranges/query/isbn/subRange": {
+			"post": {
+				"summary": "Query for ISBN SubRanges",
+				"tags": [
+					"SubRanges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/SubRangeIsbn"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/ranges/isbn/subRange": {
+			"post": {
+				"summary": "Create a subRange resource",
+				"tags": [
+					"SubRanges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubRangeIsbnContent"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Resource was created",
+						"headers": {
+							"Location": {
+								"description": "URL of the created resource",
+								"schema": {
+									"type": "string",
+									"format": "uri"
+								}
+							},
+							"Resource-ID": {
+								"description": "Identifier of the created resource",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/ranges/isbn/subRange/{id}": {
+			"get": {
+				"summary": "Retrieve a Sub Range resource",
+				"tags": [
+					"SubRanges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Resource was found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubRangeIsbn"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			}
+		},
+		"/ranges/isbnBatch": {
+			"post": {
+				"summary": "Create an Isbn Batch resource",
+				"tags": [
+					"Batches"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RangeBatch"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Resource was created",
+						"headers": {
+							"Location": {
+								"description": "URL of the created resource",
+								"schema": {
+									"type": "string",
+									"format": "uri"
+								}
+							},
+							"Resource-ID": {
+								"description": "Identifier of the created resource",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/ranges/query/isbnBatch": {
+			"post": {
+				"summary": "Query for ISBN Range Batches",
+				"tags": [
+					"Batches"
 				],
 				"security": [
 					{
