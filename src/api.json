@@ -10,6 +10,10 @@
 			"description": "Get authentication token"
 		},
 		{
+			"name": "Message",
+			"description": "Operate on message"
+		},
+		{
 			"name": "Message templates",
 			"description": "Operate on message templates"
 		},
@@ -138,6 +142,61 @@
 				}
 			}
 		},
+		"/templates": {
+			"post": {
+				"summary": "Create a resource",
+				"tags": [
+					"Message templates"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MessageTemplate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Resource was created",
+						"headers": {
+							"Location": {
+								"description": "URL of the created resource",
+								"schema": {
+									"type": "string",
+									"format": "uri"
+								}
+							},
+							"Resource-ID": {
+								"description": "Identifier of the created resource",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
 		"/templates/{id}": {
 			"get": {
 				"summary": "Retrieve a resource",
@@ -235,7 +294,7 @@
 		},
 		"/templates/query": {
 			"post": {
-				"summary": "Query for resources",
+				"summary": "Query for resources with limited result",
 				"tags": [
 					"Message templates"
 				],
@@ -287,6 +346,327 @@
 											},
 											{
 												"$ref": "#/components/schemas/MessageTemplate"
+											}
+										]
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/templates/query/all": {
+			"post": {
+				"summary": "Return all for resources without result limit and query",
+				"tags": [
+					"Message templates"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The offset from where the results should be returned",
+						"name": "QueryOffset",
+						"in": "header",
+						"required": false,
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"headers": {
+							"NextOffset": {
+								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
+								"schema": {
+									"type": "number"
+								}
+							}
+						},
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/MessageTemplate"
+											}
+										]
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/messages": {
+			"post": {
+				"summary": "Create a resource",
+				"tags": [
+					"Message"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Message"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Resource was created",
+						"headers": {
+							"Location": {
+								"description": "URL of the created resource",
+								"schema": {
+									"type": "string",
+									"format": "uri"
+								}
+							},
+							"Resource-ID": {
+								"description": "Identifier of the created resource",
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax or Bad Request"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/messages/{id}": {
+			"get": {
+				"summary": "Retrieve a resource",
+				"tags": [
+					"Message"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Resource was found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Message"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			}			
+		},
+		"/messages/query": {
+			"post": {
+				"summary": "Query for resources with limited result",
+				"tags": [
+					"Message"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The offset from where the results should be returned",
+						"name": "QueryOffset",
+						"in": "header",
+						"required": false,
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"headers": {
+							"NextOffset": {
+								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
+								"schema": {
+									"type": "number"
+								}
+							}
+						},
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/QueryResult"
+											},
+											{
+												"$ref": "#/components/schemas/Message"
+											}
+										]
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
+		"/messages/query/all": {
+			"post": {
+				"summary": "Return all for resources without result limit and query",
+				"tags": [
+					"Message"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The offset from where the results should be returned",
+						"name": "QueryOffset",
+						"in": "header",
+						"required": false,
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Query was executed",
+						"headers": {
+							"NextOffset": {
+								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
+								"schema": {
+									"type": "number"
+								}
+							}
+						},
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/Message"
 											}
 										]
 									}
@@ -807,7 +1187,7 @@
 		},
 		"/publishers/queryAll": {
 			"get": {
-				"summary": "Query All Publishers without records limit",
+				"summary": "Returns result for publisher option with value and label",
 				"tags": [
 					"Publishers"
 				],
@@ -834,7 +1214,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/Publisher"
+										"$ref": "#/components/schemas/PublisherOptions"
 									}
 								}
 							}
@@ -857,7 +1237,7 @@
 		},
 		"/publishers/queryAllPublishers": {
 			"post": {
-				"summary": "Query without record limits with query as requestBody",
+				"summary": "Return results without record limits with query as requestBody",
 				"tags": [
 					"Publishers"
 				],
@@ -3242,6 +3622,38 @@
 					"state"
 				]
 			},
+			"MessageContent": {
+				"type": "object",
+				"properties": {
+					"subject": {
+						"type": "string",
+						"description": "Subject of email"
+					},
+					"email": {
+						"type": "string",
+						"description": "receiver's email address"
+					},
+					"body": {
+						"type": "string",
+						"description": "message body"
+					}
+				},
+				"required": [
+					"subject",
+					"email",
+					"body"
+				]
+			},
+			"Message": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
+					},
+					{
+						"$ref": "#/components/schemas/MessageContent"
+					}
+				]
+			},
 			"MessageTemplateContent": {
 				"type": "object",
 				"properties": {
@@ -3555,6 +3967,17 @@
 						"$ref": "#/components/schemas/PublisherContent"
 					}
 				]
+			},
+			"PublisherOptions": {
+				"type": "object",
+				"properties": {
+					"value": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				}
 			},
 			"PublisherRequestContent": {
 				"allOf": [

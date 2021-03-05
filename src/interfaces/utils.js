@@ -222,6 +222,21 @@ const permissions = {
       'publisher'
     ]
   },
+  message: {
+    create: ['admin'],
+    read: [
+      'admin',
+      'system'
+    ],
+    query: [
+      'system',
+      'admin'
+    ],
+    queryAll: [
+      'system',
+      'admin'
+    ]
+  },
   messageTemplates: {
     create: ['admin'],
     read: [
@@ -650,7 +665,7 @@ export function calculatePublicationIdentifier(nextValue, category, index, publi
     const combineArray = `${prefix}${langGroup}${range}${next}`.split('');
     const mode = 10;
     const sum = combineArray.reduce((acc, char, i) => {
-      if (i % 2) { // eslint-disable-line functional/no-conditional-statement
+      if (i % 2 === 0) { // eslint-disable-line functional/no-conditional-statement
         acc += Number(char) * 1;
       } else { // eslint-disable-line functional/no-conditional-statement
         acc += Number(char) * 3;
@@ -682,7 +697,7 @@ export function calculatePublicationIdentifier(nextValue, category, index, publi
     const combineArray = `${prefix.replace(/-/ug, '')}${publisherCode}${nextPublicationCode}`.split('');
     const mode = 10;
     const sum = combineArray.reduce((acc, char, i) => {
-      if (i % 2) { // eslint-disable-line functional/no-conditional-statement
+      if (i % 2 === 0) { // eslint-disable-line functional/no-conditional-statement
         acc += Number(char) * 1;
       } else { // eslint-disable-line functional/no-conditional-statement
         acc += Number(char) * 3;

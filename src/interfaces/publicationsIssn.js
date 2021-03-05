@@ -153,7 +153,7 @@ export default function () {
   function queryIssnStatistics(db, query, user) {
     try {
       if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
-        return publicationsIssnInterface.queryStatistics(db, query);
+        return publicationsIssnInterface.queryAllRecords(db, query);
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {

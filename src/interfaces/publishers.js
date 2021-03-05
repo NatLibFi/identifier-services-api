@@ -148,7 +148,7 @@ export default function () {
     try {
       const {identifierType, type} = query;
       if (type) {
-        const publishersList = await publisherInterface.queryStatistics(db, {query: type});
+        const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
         const filtered = publishersList.filter(i => i.publisherRangeId);
         return run(db, filtered, identifierType);
       }

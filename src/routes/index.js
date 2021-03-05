@@ -35,6 +35,7 @@ export {default as createRequestsPublicationsRouterIsbnIsmn} from './publication
 export {default as createPublicationsRouterIssn} from './publications/issn';
 export {default as createRequestsPublicationsRouterIssn} from './publications/requestsIssn';
 export {default as createMessageTemplate} from './messageTemplates';
+export {default as createMessageRouter} from './messages';
 export {default as createRangesRouter} from './ranges';
 export {default as createApiDocRouter} from './api-doc';
 export {default as authenticationRouter} from './authentication';

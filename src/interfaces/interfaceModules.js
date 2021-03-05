@@ -39,7 +39,7 @@ export default function (collectionName) {
     update,
     remove,
     query,
-    queryStatistics,
+    queryAllRecords,
     queryAll
   };
 
@@ -146,8 +146,10 @@ export default function (collectionName) {
       const results = [];
       const totalDoc = await db.collection(collectionName).find({})
         .count();
-      const cursor = await db.collection(collectionName)
+
+      const cursor = await db.collection(collectionName) // eslint-disable-line functional/immutable-data
         .find(query, {projection: protectedProperties})
+        .sort({_id: 1})
         .limit(QUERY_LIMIT);
       const queryDocCount = await cursor.count();
       return new Promise(resolve => {
@@ -263,7 +265,7 @@ export default function (collectionName) {
     }
   }
 
-  async function queryStatistics(db, {query}, protectedProperties) {
+  async function queryAllRecords(db, {query}, protectedProperties) {
     const result = await db.collection(collectionName).find(query, {projection: protectedProperties})
       .toArray();
     if (result) {

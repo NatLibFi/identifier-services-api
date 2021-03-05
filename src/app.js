@@ -34,6 +34,7 @@ import {ApiError} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 
 import {
+  createMessageRouter,
   createUsersRouter,
   createRequestsUsersRouter,
   createPublishersRouter,
@@ -113,6 +114,7 @@ export default async function run() {
 
   app.use('/', createApiDocRouter());
   app.use('/templates', passportMiddlewares.token, combineUserInfo, createMessageTemplate(db));
+  app.use('/messages', passportMiddlewares.token, combineUserInfo, createMessageRouter(db));
   app.use('/users', passportMiddlewares.token, combineUserInfo, createUsersRouter(userProvider));
   app.use('/requests/users', passportMiddlewares.token, combineUserInfo, createRequestsUsersRouter(userProvider));
   app.use('/publishers', createPublishersRouter(db, passportMiddlewares, combineUserInfo));

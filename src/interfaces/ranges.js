@@ -368,12 +368,12 @@ export default function () {
 
   async function queryIsbnIsmnMonthlyStatistics(db, query, user) {
     try {
-      // Const publisherResponse = await publisherInterface.queryStatistics(db, query);
+      // Const publisherResponse = await publisherInterface.queryAllRecords(db, query);
       // TO DO
       // Query for different records for monthly statistics and return the values
       // Not Completed yet
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const result = await rangesIsbnInterface.queryStatistics(db, query);
+        const result = await rangesIsbnInterface.queryAllRecords(db, query);
         return result;
       }
 
@@ -504,7 +504,7 @@ export default function () {
             category: doc.category,
             rangeStart: doc.rangeStart
           };
-          const queryResponse = await rangesIsmnInterface.queryStatistics(db, {query});
+          const queryResponse = await rangesIsmnInterface.queryAllRecords(db, {query});
           if (queryResponse.length === 0) {
             const result = await rangesIsmnInterface.create(db, {
               ...newDoc,
@@ -789,7 +789,7 @@ export default function () {
   function queryIssnStatistics(db, query, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
-        return rangesISSNInterface.queryStatistics(db, query);
+        return rangesISSNInterface.queryAllRecords(db, query);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

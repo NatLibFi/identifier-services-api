@@ -31,6 +31,7 @@ export {default as publishersFactory} from './publishers';
 export {default as publisherRequestsFactory} from './requestsPublishers';
 export {default as publicationsIsbnIsmnFactory} from './publicationsIsbnIsmn';
 export {default as publicationsIssnFactory} from './publicationsIssn';
+export {default as messagesFactory} from './messages';
 export {default as templatesFactory} from './messageTemplates';
 export {default as rangesFactory} from './ranges';
 export {default as usersRequestsFactory} from './requestsUsers';
