@@ -1196,16 +1196,16 @@
 						"httpBearer": []
 					}
 				],
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
 						}
 					}
-				],
+				},
 				"responses": {
 					"200": {
 						"description": "Query was executed",
@@ -1791,6 +1791,16 @@
 				"security": [
 					{
 						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
 					}
 				],
 				"requestBody": {
@@ -5093,7 +5103,7 @@
 						"type": "number"
 					},
 					"edition": {
-						"type": "number"
+						"type": "string"
 					}
 				},
 				"required": [
