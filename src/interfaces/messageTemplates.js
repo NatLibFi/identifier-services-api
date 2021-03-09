@@ -114,10 +114,10 @@ export default function () {
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
-  async function query(db, {queries, offset}, user) {
+  async function query(db, {queries, offset, sort}, user) {
     try {
       if (hasPermission(user, 'messageTemplates', 'query')) {
-        return await templateInterface.query(db, {queries, offset});
+        return await templateInterface.query(db, {queries, offset, sort});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

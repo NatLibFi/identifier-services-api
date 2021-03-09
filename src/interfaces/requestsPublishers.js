@@ -101,10 +101,10 @@ export default function () {
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
-  function queryRequests(db, {queries, offset}, user) {
+  function queryRequests(db, {queries, offset, sort}, user) {
     try {
       if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
-        return publisherRequestsInterface.query(db, {queries, offset});
+        return publisherRequestsInterface.query(db, {queries, offset, sort});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

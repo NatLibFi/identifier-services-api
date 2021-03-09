@@ -408,8 +408,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset} = doc;
-    const result = await usersRequestInterface.query(db, {queries, offset});
+    const {queries, offset, sort} = doc;
+    const result = await usersRequestInterface.query(db, {queries, offset, sort});
     if (hasPermission(user, 'userRequests', 'queryRequest')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -418,7 +418,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
           }
         ];
         const protectedProperties = {state: 0};
-        const response = await usersRequestInterface.query(db, {queries, offset}, protectedProperties);
+        const response = await usersRequestInterface.query(db, {queries, offset, sort}, protectedProperties);
         return response;
       }
       return result;

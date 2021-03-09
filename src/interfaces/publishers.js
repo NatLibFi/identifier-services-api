@@ -127,8 +127,8 @@ export default function () {
     return publisherInterface.update(db, id, doc, user);
   }
 
-  function query(db, {queries, offset}) {
-    return publisherInterface.query(db, {queries, offset});
+  function query(db, {queries, offset, sort}) {
+    return publisherInterface.query(db, {queries, offset, sort});
   }
 
   async function queryAll(db) {

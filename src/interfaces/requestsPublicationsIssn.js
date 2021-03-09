@@ -145,9 +145,9 @@ export default function () {
     }
   }
 
-  async function queryRequestISSN(db, {queries, offset}, user) {
+  async function queryRequestISSN(db, {queries, offset, sort}, user) {
     try {
-      const result = await publicationsRequestsIssnInterface.query(db, {queries, offset});
+      const result = await publicationsRequestsIssnInterface.query(db, {queries, offset, sort});
       if (hasPermission(user, 'publicationIssnRequests', 'queryRequestISSN')) {
         if (user.role === 'publisher-admin' || user.role === 'publisher') {
           const protectedProperties = {

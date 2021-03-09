@@ -149,9 +149,9 @@ export default function () {
     }
   }
 
-  async function queryRequestIsbnIsmn(db, {queries, offset}, user) {
+  async function queryRequestIsbnIsmn(db, {queries, offset, sort}, user) {
     try {
-      const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset});
+      const result = await publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset, sort});
       if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
         if (user.role === 'publisher-admin' || user.role === 'publisher') {
           const protectedProperties = {
@@ -164,7 +164,7 @@ export default function () {
               query: {publisher: user.publisher}
             }
           ];
-          return publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset}, protectedProperties);
+          return publicationsRequestsIsbnIsmnInterface.query(db, {queries, offset, sort}, protectedProperties);
         }
 
         return result;

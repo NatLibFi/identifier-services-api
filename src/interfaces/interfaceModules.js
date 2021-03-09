@@ -30,7 +30,6 @@
 import {QUERY_LIMIT} from '../config';
 
 const {ObjectId} = require('mongodb');
-const moment = require('moment');
 
 export default function (collectionName) {
   return {
@@ -48,10 +47,10 @@ export default function (collectionName) {
       ...doc,
       created: {
         ...doc.created,
-        timestamp: moment().toISOString()
+        timestamp: Date.now().toString()
       },
       lastUpdated: {
-        timestamp: moment().toISOString(),
+        timestamp: Date.now().toString(),
         user: user ? user.id : undefined
       }
     });
@@ -89,7 +88,7 @@ export default function (collectionName) {
     }, {
       ...doc,
       lastUpdated: {
-        timestamp: doc.state === 'new' ? doc.lastUpdated.timestamp : moment().toISOString(),
+        timestamp: Date.now().toString(),
         user: doc.state === 'new' ? doc.lastUpdated.user : user.id
       }
     }, {
@@ -115,7 +114,7 @@ export default function (collectionName) {
     return undefined;
   }
 
-  async function query(db, {queries, offset}, protectedProperties) {
+  async function query(db, {queries, offset, sort}, protectedProperties) {
     if (offset) {
       if (queries.length > 0) {
         const result = await queries.reduce((acc, {query}) => doQuery({
@@ -125,7 +124,7 @@ export default function (collectionName) {
               _id: {$gt: new ObjectId(offset)}
             }
           ]
-        }), []);
+        }, sort), []);
         return result;
       }
 
@@ -136,20 +135,19 @@ export default function (collectionName) {
             _id: {$gt: new ObjectId(offset)}
           }
         ]
-      });
+      }, sort);
     }
 
-    const result = queries.reduce((acc, {query}) => doQuery(formatQuery(query)), []);
+    const result = queries.reduce((acc, {query}) => doQuery(formatQuery(query), sort), []);
     return result;
 
-    async function doQuery(query) {
+    async function doQuery(query, sort) {
       const results = [];
       const totalDoc = await db.collection(collectionName).find({})
         .count();
-
       const cursor = await db.collection(collectionName) // eslint-disable-line functional/immutable-data
         .find(query, {projection: protectedProperties})
-        .sort({_id: 1})
+        .sort(sort ? sort : {_id: -1})
         .limit(QUERY_LIMIT);
       const queryDocCount = await cursor.count();
       return new Promise(resolve => {
