@@ -3813,13 +3813,9 @@
 					"language": {
 						"$ref": "#/components/schemas/Language"
 					},
-					"givenName": {
+					"contactPerson": {
 						"type": "string",
 						"description": "Primary contact name"
-					},
-					"familyName": {
-						"type": "string",
-						"description": "Primary contact family name"
 					},
 					"email": {
 						"type": "string",
@@ -3861,6 +3857,8 @@
 				},
 				"required": [
 					"name",
+					"phone",
+					"contactPerson",
 					"postalAddress"
 				]
 			},
@@ -4353,9 +4351,6 @@
 												"$ref": "#/components/schemas/PostalAddress"
 											},
 											{
-												"$ref": "#/components/schemas/Contact"
-											},
-											{
 												"type": "object",
 												"properties": {
 													"country": {
@@ -4366,10 +4361,20 @@
 													},
 													"university": {
 														"$ref": "#/components/schemas/Publisher_ISBN_ISMN_Dissertation"
+													},
+													"email": {
+														"type": "string",
+														"format": "email"
+													},
+													"contactPerson": {
+															"type": "string",
+															"description": "Primary contact name"
 													}
 												},
 												"required": [
-													"country"
+													"country",
+													"email",
+													"contactPerson"
 												]
 											}
 										]
