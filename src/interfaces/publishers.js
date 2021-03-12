@@ -152,10 +152,13 @@ export default function () {
         const filtered = publishersList.filter(i => i.publisherRangeId);
         return run(db, filtered, identifierType);
       }
-
       const publishersList = await publisherInterface.queryAll(db);
-      const filtered = publishersList.filter(i => i.publisherRangeId);
-      return run(db, filtered, identifierType);
+      if (identifierType) {
+        const filtered = publishersList.filter(i => i.publisherRangeId);
+        return run(db, filtered, identifierType);
+      }
+      return publishersList;
+
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
