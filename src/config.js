@@ -65,3 +65,7 @@ export const USER_AGENT_LOGGING_BLACKLIST = readEnvironmentVariable('USER_AGENT_
 });
 
 export const GROUPS_AND_ROLES = readEnvironmentVariable('GROUPS_AND_ROLES');
+
+export const MELINDA_API_URL = readEnvironmentVariable('MELINDA_API_URL');
+export const MELINDA_RECORD_IMPORT_USERNAME = readEnvironmentVariable('MELINDA_RECORD_IMPORT_USERNAME');
+export const MELINDA_RECORD_IMPORT_PASSWORD = readEnvironmentVariable('MELINDA_RECORD_IMPORT_PASSWORD');

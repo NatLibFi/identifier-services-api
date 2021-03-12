@@ -257,6 +257,12 @@ const permissions = {
       'admin'
     ]
   },
+  marc: {
+    read: [
+      'admin',
+      'system'
+    ]
+  },
   ranges: {
     queryRanges: [
       'admin',

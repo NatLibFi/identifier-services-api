@@ -46,7 +46,8 @@ import {
   createMessageTemplate,
   createRangesRouter,
   createApiDocRouter,
-  authenticationRouter
+  authenticationRouter,
+  createMarcRouter
 } from './routes';
 import {bodyParse, mapGroupToRole} from './utils';
 import {
@@ -125,6 +126,7 @@ export default async function run() {
   app.use('/requests/publications/issn', passportMiddlewares.token, combineUserInfo, createRequestsPublicationsRouterIssn(db));
   app.use('/ranges', passportMiddlewares.token, combineUserInfo, createRangesRouter(db));
   app.use('/auth', authenticationRouter(db, passportMiddlewares));
+  app.use('/marc', passportMiddlewares.token, combineUserInfo, createMarcRouter());
 
   const server = app.listen(HTTP_PORT, () => {
     Logger.log('info', 'Started identifier-services-api');
