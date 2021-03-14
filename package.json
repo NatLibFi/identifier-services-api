@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/runtime": "^7.13.10",
     "@natlibfi/express-validate-content-type": "^1.0.1",
     "@natlibfi/identifier-services-commons": "git+https://github.com/natlibfi/identifier-services-commons.git#feature/apiError",
     "@natlibfi/melinda-commons": "^7.0.2",
