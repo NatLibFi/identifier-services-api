@@ -3807,6 +3807,10 @@
 						"type": "string",
 						"description": "Publisher's Name"
 					},
+					"aliases": {
+						"type": "string",
+						"description": "Other forms of the names"
+					},
 					"code": {
 						"type": "string"
 					},

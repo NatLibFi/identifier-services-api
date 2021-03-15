@@ -26,17 +26,25 @@
  *
  */
 
-export {default as createUsersRouter} from './users';
-export {default as createRequestsUsersRouter} from './requestsUsers';
-export {default as createPublishersRouter} from './publishers';
-export {default as createPublishersRequestsRouter} from './requestsPublishers';
-export {default as createPublicationsRouterIsbnIsmn} from './publications/isbnIsmn';
-export {default as createRequestsPublicationsRouterIsbnIsmn} from './publications/requestsIsbnIsmn';
-export {default as createPublicationsRouterIssn} from './publications/issn';
-export {default as createRequestsPublicationsRouterIssn} from './publications/requestsIssn';
-export {default as createMessageTemplate} from './messageTemplates';
-export {default as createMessageRouter} from './messages';
-export {default as createMarcRouter} from './marc';
-export {default as createRangesRouter} from './ranges';
-export {default as createApiDocRouter} from './api-doc';
-export {default as authenticationRouter} from './authentication';
+import {Router} from 'express';
+
+import {marcFactory} from '../interfaces';
+import {API_URL} from '../config';
+
+export default function () {
+  const marc = marcFactory({url: API_URL});
+
+  return new Router()
+    .get('/:id', read);
+
+  async function read(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await marc.read(id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+}
