@@ -3961,6 +3961,18 @@
 										"type": "number"
 									}
 								}
+							},
+							"publisherIdentifier": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"publisherRangeId": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
 							}
 						},
 						"required": [
