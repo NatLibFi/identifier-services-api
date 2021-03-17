@@ -3973,6 +3973,9 @@
 								"items": {
 									"type": "string"
 								}
+							},
+							"selfPublisher": {
+								"type": "boolean"
 							}
 						},
 						"required": [
