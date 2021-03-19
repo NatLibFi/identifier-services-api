@@ -3551,6 +3551,9 @@
 							"type": "string",
 							"description": "A list Base64-encoded notes"
 						}
+					},
+					"additionalInformation" : {
+						"type": "string"
 					}
 				},
 				"required": [
