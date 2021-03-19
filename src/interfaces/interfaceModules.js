@@ -203,7 +203,7 @@ export default function (collectionName) {
         const propertyQuery = convert(key, query[key]);
         return {
           ...acc,
-          $and: '$and' in acc ? acc.$and.concat(formatQuery(propertyQuery)) : [propertyQuery]
+          $and: '$and' in acc ? acc.$and.concat(propertyQuery) : [propertyQuery]
         };
         function convert(key, value) {
           if (typeof value === 'object') {
