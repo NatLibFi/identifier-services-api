@@ -46,13 +46,11 @@ import {
 
 const rangesIsbnInterface = interfaceFactory('RangeIsbn');
 const rangesSubIsbnInterface = interfaceFactory('SubRangeIsbn');
-const rangesIsbnBatchInterface = interfaceFactory('RangeIsbnBatch');
+const rangesBatchInterface = interfaceFactory('RangeBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
 
 const rangesIsmnInterface = interfaceFactory('RangeIsmn');
 const rangesSubIsmnInterface = interfaceFactory('SubRangeIsmn');
-const rangesIsmnBatchInterface = interfaceFactory('RangeIsmnBatch');
-
 
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN');
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN');
@@ -267,7 +265,7 @@ export default function () {
   async function queryRangesIsbnBatch(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsbnBatch')) {
-        const result = await rangesIsbnBatchInterface.query(db, {queries, offset});
+        const result = await rangesBatchInterface.query(db, {queries, offset});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -281,7 +279,7 @@ export default function () {
   async function readRangesIsbnBatch(db, id, user) {
     try {
       if (hasPermission(user, 'ranges', 'readRangesIsbnBatch')) {
-        const result = await rangesIsbnBatchInterface.read(db, id);
+        const result = await rangesBatchInterface.read(db, id);
         if (result) {
           return result;
         }
@@ -314,8 +312,8 @@ export default function () {
               publisherIdentifierRangeId: id,
               created: {user: user.id}
             };
-            const batchId = await rangesIsbnBatchInterface.create(db, batch, user);
-            const responseBatch = await rangesIsbnBatchInterface.read(db, batchId);
+            const batchId = await rangesBatchInterface.create(db, batch, user);
+            const responseBatch = await rangesBatchInterface.read(db, batchId);
             // Calculate Publication identifier and create ranges for respective formatDetails in One batch
             formatDetailsArray.map(async (item, index) => {
               const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
@@ -612,7 +610,7 @@ export default function () {
   async function queryRangesIsmnBatch(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsmnBatch')) {
-        const result = await rangesIsmnBatchInterface.query(db, {queries, offset});
+        const result = await rangesBatchInterface.query(db, {queries, offset});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -643,8 +641,8 @@ export default function () {
               publisherIdentifierRangeId: id,
               created: {user: user.id}
             };
-            const batchId = await rangesIsmnBatchInterface.create(db, batch, user);
-            const responseBatch = await rangesIsmnBatchInterface.read(db, batchId);
+            const batchId = await rangesBatchInterface.create(db, batch, user);
+            const responseBatch = await rangesBatchInterface.read(db, batchId);
             // Calculate Publication identifier and create ranges for respective formatDetails in One batch
             formatDetailsArray.map(async (item, index) => {
               const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
