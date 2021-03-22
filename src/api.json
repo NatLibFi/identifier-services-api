@@ -4499,6 +4499,7 @@
 											"bi-yearly",
 											"quarterly",
 											"bi-monthly",
+											"six-times/year",
 											"continuously",
 											"irregular"
 										]
