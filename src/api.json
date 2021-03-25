@@ -1196,16 +1196,6 @@
 						"httpBearer": []
 					}
 				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object"
-							}
-						}
-					}
-				},
 				"responses": {
 					"200": {
 						"description": "Query was executed",
@@ -3552,7 +3542,7 @@
 							"description": "A list Base64-encoded notes"
 						}
 					},
-					"additionalInformation" : {
+					"additionalDetails" : {
 						"type": "string"
 					}
 				},
@@ -4453,7 +4443,7 @@
 					{
 						"type": "object",
 						"properties": {
-							"additionalInformation" : {
+							"additionalDetails" : {
 								"type": "string"
 							}
 						}
@@ -4719,7 +4709,7 @@
 					{
 						"type": "object",
 						"properties": {
-							"additionalInformation" : {
+							"additionalDetails" : {
 								"type": "string"
 							}
 						}

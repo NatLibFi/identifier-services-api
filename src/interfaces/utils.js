@@ -74,12 +74,12 @@ const permissions = {
     read: [
       'system',
       'admin',
-      'publisher-admin'
+      'publisher'
     ],
     update: [
       'system',
       'admin',
-      'publisher-admin'
+      'publisher'
     ],
     remove: [
       'system',
@@ -92,15 +92,15 @@ const permissions = {
     query: [
       'system',
       'admin',
-      'publisher-admin'
+      'publisher'
     ]
   },
   userRequests: {
-    createRequest: ['publisher-admin'],
+    createRequest: ['publisher'],
     readRequest: [
       'system',
       'admin',
-      'publisher-admin'
+      'publisher'
     ],
     updateRequest: [
       'system',
@@ -110,7 +110,7 @@ const permissions = {
     queryRequest: [
       'system',
       'admin',
-      'publisher-admin'
+      'publisher'
     ]
   },
   publishers: {
@@ -119,7 +119,7 @@ const permissions = {
       'system'
     ],
     read: ['all'],
-    update: ['publisher-admin'],
+    update: ['publisher'],
     query: ['all']
   },
   publisherRequests: {
@@ -142,12 +142,11 @@ const permissions = {
     createIsbnIsmn: [
       'admin',
       'system',
-      'publisher-admin',
       'publisher'
     ],
     readIsbnIsmn: [
       'admin',
-      'publisher-admin'
+      'publisher'
     ],
     updateIsbnIsmn: [
       'system',
@@ -156,7 +155,6 @@ const permissions = {
     queryIsbnIsmn: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ]
   },
@@ -165,7 +163,6 @@ const permissions = {
     readRequestIsbnIsmn: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ],
     updateRequestIsbnIsmn: [
@@ -176,7 +173,6 @@ const permissions = {
     queryRequestIsbnIsmn: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ]
   },
@@ -184,12 +180,11 @@ const permissions = {
     createISSN: [
       'admin',
       'system',
-      'publisher-admin',
       'publisher'
     ],
     readISSN: [
       'admin',
-      'publisher-admin'
+      'publisher'
     ],
     updateISSN: [
       'system',
@@ -198,7 +193,6 @@ const permissions = {
     queryISSN: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ]
   },
@@ -207,7 +201,6 @@ const permissions = {
     readRequestISSN: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ],
     updateRequestISSN: [
@@ -218,7 +211,6 @@ const permissions = {
     queryRequestISSN: [
       'system',
       'admin',
-      'publisher-admin',
       'publisher'
     ]
   },

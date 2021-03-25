@@ -62,9 +62,9 @@ export default function () {
     }
   }
 
-  function remove(userProvider, id, user) {
+  function remove(userProvider, id, doc, user) {
     try {
-      return userProvider.remove(id, user);
+      return userProvider.remove(id, doc, user);
     } catch (err) {
       throw new ApiError(err.status);
     }

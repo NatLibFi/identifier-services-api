@@ -227,19 +227,42 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     }
   }
 
-  async function remove(id, user) {
-    if (hasPermission(user, 'users', 'remove')) {
-      const response = await userMetadataInterface.read(db, id);
-      if (response) {
+  function remove(id, doc, user) {
+    try {
+      if (hasPermission(user, 'users', 'remove')) {
+        const allowedKeys = [
+          '_id',
+          'preferences',
+          'lastUpdated',
+          'publisher',
+          'displayname',
+          'firstname',
+          'active',
+          'lastname'
+        ];
+        const crowdPortion = filterDoc(doc, allowedKeys);
         const {crowdUser} = crowd();
-        await crowdUser.remove({
-          id: response.userId ? response.userId : response.id
-        });
-        return userMetadataInterface.remove(db, id);
+        return crowdUser.remove({doc: crowdPortion});
       }
-      throw new ApiError(HttpStatus.NOT_FOUND);
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      throw new ApiError(err);
     }
-    throw new ApiError(HttpStatus.FORBIDDEN);
+
+    function filterDoc(doc, allowedKeys) {
+      const accumulate = {role: mapGroupToRole(doc.groups[0]), active: false};
+      return Object.entries(doc)
+        .filter(filter)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), accumulate);
+
+      function filter([key]) {
+        return allowedKeys.includes(key) === false;
+      }
+    }
   }
 
   // eslint-disable-next-line max-statements
@@ -466,10 +489,10 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       }
     }
 
-    async function remove({id}) {
-      const group = await getUserGroup(id);
-      await crowdClient.user.groups.remove(id, group);
-      const response = await crowdClient.user.remove(id);
+    async function remove({doc}) {
+      const payload = new User(doc.givenName, doc.familyName, doc.displayName, doc.email, doc.username, Math.random().toString(36)
+        .slice(2), false);
+      const response = await crowdClient.user.update(doc.username, payload);
       return response;
     }
 

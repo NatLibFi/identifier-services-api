@@ -77,7 +77,7 @@ export default function (userProvider) {
   async function remove(req, res, next) {
     const {id} = req.params;
     try {
-      const result = await users.remove(userProvider, id, req.user);
+      const result = await users.remove(userProvider, id, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
