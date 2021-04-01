@@ -54,17 +54,12 @@ export default function () {
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
 
-      const newDoc = doc.isPublic
-        ? {
-          ...doc,
-          metadataReference: {state: 'pending'},
-          publicationType: 'isbn-ismn'
-        }
-        : {
-          ...doc,
-          metadataReference: {state: 'pending'},
-          publicationType: 'isbn-ismn'
-        };
+      const newDoc = {
+        ...doc,
+        formatDetails: addMetadataReference(doc),
+        metadataReference: {state: 'pending', update: false},
+        publicationType: 'isbn-ismn'
+      };
 
       if (validateDoc(newDoc, 'PublicationIsbnIsmnContent')) {
         if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
@@ -79,6 +74,18 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
+    }
+
+    function addMetadataReference(data) {
+      const {formatDetails} = data;
+      return Object.keys(formatDetails).reduce((acc, item) => {
+        if (item === 'fileFormat' || item === 'printFormat') { // eslint-disable-line functional/no-conditional-statement
+          acc = {...acc, [item]: {...formatDetails[item], metadata: {id: ''}}}; // eslint-disable-line no-param-reassign
+        } else { // eslint-disable-line functional/no-conditional-statement
+          acc = {...acc, [item]: formatDetails[item]}; // eslint-disable-line no-param-reassign
+        }
+        return acc;
+      }, {});
     }
   }
 

@@ -57,7 +57,8 @@ export default function () {
       }
       const newDoc = {
         ...doc,
-        metadataReference: {state: 'pending'}
+        formatDetails: addIssnMetadataReference(doc),
+        metadataReference: {status: 'pending', update: false}
       };
       if (validateDoc(newDoc, 'PublicationIssnContent')) {
         if (hasPermission(user, 'publicationIssn', 'createISSN')) {
@@ -73,6 +74,11 @@ export default function () {
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
     }
+  }
+
+  function addIssnMetadataReference(data) {
+    const {formatDetails} = data;
+    return formatDetails.map(item => ({...item, metadata: {id: ''}}));
   }
 
   async function readISSN(db, id, user) {

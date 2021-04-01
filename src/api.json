@@ -4194,9 +4194,6 @@
 											"other"
 										]
 									},
-									"metadataReference": {
-										"$ref": "#/components/schemas/MetadataReference"
-									},
 									"identifier": {
 										"type": "array",
 										"items": {
@@ -4518,25 +4515,33 @@
 								]
 							},
 							"formatDetails": {
-								"type": "array",
-								"items": {
-									"oneOf": [
-										{
-											"type": "object",
-											"properties": {
-												"format" : {
-													"type": "string"
-												},
-												"url": {
-													"type": "string"
+								"type": "object",
+									"properties": {
+										"format": {
+											"type": "array",
+												"items": {
+													"oneOf": [
+														{
+															"type": "object",
+															"properties": {
+																"format" : {
+																	"type": "string"
+																},
+																"url": {
+																	"type": "string"
+																}
+															},
+															"required": [
+																"format"
+															]
+														}
+													]
 												}
-											},
-											"required": [
-												"format"
-											]
+										},
+										"metadataReference": {
+											"$ref": "#/components/schemas/MetadataReference"
 										}
-									]
-								}
+									}
 							},
 							"previousPublication": {
 								"allOf": [
@@ -5066,25 +5071,32 @@
 				"type": "object",
 				"properties": {
 					"fileFormat": {
-						"type": "array",
-						"items": {
-							"oneOf": [
-								{
-									"type": "string",
-									"pattern": "^other_\\w+",
-									"enum": [
-										"pdf",
-										"epub",
-										"cd",
-										"mp3"
+						"type" : "object",
+						"properties": {
+							"format" : {
+								"type": "array",
+								"items": {
+									"oneOf": [
+										{
+											"type": "string",
+											"pattern": "^other_\\w+",
+											"enum": [
+												"pdf",
+												"epub",
+												"cd",
+												"mp3"
+											]
+										},
+										{
+											"type": "string"
+										}
 									]
-								},
-								{
-									"type": "string"
 								}
-							]
+							},
+							"metadataReference": {
+								"$ref": "#/components/schemas/MetadataReference"
+							}
 						}
-
 					}
 				},
 				"required": [
@@ -5094,21 +5106,29 @@
 			"PrintedPublicationDetails": {
 				"properties": {
 					"printFormat": {
-						"type": "array",
-						"items": {
-							"oneOf": [
-								{
-									"type": "string",
-									"enum": [
-										"paperback",
-										"hardback",
-										"spiral-binding",
+						"type" : "object",
+						"properties": {
+							"format" : {
+								"type": "array",
+								"items": {
+									"oneOf": [
 										{
-											"type": "string"
+											"type": "string",
+											"enum": [
+												"paperback",
+												"hardback",
+												"spiral-binding",
+												{
+													"type": "string"
+												}
+											]
 										}
 									]
 								}
-							]
+							},
+							"metadataReference": {
+								"$ref": "#/components/schemas/MetadataReference"
+							}
 						}
 					},
 					"manufacturer": {
