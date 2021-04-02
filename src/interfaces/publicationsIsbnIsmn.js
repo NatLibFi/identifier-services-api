@@ -47,7 +47,7 @@ export default function () {
   function createIsbnIsmn(db, doc, user) {
     try {
       if (doc.request) {
-        return publicationsIsbnIsmnInterface.create(db, doc, user);
+        return publicationsIsbnIsmnInterface.create(db, {...doc, metadataReference: addMetadataReference(doc)}, user);
       }
       // Get publisher associate with authenticated user
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
@@ -83,7 +83,7 @@ export default function () {
       ];
 
       return allFormats.map(item => { // eslint-disable-line array-callback-return
-        if (item === 'fileFormat' || item === 'printFormat') { // eslint-disable-line functional/no-conditional-statement
+        if (formatDetails.fileFormat.format.includes(item) || formatDetails.printFormat.format.includes(item)) { // eslint-disable-line functional/no-conditional-statement
           return {
             format: item,
             status: 'pending',
