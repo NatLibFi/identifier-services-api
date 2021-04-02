@@ -4268,7 +4268,10 @@
 								"type": "string"
 							},
 							"metadataReference": {
-								"$ref": "#/components/schemas/MetadataReference"
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/MetadataReference"
+								}
 							},
 							"id": {
 								"description": "Identifier of the publication",
@@ -4459,7 +4462,10 @@
 								"type": "string"
 							},
 							"metadataReference": {
-								"$ref": "#/components/schemas/MetadataReference"
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/MetadataReference"
+								}
 							},
 							"city": {
 								"type": "string"
@@ -4515,32 +4521,24 @@
 								]
 							},
 							"formatDetails": {
-								"type": "object",
-									"properties": {
-										"format": {
-											"type": "array",
-												"items": {
-													"oneOf": [
-														{
-															"type": "object",
-															"properties": {
-																"format" : {
-																	"type": "string"
-																},
-																"url": {
-																	"type": "string"
-																}
-															},
-															"required": [
-																"format"
-															]
-														}
-													]
-												}
-										},
-										"metadataReference": {
-											"$ref": "#/components/schemas/MetadataReference"
-										}
+								"type": "array",
+									"items": {
+										"oneOf": [
+											{
+												"type": "object",
+												"properties": {
+													"format" : {
+														"type": "string"
+													},
+													"url": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"format"
+												]
+											}
+										]
 									}
 							},
 							"previousPublication": {
@@ -4631,7 +4629,10 @@
 								"type": "string"
 							},
 							"metadataReference": {
-								"$ref": "#/components/schemas/MetadataReference"
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/MetadataReference"
+								}
 							},
 							"id": {
 								"description": "Identifier of the publication",
@@ -5092,9 +5093,6 @@
 										}
 									]
 								}
-							},
-							"metadataReference": {
-								"$ref": "#/components/schemas/MetadataReference"
 							}
 						}
 					}
@@ -5125,9 +5123,6 @@
 										}
 									]
 								}
-							},
-							"metadataReference": {
-								"$ref": "#/components/schemas/MetadataReference"
 							}
 						}
 					},
