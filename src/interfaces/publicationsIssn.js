@@ -57,8 +57,7 @@ export default function () {
       }
       const newDoc = {
         ...doc,
-        formatDetails: addIssnMetadataReference(doc),
-        metadataReference: {status: 'pending', update: false}
+        metadataReference: addIssnMetadataReference(doc)
       };
       if (validateDoc(newDoc, 'PublicationIssnContent')) {
         if (hasPermission(user, 'publicationIssn', 'createISSN')) {
@@ -78,7 +77,7 @@ export default function () {
 
   function addIssnMetadataReference(data) {
     const {formatDetails} = data;
-    return formatDetails.map(item => ({...item, metadata: {id: ''}}));
+    return formatDetails.map(item => ({format: item.format, status: 'pending', update: false}));
   }
 
   async function readISSN(db, id, user) {

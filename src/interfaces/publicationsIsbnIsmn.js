@@ -56,8 +56,7 @@ export default function () {
 
       const newDoc = {
         ...doc,
-        formatDetails: addMetadataReference(doc),
-        metadataReference: {state: 'pending', update: false},
+        metadataReference: addMetadataReference(doc),
         publicationType: 'isbn-ismn'
       };
 
@@ -78,14 +77,20 @@ export default function () {
 
     function addMetadataReference(data) {
       const {formatDetails} = data;
-      return Object.keys(formatDetails).reduce((acc, item) => {
+      const allFormats = [
+        ...formatDetails.fileFormat.format,
+        ...formatDetails.printFormat.format
+      ];
+
+      return allFormats.map(item => { // eslint-disable-line array-callback-return
         if (item === 'fileFormat' || item === 'printFormat') { // eslint-disable-line functional/no-conditional-statement
-          acc = {...acc, [item]: {...formatDetails[item], metadata: {id: ''}}}; // eslint-disable-line no-param-reassign
-        } else { // eslint-disable-line functional/no-conditional-statement
-          acc = {...acc, [item]: formatDetails[item]}; // eslint-disable-line no-param-reassign
+          return {
+            format: item,
+            status: 'pending',
+            update: false
+          };
         }
-        return acc;
-      }, {});
+      });
     }
   }
 

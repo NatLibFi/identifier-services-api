@@ -806,15 +806,19 @@ export default function () {
         const {formatDetails} = issn;
         const newIssn = {
           ...filterResult(issn),
+          id: issn._id,
           associatedRange: [{id: rangeBlockId, block: rangeDetails.prefix}],
           identifier: await getIdentifier(formatDetails, rangeDetails)
         };
-        const issnUpdateResponse = await publicationsIssnInterface.update(db, filterResult(issn).id, newIssn, user);
-        if (issnUpdateResponse.lastErrorObject.updatedExisting) {
-          return HttpStatus.OK;
-        }
+        if (validateDoc(newIssn, 'PublicationIssn')) {
+          const issnUpdateResponse = await publicationsIssnInterface.update(db, newIssn.id, newIssn, user);
+          if (issnUpdateResponse.lastErrorObject.updatedExisting) {
+            return HttpStatus.OK;
+          }
 
-        throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+          throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
+        }
+        throw new ApiError(HttpStatus.BAD_REQUEST);
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
