@@ -1,3 +1,5 @@
+/* eslint-disable array-element-newline */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable max-depth */
 /* eslint-disable max-statements */
 /**
@@ -77,13 +79,15 @@ export default function () {
 
     function addMetadataReference(data) {
       const {formatDetails} = data;
-      const allFormats = [
-        ...formatDetails.fileFormat.format,
-        ...formatDetails.printFormat.format
-      ];
+      const allFormats = formatDetails.fileFormat && formatDetails.fileFormat
+        ? [...formatDetails.fileFormat.format, ...formatDetails.printFormat.format]
+        : formatDetails.fileFormat
+          ? [...formatDetails.fileFormat.format]
+          : formatDetails.printFormat && [...formatDetails.printFormat.format];
 
       return allFormats.map(item => { // eslint-disable-line array-callback-return
-        if (formatDetails.fileFormat.format.includes(item) || formatDetails.printFormat.format.includes(item)) { // eslint-disable-line functional/no-conditional-statement
+        // eslint-disable-next-line no-extra-parens
+        if ((formatDetails.fileFormat && formatDetails.fileFormat.format.includes(item)) || (formatDetails.printFormat && formatDetails.printFormat.format.includes(item))) { // eslint-disable-line functional/no-conditional-statement
           return {
             format: item,
             status: 'pending',
