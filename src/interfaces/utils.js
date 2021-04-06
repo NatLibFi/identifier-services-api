@@ -634,15 +634,17 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
 
 export function manageFormatDetails(formatDetails) {
   const {fileFormat, printFormat} = formatDetails;
+  const fileFormatArr = fileFormat.format;
+  const printFormatArr = printFormat.format;
   if (fileFormat && printFormat) {
     return [
-      ...fileFormat,
-      ...printFormat
+      ...fileFormatArr,
+      ...printFormatArr
     ];
   } else if (fileFormat) {
-    return [...fileFormat];
+    return [...fileFormatArr];
   } else if (printFormat) {
-    return [...printFormat];
+    return [...printFormatArr];
   }
 }
 
