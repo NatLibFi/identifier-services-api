@@ -180,6 +180,10 @@ export default function () {
   async function queryIsbnSubRanges(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
+        if (offset === 'unlimited') {
+          return rangesSubIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+        }
+
         const result = await rangesSubIsbnInterface.query(db, {queries, offset});
         return result;
       }
@@ -596,6 +600,9 @@ export default function () {
   async function queryIsmnSubRanges(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
+        if (offset === 'unlimited') {
+          return rangesSubIsmnInterface.queryAllRecords(db, {query: queries[0].query});
+        }
         const result = await rangesSubIsmnInterface.query(db, {queries, offset});
         return result;
       }
@@ -773,6 +780,9 @@ export default function () {
   function queryIssn(db, {queries, offset}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
+        if (offset === 'unlimited') {
+          return rangesISSNInterface.queryAllRecords(db, {query: queries[0].query});
+        }
         return rangesISSNInterface.query(db, {queries, offset});
       }
 
