@@ -41,7 +41,8 @@ export default function (userProvider) {
     .put('/:id', update)
     .delete('/:id', remove)
     .post('/:id/password', changePwd)
-    .post('/query', query);
+    .post('/query', query)
+    .post('/query/all', query);
 
   async function create(req, res, next) {
     try {

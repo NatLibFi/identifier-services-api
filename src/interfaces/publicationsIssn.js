@@ -43,6 +43,7 @@ export default function () {
     updateISSN,
     // RemoveISSN,
     queryISSN,
+    queryAllIssn,
     queryIssnStatistics
   };
 
@@ -77,7 +78,7 @@ export default function () {
 
   function addIssnMetadataReference(data) {
     const {formatDetails} = data;
-    return formatDetails.map(item => ({format: item.format, status: 'pending', update: false}));
+    return formatDetails.map(item => ({format: item.format, state: 'pending', update: false}));
   }
 
   async function readISSN(db, id, user) {
@@ -153,6 +154,18 @@ export default function () {
     }
 
     throw new ApiError(HttpStatus.FORBIDDEN);
+  }
+
+  function queryAllIssn(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
+        return publicationsIssnInterface.queryAllRecords(db, {query: queries[0].query});
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      throw new ApiError(err);
+    }
   }
 
   function queryIssnStatistics(db, query, user) {

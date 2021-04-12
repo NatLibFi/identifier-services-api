@@ -5103,19 +5103,8 @@
 							"format" : {
 								"type": "array",
 								"items": {
-									"oneOf": [
-										{
-											"type": "string",
-											"enum": [
-												"paperback",
-												"hardback",
-												"spiral-binding",
-												{
-													"type": "string"
-												}
-											]
-										}
-									]
+										"type": "string"
+									
 								}
 							}
 						}

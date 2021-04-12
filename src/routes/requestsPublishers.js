@@ -39,7 +39,8 @@ export default function (db) {
     .get('/:id', readRequest)
     .put('/:id', updateRequest)
     .delete('/:id', removeRequest)
-    .post('/query', queryRequests);
+    .post('/query', queryRequests)
+    .post('/query/all', queryRequests);
 
   async function createRequest(req, res, next) {
     try {

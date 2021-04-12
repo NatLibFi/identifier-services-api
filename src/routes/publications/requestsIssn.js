@@ -40,7 +40,8 @@ export default function (db) {
     .get('/:id', readRequest)
     .delete('/:id', removeRequest)
     .put('/:id', bodyParse(), updateRequest)
-    .post('/query', bodyParse(), queryRequest);
+    .post('/query', bodyParse(), queryRequest)
+    .post('/query/all', bodyParse(), queryRequest);
 
   async function createRequest(req, res, next) {
     try {

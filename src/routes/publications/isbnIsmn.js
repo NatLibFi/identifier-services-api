@@ -41,7 +41,8 @@ export default function (db, passportMiddlewares, combineUserInfo) {
     .use(combineUserInfo)
     .get('/:id', read)
     .put('/:id', bodyParse(), update)
-    .post('/query', bodyParse(), query);
+    .post('/query', bodyParse(), query)
+    .post('/query/all', bodyParse(), queryAll);
 
   function authenticated(req, res, next) {
     if ('authorization' in req.headers) {
@@ -96,6 +97,15 @@ export default function (db, passportMiddlewares, combineUserInfo) {
       }
 
       const result = await publications.queryIsbnIsmn(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryAll(req, res, next) {
+    try {
+      const result = await publications.queryAllIsbnIsmn(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

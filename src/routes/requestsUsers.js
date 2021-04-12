@@ -39,7 +39,8 @@ export default function (userProvider) {
     .get('/:id', readRequest)
     .delete('/:id', removeRequest)
     .put('/:id', updateRequest)
-    .post('/query', queryRequest);
+    .post('/query', queryRequest)
+    .post('/query/all', queryRequest);
 
   async function createRequest(req, res, next) {
     try {
