@@ -40,7 +40,7 @@ export default function (userProvider) {
     .delete('/:id', removeRequest)
     .put('/:id', updateRequest)
     .post('/query', queryRequest)
-    .post('/query/all', queryRequest);
+    .post('/query/all', queryAllRequest);
 
   async function createRequest(req, res, next) {
     try {
@@ -84,6 +84,14 @@ export default function (userProvider) {
   async function queryRequest(req, res, next) {
     try {
       const result = await usersRequests.queryRequest(userProvider, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+  async function queryAllRequest(req, res, next) {
+    try {
+      const result = await usersRequests.queryAllRequest(userProvider, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

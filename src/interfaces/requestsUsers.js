@@ -34,7 +34,8 @@ export default function () {
     readRequest,
     updateRequest,
     removeRequest,
-    queryRequest
+    queryRequest,
+    queryAllRequest
   };
 
   function createRequest(userProvider, doc, user) {
@@ -72,6 +73,14 @@ export default function () {
   function queryRequest(userProvider, doc, user) {
     try {
       return userProvider.queryRequest(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
+
+  function queryAllRequest(userProvider, doc, user) {
+    try {
+      return userProvider.queryAllRequest(doc, user);
     } catch (err) {
       throw new ApiError(err.status);
     }

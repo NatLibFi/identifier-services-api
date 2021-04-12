@@ -58,11 +58,13 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     remove,
     changePwd,
     query,
+    queryAll,
     createRequest,
     readRequest,
     updateRequest,
     removeRequest,
-    queryRequest
+    queryRequest,
+    queryAllRequest
   };
 
   async function create(doc, user) {
@@ -307,6 +309,25 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
+  function queryAll(doc, user) {
+    if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+    const {queries, offset} = doc;
+    if (hasPermission(user, 'users', 'query')) {
+      if (user.role === 'publisher-admin') {
+        const queries = [
+          {
+            query: {publisher: user.publisher}
+          }
+        ];
+        return userMetadataInterface.queryAllRecords(db, {queries, offset});
+      }
+      return userMetadataInterface.queryAllRecords(db, {queries, offset});
+    }
+    throw new ApiError(HttpStatus.FORBIDDEN);
+  }
+
   async function createRequest(doc, user) {
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -442,6 +463,28 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
         ];
         const protectedProperties = {state: 0};
         const response = await usersRequestInterface.query(db, {queries, offset, sort}, protectedProperties);
+        return response;
+      }
+      return result;
+    }
+    throw new ApiError(HttpStatus.FORBIDDEN);
+  }
+
+  async function queryAllRequest(doc, user) {
+    if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+    const {queries, offset, sort} = doc;
+    const result = await usersRequestInterface.queryAllRecords(db, {queries, offset, sort});
+    if (hasPermission(user, 'userRequests', 'queryRequest')) {
+      if (user.role === 'publisher-admin') {
+        const queries = [
+          {
+            query: {publisher: user.publisher}
+          }
+        ];
+        const protectedProperties = {state: 0};
+        const response = await usersRequestInterface.queryAllRecords(db, {queries, offset, sort}, protectedProperties);
         return response;
       }
       return result;

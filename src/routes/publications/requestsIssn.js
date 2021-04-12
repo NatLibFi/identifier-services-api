@@ -41,7 +41,7 @@ export default function (db) {
     .delete('/:id', removeRequest)
     .put('/:id', bodyParse(), updateRequest)
     .post('/query', bodyParse(), queryRequest)
-    .post('/query/all', bodyParse(), queryRequest);
+    .post('/query/all', bodyParse(), queryAllRequest);
 
   async function createRequest(req, res, next) {
     try {
@@ -89,6 +89,19 @@ export default function (db) {
       }
 
       const result = await publications.queryRequestISSN(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryAllRequest(req, res, next) {
+    try {
+      if (Object.keys(req.body).length === 0) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+
+      const result = await publications.queryAllRequestISSN(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

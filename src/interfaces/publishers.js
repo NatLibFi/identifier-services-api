@@ -146,7 +146,11 @@ export default function () {
 
   async function queryAllPublishers(db, {query}) {
     try {
-      const {identifierType, type} = query;
+      const {identifierType, type, cleanup} = query;
+      if (cleanup) {
+        return publisherInterface.queryAllRecords(db, {query: type});
+      }
+
       if (type) {
         const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
         const filtered = publishersList.filter(i => i.publisherRangeId);

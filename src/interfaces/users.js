@@ -35,7 +35,8 @@ export default function () {
     update,
     remove,
     changePwd,
-    query
+    query,
+    queryAll
   };
 
   function create(userProvider, doc, user) {
@@ -81,6 +82,14 @@ export default function () {
   function query(userProvider, doc, user) {
     try {
       return userProvider.query(doc, user);
+    } catch (err) {
+      throw new ApiError(err.status);
+    }
+  }
+
+  function queryAll(userProvider, doc, user) {
+    try {
+      return userProvider.queryAll(doc, user);
     } catch (err) {
       throw new ApiError(err.status);
     }

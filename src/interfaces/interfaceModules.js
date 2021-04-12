@@ -267,7 +267,20 @@ export default function (collectionName) {
     const result = await db.collection(collectionName).find(query, {projection: protectedProperties})
       .toArray();
     if (result) {
-      return result;
+      const filteredDoc = result.map(item => {
+        const filteredDoc = {...filterDoc(item), id: item._id.toString()};
+        return filteredDoc;
+      });
+      return filteredDoc;
+    }
+
+    function filterDoc(doc) {
+      return Object.entries(doc)
+        .filter(([key]) => key === '_id' === false)
+        .reduce((acc, [
+          key,
+          value
+        ]) => ({...acc, [key]: value}), {});
     }
   }
 }

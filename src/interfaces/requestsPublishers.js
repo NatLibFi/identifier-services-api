@@ -39,7 +39,8 @@ export default function () {
     readRequest,
     updateRequest,
     removeRequest,
-    queryRequests
+    queryRequests,
+    queryAllRequests
   };
 
   function createRequest(db, doc, user) {
@@ -105,6 +106,20 @@ export default function () {
     try {
       if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
         return publisherRequestsInterface.query(db, {queries, offset, sort});
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function queryAllRequests(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'publisherRequests', 'queryRequests')) {
+        return publisherRequestsInterface.queryAllRecords(db, {query: queries[0].query});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

@@ -42,7 +42,8 @@ export default function () {
     readRequestISSN,
     updateRequestISSN,
     removeRequestISSN,
-    queryRequestISSN
+    queryRequestISSN,
+    queryAllRequestISSN
   };
 
   function createRequestISSN(db, doc, user) {
@@ -164,6 +165,20 @@ export default function () {
         }
 
         return result;
+      }
+
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function queryAllRequestISSN(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'publicationIssnRequests', 'queryRequestISSN')) {
+        return publicationsRequestsIssnInterface.queryAllRecords(db, {query: queries[0].query});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

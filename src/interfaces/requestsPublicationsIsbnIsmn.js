@@ -42,7 +42,8 @@ export default function () {
     readRequestIsbnIsmn,
     updateRequestIsbnIsmn,
     removeRequestIsbnIsmn,
-    queryRequestIsbnIsmn
+    queryRequestIsbnIsmn,
+    queryAllRequestIsbnIsmn
   };
 
   function createRequestIsbnIsmn(db, doc, user) {
@@ -111,7 +112,6 @@ export default function () {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
       }
-
       const newDoc = {...doc, backgroundProcessingState: doc.backgroundProcessingState ? doc.backgroundProcessingState : 'pending'};
       if (validateDoc(newDoc, 'PublicationIsbnIsmnRequestContent')) {
         const readResult = await readRequestIsbnIsmn(db, id, user);
@@ -170,6 +170,19 @@ export default function () {
         return result;
       }
 
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function queryAllRequestIsbnIsmn(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'publicationIsbnIsmnRequests', 'queryRequestIsbnIsmn')) {
+        return publicationsRequestsIsbnIsmnInterface.queryAllRecords(db, {query: queries[0].query});
+      }
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
