@@ -63,7 +63,6 @@ export default function (db) {
   }
 
   async function update(req, res, next) {
-    console.log(req.body)
     const {id} = req.params;
     try {
       const result = await publications.updateISSN(db, id, req.body, req.user);
