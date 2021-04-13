@@ -305,7 +305,7 @@ export default function () {
           const subRangeInfo = await rangesSubIsbnInterface.read(db, id);
           const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
           // Condition if next + count is still inside rangeEnd needs to know the condition if not
-          if (subRangeInfo.next + formatDetailsArray.length <= subRangeInfo.rangeEnd) {
+          if (Number(subRangeInfo.next) + formatDetailsArray.length <= Number(subRangeInfo.rangeEnd)) {
             const batch = {
               identifierType: 'ISBN',
               identifierCount: formatDetailsArray.length,
@@ -320,23 +320,27 @@ export default function () {
             const responseBatch = await rangesBatchInterface.read(db, batchId);
             // Calculate Publication identifier and create ranges for respective formatDetails in One batch
             formatDetailsArray.map(async (item, index) => {
-              const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
-              const payload = {
-                identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'isbn'),
-                identifierBatchId: batchId,
-                publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
-                publicationType: item
-              };
-              const result = await rangesIdentifierInterface.create(db, payload, user);
-              if (result) {
-                const subRangedoc = {
-                  ...subRangeInfo,
-                  taken: `${Number(subRangeInfo.taken) + 1}`,
-                  free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
-                  next: updateNext(subRangeInfo.next, formatDetailsArray.length)
+              if (subRangeInfo.active) {
+                const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
+                const payload = {
+                  identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'isbn'),
+                  identifierBatchId: batchId,
+                  publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
+                  publicationType: item
                 };
-                return rangesSubIsbnInterface.update(db, id, subRangedoc, user);
+                const result = await rangesIdentifierInterface.create(db, payload, user);
+                if (result) {
+                  const subRangedoc = {
+                    ...subRangeInfo,
+                    taken: `${Number(subRangeInfo.taken) + 1}`,
+                    free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
+                    next: updateNext(subRangeInfo.next, formatDetailsArray.length),
+                    active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
+                  };
+                  return rangesSubIsbnInterface.update(db, id, subRangedoc, user);
+                }
               }
+              throw new ApiError('Selected Range is inactive!!!');
             });
 
             const queries = [
@@ -355,6 +359,7 @@ export default function () {
               return finalResult;
             }
           }
+          throw new ApiError('Not enough ranges!!');
         }
 
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -637,7 +642,7 @@ export default function () {
           const subRangeInfo = await rangesSubIsmnInterface.read(db, id);
           const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
           // Condition if next + count is still inside rangeEnd needs to know the condition if not
-          if (subRangeInfo.next + formatDetailsArray.length <= subRangeInfo.rangeEnd) {
+          if (Number(subRangeInfo.next) + formatDetailsArray.length <= Number(subRangeInfo.rangeEnd)) {
             const batch = {
               identifierType: 'ISMN',
               identifierCount: formatDetailsArray.length,
@@ -665,7 +670,8 @@ export default function () {
                   ...subRangeInfo,
                   taken: `${Number(subRangeInfo.taken) + 1}`,
                   free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
-                  next: updateNext(subRangeInfo.next, formatDetailsArray.length)
+                  next: updateNext(subRangeInfo.next, formatDetailsArray.length),
+                  active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
                 };
                 return rangesSubIsmnInterface.update(db, id, subRangedoc, user);
               }
