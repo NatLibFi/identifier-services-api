@@ -40,7 +40,7 @@ export default function (db) {
     .put('/:id', updateRequest)
     .delete('/:id', removeRequest)
     .post('/query', queryRequests)
-    .post('/query/all', queryRequests);
+    .post('/query/all', queryAllRequests);
 
   async function createRequest(req, res, next) {
     try {
@@ -86,6 +86,15 @@ export default function (db) {
   async function queryRequests(req, res, next) {
     try {
       const result = await publisherRequests.queryRequests(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function queryAllRequests(req, res, next) {
+    try {
+      const result = await publisherRequests.queryAllRequests(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

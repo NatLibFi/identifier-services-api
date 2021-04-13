@@ -44,7 +44,8 @@ export default function () {
     update,
     query,
     queryAll,
-    queryAllPublishers
+    queryAllPublishers,
+    queryAllRecords
   };
 
   async function create(db, doc, user) {
@@ -163,6 +164,16 @@ export default function () {
       }
       return publishersList;
 
+    } catch (err) {
+      if (err) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(err.status);
+      }
+    }
+  }
+
+  function queryAllRecords(db, {queries}) {
+    try {
+      return publisherInterface.queryAllRecords(db, {query: queries});
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
