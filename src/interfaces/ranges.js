@@ -303,63 +303,66 @@ export default function () {
         const {id, isbnIsmn, publisherId} = doc;
         if (isbnIsmn.type !== 'music') {
           const subRangeInfo = await rangesSubIsbnInterface.read(db, id);
-          const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
+          const initialFormatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
+          const response = isbnIsmn.identifier && isbnIsmn.identifier.length > 0
+            ? initialFormatDetailsArray.filter(item => !isbnIsmn.identifier.map(i => i.type).includes(item))
+            : initialFormatDetailsArray;
+          const batchLength = Number(subRangeInfo.next) + response.length > Number(subRangeInfo.rangeEnd)
+            ? Number(subRangeInfo.free) : response.length;
+          const formatDetailsArray = response.slice(0, batchLength);
           // Condition if next + count is still inside rangeEnd needs to know the condition if not
-          if (Number(subRangeInfo.next) + formatDetailsArray.length <= Number(subRangeInfo.rangeEnd)) {
-            const batch = {
-              identifierType: 'ISBN',
-              identifierCount: formatDetailsArray.length,
-              identifierCanceledCount: 0,
-              identifierDeletedCount: 0,
-              publisherId,
-              publicationId: isbnIsmn._id,
-              publisherIdentifierRangeId: id,
-              created: {user: user.id}
-            };
-            const batchId = await rangesBatchInterface.create(db, batch, user);
-            const responseBatch = await rangesBatchInterface.read(db, batchId);
-            // Calculate Publication identifier and create ranges for respective formatDetails in One batch
-            formatDetailsArray.map(async (item, index) => {
-              if (subRangeInfo.active) {
-                const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
-                const payload = {
-                  identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'isbn'),
-                  identifierBatchId: batchId,
-                  publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
-                  publicationType: item
-                };
-                const result = await rangesIdentifierInterface.create(db, payload, user);
-                if (result) {
-                  const subRangedoc = {
-                    ...subRangeInfo,
-                    taken: `${Number(subRangeInfo.taken) + 1}`,
-                    free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
-                    next: updateNext(subRangeInfo.next, formatDetailsArray.length),
-                    active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
-                  };
-                  return rangesSubIsbnInterface.update(db, id, subRangedoc, user);
-                }
-              }
-              throw new ApiError('Selected Range is inactive!!!');
-            });
-
-            const queries = [
-              {
-                query: {identifierBatchId: batchId}
-              }
-            ];
-            const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
-            if (currentIdentifier.results) {
-              const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
-                ...isbnIsmn,
-                associatedRange: filterDuplicateValueInArray(currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier}))),
-                identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
+          const batch = {
+            identifierType: 'ISBN',
+            identifierCount: formatDetailsArray.length,
+            identifierCanceledCount: 0,
+            identifierDeletedCount: 0,
+            publisherId,
+            publicationId: isbnIsmn._id,
+            publisherIdentifierRangeId: id,
+            created: {user: user.id}
+          };
+          const batchId = await rangesBatchInterface.create(db, batch, user);
+          const responseBatch = await rangesBatchInterface.read(db, batchId);
+          // Calculate Publication identifier and create ranges for respective formatDetails in One batch
+          formatDetailsArray.map(async (item, index) => {
+            if (subRangeInfo.active) {
+              const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
+              const payload = {
+                identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'isbn'),
+                identifierBatchId: batchId,
+                publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
+                publicationType: item
               };
-              const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
-              return finalResult;
+              const result = await rangesIdentifierInterface.create(db, payload, user);
+              if (result) {
+                const subRangedoc = {
+                  ...subRangeInfo,
+                  taken: `${Number(subRangeInfo.taken) + formatDetailsArray.length}`,
+                  free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
+                  next: updateNext(subRangeInfo.next, formatDetailsArray.length),
+                  active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
+                };
+                return rangesSubIsbnInterface.update(db, id, subRangedoc, user);
+              }
             }
+            throw new ApiError('Selected Range is inactive!!!');
+          });
+
+          const queries = [
+            {
+              query: {identifierBatchId: batchId}
+            }
+          ];
+          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
+          if (currentIdentifier.results) {
+            const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
+              ...isbnIsmn,
+              associatedRange: filterDuplicateValueInArray(currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier}))),
+              identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
+            };
+            const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
+            return finalResult;
           }
-          throw new ApiError('Not enough ranges!!');
         }
 
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -640,23 +643,30 @@ export default function () {
 
         if (isbnIsmn.type === 'music') {
           const subRangeInfo = await rangesSubIsmnInterface.read(db, id);
-          const formatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
+          const initialFormatDetailsArray = manageFormatDetails(isbnIsmn.formatDetails);
+          const response = isbnIsmn.identifier && isbnIsmn.identifier.length > 0
+            ? initialFormatDetailsArray.filter(item => !isbnIsmn.identifier.map(i => i.type).includes(item))
+            : initialFormatDetailsArray;
+          const batchLength = Number(subRangeInfo.next) + response.length > Number(subRangeInfo.rangeEnd)
+            ? Number(subRangeInfo.free) : response.length;
+          const formatDetailsArray = response.slice(0, batchLength);
+
           // Condition if next + count is still inside rangeEnd needs to know the condition if not
-          if (Number(subRangeInfo.next) + formatDetailsArray.length <= Number(subRangeInfo.rangeEnd)) {
-            const batch = {
-              identifierType: 'ISMN',
-              identifierCount: formatDetailsArray.length,
-              identifierCanceledCount: 0,
-              identifierDeletedCount: 0,
-              publisherId,
-              publicationId: isbnIsmn._id,
-              publisherIdentifierRangeId: id,
-              created: {user: user.id}
-            };
-            const batchId = await rangesBatchInterface.create(db, batch, user);
-            const responseBatch = await rangesBatchInterface.read(db, batchId);
-            // Calculate Publication identifier and create ranges for respective formatDetails in One batch
-            formatDetailsArray.map(async (item, index) => {
+          const batch = {
+            identifierType: 'ISMN',
+            identifierCount: formatDetailsArray.length,
+            identifierCanceledCount: 0,
+            identifierDeletedCount: 0,
+            publisherId,
+            publicationId: isbnIsmn._id,
+            publisherIdentifierRangeId: id,
+            created: {user: user.id}
+          };
+          const batchId = await rangesBatchInterface.create(db, batch, user);
+          const responseBatch = await rangesBatchInterface.read(db, batchId);
+          // Calculate Publication identifier and create ranges for respective formatDetails in One batch
+          formatDetailsArray.map(async (item, index) => {
+            if (subRangeInfo.active) {
               const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
               const payload = {
                 identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'ismn'),
@@ -668,30 +678,31 @@ export default function () {
               if (result) {
                 const subRangedoc = {
                   ...subRangeInfo,
-                  taken: `${Number(subRangeInfo.taken) + 1}`,
+                  taken: `${Number(subRangeInfo.taken) + formatDetailsArray.length}`,
                   free: `${Number(subRangeInfo.free) - formatDetailsArray.length}`,
                   next: updateNext(subRangeInfo.next, formatDetailsArray.length),
                   active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
                 };
                 return rangesSubIsmnInterface.update(db, id, subRangedoc, user);
               }
-            });
-
-            const queries = [
-              {
-                query: {identifierBatchId: batchId}
-              }
-            ];
-            const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
-            if (currentIdentifier.results) {
-              const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
-                ...isbnIsmn,
-                associatedRange: filterDuplicateValueInArray(currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier}))),
-                identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
-              };
-              const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
-              return finalResult;
             }
+            throw new ApiError('Selected Range is inactive!!!');
+          });
+
+          const queries = [
+            {
+              query: {identifierBatchId: batchId}
+            }
+          ];
+          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
+          if (currentIdentifier.results) {
+            const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
+              ...isbnIsmn,
+              associatedRange: filterDuplicateValueInArray(currentIdentifier.results.map(item => ({id: item.publisherIdentifierRangeId, subRange: subRangeInfo.publisherIdentifier}))),
+              identifier: currentIdentifier.results.map(item => ({id: item.identifier, type: item.publicationType}))
+            };
+            const finalResult = await publicationsInterface.update(db, isbnIsmn._id, publicationToUpdate, user);
+            return finalResult;
           }
         }
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -866,7 +877,8 @@ export default function () {
           ...filterResult(rangeDetails),
           next: calculateNext(prefix, next.slice(0, 3), 1),
           free: `${Number(rangeDetails.free) - 1}`,
-          taken: `${Number(rangeDetails.taken) + 1}`
+          taken: `${Number(rangeDetails.taken) + 1}`,
+          active: !(Number(rangeDetails.next) + 1 > Number(rangeDetails.rangeEnd))
         };
         const updateRangeDetails = await rangesISSNInterface.update(db, rangeDetails._id, newRangeDetails, user);
         if (updateRangeDetails.lastErrorObject.updatedExisting) {
@@ -889,7 +901,8 @@ export default function () {
           ...filterResult(rangeDetails),
           next: calculateNext(prefix, next.slice(0, 3), 2),
           free: `${Number(rangeDetails.free) - 2}`,
-          taken: `${Number(rangeDetails.taken) + 2}`
+          taken: `${Number(rangeDetails.taken) + 2}`,
+          active: !(Number(rangeDetails.next) + 3 > Number(rangeDetails.rangeEnd))
         };
         const updateRangeDetails = await rangesISSNInterface.update(db, rangeDetails._id, newRangeDetails, user);
         if (updateRangeDetails.lastErrorObject.updatedExisting) {
