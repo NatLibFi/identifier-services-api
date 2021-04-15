@@ -115,7 +115,7 @@ export default function (db, passportMiddlewares, combineUserInfo) {
 
   async function queryAllRecords(req, res, next) {
     try {
-      const result = await publishers.queryAllPublishers(db, req.body);
+      const result = await publishers.queryAllRecords(db, req.body);
       res.json(result);
     } catch (err) {
       return next(err);
