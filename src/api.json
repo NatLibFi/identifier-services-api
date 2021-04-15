@@ -2136,6 +2136,46 @@
 				}
 			}
 		},
+		"/ranges/isbn/subrange/revoke": {
+			"post": {
+				"summary": "Revoke or cancel ISBN SubRanges",
+				"tags": [
+					"SubRanges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Resource was revoked"
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
 		"/ranges/ismn": {
 			"post": {
 				"summary": "Create a resource",
@@ -4886,6 +4926,26 @@
 						]
 					}
 				]
+			},
+			"SubRangeIsbnCancel": {
+				"type": "object",
+				"properties": {
+					"identifier": {
+						"type": "string",
+						"description": "ISBN subrange revoked"
+					},
+					"category": {
+						"type": "string"
+					},
+					"rangeId": {
+						"type": "string",
+						"description": "Mongo Id of corresponding subRange"
+					},
+					"publisherId": {
+						"type": "string",
+						"description": "MongoID of a publisher whose ISBN was revoked"
+					}
+				}
 			},
 			"SubRangeIsmnContent": {
 				"allOf": [

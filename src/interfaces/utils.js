@@ -280,6 +280,10 @@ const permissions = {
       'admin',
       'system'
     ],
+    revokeIsbnSubRange: [
+      'admin',
+      'system'
+    ],
     queryRangesIsbnBatch: [
       'admin',
       'system'

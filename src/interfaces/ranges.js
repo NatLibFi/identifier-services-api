@@ -48,14 +48,14 @@ const rangesIsbnInterface = interfaceFactory('RangeIsbn');
 const rangesSubIsbnInterface = interfaceFactory('SubRangeIsbn');
 const rangesBatchInterface = interfaceFactory('RangeBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
-
+const subRangeIsbnCanceledInterface = interfaceFactory('SubRangeIsbnCanceled');
 const rangesIsmnInterface = interfaceFactory('RangeIsmn');
 const rangesSubIsmnInterface = interfaceFactory('SubRangeIsmn');
 
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN');
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN');
 const rangesISSNInterface = interfaceFactory('RangeIssn');
-// Const publisherInterface = interfaceFactory('PublisherMetadata');
+const publisherInterface = interfaceFactory('PublisherMetadata');
 
 
 export default function () {
@@ -67,6 +67,7 @@ export default function () {
     queryIsbnSubRanges,
     readIsbnSubRange,
     createIsbnSubRange,
+    revokeIsbnSubRange,
     queryRangesIsbnBatch,
     readRangesIsbnBatch,
     createRangesIsbnBatch,
@@ -216,9 +217,10 @@ export default function () {
     const {id, rangeId} = doc;
     try {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
-        const range = await rangesIsbnInterface.read(db, rangeId);
+        const response = await rangesIsbnInterface.read(db, rangeId);
+        const {_id, ...range} = response; // eslint-disable-line no-unused-vars
         if (range) {
-          const {prefix, langGroup, rangeEnd, category, next, free, taken} = range;
+          const {prefix, langGroup, rangeStart, rangeEnd, category, next, free, taken, canceled, active} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
               publisherIdentifier: '', // Value Changes after calculation
@@ -238,16 +240,42 @@ export default function () {
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
             if (validateDoc(newDoc, 'SubRangeIsbnContent')) {
-              const result = await rangesSubIsbnInterface.create(db, newDoc);
-
-              // Values to Update Big Block
-              const rangeToUpdate = {...range, next: updateNext(next, 1), free: `${Number(free) - 1}`, taken: `${Number(taken) + 1}`};
-              const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
-              // eslint-disable-next-line max-depth
-              if (response) {
-                return result;
+              if (active) {
+                if (free === '0' && Number(canceled) > 0) {
+                  const result = await rangesSubIsbnInterface.create(db, newDoc);
+                  // Values to Update Big Block
+                  const rangeToUpdate = {
+                    ...range,
+                    next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
+                    free: '0',
+                    canceled: Number(canceled) - 1 <= 0 ? '0' : `${Number(canceled) - 1}`,
+                    taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
+                    active: !(updateNext(next, 1) > Number(rangeEnd))
+                  };
+                  const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
+                  if (response) {
+                    return result;
+                  }
+                  throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                if (Number(free) > 0) {
+                  const result = await rangesSubIsbnInterface.create(db, newDoc);
+                  // Values to Update Big Block
+                  const rangeToUpdate = {
+                    ...range,
+                    next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
+                    free: Number(free) - 1 <= 0 ? '0' : `${Number(free) - 1}`,
+                    taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
+                    active: !(updateNext(next, 1) > Number(rangeEnd))
+                  };
+                  const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
+                  if (response) {
+                    return result;
+                  }
+                  throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
               }
-              throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+              throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
             }
             throw new ApiError(HttpStatus.BAD_REQUEST);
           }
@@ -262,6 +290,67 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
       }
+    }
+  }
+
+  async function revokeIsbnSubRange(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'revokeIsbnSubRange')) {
+        const subRangeTobeRevoked = await rangesSubIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+        if (subRangeTobeRevoked) {
+          const {publisherIdentifier, category, id, publisherId, isbnRangeId} = subRangeTobeRevoked[0]; // eslint-disable-line prefer-destructuring
+          const responesIsbnRange = await rangesIsbnInterface.read(db, isbnRangeId);
+          const newDoc = {
+            identifier: publisherIdentifier,
+            category,
+            rangeId: id,
+            publisherId,
+            created: {user: user.id}
+          };
+          const {_id, ...isbnRange} = responesIsbnRange;
+          if (validateDoc(newDoc, 'SubRangeIsbnCancel')) {
+            const responseDeleteSubRange = await rangesSubIsbnInterface.remove(db, id);
+            const newIsbnRange = {
+              ...isbnRange,
+              free: Number(isbnRange.free) <= 0
+                ? '0'
+                : (Number(isbnRange.free) - 1).toString(),
+              // eslint-disable-next-line no-nested-ternary
+              next: isbnRange.next === 'N/A'
+                ? isbnRange.rangeEnd
+                : Number(isbnRange.next) - 1 <= Number(isbnRange.rangeEnd)
+                  ? (Number(isbnRange.next) - 1).toString()
+                  : 'N/A',
+              canceled: (Number(isbnRange.canceled) + 1).toString(),
+              active: true,
+              taken: Number(isbnRange.taken) - 1 < Number(isbnRange.rangeEnd) - Number(isbnRange.rangeStart) ? (Number(isbnRange.taken) - 1).toString() : '0'
+            };
+
+            if (responseDeleteSubRange) {
+              const responseIsbnRangeUpdate = await rangesIsbnInterface.update(db, _id, newIsbnRange, user);
+              if (responseIsbnRangeUpdate) {
+                const responseRevokedRecord = await subRangeIsbnCanceledInterface.create(db, newDoc);
+                if (responseRevokedRecord) {
+                  const responseReadPublisher = await publisherInterface.read(db, publisherId);
+                  const newPublisher = {
+                    ...responseReadPublisher,
+                    publisherRangeId: responseReadPublisher.publisherRangeId.filter(item => item !== id),
+                    publisherIdentifier: responseReadPublisher.publisherIdentifier.filter(item => item !== publisherIdentifier)
+                  };
+                  const responsePublisherUpdate = await publisherInterface.update(db, publisherId, newPublisher, user);
+                  if (responsePublisherUpdate) {
+                    return responsePublisherUpdate;
+                  }
+                }
+              }
+
+            }
+          }
+          throw new ApiError(HttpStatus.BAD_REQUEST);
+        }
+      }
+    } catch (err) {
+      throw new ApiError(err.status);
     }
   }
 

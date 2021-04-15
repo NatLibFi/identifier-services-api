@@ -47,6 +47,7 @@ export default function (db) {
     .post('/isbn/subRange', bodyParse(), createIsbnSubRange)
     .post('/query/isbnBatch', bodyParse(), queryRangesIsbnBatch)
     .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
+    .post('/isbn/subRange/revoke', bodyParse(), revokeIsbnSubRange)
 
     .post('/ismn', bodyParse(), createIsmn)
     .post('/ismn/subRange', bodyParse(), createIsmnSubRange)
@@ -121,6 +122,15 @@ export default function (db) {
   async function createIsbnSubRange(req, res, next) {
     try {
       const result = await ranges.createIsbnSubRange(db, req.body, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function revokeIsbnSubRange(req, res, next) {
+    try {
+      const result = await ranges.revokeIsbnSubRange(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
