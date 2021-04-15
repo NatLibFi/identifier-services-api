@@ -170,7 +170,7 @@ export default function () {
 
   function queryAllRecords(db, {queries}) {
     try {
-      return publisherInterface.queryAllRecords(db, {query: queries});
+      return publisherInterface.queryAllRecords(db, {query: queries[0].query});
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
