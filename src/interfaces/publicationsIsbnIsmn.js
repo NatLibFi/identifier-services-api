@@ -80,7 +80,7 @@ export default function () {
 
     function addMetadataReference(data) {
       const {formatDetails} = data;
-      const allFormats = formatDetails.fileFormat && formatDetails.fileFormat
+      const allFormats = formatDetails.fileFormat && formatDetails.printFormat
         ? [...formatDetails.fileFormat.format, ...formatDetails.printFormat.format]
         : formatDetails.fileFormat
           ? [...formatDetails.fileFormat.format]
