@@ -62,7 +62,7 @@ export default function (db) {
 
   async function query(req, res, next) {
     try {
-      const result = await messages.query(db, req.body, req.user, req.query);
+      const result = await messages.query(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
