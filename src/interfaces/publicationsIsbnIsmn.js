@@ -73,7 +73,11 @@ export default function () {
 
       throw new ApiError(HttpStatus.BAD_REQUEST);
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
       if (err) { // eslint-disable-line functional/no-conditional-statement
+        // eslint-disable-next-line no-console
+        console.log(err);
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
     }
