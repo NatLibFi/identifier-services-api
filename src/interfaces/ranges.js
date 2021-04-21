@@ -91,10 +91,10 @@ export default function () {
     assignIssnRange
   };
 
-  async function queryIsbnRanges(db, {queries, offset}, user) {
+  async function queryIsbnRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const result = await rangesIsbnInterface.query(db, {queries, offset});
+        const result = await rangesIsbnInterface.query(db, {queries});
         return result;
       }
 
@@ -178,14 +178,10 @@ export default function () {
     }
   }
 
-  async function queryIsbnSubRanges(db, {queries, offset}, user) {
+  async function queryIsbnSubRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
-        if (offset === 'unlimited') {
-          return rangesSubIsbnInterface.queryAllRecords(db, {query: queries[0].query});
-        }
-
-        const result = await rangesSubIsbnInterface.query(db, {queries, offset});
+        const result = await rangesSubIsbnInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -355,10 +351,10 @@ export default function () {
   }
 
 
-  async function queryRangesIsbnBatch(db, {queries, offset}, user) {
+  async function queryRangesIsbnBatch(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsbnBatch')) {
-        const result = await rangesBatchInterface.query(db, {queries, offset});
+        const result = await rangesBatchInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -442,7 +438,7 @@ export default function () {
               query: {identifierBatchId: batchId}
             }
           ];
-          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
+          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries});
           if (currentIdentifier.results) {
             const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
               ...isbnIsmn,
@@ -533,10 +529,10 @@ export default function () {
     }
   }
 
-  async function queryRangesIdentifier(db, {queries, offset}, user) {
+  async function queryRangesIdentifier(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIdentifier')) {
-        const result = await rangesIdentifierInterface.query(db, {queries, offset});
+        const result = await rangesIdentifierInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -694,13 +690,10 @@ export default function () {
     }
   }
 
-  async function queryIsmnSubRanges(db, {queries, offset}, user) {
+  async function queryIsmnSubRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
-        if (offset === 'unlimited') {
-          return rangesSubIsmnInterface.queryAllRecords(db, {query: queries[0].query});
-        }
-        const result = await rangesSubIsmnInterface.query(db, {queries, offset});
+        const result = await rangesSubIsmnInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -711,10 +704,10 @@ export default function () {
     }
   }
 
-  async function queryRangesIsmnBatch(db, {queries, offset}, user) {
+  async function queryRangesIsmnBatch(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsmnBatch')) {
-        const result = await rangesBatchInterface.query(db, {queries, offset});
+        const result = await rangesBatchInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
@@ -783,7 +776,7 @@ export default function () {
               query: {identifierBatchId: batchId}
             }
           ];
-          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries, offset: null});
+          const currentIdentifier = await rangesIdentifierInterface.query(db, {queries});
           if (currentIdentifier.results) {
             const {_id, ...publicationToUpdate} = { // eslint-disable-line no-unused-vars
               ...isbnIsmn,
@@ -827,10 +820,10 @@ export default function () {
     }
   }
 
-  async function queryIsmnRanges(db, {queries, offset}, user) {
+  async function queryIsmnRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
-        const result = await rangesIsmnInterface.query(db, {queries, offset});
+        const result = await rangesIsmnInterface.query(db, {queries});
         return result;
       }
 
@@ -883,13 +876,10 @@ export default function () {
     }
   }
 
-  function queryIssn(db, {queries, offset}, user) {
+  function queryIssn(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
-        if (offset === 'unlimited') {
-          return rangesISSNInterface.queryAllRecords(db, {query: queries[0].query});
-        }
-        return rangesISSNInterface.query(db, {queries, offset});
+        return rangesISSNInterface.query(db, {queries});
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);

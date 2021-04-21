@@ -27,8 +27,6 @@
  *
  */
 
-import {QUERY_LIMIT} from '../config';
-
 const {ObjectId} = require('mongodb');
 
 export default function (collectionName) {
@@ -114,50 +112,22 @@ export default function (collectionName) {
     return undefined;
   }
 
-  async function query(db, {queries, offset, sort}, protectedProperties) {
-    if (offset) {
-      if (queries.length > 0) {
-        const result = await queries.reduce((acc, {query}) => doQuery({
-          ...formatQuery(query),
-          $and: [
-            {
-              _id: {$gt: new ObjectId(offset)}
-            }
-          ]
-        }, sort), []);
-        return result;
-      }
-
-      return doQuery({
-        ...formatQuery(query),
-        $and: [
-          {
-            _id: {$gt: new ObjectId(offset)}
-          }
-        ]
-      }, sort);
-    }
-
+  function query(db, {queries, sort}, protectedProperties) {
     const result = queries.reduce((acc, {query}) => doQuery(formatQuery(query), sort), []);
     return result;
 
     async function doQuery(query, sort) {
       const results = [];
-      const totalDoc = await db.collection(collectionName).find({})
-        .count();
+      const totalDoc = await db.collection(collectionName).count();
       const cursor = await db.collection(collectionName) // eslint-disable-line functional/immutable-data
         .find(query, {projection: protectedProperties})
-        .sort(sort ? sort : {_id: -1})
-        .limit(QUERY_LIMIT);
-      const queryDocCount = await cursor.count();
+        .sort(sort ? sort : {_id: -1});
       return new Promise(resolve => {
         cursor.on('data', processData);
         cursor.on('end', () => results.length > 0
           ? resolve({
             results,
-            offset: results.slice(-1).shift().mongoId ? results.slice(-1).shift().mongoId : results.slice(-1).shift().id,
-            totalDoc,
-            queryDocCount
+            totalDoc
           })
           : resolve({results}));
         function processData(doc) {

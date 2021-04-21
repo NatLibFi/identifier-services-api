@@ -134,8 +134,8 @@ export default function () {
   // Return result;
   // }
 
-  async function queryISSN(db, {queries, offset, sort}, user) {
-    const result = await publicationsIssnInterface.query(db, {queries, offset, sort});
+  async function queryISSN(db, {queries, sort}, user) {
+    const result = await publicationsIssnInterface.query(db, {queries, sort});
     if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
       if (user.role === 'publisher-admin' || user.role === 'publisher') {
         const queries = [
@@ -143,7 +143,7 @@ export default function () {
             query: {publisher: user.publisher}
           }
         ];
-        return publicationsIssnInterface.query(db, {queries, offset});
+        return publicationsIssnInterface.query(db, {queries});
       }
 
       return result;

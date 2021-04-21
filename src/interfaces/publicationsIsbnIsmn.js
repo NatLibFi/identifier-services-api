@@ -154,8 +154,8 @@ export default function () {
   throw new ApiError(HttpStatus.FORBIDDEN);
   } */
 
-  async function queryIsbnIsmn(db, {queries, offset, sort}, user) {
-    const result = await publicationsIsbnIsmnInterface.query(db, {queries, offset, sort});
+  async function queryIsbnIsmn(db, {queries, sort}, user) {
+    const result = await publicationsIsbnIsmnInterface.query(db, {queries, sort});
     if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
       if (user.role === 'publisher') {
         const queries = [
@@ -163,7 +163,7 @@ export default function () {
             query: {publisher: user.publisher}
           }
         ];
-        return publicationsIsbnIsmnInterface.query(db, {queries, offset});
+        return publicationsIsbnIsmnInterface.query(db, {queries});
       }
 
       return result;

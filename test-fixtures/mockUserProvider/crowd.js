@@ -193,7 +193,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset} = doc;
+    const {queries} = doc;
     if (hasPermission(user, 'users', 'query')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -201,9 +201,9 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
             query: {publisher: user.publisher}
           }
         ];
-        return userInterface.query(db, {queries, offset});
+        return userInterface.query(db, {queries});
       }
-      return userInterface.query(db, {queries, offset});
+      return userInterface.query(db, {queries});
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }

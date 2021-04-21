@@ -294,7 +294,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset} = doc;
+    const {queries} = doc;
     if (hasPermission(user, 'users', 'query')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -302,9 +302,9 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
             query: {publisher: user.publisher}
           }
         ];
-        return userMetadataInterface.query(db, {queries, offset});
+        return userMetadataInterface.query(db, {queries});
       }
-      return userMetadataInterface.query(db, {queries, offset});
+      return userMetadataInterface.query(db, {queries});
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
@@ -313,7 +313,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset} = doc;
+    const {queries} = doc;
     if (hasPermission(user, 'users', 'query')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -321,9 +321,9 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
             query: {publisher: user.publisher}
           }
         ];
-        return userMetadataInterface.queryAllRecords(db, {queries, offset});
+        return userMetadataInterface.queryAllRecords(db, {queries});
       }
-      return userMetadataInterface.queryAllRecords(db, {queries, offset});
+      return userMetadataInterface.queryAllRecords(db, {queries});
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
@@ -452,8 +452,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset, sort} = doc;
-    const result = await usersRequestInterface.query(db, {queries, offset, sort});
+    const {queries, sort} = doc;
+    const result = await usersRequestInterface.query(db, {queries, sort});
     if (hasPermission(user, 'userRequests', 'queryRequest')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -462,7 +462,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
           }
         ];
         const protectedProperties = {state: 0};
-        const response = await usersRequestInterface.query(db, {queries, offset, sort}, protectedProperties);
+        const response = await usersRequestInterface.query(db, {queries, sort}, protectedProperties);
         return response;
       }
       return result;
@@ -474,8 +474,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset, sort} = doc;
-    const result = await usersRequestInterface.queryAllRecords(db, {queries, offset, sort});
+    const {queries, sort} = doc;
+    const result = await usersRequestInterface.queryAllRecords(db, {queries, sort});
     if (hasPermission(user, 'userRequests', 'queryRequest')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -484,7 +484,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
           }
         ];
         const protectedProperties = {state: 0};
-        const response = await usersRequestInterface.queryAllRecords(db, {queries, offset, sort}, protectedProperties);
+        const response = await usersRequestInterface.queryAllRecords(db, {queries, sort}, protectedProperties);
         return response;
       }
       return result;

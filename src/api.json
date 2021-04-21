@@ -303,17 +303,6 @@
 						"httpBearer": []
 					}
 				],
-				"parameters": [
-					{
-						"description": "The offset from where the results should be returned",
-						"name": "QueryOffset",
-						"in": "header",
-						"required": false,
-						"schema": {
-							"type": "number"
-						}
-					}
-				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -328,12 +317,6 @@
 					"200": {
 						"description": "Query was executed",
 						"headers": {
-							"NextOffset": {
-								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
-								"schema": {
-									"type": "number"
-								}
-							}
 						},
 						"content": {
 							"application/json": {
@@ -379,17 +362,6 @@
 						"httpBearer": []
 					}
 				],
-				"parameters": [
-					{
-						"description": "The offset from where the results should be returned",
-						"name": "QueryOffset",
-						"in": "header",
-						"required": false,
-						"schema": {
-							"type": "number"
-						}
-					}
-				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -404,12 +376,6 @@
 					"200": {
 						"description": "Query was executed",
 						"headers": {
-							"NextOffset": {
-								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
-								"schema": {
-									"type": "number"
-								}
-							}
 						},
 						"content": {
 							"application/json": {
@@ -551,17 +517,6 @@
 						"httpBearer": []
 					}
 				],
-				"parameters": [
-					{
-						"description": "The offset from where the results should be returned",
-						"name": "QueryOffset",
-						"in": "header",
-						"required": false,
-						"schema": {
-							"type": "number"
-						}
-					}
-				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -576,12 +531,6 @@
 					"200": {
 						"description": "Query was executed",
 						"headers": {
-							"NextOffset": {
-								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
-								"schema": {
-									"type": "number"
-								}
-							}
 						},
 						"content": {
 							"application/json": {
@@ -627,17 +576,6 @@
 						"httpBearer": []
 					}
 				],
-				"parameters": [
-					{
-						"description": "The offset from where the results should be returned",
-						"name": "QueryOffset",
-						"in": "header",
-						"required": false,
-						"schema": {
-							"type": "number"
-						}
-					}
-				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -651,14 +589,7 @@
 				"responses": {
 					"200": {
 						"description": "Query was executed",
-						"headers": {
-							"NextOffset": {
-								"description": "The next offset where more results are available for this query. If missing, it means that no more results are available for further queries",
-								"schema": {
-									"type": "number"
-								}
-							}
-						},
+						"headers": {},
 						"content": {
 							"application/json": {
 								"schema": {

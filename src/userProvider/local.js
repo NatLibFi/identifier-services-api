@@ -230,7 +230,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     }
-    const {queries, offset} = doc;
+    const {queries} = doc;
     if (hasPermission(user, 'users', 'query')) {
       if (user.role === 'publisher-admin') {
         const queries = [
@@ -238,9 +238,9 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
             query: {publisher: user.publisher}
           }
         ];
-        return userMetadataInterface.query(db, {queries, offset});
+        return userMetadataInterface.query(db, {queries});
       }
-      return userMetadataInterface.query(db, {queries, offset});
+      return userMetadataInterface.query(db, {queries});
     }
     throw new ApiError(HttpStatus.FORBIDDEN);
   }
@@ -373,8 +373,8 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
     if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
       throw new ApiError(HttpStatus.BAD_REQUEST);
     } else {
-      const {queries, offset} = doc;
-      const result = await usersRequestInterface.query(db, {queries, offset});
+      const {queries} = doc;
+      const result = await usersRequestInterface.query(db, {queries});
       if (hasPermission(user, 'userRequests', 'queryRequest')) {
         if (user.role === 'publisher-admin') {
           const queries = [
@@ -383,7 +383,7 @@ export default function ({PASSPORT_LOCAL_USERS, PRIVATE_KEY_URL, db}) {
             }
           ];
           const protectedProperties = {state: 0};
-          const response = await usersRequestInterface.query(db, {queries, offset}, protectedProperties);
+          const response = await usersRequestInterface.query(db, {queries}, protectedProperties);
           return response;
         }
         return result;
