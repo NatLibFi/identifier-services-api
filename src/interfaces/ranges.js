@@ -51,6 +51,7 @@ const rangesIdentifierInterface = interfaceFactory('Identifier');
 const subRangeIsbnCanceledInterface = interfaceFactory('SubRangeIsbnCanceled');
 const rangesIsmnInterface = interfaceFactory('RangeIsmn');
 const rangesSubIsmnInterface = interfaceFactory('SubRangeIsmn');
+const subRangeIsmnCanceledInterface = interfaceFactory('SubRangeIsmnCanceled');
 
 const publicationsInterface = interfaceFactory('Publication_ISBN_ISMN');
 const publicationsIssnInterface = interfaceFactory('Publication_ISSN');
@@ -76,6 +77,7 @@ export default function () {
     createIsmn,
     updateIsmnRange,
     createIsmnSubRange,
+    revokeIsmnSubRange,
     readIsmnSubRange,
     queryIsmnSubRanges,
     queryRangesIsmnBatch,
@@ -216,7 +218,7 @@ export default function () {
         const response = await rangesIsbnInterface.read(db, rangeId);
         const {_id, ...range} = response; // eslint-disable-line no-unused-vars
         if (range) {
-          const {prefix, langGroup, rangeStart, rangeEnd, category, next, free, taken, canceled, active} = range;
+          const {prefix, langGroup, rangeStart, rangeEnd, category, next, free, taken, active} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
               publisherIdentifier: '', // Value Changes after calculation
@@ -236,40 +238,21 @@ export default function () {
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, langGroup, next, category});
             if (validateDoc(newDoc, 'SubRangeIsbnContent')) {
-              if (active) {
-                if (free === '0' && Number(canceled) > 0) {
-                  const result = await rangesSubIsbnInterface.create(db, newDoc);
-                  // Values to Update Big Block
-                  const rangeToUpdate = {
-                    ...range,
-                    next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
-                    free: '0',
-                    canceled: Number(canceled) - 1 <= 0 ? '0' : `${Number(canceled) - 1}`,
-                    taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
-                    active: !(updateNext(next, 1) > Number(rangeEnd))
-                  };
-                  const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
-                  if (response) {
-                    return result;
-                  }
-                  throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+              if (active && Number(free) > 0) {
+                const result = await rangesSubIsbnInterface.create(db, newDoc);
+                // Values to Update Big Block
+                const rangeToUpdate = {
+                  ...range,
+                  next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
+                  free: Number(free) - 1 <= 0 ? '0' : `${Number(free) - 1}`,
+                  taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
+                  active: !(updateNext(next, 1) > Number(rangeEnd))
+                };
+                const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
+                if (response) {
+                  return result;
                 }
-                if (Number(free) > 0) {
-                  const result = await rangesSubIsbnInterface.create(db, newDoc);
-                  // Values to Update Big Block
-                  const rangeToUpdate = {
-                    ...range,
-                    next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
-                    free: Number(free) - 1 <= 0 ? '0' : `${Number(free) - 1}`,
-                    taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
-                    active: !(updateNext(next, 1) > Number(rangeEnd))
-                  };
-                  const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
-                  if (response) {
-                    return result;
-                  }
-                  throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+                throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
               }
               throw new ApiError(HttpStatus.NOT_ACCEPTABLE);
             }
@@ -308,9 +291,7 @@ export default function () {
             const responseDeleteSubRange = await rangesSubIsbnInterface.remove(db, id);
             const newIsbnRange = {
               ...isbnRange,
-              free: Number(isbnRange.free) <= 0
-                ? '0'
-                : (Number(isbnRange.free) - 1).toString(),
+              free: (Number(isbnRange.free) + 1).toString(),
               // eslint-disable-next-line no-nested-ternary
               next: isbnRange.next === 'N/A'
                 ? isbnRange.rangeEnd
@@ -626,7 +607,7 @@ export default function () {
       if (hasPermission(user, 'ranges', 'createSubRange')) {
         const range = await rangesIsmnInterface.read(db, rangeId);
         if (range) {
-          const {prefix, rangeEnd, category, next, free, taken} = range;
+          const {prefix, rangeEnd, category, next, free, taken, active} = range;
           if (Number(rangeEnd) + 1 !== Number(next)) {
             const payload = {
               publisherIdentifier: '', // Value Changes after calculation
@@ -646,16 +627,21 @@ export default function () {
             };
             const newDoc = calculatePublisherIdentifier({payload, prefix, next, category});
             if (validateDoc(newDoc, 'SubRangeIsmnContent')) {
-              const result = await rangesSubIsmnInterface.create(db, newDoc);
-
-              // Values to Update Big Block
-              const rangeToUpdate = {...range, next: updateNext(next, 1), free: `${Number(free) - 1}`, taken: `${Number(taken) + 1}`};
-              const response = await updateIsmnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
-              // eslint-disable-next-line max-depth
-              if (response) {
-                return result;
+              if (active && Number(free) > 0) {
+                const result = await rangesSubIsmnInterface.create(db, newDoc);
+                // Values to Update Big Block
+                const rangeToUpdate = {
+                  ...range,
+                  next: updateNext(next, 1),
+                  free: `${Number(free) - 1}`,
+                  taken: `${Number(taken) + 1}`
+                };
+                const response = await updateIsmnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
+                if (response) {
+                  return result;
+                }
+                throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
               }
-              throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
             }
             throw new ApiError(HttpStatus.BAD_REQUEST);
           }
@@ -670,6 +656,65 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
       }
+    }
+  }
+
+  async function revokeIsmnSubRange(db, {queries}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'revokeIsmnSubRange')) {
+        const subRangeTobeRevoked = await rangesSubIsmnInterface.queryAllRecords(db, {query: queries[0].query});
+        if (subRangeTobeRevoked) {
+          const {publisherIdentifier, category, id, publisherId, ismnRangeId} = subRangeTobeRevoked[0]; // eslint-disable-line prefer-destructuring
+          const responesIsmnRange = await rangesIsmnInterface.read(db, ismnRangeId);
+          const newDoc = {
+            identifier: publisherIdentifier,
+            category,
+            rangeId: id,
+            publisherId,
+            created: {user: user.id}
+          };
+          const {_id, ...ismnRange} = responesIsmnRange;
+          if (validateDoc(newDoc, 'SubRangeIsmnCancel')) {
+            const responseDeleteSubRange = await rangesSubIsmnInterface.remove(db, id);
+            const newIsbnRange = {
+              ...ismnRange,
+              free: (Number(ismnRange.free) + 1).toString(),
+              // eslint-disable-next-line no-nested-ternary
+              next: ismnRange.next === 'N/A'
+                ? ismnRange.rangeEnd
+                : Number(ismnRange.next) - 1 <= Number(ismnRange.rangeEnd)
+                  ? (Number(ismnRange.next) - 1).toString()
+                  : 'N/A',
+              canceled: (Number(ismnRange.canceled) + 1).toString(),
+              active: true,
+              taken: Number(ismnRange.taken) - 1 < Number(ismnRange.rangeEnd) - Number(ismnRange.rangeStart) ? (Number(ismnRange.taken) - 1).toString() : '0'
+            };
+
+            if (responseDeleteSubRange) {
+              const responseIsmnRangeUpdate = await rangesIsmnInterface.update(db, _id, newIsbnRange, user);
+              if (responseIsmnRangeUpdate) {
+                const responseRevokedRecord = await subRangeIsmnCanceledInterface.create(db, newDoc);
+                if (responseRevokedRecord) {
+                  const responseReadPublisher = await publisherInterface.read(db, publisherId);
+                  const newPublisher = {
+                    ...responseReadPublisher,
+                    publisherRangeId: responseReadPublisher.publisherRangeId.filter(item => item !== id),
+                    publisherIdentifier: responseReadPublisher.publisherIdentifier.filter(item => item !== publisherIdentifier)
+                  };
+                  const responsePublisherUpdate = await publisherInterface.update(db, publisherId, newPublisher, user);
+                  if (responsePublisherUpdate) {
+                    return responsePublisherUpdate;
+                  }
+                }
+              }
+
+            }
+          }
+          throw new ApiError(HttpStatus.BAD_REQUEST);
+        }
+      }
+    } catch (err) {
+      throw new ApiError(err.status);
     }
   }
 

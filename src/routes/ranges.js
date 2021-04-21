@@ -57,6 +57,7 @@ export default function (db) {
     .post('/query/ismn/subRange', bodyParse(), queryIsmnSubRanges)
     .post('/query/ismnBatch', bodyParse(), queryRangesIsmnBatch)
     .post('/ismnBatch', bodyParse(), createRangesIsmnBatch)
+    .post('/ismn/subRange/revoke', bodyParse(), revokeIsmnSubRange)
 
     .get('/identifier/:id', readRangesIdentifier)
     .post('/isbn-ismn/queryMonthlyStatistics', bodyParse(), queryIsbnIsmnMonthlyStatistics)
@@ -184,6 +185,14 @@ export default function (db) {
       }
       const result = await ranges.createIsmn(db, req.body, req.user);
       res.status(HttpStatus.CREATED).json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+  async function revokeIsmnSubRange(req, res, next) {
+    try {
+      const result = await ranges.revokeIsmnSubRange(db, req.body, req.user);
+      res.json(result);
     } catch (err) {
       return next(err);
     }
