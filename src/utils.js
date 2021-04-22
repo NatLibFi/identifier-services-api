@@ -45,10 +45,16 @@ export function bodyParse() {
 
 export function mapRoleToGroup(role) {
   const data = JSON.parse(readResponse);
-  return Object.values(data).find(() => {
-    const key = Object.keys(data).find(k => k === role);
-    return data[key];
-  });
+  return Object.entries(data).reduce((acc, [
+    k,
+    v
+  ]) => {
+    if (k === role) {
+      acc = v; // eslint-disable-line no-param-reassign
+      return acc;
+    }
+    return acc;
+  }, '');
 }
 
 export function mapGroupToRole(group) {
