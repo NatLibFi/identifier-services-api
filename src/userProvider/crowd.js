@@ -269,25 +269,29 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
   // eslint-disable-next-line max-statements
   async function changePwd(doc, user) {
-    if (doc.newPassword) {
-      if (hasPermission(user, 'users', 'changePwd')) { // eslint-disable-line functional/no-conditional-statement
-        const {crowdUser} = crowd();
-        await crowdUser.updatePwd({doc});
+    try {
+      if (doc.newPassword) {
+        if (hasPermission(user, 'users', 'changePwd')) { // eslint-disable-line functional/no-conditional-statement
+          const {crowdUser} = crowd();
+          return crowdUser.updatePwd({doc});
+        }
+        throw new ApiError(HttpStatus.FORBIDDEN);
       }
-      throw new ApiError(HttpStatus.FORBIDDEN);
+      const {crowdUser} = crowd();
+      const response = await crowdUser.read({id: doc.id});
+      // ************ DO SOMETHING HERE NOT COMLETE ******************
+      const email = response.emails[0].value;
+      const result = await createLinkAndSendEmail({
+        request: {...doc, email},
+        PRIVATE_KEY_URL
+      });
+      if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
+      return result;
+    } catch (err) {
+      throw new ApiError(err);
     }
-    const {crowdUser} = crowd();
-    const response = await crowdUser.read({id: doc.id});
-    // ************ DO SOMETHING HERE NOT COMLETE ******************
-    const email = response.emails[0].value;
-    const result = await createLinkAndSendEmail({
-      request: {...doc, email},
-      PRIVATE_KEY_URL
-    });
-    if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
-      throw new ApiError(HttpStatus.NOT_FOUND);
-    }
-    return result;
   }
 
   function query(doc, user) {
