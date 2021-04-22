@@ -288,6 +288,10 @@ const permissions = {
       'admin',
       'system'
     ],
+    revokeIdentifier: [
+      'admin',
+      'system'
+    ],
     queryRangesIsbnBatch: [
       'admin',
       'system'

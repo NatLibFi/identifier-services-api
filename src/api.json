@@ -2445,6 +2445,90 @@
 				}
 			}
 		},
+		"/ranges/identifier/{id}": {
+			"get": {
+				"summary": "Retrieve a identifier resource",
+				"tags": [
+					"Identifier"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Resource was found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Identifier"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			}
+		},
+		"/ranges/identifier/revoke": {
+			"post": {
+				"summary": "Revoke or cancel Identifier",
+				"tags": [
+					"Identifier"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "Resource was revoked"
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
 		"/requests/users": {
 			"post": {
 				"summary": "Create a resource",
@@ -4801,7 +4885,6 @@
 					}
 				},
 				"required": [
-					"prefix",
 					"rangeStart",
 					"rangeEnd",
 					"active"
@@ -5108,6 +5191,34 @@
 							"createdBy": {
 								"type": "string",
 								"description": "Name of user who created it"
+							}
+						}
+					}
+				]
+			},
+			"Identifier": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/ResourceMetadata"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"identifier": {
+								"type": "string",
+								"description": "ISBN/ISMN/ISSN identifiers"
+							},
+							"identifierBatchId"	: {
+								"type": "string",
+								"description": "mongoId of range batch"
+							},
+							"publisherIdentifierRangeId": {
+								"type": "string",
+								"description": "mongoId of subRange of particular batch"
+							},
+							"publicationType": {
+								"type": "string",
+								"description": "format type for eg. pdf, mp3, paperback etc"
 							}
 						}
 					}

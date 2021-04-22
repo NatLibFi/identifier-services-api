@@ -44,6 +44,7 @@ import {
   updateNext
 } from './utils';
 
+const {ObjectId} = require('mongodb');
 const rangesIsbnInterface = interfaceFactory('RangeIsbn');
 const rangesSubIsbnInterface = interfaceFactory('SubRangeIsbn');
 const rangesBatchInterface = interfaceFactory('RangeBatch');
@@ -90,7 +91,8 @@ export default function () {
     queryIssnStatistics,
     queryIsbnIsmnStatistics,
     queryIsbnIsmnMonthlyStatistics,
-    assignIssnRange
+    assignIssnRange,
+    revokeIdentifier
   };
 
   async function queryIsbnRanges(db, {queries}, user) {
@@ -159,7 +161,6 @@ export default function () {
   }
 
   function updateIsbnRange(db, id, doc, user) {
-
     try {
       if (Object.keys(doc).length === 0) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(HttpStatus.BAD_REQUEST);
@@ -329,6 +330,7 @@ export default function () {
     } catch (err) {
       throw new ApiError(err.status);
     }
+    throw new ApiError(HttpStatus.FORBIDDEN);
   }
 
 
@@ -1037,6 +1039,53 @@ export default function () {
       }
     }
   }
+
+  async function revokeIdentifier(db, {queries, subRangeId}, user) {
+    try {
+      if (hasPermission(user, 'ranges', 'revokeIdentifier')) {
+        const response = await rangesIdentifierInterface.query(db, {queries});
+        const {id, identifierBatchId} = response.results[0]; // eslint-disable-line prefer-destructuring
+        const batchResponse = await rangesBatchInterface.queryAllRecords(db, {query: {_id: new ObjectId(identifierBatchId)}});
+        const {identifierType} = batchResponse[0]; // eslint-disable-line prefer-destructuring
+        const result = await rangesIdentifierInterface.remove(db, id);
+        if (result) {
+          if (identifierType === 'ISBN') {
+            const prevSubRange = await rangesSubIsbnInterface.read(db, subRangeId);
+            const newSubRange = {
+              ...prevSubRange,
+              canceled: (Number(prevSubRange.canceled) + 1).toString()
+            };
+
+            const updateSubRangeResult = await rangesSubIsbnInterface.update(db, subRangeId, newSubRange, user);
+            if (updateSubRangeResult) {
+              return result;
+            }
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+          }
+
+          if (identifierType === 'ISMN') {
+            const {_id, ...prevSubRange} = await rangesSubIsmnInterface.read(db, subRangeId); // eslint-disable-line no-unused-vars
+            const newSubRange = {
+              ...prevSubRange,
+              canceled: (Number(prevSubRange.canceled) + 1).toString()
+            };
+
+            const updateSubRangeResult = await rangesSubIsmnInterface.update(db, subRangeId, newSubRange, user);
+            if (updateSubRangeResult) {
+              return result;
+            }
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+          }
+        }
+        throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      throw new ApiError(HttpStatus.FORBIDDEN);
+    } catch (err) {
+      console.log(err)
+      throw new ApiError(err.status);
+    }
+  }
+
 
   function calculateNext(prefix, next, i = 0) {
     const nextValue = formatNext(next, i);

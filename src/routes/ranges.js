@@ -60,6 +60,7 @@ export default function (db) {
     .post('/ismn/subRange/revoke', bodyParse(), revokeIsmnSubRange)
 
     .get('/identifier/:id', readRangesIdentifier)
+    .post('/identifier/revoke', bodyParse(), revokeIdentifier)
     .post('/isbn-ismn/queryMonthlyStatistics', bodyParse(), queryIsbnIsmnMonthlyStatistics)
     .post('/isbn-ismn/queryIsbnIsmnStatistics', bodyParse(), queryIsbnIsmnStatistics)
 
@@ -285,6 +286,15 @@ export default function (db) {
     const {id} = req.params;
     try {
       const result = await ranges.readRangesIdentifier(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async function revokeIdentifier(req, res, next) {
+    try {
+      const result = await ranges.revokeIdentifier(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

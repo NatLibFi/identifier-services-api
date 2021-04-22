@@ -34,8 +34,7 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
-const rangesIsbnBatchInterface = interfaceFactory('RangeIsbnBatch');
-const rangesIsmnBatchInterface = interfaceFactory('RangeIsmnBatch');
+const rangesBatchInterface = interfaceFactory('RangeBatch');
 
 export default function () {
   return {
@@ -152,12 +151,12 @@ export default function () {
       if (type) {
         const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
         const filtered = publishersList.filter(i => i.publisherRangeId);
-        return run(db, filtered, identifierType);
+        return run(db, filtered);
       }
       const publishersList = await publisherInterface.queryAll(db);
       if (identifierType) {
         const filtered = publishersList.filter(i => i.publisherRangeId);
-        return run(db, filtered, identifierType);
+        return run(db, filtered);
       }
       return publishersList;
 
@@ -178,12 +177,9 @@ export default function () {
     }
   }
 
-  async function run (db, filtered, identifierType) {
-    const rangeInterface = identifierType === 'isbn'
-      ? rangesIsbnBatchInterface
-      : rangesIsmnBatchInterface;
+  async function run (db, filtered) {
     const result = await filter(filtered, async publisher => {
-      const res = await doAsyncStuff(db, publisher, rangeInterface);
+      const res = await doAsyncStuff(db, publisher, rangesBatchInterface);
       if (res) {
         return publisher;
       }
