@@ -1081,7 +1081,6 @@ export default function () {
       }
       throw new ApiError(HttpStatus.FORBIDDEN);
     } catch (err) {
-      console.log(err)
       throw new ApiError(err.status);
     }
   }
