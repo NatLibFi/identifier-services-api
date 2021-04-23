@@ -2017,9 +2017,9 @@
 				}
 			}
 		},
-		"/ranges/query/isbnBatch": {
+		"/ranges/query/rangebatch": {
 			"post": {
-				"summary": "Query for ISBN Range Batches",
+				"summary": "Query for Range Batches",
 				"tags": [
 					"Batches"
 				],
@@ -2046,7 +2046,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/RangeIsbn"
+										"$ref": "#/components/schemas/RangeBatch"
 									}
 								}
 							}

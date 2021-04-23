@@ -70,7 +70,7 @@ export default function () {
     readIsbnSubRange,
     createIsbnSubRange,
     revokeIsbnSubRange,
-    queryRangesIsbnBatch,
+    queryRangesBatch,
     readRangesIsbnBatch,
     createRangesIsbnBatch,
     readRangesIdentifier,
@@ -81,7 +81,6 @@ export default function () {
     revokeIsmnSubRange,
     readIsmnSubRange,
     queryIsmnSubRanges,
-    queryRangesIsmnBatch,
     createRangesIsmnBatch,
     queryIsmnRanges,
     createIssn,
@@ -334,7 +333,7 @@ export default function () {
   }
 
 
-  async function queryRangesIsbnBatch(db, {queries}, user) {
+  async function queryRangesBatch(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRangesIsbnBatch')) {
         const result = await rangesBatchInterface.query(db, {queries});
@@ -741,20 +740,6 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
         const result = await rangesSubIsmnInterface.query(db, {queries});
-        return result;
-      }
-      throw new ApiError(HttpStatus.FORBIDDEN);
-    } catch (err) {
-      if (err) { // eslint-disable-line functional/no-conditional-statement
-        throw new ApiError(err.status);
-      }
-    }
-  }
-
-  async function queryRangesIsmnBatch(db, {queries}, user) {
-    try {
-      if (hasPermission(user, 'ranges', 'queryRangesIsmnBatch')) {
-        const result = await rangesBatchInterface.query(db, {queries});
         return result;
       }
       throw new ApiError(HttpStatus.FORBIDDEN);

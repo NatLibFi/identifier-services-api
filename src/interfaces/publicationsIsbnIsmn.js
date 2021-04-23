@@ -157,15 +157,6 @@ export default function () {
   async function queryIsbnIsmn(db, {queries, sort}, user) {
     const result = await publicationsIsbnIsmnInterface.query(db, {queries, sort});
     if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
-      if (user.role === 'publisher') {
-        const queries = [
-          {
-            query: {publisher: user.publisher}
-          }
-        ];
-        return publicationsIsbnIsmnInterface.query(db, {queries});
-      }
-
       return result;
     }
 

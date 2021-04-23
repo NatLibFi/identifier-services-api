@@ -45,7 +45,7 @@ export default function (db) {
     .post('/query/isbn/subRange', bodyParse(), queryIsbnSubRanges)
     .get('/isbn/subRange/:id', readIsbnSubRange)
     .post('/isbn/subRange', bodyParse(), createIsbnSubRange)
-    .post('/query/isbnBatch', bodyParse(), queryRangesIsbnBatch)
+    .post('/query/rangebatch', bodyParse(), queryRangesBatch)
     .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
     .post('/isbn/subRange/revoke', bodyParse(), revokeIsbnSubRange)
 
@@ -55,7 +55,6 @@ export default function (db) {
     .post('/range/ismn/:id', bodyParse(), updateIsmnRange)
     .post('/query/ismn', bodyParse(), queryIsmnRanges)
     .post('/query/ismn/subRange', bodyParse(), queryIsmnSubRanges)
-    .post('/query/ismnBatch', bodyParse(), queryRangesIsmnBatch)
     .post('/ismnBatch', bodyParse(), createRangesIsmnBatch)
     .post('/ismn/subRange/revoke', bodyParse(), revokeIsmnSubRange)
 
@@ -140,9 +139,9 @@ export default function (db) {
   }
 
 
-  async function queryRangesIsbnBatch(req, res, next) {
+  async function queryRangesBatch(req, res, next) {
     try {
-      const result = await ranges.queryRangesIsbnBatch(db, req.body, req.user);
+      const result = await ranges.queryRangesBatch(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
@@ -240,15 +239,6 @@ export default function (db) {
   async function queryIsmnSubRanges(req, res, next) {
     try {
       const result = await ranges.queryIsmnSubRanges(db, req.body, req.user);
-      res.json(result);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async function queryRangesIsmnBatch(req, res, next) {
-    try {
-      const result = await ranges.queryRangesIsmnBatch(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);
