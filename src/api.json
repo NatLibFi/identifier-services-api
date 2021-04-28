@@ -3559,10 +3559,11 @@
 								"items": {
 									"type": "string",
 									"enum": [
-										"author",
-										"illustrator",
-										"translator",
-										"editor"
+										"tekija",
+										"kuvittaja",
+										"kääntäjä",
+										"toimittaja",
+										"lukija"
 									]
 								}
 							}
@@ -3940,10 +3941,13 @@
 						"type": "string",
 						"enum": [
 							"private person",
-							"association/corporation/organisation",
+							"association/corporation/organisation/foundation",
 							"city/municipality",
 							"school",
-							"clerical organisation"
+							"church or congregation",
+							"government institution",
+							"other organization",
+							"other"
 						],
 						"default": "manual"
 					}
