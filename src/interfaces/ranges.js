@@ -73,6 +73,7 @@ export default function () {
     queryRangesBatch,
     readRangesIsbnBatch,
     createRangesIsbnBatch,
+    pickRangeList,
     readRangesIdentifier,
     queryRangesIdentifier,
     createIsmn,
@@ -440,6 +441,55 @@ export default function () {
       if (err) { // eslint-disable-line functional/no-conditional-statement
         throw new ApiError(err.status);
       }
+    }
+  }
+
+  async function pickRangeList(db, doc, user) {
+    try {
+      const {publisherId, identifierType, identifierCount, subRangeId} = doc;
+      const subRangeInfo = await rangesSubIsbnInterface.read(db, subRangeId);
+
+      const batch = {
+        identifierType,
+        identifierCount,
+        identifierCanceledCount: 0,
+        identifierDeletedCount: 0,
+        publisherId: publisherId.value,
+        publicationId: '',
+        publisherIdentifierRangeId: subRangeId,
+        created: {user: user.id}
+      };
+      const batchId = await rangesBatchInterface.create(db, batch, user);
+      const responseBatch = await rangesBatchInterface.read(db, batchId);
+      const newArray = new Array(Number(identifierCount)).fill('');
+      await newArray.map(async (item, index) => {
+        if (subRangeInfo.active) {
+          const calculateNextValue = `${subRangeInfo.publisherIdentifier}-${subRangeInfo.next}`;
+          const payload = {
+            identifier: calculatePublicationIdentifier(calculateNextValue, subRangeInfo.category, index, 'isbn'),
+            identifierBatchId: batchId,
+            publisherIdentifierRangeId: responseBatch.publisherIdentifierRangeId,
+            publicationType: 'ISBN',
+            created: {user: user.id}
+          };
+          const result = await rangesIdentifierInterface.create(db, payload, user);
+          if (result) {
+            const subRangedoc = {
+              ...subRangeInfo,
+              taken: `${Number(subRangeInfo.taken) + Number(identifierCount)}`,
+              free: `${Number(subRangeInfo.free) - Number(identifierCount)}`,
+              next: updateNext(subRangeInfo.next, Number(identifierCount)),
+              active: !(Number(subRangeInfo.next) + index + 1 > Number(subRangeInfo.rangeEnd))
+            };
+
+            await rangesSubIsbnInterface.update(db, subRangeId, subRangedoc, user);
+            return result;
+          }
+        }
+        throw new ApiError('Selected Range is inactive!!!');
+      });
+    } catch (err) {
+      throw new ApiError(err.status);
     }
   }
 

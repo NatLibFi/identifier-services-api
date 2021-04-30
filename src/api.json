@@ -1763,6 +1763,46 @@
 				}
 			}
 		},
+		"/ranges/isbn/pickRangeList": {
+			"post": {
+				"summary": "Create a list of ranges which are free and given to publisher",
+				"tags": [
+					"Ranges"
+				],
+				"security": [
+					{
+						"httpBearer": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RangeIsbnContent"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Resource was created"
+					},
+					"400": {
+						"description": "Malformed syntax"
+					},
+					"401": {
+						"description": "Authentication failed"
+					},
+					"403": {
+						"description": "Not authorized"
+					},
+					"422": {
+						"description": "Unprocessable Entity"
+					}
+				}
+			}
+		},
 		"/ranges/query/isbn": {
 			"post": {
 				"summary": "Query for ISBN Ranges",
