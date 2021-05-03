@@ -3941,6 +3941,10 @@
 						"type": "string",
 						"description": "Other forms of the names"
 					},
+					"earlierName": {
+						"type": "string",
+						"description": "Earlier name of Publisher"
+					},
 					"code": {
 						"type": "string"
 					},
