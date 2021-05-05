@@ -134,12 +134,10 @@ export default function () {
   async function queryAll(db) {
     const result = await publisherInterface.queryAll(db);
     return result.reduce((acc, item) => { // eslint-disable-line array-callback-return
-      if ((item.publisherType === 'P' || item.publisherType === 'T') && item.selfPublisher === false) { // eslint-disable-line functional/no-conditional-statement
-        acc = [ // eslint-disable-line no-param-reassign
-          ...acc,
-          {value: item._id, label: `${item.name}(${item.email})`, email: item.email}
-        ];
-      }
+      acc = [ // eslint-disable-line no-param-reassign
+        ...acc,
+        {value: item._id, label: `${item.name}(${item.email})`, email: item.email, publisherType: item.publisherType}
+      ];
       return acc;
     }, []);
   }
