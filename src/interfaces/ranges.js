@@ -244,10 +244,10 @@ export default function () {
                 // Values to Update Big Block
                 const rangeToUpdate = {
                   ...range,
-                  next: updateNext(next, 1) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
+                  next: Number(updateNext(next, 1)) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
                   free: Number(free) - 1 <= 0 ? '0' : `${Number(free) - 1}`,
                   taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
-                  active: !(updateNext(next, 1) > Number(rangeEnd))
+                  active: !Number(updateNext(next, 1) > Number(rangeEnd))
                 };
                 const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
                 if (response) {
