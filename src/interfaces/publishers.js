@@ -34,7 +34,8 @@ import interfaceFactory from './interfaceModules';
 import {hasPermission, validateDoc} from './utils';
 
 const publisherInterface = interfaceFactory('PublisherMetadata', 'PublisherContent');
-const rangesBatchInterface = interfaceFactory('RangeBatch');
+const rangesIsbnInterface = interfaceFactory('RangeIsbn');
+const rangesIsmnInterface = interfaceFactory('RangeIsmn');
 
 export default function () {
   return {
@@ -146,15 +147,15 @@ export default function () {
     try {
       const {identifierType, type} = query;
 
-      if (type) {
+      if (type && identifierType) {
         const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
         const filtered = publishersList.filter(i => i.publisherRangeId);
-        return run(db, filtered);
+        return run(db, filtered, identifierType);
       }
       const publishersList = await publisherInterface.queryAll(db);
       if (identifierType) {
         const filtered = publishersList.filter(i => i.publisherRangeId);
-        return run(db, filtered);
+        return run(db, filtered, identifierType);
       }
       return publishersList;
 
@@ -175,9 +176,10 @@ export default function () {
     }
   }
 
-  async function run (db, filtered) {
+  async function run (db, filtered, identifierType) {
     const result = await filter(filtered, async publisher => {
-      const res = await doAsyncStuff(db, publisher, rangesBatchInterface);
+      const rangeInterface = identifierType === 'isbn' ? rangesIsbnInterface : rangesIsmnInterface;
+      const res = await doAsyncStuff(db, publisher, rangeInterface);
       if (res) {
         return publisher;
       }
@@ -188,10 +190,10 @@ export default function () {
 
   // Arbitrary asynchronous function
   async function doAsyncStuff(db, publisher, rangeInterface) {
-    const batchResult = await rangeInterface.queryAll(db);
+    const interfaceResult = await rangeInterface.queryAll(db);
     const publisherRangeIdArray = publisher.publisherRangeId;
     const res = publisherRangeIdArray.reduce((acc, id) => {
-      acc = batchResult.some(batch => batch.publisherId === id); // eslint-disable-line no-param-reassign
+      acc = interfaceResult.some(item => item._id.toString() === id); // eslint-disable-line no-param-reassign
       return acc;
     }, false);
     return res;
