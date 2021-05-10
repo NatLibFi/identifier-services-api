@@ -118,7 +118,7 @@ export default function (collectionName) {
 
     async function doQuery(query, sort) {
       const results = [];
-      const totalDoc = await db.collection(collectionName).count();
+      const totalDoc = await db.collection(collectionName).countDocuments({});
       const cursor = await db.collection(collectionName) // eslint-disable-line functional/immutable-data
         .find(query, {projection: protectedProperties})
         .sort(sort ? sort : {_id: -1});

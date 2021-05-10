@@ -98,6 +98,13 @@ export default function () {
   async function queryIsbnRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
+        if (queries[0].query.canceled) {
+          const response = await rangesIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+          return {
+            results: response,
+            totalDoc: response.length
+          };
+        }
         const result = await rangesIsbnInterface.query(db, {queries});
         return result;
       }
@@ -184,6 +191,13 @@ export default function () {
   async function queryIsbnSubRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
+        if (queries[0].query.canceled) {
+          const response = await rangesSubIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+          return {
+            results: response,
+            totalDoc: response.length
+          };
+        }
         const result = await rangesSubIsbnInterface.query(db, {queries});
         return result;
       }
@@ -789,6 +803,13 @@ export default function () {
   async function queryIsmnSubRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'querySubRanges')) {
+        if (queries[0].query.canceled) {
+          const response = await rangesSubIsmnInterface.queryAllRecords(db, {query: queries[0].query});
+          return {
+            results: response,
+            totalDoc: response.length
+          };
+        }
         const result = await rangesSubIsmnInterface.query(db, {queries});
         return result;
       }
@@ -905,6 +926,13 @@ export default function () {
   async function queryIsmnRanges(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
+        if (queries[0].query.canceled) {
+          const response = await rangesIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+          return {
+            results: response,
+            totalDoc: response.length
+          };
+        }
         const result = await rangesIsmnInterface.query(db, {queries});
         return result;
       }
