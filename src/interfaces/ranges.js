@@ -927,7 +927,7 @@ export default function () {
     try {
       if (hasPermission(user, 'ranges', 'queryRanges')) {
         if (queries[0].query.canceled) {
-          const response = await rangesIsbnInterface.queryAllRecords(db, {query: queries[0].query});
+          const response = await rangesIsmnInterface.queryAllRecords(db, {query: queries[0].query});
           return {
             results: response,
             totalDoc: response.length
@@ -986,9 +986,16 @@ export default function () {
     }
   }
 
-  function queryIssn(db, {queries}, user) {
+  async function queryIssn(db, {queries}, user) {
     try {
       if (hasPermission(user, 'ranges', 'queryIssn')) {
+        if (queries[0].query.canceled) {
+          const response = await rangesISSNInterface.queryAllRecords(db, {query: queries[0].query});
+          return {
+            results: response,
+            totalDoc: response.length
+          };
+        }
         return rangesISSNInterface.query(db, {queries});
       }
 
