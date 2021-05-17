@@ -233,8 +233,9 @@ export default function (collectionName) {
     }
   }
 
-  async function queryAllRecords(db, {query}, protectedProperties) {
-    const result = await db.collection(collectionName).find(query, {projection: protectedProperties})
+  async function queryAllRecords(db, {query, sort}, protectedProperties) {
+    const result = await db.collection(collectionName).find(query, {projection: protectedProperties}) // eslint-disable-line functional/immutable-data
+      .sort(sort ? sort : {_id: -1})
       .toArray();
     if (result) {
       const filteredDoc = result.map(item => {

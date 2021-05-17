@@ -155,6 +155,21 @@ export default function () {
   } */
 
   async function queryIsbnIsmn(db, {queries, sort}, user) {
+    if (queries[0].query.identifier) {
+      const result = await publicationsIsbnIsmnInterface.queryAllRecords(db, {query: queries[0].query});
+      return {
+        results: result,
+        totalDoc: result.length
+      };
+    }
+    if (user.role === 'publisher') {
+      const queries = [
+        {
+          query: {publisher: user.publisher}
+        }
+      ];
+      return publicationsIsbnIsmnInterface.query(db, {queries});
+    }
     const result = await publicationsIsbnIsmnInterface.query(db, {queries, sort});
     if (hasPermission(user, 'publicationIsbnIsmn', 'queryIsbnIsmn')) {
       return result;

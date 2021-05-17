@@ -135,9 +135,16 @@ export default function () {
   // }
 
   async function queryISSN(db, {queries, sort}, user) {
+    if (queries[0].query.identifier) {
+      const result = await publicationsIssnInterface.queryAllRecords(db, {query: queries[0].query});
+      return {
+        results: result,
+        totalDoc: result.length
+      };
+    }
     const result = await publicationsIssnInterface.query(db, {queries, sort});
     if (hasPermission(user, 'publicationIssn', 'queryISSN')) {
-      if (user.role === 'publisher-admin' || user.role === 'publisher') {
+      if (user.role === 'publisher') {
         const queries = [
           {
             query: {publisher: user.publisher}

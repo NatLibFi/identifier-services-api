@@ -80,7 +80,11 @@ export default function () {
   async function query(db, {queries, sort}, user) {
     try {
       if (hasPermission(user, 'message', 'query')) {
-        return await messageInterface.query(db, {queries, sort});
+        const response = await messageInterface.queryAllRecords(db, {query: queries[0].query, sort});
+        return {
+          results: response,
+          totalDoc: response.length
+        };
       }
 
       throw new ApiError(HttpStatus.FORBIDDEN);
