@@ -49,6 +49,7 @@ const rangesIsbnInterface = interfaceFactory('RangeIsbn');
 const rangesSubIsbnInterface = interfaceFactory('SubRangeIsbn');
 const rangesBatchInterface = interfaceFactory('RangeBatch');
 const rangesIdentifierInterface = interfaceFactory('Identifier');
+const identifierCanceledInterface = interfaceFactory('IdentifierCanceled');
 const subRangeIsbnCanceledInterface = interfaceFactory('SubRangeIsbnCanceled');
 const rangesIsmnInterface = interfaceFactory('RangeIsmn');
 const rangesSubIsmnInterface = interfaceFactory('SubRangeIsmn');
@@ -1110,41 +1111,29 @@ export default function () {
     }
   }
 
-  async function revokeIdentifier(db, {queries, subRangeId}, user) {
+  async function revokeIdentifier(db, {queries, publisherId}, user) {
     try {
       if (hasPermission(user, 'ranges', 'revokeIdentifier')) {
         const response = await rangesIdentifierInterface.query(db, {queries});
         const {id, identifierBatchId} = response.results[0]; // eslint-disable-line prefer-destructuring
         const batchResponse = await rangesBatchInterface.queryAllRecords(db, {query: {_id: new ObjectId(identifierBatchId)}});
         const {identifierType} = batchResponse[0]; // eslint-disable-line prefer-destructuring
-        const result = await rangesIdentifierInterface.remove(db, id);
+        const result = await rangesIdentifierInterface.read(db, id);
         if (result) {
-          if (identifierType === 'ISBN') {
-            const prevSubRange = await rangesSubIsbnInterface.read(db, subRangeId);
-            const newSubRange = {
-              ...prevSubRange,
-              canceled: (Number(prevSubRange.canceled) + 1).toString()
-            };
-
-            const updateSubRangeResult = await rangesSubIsbnInterface.update(db, subRangeId, newSubRange, user);
-            if (updateSubRangeResult) {
-              return result;
-            }
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-          }
-
-          if (identifierType === 'ISMN') {
-            const {_id, ...prevSubRange} = await rangesSubIsmnInterface.read(db, subRangeId); // eslint-disable-line no-unused-vars
-            const newSubRange = {
-              ...prevSubRange,
-              canceled: (Number(prevSubRange.canceled) + 1).toString()
-            };
-
-            const updateSubRangeResult = await rangesSubIsmnInterface.update(db, subRangeId, newSubRange, user);
-            if (updateSubRangeResult) {
-              return result;
-            }
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+          const {identifier, publisherIdentifierRangeId, identifierBatchId} = result;
+          const canceledDoc = {
+            identifier,
+            identifierType,
+            publisherId,
+            publisherIdentifierRangeId
+          };
+          const canceledInterfaceResponse = await identifierCanceledInterface.create(db, {...canceledDoc, created: {user: user.id}}, user);
+          if (canceledInterfaceResponse) {
+            const {_id, ...prevBatchResponse} = await rangesBatchInterface.read(db, identifierBatchId); // eslint-disable-line no-unused-vars
+            return rangesBatchInterface.update(db, identifierBatchId, {
+              ...prevBatchResponse,
+              identifierCanceledCount: prevBatchResponse.identifierCanceledCount + 1
+            }, user);
           }
         }
         throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
