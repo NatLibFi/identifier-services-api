@@ -44,6 +44,7 @@ export default function () {
 
   async function create(db, doc, user) {
     try {
+      console.log(doc); // eslint-disable-line no-console
       if (validateDoc(doc, 'MessageContent')) {
         if (hasPermission(user, 'message', 'create')) {
           return await messageInterface.create(db, {...doc, body: Buffer.from(doc.body).toString('base64')}, user);
@@ -53,7 +54,6 @@ export default function () {
       throw new ApiError(HttpStatus.BAD_REQUEST);
     } catch (err) {
       if (err) { // eslint-disable-line functional/no-conditional-statement
-        console.log(err); // eslint-disable-line no-console
         throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
       }
     }
