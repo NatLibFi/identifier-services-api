@@ -270,7 +270,8 @@ const permissions = {
     ],
     querySubRanges: [
       'admin',
-      'system'
+      'system',
+      'publisher'
     ],
     readSubRange: [
       'admin',
@@ -294,11 +295,13 @@ const permissions = {
     ],
     queryRangesIsbnBatch: [
       'admin',
-      'system'
+      'system',
+      'publisher'
     ],
-    readRangesIsbnBatch: [
+    readRangeBatch: [
       'admin',
-      'system'
+      'system',
+      'publisher'
     ],
     createRangesIsbnBatch: [
       'admin',
@@ -310,7 +313,8 @@ const permissions = {
     ],
     queryRangesIdentifier: [
       'admin',
-      'system'
+      'system',
+      'publisher'
     ],
     queryRangesIsmnBatch: [
       'admin',

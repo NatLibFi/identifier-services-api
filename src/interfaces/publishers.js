@@ -125,7 +125,11 @@ export default function () {
   }
 
   function update(db, id, doc, user) {
-    return publisherInterface.update(db, id, doc, user);
+    try {
+      return publisherInterface.update(db, id, doc, user);
+    } catch (err) {
+      throw new ApiError(err);
+    }
   }
 
   function query(db, {queries, sort}) {
@@ -146,12 +150,17 @@ export default function () {
   async function queryAllPublishers(db, {query}) {
     try {
       const {identifierType, type} = query;
-
       if (type && identifierType) {
         const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
         const filtered = publishersList.filter(i => i.publisherRangeId);
         return run(db, filtered, identifierType);
       }
+
+      if (type) {
+        const publishersList = await publisherInterface.queryAllRecords(db, {query: type});
+        return publishersList;
+      }
+
       const publishersList = await publisherInterface.queryAll(db);
       if (identifierType) {
         const filtered = publishersList.filter(i => i.publisherRangeId);

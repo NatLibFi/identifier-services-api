@@ -72,7 +72,7 @@ export default function () {
     createIsbnSubRange,
     revokeIsbnSubRange,
     queryRangesBatch,
-    readRangesIsbnBatch,
+    readRangeBatch,
     createRangesIsbnBatch,
     pickRangeList,
     readRangesIdentifier,
@@ -363,9 +363,9 @@ export default function () {
     }
   }
 
-  async function readRangesIsbnBatch(db, id, user) {
+  async function readRangeBatch(db, id, user) {
     try {
-      if (hasPermission(user, 'ranges', 'readRangesIsbnBatch')) {
+      if (hasPermission(user, 'ranges', 'readRangeBatch')) {
         const result = await rangesBatchInterface.read(db, id);
         if (result) {
           return result;

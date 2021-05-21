@@ -3599,7 +3599,7 @@
 								"items": {
 									"type": "string",
 									"enum": [
-										"tekija",
+										"tekijä",
 										"kuvittaja",
 										"kääntäjä",
 										"toimittaja",
@@ -3770,8 +3770,18 @@
 						"description": "Subject of email"
 					},
 					"email": {
-						"type": "string",
-						"description": "receiver's email address"
+						"type": "array",
+						"description": "receiver's email address",
+						"items": {
+							"type": "string"
+						}
+					},
+					"cc": {
+						"type": "array",
+						"description": "carboncopy receiver's email address",
+						"items": {
+							"type": "string"
+						}
 					},
 					"body": {
 						"type": "string",
@@ -4109,6 +4119,12 @@
 								"type": "array",
 								"items": {
 									"type": "string"
+								}
+							},
+							"selfPublisherIdentifier": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/SelfPublisherIdentifier"
 								}
 							},
 							"selfPublisher": {
@@ -5271,6 +5287,18 @@
 						}
 					}
 				]
+			},
+			"SelfPublisherIdentifier": {
+				"type": "object",
+				"properties": {
+					"identifier": {
+						"type": "string",
+						"description": "ISBN identifiers"
+					},
+					"taken": {
+						"type": "boolean"
+					}
+				}
 			},
 			"ElectronicPublicationDetails": {
 				"type": "object",

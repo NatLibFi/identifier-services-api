@@ -47,6 +47,7 @@ export default function (db) {
     .post('/isbn/subRange', bodyParse(), createIsbnSubRange)
     .post('/query/rangebatch', bodyParse(), queryRangesBatch)
     .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
+    .get('/rangeBatch/:id', readRangeBatch)
     .post('/isbn/subRange/revoke', bodyParse(), revokeIsbnSubRange)
     .post('/isbn/pickRangeList', bodyParse(), pickRangeList)
 
@@ -148,6 +149,15 @@ export default function (db) {
     }
   }
 
+  async function readRangeBatch(req, res, next) {
+    const {id} = req.params;
+    try {
+      const result = await ranges.readRangeBatch(db, id, req.user);
+      res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
 
   async function queryRangesBatch(req, res, next) {
     try {
