@@ -280,9 +280,8 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       const {crowdUser} = crowd();
       const response = await crowdUser.read({id: doc.id});
       // ************ DO SOMETHING HERE NOT COMLETE ******************
-      const email = response.emails[0].value;
       const result = await createLinkAndSendEmail({
-        request: {...doc, email},
+        request: {...doc, email: response.email},
         PRIVATE_KEY_URL
       });
       if (result !== undefined && result.status === 404) { // eslint-disable-line functional/no-conditional-statement
@@ -523,7 +522,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
 
     async function update({doc}) {
       const payload = new User(doc.givenName, doc.familyName, doc.displayName, doc.email, doc.username, Math.random().toString(36)
-        .slice(2));
+        .slice(2), doc.active);
       const response = await crowdClient.user.update(doc.username, payload);
       return response;
     }
