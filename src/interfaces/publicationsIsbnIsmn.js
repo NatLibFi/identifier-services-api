@@ -206,12 +206,8 @@ export default function () {
       const publisherDetails = await publisherInterface.read(db, newDoc.publisher);
       if (publisherDetails) { // eslint-disable-line functional/no-conditional-statement
         const availableIsbns = publisherDetails.selfPublisherIdentifier;
-        const sortedList = availableIsbns.sort((a, b) => Number(a.identifier.replace(/-/gu, '')) - Number(b.identifier.replace(/-/gu, ''))); // eslint-disable-line functional/immutable-data
-        const identifiers = allFormats.map((item, index) => { // eslint-disable-line array-callback-return
-          if (sortedList[index].free) {
-            return {id: sortedList[index].identifier, type: item};
-          }
-        });
+        const sortedList = availableIsbns.sort((a, b) => Number(a.identifier.replace(/-/gu, '')) - Number(b.identifier.replace(/-/gu, ''))).filter(item => item.free); // eslint-disable-line functional/immutable-data
+        const identifiers = allFormats.map((item, index) => ({id: sortedList[index].identifier, type: item}));
         const newSortedList = sortedList.map((item, index) => {
           if (index < allFormats.length) {
             return {...item, free: false};
