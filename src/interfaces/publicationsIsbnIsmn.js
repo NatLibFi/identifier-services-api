@@ -207,7 +207,7 @@ export default function () {
       if (publisherDetails) { // eslint-disable-line functional/no-conditional-statement
         const availableIsbns = publisherDetails.selfPublisherIdentifier;
         const sortedList = availableIsbns.sort((a, b) => Number(a.identifier.replace(/-/gu, '')) - Number(b.identifier.replace(/-/gu, ''))).filter(item => item.free); // eslint-disable-line functional/immutable-data
-        const identifiers = allFormats.map((item, index) => ({id: sortedList[index].identifier, type: item}));
+        const identifier = allFormats.map((item, index) => ({id: sortedList[index].identifier, type: item}));
         const newSortedList = sortedList.map((item, index) => {
           if (index < allFormats.length) {
             return {...item, free: false};
@@ -215,7 +215,7 @@ export default function () {
           return item;
         });
         await publisherInterface.update(db, newDoc.publisher, {...publisherDetails, selfPublisherIdentifier: newSortedList}, user);
-        return publicationsIsbnIsmnInterface.create(db, {...newDoc, identifiers}, user);
+        return publicationsIsbnIsmnInterface.create(db, {...newDoc, identifier}, user);
       }
     } catch (err) {
       throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
