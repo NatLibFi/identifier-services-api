@@ -124,9 +124,13 @@ export default function () {
 
   }
 
-  function update(db, id, doc, user) {
+  async function update(db, id, doc, user) {
     try {
-      return publisherInterface.update(db, id, doc, user);
+      if (validateDoc(doc, 'PublisherISBN_ISMN_ISSN')) {
+        const result = await publisherInterface.update(db, id, doc, user);
+        return result;
+      }
+      throw new ApiError(HttpStatus.BAD_REQUEST);
     } catch (err) {
       throw new ApiError(err);
     }

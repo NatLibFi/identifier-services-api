@@ -1763,7 +1763,7 @@
 				}
 			}
 		},
-		"/ranges/isbn/pickRangeList": {
+		"/ranges/isbn/createUnboundIsbnList": {
 			"post": {
 				"summary": "Create a list of ranges which are free and given to publisher",
 				"tags": [
@@ -3643,7 +3643,7 @@
 						"type": "object",
 						"properties": {
 							"timestamp": {
-								"type": "string"
+								"type": "number"
 							},
 							"user": {
 								"type": "string",
@@ -3655,7 +3655,7 @@
 						"type": "object",
 						"properties": {
 							"timestamp": {
-								"type": "string"
+								"type": "number"
 							},
 							"user": {
 								"type": "string",
@@ -5136,7 +5136,7 @@
 								"type": "object",
 								"properties": {
 									"timestamp": {
-										"type": "string"
+										"type": "number"
 									},
 									"user": {
 										"type": "string",
@@ -5295,8 +5295,14 @@
 						"type": "string",
 						"description": "ISBN identifiers"
 					},
-					"taken": {
+					"publicationType": {
+						"type": "string"
+					},
+					"free": {
 						"type": "boolean"
+					},
+					"timestamp": {
+						"type": "number"
 					}
 				}
 			},

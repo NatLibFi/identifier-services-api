@@ -49,7 +49,7 @@ export default function (db) {
     .post('/isbnBatch', bodyParse(), createRangesIsbnBatch)
     .get('/rangeBatch/:id', readRangeBatch)
     .post('/isbn/subRange/revoke', bodyParse(), revokeIsbnSubRange)
-    .post('/isbn/pickRangeList', bodyParse(), pickRangeList)
+    .post('/isbn/createUnboundIsbnList', bodyParse(), createUnboundIsbnList)
 
     .post('/ismn', bodyParse(), createIsmn)
     .post('/ismn/subRange', bodyParse(), createIsmnSubRange)
@@ -140,9 +140,9 @@ export default function (db) {
     }
   }
 
-  async function pickRangeList(req, res, next) {
+  async function createUnboundIsbnList(req, res, next) {
     try {
-      const result = await ranges.pickRangeList(db, req.body, req.user);
+      const result = await ranges.createUnboundIsbnList(db, req.body, req.user);
       res.json(result);
     } catch (err) {
       return next(err);

@@ -74,7 +74,7 @@ export default function () {
     queryRangesBatch,
     readRangeBatch,
     createRangesIsbnBatch,
-    pickRangeList,
+    createUnboundIsbnList,
     readRangesIdentifier,
     queryRangesIdentifier,
     createIsmn,
@@ -261,7 +261,7 @@ export default function () {
                   ...range,
                   next: Number(updateNext(next, 1)) <= Number(rangeEnd) ? updateNext(next, 1) : 'N/A',
                   free: Number(free) - 1 <= 0 ? '0' : `${Number(free) - 1}`,
-                  taken: Number(taken) + 1 <= Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
+                  taken: Number(taken) + 1 < Number(rangeEnd) - Number(rangeStart) ? `${Number(taken) + 1}` : (Number(rangeEnd) - Number(rangeStart)).toString(),
                   active: !Number(updateNext(next, 1) > Number(rangeEnd))
                 };
                 const response = await updateIsbnRange(db, rangeId, rangeToUpdate, user); // Updates big Range block
@@ -459,11 +459,15 @@ export default function () {
     }
   }
 
-  async function pickRangeList(db, doc, user) {
+  async function createUnboundIsbnList(db, doc, user) {
     try {
       const {publisherId, identifierType, identifierCount, subRangeId} = doc;
       const subRangeInfo = await rangesSubIsbnInterface.read(db, subRangeId);
+      if (identifierCount > subRangeInfo.free) { // eslint-disable-line functional/no-conditional-statement
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
 
+      const {_id, ...publisherResponse} = await publisherInterface.read(db, publisherId.value); // eslint-disable-line no-unused-vars
       const batch = {
         identifierType,
         identifierCount,
@@ -503,6 +507,16 @@ export default function () {
         }
         throw new ApiError('Selected Range is inactive!!!');
       });
+      const identifiersCreated = await rangesIdentifierInterface.queryAllRecords(db, {query: {identifierBatchId: batchId}, sort: {'lastUpdated.timestamp': -1}});
+      const selfPublisherIdentifier = identifiersCreated.map(i => ({identifier: i.identifier, publicationType: i.publicationType, free: true, timestamp: Date.now().toString()}));
+      const newPublisher = {...publisherResponse,
+        selfPublisherIdentifier: publisherResponse.selfPublisherIdentifier
+          ? [
+            ...publisherResponse.selfPublisherIdentifier,
+            ...selfPublisherIdentifier
+          ]
+          : selfPublisherIdentifier};
+      return publisherInterface.update(db, publisherId.value, newPublisher, user);
     } catch (err) {
       throw new ApiError(err.status);
     }

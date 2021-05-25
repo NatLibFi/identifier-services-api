@@ -34,9 +34,12 @@ import HttpStatus from 'http-status';
 import {ApiError} from '@natlibfi/identifier-services-commons';
 
 import interfaceFactory from './interfaceModules';
-import {hasPermission, validateDoc} from './utils';
+import {hasPermission, validateDoc, manageFormatDetails} from './utils';
 
-const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN', 'PublicationIsbnIsmnContent');
+
+const publicationsIsbnIsmnInterface = interfaceFactory('Publication_ISBN_ISMN');
+const publisherInterface = interfaceFactory('PublisherMetadata');
+
 
 export default function () {
   return {
@@ -65,6 +68,9 @@ export default function () {
 
       if (validateDoc(newDoc, 'PublicationIsbnIsmnContent')) {
         if (hasPermission(user, 'publicationIsbnIsmn', 'createIsbnIsmn')) {
+          if (user.role === 'publisher') {
+            return assignIsbnRange(db, newDoc, user);
+          }
           return publicationsIsbnIsmnInterface.create(db, newDoc, user);
         }
 
@@ -194,5 +200,29 @@ export default function () {
     }
   }
 
-
+  async function assignIsbnRange(db, newDoc, user) {
+    try {
+      const allFormats = manageFormatDetails(newDoc.formatDetails);
+      const publisherDetails = await publisherInterface.read(db, newDoc.publisher);
+      if (publisherDetails) { // eslint-disable-line functional/no-conditional-statement
+        const availableIsbns = publisherDetails.selfPublisherIdentifier;
+        const sortedList = availableIsbns.sort((a, b) => Number(a.identifier.replace(/-/gu, '')) - Number(b.identifier.replace(/-/gu, ''))); // eslint-disable-line functional/immutable-data
+        const identifiers = allFormats.map((item, index) => { // eslint-disable-line array-callback-return
+          if (sortedList[index].free) {
+            return {id: sortedList[index].identifier, type: item};
+          }
+        });
+        const newSortedList = sortedList.map((item, index) => {
+          if (index < allFormats.length) {
+            return {...item, free: false};
+          }
+          return item;
+        });
+        await publisherInterface.update(db, newDoc.publisher, {...publisherDetails, selfPublisherIdentifier: newSortedList}, user);
+        return publicationsIsbnIsmnInterface.create(db, {...newDoc, identifiers}, user);
+      }
+    } catch (err) {
+      throw new ApiError(err.status ? err.status : HttpStatus.BAD_REQUEST);
+    }
+  }
 }
