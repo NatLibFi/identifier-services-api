@@ -568,7 +568,7 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
       const token = JWE.encrypt(payload, key, {kid: key.kid});
       const link = `${UI_URL}/users/passwordReset/${token}`;
       const result = sendEmail({
-        name: 'forgot password',
+        name: 'change password',
         args: {link},
         getTemplate,
 
