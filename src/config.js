@@ -7,6 +7,7 @@ export const API_URL = readEnvironmentVariable('API_URL', {
 
 export const SMTP_URL = readEnvironmentVariable('SMTP_URL');
 export const API_EMAIL = readEnvironmentVariable('API_EMAIL');
+export const ADMINISTRATORS_EMAIL = readEnvironmentVariable('ADMINISTRATORS_EMAIL');
 
 export const API_CLIENT_USER_AGENT = readEnvironmentVariable('API_CLIENT_USER_AGENT', {defaultValue: '_RECORD-IMPORT-CONTROLLER'});
 export const API_USERNAME = readEnvironmentVariable('API_USERNAME');

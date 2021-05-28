@@ -37,7 +37,7 @@ import fs from 'fs';
 import {hasPermission, getTemplate, validateDoc} from '../interfaces/utils';
 import interfaceFactory from '../interfaces/interfaceModules';
 import {mapRoleToGroup, mapGroupToRole} from '../utils';
-import {UI_URL, SMTP_URL} from '../config';
+import {UI_URL, SMTP_URL, ADMINISTRATORS_EMAIL} from '../config';
 
 const userMetadataInterface = interfaceFactory('userMetadata');
 const usersRequestInterface = interfaceFactory('usersRequest');
@@ -571,9 +571,9 @@ export default function ({CROWD_URL, CROWD_APP_NAME, CROWD_APP_PASSWORD, PRIVATE
         name: 'change password',
         args: {link},
         getTemplate,
-
         SMTP_URL,
-        API_EMAIL: request.email
+        API_EMAIL: request.email,
+        ADMINISTRATORS_EMAIL
       });
       return result;
     }
