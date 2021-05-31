@@ -45,10 +45,10 @@ export default function (collectionName) {
       ...doc,
       created: {
         ...doc.created,
-        timestamp: Date.now().toString()
+        timestamp: Date.now()
       },
       lastUpdated: {
-        timestamp: Date.now().toString(),
+        timestamp: Date.now(),
         user: user ? user.id : undefined
       }
     });
@@ -86,7 +86,7 @@ export default function (collectionName) {
     }, {
       ...doc,
       lastUpdated: {
-        timestamp: Date.now().toString(),
+        timestamp: Date.now(),
         user: doc.state === 'new' ? doc.lastUpdated.user : user.id
       }
     }, {
