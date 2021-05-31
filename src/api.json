@@ -4695,6 +4695,13 @@
 													},
 													"url": {
 														"type": "string"
+													},
+													"formatName": {
+														"type": "string",
+														"enum": [
+															"otherFormatOne",
+															"otherFormatTwo"
+														]
 													}
 												},
 												"required": [
@@ -5333,11 +5340,22 @@
 								}
 							}
 						}
+					},
+					"otherFileFormat": {
+						"type": "object",
+						"properties": {
+							"one": {
+								"type": "string",
+								"description": "first additional format other than available in option"
+							},
+							"two": {
+								"type": "string",
+								"description": "second additional format other than available in option"
+
+							}
+						}
 					}
-				},
-				"required": [
-					"fileFormat"
-				]
+				}
 			},
 			"PrintedPublicationDetails": {
 				"properties": {
@@ -5353,6 +5371,20 @@
 							}
 						}
 					},
+					"otherFileFormat": {
+						"type": "object",
+						"properties": {
+							"one": {
+								"type": "string",
+								"description": "first additional format other than available in option"
+							},
+							"two": {
+								"type": "string",
+								"description": "second additional format other than available in option"
+
+							}
+						}
+					},
 					"manufacturer": {
 						"type": "string"
 					},
@@ -5365,10 +5397,7 @@
 					"edition": {
 						"type": "string"
 					}
-				},
-				"required": [
-					"printFormat"
-				]
+				}
 			},
 			"SeriesDetails": {
 				"anyOf": [

@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-parens */
 /* eslint-disable array-element-newline */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable max-depth */
@@ -85,16 +86,25 @@ export default function () {
     }
 
     function addMetadataReference(data) {
-      const {formatDetails} = data;
-      const allFormats = formatDetails.fileFormat && formatDetails.printFormat
-        ? [...formatDetails.fileFormat.format, ...formatDetails.printFormat.format]
-        : formatDetails.fileFormat
-          ? [...formatDetails.fileFormat.format]
-          : formatDetails.printFormat && [...formatDetails.printFormat.format];
-
+      const {fileFormat, printFormat, otherFileFormat, otherPrintFormat} = data.formatDetails;
+      const allFormats = fileFormat && printFormat
+        ? [
+          ...fileFormat.format,
+          ...printFormat.format
+        ]
+        : fileFormat
+          ? [...fileFormat.format]
+          : printFormat && [...printFormat.format];
+      otherFileFormat && otherPrintFormat // eslint-disable-line no-unused-expressions
+        ? [
+          ...Object.values(otherFileFormat),
+          ...Object.values(otherPrintFormat)
+        ].forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
+        : otherFileFormat
+          ? Object.values(otherFileFormat).forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
+          : otherPrintFormat && Object.values(otherFileFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
       return allFormats.map(item => { // eslint-disable-line array-callback-return
-        // eslint-disable-next-line no-extra-parens
-        if ((formatDetails.fileFormat && formatDetails.fileFormat.format.includes(item)) || (formatDetails.printFormat && formatDetails.printFormat.format.includes(item))) { // eslint-disable-line functional/no-conditional-statement
+        if (condition(data.formatDetails, item)) {
           return {
             format: item,
             state: 'pending',
@@ -102,6 +112,16 @@ export default function () {
           };
         }
       });
+    }
+
+    function condition(formatDetails, item) {
+      const {fileFormat, printFormat, otherFileFormat, otherPrintFormat} = formatDetails;
+      return (
+        (fileFormat && fileFormat.format.includes(item)) ||
+        (printFormat && printFormat.format.includes(item)) ||
+        (otherFileFormat && (otherFileFormat.one === item || otherFileFormat.two === item)) ||
+        (otherPrintFormat && (otherPrintFormat.one === item || otherPrintFormat.two === item))
+      );
     }
   }
 

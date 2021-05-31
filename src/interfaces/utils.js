@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable max-statements, max-lines */
 /* eslint-disable no-param-reassign */
 /**
@@ -649,19 +651,24 @@ export function calculatePublisherIdentifier({payload, prefix, langGroup, next, 
 }
 
 export function manageFormatDetails(formatDetails) {
-  const {fileFormat, printFormat} = formatDetails;
-  const fileFormatArr = fileFormat && fileFormat.format;
-  const printFormatArr = printFormat && printFormat.format;
-  if (fileFormat && printFormat) {
-    return [
-      ...fileFormatArr,
-      ...printFormatArr
-    ];
-  } else if (fileFormat) {
-    return [...fileFormatArr];
-  } else if (printFormat) {
-    return [...printFormatArr];
-  }
+  const {fileFormat, printFormat, otherFileFormat, otherPrintFormat} = formatDetails;
+  const allFormats = fileFormat && printFormat
+    ? [
+      ...fileFormat.format,
+      ...printFormat.format
+    ]
+    : fileFormat
+      ? [...fileFormat.format]
+      : printFormat && [...printFormat.format];
+  otherFileFormat && otherPrintFormat // eslint-disable-line no-unused-expressions
+    ? [
+      ...Object.values(otherFileFormat),
+      ...Object.values(otherPrintFormat)
+    ].forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
+    : otherFileFormat
+      ? Object.values(otherFileFormat).forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
+      : otherPrintFormat && Object.values(otherFileFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
+  return allFormats;
 }
 
 export function calculatePublicationIdentifier(nextValue, category, index, publicationType) {
