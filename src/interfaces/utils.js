@@ -659,7 +659,9 @@ export function manageFormatDetails(formatDetails) {
     ]
     : fileFormat
       ? [...fileFormat.format]
-      : printFormat && [...printFormat.format];
+      : printFormat
+        ? [...printFormat.format]
+        : [];
   otherFileFormat && otherPrintFormat // eslint-disable-line no-unused-expressions
     ? [
       ...Object.values(otherFileFormat),
