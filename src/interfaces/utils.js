@@ -667,7 +667,7 @@ export function manageFormatDetails(formatDetails) {
     ].forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
     : otherFileFormat
       ? Object.values(otherFileFormat).forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
-      : otherPrintFormat && Object.values(otherFileFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
+      : otherPrintFormat && Object.values(otherPrintFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
   return allFormats;
 }
 
