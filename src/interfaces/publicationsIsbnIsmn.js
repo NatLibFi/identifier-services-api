@@ -94,7 +94,9 @@ export default function () {
         ]
         : fileFormat
           ? [...fileFormat.format]
-          : printFormat && [...printFormat.format];
+          : printFormat
+            ? [...printFormat.format]
+            : [];
       otherFileFormat && otherPrintFormat // eslint-disable-line no-unused-expressions
         ? [
           ...Object.values(otherFileFormat),
@@ -102,7 +104,7 @@ export default function () {
         ].forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
         : otherFileFormat
           ? Object.values(otherFileFormat).forEach(v => allFormats.push(v)) // eslint-disable-line functional/immutable-data
-          : otherPrintFormat && Object.values(otherFileFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
+          : otherPrintFormat && Object.values(otherPrintFormat).forEach(v => allFormats.push(v)); // eslint-disable-line functional/immutable-data
       return allFormats.map(item => { // eslint-disable-line array-callback-return
         if (condition(data.formatDetails, item)) {
           return {
