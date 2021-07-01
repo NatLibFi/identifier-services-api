@@ -686,8 +686,9 @@ export function calculatePublicationIdentifier(nextValue, category, index, publi
     const prefix = nextValue.slice(0, 3);
     const langGroup = nextValue.slice(4, 7);
     const range = nextValue.slice(8, 8 + Number(category));
-    const next = `${Number(nextValue.slice(8 + Number(category) + 1)) + index}`;
-    const combineArray = `${prefix}${langGroup}${range}${next}`.split('');
+    const next = getNext(nextValue, category, index);
+    const combineArray = nextValue.split('').filter(i => i !== '-');
+
     const mode = 10;
     const sum = combineArray.reduce((acc, char, i) => {
       if (i % 2 === 0) { // eslint-disable-line functional/no-conditional-statement
@@ -700,18 +701,24 @@ export function calculatePublicationIdentifier(nextValue, category, index, publi
 
     const remainder = sum % mode;
     const checkdigit = mode - remainder === 10 ? 0 : mode - remainder;
+    return `${prefix}-${langGroup}-${range}-${next}-${checkdigit}`;
+  }
 
-    switch (combineArray.length) {
-    case 8:
-      return `${prefix}-${langGroup}-${range}-0000${next}-${checkdigit}`;
-    case 9:
-      return `${prefix}-${langGroup}-${range}-000${next}-${checkdigit}`;
-    case 10:
-      return `${prefix}-${langGroup}-${range}-00${next}-${checkdigit}`;
-    case 11:
-      return `${prefix}-${langGroup}-${range}-0${next}-${checkdigit}`;
+  function getNext(nextValue, category, index) {
+    const next = nextValue.slice(8 + Number(category) + 1);
+    const newNextvalue = Number(nextValue.slice(8 + Number(category) + 1)) + Number(index);
+    const difference = next.length - newNextvalue.toString().length;
+    switch (difference) {
+    case 4:
+      return `0000${newNextvalue}`;
+    case 3:
+      return `000${newNextvalue}`;
+    case 2:
+      return `00${newNextvalue}`;
+    case 1:
+      return `0${newNextvalue}`;
     default:
-      return `${prefix}-${langGroup}-${range}-${next}-${checkdigit}`;
+      return `${newNextvalue}`;
     }
   }
 
