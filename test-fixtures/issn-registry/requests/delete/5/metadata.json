@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot delete ISSN request which has publication associated with ISSN (within publication model)",
+  "requestUrl": "/issn-registry/requests/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

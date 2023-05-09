@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot update ISSN publication protected attribute: publisherId (publisherId is updated through forms set-publisher endpoint)",
+  "requestUrl": "/issn-registry/publications/1",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 422
+}

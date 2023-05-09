@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot create ISSN message template",
+  "requestUrl": "/issn-registry/messagetemplates",
+  "method": "post",
+  "expectedStatus": 401
+}

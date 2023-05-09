@@ -1,0 +1,8 @@
+{
+  "descr": "Paging works, ordering is alphabetical",
+  "requestUrl": "/issn-registry/publishers/query",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

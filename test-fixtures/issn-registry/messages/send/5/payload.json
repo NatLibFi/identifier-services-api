@@ -1,0 +1,9 @@
+{
+  "publisherId": 2,
+  "formId": 1,
+  "messageTemplateId": 1,
+  "recipient": "example@example.com",
+  "langCode": "fi-FI",
+  "messageBody": "<p>Example</p>",
+  "subject": "THIS IS AN AUTOMATED TEST"
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Update can include type information after identifier has been granted if the value is equal to db value",
+    "requestUrl": "/isbn-registry/requests/publications/1",
+    "username": "system",
+    "password": "system",
+    "method": "put",
+    "expectedStatus": 200
+}

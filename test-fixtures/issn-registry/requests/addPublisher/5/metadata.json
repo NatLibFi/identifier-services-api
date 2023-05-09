@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create publisher from ISSN request information if ISSN form has been created a publisher before (FK in request)",
+  "requestUrl": "/issn-registry/requests/1/add-publisher",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

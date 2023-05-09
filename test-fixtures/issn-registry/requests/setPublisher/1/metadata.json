@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can set form publisher reference if publisher exists in db",
+  "requestUrl": "/issn-registry/requests/1/set-publisher",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

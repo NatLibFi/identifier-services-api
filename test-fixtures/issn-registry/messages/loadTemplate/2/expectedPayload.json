@@ -1,0 +1,9 @@
+{
+  "langCode": "fi-FI",
+  "message": "Tämä viesti on testijärjestelmästä / This message is from test system.<br /><br />Foo Publisher (example@example.com),<br />Foo Street 1<br />00000 Foobarila<br /><br />Here are your new identifier for title Foo title:<br />Foo title<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ISSN 1797-0008 (painettu)<br /><br />Regards, test admin",
+  "publisherId": 1,
+  "formId": 1,
+  "recipient": "example@example.com",
+  "subject": "TESTI/TEST MESSAGE New ISSN identifier has been granted",
+  "messageTemplateId": 1
+}

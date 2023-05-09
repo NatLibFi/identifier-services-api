@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed and associate publication with form's publisher",
+  "requestUrl": "/issn-registry/requests/1/add-publication",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Admin may delete identifierbatch of ISMN identifiers if it was last one given from subrange and no message has been sent",
+    "requestUrl": "/isbn-registry/identifierbatches/1",
+    "username": "admin",
+    "password": "admin",
+    "method": "delete",
+    "expectedStatus": 204
+}

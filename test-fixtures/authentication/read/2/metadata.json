@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, user cannot retrieve user information without authenticating.",
+    "requestUrl": "/auth",
+    "method": "get",
+    "expectedStatus": 401
+}

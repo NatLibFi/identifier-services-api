@@ -1,0 +1,27 @@
+{
+  "messageTypeIsbn": [
+    {
+      "id": 10,
+      "name": "Esimerkkinimi",
+      "description": "Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 2,
+      "name": "Esimerkkitemplate #2",
+      "subject": "Esimerkkiaihe #2",
+      "langCode": "fi-FI",
+      "message": "<p>Testiviesti #2</p>\n<p>#EXAMPLE_TAG#</p>",
+      "messageTypeId": 10,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can send a ISSN related message. Form status changes to COMPLETED.",
+  "requestUrl": "/issn-registry/messages/send",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

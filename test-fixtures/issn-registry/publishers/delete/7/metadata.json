@@ -1,0 +1,8 @@
+{
+  "descr": "If deletion succeeds and publisher is associated with any messages, deletes the messages also",
+  "requestUrl": "/issn-registry/publishers/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 204
+}

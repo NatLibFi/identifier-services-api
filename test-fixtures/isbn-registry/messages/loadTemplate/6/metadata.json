@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, able to load default template for sending publication identifiers and use publication official name as publisher ID is author publisher",
+  "requestUrl": "/isbn-registry/messages/loadtemplate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if no ISMN subranges can be created from chosen range (range may have free, but is not active)",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

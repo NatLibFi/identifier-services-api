@@ -1,0 +1,13 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "email": "foo.bar@example.com",
+      "langCode": "fi-FI",
+      "additionalInfo": "",
+      "created": {}
+    }
+  ]
+}

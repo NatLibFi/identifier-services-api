@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated user can not read ISSN request archive record",
+  "requestUrl": "/issn-registry/requests/1/get-archive-record",
+  "method": "get",
+  "expectedStatus": 401
+}

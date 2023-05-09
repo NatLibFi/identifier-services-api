@@ -1,0 +1,8 @@
+{
+  "descr": "Administrator may download marc record out of ISBN registry publication request in ISO 2709 format",
+  "requestUrl": "/isbn-registry/marc/1?format=iso2709&download=true",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

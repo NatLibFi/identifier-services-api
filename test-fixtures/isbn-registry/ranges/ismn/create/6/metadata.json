@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create a valid ISMN range if values of said range are already used by other range in another category",
+  "requestUrl": "/isbn-registry/ranges/ismn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

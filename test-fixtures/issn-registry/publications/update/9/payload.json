@@ -1,0 +1,7 @@
+{
+  "previous": {
+    "title": ["PreviousSeriesA", "PreviousSeriesB", "PreviousSeriesC"],
+    "issn": ["1234-4321", "1234-4331", "1234-4341"],
+    "lastIssue": ["one", "2", "9/9999"]
+  }
+}

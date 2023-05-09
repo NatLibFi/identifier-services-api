@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot send message",
+  "requestUrl": "/isbn-registry/messages/send",
+  "method": "post",
+  "expectedStatus": 401
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Query pagination works",
+    "requestUrl": "/isbn-registry/requests/publications/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

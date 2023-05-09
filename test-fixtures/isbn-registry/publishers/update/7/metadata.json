@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, system cannot update protected attribute to db: confirmation",
+    "requestUrl": "/isbn-registry/publishers/3",
+    "username": "system",
+    "password": "system",
+    "method": "put",
+    "expectedStatus": 422
+}

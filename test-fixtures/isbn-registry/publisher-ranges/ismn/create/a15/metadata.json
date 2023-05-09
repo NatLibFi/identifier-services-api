@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if selected publisher identifier already exists in database",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

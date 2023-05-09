@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, can create zero-padded ISBN subrange when range category matches selected subrange length",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

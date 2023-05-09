@@ -1,0 +1,8 @@
+{
+    "descr": "Allows single identifier cancellation out of batch that is not linked to a publication",
+    "requestUrl": "/isbn-registry/identifiers/cancel",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can activate deactivated ISBN range which has free subranges available",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/activate",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 200
+}

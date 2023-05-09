@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can successfully query identifier batch using publicationId",
+    "requestUrl": "/isbn-registry/identifierbatches/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

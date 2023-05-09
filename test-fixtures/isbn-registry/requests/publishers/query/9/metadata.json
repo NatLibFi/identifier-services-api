@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed but result into empty result set: Cannot query publishers through publisher request endpoint",
+  "requestUrl": "/isbn-registry/requests/publishers/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

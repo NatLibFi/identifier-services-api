@@ -1,0 +1,19 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 2,
+      "recipient": "foo.bar@example.com",
+      "subject": "THIS IS AN AUTOMATED TEST",
+      "messageTemplateName": "Esimerkkitemplate",
+      "sent": {}
+    },
+    {
+      "id": 1,
+      "recipient": "example@example.com",
+      "subject": "THIS IS AN AUTOMATED TEST",
+      "messageTemplateName": "Esimerkkitemplate",
+      "sent": {}
+    }
+  ]
+}

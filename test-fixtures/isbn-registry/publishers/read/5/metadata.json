@@ -1,0 +1,8 @@
+{
+    "descr": "Should result to NOT FOUND status with system permissions: cannot interact with publisher join requests through publisher route",
+    "requestUrl": "/isbn-registry/publishers/2",
+    "username": "system",
+    "password": "system",
+    "method": "get",
+    "expectedStatus": 404
+}

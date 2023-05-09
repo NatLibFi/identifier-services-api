@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create identifier batch if there are not enough free identifiers in publishers subranges",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

@@ -1,0 +1,23 @@
+{
+  "isbnRange": [
+    {
+      "id": 1,
+      "prefix": 978,
+      "langGroup": 951,
+      "category": 1,
+      "rangeBegin": "0",
+      "rangeEnd": "1",
+      "free": 2,
+      "taken": 0,
+      "canceled": 0,
+      "next": "0",
+      "isActive": 1,
+      "isClosed": 0,
+      "idOld": null,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully read ISSN all ranges at once",
+  "requestUrl": "/issn-registry/ranges",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

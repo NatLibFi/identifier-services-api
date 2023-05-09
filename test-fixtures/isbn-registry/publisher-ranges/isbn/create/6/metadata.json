@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system creates ISBN subrange and updates next value accordingly by skipping already reserved next values",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

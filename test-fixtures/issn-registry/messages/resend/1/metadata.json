@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can resend a ISSN related message",
+  "requestUrl": "/issn-registry/messages/resend/1",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

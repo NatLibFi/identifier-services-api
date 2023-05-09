@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot update ISBN message type",
+  "requestUrl": "/isbn-registry/messagetypes/1",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "put",
+  "expectedStatus": 403
+}

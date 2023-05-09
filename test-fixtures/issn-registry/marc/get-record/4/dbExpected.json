@@ -1,0 +1,151 @@
+{
+  "publisherIssn": [
+    {
+      "id": 1,
+      "formId": null,
+      "idOld": null,
+      "officialName": "Foo Publisher",
+      "contactPerson": "{\"name\":[\"Foo Bar\"],\"email\":[\"example@example.com\"]}",
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "issnForm": [
+    {
+      "id": 1,
+      "publisherId": 1,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 1,
+      "publicationCountIssn": 1,
+      "publisherCreated": 0,
+      "langCode": "fi-FI",
+      "status": "NOT_NOTIFIED",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "issnFormArchive": [
+    {
+      "id": 1,
+      "idOld": null,
+      "formId": 1,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 1,
+      "langCode": "fi-FI",
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "publicationIssn": [
+    {
+      "id": 1,
+      "formId": 1,
+      "publisherId": 1,
+      "title": "Foo title",
+      "subtitle": "Foo subtitle",
+      "issn": "1797-0008",
+      "placeOfPublication": "Foobarila",
+      "printer": "Foo printer",
+      "issuedFromYear": "1990",
+      "issuedFromNumber": "1",
+      "frequency": "z",
+      "frequencyOther": "Epäsäännöllinen",
+      "language": "FIN",
+      "publicationType": "MONOGRAPHY_SERIES",
+      "publicationTypeOther": null,
+      "medium": "PRINTED",
+      "mediumOther": null,
+      "url": null,
+      "previous": "{\"title\":[\"FooFooFoo\"],\"issn\":[\"1797-0011\"],\"last_issue\":[\"40\/1980\"]}",
+      "mainSeries": "{\"title\":[\"Foo Series\"],\"issn\":[\"1797-0024\"]}",
+      "subseries": "{\"title\":[\"SubFoo\"],\"issn\":[\"1797-0032\"]}",
+      "anotherMedium": "{\"title\":[\"InterwebsFoo\"],\"issn\":[\"1797-0040\"]}",
+      "additionalInfo": "Example info",
+      "status": "WAITING_FOR_CONTROL_COPY",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "publicationIssnArchive": [
+    {
+      "id": 1,
+      "idOld": null,
+      "publicationId": 1,
+      "formId": 1,
+      "title": "Foo title",
+      "subtitle": "Foo subtitle",
+      "placeOfPublication": "Foobarila",
+      "printer": "Foo printer",
+      "issuedFromYear": "1990",
+      "issuedFromNumber": "1",
+      "frequency": "z",
+      "frequencyOther": "Epäsäännöllinen",
+      "language": "FIN",
+      "publicationType": "MONOGRAPHY_SERIES",
+      "publicationTypeOther": null,
+      "medium": "PRINTED",
+      "mediumOther": null,
+      "url": null,
+      "previous": "{\"title\":[\"FooFooFoo\"],\"issn\":[\"1797-0011\"],\"last_issue\":[\"40\/1980\"]}",
+      "mainSeries": "{\"title\":[\"Foo Series\"],\"issn\":[\"1797-0024\"]}",
+      "subseries": "{\"title\":[\"SubFoo\"],\"issn\":[\"1797-0032\"]}",
+      "anotherMedium": "{\"title\":[\"InterwebsFoo\"],\"issn\":[\"1797-0040\"]}",
+      "additionalInfo": "Example info",
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "issnRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "block": "1797",
+      "rangeBegin": "0008",
+      "rangeEnd": "9994",
+      "free": 999,
+      "taken": 1,
+      "next": "0016",
+      "isActive": 1,
+      "isClosed": 0,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "issnUsed": [
+    {
+      "id": 1,
+      "issnRangeId": 1,
+      "publicationId": 1,
+      "issn": "1797-0008",
+      "created": {},
+      "createdBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Knows xlsx format",
+  "requestUrl": "/issn-registry/statistics",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

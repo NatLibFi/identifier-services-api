@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can read ISMN subrange based on id",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1",
+  "username": "system",
+  "password": "system",
+  "method": "get",
+  "expectedStatus": 200
+}

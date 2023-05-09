@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, results into error if publicationId and publisherId conflict",
+  "requestUrl": "/isbn-registry/messages/send",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, can create ISMN subrange that has zero padded value if range category matches and range contains said identifier",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

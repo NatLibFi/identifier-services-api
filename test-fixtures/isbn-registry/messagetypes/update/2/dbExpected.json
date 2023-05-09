@@ -1,0 +1,22 @@
+{
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Muutettu Esimerkkinimi",
+      "description": "Muutettu Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Toinen Esimerkkinimi",
+      "description": "Toinen Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

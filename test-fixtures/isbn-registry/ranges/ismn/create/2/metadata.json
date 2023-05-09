@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully create a valid ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

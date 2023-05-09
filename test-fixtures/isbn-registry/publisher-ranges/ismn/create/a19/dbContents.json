@@ -1,0 +1,49 @@
+{
+  "ismnRange": [
+    {
+      "id": 1,
+      "prefix": "979-0",
+      "category": 3,
+      "rangeBegin": "042",
+      "rangeEnd": "042",
+      "free": 1,
+      "taken": 0,
+      "canceled": 0,
+      "next": "042",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIsbn": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+      "address": "FooBar 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "1234567",
+      "email": "foo.bar@example.com",
+      "www": "http://example.com",
+      "langCode": "fi-FI",
+      "contactPerson": "Foo Bar",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "",
+      "frequencyCurrent": "1",
+      "frequencyNext": "1",
+      "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+      "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
+      "classification": ["40", "100"],
+      "classificationOther": "",
+      "confirmation": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

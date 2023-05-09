@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, when more than one archive record is found",
+  "requestUrl": "/issn-registry/requests/1/get-archive-record",
+  "method": "get",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

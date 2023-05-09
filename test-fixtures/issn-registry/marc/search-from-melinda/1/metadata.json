@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail with generic code, as system can search from Melinda but the connection is not configured",
+  "requestUrl": "/issn-registry/marc/1/search-from-melinda",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 500
+}

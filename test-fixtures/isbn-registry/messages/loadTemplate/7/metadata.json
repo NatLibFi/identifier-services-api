@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, able to load default template for sending new set of generated identifiers using batchId. Includes UI URL to batch.",
+  "requestUrl": "/isbn-registry/messages/loadtemplate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

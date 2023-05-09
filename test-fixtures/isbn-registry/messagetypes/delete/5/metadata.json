@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot delete ISBN message type that is defined mandatory for system",
+  "requestUrl": "/isbn-registry/messagetypes/1",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 409
+}

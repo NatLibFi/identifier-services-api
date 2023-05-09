@@ -1,0 +1,8 @@
+{
+  "descr": "Prevents creating range which block is invalid",
+  "requestUrl": "/issn-registry/ranges",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 422
+}

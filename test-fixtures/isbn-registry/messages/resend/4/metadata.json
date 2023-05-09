@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot re-send message",
+  "requestUrl": "/isbn-registry/messages/resend/1",
+  "method": "post",
+  "expectedStatus": 401
+}

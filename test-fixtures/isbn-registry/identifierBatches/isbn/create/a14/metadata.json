@@ -1,0 +1,8 @@
+{
+    "descr": "Can utilize identifiers from two publisher ranges if pre-conditions are met. Note this will create a batch from the first range that is then canceled: thus the id increments.",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}

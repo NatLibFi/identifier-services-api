@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "identifierCount": 3,
+  "identifierCanceledCount": 0,
+  "identifierCanceledUsedCount": 0,
+  "identifierDeletedCount": 0,
+  "identifierType": "ISBN",
+  "subRangeId": 1,
+  "publicationId": 1,
+  "publisherId": 1,
+  "publisherName": "FooBar Publisher",
+  "publisherIdentifier": "978-951-550",
+  "identifiers": [
+    {
+      "id": 1,
+      "identifier": "978-951-550-000-7",
+      "publicationType": "PAPERBACK"
+    },
+    {
+      "id": 2,
+      "identifier": "978-951-550-001-4",
+      "publicationType": "HARDBACK"
+    },
+    {
+      "id": 3,
+      "identifier": "978-951-550-002-1",
+      "publicationType": "PDF"
+    }
+  ],
+  "created": {},
+  "createdBy": "system"
+}

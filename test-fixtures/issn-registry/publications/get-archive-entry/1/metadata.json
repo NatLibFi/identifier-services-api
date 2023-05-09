@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can read ISSN publication archive entry",
+  "requestUrl": "/issn-registry/publications/1/get-archive-entry",
+  "method": "get",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

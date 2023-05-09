@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot get available options for selected range regarding subrange generation",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/publisher-range-options",
+  "method": "get",
+  "expectedStatus": 401
+}

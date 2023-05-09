@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can send message with batchId information",
+  "requestUrl": "/isbn-registry/messages/send",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

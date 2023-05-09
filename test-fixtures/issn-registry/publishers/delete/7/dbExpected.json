@@ -1,0 +1,43 @@
+{
+  "messageTypeIssn": [
+    {
+      "id": 1,
+      "name": "Random message type",
+      "description": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIssn": [
+    {
+      "id": 1,
+      "messageTypeId": 1,
+      "name": "Random message template",
+      "subject": "Random message",
+      "langCode": "fi-FI",
+      "message": "Test message content",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageIssn": [
+    {
+      "id": 2,
+      "messageTemplateId": 1,
+      "messageTypeId": 1,
+      "publisherId": null,
+      "formId": null,
+      "groupMessageId": null,
+      "recipient": "example@example.com",
+      "subject": "Random message 2",
+      "langCode": "fi-FI",
+      "message": "Test message content",
+      "sent": {},
+      "sentBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Produces I as registrant status code if publisher has quitted",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

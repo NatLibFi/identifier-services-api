@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can activate deactivated ISBN range which has free subranges available",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/activate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

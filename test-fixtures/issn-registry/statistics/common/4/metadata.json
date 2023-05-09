@@ -1,0 +1,6 @@
+{
+  "descr": "Unauthenticated cannot get statistics",
+  "requestUrl": "/issn-registry/statistics",
+  "method": "post",
+  "expectedStatus": 401
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if selected publisher range is already found in cancelled publisher identifiers table (should use cancelled selection type)",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

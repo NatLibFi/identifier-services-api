@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can search ISSN request archive information",
+  "requestUrl": "/issn-registry/archived-requests/search",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

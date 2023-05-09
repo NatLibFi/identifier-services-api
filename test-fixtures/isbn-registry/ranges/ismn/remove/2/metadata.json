@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully remove ISMN range if no subranges have been given from it",
+  "requestUrl": "/isbn-registry/ranges/ismn/1",
+  "username": "admin",
+  "password": "admin",
+  "method": "delete",
+  "expectedStatus": 204
+}

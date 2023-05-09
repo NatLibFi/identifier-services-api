@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can open closed ISMN subrange",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1/open",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 200
+}

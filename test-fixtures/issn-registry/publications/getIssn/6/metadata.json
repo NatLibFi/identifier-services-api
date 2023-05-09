@@ -1,0 +1,8 @@
+{
+  "descr": "Assigning last identifier of range closes and deactivates range and sets next value to empty string",
+  "requestUrl": "/issn-registry/publications/1/get-issn",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

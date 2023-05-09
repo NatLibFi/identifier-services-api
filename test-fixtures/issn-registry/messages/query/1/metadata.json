@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can query ISSN related messages",
+  "requestUrl": "/issn-registry/messages/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin can successfully create publisher registry join request",
+    "requestUrl": "/isbn-registry/requests/publishers",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}

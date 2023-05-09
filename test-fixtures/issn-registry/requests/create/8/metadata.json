@@ -1,0 +1,8 @@
+{
+  "descr": "Manages partial values of attributes: previous, mainSeries, subseries and anotherMedium properly",
+  "requestUrl": "/issn-registry/requests",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

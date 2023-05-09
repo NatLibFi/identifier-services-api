@@ -1,0 +1,8 @@
+{
+  "descr": "Null values of attributes: previous, mainSeries, subseries and anotherMedium are handled properly",
+  "requestUrl": "/issn-registry/requests",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot delete ISSN publisher",
+  "requestUrl": "/issn-registry/publishers/1",
+  "method": "delete",
+  "expectedStatus": 401
+}

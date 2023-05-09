@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system may assign ISSN to publication if there is active range and publication does not have ISSN",
+  "requestUrl": "/issn-registry/publications/1/get-issn",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

@@ -1,0 +1,9 @@
+{
+  "name": {
+    "givenName": "test",
+    "familyName": "admin"
+  },
+  "displayName": "testAdmin",
+  "email": "admin@example.com",
+  "role": "admin"
+}

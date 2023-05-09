@@ -1,0 +1,8 @@
+{
+  "descr": "Emails with attachment may not be re-send as resending of identifier batches should be done through different process",
+  "requestUrl": "/isbn-registry/messages/resend/1",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 409
+}

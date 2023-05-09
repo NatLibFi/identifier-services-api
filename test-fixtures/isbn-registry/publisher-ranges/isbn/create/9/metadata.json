@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if no ISBN subranges can be created from chosen range (range may have free, but is closed)",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

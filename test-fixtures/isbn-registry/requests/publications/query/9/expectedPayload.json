@@ -1,0 +1,13 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "langCode": "fi-FI",
+      "publicationType": "BOOK",
+      "title": "Foo Book",
+      "comments": "Esimerkki käsittelytiedosta"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully create a valid ISBN range",
+  "requestUrl": "/isbn-registry/ranges/isbn",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

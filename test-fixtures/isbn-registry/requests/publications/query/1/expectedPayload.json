@@ -1,0 +1,21 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 2,
+      "officialName": "XYZ Publishing",
+      "langCode": "fi-FI",
+      "publicationType": "BOOK",
+      "title": "Test book",
+      "comments": ""
+    },
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "langCode": "fi-FI",
+      "publicationType": "BOOK",
+      "title": "Foo Book",
+      "comments": "Esimerkki käsittelytiedosta"
+    }
+  ]
+}

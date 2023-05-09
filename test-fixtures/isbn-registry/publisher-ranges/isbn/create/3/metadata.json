@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot create ISBN subrange even when range has available subranges",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "post",
+  "expectedStatus": 403
+}

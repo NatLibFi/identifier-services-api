@@ -1,0 +1,8 @@
+{
+    "descr": "Deleting publisher request also deletes the associated archive entry",
+    "requestUrl": "/isbn-registry/requests/publishers/1",
+    "username": "system",
+    "password": "system",
+    "method": "delete",
+    "expectedStatus": 204
+}

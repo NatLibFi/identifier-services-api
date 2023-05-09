@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot create ISSN publisher",
+  "requestUrl": "/issn-registry/publishers",
+  "method": "post",
+  "username": "publisher",
+  "password": "publisher",
+  "expectedStatus": 403
+}

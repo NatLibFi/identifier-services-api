@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot read ISSN all ranges at once",
+  "requestUrl": "/issn-registry/ranges",
+  "method": "get",
+  "expectedStatus": 401
+}

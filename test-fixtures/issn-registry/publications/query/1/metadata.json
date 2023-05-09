@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can query ISSN publication information using title attribute",
+  "requestUrl": "/issn-registry/publications/query",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

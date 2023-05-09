@@ -1,0 +1,13 @@
+{
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Aiempi Esimerkkinimi",
+      "description": "Aiempi Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

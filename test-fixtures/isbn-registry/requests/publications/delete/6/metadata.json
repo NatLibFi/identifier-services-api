@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot delete publication request isbn/ismn if it has assigned identifiers (info within entity)",
+  "requestUrl": "/isbn-registry/requests/publications/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

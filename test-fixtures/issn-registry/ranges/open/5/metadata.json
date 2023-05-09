@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot open closed range which does not have free or canceled identifiers available",
+  "requestUrl": "/issn-registry/ranges/1/open",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

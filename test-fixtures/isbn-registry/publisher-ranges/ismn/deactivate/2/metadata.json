@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can deactivate active ISMN subrange",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1/deactivate",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 200
+}

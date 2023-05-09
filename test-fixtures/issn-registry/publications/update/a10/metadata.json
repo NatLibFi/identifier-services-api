@@ -1,0 +1,8 @@
+{
+  "descr": "May update partial data for each publication in linked publications (e.g., anotherMedium)",
+  "requestUrl": "/issn-registry/publications/1",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

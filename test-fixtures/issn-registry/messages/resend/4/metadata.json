@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot resend a ISSN related message",
+  "requestUrl": "/issn-registry/messages/resend/1",
+  "method": "post",
+  "expectedStatus": 401
+}

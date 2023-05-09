@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot query ISSN publisher autocomplete endpoint",
+  "requestUrl": "/issn-registry/publishers/autocomplete",
+  "method": "post",
+  "expectedStatus": 401
+}

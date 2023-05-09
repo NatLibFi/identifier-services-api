@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can create ISMN subrange when range has available subranges",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

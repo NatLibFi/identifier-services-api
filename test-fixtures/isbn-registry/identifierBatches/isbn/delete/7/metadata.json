@@ -1,0 +1,8 @@
+{
+  "descr": "Handles properly situation where batch contains identifiers from two subranges",
+  "requestUrl": "/isbn-registry/identifierbatches/2",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 204
+}

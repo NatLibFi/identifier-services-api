@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully delete ISSN message type that is not mandatory for system",
+  "requestUrl": "/issn-registry/messagetypes/10",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 204
+}

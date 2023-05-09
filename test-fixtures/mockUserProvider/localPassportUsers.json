@@ -1,0 +1,41 @@
+[
+    {
+        "id": "admin",
+        "password": "admin",
+        "name": {
+            "givenName": "test",
+            "familyName": "admin"
+        },
+        "displayName": "testAdmin",
+        "email": "admin@example.com",
+        "groups": [
+            "admin"
+        ]
+    },
+    {
+        "id": "system",
+        "password": "system",
+        "name": {
+            "givenName": "test",
+            "familyName": "system"
+        },
+        "displayName": "testSystem",
+        "email": "system@example.com",
+        "groups": [
+            "system"
+        ]
+    },
+    {
+        "id": "publisher",
+        "password": "publisher",
+        "name": {
+            "givenName": "test",
+            "familyName": "publisher"
+        },
+        "displayName": "testPublisher",
+        "email": "publisher@example.com",
+        "groups": [
+            "publisher"
+        ]
+    }
+]

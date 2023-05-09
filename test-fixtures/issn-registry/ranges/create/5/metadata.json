@@ -1,0 +1,8 @@
+{
+  "descr": "If range is set to active during creation, other ranges are deactivated automatically",
+  "requestUrl": "/issn-registry/ranges",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can successfully create identifier batch (ISMN) without defining publication (i.e., unassociated identifier list)",
+    "requestUrl": "/isbn-registry/identifierbatches/ismn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 201
+}

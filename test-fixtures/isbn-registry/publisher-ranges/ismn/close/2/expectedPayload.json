@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "idOld": null,
+  "publisherIdentifier": "979-0-55001",
+  "publisherId": 1,
+  "ismnRangeId": 1,
+  "category": 3,
+  "rangeBegin": "000",
+  "rangeEnd": "999",
+  "free": 1000,
+  "taken": 0,
+  "canceled": 0,
+  "deleted": 0,
+  "next": "000",
+  "isActive": false,
+  "isClosed": true,
+  "created": {},
+  "createdBy": "system",
+  "modified": {},
+  "modifiedBy": "admin"
+}

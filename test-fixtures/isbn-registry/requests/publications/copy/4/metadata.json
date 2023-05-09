@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot create copy of publication request isbn/ismn",
+  "requestUrl": "/isbn-registry/requests/publications/1/copy",
+  "method": "post",
+  "expectedStatus": 401
+}

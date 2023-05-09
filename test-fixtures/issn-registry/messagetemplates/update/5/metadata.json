@@ -1,0 +1,8 @@
+{
+  "descr": "Updating template mandatory and unique to system configuration is disallowed when updating message_type_id",
+  "requestUrl": "/issn-registry/messagetemplates/1",
+  "username": "system",
+  "password": "system",
+  "method": "put",
+  "expectedStatus": 409
+}

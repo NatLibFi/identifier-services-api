@@ -1,0 +1,8 @@
+{
+  "descr": "Zero-padded next value works",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

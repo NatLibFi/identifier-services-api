@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can delete ISSN publisher information if there are no associated forms or publications",
+  "requestUrl": "/issn-registry/publishers/1",
+  "method": "delete",
+  "username": "admin",
+  "password": "admin",
+  "expectedStatus": 204
+}

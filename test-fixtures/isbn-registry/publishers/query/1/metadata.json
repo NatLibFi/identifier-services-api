@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can query publishers all properties",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

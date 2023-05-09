@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully query ISBN message using publisherId",
+  "requestUrl": "/isbn-registry/messages/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

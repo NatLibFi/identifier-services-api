@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot deactivate activated ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn/1/deactivate",
+  "method": "post",
+  "expectedStatus": 401
+}

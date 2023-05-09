@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin can successfully permanently remove identifier from publication if no message has yet been sent",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 204
+}

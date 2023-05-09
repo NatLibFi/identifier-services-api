@@ -1,0 +1,23 @@
+{
+  "officialName": "XYZ Publisher Request",
+  "otherNames": "XYZ PR",
+  "address": "XYZ 123",
+  "zip": "00000",
+  "city": "Foobarila",
+  "phone": "98765432",
+  "email": "baz.baz@example.com",
+  "www": "http://xyz.example.com",
+  "langCode": "en-GB",
+  "contactPerson": "Baz Baz",
+  "frequencyCurrent": "1",
+  "frequencyNext": "1",
+  "affiliateOf": "Baz Baz Example Oy",
+  "affiliates": "Baz Baz Example North",
+  "distributorOf": "Baz Baz Example Oy",
+  "distributors": "Distributor A",
+  "classification": [
+    "100"
+  ],
+  "classificationOther": "Examples",
+  "additionalInfo": "Invalid information"
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, user cannot retrieve user information after invalid auth attempt.",
+    "requestUrl": "/auth",
+    "method": "get",
+    "username": "admin",
+    "password": "password",
+    "expectedStatus": 401
+}

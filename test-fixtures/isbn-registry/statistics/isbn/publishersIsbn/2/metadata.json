@@ -1,0 +1,8 @@
+{
+  "descr": "Date range restrictions work properly",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

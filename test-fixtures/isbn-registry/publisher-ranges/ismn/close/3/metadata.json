@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot close open ISMN subrange",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1/close",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "post",
+  "expectedStatus": 403
+}

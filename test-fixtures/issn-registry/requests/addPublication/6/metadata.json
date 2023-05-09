@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed and set status to NOT_HANDLED if it was NOT_NOTIFIED",
+  "requestUrl": "/issn-registry/requests/1/add-publication",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

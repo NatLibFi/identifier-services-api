@@ -1,0 +1,12 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "officialName": "Foo Publisher",
+      "emailCommon": "",
+      "phone": "123456789",
+      "langCode": "fi-FI"
+    }
+  ]
+}

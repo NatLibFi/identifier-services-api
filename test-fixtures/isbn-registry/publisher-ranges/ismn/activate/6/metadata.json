@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot activate ISMN subrange if it does not have free identifiers (even if it has not been closed)",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1/activate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

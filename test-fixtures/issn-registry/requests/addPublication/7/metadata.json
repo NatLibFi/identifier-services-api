@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if form has status set to COMPLETED",
+  "requestUrl": "/issn-registry/requests/1/add-publication",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

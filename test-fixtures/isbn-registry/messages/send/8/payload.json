@@ -1,0 +1,8 @@
+{
+  "publisherId": 1,
+  "langCode": "fi-FI",
+  "messageTemplateId": 2,
+  "recipient": "example@example.com",
+  "subject": "Esimerkkiotsikko",
+  "messageBody": "<p>Esimerkkiviesti</p>"
+}

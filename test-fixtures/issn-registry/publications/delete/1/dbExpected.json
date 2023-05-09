@@ -1,0 +1,103 @@
+{
+  "issnForm": [
+    {
+      "id": 1,
+      "publisherId": null,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 1,
+      "publicationCountIssn": 0,
+      "publisherCreated": 0,
+      "langCode": "fi-FI",
+      "status": "NOT_HANDLED",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "issnFormArchive": [
+    {
+      "id": 1,
+      "idOld": null,
+      "formId": 1,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 2,
+      "langCode": "fi-FI",
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "publicationIssn": [
+    {
+      "id": 2,
+      "formId": 1,
+      "publisherId": null,
+      "title": "Bar Baz title",
+      "subtitle": null,
+      "issn": "",
+      "placeOfPublication": "Foobarila",
+      "printer": "Foo printer",
+      "issuedFromYear": "1999",
+      "issuedFromNumber": "10",
+      "frequency": "z",
+      "frequencyOther": "Epäsäännöllinen",
+      "language": "FIN",
+      "publicationType": "MONOGRAPHY_SERIES",
+      "publicationTypeOther": null,
+      "medium": "ONLINE",
+      "mediumOther": null,
+      "url": "http://example.com",
+      "previous": null,
+      "mainSeries": null,
+      "subseries": null,
+      "anotherMedium": null,
+      "additionalInfo": null,
+      "status": "NO_PREPUBLICATION_RECORD",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "publicationIssnArchive": [
+    {
+      "id": 2,
+      "idOld": null,
+      "publicationId": 2,
+      "formId": 1,
+      "title": "Bar Baz title",
+      "subtitle": null,
+      "placeOfPublication": "Foobarila",
+      "printer": "Foo printer",
+      "issuedFromYear": "1999",
+      "issuedFromNumber": "10",
+      "frequency": "z",
+      "frequencyOther": "Epäsäännöllinen",
+      "language": "FIN",
+      "publicationType": "MONOGRAPHY_SERIES",
+      "publicationTypeOther": null,
+      "medium": "ONLINE",
+      "mediumOther": null,
+      "url": "http://example.com",
+      "previous": null,
+      "mainSeries": null,
+      "subseries": null,
+      "anotherMedium": null,
+      "additionalInfo": null,
+      "created": {},
+      "createdBy": "system"
+    }
+  ]
+}

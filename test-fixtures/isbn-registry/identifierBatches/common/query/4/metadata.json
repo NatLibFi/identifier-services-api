@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot query identifier batch",
+    "requestUrl": "/isbn-registry/identifierbatches/query",
+    "method": "post",
+    "expectedStatus": 401
+}

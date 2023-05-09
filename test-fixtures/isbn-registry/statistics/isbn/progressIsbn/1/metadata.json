@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can read ISBN progress statistics",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "In case of successful delete, also deletes messages associated with form and removes reference from publisher.form_id to the form",
+  "requestUrl": "/issn-registry/requests/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 204
+}

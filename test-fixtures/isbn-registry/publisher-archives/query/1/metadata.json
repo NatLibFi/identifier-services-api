@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can query publisher archive entry",
+  "requestUrl": "/isbn-registry/publisher-archives/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

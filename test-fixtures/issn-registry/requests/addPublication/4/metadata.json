@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot create new publication and associate it with ISSN request",
+  "requestUrl": "/issn-registry/requests/1/add-publication",
+  "method": "post",
+  "expectedStatus": 401
+}

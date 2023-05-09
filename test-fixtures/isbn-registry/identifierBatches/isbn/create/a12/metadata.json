@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create ISBN identifier batch for publication which has type of SHEET_MUSIC",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

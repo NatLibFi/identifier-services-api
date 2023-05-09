@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, cannot create publication request if contact email address is invalid",
+  "requestUrl": "/isbn-registry/requests/publications",
+  "method": "post",
+  "expectedStatus": 422
+}

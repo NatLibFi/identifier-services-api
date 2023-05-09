@@ -1,0 +1,21 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 2,
+      "officialName": "XYZ Publisher Request",
+      "email": "baz.baz@example.com",
+      "langCode": "en-GB",
+      "additionalInfo": null,
+      "created": {}
+    },
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "email": "foo.bar@example.com",
+      "langCode": "fi-FI",
+      "additionalInfo": "",
+      "created": {}
+    }
+  ]
+}

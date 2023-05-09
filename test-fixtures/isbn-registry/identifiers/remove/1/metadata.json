@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can successfully permanently remove identifier from publication (PRINT_ELECTRONICAL) if no message has yet been sent",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

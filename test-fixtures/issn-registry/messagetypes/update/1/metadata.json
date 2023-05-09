@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can update ISSN message type",
+  "requestUrl": "/issn-registry/messagetypes/1",
+  "username": "system",
+  "password": "system",
+  "method": "put",
+  "expectedStatus": 200
+}

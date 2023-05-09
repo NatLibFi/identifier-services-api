@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can create copy of publication request isbn/ismn if original has not been assigned identifiers",
+  "requestUrl": "/isbn-registry/requests/publications/1/copy",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

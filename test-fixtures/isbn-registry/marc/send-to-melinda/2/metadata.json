@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail with generic code, as admin can send marc record to Melinda but the connection is not configured",
+  "requestUrl": "/isbn-registry/marc/1/send-to-melinda",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 500
+}

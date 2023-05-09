@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully close open ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn/1/close",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 200
+}

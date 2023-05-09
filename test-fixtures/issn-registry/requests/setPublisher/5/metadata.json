@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot set issn form publisher reference if publisher with referenced id does not exist",
+  "requestUrl": "/issn-registry/requests/1/set-publisher",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 404
+}

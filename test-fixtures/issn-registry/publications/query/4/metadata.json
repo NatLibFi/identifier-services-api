@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot query ISSN publication information",
+  "requestUrl": "/issn-registry/publications/query",
+  "method": "post",
+  "expectedStatus": 401
+}

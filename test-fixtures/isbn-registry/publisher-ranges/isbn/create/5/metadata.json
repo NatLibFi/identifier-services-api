@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed when selection is valid cancelled subrange belonging to selected rangeId",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,22 @@
+{
+  "messageTypeIssn": [
+    {
+      "id": 2,
+      "name": "Toinen Esimerkkinimi",
+      "description": "Toinen Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    },
+    {
+      "id": 10,
+      "name": "Esimerkkinimi",
+      "description": "Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

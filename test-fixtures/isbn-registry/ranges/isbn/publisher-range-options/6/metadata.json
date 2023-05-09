@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if selected range is inactive",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/publisher-range-options",
+  "username": "system",
+  "password": "system",
+  "method": "get",
+  "expectedStatus": 409
+}

@@ -1,0 +1,6 @@
+{
+    "descr": "Unauthenticated may not use hasQuitted filter",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "method": "post",
+    "expectedStatus": 422
+}

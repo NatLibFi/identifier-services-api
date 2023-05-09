@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot read ISSN message type",
+  "requestUrl": "/issn-registry/messagetypes/1",
+  "method": "get",
+  "expectedStatus": 401
+}

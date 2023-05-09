@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create identifier batch (ISMN) if publisher has got no ISMN subranges",
+    "requestUrl": "/isbn-registry/identifierbatches/ismn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

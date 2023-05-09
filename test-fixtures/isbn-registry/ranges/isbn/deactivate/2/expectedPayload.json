@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "prefix": 978,
+  "langGroup": 951,
+  "category": 5,
+  "rangeBegin": "95000",
+  "rangeEnd": "99999",
+  "free": 5000,
+  "taken": 0,
+  "canceled": 0,
+  "next": "95000",
+  "isActive": false,
+  "isClosed": false,
+  "idOld": null,
+  "created": {},
+  "createdBy": "system",
+  "modified": {},
+  "modifiedBy": "admin"
+}

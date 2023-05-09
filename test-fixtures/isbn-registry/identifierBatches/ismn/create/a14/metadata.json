@@ -1,0 +1,8 @@
+{
+    "descr": "Can utilize identifiers from two ISMN subranges if pre-conditions are met (range category is 1 and identifiers are associated with publication)",
+    "requestUrl": "/isbn-registry/identifierbatches/ismn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}

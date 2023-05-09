@@ -1,0 +1,48 @@
+{
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkinimi",
+      "description": "Esimerkkikuvaus",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "name": "Esimerkkinimi #2",
+      "description": "Esimerkkikuvaus #2",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkitemplate muokattu",
+      "subject": "Esimerkkiaihe muokattu",
+      "langCode": "fi-FI",
+      "message": "<p>Testiviesti</p>\n<p>Lisätty tekstiä</p>\n<p>#EXAMPLE_TAG#</p>",
+      "messageTypeId": 2,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Esimerkkitemplate #2",
+      "subject": "Esimerkkiaihe #2",
+      "langCode": "fi-FI",
+      "message": "<p>Testiviesti #2</p>\n<p>#EXAMPLE_TAG#</p>",
+      "messageTypeId": 1,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ]
+}

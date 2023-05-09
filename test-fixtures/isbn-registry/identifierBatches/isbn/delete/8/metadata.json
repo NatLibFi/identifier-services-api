@@ -1,0 +1,8 @@
+{
+  "descr": "Prevents situation where batch is interpreted as latest given batch from subrange only because identifiers from previously latest batch were deleted one by one through identifier remove endpoint",
+  "requestUrl": "/isbn-registry/identifierbatches/2",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 409
+}

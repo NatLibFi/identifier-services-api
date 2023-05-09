@@ -1,0 +1,8 @@
+{
+  "descr": "Can query publisher request based on attribute: email",
+  "requestUrl": "/isbn-registry/requests/publishers/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

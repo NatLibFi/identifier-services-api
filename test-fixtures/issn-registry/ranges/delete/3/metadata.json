@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot delete ISSN range",
+  "requestUrl": "/issn-registry/ranges/1",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "delete",
+  "expectedStatus": 403
+}

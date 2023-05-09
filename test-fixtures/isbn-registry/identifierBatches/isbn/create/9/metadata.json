@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create identifier batch for publication if publisher does not have subranges",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create identifier batch for non-existing publisher",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 404
+}

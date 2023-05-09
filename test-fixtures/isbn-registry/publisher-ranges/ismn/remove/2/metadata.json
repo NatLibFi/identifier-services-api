@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can cancel ISMN subrange if pre-conditions are met",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/2",
+  "username": "admin",
+  "password": "admin",
+  "method": "delete",
+  "expectedStatus": 204
+}

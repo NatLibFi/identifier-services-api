@@ -1,0 +1,15 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 3,
+      "officialName": "Foo Music",
+      "otherNames": "",
+      "email": "foo.music@example.com",
+      "contactPerson": "Music Person",
+      "hasQuitted": false,
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "979-0-55001"
+    }
+  ]
+}

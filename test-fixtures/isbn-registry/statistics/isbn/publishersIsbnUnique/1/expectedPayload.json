@@ -1,0 +1,27 @@
+[
+  {
+    "Registrant_Status_Code": "A",
+    "Registrant_Prefix_Type": "P",
+    "Registrant_Prefix_Or_ISBN": "978-951-8900",
+    "Registrant_Name": "XYZ Publisher Request",
+    "ISO_Country_Code": "FI",
+    "Address_Line_1": "XYZ 123",
+    "Address_Line_2": "00000 Foobarila",
+    "Address_Line_3": "",
+    "Address_Line_4": "",
+    "Admin_Contact_Name": "Baz Baz",
+    "Admin_Phone": "98765432",
+    "Admin_Fax": "",
+    "Admin_Email": "xyz@example.com",
+    "Alternate_Contact_Type": "",
+    "Alternate_Contact_Name": "",
+    "Alternate_Phone": "",
+    "Alternate_Fax": "",
+    "Alternate_Email": "",
+    "SAN": "",
+    "GLN": "",
+    "Website_URL": "",
+    "Registrant_ID": "",
+    "ISNI": ""
+  }
+]

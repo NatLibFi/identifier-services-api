@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot create message template if chosen message type does not exists",
+  "requestUrl": "/isbn-registry/messagetemplates",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 422
+}

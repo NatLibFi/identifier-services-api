@@ -1,0 +1,11 @@
+{
+  "mainSeries": {},
+  "subseries": {
+    "title": ["SubFoo"],
+    "issn": [""]
+  },
+  "anotherMedium": {
+    "title": ["InterwebsFoo", "AnotherInterwebsFoo"],
+    "issn": ["1797-0040", ""]
+  }
+}

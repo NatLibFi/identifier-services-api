@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully create a valid ISSN message type",
+  "requestUrl": "/issn-registry/messagetypes",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can query ISSN request using request form publisher name as search term",
+  "requestUrl": "/issn-registry/requests/query",
+  "method": "post",
+  "username": "admin",
+  "password": "admin",
+  "expectedStatus": 200
+}

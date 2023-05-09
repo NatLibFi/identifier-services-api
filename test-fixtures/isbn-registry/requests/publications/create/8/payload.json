@@ -1,0 +1,21 @@
+{
+  "officialName": "FooBar Publisher",
+  "address": "Foo Street",
+  "zip": "00000",
+  "city": "Foo City",
+  "contactPerson": "Foo Person",
+  "phone": "123456789",
+  "email": "fooexample.com",
+  "langCode": "fi-FI",
+  "publicationsPublic": true,
+  "publicationType": "BOOK",
+  "publicationFormat": "PRINT_ELECTRONICAL",
+  "firstName1": "Foobar",
+  "lastName1": "Baz",
+  "role1": ["AUTHOR"],
+  "title": "Foo Book 2",
+  "language": "FIN",
+  "year": "2049",
+  "month": "12",
+  "type": ["PAPERBACK"]
+}

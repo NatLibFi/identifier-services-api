@@ -1,0 +1,8 @@
+{
+  "descr": "Is capable of sending empty response set",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

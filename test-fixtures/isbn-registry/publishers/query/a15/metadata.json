@@ -1,0 +1,6 @@
+{
+    "descr": "Unauthenticated cannot filter based on identifier type",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "method": "post",
+    "expectedStatus": 422
+}

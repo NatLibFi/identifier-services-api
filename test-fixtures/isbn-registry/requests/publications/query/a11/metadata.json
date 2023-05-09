@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, can use publisher name as search text in querying",
+    "requestUrl": "/isbn-registry/requests/publications/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

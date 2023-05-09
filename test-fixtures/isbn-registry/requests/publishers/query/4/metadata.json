@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot query publisher request",
+  "requestUrl": "/isbn-registry/requests/publishers/query",
+  "method": "post",
+  "expectedStatus": 401
+}

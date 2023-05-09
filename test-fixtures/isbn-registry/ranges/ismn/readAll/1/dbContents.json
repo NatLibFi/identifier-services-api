@@ -1,0 +1,34 @@
+{
+  "ismnRange": [
+    {
+      "id": 1,
+      "prefix": "979-0",
+      "category": 5,
+      "rangeBegin": "55001",
+      "rangeEnd": "55025",
+      "free": 25,
+      "taken": 0,
+      "canceled": 0,
+      "next": "55001",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "prefix": "979-0",
+      "category": 6,
+      "rangeBegin": "706300",
+      "rangeEnd": "706349",
+      "free": 50,
+      "taken": 0,
+      "canceled": 0,
+      "next": "706300",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "idOld": null,
+  "formId": 1,
+  "publisher": "Foo Publisher",
+  "contactPerson": "Foo Bar",
+  "email": "example@example.com",
+  "phone": "123456789",
+  "address": "Foo Street 1",
+  "zip": "00000",
+  "city": "Foobarila",
+  "langCode": "fi-FI",
+  "publicationCount": 2,
+  "created": {},
+  "createdBy": "system"
+}

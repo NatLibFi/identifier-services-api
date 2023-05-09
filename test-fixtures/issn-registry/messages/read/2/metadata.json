@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can read a ISSN related message",
+  "requestUrl": "/issn-registry/messages/1",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

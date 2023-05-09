@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can read ISBN subrange",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/1",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

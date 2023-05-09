@@ -1,0 +1,8 @@
+{
+  "descr": "System can read statistics",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

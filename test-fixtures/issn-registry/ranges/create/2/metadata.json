@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can successfully create a valid ISSN range",
+  "requestUrl": "/issn-registry/ranges",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Esimerkkitemplate",
+  "subject": "Esimerkkiaihe",
+  "langCode": "fi-FI",
+  "message": "<p>Testiviesti</p>\n<p>#EXAMPLE_TAG#</p>",
+  "messageTypeId": 1
+}

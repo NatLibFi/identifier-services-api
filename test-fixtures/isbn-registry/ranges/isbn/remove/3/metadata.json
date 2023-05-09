@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot remove ISBN range even if there are no linked subranges",
+  "requestUrl": "/isbn-registry/ranges/isbn/1",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "delete",
+  "expectedStatus": 403
+}

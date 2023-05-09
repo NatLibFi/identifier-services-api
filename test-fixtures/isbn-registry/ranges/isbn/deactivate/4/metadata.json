@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot deactivate activated ISBN range",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/deactivate",
+  "method": "post",
+  "expectedStatus": 401
+}

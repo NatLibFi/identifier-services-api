@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "publisherId": 1,
+  "groupMessageId": 0,
+  "batchId": 1,
+  "publicationId": 0,
+  "messageTypeId": 1,
+  "messageTemplateId": 1,
+  "recipient": "example@example.com",
+  "subject": "Esimerkkiotsikko",
+  "message": "<p>Esimerkkiviesti</p>",
+  "langCode": "fi-FI",
+  "hasAttachment": true,
+  "attachmentName": "1.txt",
+  "sent": {},
+  "sentBy": "system"
+}

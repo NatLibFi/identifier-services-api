@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create ISBN subrange when range category does not match selected subrange length",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

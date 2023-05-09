@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can get available options for selected range regarding subrange generation",
+  "requestUrl": "/isbn-registry/ranges/ismn/1/publisher-range-options",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}
