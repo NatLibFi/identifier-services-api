@@ -45,7 +45,7 @@ export default function (permissionMiddleware) {
 
   async function search(req, res, next) {
     try {
-      const result = await issnRequests.search(req.body);
+      const result = await issnRequests.search(req.body); // njsscan-ignore: regex_injection_dos
 
       if (result) {
         return res.status(HttpStatus.OK).json(result);

@@ -146,14 +146,14 @@ export default ({rootPath}) => {
               }
 
               if (payloadData) {
-                if (token === undefined) {
+                if (token === undefined) { // njsscan-ignore: node_timing_attack
                   return requester[method](requestUrl).send(payloadData);
                 }
 
                 return requester[method](requestUrl).set('Authorization', `Bearer ${token}`).send(payloadData);
               }
 
-              if (token === undefined) {
+              if (token === undefined) { // njsscan-ignore: node_timing_attack
                 return requester[method](requestUrl);
               }
 

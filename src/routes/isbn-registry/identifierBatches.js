@@ -100,7 +100,7 @@ export default function (permissionMiddleware) {
       const result = await identifierBatches.download(req.params.id, req.user);
 
       if (result) {
-        res.attachment(`identifierBatch-${req.params.id}.txt`);
+        res.attachment(`identifierBatch-${req.params.id}.txt`); // njsscan-ignore: express_xss
         return res.send(result);
       }
 
