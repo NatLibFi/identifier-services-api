@@ -39,6 +39,5 @@ describe('app', () => {
   });
   describe('authentication', () => {
     describe('#authenticate', generateTestSuite('authentication', 'authenticate'));
-    describe('#read', generateTestSuite('authentication', 'read'));
   });
 });

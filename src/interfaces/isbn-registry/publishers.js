@@ -400,7 +400,7 @@ export default function () {
    * @returns {boolean} True if user has administrator level access, otherwise false
    */
   function _isAdmin(user) {
-    return user && (user.role === 'admin' || user.role === 'system');
+    return user && user.applicationRoles && (user.applicationRoles.includes('admin') || user.applicationRoles.includes('system'));
   }
 
   /**

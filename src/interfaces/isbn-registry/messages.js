@@ -377,7 +377,7 @@ export default function () {
 
     // Replace placeholders from message body
     message.message = message.message.replace('#DATE#', new Date().toLocaleDateString('fi-FI'));
-    message.message = message.message.replace('#USER#', `${user.name.givenName} ${user.name.familyName}`);
+    message.message = message.message.replace('#USER#', getUserName(user));
     message.message = message.message.replace('#EMAIL#', message.recipient);
     message.message = message.message.replace('#PUBLISHER#', messagePublisher.officialName);
     message.message = message.message.replace('#ADDRESS#', `${messagePublisher.address}<br />${messagePublisher.zip} ${messagePublisher.city}`);
@@ -394,6 +394,10 @@ export default function () {
     message.subject = getTestPrefixedSubject(message.subject);
 
     return message;
+
+    function getUserName(user) {
+      return user?.name ?? '';
+    }
 
     /**
      * Adds identifiers to message html body to place where '#IDENTIFIERS#' definition is found.

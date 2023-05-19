@@ -268,7 +268,7 @@ export default function () {
 
     // Fill in rest of placeholders
     message.message = message.message.replace('#DATE#', new Date().toLocaleDateString('fi-FI'));
-    message.message = message.message.replace('#USER#', `${user.name.givenName} ${user.name.familyName}`);
+    message.message = message.message.replace('#USER#', getUserName(user));
     message.message = message.message.replace('#EMAIL#', message.recipient);
     message.message = message.message.replace('#PUBLISHER#', messagePublisher.officialName);
 
@@ -288,6 +288,10 @@ export default function () {
     message.subject = getTestPrefixedSubject(message.subject);
 
     return message;
+
+    function getUserName(user) {
+      return user?.name ?? '';
+    }
 
     /**
      * Returns the contact person from publisher information that has matching email to second parameter

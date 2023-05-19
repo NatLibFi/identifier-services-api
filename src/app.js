@@ -26,7 +26,7 @@
  */
 
 /* eslint-disable max-statements,no-unused-vars,require-await*/
-import {generatePassportMiddlewares} from '@natlibfi/passport-melinda-crowd';
+import {generatePassportMiddlewares} from '@natlibfi/passport-natlibfi-keycloak';
 import {createLogger, createExpressLogger} from '@natlibfi/melinda-backend-commons';
 
 import express from 'express';
@@ -40,15 +40,16 @@ import sequelize from './models';
 import * as routes from './routes';
 
 import {ApiError, bodyParse} from './utils';
-import {combineUserInfo, generateUserAuthorizationMiddleware, generatePermissionMiddleware} from './middlewares';
+import {getUserApplicationRoles, generateUserAuthorizationMiddleware, generatePermissionMiddleware} from './middlewares';
 
 import {
   CORS_WHITELIST,
   ENABLE_PROXY,
   HTTP_PORT,
-  CROWD_URL,
-  CROWD_APP_NAME,
-  CROWD_APP_PASSWORD,
+  KEYCLOAK_ALGORITHMS,
+  KEYCLOAK_AUDIENCE,
+  KEYCLOAK_ISSUER,
+  KEYCLOAK_PUBLIC_KEY,
   PASSPORT_LOCAL_USERS,
   TLS_KEY,
   TLS_CERT,
@@ -88,9 +89,11 @@ export default async function run() { // eslint-disable-line
 
   // Initialize passport middleware
   const passportMiddlewares = await generatePassportMiddlewares({
-    crowd: {
-      appName: CROWD_APP_NAME, appPassword: CROWD_APP_PASSWORD,
-      url: `${CROWD_URL}/rest`, useCache: true, fetchGroupMembership: true
+    keycloakOpts: {
+      publicKey: KEYCLOAK_PUBLIC_KEY,
+      algorithms: KEYCLOAK_ALGORITHMS,
+      audience: KEYCLOAK_AUDIENCE,
+      issuer: KEYCLOAK_ISSUER
     },
     localUsers: PASSPORT_LOCAL_USERS
   });
@@ -98,7 +101,7 @@ export default async function run() { // eslint-disable-line
   // Initialize custom middleware that handles permissions
   const authorizationMiddleware = generateUserAuthorizationMiddleware(passportMiddlewares);
   const permissionMiddleware = generatePermissionMiddleware();
-  const gatherUserInformationMiddlewares = [authorizationMiddleware, combineUserInfo];
+  const gatherUserInformationMiddlewares = [authorizationMiddleware, getUserApplicationRoles];
 
   // Initialize cors options
   function whiteListCB(origin, callback) {
@@ -126,8 +129,14 @@ export default async function run() { // eslint-disable-line
   app.use(bodyParse());
 
   // ROUTES
+
+  // Auth is available only for automated testing
+  // eslint-disable-next-line functional/no-conditional-statements
+  if (NODE_ENV === 'test') {
+    app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares)); //eslint-disable-line
+  }
+
   app.use('/ping', routes.createStatusRouter());
-  app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares, combineUserInfo)); //eslint-disable-line
   app.use('/isbn-registry', routes.createIsbnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
   app.use('/issn-registry', routes.createIssnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
 

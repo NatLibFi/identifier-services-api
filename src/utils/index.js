@@ -27,7 +27,7 @@
 
 import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
-import {GROUPS_AND_ROLES} from '../config';
+import {ROLE_MAP} from '../config';
 
 export {ApiError} from './apiError';
 
@@ -40,33 +40,14 @@ export function bodyParse() {
   });
 }
 
-export function mapRoleToGroup(role) {
-  const data = GROUPS_AND_ROLES;
-  return Object.entries(data).reduce((acc, [
-    k,
-    v
-  ]) => {
-    if (k === role) {
-      acc = v; // eslint-disable-line no-param-reassign
-      return acc;
+export function getRolesFromKeycloakRoles(userKeycloakRoles) {
+  return Object.entries(ROLE_MAP).reduce((prev, [applicationRole, keycloakRoles]) => {
+    if (userKeycloakRoles.some(role => keycloakRoles.includes(role))) {
+      return [...prev, applicationRole];
     }
-    return acc;
-  }, '');
-}
 
-export function mapGroupToRole(group) {
-  const data = GROUPS_AND_ROLES;
-  const value = Object.values(data).find(v => group.includes(v));
-  return value ? Object.keys(data).find(key => data[key] === value) : undefined;
-}
-
-export function checkRoleInGroup(group) {
-  const data = GROUPS_AND_ROLES;
-  return Object.values(data).some(value => group.includes(value));
-}
-
-export function formatUrl(url) {
-  return url.replace(/^file:\/\//u, '');
+    return prev;
+  }, []);
 }
 
 // Function parseBoolean defined below this comment is part of melinda-commons-js package and has the following license file associated to it:

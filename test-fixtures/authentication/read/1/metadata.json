@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, user can retrieve user information with valid token.",
-    "requestUrl": "/auth",
-    "method": "get",
-    "expectedStatus": 200,
-    "username": "admin",
-    "password": "admin"
-}

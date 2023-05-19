@@ -28,27 +28,11 @@
 import {Router} from 'express';
 import HttpStatus from 'http-status';
 
-import {validateTurnstile} from '../../middlewares/turnstile';
-
-export default function (passportMiddlewares, combineUserInfo) {
+export default function (passportMiddlewares) {
   return new Router()
-    .post('/', validateTurnstile, passportMiddlewares.credentials, authenticate)
-    .get('/', passportMiddlewares.token, combineUserInfo, read);
+    .post('/', passportMiddlewares.credentials, authenticate);
 
   function authenticate(req, res) {
     return res.status(HttpStatus.OK).json({authenticationToken: req.user});
-  }
-
-  function read(req, res, next) {
-    try {
-      if (req.user) {
-        const {id, groups, ...result} = {...req.user}; // eslint-disable-line no-unused-vars
-        return res.status(HttpStatus.OK).json(result);
-      }
-
-      return res.status(HttpStatus.NOT_FOUND);
-    } catch (err) {
-      return next(err);
-    }
   }
 }

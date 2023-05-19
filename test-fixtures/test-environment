@@ -8,12 +8,13 @@ TABLE_PREFIX='test'
 
 WEBSITE_USER='WEB-FOO'
 
-CROWD_URL=''
-CROWD_APP_NAME=''
-CROWD_APP_PASSWORD=''
+KEYCLOAK_PUBLIC_KEY=''
+KEYCLOAK_ALGORITHMS='[]'
+KEYCLOAK_AUDIENCE=''
+KEYCLOAK_ISSUER=''
+ROLE_MAP='{"admin": ["admin"], "system": ["system"], "publisher": ["publisher"]}'
 
 PASSPORT_LOCAL_USERS=file://test-fixtures/mockUserProvider/localPassportUsers.json
-GROUPS_AND_ROLES='{"admin": "admin", "system": "system", "publisher": "publisher"}'
 
 UI_URL='http://localhost:8098'
 CORS_WHITELIST='[]'
