@@ -42,12 +42,13 @@ export const TABLE_PREFIX = readEnvironmentVariable('TABLE_PREFIX', {defaultValu
 // Note: affects statistics generation as well as identifier used as user placeholder during form generation
 export const WEBSITE_USER = readEnvironmentVariable('WEBSITE_USER', {defaultValue: 'EXAMPLE'});
 
-// AUTHENTICATION SERVICES
-export const CROWD_URL = readEnvironmentVariable('CROWD_URL', {defaultValue: ''});
-export const CROWD_APP_NAME = readEnvironmentVariable('CROWD_APP_NAME', {defaultValue: ''});
-export const CROWD_APP_PASSWORD = readEnvironmentVariable('CROWD_APP_PASSWORD', {defaultValue: ''});
+export const KEYCLOAK_PUBLIC_KEY = readEnvironmentVariable('KEYCLOAK_PUBLIC_KEY', {defaultValue: ''});
+export const KEYCLOAK_ALGORITHMS = readEnvironmentVariable('KEYCLOAK_ALGORITHMS', {defaultValue: [], format: JSON.parse});
+export const KEYCLOAK_AUDIENCE = readEnvironmentVariable('KEYCLOAK_AUDIENCE', {defaultValue: ''});
+export const KEYCLOAK_ISSUER = readEnvironmentVariable('KEYCLOAK_ISSUER', {defaultValue: ''});
+export const ROLE_MAP = readEnvironmentVariable('ROLE_MAP', {defaultValue: {}, format: JSON.parse});
+
 export const PASSPORT_LOCAL_USERS = readEnvironmentVariable('PASSPORT_LOCAL_USERS');
-export const GROUPS_AND_ROLES = readEnvironmentVariable('GROUPS_AND_ROLES', {defaultValue: {}, format: JSON.parse});
 
 // CORS, USER AGENTS, PROXIES
 export const UI_URL = readEnvironmentVariable('UI_URL', {defaultValue: 'http://localhost:8080'});

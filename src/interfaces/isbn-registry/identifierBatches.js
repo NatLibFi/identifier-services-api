@@ -120,7 +120,7 @@ export default function () {
       // System users and admins have access to all identifierBatch information
       const publisherName = doc.publisher.officialName;
 
-      if (user && (user.role === 'admin' || user.role === 'system')) {
+      if (user && ['admin', 'system'].some(role => user.applicationRoles.includes(role))) {
         const {publisher, ...filteredDoc} = doc;
         return {...filteredDoc, publisherName: publisher.officialName};
       }

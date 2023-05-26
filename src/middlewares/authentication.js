@@ -28,23 +28,7 @@
 import HttpStatus from 'http-status';
 
 import {permissions} from './permissions';
-import {ApiError, mapGroupToRole} from '../utils';
-
-/**
- * Combines user role with other user information based on the configuration given to API via env
- * and moves to next.
- * @param {*} req Request (express)
- * @param {*} res Response (express)
- * @param {*} next Next (express)
- */
-export function combineUserInfo(req, res, next) {
-  if (req.user && req.user.groups) { // eslint-disable-line
-    const role = mapGroupToRole(req.user.groups);
-    req.user = {...req.user, role}; // eslint-disable-line require-atomic-updates, functional/immutable-data
-  }
-
-  return next();
-}
+import {ApiError, getRolesFromKeycloakRoles} from '../utils';
 
 /**
  * Returns generator for middleware which passes request to passportmiddleware if it contains authorization header
@@ -59,6 +43,16 @@ export function generateUserAuthorizationMiddleware(passportMiddlewares) {
   };
 }
 
+export function getUserApplicationRoles(req, res, next) {
+  if (!req.user || !req.user.roles || !Array.isArray(req.user.roles)) {
+    return next();
+  }
+
+  const userApplicationRoles = getRolesFromKeycloakRoles(req.user.roles);
+  req.user.applicationRoles = userApplicationRoles; // eslint-disable-line functional/immutable-data
+  return next();
+}
+
 /**
  * Returns generator for permission middleware which investigates whether user has access
  * to required resource
@@ -71,20 +65,20 @@ export function generatePermissionMiddleware() {
     }
 
     const commandPermissions = permissions[type][command];
+    const endpointIsPublic = commandPermissions.includes('all');
 
-    // If command is available for everyone, continue to next
-    if (commandPermissions.includes('all')) {
+    if (endpointIsPublic) {
       return next();
     }
 
-    // If command has restrictions regarding user roles, user definition from earlier middleware is required
-    if (!req.user) {
+    // If endpoint was not public and user is not defined, return unauthorized
+    if (!req.user || !req.user.applicationRoles) {
       throw new ApiError(HttpStatus.UNAUTHORIZED);
     }
 
-    const permitted = commandPermissions.some(role => req.user.role === role);
+    const permitted = commandPermissions.some(role => req.user.applicationRoles.includes(role));
 
-    // If user does not have permissions to command/type an error is thrown
+    // If authenticated user does not have permissions to endpoint/command, return forbidden
     if (!permitted) {
       throw new ApiError(HttpStatus.FORBIDDEN);
     }
