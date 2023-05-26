@@ -50,6 +50,10 @@ export function getRolesFromKeycloakRoles(userKeycloakRoles) {
   }, []);
 }
 
+export function isAdmin(user) {
+  return user && typeof user === 'object' && user.applicationRoles && Array.isArray(user.applicationRoles) && ['admin', 'system'].some(role => user.applicationRoles.includes(role));
+}
+
 // Function parseBoolean defined below this comment is part of melinda-commons-js package and has the following license file associated to it:
 /*
 MIT License

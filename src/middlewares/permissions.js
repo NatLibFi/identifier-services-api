@@ -36,12 +36,6 @@ export const permissions = {
       'system'
     ]
   },
-  turnstile: {
-    skip: [
-      'admin',
-      'system'
-    ]
-  },
   publishers: {
     create: [
       'admin',

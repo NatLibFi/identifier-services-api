@@ -32,7 +32,7 @@ import {Op} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
 
 import sequelize from '../../models';
-import {ApiError} from '../../utils';
+import {ApiError, isAdmin} from '../../utils';
 import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
 import {generateQuery, emptyQueryResult} from '../interfaceUtils';
 
@@ -93,7 +93,7 @@ export default function () {
    * @returns {Object} Publisher object with attributes filtered appropriate to user permissions
    */
     function _filterResult(doc, user) {
-      if (_isAdmin(user)) {
+      if (isAdmin(user)) {
       // Remove category information, etc. regarding subranges from response as it's not useful
         const formattedIsbnSubranges = doc.isbnSubRanges
           .map(({id, publisherIdentifier, free, canceled, isActive, created, createdBy}) => ({id, publisherIdentifier, free, canceled, isActive, created, createdBy}));
@@ -197,7 +197,7 @@ export default function () {
     /* eslint-enable functional/no-let */
 
     // Set of properties are allowed only for admin users, if attempt to use these, throw a error
-    if (!_isAdmin(user)) {
+    if (!isAdmin(user)) {
       if (typeof hasQuitted !== 'undefined' || typeof category !== 'undefined' || typeof identifierType !== 'undefined') {
         logger.warn('Non-admin user attempted to utilize admin-only attributes in publisher registry search');
         throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Only admin users are allowed to use extended filters in publisher queries. Please login to continue.');
@@ -281,11 +281,11 @@ export default function () {
       const textConditions = trimmedSearchText ? {[Op.or]: generateQuery(textSearchAttributes, trimmedSearchText)} : undefined;
 
       // Admin may filter based on hasQuitted attribute
-      const hasQuittedCondition = hasQuitted && _isAdmin(user) ? {hasQuitted} : {};
+      const hasQuittedCondition = hasQuitted && isAdmin(user) ? {hasQuitted} : {};
 
       // Admin may additionally filter based on identifier type or category
-      const categoryCondition = category && _isAdmin(user) ? _getCategoryCondition(category) : {};
-      const identifierTypeCondition = identifierType && _isAdmin(user) ? identifierType : '';
+      const categoryCondition = category && isAdmin(user) ? _getCategoryCondition(category) : {};
+      const identifierTypeCondition = identifierType && isAdmin(user) ? identifierType : '';
 
       // Query must be done in two parts and without including association attributes because sequelize cannot handle group by
       // together with findAndCountAll and full group by limitation cannot be satisfied otherwise. See e.g.,: https://github.com/sequelize/sequelize/issues/6148
@@ -363,7 +363,7 @@ export default function () {
         'previousNames'
       ];
 
-      if (_isAdmin(user)) {
+      if (isAdmin(user)) {
         return [
           ...searchAttributes,
           'email',
@@ -383,7 +383,7 @@ export default function () {
    */
     function _filterResult(doc, user) {
     // If user is admin or system user, return all attributes defined for db query
-      if (_isAdmin(user)) {
+      if (isAdmin(user)) {
         return doc;
       }
 
@@ -393,15 +393,6 @@ export default function () {
     }
   }
   /* eslint-enable max-statements */
-
-  /**
-   * Determines whether user has administrator level access
-   * @param {Object} user User object
-   * @returns {boolean} True if user has administrator level access, otherwise false
-   */
-  function _isAdmin(user) {
-    return user && user.applicationRoles && (user.applicationRoles.includes('admin') || user.applicationRoles.includes('system'));
-  }
 
   /**
    * Function to test whether publisherModel entry is part of publisher registry.

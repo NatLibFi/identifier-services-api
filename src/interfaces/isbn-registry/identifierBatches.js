@@ -32,7 +32,7 @@ import {Op} from 'sequelize';
 import {createHash} from 'crypto';
 
 import sequelize from '../../models';
-import {ApiError} from '../../utils';
+import {ApiError, isAdmin} from '../../utils';
 import {COMMON_IDENTIFIER_TYPES} from '../constants';
 import abstractModelInterface from '../common/abstractModelInterface';
 import {NODE_ENV} from '../../config';
@@ -120,7 +120,7 @@ export default function () {
       // System users and admins have access to all identifierBatch information
       const publisherName = doc.publisher.officialName;
 
-      if (user && ['admin', 'system'].some(role => user.applicationRoles.includes(role))) {
+      if (isAdmin(user)) {
         const {publisher, ...filteredDoc} = doc;
         return {...filteredDoc, publisherName: publisher.officialName};
       }

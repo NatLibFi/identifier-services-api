@@ -28,8 +28,7 @@
 import HttpStatus from 'http-status';
 
 import {NODE_ENV, TURNSTILE_SECRET_KEY, TURNSTILE_URL, DISABLE_TURNSTILE} from '../config';
-import {ApiError} from '../utils';
-import {permissions} from './permissions';
+import {ApiError, isAdmin} from '../utils';
 
 /**
  * Validates turnstile token
@@ -46,7 +45,7 @@ export async function validateTurnstile(req, res, next) {
     }
 
     // If request has user with role of administrator, do not require turnstile token
-    if (req.user && permissions.turnstile.skip.some(role => req.user.role === role)) {
+    if (isAdmin(req.user)) {
       return next();
     }
 
