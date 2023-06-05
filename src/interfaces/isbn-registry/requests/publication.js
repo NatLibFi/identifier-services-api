@@ -35,7 +35,7 @@ import sequelize from '../../../models';
 import {ApiError} from '../../../utils';
 import {generateQuery} from '../../interfaceUtils';
 import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config';
-import {ISBN_REGISTRY_FORMATS} from '../../constants';
+import {COMMON_LANGUAGES, ISBN_REGISTRY_FORMATS} from '../../constants';
 import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils';
 import abstractModelInterface from '../../common/abstractModelInterface';
 
@@ -90,9 +90,9 @@ export default function () {
     // Inform customer that the request was successfully received if system is configured to send emails
     // If logged in user is initiating the creation of request, do not send confirmation email
     /* eslint-disable no-process-env,functional/no-let,functional/no-conditional-statements */
-    if (!user && SEND_EMAILS && !copy) {
-      let messageBody = 'ISBN-/ISMN-hakulomakkeenne on vastaanotettu. Lomakkeet käsitellään saapumisjärjestyksessä.<br /><br />Ystävällisin terveisin,<br />ISBN-keskus';
-      let subject = 'ISBN-/ISMN-hakulomakkeenne on vastaanotettu';
+    if (SEND_EMAILS && !user && !copy) {
+      let messageBody = getNotifyClientMessageBody(doc.langCode);
+      let subject = getNotifyClientMessageSubject(doc.langCode);
       logger.info('Start sending email message using email service');
 
       // If email is not send in production context, add flag regarding test system
@@ -119,6 +119,32 @@ export default function () {
 
     /* eslint-enable no-process-env,functional/no-let,functional/no-conditional-statements */
     return result.toJSON();
+
+    function getNotifyClientMessageBody(lang) {
+      if (lang === COMMON_LANGUAGES.english) {
+        return 'Your ISBN/ISMN request form has been received. The ISBN Agency handles request forms in order of arrival.<br /><br />With kind regards,<br />The ISBN Agency';
+      }
+
+      if (lang === COMMON_LANGUAGES.swedish) {
+        return 'En ny ISBN/ISMN-ansökningsblankett har mottagits. Finlands ISBN-central behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
+      }
+
+      // Default to finnish version
+      return 'ISBN-/ISMN-hakulomakkeenne on vastaanotettu. Lomakkeet käsitellään saapumisjärjestyksessä.<br /><br />Ystävällisin terveisin,<br />ISBN-keskus';
+    }
+
+    function getNotifyClientMessageSubject(lang) {
+      if (lang === COMMON_LANGUAGES.english) {
+        return 'Your ISBN/ISMN request form has been received';
+      }
+
+      if (lang === COMMON_LANGUAGES.swedish) {
+        return 'En ny ISBN/ISMN-ansökningsblankett har mottagits';
+      }
+
+      // Default to finnish version
+      return 'ISBN-/ISMN-hakulomakkeenne on vastaanotettu';
+    }
   }
 
   /**

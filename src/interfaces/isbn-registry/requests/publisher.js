@@ -37,6 +37,7 @@ import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config';
 import {generateQuery} from '../../interfaceUtils';
 import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils';
 import abstractModelInterface from '../../common/abstractModelInterface';
+import {COMMON_LANGUAGES} from '../../constants';
 
 /**
  * Publisher registry request interface. Contains create, read and query operations and a number of helper functions.
@@ -96,8 +97,8 @@ export default function () {
       // and user who initiated the request is not logged in
       /* eslint-disable no-process-env,functional/no-let,functional/no-conditional-statements */
       if (!user && SEND_EMAILS) {
-        let messageBody = 'Liittymislomakkeenne ISBN-/ISMN-järjestelmään on vastaanotettu. Lomakkeet käsitellään saapumisjärjestyksessä.<br /><br />Ystävällisin terveisin,<br />ISBN-keskus';
-        let subject = 'Liittymislomakkeenne ISBN-/ISMN-järjestelmään on vastaanotettu';
+        let messageBody = getNotifyClientMessageBody(doc.langCode);
+        let subject = getNotifyClientMessageSubject(doc.langCode);
         logger.info('Start sending email message using email service');
 
         // If email is not send in production context, add flag regarding test system
@@ -131,6 +132,32 @@ export default function () {
 
       // Throw error upwards
       throw err;
+    }
+
+    function getNotifyClientMessageBody(lang) {
+      if (lang === COMMON_LANGUAGES.english) {
+        return 'Your request to join the ISBN/ISMN System has been received. The ISBN Agency handles request forms in order of arrival.<br /><br />With kind regards,<br />The ISBN Agency';
+      }
+
+      if (lang === COMMON_LANGUAGES.swedish) {
+        return 'En ny anslutningsblankett till förlagsregistret har mottagits. Finlands ISBN-central, behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
+      }
+
+      // Default to finnish version
+      return 'Liittymislomakkeenne ISBN-/ISMN-järjestelmään on vastaanotettu. Lomakkeet käsitellään saapumisjärjestyksessä.<br /><br />Ystävällisin terveisin,<br />ISBN-keskus';
+    }
+
+    function getNotifyClientMessageSubject(lang) {
+      if (lang === COMMON_LANGUAGES.english) {
+        return 'Your request to join the ISBN/ISMN System has been received';
+      }
+
+      if (lang === COMMON_LANGUAGES.swedish) {
+        return 'En ny anslutningsblankett till förlagsregistret har mottagits';
+      }
+
+      // Default to finnish version
+      return 'Liittymislomakkeenne ISBN-/ISMN-järjestelmään on vastaanotettu';
     }
   }
 

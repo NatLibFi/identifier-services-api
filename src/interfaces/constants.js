@@ -41,6 +41,12 @@ export const COMMON_IDENTIFIER_TYPES = {
   ISSN: 'ISSN'
 };
 
+export const COMMON_LANGUAGES = {
+  finnish: 'fi-FI',
+  swedish: 'sv-SE',
+  english: 'en-GB'
+};
+
 // ISBN-REGISTRY CONSTANTS
 export const ISBN_REGISTRY_ISBN_RANGE_LENGTH = 6;
 export const ISBN_REGISTRY_ISMN_RANGE_LENGTH = 8;
