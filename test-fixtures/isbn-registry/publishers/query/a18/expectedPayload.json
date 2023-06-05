@@ -1,0 +1,15 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 2,
+      "officialName": "XYZ Publisher Request",
+      "otherNames": "",
+      "email": "xyz@example.com",
+      "contactPerson": "Baz Baz",
+      "hasQuitted": false,
+      "activeIdentifierIsbn": "978-951-95000",
+      "activeIdentifierIsmn": ""
+    }
+  ]
+}
