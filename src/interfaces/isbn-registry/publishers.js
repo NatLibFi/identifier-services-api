@@ -284,8 +284,8 @@ export default function () {
       const hasQuittedCondition = hasQuitted && isAdmin(user) ? {hasQuitted} : {};
 
       // Admin may additionally filter based on identifier type or category
-      const categoryCondition = category && isAdmin(user) ? _getCategoryCondition(category) : {};
       const identifierTypeCondition = identifierType && isAdmin(user) ? identifierType : '';
+      const categoryCondition = category && isAdmin(user) ? _getCategoryCondition(category, identifierType) : {};
 
       // Query must be done in two parts and without including association attributes because sequelize cannot handle group by
       // together with findAndCountAll and full group by limitation cannot be satisfied otherwise. See e.g.,: https://github.com/sequelize/sequelize/issues/6148
@@ -342,13 +342,17 @@ export default function () {
     // Return empty result if no result could be found
     return emptyQueryResult;
 
-    function _getCategoryCondition(category) {
-      return {
-        [Op.or]: [
-          {'$isbnSubRanges.category$': {[Op.eq]: ISBN_REGISTRY_ISBN_RANGE_LENGTH - category}},
-          {'$ismnSubRanges.category$': {[Op.eq]: ISBN_REGISTRY_ISMN_RANGE_LENGTH - category}}
-        ]
-      };
+    function _getCategoryCondition(category, identifierType) {
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+        return {'$isbnSubRanges.category$': {[Op.eq]: ISBN_REGISTRY_ISBN_RANGE_LENGTH - category}};
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+        return {'$ismnSubRanges.category$': {[Op.eq]: ISBN_REGISTRY_ISMN_RANGE_LENGTH - category}};
+
+      }
+
+      return undefined;
     }
 
     /**
