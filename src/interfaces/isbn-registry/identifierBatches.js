@@ -395,11 +395,14 @@ export default function () {
 
       // Format to text file to include publisher information
       let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${result.publisher.officialName}\r\n`; // eslint-disable-line
+      headerText += `Följande identifikatorer har tilldelats åt förlaget ${result.publisher.officialName}\r\n`;
       headerText += `Following identifiers have been assigned to publisher ${result.publisher.officialName}\r\n\r\n`;
 
       // Add test header for test environment
       if (NODE_ENV !== 'production') { // eslint-disable-line
-        headerText += 'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n\r\n';
+        headerText += 'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n';
+        headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\r\n';
+        headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\r\n\r\n';
       }
 
       const resultBody = result.identifiers.reduce((acc, {identifier}) => `${acc}${identifier}\r\n`, headerText);
