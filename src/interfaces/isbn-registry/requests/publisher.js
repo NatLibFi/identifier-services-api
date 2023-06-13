@@ -140,7 +140,7 @@ export default function () {
       }
 
       if (lang === COMMON_LANGUAGES.swedish) {
-        return 'En ny anslutningsblankett till förlagsregistret har mottagits. Finlands ISBN-central, behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
+        return 'En ny anslutningsblankett till förlagsregistret har mottagits. Finlands ISBN-central behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
       }
 
       // Default to finnish version
