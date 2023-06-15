@@ -25,7 +25,7 @@
  *
  */
 
-/* Based on original work by Petteri Kivimäki (Identifier Registry) */
+/* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import {AUTHOR_PUBLISHER_ID_ISBN} from '../../../config';
 import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES} from '../../constants';

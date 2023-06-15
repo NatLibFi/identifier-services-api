@@ -25,7 +25,7 @@
  *
  */
 
-/* Based on original work by Petteri Kivimäki (Identifier Registry) */
+/* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 /**
  * Function to reduce boilerplate code as data transformations from string to array
  * may contain different types of empty values, e.g., undefined, null or empty string
