@@ -1,5 +1,5 @@
 {
-  "descr": "Can retrieve ISSN identifier/block statistics in JSON format",
+  "descr": "Can retrieve ISSN publisher statistics in XLSX format",
   "requestUrl": "/issn-registry/statistics",
   "method": "post",
   "username": "system",

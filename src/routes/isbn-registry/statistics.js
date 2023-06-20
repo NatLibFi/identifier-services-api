@@ -51,13 +51,11 @@ export default function (permissionMiddleware) {
 
       if (result) {
         if (req.body.format !== 'json') {
-          const formattedResult = await statistics.formatStatistics(req.body.format, result);
+          const formattedResult = await statistics.formatStatistics(req.body.format, result, req.body.type);
 
           // For xlsx setting content type explicitly
           if (req.body.format === 'xlsx') {
-            res.setHeader('Content-Disposition', 'attachment; filename=isbn-registry-statistics.xlsx');
-            res.setHeader('Content-Type', 'application/vnd.ms-excel');
-            return res.status(HttpStatus.OK).end(formattedResult);
+            return formattedResult.write(`isbn-registry-statistics.${req.body.format}`, res);
           }
 
           return res.status(HttpStatus.OK).attachment(`isbn-registry-statistics.${req.body.format}`).send(formattedResult);

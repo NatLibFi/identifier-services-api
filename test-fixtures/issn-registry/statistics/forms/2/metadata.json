@@ -1,5 +1,5 @@
 {
-  "descr": "Knows xlsx format",
+  "descr": "Can retrieve ISSN form statistics in XLSX format",
   "requestUrl": "/issn-registry/statistics",
   "method": "post",
   "username": "system",
