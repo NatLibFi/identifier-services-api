@@ -25,7 +25,7 @@
  *
  */
 
-/* Based on original work by Petteri Kivimäki (Identifier Registry) */
+/* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import {DataTypes} from 'sequelize';
 

@@ -2,7 +2,7 @@
 
 API service of Identifier Services system.
 
-This repo contains API implementation written in Javascript that is based on the [Identifier Registry](https://github.com/petkivim/id-registry).
+This repo contains API implementation written in Javascript that is based on the [Identifier Registry](https://github.com/petkivim/id-registry) by [Petteri Kivimäki](https://github.com/petkivim/).
 
 
 ## License and copyright

@@ -25,7 +25,7 @@
  *
  */
 
-/* Based on original work by Petteri Kivimäki (Identifier Registry) */
+/* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import nodemailer from 'nodemailer';
 import {convert} from 'html-to-text';

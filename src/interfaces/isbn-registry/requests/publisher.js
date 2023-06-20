@@ -25,7 +25,7 @@
  *
  */
 
-/* Based on original work by Petteri Kivimäki (Identifier Registry) */
+/* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
@@ -140,7 +140,7 @@ export default function () {
       }
 
       if (lang === COMMON_LANGUAGES.swedish) {
-        return 'En ny anslutningsblankett till förlagsregistret har mottagits. Finlands ISBN-central, behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
+        return 'En ny anslutningsblankett till förlagsregistret har mottagits. Finlands ISBN-central behandlar ansökningarna i ankomstordning.<br /><br />Med vänlig hälsning,<br />ISBN-centralen';
       }
 
       // Default to finnish version
