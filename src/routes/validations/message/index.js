@@ -95,7 +95,6 @@ export const validateSendMessageIsbn = {
   langCode: Joi.string().regex(regexPatterns.langCode).required(),
   recipient: Joi.string().regex(regexPatterns.email).required(),
   subject: Joi.string().required(),
-  hasAttachment: Joi.boolean(),
   messageBody: Joi.string().required()
 };
 

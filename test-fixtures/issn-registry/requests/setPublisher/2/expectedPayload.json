@@ -14,34 +14,6 @@
   "publisherCreated": false,
   "langCode": "fi-FI",
   "status": "NOT_HANDLED",
-  "publicationIssn": [
-    {
-      "id": 1,
-      "title": "Foo title",
-      "subtitle": "Foo subtitle",
-      "issn": "",
-      "language": "FIN",
-      "medium": "PRINTED",
-      "status": "NO_PREPUBLICATION_RECORD",
-      "created": {},
-      "createdBy": "system",
-      "modified": {},
-      "modifiedBy": "admin"
-    },
-    {
-      "id": 2,
-      "title": "Bar Baz title",
-      "subtitle": null,
-      "issn": "",
-      "language": "FIN",
-      "medium": "ONLINE",
-      "status": "NO_PREPUBLICATION_RECORD",
-      "created": {},
-      "createdBy": "system",
-      "modified": {},
-      "modifiedBy": "admin"
-    }
-  ],
   "created": {},
   "createdBy": "system",
   "modified": {},

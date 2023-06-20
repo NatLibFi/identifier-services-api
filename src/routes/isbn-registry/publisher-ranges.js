@@ -53,9 +53,6 @@ export default function (permissionMiddleware, identifierType) {
     .post('/:id/close', permissionMiddleware('ranges', 'update'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), close)
-    .get('/:id/get-publications', permissionMiddleware('publicationRequests', 'read'), celebrate({
-      [Segments.PARAMS]: validateRequestId
-    }), getPublications)
     .get('/:id', permissionMiddleware('ranges', 'read'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), read)
@@ -150,20 +147,6 @@ export default function (permissionMiddleware, identifierType) {
   async function close(req, res, next) {
     try {
       const result = await isbnSubRanges.close(req.params.id, req.user);
-
-      if (result) {
-        return res.status(HttpStatus.OK).json(result);
-      }
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  async function getPublications(req, res, next) {
-    try {
-      const result = await isbnSubRanges.getPublications(req.params.id);
 
       if (result) {
         return res.status(HttpStatus.OK).json(result);
