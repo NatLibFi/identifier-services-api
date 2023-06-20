@@ -1,6 +1,7 @@
 {
   "id": 1,
   "publisherId": null,
+  "publisherName": null,
   "publisher": "Foo Publisher Edit",
   "contactPerson": "Foo Bar Edit",
   "email": "example.edit@example.com",

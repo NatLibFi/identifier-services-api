@@ -163,10 +163,6 @@ export default function () {
     const result = await issnFormModel.findByPk(id, {
       include: [
         {
-          association: 'publicationIssn',
-          attributes: ['id', 'title', 'subtitle', 'issn', 'language', 'medium', 'status', 'created', 'createdBy', 'modified', 'modifiedBy']
-        },
-        {
           association: 'publisherIssn',
           attributes: ['id', 'officialName']
         }
@@ -198,7 +194,7 @@ export default function () {
       const issnRequest = await issnFormModelInterface.read(id, t);
 
       // Status may be set only to either rejected or not_handled through GUI
-      // Status of not_notified is automatically when all form publications have ISSN
+      // Status of NOT_NOTIFIED is automatically set when last of form publications is given ISSN
       // Status of completed is automatically set when message is sent after all publications have ISSN
       /* Restriction regarding changing status manually has been lifted
       if (doc.status) {
@@ -223,7 +219,7 @@ export default function () {
       /* eslint-enable functional/immutable-data */
 
       // Save to db
-      const result = await issnRequest.update(dbDoc, {transaction: t});
+      await issnRequest.update(dbDoc, {transaction: t});
 
       // Update status of publications associated to form to NO_ISSN_GRANTED if form status
       // was changed to REJECTED
@@ -252,7 +248,7 @@ export default function () {
 
       // Verify all publications where updated
       await t.commit();
-      return result.toJSON();
+      return read(id);
     } catch (err) {
       await t.rollback();
       throw err;
