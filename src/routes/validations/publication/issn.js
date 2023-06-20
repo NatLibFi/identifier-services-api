@@ -49,15 +49,15 @@ export const validateCreatePublicationIssn = {
     lastIssue: Joi.array().items(Joi.string().allow('').max(50)).max(5)
   }),
   mainSeries: Joi.object({
-    title: Joi.array().items(Joi.string().max(100)).max(6),
+    title: Joi.array().items(Joi.string().max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   subseries: Joi.object({
-    title: Joi.array().items(Joi.string().max(100)).max(6),
+    title: Joi.array().items(Joi.string().max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   anotherMedium: Joi.object({
-    title: Joi.array().items(Joi.string().max(100)).max(6),
+    title: Joi.array().items(Joi.string().max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   additionalInfo: Joi.string().max(2000)
@@ -84,15 +84,15 @@ export const validateUpdatePublicationIssn = {
     lastIssue: Joi.array().items(Joi.string().allow('').max(50)).max(5)
   }),
   mainSeries: Joi.object({
-    title: Joi.array().items(Joi.string().allow('').max(100)).max(6),
+    title: Joi.array().items(Joi.string().allow('').max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   subseries: Joi.object({
-    title: Joi.array().items(Joi.string().allow('').max(100)).max(6),
+    title: Joi.array().items(Joi.string().allow('').max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   anotherMedium: Joi.object({
-    title: Joi.array().items(Joi.string().allow('').max(100)).max(6),
+    title: Joi.array().items(Joi.string().allow('').max(100)).max(5),
     issn: Joi.array().items(Joi.string().allow('').regex(regexPatterns.issnNumber)).max(5)
   }),
   status: Joi.string().regex(regexPatterns.issnPublicationStatus),
