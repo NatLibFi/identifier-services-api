@@ -28,7 +28,6 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
-import XLSX from 'xlsx';
 import {Op, fn, col, literal} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
@@ -38,6 +37,7 @@ import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../../co
 
 import {AUTHOR_PUBLISHER_ID_ISBN, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config';
 import {formatPublicationToPIID, formatPublisherToPIID} from './statisticsUtils';
+import {formatStatisticsToXlsx} from '../../common/utils/statisticsUtils';
 
 /**
  * ISBN statistics interface.
@@ -73,22 +73,14 @@ export default function () {
   /**
    * Format statistics to format defined as parameter
    * @param {string} format Format to format to
-   * @param {Object} item Statistics item
+   * @param {Object} jsonData Statistics data in JSON format
+   * @param {string} type Type of statistics
    * @returns Formatted item
    */
-  async function formatStatistics(format, item) { // eslint-disable-line require-await
+  async function formatStatistics(format, jsonData, type) { // eslint-disable-line require-await
     if (format === 'xlsx') {
-      // Create new Excel workbook
-      const wb = XLSX.utils.book_new();
-
-      // Transform statistics from JSON format
-      const ws = XLSX.utils.json_to_sheet(item);
-
-      // Append transformed statistics as new worksheet for workbook
-      XLSX.utils.book_append_sheet(wb, ws);
-
-      // Return workbook written to buffer
-      return XLSX.write(wb, {type: 'buffer', bookType: 'xlsx'});
+      const statisticsType = `ISBN_REGISTRY_${type}`;
+      return formatStatisticsToXlsx(statisticsType, jsonData, type);
     }
     /* istanbul ignore next */
     throw new ApiError(HttpStatus.BAD_REQUEST, 'Unsupported format for statistics');
@@ -242,14 +234,34 @@ export default function () {
     const model = _getRangeModel(identifierType);
     const ranges = await model.findAll();
 
-    return ranges.map(r => r.toJSON()).map(r => ({
-      etuliite: String(r.prefix),
-      kieliryhmä: r.langGroup ? String(r.langGroup) : '',
-      alku: String(r.rangeBegin),
-      loppu: String(r.rangeEnd),
-      vapaana: r.free + r.canceled,
-      käytetty: r.taken - r.canceled
-    }));
+    return ranges.map(r => r.toJSON()).map(r => formatRange(r, identifierType));
+
+    function formatRange(range, identifierType) {
+      const {prefix, langGroup, rangeBegin, rangeEnd, free, taken, canceled} = range;
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+        return {
+          etuliite: String(prefix),
+          kieliryhmä: String(langGroup),
+          alku: String(rangeBegin),
+          loppu: String(rangeEnd),
+          vapaana: free + canceled,
+          käytetty: taken - canceled
+        };
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+        return {
+          etuliite: String(prefix),
+          alku: String(rangeBegin),
+          loppu: String(rangeEnd),
+          vapaana: free + canceled,
+          käytetty: taken - canceled
+        };
+      }
+
+      return {};
+    }
   }
 
   // Does not yet have automated tests

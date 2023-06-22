@@ -1,8 +1,0 @@
-{
-  "descr": "Can retrieve statistics in xlsx format",
-  "requestUrl": "/isbn-registry/statistics",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 200
-}

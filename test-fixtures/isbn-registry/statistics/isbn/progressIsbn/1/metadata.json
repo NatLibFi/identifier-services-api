@@ -1,5 +1,5 @@
 {
-  "descr": "Should succeed, system can read ISBN progress statistics",
+  "descr": "Should succeed, system can read ISBN progress statistics in JSON format",
   "requestUrl": "/isbn-registry/statistics",
   "username": "system",
   "password": "system",

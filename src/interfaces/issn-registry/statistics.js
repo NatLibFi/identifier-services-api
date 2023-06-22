@@ -28,12 +28,13 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
-import XLSX from 'xlsx';
 import {Op, col, literal} from 'sequelize';
 
 import sequelize from '../../models';
 import {ApiError} from '../../utils';
 import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
+
+import {formatStatisticsToXlsx} from '../common/utils/statisticsUtils';
 
 /**
  * ISSN-registry statistics interface.
@@ -62,30 +63,16 @@ export default function () {
   /**
    * Format statistics to format defined as parameter
    * @param {string} format Format to format to
-   * @param {Object} item Statistics item
+   * @param {Object} jsonData Statistics item in JSON format
+   * @param {string} type Type of statistics
    * @returns Formatted item
    */
-  async function formatStatistics(format, item) { // eslint-disable-line require-await
+  async function formatStatistics(format, jsonData, type) { // eslint-disable-line require-await
     if (format === 'xlsx') {
-      // Create new Excel workbook
-      const wb = XLSX.utils.book_new();
-
-      // If item was array, directly convert item. Otherwise attempt on creating multiple sheets.
-      /* eslint-disable functional/no-conditional-statements */
-      if (Array.isArray(item)) {
-        const ws = XLSX.utils.json_to_sheet(item);
-        XLSX.utils.book_append_sheet(wb, ws);
-      } else if (typeof item === 'object' && item.sheets) {
-        const worksheets = item.sheets.map(XLSX.utils.json_to_sheet);
-        worksheets.forEach(ws => XLSX.utils.book_append_sheet(wb, ws));
-      } else {
-        throw new ApiError(HttpStatus.BAD_REQUEST, 'Cannot format selected statistics to xlsx file');
-      }
-      /* eslint-enable functional/no-conditional-statements */
-
-      // Return workbook written to buffer
-      return XLSX.write(wb, {type: 'buffer', bookType: 'xlsx'});
+      const statisticsType = `ISSN_REGISTRY_${type}`;
+      return formatStatisticsToXlsx(statisticsType, jsonData, type);
     }
+
     throw new ApiError(HttpStatus.BAD_REQUEST, 'Unsupported format for statistics');
   }
 
