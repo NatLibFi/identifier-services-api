@@ -50,7 +50,7 @@ export function formatStatisticsToXlsx(statisticsType, jsonData) {
     }
 
     if (statisticsType === 'ISSN_REGISTRY_ISSN') {
-      const ws2 = wb.addWorksheet(statisticsType);
+      const ws2 = wb.addWorksheet(`${statisticsType}_2`);
       return writeIssnRegistryIssnStatistics(jsonData, ws, ws2);
     }
 
