@@ -30,6 +30,8 @@
 import HttpStatus from 'http-status';
 import {QueryTypes} from 'sequelize';
 
+import {createLogger} from '@natlibfi/melinda-backend-commons';
+
 import sequelize from '../../models';
 import {ApiError} from '../../utils';
 import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
@@ -43,6 +45,8 @@ import {DB_DIALECT} from '../../config';
  */
 /* eslint-disable max-lines */
 export default function () {
+  const logger = createLogger(); // eslint-disable-line
+
   const rangeModel = sequelize.models.issnRange;
   const issnUsedModel = sequelize.models.issnUsed;
   const publisherIssnModel = sequelize.models.publisherIssn;
@@ -123,6 +127,8 @@ export default function () {
                     `ORDER BY ${yearDefinition}, ${monthDefinition}, IR.block`;
 
       return sequelize.query(query, {
+        benchmark: true,
+        logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
         replacements: {
           begin,
           end: `${end} 23:59:59`
@@ -163,6 +169,8 @@ export default function () {
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
+        benchmark: true,
+        logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
         replacements: {
           begin,
           end: `${end} 23:59:59`
@@ -181,6 +189,8 @@ export default function () {
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
+        benchmark: true,
+        logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
         replacements: {
           begin,
           end: `${end} 23:59:59`
@@ -260,6 +270,8 @@ export default function () {
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
+        benchmark: true,
+        logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
         replacements: {
           status,
           begin,
@@ -325,6 +337,8 @@ export default function () {
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
+        benchmark: true,
+        logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
         replacements: {
           begin,
           end: `${end} 23:59:59`
