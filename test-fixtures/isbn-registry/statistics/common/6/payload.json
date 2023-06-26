@@ -1,0 +1,6 @@
+{
+  "type": "MONTHLY",
+  "begin": "2022-09-01",
+  "end": "2022-09-30",
+  "format": "json"
+}

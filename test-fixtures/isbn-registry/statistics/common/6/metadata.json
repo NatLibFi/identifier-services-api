@@ -1,0 +1,8 @@
+{
+  "descr": "Monthly statistics generation does not crash",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

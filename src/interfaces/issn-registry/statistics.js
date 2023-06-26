@@ -28,13 +28,14 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
-import {Op, col, literal} from 'sequelize';
+import {QueryTypes} from 'sequelize';
 
 import sequelize from '../../models';
 import {ApiError} from '../../utils';
 import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
 
-import {formatStatisticsToXlsx} from '../common/utils/statisticsUtils';
+import {formatStatisticsToXlsx, getSQLDateDefinition} from '../common/utils/statisticsUtils';
+import {DB_DIALECT} from '../../config';
 
 /**
  * ISSN-registry statistics interface.
@@ -94,47 +95,43 @@ export default function () {
    * @returns Object containing sheets-attribute
    */
   async function getIssnStatistics({begin, end}) {
-    const beginDate = new Date(begin);
-    const endDate = new Date(end);
-
     // First part of this statistics consider the current status of ranges
-    const ranges = await rangeModel.findAll();
-    const firstSheetResult = ranges
-      .map(r => r.toJSON())
-      .map(r => ({'Lohko': r.block, 'Annettu': r.taken, 'Vapaana': r.free, 'Yht.': r.free + r.taken}));
+    const ranges = await rangeModel.findAll({attributes: ['block', 'taken', 'free']});
+    const firstSheetResult = ranges.map(r => ({'Lohko': r.block, 'Annettu': r.taken, 'Vapaana': r.free, 'Yht.': r.free + r.taken}));
 
     // Second part of this statistics consider count of identifiers assigned between the given timeframe
     // grouped by year, month and range block
-    const issnCount = await issnUsedModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(issnUsed.id))'), 'count'],
-        [literal(`SUBSTRING(issnUsed.created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(issnUsed.created, 6, 2)`), 'm']
-      ],
-      include: [
-        {
-          association: 'issnRange',
-          attributes: ['block']
-        }
-      ],
-      where: {
-        created: {
-          [Op.between]: [beginDate, endDate]
-        }
-      },
-      group: ['y', 'm', 'issnRange.block'],
-      order: ['y', 'm'],
-      raw: true
-    });
-
-    const secondSheetResult = issnCount
+    const secondSheetResult = await _getRangeMonthlyStatistics({begin, end});
+    const formattedSecondSheetResult = secondSheetResult
       .map(r => ({
         'Kuukausi': `${r.y} - ${r.m}`,
-        'Lohko': r['issnRange.block'],
-        'Lukumäärä': r.count
+        'Lohko': r.block,
+        'Lukumäärä': r.c
       }));
 
-    return {sheets: [firstSheetResult, secondSheetResult]};
+    return {sheets: [firstSheetResult, formattedSecondSheetResult]};
+
+    // eslint-disable-next-line require-await
+    async function _getRangeMonthlyStatistics({begin, end}) {
+      const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'IU.created');
+      const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'IU.created');
+
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, IR.block AS block, COUNT(DISTINCT IU.id) as c FROM :issnRangeTableName IR ` +
+                    `INNER JOIN :identifierUsedTableName IU ON IU.issn_range_id = IR.id ` +
+                    `WHERE IU.created BETWEEN :begin AND :end ` +
+                    `GROUP BY ${yearDefinition}, ${monthDefinition}, IR.block ` +
+                    `ORDER BY ${yearDefinition}, ${monthDefinition}, IR.block`;
+
+      return sequelize.query(query, {
+        replacements: {
+          issnRangeTableName: rangeModel.tableName,
+          identifierUsedTableName: issnUsedModel.tableName,
+          begin,
+          end: `${end} 23:59:59`
+        },
+        type: QueryTypes.SELECT
+      });
+    }
   }
 
   /**
@@ -150,38 +147,51 @@ export default function () {
     const headers = ['Aktiviteetin tyyppi', ...dateColumns];
     const rows = [];
 
-    const publishersCreatedCounts = await publisherIssnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))', col('id')), 'count'],
-        [literal(`SUBSTRING(created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(created, 6, 2)`), 'm']
-      ],
-      where: {
-        created: {
-          [Op.between]: [beginDate, endDate]
-        }
-      },
-      group: ['y', 'm']
-    });
-
-    const publishersModifiedCounts = await publisherIssnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))', col('id')), 'count'],
-        [literal(`SUBSTRING(modified, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(modified, 6, 2)`), 'm']
-      ],
-      where: {
-        modified: {
-          [Op.between]: [beginDate, endDate]
-        }
-      },
-      group: ['y', 'm']
-    });
-
+    const publishersCreatedCounts = await _getCreatedPublisherCount({begin, end});
     rows.push(_formatResultSet('Luotu', publishersCreatedCounts, headers)); // eslint-disable-line functional/immutable-data
+
+    const publishersModifiedCounts = await _getModifiedPublisherCount({begin, end});
     rows.push(_formatResultSet('Muokattu', publishersModifiedCounts, headers)); // eslint-disable-line functional/immutable-data
 
     return rows;
+
+    // eslint-disable-next-line require-await
+    async function _getCreatedPublisherCount({begin, end}) {
+      const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
+      const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
+
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+                    `WHERE created BETWEEN :begin AND :end ` +
+                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+      return sequelize.query(query, {
+        replacements: {
+          publisherTableName: publisherIssnModel.tableName,
+          begin,
+          end: `${end} 23:59:59`
+        },
+        type: QueryTypes.SELECT
+      });
+    }
+
+    // eslint-disable-next-line require-await
+    async function _getModifiedPublisherCount({begin, end}) {
+      const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
+      const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
+
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+                    `WHERE modified BETWEEN :begin AND :end ` +
+                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+      return sequelize.query(query, {
+        replacements: {
+          publisherTableName: publisherIssnModel.tableName,
+          begin,
+          end: `${end} 23:59:59`
+        },
+        type: QueryTypes.SELECT
+      });
+    }
 
     function _formatResultSet(state, resultSet, headers) {
       // Generate result object from column information
@@ -190,7 +200,7 @@ export default function () {
       // Transform result set
       const transformedResult = resultSet
         .map(v => v.toJSON()) // Transform to JSONified format
-        .map(({y, m, count}) => ({[`${y}-${Number(m)}`]: `${count}`})); // Transform keys to match dateColumn keys
+        .map(({y, m, c}) => ({[`${y}-${Number(m)}`]: `${c}`})); // Transform keys to match dateColumn keys
 
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
@@ -231,35 +241,37 @@ export default function () {
     const rows = [];
 
     // Get data and format it to fit the headers
-    const notProcessedCount = await _getPublicationsByDateAndStatus({beginDate, endDate, status: ISSN_REGISTRY_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD});
+    const notProcessedCount = await _getPublicationsByDateAndStatus({begin, end, status: ISSN_REGISTRY_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD});
     rows.push(_formatResultSet('Ei ennakkotietoa', notProcessedCount, headers));
 
-    const frozenCount = await _getPublicationsByDateAndStatus({beginDate, endDate, status: ISSN_REGISTRY_PUBLICATION_STATUS.ISSN_FROZEN});
+    const frozenCount = await _getPublicationsByDateAndStatus({begin, end, status: ISSN_REGISTRY_PUBLICATION_STATUS.ISSN_FROZEN});
     rows.push(_formatResultSet('Jäädytetty', frozenCount, headers));
 
-    const waitingForControlCopyCount = await _getPublicationsByDateAndStatus({beginDate, endDate, status: ISSN_REGISTRY_PUBLICATION_STATUS.WAITING_FOR_CONTROL_COPY});
+    const waitingForControlCopyCount = await _getPublicationsByDateAndStatus({begin, end, status: ISSN_REGISTRY_PUBLICATION_STATUS.WAITING_FOR_CONTROL_COPY});
     rows.push(_formatResultSet('Odottaa valvontakpl', waitingForControlCopyCount, headers));
 
-    const completedCount = await _getPublicationsByDateAndStatus({beginDate, endDate, status: ISSN_REGISTRY_PUBLICATION_STATUS.COMPLETED});
+    const completedCount = await _getPublicationsByDateAndStatus({begin, end, status: ISSN_REGISTRY_PUBLICATION_STATUS.COMPLETED});
     rows.push(_formatResultSet('Valmis', completedCount, headers));
 
     return rows;
 
     // eslint-disable-next-line require-await
-    async function _getPublicationsByDateAndStatus({beginDate, endDate, status}) {
-      return publicationIssnModel.findAll({
-        attributes: [
-          [literal('COUNT(DISTINCT(id))', col('id')), 'count'],
-          [literal(`SUBSTRING(created, 1, 4)`), 'y'],
-          [literal(`SUBSTRING(created, 6, 2)`), 'm']
-        ],
-        where: {
-          created: {
-            [Op.between]: [beginDate, endDate]
-          },
-          status
+    async function _getPublicationsByDateAndStatus({begin, end, status}) {
+      const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
+      const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
+
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publicationTableName ` +
+                    `WHERE created BETWEEN :begin AND :end AND status = :status ` +
+                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+      return sequelize.query(query, {
+        replacements: {
+          publicationTableName: publicationIssnModel.tableName,
+          status,
+          begin,
+          end: `${end} 23:59:59`
         },
-        group: ['y', 'm']
+        type: QueryTypes.SELECT
       });
     }
 
@@ -301,32 +313,32 @@ export default function () {
    * @returns Array containing results
    */
   async function getIssnFormStatistics({begin, end}) {
-    // Transform dates
-    const beginDate = new Date(begin);
-    const endDate = new Date(end);
-
     // Get form counts and group by year and month
-    const formCounts = await issnFormModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))', col('id')), 'count'],
-        [literal(`SUBSTRING(created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(created, 6, 2)`), 'm']
-      ],
-      where: {
-        created: {
-          [Op.between]: [beginDate, endDate]
-        }
-      },
-      group: ['y', 'm']
-    });
+    const formCounts = await _getCreatedForms({begin, end});
 
-    return formCounts.map(r => r.toJSON()).map(formatResult);
+    return formCounts.map(formatResult);
 
     function formatResult(r) {
-      return {
-        'Kuukausi': `${r.y}-${r.m}`,
-        'Määrä': r.count
-      };
+      return {'Kuukausi': `${r.y}-${r.m}`, 'Määrä': r.c};
+    }
+
+    // eslint-disable-next-line require-await
+    async function _getCreatedForms({begin, end}) {
+      const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
+      const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
+
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :issnFormTableName ` +
+                    `WHERE created BETWEEN :begin AND :end ` +
+                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+      return sequelize.query(query, {
+        replacements: {
+          issnFormTableName: issnFormModel.tableName,
+          begin,
+          end: `${end} 23:59:59`
+        },
+        type: QueryTypes.SELECT
+      });
     }
   }
 

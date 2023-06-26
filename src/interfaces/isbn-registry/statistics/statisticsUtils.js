@@ -27,6 +27,9 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
+import HttpStatus from 'http-status';
+
+import {ApiError} from '../../../utils';
 import {AUTHOR_PUBLISHER_ID_ISBN} from '../../../config';
 import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES} from '../../constants';
 
@@ -42,23 +45,33 @@ export function formatPublisherToPIID(publisher, publisherIdentifier, identifier
   /* eslint-disable camelcase */
   // Using PIID headers as attribute values
   if (previousNamesOnly) {
-    return publisher.previousNames.map(previousName => _formatPublisher(previousName, true));
+    const previousNames = publisher.previous_names;
+    // Attempt on generating entries from previous names. It may fail if previous names information does not
+    // contain data in correct format.
+    const previousNamesObject = JSON.parse(previousNames);
+    if (typeof previousNamesObject !== 'object' || !Object.keys(previousNamesObject).includes('name') || !Array.isArray(previousNamesObject.name)) {
+      throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Could not generate previous names statistics for publisher identifier ${publisherIdentifier} as data is not in correct format`);
+    }
+
+    return previousNamesObject.name.map(previousName => _formatPublisher(previousName, true));
   }
 
   return _formatPublisher();
 
+  // Note: uses publisher information from outer function scope. This is due to the use case where it is required to
+  // overwrite name information for previous name entries.
   function _formatPublisher(overwriteName = false, isOtherName = false) {
     return {
-      Registrant_Status_Code: publisher.hasQuitted || isOtherName ? 'I' : 'A',
+      Registrant_Status_Code: publisher.has_quitted || isOtherName ? 'I' : 'A',
       Registrant_Prefix_Type: publisher.id === AUTHOR_PUBLISHER_ID_ISBN ? 'T' : 'P',
       [`Registrant_Prefix_Or_${identifierType}`]: String(publisherIdentifier),
-      Registrant_Name: overwriteName ? String(overwriteName) : String(publisher.officialName),
+      Registrant_Name: overwriteName ? String(overwriteName) : String(publisher.official_name),
       ISO_Country_Code: 'FI',
       Address_Line_1: String(publisher.address),
       Address_Line_2: `${publisher.zip} ${publisher.city}`,
       Address_Line_3: '',
       Address_Line_4: '',
-      Admin_Contact_Name: publisher.contactPerson,
+      Admin_Contact_Name: publisher.contact_person,
       Admin_Phone: String(publisher.phone),
       Admin_Fax: '',
       Admin_Email: publisher.email,
@@ -95,13 +108,13 @@ export function formatPublicationToPIID(publication, identifier, publicationForm
     Registrant_Status_Code: isCancelled ? 'I' : 'A',
     Registrant_Prefix_Type: 'A',
     [`Registrant_Prefix_Or_${identifierType}`]: String(identifier),
-    Registrant_Name: String(publication.officialName),
+    Registrant_Name: String(publication.official_name),
     ISO_Country_Code: 'FI',
     Address_Line_1: String(publication.address),
     Address_Line_2: `${publication.zip} ${publication.city}`,
     Address_Line_3: '',
     Address_Line_4: '',
-    Admin_Contact_Name: String(publication.contactPerson),
+    Admin_Contact_Name: String(publication.contact_person),
     Admin_Phone: String(publication.phone),
     Admin_Fax: '',
     Admin_Email: String(publication.email),
@@ -124,13 +137,13 @@ export function formatPublicationToPIID(publication, identifier, publicationForm
    */
   function _publicationIsCanceled() {
     // If publication name contains '(ISBN|ISMN) cancelled' but no format information, it means the publication has not been published at all, and all formats should have status I
-    const publicationIsCanceled = publication.officialName.match(/^(?:ISBN|ISMN) cancelled/u);
+    const publicationIsCanceled = publication.official_name.match(/^(?:ISBN|ISMN) cancelled/u);
     const cancellationIncludesTypeInfo = [...Object.values(ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ...Object.values(ISBN_REGISTRY_PUBLICATION_PRINT_TYPES))]
-      .filter(v => publication.officialName.includes(v))
+      .filter(v => publication.official_name.includes(v))
       .some(v => v);
 
     // If publication name contains format and cancellation information, it means that only the defined format is cancelled
-    const typeIsCanceled = publication.officialName.match(/cancelled/u) && publication.officialName.includes(publicationFormat);
+    const typeIsCanceled = publication.official_name.match(/cancelled/u) && publication.official_name.includes(publicationFormat);
 
     return (publicationIsCanceled && !cancellationIncludesTypeInfo) || (cancellationIncludesTypeInfo && typeIsCanceled); // eslint-disable-line no-extra-parens
   }
