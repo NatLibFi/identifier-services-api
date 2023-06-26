@@ -28,16 +28,16 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
-import {Op, fn, col, literal} from 'sequelize';
+import {QueryTypes} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
 import sequelize from '../../../models';
 import {ApiError} from '../../../utils';
 import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../../constants';
 
-import {AUTHOR_PUBLISHER_ID_ISBN, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config';
+import {AUTHOR_PUBLISHER_ID_ISBN, DB_DIALECT, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config';
 import {formatPublicationToPIID, formatPublisherToPIID} from './statisticsUtils';
-import {formatStatisticsToXlsx} from '../../common/utils/statisticsUtils';
+import {formatStatisticsToXlsx, getSQLDateDefinition} from '../../common/utils/statisticsUtils';
 
 /**
  * ISBN statistics interface.
@@ -51,6 +51,7 @@ export default function () {
   const publicationIsbnModel = sequelize.models.publicationIsbn;
   const messageIsbnModel = sequelize.models.messageIsbn;
 
+  const identifierModel = sequelize.models.identifier;
   const identifierBatchModel = sequelize.models.identifierBatch;
 
   const STATISTICS = {
@@ -105,69 +106,96 @@ export default function () {
    * @returns Object containing required statistics
    */
   async function getPublishersIdentifierUniqueStatistics({begin, end, identifierType}) {
-    // Set models depending on identifier type
-    const ASSOCIATIONS = _getAssociations(identifierType);
+    const publisherRangeModel = _getPublisherRangeModel(identifierType);
 
-    const publishers = await publisherIsbnModel.findAll({
-      include: [
-        {
-          association: ASSOCIATIONS.subRange,
-          attributes: ['id', 'publisherIdentifier', 'created']
-        }
-      ],
-      order: [['officialName', 'ASC']]
+    // SQL query
+    const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
+                  `INNER JOIN (SELECT publisher_id, publisher_identifier AS first_publisher_identifier, min(created) FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end) PIR ` +
+                  'ON P.id = PIR.publisher_id ' +
+                  'GROUP BY PIR.publisher_id';
+
+    const result = await sequelize.query(query, {
+      replacements: {
+        begin,
+        end: `${end} 23:59:59`
+      },
+      type: QueryTypes.SELECT
     });
 
-    const result = publishers
-      .map(publisher => publisher.toJSON())
-      .filter(publisher => publisher[ASSOCIATIONS.subRange].length > 0)
-      .map(publisher => ({...publisher, subrange: publisher[ASSOCIATIONS.subRange].reduce((prev, curr) => prev.id < curr.id ? prev : curr)})) // Reduce to only first given identifier
-      .filter(publisher => _createdBetween(publisher.subrange, begin, end)) // Select only publishers whose first identifier was created in given time period range
-      .map(publisher => formatPublisherToPIID(publisher, publisher.subrange.publisherIdentifier, identifierType)); // Format to PIID headers
-
-    return result;
+    // Format result to PIID headers format
+    return result.map(publisher => formatPublisherToPIID(publisher, publisher.first_publisher_identifier, identifierType));
   }
 
   /**
-   * Retrieve publisher statistics of publishers which have had publisher identifier assigned between the selected dates
+   * Retrieve publisher statistics of publishers which have had publisher identifier assigned between the selected dates.
+   * If multiple identifier have been assigned between the selected time period, publisher is included multiple times to result set:
+   * Once for earch publisher identifier.
    * @param {Object} params Parameters for retrieving statistics
    * @returns Object containing required statistics
    */
   async function getPublishersStatistics({begin, end, identifierType}) {
-    // Set models depending on identifier type
-    const ASSOCIATIONS = _getAssociations(identifierType);
+    const publisherRangeModel = _getPublisherRangeModel(identifierType);
 
-    const publishers = await publisherIsbnModel.findAll({
-      include: [
-        {
-          association: ASSOCIATIONS.subRange,
-          attributes: ['publisherIdentifier', 'created']
-        }
-      ],
-      order: [['officialName', 'ASC']]
+    // SQL query
+    const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
+                  `INNER JOIN (SELECT publisher_id, publisher_identifier, created AS pir_created FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end) PIR ` +
+                  'ON P.id = PIR.publisher_id ' +
+                  'ORDER BY P.official_name ASC';
+
+    const result = await sequelize.query(query, {
+      replacements: {
+        begin,
+        end: `${end} 23:59:59`
+      },
+      type: QueryTypes.SELECT
     });
 
-    const result = publishers
-      .map(publisher => publisher.toJSON())
-      .map(publisher => ({...publisher, [ASSOCIATIONS.subRange]: publisher[ASSOCIATIONS.subRange].filter(sr => _createdBetween(sr, begin, end))})) // Remove subranges which have been created outside desired range
-      .filter(publisher => publisher[ASSOCIATIONS.subRange].length > 0) // Consider only publishers having requested type of subranges in requested range
-      .map(publisher => _generateEntries(publisher, ASSOCIATIONS)) // Format to PIID headers
+    const formattedResult = result.map(publisher => formatPublisherToPIID(publisher, publisher.publisher_identifier, identifierType));
+
+    // Result set requires also an entry per each of the previous names with status code 'I'
+    // Publisher identifier should be the latest available for the publisher
+    const previousNameEntries = result
+      .reduce(_getPreviousNameEntries, [])
+      .map(previousNameEntry => formatPublisherToPIID(previousNameEntry, previousNameEntry.publisher_identifier, identifierType, true))
       .flat();
 
-    return [...result].sort((x, y) => x.Registrant_Name.toLowerCase().localeCompare(y.Registrant_Name.toLowerCase())); // Return in alphabetical order
+    // eslint-disable-next-line functional/immutable-data
+    return [formattedResult, previousNameEntries]
+      .flat()
+      .sort((x, y) => x.Registrant_Name.toLowerCase().localeCompare(y.Registrant_Name.toLowerCase()));
 
-    function _generateEntries(publisher, associations) {
-      // These are the entries for each publisher range of publisher
-      const publisherEntries = publisher[associations.subRange].map(sr => formatPublisherToPIID(publisher, sr.publisherIdentifier, identifierType));
 
-      // For each of the previous names, an entry with status code 'I' is constructed
-      // All same contact information is used as with official name entry. The prefix/isbn/ismn identifier is the latest available of publisher subranges.
-      const previousNameEntries = formatPublisherToPIID(publisher, publisher[associations.subRange].slice(-1)[0].publisherIdentifier, identifierType, true);
+    function _getPreviousNameEntries(prev, cur) {
+      // If publisher does not have previous names, do not include to this result set
+      if (!_hasPreviousNames(cur)) {
+        return prev;
+      }
 
-      return [
-        ...publisherEntries,
-        ...previousNameEntries
-      ];
+      // If publisher had previous name, but was not yet in result set, include it
+      const existingEntryIdx = prev.findIndex(publisher => publisher.id === cur.id);
+      if (existingEntryIdx === -1) {
+        return [...prev, cur];
+      }
+
+      // If publisher entry exists in result set, but does not consider the latest publisher range
+      // Change the entry in result set so that latest publisher range entry is included to result set
+      // eslint-disable-next-line functional/no-conditional-statements
+      const prevCreatedDate = new Date(prev[existingEntryIdx].pir_created);
+      const curCreatedDate = new Date(cur.pir_created);
+
+      if (prevCreatedDate < curCreatedDate) {
+        // eslint-disable-next-line functional/immutable-data
+        prev[existingEntryIdx] = cur;
+        return prev;
+      }
+
+      // If publisher range result set already had the latest created publisher range, return set as it was
+      return prev;
+    }
+
+    function _hasPreviousNames(publisher) {
+      const previousNames = publisher.previous_names;
+      return previousNames && typeof previousNames === 'string' && previousNames.length > 0;
     }
   }
 
@@ -177,21 +205,26 @@ export default function () {
    * @returns Object containing required statistics
    */
   async function getAuthorPublisherPublicationStatistics({begin, end, identifierType}) {
-    const authorPublisherPublications = await publicationIsbnModel.findAll({
-      where: {
+    // SQL query
+    const query = `SELECT * FROM ${publicationIsbnModel.tableName} ` +
+                  `WHERE publisher_id = :publisherId AND ` +
+                  'publication_identifier_type = :identifierType AND ' +
+                  '((created BETWEEN :begin AND :end) OR (modified BETWEEN :begin AND :end)) ' +
+                  'ORDER BY official_name ASC';
+
+    const result = await sequelize.query(query, {
+      replacements: {
+        identifierType,
         publisherId: AUTHOR_PUBLISHER_ID_ISBN,
-        publicationIdentifierType: identifierType
-      }
+        begin,
+        end: `${end} 23:59:59`
+      },
+      type: QueryTypes.SELECT
     });
 
-    const result = authorPublisherPublications
-      .filter(p => _hasIdentifier(p))
-      .filter(p => _modifiedBetween(p, begin, end) || _createdBetween(p, begin, end))
-      .map(v => v.toJSON())
+    return result
       .map(publication => _generateEntries(publication))
       .flat();
-
-    return result;
 
     /**
      * Generates formatted entries from data given as parameter
@@ -201,7 +234,7 @@ export default function () {
     function _generateEntries(p) {
       return Object.entries(p)
         .reduce((acc, [key, value]) => {
-          if (key === 'publicationIdentifierPrint' || key === 'publicationIdentifierElectronical') {
+          if (key === 'publication_identifier_print' || key === 'publication_identifier_electronical') {
             // If value is empty, continue
             if (value === '') {
               return acc;
@@ -212,16 +245,6 @@ export default function () {
           }
           return acc;
         }, []);
-    }
-
-    /**
-     * Utility function to test whether publication has identifier or not
-     * @param {Object} p Publication
-     * @returns {boolean} True if publication has identifiers assigned to it, otherwise false
-     */
-    function _hasIdentifier(p) {
-      return (p.publicationIdentifierPrint && p.publicationIdentifierPrint !== '') || // eslint-disable-line
-        (p.publicationIdentifierElectronical && p.publicationIdentifierElectronical !== '') // eslint-disable-line
     }
   }
 
@@ -246,7 +269,7 @@ export default function () {
           alku: String(rangeBegin),
           loppu: String(rangeEnd),
           vapaana: free + canceled,
-          käytetty: taken - canceled
+          'käytetty': taken - canceled
         };
       }
 
@@ -256,7 +279,7 @@ export default function () {
           alku: String(rangeBegin),
           loppu: String(rangeEnd),
           vapaana: free + canceled,
-          käytetty: taken - canceled
+          'käytetty': taken - canceled
         };
       }
 
@@ -265,8 +288,6 @@ export default function () {
   }
 
   // Does not yet have automated tests
-  // Relies on using SUBSTRING-function OF SQL because automated tests utilize in-memory SQLite
-  // and it does not support SQL-functions like YEAR or MONTH
   /* eslint-disable max-statements,functional/immutable-data */
   async function getMonthlyStatistics({begin, end}) {
     // Init result set
@@ -286,60 +307,60 @@ export default function () {
     const excludePublisherIdsCat1 = [AUTHOR_PUBLISHER_ID_ISBN, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN];
 
     // Get sent messages count
-    const messageCounts = await _getByMessageCount({beginDate, endDate});
+    const messageCounts = await _getByMessageCount({begin, end});
     rows.push(_formatResultSet('Lähetetyt viestit', messageCounts, headers));
 
     // Get new ISBN publisher count and push formatted version to rows
     // Note: only tests creation date of publisher request, not creation date of subrange (similar to previous)
-    const publisherIsbnCreatedCount = await _getCreatedPublisherCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN});
+    const publisherIsbnCreatedCount = await _getCreatedPublisherCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISBN});
     rows.push(_formatResultSet('Uudet kustantajat (ISBN)', publisherIsbnCreatedCount, headers));
 
     // Get ISMN publisher count
-    const publisherIsmnCreatedCount = await _getCreatedPublisherCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISMN});
+    const publisherIsmnCreatedCount = await _getCreatedPublisherCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISMN});
     rows.push(_formatResultSet('Uudet kustantajat (ISMN)', publisherIsmnCreatedCount, headers));
 
     // Get count of publisher requests that have come through WEB interface using default WEB user
-    const publisherRegistrationCount = await _getCreatedPublisherRequests({beginDate, endDate});
+    const publisherRegistrationCount = await _getCreatedPublisherRequests({begin, end});
     rows.push(_formatResultSet('Kustantajarekisterin liittymislomakkeet', publisherRegistrationCount, headers));
 
     // Get new ISBN application count
-    const publicationRegistrationIsbnCount = await _getCreatedPublicationRequests({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN});
+    const publicationRegistrationIsbnCount = await _getCreatedPublicationRequests({begin, end, music: false});
     rows.push(_formatResultSet('ISBN hakulomakkeet', publicationRegistrationIsbnCount, headers));
 
     // Get new ISMN application count
-    const publicationRegistrationIsmnCount = await _getCreatedPublicationRequests({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISMN});
+    const publicationRegistrationIsmnCount = await _getCreatedPublicationRequests({begin, end, music: true});
     rows.push(_formatResultSet('ISMN hakulomakkeet', publicationRegistrationIsmnCount, headers));
 
     // ISBN identifier stats
 
     // Get created ISBN identifier count for authorpublisher
-    const createdIsbnCountAuthor = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: AUTHOR_PUBLISHER_ID_ISBN});
+    const createdIsbnCountAuthor = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: AUTHOR_PUBLISHER_ID_ISBN});
     rows.push(_formatResultSet('Myönnetyt ISBN-tunnukset (omakustanteet)', createdIsbnCountAuthor, headers));
 
     // Get created ISBN identifier count for state publisher
-    const createdIsbnCountState = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: STATE_PUBLISHER_ID_ISBN});
+    const createdIsbnCountState = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: STATE_PUBLISHER_ID_ISBN});
     rows.push(_formatResultSet('Myönnetyt ISBN-tunnukset (valtio)', createdIsbnCountState, headers));
 
     // Get created ISBN identifier count for university publisher
-    const createdIsbnCountUniversity = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: UNIVERSITY_PUBLISHER_ID_ISBN});
+    const createdIsbnCountUniversity = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, publisherId: UNIVERSITY_PUBLISHER_ID_ISBN});
     rows.push(_formatResultSet('Myönnetyt ISBN-tunnukset (yliopisto)', createdIsbnCountUniversity, headers));
 
     // Get created ISBN identifier count regarding category 1 subranges
-    const createdIsbnCountCat1 = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, excludePublisherIds: excludePublisherIdsCat1, category: 1});
+    const createdIsbnCountCat1 = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISBN, excludePublisherIds: excludePublisherIdsCat1, category: 1});
     rows.push(_formatResultSet('Myönnetyt ISBN-tunnukset (5-merkkiset)', createdIsbnCountCat1, headers));
 
     // ISMN identifier stats
 
     // Get created ISMN identifier count for authorpublisher
-    const createdIsmnCountAuthor = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISMN, publisherId: AUTHOR_PUBLISHER_ID_ISBN});
+    const createdIsmnCountAuthor = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISMN, publisherId: AUTHOR_PUBLISHER_ID_ISBN});
     rows.push(_formatResultSet('Myönnetyt ISMN-tunnukset (omakustanteet)', createdIsmnCountAuthor, headers));
 
     // Get created ISMN identifier count regarding category 1 subranges
-    const createdIsmnCountCat1 = await _getCreatedIdentifierCount({beginDate, endDate, identifierType: COMMON_IDENTIFIER_TYPES.ISMN, excludePublisherIds: excludePublisherIdsCat1, category: 1});
-    rows.push(_formatResultSet('Myönnetyt ISMN-tunnukset (5-merkkiset)', createdIsmnCountCat1, headers));
+    const createdIsmnCountCat1 = await _getCreatedIdentifierCount({begin, end, identifierType: COMMON_IDENTIFIER_TYPES.ISMN, excludePublisherIds: excludePublisherIdsCat1, category: 1});
+    rows.push(_formatResultSet('Myönnetyt ISMN-tunnukset (7-merkkiset)', createdIsmnCountCat1, headers));
 
     // Get modified publisher count
-    const modifiedPublisherCount = await _getModifiedPublisherCount({beginDate, endDate});
+    const modifiedPublisherCount = await _getModifiedPublisherCount({begin, end});
     rows.push(_formatResultSet('Kustantajatietojen muokkaukset', modifiedPublisherCount, headers));
 
     // Return results
@@ -351,7 +372,7 @@ export default function () {
 
       // Transform result set
       const transformedResult = resultSet
-        .map(({y, m, count}) => ({[`${Number(m)} / ${y}`]: `${count}`})); // Transform keys to match dateColumn keys
+        .map(({y, m, c}) => ({[`${Number(m)} / ${y}`]: `${c}`})); // Transform keys to match dateColumn keys
 
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
@@ -410,59 +431,20 @@ export default function () {
   }
 
   /**
-   * Utility function to determine whether entity was created between
-   * @param {Object} entity Entity to evaluate
-   * @param {string} begin Begin on time period
-   * @param {string} end End of time period
-   * @returns True if entity created value was between the begin and end parameters, otherwise false
+   * Get Sequelize model for selected identifier type publisher range
+   * @param {string} identifierType Type of identifiers to get publisher range model for
+   * @returns Sequelize model for selected identifier type's publisher ranges
    */
-  function _createdBetween(entity, begin, end) {
-    // Entity created attribute is already instanceof Date
-    const endDate = new Date(end);
-    endDate.setHours(23);
-    endDate.setMinutes(59);
-    endDate.setSeconds(59);
-    return entity.created >= new Date(begin) && entity.created <= endDate;
-  }
-
-  /**
-   * Utility function to determine whether entity was modified between
-   * @param {Object} entity Entity to evaluate
-   * @param {string} begin Begin on time period
-   * @param {string} end End of time period
-   * @returns True if entity created value was between the begin and end parameters, otherwise false
-   */
-  function _modifiedBetween(entity, begin, end) {
-    // Entity modified attribute is already instanceof Date
-    const endDate = new Date(end);
-    endDate.setHours(23);
-    endDate.setMinutes(59);
-    endDate.setSeconds(59);
-
-    return entity.modified >= new Date(begin) && entity.modified <= endDate;
-  }
-
-  /**
-   * Get association models for selected identifier type
-   * @param {string} identifierType Type of identifiers to get association models for
-   * @returns Object containing subrange and canceledSubrange models
-   */
-  function _getAssociations(identifierType) {
+  function _getPublisherRangeModel(identifierType) {
     if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
-      return {
-        subRange: 'isbnSubRanges',
-        canceledSubRange: 'canceledIsbnSubRanges'
-      };
+      return sequelize.models.isbnSubRange;
     }
 
     if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
-      return {
-        subRange: 'ismnSubRanges',
-        canceledSubRange: 'canceledIsmnSubRanges'
-      };
+      return sequelize.models.ismnSubRange;
     }
 
-    return {};
+    throw new Error(`Cannot find publisher range model for identifier type of ${identifierType}`);
   }
 
   /**
@@ -483,211 +465,154 @@ export default function () {
   }
 
   // MONTHLY STATS GETTER FUNCTIONS
-  // These contain Sequelize ORM queries for retrieving statistics
-  async function _getByMessageCount({beginDate, endDate}) { // eslint-disable-line require-await
-    return messageIsbnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))'), 'count'],
-        [literal(`SUBSTRING(sent, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(sent, 6, 2)`), 'm']
-      ],
-      where: {
-        sent: {
-          [Op.between]: [beginDate, endDate]
-        }
+  // These contain SQL queries for retrieving statistics
+  // eslint-disable-next-line require-await
+  async function _getByMessageCount({begin, end}) {
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'sent');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'sent');
+
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${messageIsbnModel.tableName} WHERE ` +
+                  `sent BETWEEN :begin AND :end ` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        publisherId: AUTHOR_PUBLISHER_ID_ISBN,
+        begin,
+        end: `${end} 23:59:59`
       },
-      group: ['y', 'm'],
-      raw: true
+      type: QueryTypes.SELECT
     });
   }
 
-  async function _getCreatedPublisherCount({beginDate, endDate, identifierType}) { // eslint-disable-line require-await
-    const include = _getInclude(identifierType);
+  async function _getCreatedPublisherCount({begin, end, identifierType}) { // eslint-disable-line require-await
+    const publisherRangeModel = _getPublisherRangeModel(identifierType);
 
-    return publisherIsbnModel.findAll({
-      include,
-      attributes: [
-        [literal('COUNT(DISTINCT(publisherIsbn.id))'), 'count'],
-        [literal(`SUBSTRING(publisherIsbn.created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(publisherIsbn.created, 6, 2)`), 'm']
-      ],
-      where: {
-        created: {
-          [Op.between]: [beginDate, endDate]
-        }
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'P.created');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'P.created');
+
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT P.id) as c FROM ${publisherIsbnModel.tableName} P ` +
+                  `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
+                  `WHERE P.created BETWEEN :begin AND :end ` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        begin,
+        end: `${end} 23:59:59`
       },
-      group: ['y', 'm'],
-      raw: true
+      type: QueryTypes.SELECT
+    });
+  }
+
+  async function _getCreatedPublisherRequests({begin, end}) { // eslint-disable-line require-await
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
+
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
+                  `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        websiteUser: WEBSITE_USER,
+        begin,
+        end: `${end} 23:59:59`
+      },
+      type: QueryTypes.SELECT
+    });
+  }
+
+  // eslint-disable-next-line require-await
+  async function _getCreatedPublicationRequests({begin, end, music}) {
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
+
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIsbnModel.tableName} ` +
+                  `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
+                  `${_getMusicCondition(music)}` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        websiteUser: WEBSITE_USER,
+        begin,
+        end: `${end} 23:59:59`
+      },
+      type: QueryTypes.SELECT
     });
 
-    function _getInclude(identifierType) {
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
-        return {
-          association: 'isbnSubRanges',
-          attributes: [],
-          required: true // Note: enforces INNER JOIN
-        };
-      }
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
-        return {
-          association: 'ismnSubRanges',
-          attributes: [],
-          required: true // Note: enforces INNER JOIN
-        };
-      }
-
-      throw new Error('Invalid identifier type definition!');
+    function _getMusicCondition(music) {
+      return music ? `AND publication_type = "${ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC}" ` : '';
     }
   }
 
-  async function _getCreatedPublisherRequests({beginDate, endDate}) { // eslint-disable-line require-await
-    return publisherIsbnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))'), 'count'],
-        [literal(`SUBSTRING(created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(created, 6, 2)`), 'm']
-      ],
-      where: {
-        created: {
-          [Op.between]: [beginDate, endDate]
-        },
-        createdBy: WEBSITE_USER
-      },
-      group: ['y', 'm'],
-      raw: true
-    });
-  }
+  // eslint-disable-next-line require-await
+  async function _getCreatedIdentifierCount({begin, end, identifierType, publisherId, excludePublisherIds, category}) {
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'IB.created');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'IB.created');
 
-  async function _getCreatedPublicationRequests({beginDate, endDate, identifierType}) { // eslint-disable-line require-await
-    const conditions = _getConditions(identifierType);
+    const publisherRangeModel = _getPublisherRangeModel(identifierType);
+    const conditions = [_getPublisherConditions(publisherId, excludePublisherIds), _getCategoryConditions(category)].filter(condition => condition !== '');
 
-    return publicationIsbnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))'), 'count'],
-        [literal(`SUBSTRING(created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(created, 6, 2)`), 'm']
-      ],
-      where: {
-        ...conditions,
-        created: {
-          [Op.between]: [beginDate, endDate]
-        },
-        createdBy: WEBSITE_USER
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT I.id) as c FROM ${publisherRangeModel.tableName} PIR ` +
+                  `INNER JOIN ${identifierModel.tableName} I ON I.publisher_identifier_range_id = PIR.id ` +
+                  `INNER JOIN ${identifierBatchModel.tableName} IB ON I.identifier_batch_id = IB.id ` +
+                  `WHERE IB.created BETWEEN :begin AND :end ` +
+                  `${_getConditionString(conditions)}` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        begin,
+        end: `${end} 23:59:59`
       },
-      group: ['y', 'm'],
-      raw: true
+      type: QueryTypes.SELECT
     });
 
-    function _getConditions(identifierType) {
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
-        return {
-          publicationType: {
-            [Op.ne]: ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC
-          }
-        };
-      }
-
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
-        return {
-          publicationType: ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC
-        };
-      }
-
-      return undefined;
-    }
-  }
-
-  async function _getCreatedIdentifierCount({beginDate, endDate, identifierType, publisherId, excludePublisherIds, category}) {
-    const identifierSubRangeModel = _getSubRangeModel(identifierType);
-    const subRangeConditions = _getSubRangeConditions({publisherId, excludePublisherIds, category});
-
-    // Find subranges
-    const subRangeResult = await identifierSubRangeModel.findAll({
-      attributes: ['id'],
-      where: {
-        ...subRangeConditions
-      }
-    });
-
-    const subrangeIds = subRangeResult.map(({id}) => id);
-
-    // If there were no subranges found, empty set is returned
-    if (subrangeIds.length === 0) {
-      return [];
-    }
-
-    // Find batches which correspond with identifier type and subrange id
-    return identifierBatchModel.findAll({
-      include: {
-        association: 'identifiers',
-        attributes: [],
-        required: true
-      },
-      attributes: [
-        [fn('COUNT', col('identifiers.id')), 'count'],
-        [literal(`SUBSTRING(identifierBatch.created, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(identifierBatch.created, 6, 2)`), 'm']
-      ],
-      where: {
-        identifierType,
-        created: {
-          [Op.between]: [beginDate, endDate]
-        },
-        subRangeId: {
-          [Op.in]: subrangeIds
-        }
-      },
-      group: ['y', 'm'],
-      raw: true
-    });
-
-    function _getSubRangeConditions({publisherId, excludePublisherIds, category}) {
-      /* eslint-disable functional/immutable-data */
-      const result = {};
-
+    function _getPublisherConditions(publisherId, excludePublisherIds) {
       if (publisherId) {
-        result.publisherId = publisherId;
-      } else if (excludePublisherIds) {
-        result.publisherId = {
-          [Op.notIn]: excludePublisherIds
-        };
+        return `PIR.publisher_id = ${publisherId}`;
       }
 
-      if (category) {
-        result.category = category;
+      if (excludePublisherIds) {
+        return `PIR.publisher_id NOT IN (${excludePublisherIds.join(',')})`;
       }
 
-      return result;
-      /* eslint-enable functional/immutable-data */
+      return '';
     }
 
-    function _getSubRangeModel(identifierType) {
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
-        return sequelize.models.isbnSubRange;
+    function _getCategoryConditions(category) {
+      if (category) {
+        return `PIR.category = ${category}`;
       }
 
-      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
-        return sequelize.models.ismnSubRange;
+      return '';
+    }
+
+    function _getConditionString(conditions) {
+      if (conditions.length === 0) {
+        return '';
       }
 
-      return undefined;
+      return `AND ${conditions.join(' AND ')} `;
     }
   }
 
-  async function _getModifiedPublisherCount({beginDate, endDate}) { // eslint-disable-line require-await
-    return publisherIsbnModel.findAll({
-      attributes: [
-        [literal('COUNT(DISTINCT(id))'), 'count'],
-        [literal(`SUBSTRING(modified, 1, 4)`), 'y'],
-        [literal(`SUBSTRING(modified, 6, 2)`), 'm']
-      ],
-      where: {
-        modified: {
-          [Op.between]: [beginDate, endDate]
-        }
+  async function _getModifiedPublisherCount({begin, end}) { // eslint-disable-line require-await
+    const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
+    const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
+
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
+                  `WHERE modified BETWEEN :begin AND :end ` +
+                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+
+    return sequelize.query(query, {
+      replacements: {
+        begin,
+        end: `${end} 23:59:59`
       },
-      group: ['y', 'm'],
-      raw: true
+      type: QueryTypes.SELECT
     });
   }
 }

@@ -27,6 +27,8 @@
 
 import * as xl from 'excel4node';
 
+import {DB_TYPES} from '../../../models/constants';
+
 export function formatStatisticsToXlsx(statisticsType, jsonData) {
   const wb = new xl.Workbook({author: 'National Library of Finland'});
   writeDataToSheet(statisticsType, jsonData, wb);
@@ -142,4 +144,49 @@ function writeData(jsonData, ws, numberDataHeaders) {
   function canGenerateXlsx(jsonData) {
     return Array.isArray(jsonData) && jsonData.length > 0 && typeof jsonData[0] === 'object';
   }
+}
+
+/**
+ * Get SQL query definition regarding parameters that differ depending on chosen database type (e.g., SQLite does not know MONTH function)
+ * @param {(sqlite|mariadb|mysql)} dbType Type of database
+ * @param {(year|month)} typeOfTransform Type of query to transform
+ * @param {string} variableName Name of variable to include to query
+ * @returns String containing the transformed portion of SQL query
+ */
+export function getSQLDateDefinition(dbType, typeOfTransform, variableName) {
+  if (!Object.keys(DB_TYPES).includes(dbType)) {
+    throw new Error('Unsupported database type for SQL query transformation');
+  }
+
+  const supportedTransformations = {year: 'year', month: 'month'};
+  if (!Object.keys(supportedTransformations).includes(typeOfTransform)) {
+    throw new Error('Unsupported SQL query transformation type');
+  }
+
+  // SQLite does not support YEAR and MONTH functions so implement queries utilizing substring
+  if (dbType === DB_TYPES.sqlite) {
+    if (typeOfTransform === supportedTransformations.year) {
+      return `SUBSTRING(${variableName}, 1, 4)`;
+    }
+
+    if (typeOfTransform === supportedTransformations.month) {
+      return `SUBSTRING(${variableName}, 6, 2)`;
+    }
+
+    throw new Error('Unsupported SQL query transformation for selected database type');
+  }
+
+  if ([DB_TYPES.mariadb, DB_TYPES.mysql].includes(dbType)) {
+    if (typeOfTransform === supportedTransformations.year) {
+      return `YEAR(${variableName})`;
+    }
+
+    if (typeOfTransform === supportedTransformations.month) {
+      return `MONTH(${variableName})`;
+    }
+
+    throw new Error('Unsupported SQL query transformation for selected database type');
+  }
+
+  throw new Error('Unknown unsupported SQL query transformation definition');
 }
