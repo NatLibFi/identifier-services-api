@@ -110,11 +110,12 @@ export default function () {
 
     // SQL query
     const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
-                  `INNER JOIN (SELECT publisher_id, publisher_identifier AS first_publisher_identifier, min(created) FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end) PIR ` +
-                  'ON P.id = PIR.publisher_id ' +
-                  'GROUP BY PIR.publisher_id';
+                  `INNER JOIN (SELECT publisher_id, publisher_identifier AS first_publisher_identifier, min(id) FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end GROUP BY publisher_id) PIR ` +
+                  'ON P.id = PIR.publisher_id ';
 
     const result = await sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
         end: `${end} 23:59:59`
@@ -143,6 +144,8 @@ export default function () {
                   'ORDER BY P.official_name ASC';
 
     const result = await sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
         end: `${end} 23:59:59`
@@ -213,6 +216,8 @@ export default function () {
                   'ORDER BY official_name ASC';
 
     const result = await sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         identifierType,
         publisherId: AUTHOR_PUBLISHER_ID_ISBN,
@@ -476,6 +481,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         publisherId: AUTHOR_PUBLISHER_ID_ISBN,
         begin,
@@ -497,6 +504,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
         end: `${end} 23:59:59`
@@ -514,6 +523,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         websiteUser: WEBSITE_USER,
         begin,
@@ -534,6 +545,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         websiteUser: WEBSITE_USER,
         begin,
@@ -563,6 +576,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
         end: `${end} 23:59:59`
@@ -608,6 +623,8 @@ export default function () {
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
+      benchmark: true,
+      logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
         end: `${end} 23:59:59`
