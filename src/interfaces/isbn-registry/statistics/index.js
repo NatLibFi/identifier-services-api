@@ -471,13 +471,12 @@ export default function () {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'sent');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'sent');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :messageTableName WHERE ` +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${messageIsbnModel.tableName} WHERE ` +
                   `sent BETWEEN :begin AND :end ` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        messageTableName: messageIsbnModel.tableName,
         publisherId: AUTHOR_PUBLISHER_ID_ISBN,
         begin,
         end: `${end} 23:59:59`
@@ -492,15 +491,13 @@ export default function () {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'P.created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'P.created');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT P.id) as c FROM :publisherTableName P ` +
-                  'INNER JOIN :publisherRangeTableName PIR ON P.id = PIR.publisher_id ' +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT P.id) as c FROM ${publisherIsbnModel.tableName} P ` +
+                  `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
                   `WHERE P.created BETWEEN :begin AND :end ` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        publisherTableName: publisherIsbnModel.tableName,
-        publisherRangeTableName: publisherRangeModel.tableName,
         begin,
         end: `${end} 23:59:59`
       },
@@ -512,13 +509,12 @@ export default function () {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
                   `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        publisherTableName: publisherIsbnModel.tableName,
         websiteUser: WEBSITE_USER,
         begin,
         end: `${end} 23:59:59`
@@ -532,14 +528,13 @@ export default function () {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publicationTableName ` +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIsbnModel.tableName} ` +
                   `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
                   `${_getMusicCondition(music)}` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        publicationTableName: publicationIsbnModel.tableName,
         websiteUser: WEBSITE_USER,
         begin,
         end: `${end} 23:59:59`
@@ -560,18 +555,15 @@ export default function () {
     const publisherRangeModel = _getPublisherRangeModel(identifierType);
     const conditions = [_getPublisherConditions(publisherId, excludePublisherIds), _getCategoryConditions(category)].filter(condition => condition !== '');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT I.id) as c FROM :publisherIdentifierRangeTableName PIR ` +
-                  `INNER JOIN :identifierTableName I ON I.publisher_identifier_range_id = PIR.id ` +
-                  `INNER JOIN :identifierBatchTableName IB ON I.identifier_batch_id = IB.id ` +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT I.id) as c FROM ${publisherRangeModel.tableName} PIR ` +
+                  `INNER JOIN ${identifierModel.tableName} I ON I.publisher_identifier_range_id = PIR.id ` +
+                  `INNER JOIN ${identifierBatchModel.tableName} IB ON I.identifier_batch_id = IB.id ` +
                   `WHERE IB.created BETWEEN :begin AND :end ` +
                   `${_getConditionString(conditions)}` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        publisherIdentifierRangeTableName: publisherRangeModel.tableName,
-        identifierTableName: identifierModel.tableName,
-        identifierBatchTableName: identifierBatchModel.tableName,
         begin,
         end: `${end} 23:59:59`
       },
@@ -611,13 +603,12 @@ export default function () {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
 
-    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+    const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
                   `WHERE modified BETWEEN :begin AND :end ` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       replacements: {
-        publisherTableName: publisherIsbnModel.tableName,
         begin,
         end: `${end} 23:59:59`
       },

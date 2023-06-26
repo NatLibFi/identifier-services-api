@@ -116,16 +116,14 @@ export default function () {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'IU.created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'IU.created');
 
-      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, IR.block AS block, COUNT(DISTINCT IU.id) as c FROM :issnRangeTableName IR ` +
-                    `INNER JOIN :identifierUsedTableName IU ON IU.issn_range_id = IR.id ` +
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, IR.block AS block, COUNT(DISTINCT IU.id) as c FROM ${rangeModel.tableName} IR ` +
+                    `INNER JOIN ${issnUsedModel.tableName} IU ON IU.issn_range_id = IR.id ` +
                     `WHERE IU.created BETWEEN :begin AND :end ` +
                     `GROUP BY ${yearDefinition}, ${monthDefinition}, IR.block ` +
                     `ORDER BY ${yearDefinition}, ${monthDefinition}, IR.block`;
 
       return sequelize.query(query, {
         replacements: {
-          issnRangeTableName: rangeModel.tableName,
-          identifierUsedTableName: issnUsedModel.tableName,
           begin,
           end: `${end} 23:59:59`
         },
@@ -160,13 +158,12 @@ export default function () {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
-      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIssnModel.tableName} ` +
                     `WHERE created BETWEEN :begin AND :end ` +
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         replacements: {
-          publisherTableName: publisherIssnModel.tableName,
           begin,
           end: `${end} 23:59:59`
         },
@@ -179,13 +176,12 @@ export default function () {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
 
-      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publisherTableName ` +
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIssnModel.tableName} ` +
                     `WHERE modified BETWEEN :begin AND :end ` +
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         replacements: {
-          publisherTableName: publisherIssnModel.tableName,
           begin,
           end: `${end} 23:59:59`
         },
@@ -199,7 +195,6 @@ export default function () {
 
       // Transform result set
       const transformedResult = resultSet
-        .map(v => v.toJSON()) // Transform to JSONified format
         .map(({y, m, c}) => ({[`${y}-${Number(m)}`]: `${c}`})); // Transform keys to match dateColumn keys
 
       // Looping through array object keys to assign them to result
@@ -260,13 +255,12 @@ export default function () {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
-      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :publicationTableName ` +
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIssnModel.tableName} ` +
                     `WHERE created BETWEEN :begin AND :end AND status = :status ` +
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         replacements: {
-          publicationTableName: publicationIssnModel.tableName,
           status,
           begin,
           end: `${end} 23:59:59`
@@ -281,8 +275,7 @@ export default function () {
 
       // Transform result set
       const transformedResult = resultSet
-        .map(v => v.toJSON()) // Transform to JSONified format
-        .map(({y, m, count}) => ({[`${y}-${Number(m)}`]: `${count}`})); // Transform keys to match dateColumn keys
+        .map(({y, m, c}) => ({[`${y}-${Number(m)}`]: `${c}`})); // Transform keys to match dateColumn keys
 
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
@@ -327,13 +320,12 @@ export default function () {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
-      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM :issnFormTableName ` +
+      const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${issnFormModel.tableName} ` +
                     `WHERE created BETWEEN :begin AND :end ` +
                     `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         replacements: {
-          issnFormTableName: issnFormModel.tableName,
           begin,
           end: `${end} 23:59:59`
         },
