@@ -58,6 +58,10 @@ export default function (permissionMiddleware) {
             return formattedResult.write(`issn-registry-statistics.${req.body.format}`, res);
           }
 
+          if (req.body.format === 'csv') {
+            return res.attachment('isbn-registry-statistics.csv').send(formattedResult);
+          }
+
           return res.status(HttpStatus.OK).attachment(`isbn-registry-statistics.${req.body.format}`).send(formattedResult);
         }
 

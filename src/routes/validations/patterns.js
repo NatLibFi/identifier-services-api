@@ -46,7 +46,7 @@ export default {
   publisherIdentifierIsbn: /^(?:[0-9]{1,8}|can_[0-9]{1,10})$/u,
   statisticsTypesIsbn: /^MONTHLY$|^PROGRESS_ISBN$|^PROGRESS_ISMN$|^PUBLISHERS_ISBN$|^PUBLICATIONS_ISBN$|^PUBLISHERS_ISMN$|^PUBLICATIONS_ISMN$|^PUBLISHERS_ISBN_UNIQUE$|^PUBLISHERS_ISMN_UNIQUE$/u,
   statisticsTypesIssn: /^ISSN$|^PUBLISHERS$|^PUBLICATIONS$|^FORMS$/u,
-  statisticsFormats: /^json$|^xlsx$/u,
+  statisticsFormats: /^json$|^xlsx$|^csv$/u,
   issnPublicationType: /^JOURNAL$|^NEWSLETTER$|^STAFF_MAGAZINE$|^MEMBERSHIP_BASED_MAGAZINE$|^CARTOON$|^NEWSPAPER$|^FREE_PAPER$|^MONOGRAPHY_SERIES$|^OTHER_SERIAL$/u,
   issnMedium: /^PRINTED$|^ONLINE$|^CDROM$|^OTHER$/u,
   issnLanguages: /^FIN$|^SWE$|^ENG$|^SMI$|^SPA$|^FRE$|^RUS$|^GER$|^MUL$/u,

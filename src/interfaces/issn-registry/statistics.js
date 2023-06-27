@@ -36,7 +36,7 @@ import sequelize from '../../models';
 import {ApiError} from '../../utils';
 import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
 
-import {formatStatisticsToXlsx, getSQLDateDefinition} from '../common/utils/statisticsUtils';
+import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../common/utils/statisticsUtils';
 import {DB_DIALECT} from '../../config';
 
 /**
@@ -76,6 +76,14 @@ export default function () {
     if (format === 'xlsx') {
       const statisticsType = `ISSN_REGISTRY_${type}`;
       return formatStatisticsToXlsx(statisticsType, jsonData, type);
+    }
+
+    if (format === 'csv') {
+      if (type === 'ISSN') {
+        throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'ISSN range statistics do not yet support csv format');
+      }
+
+      return formatStatisticsToCsv(jsonData);
     }
 
     throw new ApiError(HttpStatus.BAD_REQUEST, 'Unsupported format for statistics');

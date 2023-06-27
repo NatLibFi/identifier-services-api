@@ -37,7 +37,7 @@ import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../../co
 
 import {AUTHOR_PUBLISHER_ID_ISBN, DB_DIALECT, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config';
 import {formatPublicationToPIID, formatPublisherToPIID} from './statisticsUtils';
-import {formatStatisticsToXlsx, getSQLDateDefinition} from '../../common/utils/statisticsUtils';
+import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../../common/utils/statisticsUtils';
 
 /**
  * ISBN statistics interface.
@@ -83,6 +83,11 @@ export default function () {
       const statisticsType = `ISBN_REGISTRY_${type}`;
       return formatStatisticsToXlsx(statisticsType, jsonData, type);
     }
+
+    if (format === 'csv') {
+      return formatStatisticsToCsv(jsonData);
+    }
+
     /* istanbul ignore next */
     throw new ApiError(HttpStatus.BAD_REQUEST, 'Unsupported format for statistics');
   }
@@ -110,8 +115,11 @@ export default function () {
 
     // SQL query
     const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
-                  `INNER JOIN (SELECT publisher_id, publisher_identifier AS first_publisher_identifier, min(id) FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end GROUP BY publisher_id) PIR ` +
-                  'ON P.id = PIR.publisher_id ';
+                  `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
+                  'WHERE PIR.id IN ' +
+                  `  (SELECT min(PIR.id) FROM ${publisherRangeModel.tableName} PIR GROUP BY PIR.publisher_id) ` +
+                  'AND PIR.created BETWEEN :begin AND :end ' +
+                  'ORDER BY P.official_name ASC';
 
     const result = await sequelize.query(query, {
       benchmark: true,
@@ -124,7 +132,7 @@ export default function () {
     });
 
     // Format result to PIID headers format
-    return result.map(publisher => formatPublisherToPIID(publisher, publisher.first_publisher_identifier, identifierType));
+    return result.map(publisher => formatPublisherToPIID(publisher, publisher.publisher_identifier, identifierType));
   }
 
   /**
@@ -228,7 +236,7 @@ export default function () {
     });
 
     return result
-      .map(publication => _generateEntries(publication))
+      .map(publication => _generateEntries(publication, identifierType))
       .flat();
 
     /**
@@ -236,20 +244,18 @@ export default function () {
      * @param {Object[]} p Publications to format
      * @returns Array of objects which are formatted to have properties similar to PIID headers
      */
-    function _generateEntries(p) {
-      return Object.entries(p)
-        .reduce((acc, [key, value]) => {
-          if (key === 'publication_identifier_print' || key === 'publication_identifier_electronical') {
-            // If value is empty, continue
-            if (value === '') {
-              return acc;
-            }
+    function _generateEntries(p, identifierType) {
+      const publicationIdentifierPrint = p.publication_identifier_print;
+      const publicationIdentifierElectronical = p.publication_identifier_electronical;
 
-            // Otherwise, loop through keys and make a new entry from each identifier
-            return [...acc, Object.entries(JSON.parse(value)).map(([identifier, publicationFormat]) => formatPublicationToPIID(p, identifier, publicationFormat, identifierType))].flat();
-          }
-          return acc;
-        }, []);
+      const publicationIdentifierPrintPublications = publicationIdentifierPrint ? _getFormattedPublicationInfo(p, publicationIdentifierPrint, identifierType) : [];
+      const publicationIdentifierElectronicalPublications = publicationIdentifierElectronical ? _getFormattedPublicationInfo(p, publicationIdentifierElectronical, identifierType) : [];
+
+      return [...publicationIdentifierPrintPublications, ...publicationIdentifierElectronicalPublications].flat();
+
+      function _getFormattedPublicationInfo(publication, identifiers, identifierType) {
+        return Object.entries(JSON.parse(identifiers)).map(([identifier, publicationFormat]) => formatPublicationToPIID(publication, identifier, publicationFormat, identifierType));
+      }
     }
   }
 
