@@ -108,8 +108,8 @@ export function translatePublicationMediumIssn(medium, langCode) {
       [ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER]: 'muu'
     },
     'sv-SE': {
-      [ISSN_REGISTRY_PUBLICATION_MEDIUM.PRINTED]: 'trycksak',
-      [ISSN_REGISTRY_PUBLICATION_MEDIUM.ONLINE]: 'online-publikation',
+      [ISSN_REGISTRY_PUBLICATION_MEDIUM.PRINTED]: 'print',
+      [ISSN_REGISTRY_PUBLICATION_MEDIUM.ONLINE]: 'online',
       [ISSN_REGISTRY_PUBLICATION_MEDIUM.CDROM]: 'CD-ROM',
       [ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER]: 'annan'
     },
