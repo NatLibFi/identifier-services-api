@@ -62,13 +62,7 @@ properties:
   role2:
     type: array
     items:
-      type: string
-      maxItems: 4
-      enum:
-        - AUTHOR
-        - ILLUSTRATOR
-        - TRANSLATOR
-        - EDITOR
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
   firstName3:
     type: string
     maximum: 50

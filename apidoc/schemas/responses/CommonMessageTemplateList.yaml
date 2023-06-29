@@ -9,10 +9,6 @@ items:
     subject:
       type: string
     langCode:
-      type: string
-      enum:
-        - fi-FI
-        - en-GB
-        - sv-SE
+      $ref: '../enums/CommonLangCode.yaml'
     messageTypeName:
       type: string

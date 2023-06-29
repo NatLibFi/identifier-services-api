@@ -14,11 +14,7 @@ properties:
         email:
           type: string
         langCode:
-          type: string
-          enum:
-            - fi-FI
-            - sv-SE
-            - en-GB
+          $ref: '../enums/CommonLangCode.yaml'
         additionalInfo:
           type: string
         created:

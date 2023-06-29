@@ -12,19 +12,9 @@ properties:
         officialName:
           type: string
         langCode:
-          type: string
-          enum:
-            - fi-FI
-            - en-GB
-            - sv-SE
+          $ref: '../enums/CommonLangCode.yaml'
         publicationType:
-          type: string
-          enum:
-            - BOOK
-            - DISSERTATION
-            - SHEET_MUSIC
-            - MAP
-            - OTHER
+          $ref: '../enums/IsbnIsmnPublicationType.yaml'
         title:
           type: string
         comments:

@@ -21,6 +21,9 @@ post:
         application/vnd.ms-excel:
           schema:
             type: string
+        text/csv:
+          schema:
+            type: string
     '401':
       description: Unauthorized
     '403':
