@@ -34,7 +34,7 @@
     "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified && npm run build:apidoc",
     "build:apidoc": "swagger-cli bundle -o dist/public/openapi.json apidoc/openapi.yaml",
     "build:apidoc-dev": "swagger-cli bundle -o src/public/openapi.json apidoc/openapi.yaml",
-    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
+    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ext '*.yaml' --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
   },
   "dependencies": {
     "@babel/core": "^7.17.7",
