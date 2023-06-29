@@ -1,8 +1,3 @@
 {
-  "id": 1,
-  "identifierType": "ISBN",
-  "identifierCount": 3,
-  "publisherId": 1,
-  "publisherName": "FooBar Publisher",
-  "publisherIdentifier": "978-951-550"
+  "message": "Unauthorized"
 }

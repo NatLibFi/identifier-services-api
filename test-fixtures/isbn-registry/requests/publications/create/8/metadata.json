@@ -2,5 +2,7 @@
   "descr": "Should fail, cannot create publication request if contact email address is invalid",
   "requestUrl": "/isbn-registry/requests/publications",
   "method": "post",
+  "username": "system",
+  "password": "system",
   "expectedStatus": 422
 }

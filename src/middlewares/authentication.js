@@ -43,9 +43,13 @@ export function generateUserAuthorizationMiddleware(passportMiddlewares) {
   };
 }
 
+/**
+ * Getter for user application roles. Requires the request user to exist and have some application role.
+ * @returns Next if user has some application role, otherwise throws ApiError with unauthorized status
+ */
 export function getUserApplicationRoles(req, res, next) {
   if (!req.user || !req.user.roles || !Array.isArray(req.user.roles)) {
-    return next();
+    throw new ApiError(HttpStatus.UNAUTHORIZED);
   }
 
   const userApplicationRoles = getRolesFromKeycloakRoles(req.user.roles);
@@ -59,6 +63,11 @@ export function getUserApplicationRoles(req, res, next) {
  */
 export function generatePermissionMiddleware() {
   return (type, command) => (req, res, next) => {
+    // Do not evaluate further if user is not defined, public endpoints do not utilize permission middleware
+    if (!req.user) {
+      throw new ApiError(HttpStatus.UNAUTHORIZED);
+    }
+
     // Not allowed to access commands/types that are not defined
     if (!Object.keys(permissions).includes(type) || !Object.keys(permissions[type]).includes(command)) {
       throw new ApiError();
@@ -72,7 +81,7 @@ export function generatePermissionMiddleware() {
     }
 
     // If endpoint was not public and user is not defined, return unauthorized
-    if (!req.user || !req.user.applicationRoles) {
+    if (!req.user.applicationRoles) {
       throw new ApiError(HttpStatus.UNAUTHORIZED);
     }
 

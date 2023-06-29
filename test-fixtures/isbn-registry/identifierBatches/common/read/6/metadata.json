@@ -1,6 +1,6 @@
 {
-    "descr": "Unauthenticated may read some information regarding ISMN batch that is not linked to a publication",
+    "descr": "Should fail, unauthenticated cannot read information regarding ISMN batch that is not linked to a publication through non-public endpoint",
     "requestUrl": "/isbn-registry/identifierbatches/1",
     "method": "get",
-    "expectedStatus": 200
+    "expectedStatus": 401
 }

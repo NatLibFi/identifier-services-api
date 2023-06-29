@@ -1,26 +1,3 @@
 {
-  "id": 1,
-  "officialName": "FooBar Publisher",
-  "otherNames": "OtherFooBar, OtherAnotherFooBar",
-  "previousNames": ["PriorFoo", "AnotherPriorFoo"],
-  "address": "FooBar 123",
-  "zip": "00000",
-  "city": "Foobarila",
-  "hasQuitted": false,
-  "phone": "1234567",
-  "www": "http://example.com",
-  "activeIdentifierIsbn": "978-951-550",
-  "activeIdentifierIsmn": "979-0-55001",
-  "isbnSubRanges": [
-    {
-      "id": 1,
-      "publisherIdentifier": "978-951-550"
-    }
-  ],
-  "ismnSubRanges": [
-    {
-      "id": 1,
-      "publisherIdentifier": "979-0-55001"
-    }
-  ]
+  "message": "Unauthorized"
 }

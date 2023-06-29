@@ -39,31 +39,31 @@ import {default as createIssnRegistryStatisticsRouter} from './statistics';
 import * as commonRoutes from '../common';
 
 export default function (middlewares) {
-  const {gatherUserInformationMiddlewares, permissionMiddleware} = middlewares;
+  const {permissionMiddleware} = middlewares;
   return new Router()
     // ISSN RANGES
-    .use('/ranges', gatherUserInformationMiddlewares, createIssnRegistryRangeRouter(permissionMiddleware))
+    .use('/ranges', createIssnRegistryRangeRouter(permissionMiddleware))
 
     // ISSN REQUESTS
-    .use('/requests', gatherUserInformationMiddlewares, createIssnRegistryRequestRouter(permissionMiddleware))
+    .use('/requests', createIssnRegistryRequestRouter(permissionMiddleware))
 
     // ISSN REQUESTS ARCHIVE
-    .use('/archived-requests', gatherUserInformationMiddlewares, createIssnRegistryArchivedRequestRouter(permissionMiddleware))
+    .use('/archived-requests', createIssnRegistryArchivedRequestRouter(permissionMiddleware))
 
     // ISSN PUBLISHERS
-    .use('/publishers', gatherUserInformationMiddlewares, createIssnRegistryPublisherRouter(permissionMiddleware))
+    .use('/publishers', createIssnRegistryPublisherRouter(permissionMiddleware))
 
     // ISSN PUBLICATIONS
-    .use('/publications', gatherUserInformationMiddlewares, createIssnRegistryPublicationRouter(permissionMiddleware))
+    .use('/publications', createIssnRegistryPublicationRouter(permissionMiddleware))
 
     // ISSN MESSAGES
-    .use('/messagetypes', gatherUserInformationMiddlewares, commonRoutes.createMessageTypeRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN))
-    .use('/messagetemplates', gatherUserInformationMiddlewares, commonRoutes.createMessageTemplateRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN))
-    .use('/messages', gatherUserInformationMiddlewares, createIssnRegistryMessageRouter(permissionMiddleware))
+    .use('/messagetypes', commonRoutes.createMessageTypeRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN))
+    .use('/messagetemplates', commonRoutes.createMessageTemplateRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN))
+    .use('/messages', createIssnRegistryMessageRouter(permissionMiddleware))
 
     // ISSN STATISTICS
-    .use('/statistics', gatherUserInformationMiddlewares, createIssnRegistryStatisticsRouter(permissionMiddleware))
+    .use('/statistics', createIssnRegistryStatisticsRouter(permissionMiddleware))
 
     // ISSN MARC
-    .use('/marc', gatherUserInformationMiddlewares, commonRoutes.createMarcRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN));
+    .use('/marc', commonRoutes.createMarcRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISSN));
 }

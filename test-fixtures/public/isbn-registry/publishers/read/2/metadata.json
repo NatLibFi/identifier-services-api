@@ -1,6 +1,6 @@
 {
     "descr": "Should result to NOT FOUND status to unauthenticated: cannot read publisher join requests through publisher route",
-    "requestUrl": "/isbn-registry/publishers/2",
+    "requestUrl": "/public/isbn-registry/publishers/2",
     "method": "get",
     "expectedStatus": 404
 }

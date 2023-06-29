@@ -28,3 +28,4 @@
 export {createAuthenticationRouter, createStatusRouter} from './common';
 export {default as createIsbnRegistryRouter} from './isbn-registry';
 export {default as createIssnRegistryRouter} from './issn-registry';
+export {default as createPublicRouter} from './public';

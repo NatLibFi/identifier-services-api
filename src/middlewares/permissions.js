@@ -37,21 +37,26 @@ export const permissions = {
     ]
   },
   publishers: {
+    autocomplete: [
+      'admin',
+      'system'
+    ],
     create: [
       'admin',
       'system'
     ],
-    read: ['all'], // Note, attributes are restricted for general public via filtering
-    extendedQueries: [
-      'admin',
-      'system'
-    ],
+    read: ['all'],
+    query: ['all'],
     update: [
       'admin',
       'system'
     ]
   },
   issnPublishers: {
+    autocomplete: [
+      'admin',
+      'system'
+    ],
     create: [
       'admin',
       'system'
@@ -74,6 +79,7 @@ export const permissions = {
       'admin',
       'system'
     ],
+    create: ['all'],
     update: [
       'admin',
       'system'
@@ -102,10 +108,7 @@ export const permissions = {
     ]
   },
   publicationRequests: {
-    create: [
-      'admin',
-      'system'
-    ],
+    create: ['all'],
     read: [
       'admin',
       'system'
@@ -124,6 +127,7 @@ export const permissions = {
     ]
   },
   issnRequests: {
+    create: ['all'],
     read: [
       'admin',
       'system'
@@ -160,6 +164,8 @@ export const permissions = {
       'admin',
       'system'
     ],
+    download: ['all'],
+    read: ['all'],
     query: [
       'admin',
       'system'

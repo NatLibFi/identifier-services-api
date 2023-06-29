@@ -27,6 +27,8 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
+/* eslint-disable max-lines */
+
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
@@ -49,7 +51,9 @@ export default function () {
 
   return {
     read,
+    readPublic,
     query,
+    queryPublic,
     update,
     autoComplete
   };
@@ -115,7 +119,81 @@ export default function () {
         isbnSubRanges: formattedIsbnSubranges, ismnSubRanges: formattedIsmnSubranges, activeIdentifierIsbn, activeIdentifierIsmn
       };
     }
+  }
 
+  /**
+   * Read public information from publisher registry entry.
+   * @param {number} id ID of publisher to read
+   * @returns {Object} Publisher as object containing public attributes
+   */
+  async function readPublic(id) {
+    const result = await publisherModel.findByPk(id, {
+      attributes: [
+        'id',
+        'officialName',
+        'previousNames',
+        'otherNames',
+        'address',
+        'hasQuitted',
+        'city',
+        'zip',
+        'phone',
+        'www',
+        'activeIdentifierIsbn',
+        'activeIdentifierIsmn'
+      ],
+      include: [
+        {
+          association: 'isbnSubRanges',
+          attributes: ['id', 'publisherIdentifier']
+        },
+        {
+          association: 'ismnSubRanges',
+          attributes: ['id', 'publisherIdentifier']
+        }
+      ]
+    });
+
+    if (result !== null && _isPublisherRegistryEntry(result)) {
+      const {
+        officialName,
+        previousNames,
+        otherNames,
+        address,
+        hasQuitted,
+        city,
+        zip,
+        phone,
+        www,
+        isbnSubRanges,
+        ismnSubRanges,
+        activeIdentifierIsbn,
+        activeIdentifierIsmn
+      } = result.toJSON();
+
+      return {
+        id,
+        officialName,
+        previousNames,
+        otherNames,
+        address,
+        hasQuitted,
+        city,
+        zip,
+        phone,
+        www,
+        isbnSubRanges,
+        ismnSubRanges,
+        activeIdentifierIsbn,
+        activeIdentifierIsmn
+      };
+    }
+
+      if (result !== null && !_isPublisherRegistryEntry(result)) { // eslint-disable-line
+      logger.info('Publisher with id exists but is not part of publisher registry');
+    }
+
+    throw new ApiError(HttpStatus.NOT_FOUND);
   }
 
   /**
@@ -391,6 +469,166 @@ export default function () {
         return doc;
       }
 
+      // Otherwise, return pre-defined, filtered, set of information
+      const {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
+      return {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn};
+    }
+  }
+  /* eslint-enable max-statements */
+
+  /**
+   * Public query publisher functionality.
+   * @param {Object} guiOpts Search options
+   * @returns Result set of the query
+   */
+  /* eslint-disable max-statements,complexity */
+  async function queryPublic(guiOpts) {
+    // NOTE: there exists a known, most likely a sequelize-related, bug regarding the row set being limited incorrectly.
+    // Basically the reason seems to be that the duplicate entries are cut from the resulting rows attribute after the limiter
+    // has been evaluated in the database query. At the time of writing, this bug remains unsolved.
+
+    /* eslint-disable functional/no-let */
+    const attributes = ['id', 'officialName', 'otherNames', 'hasQuitted', 'activeIdentifierIsbn', 'activeIdentifierIsmn'];
+    const {searchText, offset = 0, limit = 10} = guiOpts;
+    const order = [['id', 'DESC']];
+    const trimmedSearchText = searchText ? searchText.trim() : undefined;
+
+    let publisherIds = null; // Utilized in queries using publisher identifier
+    /* eslint-enable functional/no-let */
+
+    // Search by identifier, populate matching publisher IDs
+    // ISBN publisher identifier
+    if (trimmedSearchText) {
+
+      if (trimmedSearchText.match(/^97(?:8|9)-(?:951|952)-\d+/u) !== null) {
+
+        const subrangeResult = await sequelize.models.isbnSubRange.findAll({
+          attributes: ['publisherId'],
+          where: {
+            publisherIdentifier: {
+              [Op.like]: `${trimmedSearchText}%`
+            }
+          },
+          distinct: true,
+          order: [['publisherId', 'DESC']]
+        });
+
+        if (!subrangeResult || subrangeResult.length === 0) {
+          return emptyQueryResult;
+        }
+
+        publisherIds = subrangeResult.map(v => v.publisherId);
+      } else if (trimmedSearchText.match(/^979-0-\d+/u) !== null) {
+
+        // ISMN publisher identifier
+        const subrangeResult = await sequelize.models.ismnSubRange.findAll({
+          attributes: ['publisherId'],
+          where: {
+            publisherIdentifier: {
+              [Op.like]: `${trimmedSearchText}%`
+            }
+          },
+          distinct: true,
+          order: [['publisherId', 'DESC']]
+        });
+
+        if (!subrangeResult || subrangeResult.length === 0) {
+          return emptyQueryResult;
+        }
+
+        publisherIds = subrangeResult.map(v => v.publisherId);
+      }
+    }
+
+    /* eslint-disable functional/no-conditional-statements */
+    if (publisherIds !== null) { // eslint-disable-line no-negated-condition
+
+      // Note: since we are using publisher IDs as base for the search, there is no need for additionally make sure
+      // publisher is linked to an publisher range. ID based search is also distinct by default so no need for
+      // hacks for achieving distinct result set (like in text-based search).
+      const result = await publisherModel.findAndCountAll({
+        attributes,
+        where: {
+          id: {
+            [Op.in]: publisherIds
+          }
+        },
+        limit,
+        offset,
+        order
+      });
+
+      if (result.count > 0) {
+        const filteredResult = result.rows
+          .map(v => v.toJSON())
+          .map(v => _filterResult(v));
+
+        return {totalDoc: result.count, results: filteredResult};
+      }
+    } else {
+      // Search by attributes other than identifier
+
+      // Define free-text search attributes
+      const textSearchAttributes = ['officialName', 'otherNames', 'previousNames'];
+      const textConditions = trimmedSearchText ? {[Op.or]: generateQuery(textSearchAttributes, trimmedSearchText)} : undefined;
+
+      // Query must be done in two parts and without including association attributes because sequelize cannot handle group by
+      // together with findAndCountAll and full group by limitation cannot be satisfied otherwise. See e.g.,: https://github.com/sequelize/sequelize/issues/6148
+      const queryParams = {
+        where: {
+          [Op.and]: [
+            {...textConditions},
+            {[Op.or]: [
+              {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
+              {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
+            ]}
+          ]
+        },
+        limit,
+        offset,
+        order,
+        include: [
+          {
+            model: isbnSubRangeModel,
+            as: 'isbnSubRanges',
+            attributes: []
+          },
+          {
+            model: ismnSubRangeModel,
+            as: 'ismnSubRanges',
+            attributes: []
+          }
+        ],
+        subQuery: false, // Note: required for where clause with eagerly loaded associations to work together with limit/offset/order
+        distinct: true, // Required for retrieving true count of distinct entries
+        col: 'id' // Required for retrieving true count of distinct entries
+      };
+
+      // Grouping by publisher id is the hack to get correct rows as result
+      const result = await publisherModel.findAll({...queryParams, attributes, group: ['publisherIsbn.id']});
+      const countResult = await publisherModel.count({...queryParams});
+
+      // Return result if there is one
+      if (countResult > 0) {
+      // Filter attributes based on user role
+        const filteredResult = result
+          .map(v => v.toJSON())
+          .map(v => _filterResult(v));
+
+        // Finally, return results
+        return {totalDoc: countResult, results: filteredResult};
+      }
+    }
+
+    // Return empty result if no result could be found
+    return emptyQueryResult;
+
+    /**
+   * Filters result attributes to the ones available for everybody
+   * @param {Object} doc Publisher registry entry object
+   * @returns {Object} Publisher object with attributes filtered
+   */
+    function _filterResult(doc) {
       // Otherwise, return pre-defined, filtered, set of information
       const {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
       return {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn};

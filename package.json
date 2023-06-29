@@ -31,6 +31,7 @@
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
     "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
+    "test:public-routes": "npm run test:base -- -b src/routes/public/*spec.js",
     "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified && npm run build:apidoc",
     "build:apidoc": "swagger-cli bundle -o dist/public/openapi.json apidoc/openapi.yaml",
     "build:apidoc-dev": "swagger-cli bundle -o src/public/openapi.json apidoc/openapi.yaml",

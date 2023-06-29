@@ -37,14 +37,13 @@ import {
 } from '../../validations';
 
 import {publisherRequestIsbnFactory} from '../../../interfaces';
-import {validateTurnstile} from '../../../middlewares/turnstile';
 
 export default function (permissionMiddleware) {
 
   const publisherRequests = publisherRequestIsbnFactory();
 
   return new Router()
-    .post('/', validateTurnstile, celebrate({
+    .post('/', permissionMiddleware('publisherRequests', 'create'), celebrate({
       [Segments.BODY]: validateCreatePublisherRequestIsbn
     }), create)
     .get('/:id', permissionMiddleware('publisherRequests', 'read'), celebrate({

@@ -1,6 +1,8 @@
 {
-    "descr": "Unauthenticated cannot filter based on identifier type",
+    "descr": "Non-admin cannot filter based on identifier type",
     "requestUrl": "/isbn-registry/publishers/query",
     "method": "post",
+    "username": "publisher",
+    "password": "publisher",
     "expectedStatus": 422
 }

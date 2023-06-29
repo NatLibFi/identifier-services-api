@@ -55,7 +55,7 @@ export default function (permissionMiddleware) {
     .delete('/:id', permissionMiddleware('issnPublishers', 'delete'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), remove)
-    .post('/autocomplete', permissionMiddleware('issnPublishers', 'read'), celebrate({
+    .post('/autocomplete', permissionMiddleware('issnPublishers', 'autocomplete'), celebrate({
       [Segments.BODY]: validateQueryBody
     }), autocomplete)
     .post('/query', permissionMiddleware('issnPublishers', 'read'), celebrate({
