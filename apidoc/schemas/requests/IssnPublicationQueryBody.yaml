@@ -1,0 +1,14 @@
+type: object
+properties:
+  formId:
+    type: integer
+  publisherId:
+    type: integer
+  status:
+    $ref: '../enums/IssnPublicationStatus.yaml'
+  searchText:
+    type: string
+  offset:
+    type: integer
+  limit:
+    type: integer

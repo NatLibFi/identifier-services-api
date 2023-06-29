@@ -1,0 +1,6 @@
+type: string
+enum:
+  - NOT_HANDLED
+  - NOT_NOTIFIED
+  - COMPLETED
+  - REJECTED

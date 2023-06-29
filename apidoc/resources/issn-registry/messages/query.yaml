@@ -1,0 +1,28 @@
+post:
+  summary: Query for ISSN-registry Messages
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry messages
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnMessageQueryBody.yaml'
+  responses:
+    '200':
+      description: Query was successful
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnMessagesList.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

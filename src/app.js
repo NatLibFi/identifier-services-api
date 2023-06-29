@@ -35,6 +35,7 @@ import https from 'https';
 import fs from 'fs';
 import HttpStatus from 'http-status';
 import {isCelebrateError} from 'celebrate';
+import path from 'path';
 
 import sequelize from './models';
 import * as routes from './routes';
@@ -139,6 +140,7 @@ export default async function run() { // eslint-disable-line
   app.use('/ping', routes.createStatusRouter());
   app.use('/isbn-registry', routes.createIsbnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
   app.use('/issn-registry', routes.createIssnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
+  app.use('/', express.static(path.resolve(__dirname, 'public')));
 
   app.use(handleErrors);
 

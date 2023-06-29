@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: integer
+  identifierType:
+    type: string
+  identifierCount:
+    type: integer
+  identifierCanceledCount:
+    type: integer
+  identifierCanceledUsedCount:
+    type: integer
+  identifierDeletedCount:
+    type: integer
+  subRangeId:
+    type: integer
+  publicationId:
+    type: integer
+    nullable: true
+  publisherId:
+    type: integer
+  publisherName:
+    type: string
+  publisherIdentifier:
+    type: string
+  identifiers:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        identifier:
+          type: string
+        publicationType:
+          type: string
+  created:
+    type: string
+  createdBy:
+    type: string

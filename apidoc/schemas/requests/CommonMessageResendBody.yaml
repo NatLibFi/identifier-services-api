@@ -1,0 +1,7 @@
+type: object
+properties:
+  recipient:
+    type: string
+    description: email address to send the message
+required:
+  - recipient

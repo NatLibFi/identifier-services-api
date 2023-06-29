@@ -1,0 +1,5 @@
+type: string
+enum:
+  - PRINT
+  - ELECTRONICAL
+  - PRINT_ELECTRONICAL

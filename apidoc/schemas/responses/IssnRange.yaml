@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: integer
+  idOld:
+    type: integer
+  block:
+    type: string
+  rangeBegin:
+    type: string
+  rangeEnd:
+    type: string
+  free:
+    type: integer
+  taken:
+    type: integer
+  next:
+    type: string
+  isActive:
+    type: boolean
+  isClosed:
+    type: boolean
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

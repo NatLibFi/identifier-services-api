@@ -1,0 +1,21 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        langCode:
+          $ref: '../enums/CommonLangCode.yaml'
+        publicationType:
+          $ref: '../enums/IsbnIsmnPublicationType.yaml'
+        title:
+          type: string
+        comments:
+          type: string

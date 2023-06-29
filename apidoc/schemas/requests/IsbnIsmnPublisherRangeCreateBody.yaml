@@ -1,0 +1,14 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  rangeId:
+    type: integer
+  selectedPublisherIdentifier:
+    type: string
+    description: Selected identifier without prefix or langGroup
+    example: '55001'
+required:
+  - publisherId
+  - rangeId
+  - selectedPublisherIdentifier

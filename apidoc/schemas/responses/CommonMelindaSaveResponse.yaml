@@ -1,0 +1,19 @@
+type: object
+properties:
+  records:
+    description: Record information gathered from save operation through Melinda REST API response
+    type: array
+    items:
+      type: object
+      properties:
+        databaseId:
+          type: string
+        recordStatus:
+          type: string
+        ids:
+          type: array
+          items:
+            type: string
+  errors:
+    description: Number of records that produced error during save operation
+    type: integer

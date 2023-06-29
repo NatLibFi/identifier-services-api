@@ -1,0 +1,25 @@
+post:
+  summary: Create new publication request
+  description: Turnstile token is required for non-authenticated users
+  tags:
+    - isbn-registry
+    - isbn-registry publication-requests
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+            $ref: '../../../../schemas/requests/IsbnIsmnPublicationRequestCreateBody.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/Created.yaml'
+    '409':
+      description: Cannot create range due to an conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

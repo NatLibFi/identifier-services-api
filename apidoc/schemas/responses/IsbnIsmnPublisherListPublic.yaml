@@ -1,0 +1,21 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        otherNames:
+          type: string
+        hasQuitted:
+          type: boolean
+        activeIdentifierIsbn:
+          type: string
+        activeIdentifierIsmn:
+          type: string

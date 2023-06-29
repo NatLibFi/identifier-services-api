@@ -1,0 +1,34 @@
+post:
+  summary: Retrieve ISSN-registry statistics
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry statistics
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnStatisticsQueryBody.yaml'
+  responses:
+    '200':
+      description: Generating statistics was successful
+      content:
+        application/json:
+          schema:
+            type: object
+        application/vnd.ms-excel:
+          schema:
+            type: string
+        text/csv:
+          schema:
+            type: string
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

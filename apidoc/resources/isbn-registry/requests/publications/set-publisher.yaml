@@ -1,0 +1,33 @@
+put:
+  summary: Set publisher to publication request (only for publication requests without identifiers)
+  description: If publication request state is NEW, sets onProcess attribute to true
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry publication-requests
+  parameters:
+    - $ref: "../../../../parameters/path/id.yaml"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/CommonSetPublisherBody.yaml'
+  responses:
+    '200':
+      description: Publication request was updated with publisherId
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/IsbnIsmnPublicationRequest.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Cannot find selected publisher
+    '409':
+      description: Cannot update publisherId due to a conflict
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

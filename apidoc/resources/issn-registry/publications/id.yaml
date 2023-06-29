@@ -1,0 +1,84 @@
+get:
+  summary: Retrieve ISSN-registry publication information
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry publications
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Publication retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnPublication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'
+
+put:
+  summary: Update ISSN-registry publication
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry publications
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnPublicationUpdateBody.yaml'
+  responses:
+    '200':
+      description: Publication updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnPublication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'
+
+delete:
+  summary: Delete ISSN-registry publication
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry publications
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '204':
+      description: Publication deleted successfully
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

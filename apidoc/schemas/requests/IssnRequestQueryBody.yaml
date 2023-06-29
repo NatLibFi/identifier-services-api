@@ -1,0 +1,15 @@
+type: object
+properties:
+  searchText:
+    type: string
+  publisherId:
+    type: integer
+    minimum: 0
+  status:
+    $ref: "../enums/IssnRequestStatus.yaml"
+  limit:
+    type: integer
+    minimum: 0
+  offset:
+    type: integer
+    minimum: 0

@@ -1,0 +1,43 @@
+get:
+  summary: Retrieve identifier batch information
+  tags:
+    - isbn-registry
+    - isbn-registry identifierbatches
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Identifier batch could be read from database
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "../../../schemas/responses/IsbnIsmnIdentifierBatchAdmin.yaml"
+              - $ref: "../../../schemas/responses/IsbnIsmnIdentifierBatchPublic.yaml"
+    '404':
+      description: Not found
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"
+
+delete:
+  summary: Remove identifier batch. Identifiers will be available for reuse.
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry identifierbatches
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '204':
+      description: Identifier batch was successfully removed
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not found
+    '409':
+      description: Cannot remove identifier batch due to an conflict
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

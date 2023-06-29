@@ -1,0 +1,23 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        publisher:
+          type: string
+        publicationCount:
+          type: integer
+          description: Total number of publications associated with the request
+        publicationCountIssn:
+          type: integer
+          description: Number of publications associated with the request that have been assigned an ISSN-identifier
+        status:
+          $ref: "../enums/IssnRequestStatus.yaml"
+        created:
+          type: string

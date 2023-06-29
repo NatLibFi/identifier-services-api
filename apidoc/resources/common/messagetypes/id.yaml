@@ -1,0 +1,85 @@
+get:
+  summary: Retrieve message type resource from selected registry
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - messagetypes
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Resource was found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/CommonMessageType.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"
+
+put:
+  summary: Update message type in selected registry
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - messagetypes
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+    - $ref: "../../../parameters/path/id.yaml"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/CommonMessageTypeUpdateBody.yaml'
+  responses:
+    '200':
+      description: Resource was updated
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/CommonMessageType.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"
+
+delete:
+  summary: Delete message type resource from selected registry
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - messagetypes
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '204':
+      description: Resource was deleted
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict in removal due to message type being linked to system action
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

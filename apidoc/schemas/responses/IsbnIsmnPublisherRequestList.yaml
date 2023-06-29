@@ -1,0 +1,21 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        email:
+          type: string
+        langCode:
+          $ref: '../enums/CommonLangCode.yaml'
+        additionalInfo:
+          type: string
+        created:
+          type: string

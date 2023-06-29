@@ -1,0 +1,249 @@
+# common responses
+
+CreatedResponse:
+  $ref: './responses/Created.yaml'
+ErrorResponse:
+  $ref: './responses/Error.yaml'
+
+# common
+
+# marc
+CommonMarcRecordRead:
+  $ref: './responses/CommonMARCRecordRead.yaml'
+CommonMelindaSaveResponse:
+  $ref: './responses/CommonMelindaSaveResponse.yaml'
+
+# messages
+CommonMessageResendBody:
+  $ref: './requests/CommonMessageResendBody.yaml'
+
+# messagetemplates
+CommonMessageTemplate:
+  $ref: './responses/CommonMessageTemplate.yaml'
+CommonMessageTemplateList:
+  $ref: './responses/CommonMessageTemplateList.yaml'
+
+CommonMessageTemplateCreateBody:
+  $ref: './requests/CommonMessageTemplateCreateBody.yaml'
+CommonMessageTemplateUpdateBody:
+  $ref: './requests/CommonMessageTemplateUpdateBody.yaml'
+
+# messagetypes
+CommonMessageType:
+  $ref: './responses/CommonMessageType.yaml'
+CommonMessageTypeList:
+  $ref: './responses/CommonMessageTypeList.yaml'
+
+CommonMessageTypeUpdateBody:
+  $ref: './requests/CommonMessageTypeUpdateBody.yaml'
+CommonMessageTypeCreateBody:
+  $ref: './requests/CommonMessageTypeCreateBody.yaml'
+
+# queries
+CommonQueryBody:
+  $ref: './requests/CommonQueryBody.yaml'
+CommonPublisherAutocompleteBody:
+  $ref: './requests/CommonPublisherAutocompleteBody.yaml'
+
+# publications
+CommonSetPublisherBody:
+  $ref: './requests/CommonSetPublisherBody.yaml'
+
+# isbn-registry
+
+# identifierbatches
+IsbnIsmnIdentifierBatchCreateBody:
+  $ref: './requests/IsbnIsmnIdentifierBatchCreateBody.yaml'
+IsbnIsmnIdentifierBatchQueryBody:
+  $ref: './requests/IsbnIsmnIdentifierBatchQueryBody.yaml'
+
+IsbnIsmnIdentifierBatchAdmin:
+  $ref: './responses/IsbnIsmnIdentifierBatchAdmin.yaml'
+IsbnIsmnIdentifierBatchPublic:
+  $ref: './responses/IsbnIsmnIdentifierBatchPublic.yaml'
+
+
+# identifiers
+IsbnIsmnIdentifierRemoveBody:
+  $ref: './requests/IsbnIsmnIdentifierRemoveBody.yaml'
+
+# messages
+IsbnIsmnLoadMessageTemplateBody:
+  $ref: './requests/IsbnIsmnLoadMessageTemplateBody.yaml'
+IsbnIsmnMessageQueryBody:
+  $ref: './requests/IsbnIsmnMessageQueryBody.yaml'
+IsbnIsmnMessageSendBody:
+  $ref: './requests/IsbnIsmnMessageSendBody.yaml'
+
+IsbnIsmnMessage:
+  $ref: './responses/IsbnIsmnMessage.yaml'
+IsbnIsmnGeneratedMessage:
+  $ref: './responses/IsbnIsmnGeneratedMessage.yaml'
+IsbnIsmnMessagesList:
+  $ref: './responses/IsbnIsmnMessagesList.yaml'
+
+# publisher-ranges
+IsbnIsmnPublisherRangeCreateBody:
+  $ref: './requests/IsbnIsmnPublisherRangeCreateBody.yaml'
+
+IsbnPublisherRange:
+  $ref: './responses/IsbnPublisherRange.yaml'
+IsmnPublisherRange:
+  $ref: './responses/IsmnPublisherRange.yaml'
+
+# publisher-archives
+IsbnIsmnPublisherArchiveEntryQueryBody:
+  $ref: './requests/IsbnIsmnPublisherArchiveEntryQueryBody.yaml'
+
+IsbnIsmnPublisherArchiveEntry:
+  $ref: './responses/IsbnIsmnPublisherArchiveEntry.yaml'
+
+# publishers
+IsbnIsmnPublisherCreateBody:
+  $ref: './requests/IsbnIsmnPublisherCreateBody.yaml'
+IsbnIsmnPublisherUpdateBody:
+  $ref: './requests/IsbnIsmnPublisherUpdateBody.yaml'
+IsbnIsmnPublisherQueryBodyAdmin:
+  $ref: './requests/IsbnIsmnPublisherQueryBodyAdmin.yaml'
+IsbnIsmnPublisherQueryBodyPublic:
+  $ref: './requests/IsbnIsmnPublisherQueryBodyPublic.yaml'
+
+
+IsbnIsmnPublisherAdmin:
+  $ref: './responses/IsbnIsmnPublisherAdmin.yaml'
+IsbnIsmnPublisherPublic:
+  $ref: './responses/IsbnIsmnPublisherPublic.yaml'
+IsbnIsmnPublisherListAutocomplete:
+  $ref: './responses/IsbnIsmnPublisherListAutocomplete.yaml'
+IsbnIsmnPublisherListAdmin:
+  $ref: './responses/IsbnIsmnPublisherListAdmin.yaml'
+IsbnIsmnPublisherListPublic:
+  $ref: './responses/IsbnIsmnPublisherListPublic.yaml'
+
+# ranges
+IsbnRangeCreateBody:
+  $ref: './requests/IsbnRangeCreateBody.yaml'
+IsmnRangeCreateBody:
+  $ref: './requests/IsmnRangeCreateBody.yaml'
+
+IsbnRange:
+  $ref: './responses/IsbnRange.yaml'
+IsmnRange:
+  $ref: './responses/IsmnRange.yaml'
+IsbnRangeList:
+  $ref: './responses/IsbnRangeList.yaml'
+IsmnRangeList:
+  $ref: './responses/IsmnRangeList.yaml'
+IsbnIsmnAvailablePublisherRangeList:
+  $ref: './responses/IsbnIsmnAvailablePublisherRangeList.yaml'
+
+# publication requests
+IsbnIsmnPublicationRequest:
+  $ref: './responses/IsbnIsmnPublicationRequest.yaml'
+IsbnIsmnPublicationRequestList:
+  $ref: './responses/IsbnIsmnPublicationRequestList.yaml'
+
+IsbnIsmnPublicationRequestCreateBody:
+  $ref: './requests/IsbnIsmnPublicationRequestCreateBody.yaml'
+IsbnIsmnPublicationRequestUpdateBody:
+  $ref: './requests/IsbnIsmnPublicationRequestUpdateBody.yaml'
+IsbnIsmnPublicationRequestQueryBody:
+  $ref: './requests/IsbnIsmnPublicationRequestQueryBody.yaml'
+
+# publisher requests
+IsbnIsmnPublisherRequest:
+  $ref: './responses/IsbnIsmnPublisherRequest.yaml'
+IsbnIsmnPublisherRequestList:
+  $ref: './responses/IsbnIsmnPublisherRequestList.yaml'
+
+IsbnIsmnPublisherRequestCreateBody:
+  $ref: './requests/IsbnIsmnPublisherRequestCreateBody.yaml'
+IsbnIsmnPublisherRequestUpdateBody:
+  $ref: './requests/IsbnIsmnPublisherRequestUpdateBody.yaml'
+
+# statistics
+IsbnIsmnStatisticsQueryBody:
+  $ref: './requests/IsbnIsmnStatisticsQueryBody.yaml'
+
+
+# ISSN-registry
+
+# archived requests
+IssnArchivedRequest:
+  $ref: './responses/IssnArchivedRequest.yaml'
+
+IssnArchivedRequestSearchBody:
+  $ref: './requests/IssnArchivedRequestSearchBody.yaml'
+
+# messages
+IssnMessage:
+  $ref: './responses/IssnMessage.yaml'
+IssnMessagesList:
+  $ref: './responses/IssnMessagesList.yaml'
+IssnGeneratedMessage:
+  $ref: './responses/IssnGeneratedMessage.yaml'
+
+IssnLoadMessageTemplateBody:
+  $ref: './requests/IssnLoadMessageTemplateBody.yaml'
+IssnMessageQueryBody:
+  $ref: './requests/IssnMessageQueryBody.yaml'
+IssnMessageSendBody:
+  $ref: './requests/IssnMessageSendBody.yaml'
+
+# publications
+IssnPublication:
+  $ref: './responses/IssnPublication.yaml'
+IssnPublicationList:
+  $ref: './responses/IssnPublicationList.yaml'
+IssnPublicationArchiveEntry:
+  $ref: './responses/IssnPublicationArchiveEntry.yaml'
+
+IssnPublicationUpdateBody:
+  $ref: './requests/IssnPublicationUpdateBody.yaml'
+IssnPublicationQueryBody:
+  $ref: './requests/IssnPublicationQueryBody.yaml'
+
+# publishers
+IssnPublisher:
+  $ref: './responses/IssnPublisher.yaml'
+IssnPublisherList:
+  $ref: './responses/IssnPublisherList.yaml'
+IssnPublisherListAutocomplete:
+  $ref: './responses/IssnPublisherListAutocomplete.yaml'
+
+IssnPublisherCreateBody:
+  $ref: './requests/IssnPublisherCreateBody.yaml'
+IssnPublisherUpdateBody:
+  $ref: './requests/IssnPublisherUpdateBody.yaml'
+
+# ranges
+IssnRange:
+  $ref: "./responses/IssnRange.yaml"
+IssnRangeList:
+  $ref: "./responses/IssnRangeList.yaml"
+
+IssnRangeCreateBody:
+  $ref: "./requests/IssnRangeCreateBody.yaml"
+
+# requests
+IssnRequestCreateBody:
+  $ref: "./requests/IssnRequestCreateBody.yaml"
+IssnRequestCreateFormBody:
+  $ref: "./requests/IssnRequestCreateFormBody.yaml"
+IssnRequestCreatePublicationBody:
+  $ref: "./requests/IssnRequestCreatePublicationBody.yaml"
+IssnRequestUpdateBody:
+  $ref: "./requests/IssnRequestUpdateBody.yaml"
+IssnRequestQueryBody:
+  $ref: "./requests/IssnRequestQueryBody.yaml"
+
+IssnRequest:
+  $ref: "./responses/IssnRequest.yaml"
+IssnRequestArchiveRecord:
+  $ref: './responses/IssnRequestArchiveRecord.yaml'
+IssnRequestList:
+  $ref: "./responses/IssnRequestList.yaml"
+
+# statistics
+IssnStatisticsQueryBody:
+  $ref: './requests/IssnStatisticsQueryBody.yaml'

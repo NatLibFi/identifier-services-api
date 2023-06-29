@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: integer
+  messageTypeId:
+    type: integer
+  name:
+    type: string
+  subject:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  message:
+    type: string
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

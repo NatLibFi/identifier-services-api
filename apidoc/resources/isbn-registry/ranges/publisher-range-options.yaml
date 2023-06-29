@@ -1,0 +1,25 @@
+get:
+  summary: Retrieve range's available publisher ranges
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry ranges
+  parameters:
+    - $ref: "../../../parameters/path/identifierType.yaml"
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: List of available publisher ranges could be generated
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IsbnIsmnAvailablePublisherRangeList.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Range could not be found
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

@@ -22,16 +22,19 @@
   },
   "scripts": {
     "start": "node ./dist/index",
-    "lint:dev": "eslint --fix -- src",
-    "lint": "eslint -- src",
+    "lint:apidoc": "swagger-cli validate apidoc/openapi.yaml",
+    "lint:dev": "eslint --fix -- src && npm run lint:apidoc",
+    "lint": "eslint -- src && npm run lint:apidoc",
     "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -r dotenv/config -t 20000 --exit --require @babel/register",
     "test:coverage": "nyc --reporter=text npm run test:base -- src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test": "npm run lint && npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
     "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
-    "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified",
-    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w src --exec 'babel-node src/index.js'"
+    "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified && npm run build:apidoc",
+    "build:apidoc": "swagger-cli bundle -o dist/public/openapi.json apidoc/openapi.yaml",
+    "build:apidoc-dev": "swagger-cli bundle -o src/public/openapi.json apidoc/openapi.yaml",
+    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ext '*.yaml' --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
   },
   "dependencies": {
     "@babel/core": "^7.17.7",
@@ -79,7 +82,8 @@
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
     "path": "^0.12.7",
-    "sqlite3": "^5.0.8"
+    "sqlite3": "^5.0.8",
+    "swagger-cli": "^4.0.4"
   },
   "eslintConfig": {
     "extends": "@natlibfi/melinda-backend",

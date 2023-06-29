@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: integer
+  idOld:
+    type: integer
+  formId:
+    type: integer
+  publisher:
+    type: string
+  contactPerson:
+    type: string
+  email:
+    type: string
+  phone:
+    type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  publicationCount:
+    type: integer
+  created:
+    type: string
+  createdBy:
+    type: string
