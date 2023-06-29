@@ -1,0 +1,6 @@
+name: publicationId
+in: path
+required: true
+description: The id of the publication/publicationRequest to interact with
+schema:
+  type: integer

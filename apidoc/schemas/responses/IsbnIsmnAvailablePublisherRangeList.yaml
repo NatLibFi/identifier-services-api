@@ -1,0 +1,9 @@
+type: array
+items:
+  type: object
+  properties:
+    value:
+      type: string
+      description: Publisher identifier value. If starts with can_ -prefix, indicates that the publisher identifier is found in canceled publisher identifiers table and is available for reuse from there.
+    identifier:
+      type: string

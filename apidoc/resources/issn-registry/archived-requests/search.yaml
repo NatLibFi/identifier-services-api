@@ -1,0 +1,30 @@
+post:
+  summary: Search issn-registry request archive entry
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry archived-requests
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnArchivedRequestSearchBody.yaml'
+  responses:
+    '200':
+      description: Search was successful
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/responses/IssnArchivedRequest.yaml"
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Request archive entry could not be found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

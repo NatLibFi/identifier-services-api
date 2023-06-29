@@ -1,0 +1,10 @@
+name: marcFormat
+in: query
+required: false
+description: Format to retrieve MARC record in
+schema:
+  type: string
+  enum:
+    - text
+    - json
+    - iso2709

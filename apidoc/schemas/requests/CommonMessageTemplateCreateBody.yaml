@@ -1,0 +1,21 @@
+type: object
+properties:
+  messageTypeId:
+    type: integer
+  name:
+    type: string
+    maximum: 50
+  subject:
+    type: string
+    maximum: 150
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  message:
+    type: string
+    maximum: 65000
+required:
+  - messageTypeId
+  - name
+  - subject
+  - langCode
+  - message

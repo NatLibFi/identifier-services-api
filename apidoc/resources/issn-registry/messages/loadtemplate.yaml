@@ -1,0 +1,32 @@
+post:
+  summary: Pre-generate message from template and information read from database based on parameters
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry messages
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnLoadMessageTemplateBody.yaml'
+  responses:
+    '200':
+      description: Message could be pre-generated from template and database information
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnGeneratedMessage.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Could not find necessary information to pre-generate message
+    '409':
+      description: Could not pre-generate message due to a conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

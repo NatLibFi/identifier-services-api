@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: integer
+  idOld:
+    type: integer
+  publisherIdentifier:
+    type: string
+  isbnRangeId:
+    type: integer
+  publisherId:
+    type: integer
+  category:
+    type: integer
+  rangeBegin:
+    type: string
+  rangeEnd:
+    type: string
+  free:
+    type: integer
+  taken:
+    type: integer
+  canceled:
+    type: integer
+  deleted:
+    type: integer
+  next:
+    type: string
+  isActive:
+    type: boolean
+  isClosed:
+    type: boolean
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

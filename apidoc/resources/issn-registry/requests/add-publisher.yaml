@@ -1,0 +1,26 @@
+post:
+  summary: Create new ISSN publisher from ISSN request information and associate it with the selected request
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry requests
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/Created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Cannot add publisher due to request already having association with a publisher
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

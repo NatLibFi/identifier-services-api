@@ -1,0 +1,12 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  publicationId:
+    type: integer
+  searchText:
+    type: string
+  offset:
+    type: integer
+  limit:
+    type: integer

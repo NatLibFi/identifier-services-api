@@ -1,0 +1,255 @@
+openapi: "3.0.0"
+
+info:
+  version: 1.0.0
+  title: Identifier Services API
+  contact:
+    name: Identifier Services support
+    url: https://www.kansalliskirjasto.fi/fi/palvelut/isbn-tunnus
+tags:
+  # Main tags
+  - name: isbn-registry
+    description: ISBN-registry endpoints (ISBN and ISMN identifiers)
+  - name: issn-registry
+    description: ISSN-registry endpoints (ISSN identifiers)
+  - name: common
+    description: Endpoints that are shared between multiple registries
+
+  # ISBN registry tags
+  - name: isbn-registry identifierbatches
+    description: ISBN-registry identifier batches (ISBN/ISMN)
+  - name: isbn-registry identifiers
+    description: ISBN-registry identifiers
+  - name: isbn-registry messages
+    description: ISBN-registry messages
+  - name: isbn-registry publisher-archives
+    description: ISBN-registry publisher archive entries
+  - name: isbn-registry publisher-ranges
+    description: ISBN-registry publisher ranges (isbn and ismn)
+  - name: isbn-registry publishers
+    description: ISBN-registry publishers
+  - name: isbn-registry ranges
+    description: ISBN-registry ranges (isbn and ismn)
+  - name: isbn-registry publication-requests
+    description: ISBN-registry publication requests
+  - name: isbn-registry publisher-requests
+    description: ISBN-registry publisher requests
+  - name: isbn-registry statistics
+    description: ISBN-registry statistics
+
+  # ISSN registry tags
+  - name: issn-registry archived-requests
+    description: ISSN-registry archived-requests
+  - name: issn-registry messages
+    description: ISSN-registry messages
+  - name: issn-registry publications
+    description: ISSN-registry publications
+  - name: issn-registry publishers
+    description: ISSN-registry publishers
+  - name: issn-registry ranges
+    description: ISSN-registry ranges
+  - name: issn-registry requests
+    description: ISSN-registry requests
+  - name: issn-registry statistics
+    description: ISSN-registry statistics
+
+
+  # Common tags
+  - name: messagetypes
+    description: Shared message types endpoints. Each registry message types are separate but the management methods are the same.
+  - name: messagetemplates
+    description: Shared message types endpoints. Each registry message templates are separate but the management methods are the same.
+  - name: marc
+    description: Shared MARC related endpoints. Generation of marc record may vary between registries, but available methods are the same.
+  - name: melinda
+    description: Shared Melinda related endpoints. Generation/searching of marc record may vary between registries, but available methods are the same.
+
+paths:
+  # Routes shared by registries
+
+  # Marc
+  /{registry}/marc/{publicationId}:
+    $ref: "./resources/common/marc/id.yaml"
+  /{registry}/marc/{publicationId}/search-from-melinda:
+    $ref: "./resources/common/marc/search-from-melinda.yaml"
+  /{registry}/marc/{publicationId}/send-to-melinda:
+    $ref: "./resources/common/marc/send-to-melinda.yaml"
+
+  # Message templates
+  /{registry}/messagetemplates:
+    $ref: "./resources/common/messagetemplates/root.yaml"
+  /{registry}/messagetemplates/{id}:
+    $ref: "./resources/common/messagetemplates/id.yaml"
+
+  # Message types
+  /{registry}/messagetypes:
+    $ref: "./resources/common/messagetypes/root.yaml"
+  /{registry}/messagetypes/{id}:
+    $ref: "./resources/common/messagetypes/id.yaml"
+
+  # ISBN-registry routes
+
+  # ISBN-registry identifierbatches
+  /isbn-registry/identifierbatches/{id}:
+    $ref: "./resources/isbn-registry/identifierbatches/id.yaml"
+  /isbn-registry/identifierbatches/{id}/download:
+    $ref: "./resources/isbn-registry/identifierbatches/download.yaml"
+  /isbn-registry/identifierbatches/isbn:
+    $ref: "./resources/isbn-registry/identifierbatches/isbn.yaml"
+  /isbn-registry/identifierbatches/ismn:
+    $ref: "./resources/isbn-registry/identifierbatches/ismn.yaml"
+  /isbn-registry/identifierbatches/query:
+    $ref: "./resources/isbn-registry/identifierbatches/query.yaml"
+
+  # ISBN-registry identifiers
+  /isbn-registry/identifiers/cancel:
+      $ref: "./resources/isbn-registry/identifiers/cancel.yaml"
+  /isbn-registry/identifiers/remove:
+      $ref: "./resources/isbn-registry/identifiers/remove.yaml"
+
+  # ISBN-registry messages
+  /isbn-registry/messages/{id}:
+    $ref: "./resources/isbn-registry/messages/id.yaml"
+  /isbn-registry/messages/loadtemplate:
+    $ref: "./resources/isbn-registry/messages/loadtemplate.yaml"
+  /isbn-registry/messages/query:
+    $ref: "./resources/isbn-registry/messages/query.yaml"
+  /isbn-registry/messages/resend/{id}:
+    $ref: "./resources/isbn-registry/messages/resend.yaml"
+  /isbn-registry/messages/send:
+    $ref: "./resources/isbn-registry/messages/send.yaml"
+
+  # ISBN-registry publisher archives
+  /isbn-registry/publishers-archives/query:
+    $ref: "./resources/isbn-registry/publisher-archives/query.yaml"
+
+  # ISBN-registry publisher-ranges
+  /isbn-registry/publisher-ranges/{identifierType}:
+    $ref: "./resources/isbn-registry/publisher-ranges/root.yaml"
+  /isbn-registry/publisher-ranges/{identifierType}/{id}:
+    $ref: "./resources/isbn-registry/publisher-ranges/id.yaml"
+  /isbn-registry/publisher-ranges/{identifierType}/{id}/{rangeOperation}:
+    $ref: "./resources/isbn-registry/publisher-ranges/operate.yaml"
+
+  # ISBN-registry publishers
+  /isbn-registry/publishers/{id}:
+    $ref: "./resources/isbn-registry/publishers/id.yaml"
+  /isbn-registry/publishers/query:
+    $ref: "./resources/isbn-registry/publishers/query.yaml"
+  /isbn-registry/publishers/autocomplete:
+    $ref: "./resources/isbn-registry/publishers/autocomplete.yaml"
+
+ # ISBN-registry ranges
+  /isbn-registry/ranges/{identifierType}:
+    $ref: "./resources/isbn-registry/ranges/root.yaml"
+  /isbn-registry/ranges/{identifierType}/{id}:
+    $ref: "./resources/isbn-registry/ranges/id.yaml"
+  /isbn-registry/ranges/{identifierType}/{id}/{rangeOperation}:
+    $ref: "./resources/isbn-registry/ranges/operate.yaml"
+  /isbn-registry/ranges/{identifierType}/{id}/publisher-range-options:
+    $ref: "./resources/isbn-registry/ranges/publisher-range-options.yaml"
+
+  # ISBN-registry publication requests
+  /isbn-registry/requests/publications:
+    $ref: "./resources/isbn-registry/requests/publications/root.yaml"
+  /isbn-registry/requests/publications/{id}:
+    $ref: "./resources/isbn-registry/requests/publications/id.yaml"
+  /isbn-registry/requests/publications/{id}/copy:
+    $ref: "./resources/isbn-registry/requests/publications/copy.yaml"
+  /isbn-registry/requests/publications/{id}/set-publisher:
+    $ref: "./resources/isbn-registry/requests/publications/set-publisher.yaml"
+  /isbn-registry/requests/publications/query:
+    $ref: "./resources/isbn-registry/requests/publications/query.yaml"
+
+  # ISBN-registry publisher requests
+  /isbn-registry/requests/publishers:
+    $ref: "./resources/isbn-registry/requests/publishers/root.yaml"
+  /isbn-registry/requests/publishers/{id}:
+    $ref: "./resources/isbn-registry/requests/publishers/id.yaml"
+  /isbn-registry/requests/publishers/query:
+    $ref: "./resources/isbn-registry/requests/publishers/query.yaml"
+
+  # ISBN-registry statistics
+  /isbn-registry/statistics:
+    $ref: "./resources/isbn-registry/statistics/root.yaml"
+
+  # ISSN-registry
+
+  # ISSN-registry archived requests
+  /issn-registry/archived-requests/search:
+    $ref: "./resources/issn-registry/archived-requests/search.yaml"
+
+  # ISSN-registry messages
+  /issn-registry/messages/{id}:
+    $ref: "./resources/issn-registry/messages/id.yaml"
+  /issn-registry/messages/loadtemplate:
+    $ref: "./resources/issn-registry/messages/loadtemplate.yaml"
+  /issn-registry/messages/query:
+    $ref: "./resources/issn-registry/messages/query.yaml"
+  /issn-registry/messages/resend/{id}:
+    $ref: "./resources/issn-registry/messages/resend.yaml"
+  /issn-registry/messages/send:
+    $ref: "./resources/issn-registry/messages/send.yaml"
+
+  # ISSN-registry publications
+  /issn-registry/publications/{id}:
+    $ref: "./resources/issn-registry/publications/id.yaml"
+  /issn-registry/publications/{id}/delete-issn:
+    $ref: "./resources/issn-registry/publications/delete-issn.yaml"
+  /issn-registry/publications/{id}/get-issn:
+    $ref: "./resources/issn-registry/publications/get-issn.yaml"
+  /issn-registry/publications/{id}/get-archive-entry:
+    $ref: "./resources/issn-registry/publications/get-archive-entry.yaml"
+  /issn-registry/publications/query:
+    $ref: "./resources/issn-registry/publications/query.yaml"
+
+  # ISSN-registry publishers
+  /issn-registry/publishers:
+    $ref: "./resources/issn-registry/publishers/root.yaml"
+  /issn-registry/publishers/{id}:
+    $ref: "./resources/issn-registry/publishers/id.yaml"
+  /issn-registry/publishers/query:
+    $ref: "./resources/issn-registry/publishers/query.yaml"
+  /issn-registry/publishers/autocomplete:
+    $ref: "./resources/issn-registry/publishers/autocomplete.yaml"
+
+  # ISSN-registry ranges
+  /issn-registry/ranges:
+    $ref: "./resources/issn-registry/ranges/root.yaml"
+  /issn-registry/ranges/{id}:
+    $ref: "./resources/issn-registry/ranges/id.yaml"
+  /issn-registry/ranges/{id}/{rangeOperation}:
+    $ref: "./resources/issn-registry/ranges/operate.yaml"
+
+  # ISSN-registry requests
+  /issn-registry/requests:
+    $ref: "./resources/issn-registry/requests/root.yaml"
+  /issn-registry/requests/{id}:
+    $ref: "./resources/issn-registry/requests/id.yaml"
+  /issn-registry/requests/{id}/add-publication:
+    $ref: "./resources/issn-registry/requests/add-publication.yaml"
+  /issn-registry/requests/{id}/add-publisher:
+    $ref: "./resources/issn-registry/requests/add-publisher.yaml"
+  /issn-registry/requests/{id}/set-publisher:
+    $ref: "./resources/issn-registry/requests/set-publisher.yaml"
+  /issn-registry/requests/query:
+    $ref: "./resources/issn-registry/requests/query.yaml"
+  /issn-registry/requests/{id}/get-archive-record:
+    $ref: "./resources/issn-registry/requests/get-archive-record.yaml"
+
+  # ISSN-registry statistics
+  /issn-registry/statistics:
+    $ref: "./resources/issn-registry/statistics/root.yaml"
+
+components:
+  parameters:
+    $ref: "./parameters/_index.yaml"
+  responses:
+    $ref: "./responses/_index.yaml"
+  schemas:
+    $ref: "./schemas/_index.yaml"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

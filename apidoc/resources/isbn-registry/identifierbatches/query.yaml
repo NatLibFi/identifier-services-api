@@ -1,0 +1,28 @@
+post:
+  summary: Query identifier batches based on publisherId or publicationId
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry identifierbatches
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IsbnIsmnIdentifierBatchQueryBody.yaml'
+  responses:
+    '200':
+      description: Query was successful
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/responses/IsbnIsmnIdentifierBatchQueryResponse.yaml"
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

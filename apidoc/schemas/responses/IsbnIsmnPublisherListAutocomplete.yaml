@@ -1,0 +1,14 @@
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: integer
+    officialName:
+      type: string
+    otherNames:
+      type: string
+    previousNames:
+      type: array
+      items:
+        type: string

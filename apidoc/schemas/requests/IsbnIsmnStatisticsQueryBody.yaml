@@ -1,0 +1,13 @@
+type: object
+properties:
+  type:
+    $ref: '../enums/IsbnIsmnStatisticsType.yaml'
+  begin:
+    $ref: '../patterns/CommonDateString.yaml'
+  end:
+    $ref: '../patterns/CommonDateString.yaml'
+  format:
+    $ref: '../enums/CommonStatisticsFormat.yaml'
+required:
+  - type
+  - format

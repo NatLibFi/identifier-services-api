@@ -1,0 +1,25 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        email:
+          type: string
+        langCode:
+          type: string
+          enum:
+            - fi-FI
+            - sv-SE
+            - en-GB
+        additionalInfo:
+          type: string
+        created:
+          type: string

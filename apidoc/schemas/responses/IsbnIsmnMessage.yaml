@@ -1,0 +1,32 @@
+type: object
+properties:
+  id:
+    type: integer
+  messageTemplateId:
+    type: integer
+  messageTypeId:
+    type: integer
+  publisherId:
+    type: integer
+  publicationId:
+    type: integer
+  groupMessageId:
+    type: integer
+  batchId:
+    type: integer
+  recipient:
+    type: string
+  subject:
+    type: string
+  message:
+    type: string
+  langCode:
+    type: string
+  hasAttachment:
+    type: boolean
+  attachmentName:
+    type: string
+  sent:
+    type: string
+  sentBy:
+    type: string

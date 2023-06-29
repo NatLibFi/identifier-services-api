@@ -1,0 +1,18 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  publicationId:
+    type: integer
+    description: >-
+      PublicationRequest id of publication that the identifiers should be
+      created. Cannot be set if count is set as number of identifiers is
+      counted based on type and fileformat values.
+  count:
+    type: integer
+    minimum: 1
+    description: >-
+      Number of identifiers to generate. Cannot be set if publicationId is
+      set.
+required:
+  - publisherId

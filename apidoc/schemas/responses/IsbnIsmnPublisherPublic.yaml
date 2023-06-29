@@ -1,0 +1,46 @@
+type: object
+properties:
+  id:
+    type: integer
+  officialName:
+    type: string
+  otherNames:
+    type: string
+  previousNames:
+    type: array
+    items:
+      type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  phone:
+    type: string
+  www:
+    type: string
+  activeIdentifierIsbn:
+    type: string
+  activeIdentifierIsmn:
+    type: string
+  hasQuitted:
+    type: boolean
+  isbnSubRanges:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        publisherIdentifier:
+          type: string
+  ismnSubRanges:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        publisherIdentifier:
+          type: string

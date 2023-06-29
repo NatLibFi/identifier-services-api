@@ -1,0 +1,31 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        langCode:
+          type: string
+          enum:
+            - fi-FI
+            - en-GB
+            - sv-SE
+        publicationType:
+          type: string
+          enum:
+            - BOOK
+            - DISSERTATION
+            - SHEET_MUSIC
+            - MAP
+            - OTHER
+        title:
+          type: string
+        comments:
+          type: string

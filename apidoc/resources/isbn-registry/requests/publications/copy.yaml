@@ -1,0 +1,24 @@
+post:
+  summary: Copy publication request information (only for publications requests without identifiers)
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry publication-requests
+  parameters:
+    - $ref: "../../../../parameters/path/id.yaml"
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/Created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Cannot create copy due to original publication request containing identifiers
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

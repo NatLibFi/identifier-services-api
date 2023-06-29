@@ -1,0 +1,11 @@
+name: rangeOperation
+in: path
+required: true
+description: The type of operation to operate with selected range
+schema:
+  type: string
+  enum:
+    - activate
+    - close
+    - deactivate
+    - open

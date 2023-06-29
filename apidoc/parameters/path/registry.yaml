@@ -1,0 +1,9 @@
+name: registry
+in: path
+required: true
+description: The type of registry to interact with
+schema:
+  type: string
+  enum:
+    - isbn-registry
+    - issn-registry

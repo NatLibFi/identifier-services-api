@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: integer
+  idOld:
+    type: integer
+  publisherId:
+    type: integer
+  officialName:
+    type: string
+  otherNames:
+    type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  www:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  contactPerson:
+    type: string
+  frequencyCurrent:
+    type: string
+  frequencyNext:
+    type: string
+  affiliateOf:
+    type: string
+  affiliates:
+    type: string
+  distributorOf:
+    type: string
+  distributors:
+    type: string
+  classification:
+    type: array
+    items:
+      type: string
+  classificationOther:
+    type: string
+  confirmation:
+    type: string
+  created:
+    type: string
+  createdBy:
+    type: string

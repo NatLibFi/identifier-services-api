@@ -1,0 +1,6 @@
+type: string
+enum:
+  - PAPERBACK
+  - HARDBACK
+  - SPIRAL_BINDING
+  - OTHER_PRINT

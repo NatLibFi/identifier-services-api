@@ -1,0 +1,96 @@
+type: object
+properties:
+  title:
+    type: string
+    maximum: 200
+  subtitle:
+    type: string
+    maximum: 200
+  placeOfPublication:
+    type: string
+    maximum: 100
+  printer:
+    type: string
+    maximum: 100
+  issuedFromYear:
+    $ref: '../patterns/CommonYear.yaml'
+  issuedFromNumber:
+    type: string
+    maximum: 100
+  frequency:
+    $ref: "../enums/IssnPublicationFrequency.yaml"
+  frequencyOther:
+    maximum: 50
+  language:
+    $ref: "../enums/CommonPublicationLanguage.yaml"
+  publicationType:
+    $ref: "../enums/IssnPublicationType.yaml"
+  publicationTypeOther:
+    type: string
+    maximum: 50
+  medium:
+    $ref: "../enums/IssnPublicationMedium.yaml"
+  mediumOther:
+    type: string
+    maximum: 50
+  url:
+    type: string
+    maximum: 100
+  previous:
+    type: object
+    properties:
+      title:
+        type: array
+        maxItems: 5
+        items:
+          type: string
+          maximum: 100
+      issn:
+        type: array
+        maxItems: 5
+        items:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+      lastIssue:
+        type: array
+        maxItems: 5
+        items:
+          type: string
+          maximum: 50
+  mainSeries:
+    type: object
+    properties:
+      title:
+        type: array
+        maxItems: 5
+        items:
+          type: string
+          maximum: 100
+      issn:
+        $ref: '../patterns/CommonIssnIdentifier.yaml'
+  subseries:
+    type: object
+    properties:
+      title:
+        type: array
+        maxItems: 5
+        items:
+          type: string
+          maximum: 100
+      issn:
+        $ref: '../patterns/CommonIssnIdentifier.yaml'
+  anotherMedium:
+    type: object
+    properties:
+      title:
+        type: array
+        maxItems: 5
+        items:
+          type: string
+          maximum: 100
+      issn:
+        $ref: '../patterns/CommonIssnIdentifier.yaml'
+  additionalInfo:
+    type: string
+    maximum: 2000
+required:
+  - title

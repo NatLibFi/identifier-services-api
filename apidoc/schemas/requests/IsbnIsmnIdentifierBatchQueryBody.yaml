@@ -1,0 +1,17 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  publicationId:
+    type: integer
+  includePublications:
+    type: boolean
+    description: >-
+      If using publisherId and wish to include batches having
+      publicationId to response, this needs to be set to true.
+      Otherwise only batches with publicationId of null will be returned.
+    default: false
+  offset:
+    type: integer
+  limit:
+    type: integer

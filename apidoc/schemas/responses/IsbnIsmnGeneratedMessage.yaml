@@ -1,0 +1,14 @@
+type: object
+properties:
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  publisherId:
+    type: integer
+  templateId:
+    type: integer
+  subject:
+    type: string
+  recipient:
+    type: string
+  message:
+    type: string

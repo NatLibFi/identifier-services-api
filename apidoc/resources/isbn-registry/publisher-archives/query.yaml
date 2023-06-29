@@ -1,0 +1,28 @@
+post:
+  summary: Query publisher archive entry based on publisherId
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry publisher-archives
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IsbnIsmnPublisherArchiveEntryQueryBody.yaml'
+  responses:
+    '200':
+      description: Archive entry was found
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/responses/IsbnIsmnPublisherArchiveEntry.yaml"
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not found
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

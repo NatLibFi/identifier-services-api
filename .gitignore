@@ -135,3 +135,6 @@ dev-certs
 
 # private package installs
 private-package-installs
+
+# apidoc dev build
+src/public

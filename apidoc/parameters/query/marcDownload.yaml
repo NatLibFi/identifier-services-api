@@ -1,0 +1,6 @@
+name: marcDownload
+in: query
+required: false
+description: Whether to include record as response attachment
+schema:
+  type: boolean

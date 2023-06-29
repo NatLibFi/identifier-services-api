@@ -1,0 +1,18 @@
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    subject:
+      type: string
+    langCode:
+      type: string
+      enum:
+        - fi-FI
+        - en-GB
+        - sv-SE
+    messageTypeName:
+      type: string

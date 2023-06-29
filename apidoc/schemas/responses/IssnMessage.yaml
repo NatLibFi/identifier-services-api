@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: integer
+  publisherId:
+    type: integer
+  formId:
+    type: integer
+  messageTemplateId:
+    type: integer
+  messageTypeId:
+    type: integer
+  groupMessageId:
+    type: integer
+  recipient:
+    type: string
+  subject:
+    type: string
+  message:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  sent:
+    type: string
+  sentBy:
+    type: string

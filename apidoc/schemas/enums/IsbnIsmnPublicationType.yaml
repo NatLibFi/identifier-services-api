@@ -1,0 +1,7 @@
+type: string
+enum:
+  - BOOK
+  - DISSERTATION
+  - SHEET_MUSIC
+  - MAP
+  - OTHER
