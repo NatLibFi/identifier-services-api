@@ -1,5 +1,7 @@
 get:
   summary: Retrieve publisher information
+  security:
+    - bearerAuth: []
   tags:
     - isbn-registry
     - isbn-registry publishers
@@ -14,6 +16,8 @@ get:
             oneOf:
               - $ref: '../../../schemas/responses/IsbnIsmnPublisherAdmin.yaml'
               - $ref: '../../../schemas/responses/IsbnIsmnPublisherPublic.yaml'
+    '401':
+      description: Unauthorized
     '404':
       description: Not found
     default:

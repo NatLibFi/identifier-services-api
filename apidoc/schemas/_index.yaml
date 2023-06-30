@@ -5,7 +5,19 @@ CreatedResponse:
 ErrorResponse:
   $ref: './responses/Error.yaml'
 
-# common
+# public endpoints
+
+IsbnIsmnPublicationRequestCreateBodyPublic:
+  $ref: './requests/IsbnIsmnPublicationRequestCreateBodyPublic.yaml'
+IsbnIsmnPublisherRequestCreateBodyPublic:
+  $ref: './requests/IsbnIsmnPublisherRequestCreateBodyPublic.yaml'
+IssnRequestCreateBodyPublic:
+  $ref: './requests/IssnRequestCreateBodyPublic.yaml'
+
+CommonTurnstileToken:
+  $ref: './requests/CommonTurnstileToken.yaml'
+
+# common endpoints
 
 # marc
 CommonMarcRecordRead:

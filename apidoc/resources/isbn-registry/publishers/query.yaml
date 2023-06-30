@@ -1,5 +1,7 @@
 post:
   summary: Query isbn-registry publishers
+  security:
+    - bearerAuth: []
   description: Query options and returned objects attribute lists are extended for authorized users
   tags:
     - isbn-registry
@@ -21,6 +23,8 @@ post:
             oneOf:
             - $ref: "../../../schemas/responses/IsbnIsmnPublisherListAdmin.yaml"
             - $ref: "../../../schemas/responses/IsbnIsmnPublisherListPublic.yaml"
+    '401':
+      description: Unauthorized
     '422':
       description: Unprocessable entity
     default:

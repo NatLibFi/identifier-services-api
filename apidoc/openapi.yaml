@@ -14,6 +14,8 @@ tags:
     description: ISSN-registry endpoints (ISSN identifiers)
   - name: common
     description: Endpoints that are shared between multiple registries
+  - name: public
+    description: Endpoints available for public
 
   # ISBN registry tags
   - name: isbn-registry identifierbatches
@@ -65,6 +67,25 @@ tags:
     description: Shared Melinda related endpoints. Generation/searching of marc record may vary between registries, but available methods are the same.
 
 paths:
+  # Public routes
+  /public/isbn-registry/requests/publishers:
+    $ref: "./resources/public/isbn-registry/requests/publishers.yaml"
+  /public/isbn-registry/requests/publications:
+    $ref: "./resources/public/isbn-registry/requests/publications.yaml"
+
+  /public/isbn-registry/publishers/{id}:
+    $ref: "./resources/public/isbn-registry/publishers/id.yaml"
+  /public/isbn-registry/publishers/query:
+    $ref: "./resources/public/isbn-registry/publishers/query.yaml"
+
+  /public/isbn-registry/identifierbatches/{id}:
+    $ref: "./resources/public/isbn-registry/identifierbatches/id.yaml"
+  /public/isbn-registry/identifierbatches/{id}/download:
+    $ref: "./resources/public/isbn-registry/identifierbatches/download.yaml"
+
+  /public/issn-registry/requests:
+    $ref: "./resources/public/issn-registry/requests/root.yaml"
+
   # Routes shared by registries
 
   # Marc

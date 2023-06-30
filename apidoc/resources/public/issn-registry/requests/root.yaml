@@ -1,16 +1,14 @@
 post:
-  summary: Create new publisher request
-  security:
-    - bearerAuth: []
+  summary: Create new ISSN request
   tags:
-    - isbn-registry
-    - isbn-registry publisher-requests
+    - issn-registry
+    - public
   requestBody:
     required: true
     content:
       application/json:
         schema:
-            $ref: '../../../../schemas/requests/IsbnIsmnPublisherRequestCreateBody.yaml'
+          $ref: '../../../../schemas/requests/IssnRequestCreateBodyPublic.yaml'
   responses:
     '201':
       description: Resource was created
@@ -18,8 +16,8 @@ post:
         application/json:
           schema:
             $ref: '../../../../schemas/responses/Created.yaml'
-    '401':
-      description: Unauthorized
+    '403':
+      description: Forbidden
     '422':
       description: Unprocessable Entity
     default:

@@ -39,7 +39,7 @@ export function generateUserAuthorizationMiddleware(passportMiddlewares) {
     if ('authorization' in req.headers) {
       return passportMiddlewares.token(req, res, next);
     }
-    return next();
+    throw new ApiError(HttpStatus.UNAUTHORIZED);
   };
 }
 
