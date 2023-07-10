@@ -1,6 +1,5 @@
 post:
   summary: Create new ISSN request
-  description: Unauthenticated users require valid Turnstile token in order to create request
   security:
     - bearerAuth: []
   tags:
@@ -21,10 +20,6 @@ post:
             $ref: '../../../schemas/responses/Created.yaml'
     '401':
       description: Unauthorized
-    '403':
-      description: Forbidden
-    '409':
-      description: Cannot create range due to an conflict
     '422':
       description: Unprocessable Entity
     default:

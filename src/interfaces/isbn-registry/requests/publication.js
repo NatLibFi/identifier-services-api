@@ -70,7 +70,7 @@ export default function () {
    * @param {boolean} copy Whether the creation was due to making a copy and email should not be sent
    * @returns Created resource as object
    */
-  async function create(doc, user, copy = false) {
+  async function create(doc, user = false, copy = false) {
     const dbDoc = {
       ...doc,
       createdBy: user ? user.id : WEBSITE_USER,

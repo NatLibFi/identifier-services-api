@@ -42,36 +42,36 @@ import {default as createIsbnRegistryStatisticsRouter} from './statistics';
 import * as commonRoutes from '../common';
 
 export default function (middlewares) {
-  const {gatherUserInformationMiddlewares, permissionMiddleware} = middlewares;
+  const {permissionMiddleware} = middlewares;
   return new Router()
     // ISBN RANGES
-    .use('/ranges/isbn', gatherUserInformationMiddlewares, createIsbnRegistryRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISBN))
-    .use('/publisher-ranges/isbn', gatherUserInformationMiddlewares, createIsbnRegistryPublisherRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISBN))
+    .use('/ranges/isbn', createIsbnRegistryRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISBN))
+    .use('/publisher-ranges/isbn', createIsbnRegistryPublisherRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISBN))
 
     // ISMN RANGES
-    .use('/ranges/ismn', gatherUserInformationMiddlewares, createIsbnRegistryRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISMN))
-    .use('/publisher-ranges/ismn', gatherUserInformationMiddlewares, createIsbnRegistryPublisherRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISMN))
+    .use('/ranges/ismn', createIsbnRegistryRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISMN))
+    .use('/publisher-ranges/ismn', createIsbnRegistryPublisherRangeRouter(permissionMiddleware, COMMON_IDENTIFIER_TYPES.ISMN))
 
     // ISBN PUBLISHERS
-    .use('/publishers', gatherUserInformationMiddlewares, createIsbnRegistryPublisherRouter(permissionMiddleware))
-    .use('/publisher-archives', gatherUserInformationMiddlewares, createIsbnRegistryPublisherArchiveRouter(permissionMiddleware))
+    .use('/publishers', createIsbnRegistryPublisherRouter(permissionMiddleware))
+    .use('/publisher-archives', createIsbnRegistryPublisherArchiveRouter(permissionMiddleware))
 
     // REQUESTS
-    .use('/requests/publishers', gatherUserInformationMiddlewares, createIsbnRegistryPublisherRequestRouter(permissionMiddleware))
-    .use('/requests/publications', gatherUserInformationMiddlewares, createIsbnRegistryPublicationRequestRouter(permissionMiddleware))
+    .use('/requests/publishers', createIsbnRegistryPublisherRequestRouter(permissionMiddleware))
+    .use('/requests/publications', createIsbnRegistryPublicationRequestRouter(permissionMiddleware))
 
     // IDENTIFIERS
-    .use('/identifierbatches', gatherUserInformationMiddlewares, createIsbnRegistryIdentifierBatchRouter(permissionMiddleware))
-    .use('/identifiers', gatherUserInformationMiddlewares, createIsbnRegistryIdentifierRouter(permissionMiddleware))
+    .use('/identifierbatches', createIsbnRegistryIdentifierBatchRouter(permissionMiddleware))
+    .use('/identifiers', createIsbnRegistryIdentifierRouter(permissionMiddleware))
 
     // MESSAGES
-    .use('/messagetypes', gatherUserInformationMiddlewares, commonRoutes.createMessageTypeRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN))
-    .use('/messagetemplates', gatherUserInformationMiddlewares, commonRoutes.createMessageTemplateRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN))
-    .use('/messages', gatherUserInformationMiddlewares, createIsbnRegistryMessageRouter(permissionMiddleware))
+    .use('/messagetypes', commonRoutes.createMessageTypeRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN))
+    .use('/messagetemplates', commonRoutes.createMessageTemplateRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN))
+    .use('/messages', createIsbnRegistryMessageRouter(permissionMiddleware))
 
     // STATISTICS
-    .use('/statistics', gatherUserInformationMiddlewares, createIsbnRegistryStatisticsRouter(permissionMiddleware))
+    .use('/statistics', createIsbnRegistryStatisticsRouter(permissionMiddleware))
 
     // MARC
-    .use('/marc', gatherUserInformationMiddlewares, commonRoutes.createMarcRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN));
+    .use('/marc', commonRoutes.createMarcRouter(permissionMiddleware, COMMON_REGISTRY_TYPES.ISBN_ISMN));
 }

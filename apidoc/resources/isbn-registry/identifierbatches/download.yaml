@@ -1,5 +1,7 @@
 post:
   summary: Download an identifier batch
+  security:
+    - bearerAuth: []
   tags:
     - isbn-registry
     - isbn-registry identifierbatches
@@ -7,11 +9,13 @@ post:
     - $ref: "../../../parameters/path/id.yaml"
   responses:
     '200':
-      description: Identifier batch textefile
+      description: Identifier batch as textfile
       content:
         text/plain:
           schema:
             type: string
+    '401':
+      description: Unauthorized
     '404':
       description: Not Found
     '409':

@@ -70,7 +70,7 @@ export default function () {
    * @returns Created resource as object
    */
   // eslint-disable-next-line max-statements
-  async function create(doc, user) {
+  async function create(doc, user = false) {
     // Start transaction
     const t = await sequelize.transaction();
 

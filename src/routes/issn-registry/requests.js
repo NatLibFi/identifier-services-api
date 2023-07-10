@@ -39,14 +39,13 @@ import {
 } from '../validations';
 
 import {issnRequestFactory, issnPublicationFactory} from '../../interfaces';
-import {validateTurnstile} from '../../middlewares/turnstile';
 
 export default function (permissionMiddleware) {
   const issnRequests = issnRequestFactory();
   const issnPublications = issnPublicationFactory();
 
   return new Router()
-    .post('/', validateTurnstile, celebrate({
+    .post('/', permissionMiddleware('issnRequests', 'create'), celebrate({
       [Segments.BODY]: validateCreateIssnRequest
     }), create)
     .get('/:id', permissionMiddleware('issnRequests', 'read'), celebrate({

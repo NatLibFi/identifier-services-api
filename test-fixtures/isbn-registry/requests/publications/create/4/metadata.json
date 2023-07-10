@@ -1,6 +1,6 @@
 {
-  "descr": "Should succeed, unauthenticated can create publication request with complete book information isbn/ismn",
+  "descr": "Should fail, unauthenticated cannot create publication request with complete book information isbn/ismn through non-public endpoint",
   "requestUrl": "/isbn-registry/requests/publications",
   "method": "post",
-  "expectedStatus": 201
+  "expectedStatus": 401
 }

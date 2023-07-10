@@ -1,0 +1,104 @@
+{
+  "ismnRange": [
+    {
+      "id": 1,
+      "prefix": "979-0",
+      "category": 5,
+      "rangeBegin": "55001",
+      "rangeEnd": "55025",
+      "free": 24,
+      "taken": 1,
+      "canceled": 0,
+      "next": "55002",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIsbn": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+      "address": "FooBar 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "1234567",
+      "email": "foo.bar@example.com",
+      "www": "http://example.com",
+      "langCode": "fi-FI",
+      "contactPerson": "Foo Bar",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "979-0-55001",
+      "frequencyCurrent": "1",
+      "frequencyNext": "1",
+      "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+      "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
+      "classification": ["40", "100"],
+      "classificationOther": "",
+      "confirmation": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "ismnSubRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "publisherIdentifier": "979-0-55001",
+      "publisherId": 1,
+      "ismnRangeId": 1,
+      "category": 3,
+      "rangeBegin": "000",
+      "rangeEnd": "999",
+      "free": 997,
+      "taken": 3,
+      "canceled": 0,
+      "deleted": 0,
+      "next": "003",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "identifierBatch": [
+    {
+      "id": 1,
+      "identifierCount": 3,
+      "identifierCanceledCount": 0,
+      "identifierCanceledUsedCount": 0,
+      "identifierDeletedCount": 0,
+      "identifierType": "ISMN",
+      "subRangeId": 1,
+      "publisherId": 1,
+      "publicationId": 0,
+      "createdBy": "system"
+    }
+  ],
+  "identifier": [
+    {
+      "id": 1,
+      "identifier": "979-0-55001-000-0",
+      "identifierBatchId": 1,
+      "subRangeId": 1
+    },
+    {
+      "id": 2,
+      "identifier": "979-0-55001-001-7",
+      "identifierBatchId": 1,
+      "subRangeId": 1
+    },
+    {
+      "id": 3,
+      "identifier": "979-0-55001-002-4",
+      "identifierBatchId": 1,
+      "subRangeId": 1
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
-    "descr": "Should succeed with restrictions, unauthenticated can read publishers (limited attributes)",
+    "descr": "Should fail, unauthenticated cannot read publishers through non-public endpoint",
     "requestUrl": "/isbn-registry/publishers/1",
     "method": "get",
-    "expectedStatus": 200
+    "expectedStatus": 401
 }

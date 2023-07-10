@@ -56,9 +56,9 @@
       "noIdentifierGranted": 0,
       "onProcess": 0,
       "created": {},
-      "createdBy": "WEB-FOO",
+      "createdBy": "system",
       "modified": {},
-      "modifiedBy": "WEB-FOO"
+      "modifiedBy": "system"
     }
   ]
 }

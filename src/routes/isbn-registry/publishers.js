@@ -38,13 +38,13 @@ export default function (permissionMiddleware) {
   const publishers = publishersIsbnFactory();
 
   return new Router()
-    .get('/:id', celebrate({
+    .get('/:id', permissionMiddleware('publishers', 'read'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), read)
-    .post('/query', celebrate({
+    .post('/query', permissionMiddleware('publishers', 'query'), celebrate({
       [Segments.PARAMS]: validateIsbnPublisherQueryBody
     }), query)
-    .post('/autocomplete', permissionMiddleware('publisherRequests', 'read'), celebrate({
+    .post('/autocomplete', permissionMiddleware('publishers', 'autocomplete'), celebrate({
       [Segments.PARAMS]: validateIsbnPublisherQueryBody
     }), autocomplete)
     .put('/:id', permissionMiddleware('publishers', 'update'), celebrate({

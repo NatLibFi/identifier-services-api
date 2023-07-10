@@ -137,10 +137,12 @@ export default async function run() { // eslint-disable-line
     app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares)); //eslint-disable-line
   }
 
-  app.use('/ping', routes.createStatusRouter());
-  app.use('/isbn-registry', routes.createIsbnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
-  app.use('/issn-registry', routes.createIssnRegistryRouter({gatherUserInformationMiddlewares, permissionMiddleware}));
   app.use('/', express.static(path.resolve(__dirname, 'public')));
+  app.use('/ping', routes.createStatusRouter());
+  app.use('/public', routes.createPublicRouter());
+
+  app.use('/isbn-registry', gatherUserInformationMiddlewares, routes.createIsbnRegistryRouter({permissionMiddleware}));
+  app.use('/issn-registry', gatherUserInformationMiddlewares, routes.createIssnRegistryRouter({permissionMiddleware}));
 
   app.use(handleErrors);
 

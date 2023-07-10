@@ -1,0 +1,22 @@
+post:
+  summary: Query ISBN-registry publishers
+  tags:
+    - isbn-registry
+    - public
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/IsbnIsmnPublisherQueryBodyPublic.yaml'
+  responses:
+    '200':
+      description: Query was successful
+      content:
+        application/json:
+          schema:
+            $ref: "../../../../schemas/responses/IsbnIsmnPublisherListPublic.yaml"
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

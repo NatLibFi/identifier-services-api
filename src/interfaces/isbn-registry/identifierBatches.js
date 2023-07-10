@@ -56,6 +56,7 @@ export default function () {
   return {
     // Creation of identifier batches happens on isbn/ismn subrange interface depending on type of identifier batch created
     read,
+    readPublic,
     safeRemove,
     download,
     query
@@ -124,6 +125,57 @@ export default function () {
         const {publisher, ...filteredDoc} = doc;
         return {...filteredDoc, publisherName: publisher.officialName};
       }
+
+      // If identifierBatch considers publication, it is not accessible by publishers/non-authenticated users
+      if (doc.publicationId && doc.publicationId !== 0) {
+        throw new ApiError(HttpStatus.NOT_FOUND);
+      }
+
+      // If batch considers a list, return basic information regarding it
+      const {id, identifierType, identifierCount, publisherId, publisherIdentifier} = doc;
+
+      return {id, identifierType, identifierCount, publisherName, publisherId, publisherIdentifier};
+    }
+  }
+
+  /**
+   * Read identifierBatch (ISBN/ISMN) public information
+   * @param {number} id ID of identifier batch to read
+   * @returns Identifier batch as JSON on success, otherwise throws ApiError
+   */
+  async function readPublic(id) {
+    const result = await identifierBatchModel.findByPk(id, {
+      include: [
+        {
+          association: 'identifiers',
+          attributes: ['id', 'identifier', 'publicationType']
+        },
+        {
+          association: 'publisher',
+          attributes: ['officialName']
+        }
+      ]
+    });
+
+    if (result !== null) {
+      const subrangeModel = getPublisherRangeModel(result.identifierType);
+      const subrange = await subrangeModel.findByPk(result.subRangeId);
+
+      if (subrange !== null) {
+        return filterResult({...result.toJSON(), publisherIdentifier: subrange.publisherIdentifier});
+      }
+    }
+
+    throw new ApiError(HttpStatus.NOT_FOUND);
+
+    /**
+     * Transforms return value to have properties available for everyone
+     * @param {Object} doc Identifier batch
+     * @returns Identifier batch with appropriate attributes if valid, throws not found error if user has no access to entity
+     */
+    function filterResult(doc) {
+      // System users and admins have access to all identifierBatch information
+      const publisherName = doc.publisher.officialName;
 
       // If identifierBatch considers publication, it is not accessible by publishers/non-authenticated users
       if (doc.publicationId && doc.publicationId !== 0) {

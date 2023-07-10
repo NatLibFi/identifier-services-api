@@ -35,7 +35,6 @@ import {
   validateRequestId
 } from '../validations';
 
-import {validateTurnstile} from '../../middlewares/turnstile';
 import {identifierBatchesFactory, subRangesFactory} from '../../interfaces';
 import {COMMON_IDENTIFIER_TYPES} from '../../interfaces/constants';
 
@@ -46,13 +45,13 @@ export default function (permissionMiddleware) {
   const identifierBatches = identifierBatchesFactory();
 
   return new Router()
-    .get('/:id', celebrate({
+    .get('/:id', permissionMiddleware('identifierBatches', 'read'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), read)
     .delete('/:id', permissionMiddleware('identifierBatches', 'delete'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), remove)
-    .post('/:id/download', validateTurnstile, celebrate({
+    .post('/:id/download', permissionMiddleware('identifierBatches', 'download'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), download)
     .post('/query', permissionMiddleware('identifierBatches', 'query'), celebrate({

@@ -1,6 +1,7 @@
 post:
   summary: Create new publisher request
-  description: Turnstile token is required for non-authenticated users
+  security:
+    - bearerAuth: []
   tags:
     - isbn-registry
     - isbn-registry publisher-requests
@@ -17,8 +18,8 @@ post:
         application/json:
           schema:
             $ref: '../../../../schemas/responses/Created.yaml'
-    '409':
-      description: Cannot create range due to an conflict
+    '401':
+      description: Unauthorized
     '422':
       description: Unprocessable Entity
     default:

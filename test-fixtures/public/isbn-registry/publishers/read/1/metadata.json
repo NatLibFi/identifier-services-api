@@ -1,0 +1,6 @@
+{
+    "descr": "Should succeed with public attributes, unauthenticated can read publishers",
+    "requestUrl": "/public/isbn-registry/publishers/1",
+    "method": "get",
+    "expectedStatus": 200
+}

@@ -1,5 +1,7 @@
 get:
   summary: Retrieve identifier batch information
+  security:
+    - bearerAuth: []
   tags:
     - isbn-registry
     - isbn-registry identifierbatches
@@ -14,6 +16,8 @@ get:
             oneOf:
               - $ref: "../../../schemas/responses/IsbnIsmnIdentifierBatchAdmin.yaml"
               - $ref: "../../../schemas/responses/IsbnIsmnIdentifierBatchPublic.yaml"
+    '401':
+      description: Unauthorized
     '404':
       description: Not found
     default:
