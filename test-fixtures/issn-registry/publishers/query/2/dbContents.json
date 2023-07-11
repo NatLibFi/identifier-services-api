@@ -1,0 +1,40 @@
+{
+  "publisherIssn": [
+    {
+      "id": 1,
+      "formId": null,
+      "idOld": null,
+      "officialName": "Foo Publisher",
+      "contactPerson": {
+        "name": ["Foo Bar"],
+        "email": ["example@example.com"]
+      },
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": "2022-11-06 00:00:00",
+      "createdBy": "system",
+      "modified": "2022-11-06 00:00:00",
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "officialName": "BarBaz",
+      "emailCommon": "",
+      "phone": "",
+      "address": "",
+      "zip": "",
+      "city": "",
+      "langCode": "fi-FI",
+      "additionalInfo": "",
+      "created": "2022-11-06 00:00:00",
+      "createdBy": "system",
+      "modified": "2022-11-06 00:00:00",
+      "modifiedBy": "system"
+    }
+  ]
+}

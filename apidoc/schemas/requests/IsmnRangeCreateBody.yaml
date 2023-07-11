@@ -1,0 +1,23 @@
+type: object
+properties:
+  prefix:
+    type: string
+    enum:
+      - '979-0'
+  category:
+    type: integer
+    minimum: 3
+    maximum: 7
+  rangeBegin:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 3
+    maximum: 7
+  rangeEnd:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 3
+    maximum: 7
+required:
+  - prefix
+  - category
+  - rangeBegin
+  - rangeEnd

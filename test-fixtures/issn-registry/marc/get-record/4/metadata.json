@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot get marc record out of ISSN registry publication",
+  "requestUrl": "/issn-registry/marc/1",
+  "method": "get",
+  "expectedStatus": 401
+}

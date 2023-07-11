@@ -1,0 +1,6 @@
+name: id
+in: path
+required: true
+description: The id of the entity to retrieve or interact with
+schema:
+  type: integer

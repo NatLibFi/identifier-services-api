@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "publisherId": null,
+  "publisherName": null,
+  "publisher": "Foo Publisher Edit",
+  "contactPerson": "Foo Bar Edit",
+  "email": "example.edit@example.com",
+  "phone": "",
+  "address": "",
+  "zip": "",
+  "city": "",
+  "publicationCount": 2,
+  "publicationCountIssn": 0,
+  "publisherCreated": false,
+  "langCode": "en-GB",
+  "status": "NOT_HANDLED",
+  "created": {},
+  "createdBy": "system",
+  "modified": {},
+  "modifiedBy": "system"
+}

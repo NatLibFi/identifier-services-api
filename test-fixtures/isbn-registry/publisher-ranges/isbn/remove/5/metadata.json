@@ -1,0 +1,8 @@
+{
+  "descr": "Should result to cancellation of publisher identifier: ISBN Subrange was not last given from range but has not been used yet",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/2",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 204
+}

@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    description: Process code. Decides which template is loaded from the database.
+    $ref: '../enums/IssnMessageTemplateLoadCode.yaml'
+  publisherId:
+    type: integer
+  formId:
+    type: integer
+required:
+  - code
+  - publisherId

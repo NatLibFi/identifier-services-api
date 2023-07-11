@@ -1,0 +1,6 @@
+{
+  "descr": "Should succeed, unauthenticated can create ISSN request with two publication linked to it",
+  "requestUrl": "/public/issn-registry/requests",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot delete ISSN from publication",
+  "requestUrl": "/issn-registry/publications/1/delete-issn",
+  "method": "post",
+  "expectedStatus": 401
+}

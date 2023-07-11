@@ -1,0 +1,8 @@
+{
+    "descr": "Non-admin cannot filter based on identifier category",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "method": "post",
+    "username": "publisher",
+    "password": "publisher",
+    "expectedStatus": 422
+}

@@ -1,0 +1,23 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        issn:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+        language:
+          $ref: '../enums/CommonPublicationLanguage.yaml'
+        medium:
+          $ref: '../enums/IssnPublicationMedium.yaml'
+        status:
+          $ref: '../enums/IssnPublicationStatus.yaml'
+        created:
+          type: string

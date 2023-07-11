@@ -1,0 +1,8 @@
+{
+  "descr": "Paging works",
+  "requestUrl": "/isbn-registry/requests/publishers/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

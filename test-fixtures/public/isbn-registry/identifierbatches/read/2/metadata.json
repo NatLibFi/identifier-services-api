@@ -1,0 +1,6 @@
+{
+    "descr": "Should succeed, unauthenticated may read public information regarding ISBN-batches that are not linked to a publication",
+    "requestUrl": "/public/isbn-registry/identifierbatches/1",
+    "method": "get",
+    "expectedStatus": 200
+}

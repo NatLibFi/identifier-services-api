@@ -1,0 +1,2 @@
+ignore-rules:
+- node_nosqli_injection

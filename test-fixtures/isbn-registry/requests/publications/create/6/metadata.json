@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create publication request without including type or fileformat definition",
+  "requestUrl": "/isbn-registry/requests/publications",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 422
+}

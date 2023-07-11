@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin can successfully delete identifier batch information if its last one given from subrange and no message has been sent",
+    "requestUrl": "/isbn-registry/identifierbatches/1",
+    "username": "admin",
+    "password": "admin",
+    "method": "delete",
+    "expectedStatus": 204
+}

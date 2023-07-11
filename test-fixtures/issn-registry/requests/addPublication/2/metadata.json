@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can create new publication and associate it with ISSN request",
+  "requestUrl": "/issn-registry/requests/1/add-publication",
+  "method": "post",
+  "username": "admin",
+  "password": "admin",
+  "expectedStatus": 201
+}

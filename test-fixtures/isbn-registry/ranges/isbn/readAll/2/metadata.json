@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can read all ISBN ranges",
+  "requestUrl": "/isbn-registry/ranges/isbn",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

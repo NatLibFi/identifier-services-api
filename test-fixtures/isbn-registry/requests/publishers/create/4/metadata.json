@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot create publisher registry join request through non-public endpoint",
+    "requestUrl": "/isbn-registry/requests/publishers",
+    "method": "post",
+    "expectedStatus": 401
+}

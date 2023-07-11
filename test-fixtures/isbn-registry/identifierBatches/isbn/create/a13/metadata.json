@@ -1,0 +1,8 @@
+{
+    "descr": "Cannot create batch for publication which is defined to be non-public",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

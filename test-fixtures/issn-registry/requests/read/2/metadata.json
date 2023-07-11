@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can read ISSN request with two publication linked to it",
+  "requestUrl": "/issn-registry/requests/1",
+  "method": "get",
+  "username": "admin",
+  "password": "admin",
+  "expectedStatus": 200
+}

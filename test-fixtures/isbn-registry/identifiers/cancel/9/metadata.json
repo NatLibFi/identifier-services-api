@@ -1,0 +1,8 @@
+{
+    "descr": "Fails when message is associated with batch associated to identifier",
+    "requestUrl": "/isbn-registry/identifiers/cancel",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

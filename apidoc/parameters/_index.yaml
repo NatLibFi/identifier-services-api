@@ -1,0 +1,18 @@
+# path parameters
+id:
+  $ref: './path/id.yaml'
+identifierType:
+  $ref: './path/identifierType.yaml'
+rangeOperation:
+  $ref: './path/rangeOperation.yaml'
+registry:
+  $ref: './path/registry.yaml'
+publicationId:
+  $ref: './path/publicationId.yaml'
+
+# query parameters
+marcDownload:
+  $ref: './query/marcDownload.yaml'
+
+marcFormat:
+  $ref: './query/marcFormat.yaml'

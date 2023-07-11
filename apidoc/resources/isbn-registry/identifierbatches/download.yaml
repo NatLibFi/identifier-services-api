@@ -1,0 +1,24 @@
+post:
+  summary: Download an identifier batch
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry identifierbatches
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Identifier batch as textfile
+      content:
+        text/plain:
+          schema:
+            type: string
+    '401':
+      description: Unauthorized
+    '404':
+      description: Not Found
+    '409':
+      description: Cannot download batch as text file due to a conflict
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

@@ -1,0 +1,136 @@
+type: object
+properties:
+  id:
+    type: integer
+  publisherId:
+    type: integer
+  publisherName:
+    type: string
+  identifierBatchId:
+    type: integer
+  officialName:
+    type: string
+  publisherIdentifierStr:
+    type: string
+  publicationIdentifierPrint:
+    description: JSON as string
+    type: string
+  publicationIdentifierElectronical:
+    description: JSON as string
+    type: string
+  publicationIdentifierType:
+    type: string
+  locality:
+    type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  contactPerson:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  publishedBefore:
+    type: boolean
+  publicationsPublic:
+    type: boolean
+  publicationsIntra:
+    type: boolean
+  publishingActivity:
+    $ref: '../enums/IsbnIsmnPublishingActivity.yaml'
+  publishingActivityAmount:
+    type: string
+  publicationType:
+    $ref: '../enums/IsbnIsmnPublicationType.yaml'
+  publicationFormat:
+    $ref: '../enums/IsbnIsmnPublicationFormat.yaml'
+  firstName1:
+    type: string
+  lastName1:
+    type: string
+  role1:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName2:
+    type: string
+  lastName2:
+    type: string
+  role2:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName3:
+    type: string
+  lastName3:
+    type: string
+  role3:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName4:
+    type: string
+  lastName4:
+    type: string
+  role4:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  title:
+    type: string
+  subtitle:
+    type: string
+  mapScale:
+    type: string
+  language:
+    $ref: '../enums/CommonPublicationLanguage.yaml'
+  year:
+    type: string
+  month:
+    type: string
+  series:
+    type: string
+  issn:
+    type: string
+  volume:
+    type: string
+  printingHouse:
+    type: string
+  printingHouseCity:
+    type: string
+  copies:
+    type: string
+  edition:
+    type: string
+  type:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnPublicationPrintType.yaml'
+  typeOther:
+    type: string
+  fileformat:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnPublicationElectronicalFormat.yaml'
+  fileformatOther:
+    type: string
+  comments:
+    type: string
+  noIdentifierGranted:
+    type: boolean
+  onProcess:
+    type: boolean
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

@@ -1,0 +1,21 @@
+type: object
+properties:
+  block:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 4
+    maximum: 4
+  rangeBegin:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 3
+    maximum: 3
+  rangeEnd:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 3
+    maximum: 3
+  isActive:
+    type: boolean
+required:
+  - block
+  - rangeBegin
+  - rangeEnd
+  - isActive

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can generate monthly statistics in xlsx format (todo: response inspect)",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

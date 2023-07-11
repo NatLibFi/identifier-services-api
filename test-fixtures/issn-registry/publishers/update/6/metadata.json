@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot update protected attribute: formId. Form-Publisher links is set through forms set-publisher endpoint.",
+  "requestUrl": "/issn-registry/publishers/1",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 422
+}

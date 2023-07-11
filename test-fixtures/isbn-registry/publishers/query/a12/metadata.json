@@ -1,0 +1,8 @@
+{
+    "descr": "Non-admin may not use hasQuitted filter",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "method": "post",
+    "username": "publisher",
+    "password": "publisher",
+    "expectedStatus": 422
+}

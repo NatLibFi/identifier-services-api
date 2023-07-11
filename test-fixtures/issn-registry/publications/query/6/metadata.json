@@ -1,0 +1,8 @@
+{
+  "descr": "Status filter works (positive case)",
+  "requestUrl": "/issn-registry/publications/query",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

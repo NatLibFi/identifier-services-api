@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "formId": null,
+  "idOld": null,
+  "officialName": "Foo Publisher Edit",
+  "contactPerson": {
+    "name": ["Foo Bar", "Baz"],
+    "email": ["example@example.com", "example.baz@example.com"]
+  },
+  "emailCommon": "",
+  "phone": "",
+  "address": "",
+  "zip": "",
+  "city": "",
+  "langCode": "fi-FI",
+  "additionalInfo": "",
+  "created": {},
+  "createdBy": "system",
+  "modified": {},
+  "modifiedBy": "admin"
+}

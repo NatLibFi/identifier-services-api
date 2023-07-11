@@ -1,0 +1,8 @@
+{
+    "descr": "Succeeds even when message is associated with batch associated to identifier",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

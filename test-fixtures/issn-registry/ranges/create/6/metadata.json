@@ -1,0 +1,8 @@
+{
+  "descr": "Prevents creating overlapping range if block information matches to existing issn range",
+  "requestUrl": "/issn-registry/ranges",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 409
+}

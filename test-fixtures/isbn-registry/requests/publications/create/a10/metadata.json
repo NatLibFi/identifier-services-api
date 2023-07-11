@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail when type definitions are broken (electronical with type information)",
+  "requestUrl": "/isbn-registry/requests/publications",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 422
+}

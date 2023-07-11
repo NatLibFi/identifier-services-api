@@ -1,0 +1,8 @@
+type: string
+enum:
+  - identifier_created_isbn
+  - identifier_created_ismn
+  - publisher_registered_isbn
+  - publisher_registered_ismn
+  - big_publisher_isbn
+  - big_publisher_ismn

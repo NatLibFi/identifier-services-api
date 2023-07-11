@@ -1,0 +1,14 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "identifierCount": 3,
+      "identifierCanceledCount": 0,
+      "identifierDeletedCount": 0,
+      "identifierType": "ISBN",
+      "publisherRangeIdentifier": "978-951-550",
+      "created": {}
+    }
+  ]
+}

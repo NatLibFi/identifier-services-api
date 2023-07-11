@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot remove identifier from publication",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "method": "post",
+    "expectedStatus": 401
+}

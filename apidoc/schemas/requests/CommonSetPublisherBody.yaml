@@ -1,0 +1,7 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+    nullable: true
+required:
+  - publisherId

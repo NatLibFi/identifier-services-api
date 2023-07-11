@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin can successfully create identifier batch for publication if pre-conditions are met [PRINT+ELECTRONIC]",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}

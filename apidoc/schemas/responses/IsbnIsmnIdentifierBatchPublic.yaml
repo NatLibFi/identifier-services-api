@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: integer
+  identifierType:
+    type: string
+  identifierCount:
+    type: integer
+  publisherId:
+    type: integer
+  publisherName:
+    type: string
+  publisherIdentifier:
+    type: string

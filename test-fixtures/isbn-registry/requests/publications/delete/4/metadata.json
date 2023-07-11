@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot delete publication request isbn/ismn",
+  "requestUrl": "/isbn-registry/requests/publications/1",
+  "method": "delete",
+  "expectedStatus": 401
+}

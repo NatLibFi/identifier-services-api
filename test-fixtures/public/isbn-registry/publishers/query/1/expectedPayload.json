@@ -1,0 +1,13 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "hasQuitted": false,
+      "activeIdentifierIsbn": "978-951-550",
+      "activeIdentifierIsmn": "979-0-55001"
+    }
+  ]
+}

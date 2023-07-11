@@ -1,0 +1,35 @@
+{
+  "publisherIsbn": [
+    {
+      "id": 1,
+      "officialName": "FooBar",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+      "address": "FooBar 123",
+      "addressLine1": "Example of previous data",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "1234567",
+      "email": "foo.bar@example.com",
+      "www": "http://example.com",
+      "langCode": "fi-FI",
+      "contactPerson": "Foo Bar",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "",
+      "frequencyCurrent": "1",
+      "frequencyNext": "1",
+      "affiliateOf": "Example Oy",
+      "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+      "distributorOf": "Example Oy",
+      "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
+      "classification": ["40", "100"],
+      "classificationOther": "",
+      "confirmation": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

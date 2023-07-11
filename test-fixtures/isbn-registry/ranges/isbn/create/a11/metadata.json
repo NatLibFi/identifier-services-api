@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create ISBN range if range definition do not match category definition",
+  "requestUrl": "/isbn-registry/ranges/isbn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 422
+}

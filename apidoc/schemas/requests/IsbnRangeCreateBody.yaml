@@ -1,0 +1,30 @@
+type: object
+properties:
+  prefix:
+    type: integer
+    enum:
+      - 978
+      - 979
+  langGroup:
+    type: integer
+    enum:
+      - 951
+      - 952
+  category:
+    type: integer
+    minimum: 1
+    maximum: 5
+  rangeBegin:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 1
+    maximum: 5
+  rangeEnd:
+    $ref: '../patterns/CommonNumberString.yaml'
+    minimum: 1
+    maximum: 5
+required:
+  - prefix
+  - langGroup
+  - category
+  - rangeBegin
+  - rangeEnd

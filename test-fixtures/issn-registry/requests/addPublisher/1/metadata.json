@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can create new publisher from ISSN request information. Form is associated with created publisher.",
+  "requestUrl": "/issn-registry/requests/1/add-publisher",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

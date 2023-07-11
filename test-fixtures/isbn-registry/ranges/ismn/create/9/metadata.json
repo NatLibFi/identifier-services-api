@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, ISMN range with invalid range (end smaller than begin) cannot be created",
+  "requestUrl": "/isbn-registry/ranges/ismn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 422
+}

@@ -1,0 +1,28 @@
+post:
+  summary: Assign ISSN-identifier from ISSN-registry active range to publication
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry publications
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: ISSN identifier assigned to publication successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnPublication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Could not remove identifier due to an conflict
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

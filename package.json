@@ -1,0 +1,132 @@
+{
+  "name": "@natlibfi/identifier-services-api",
+  "description": "Identifier Services API",
+  "author": {
+    "name": "The National Library of Finland"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/natlibfi/identifier-services-api",
+  "bugs": {
+    "url": "https://github.com/natlibfi/identifier-services-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:NatLibFi/identifier-services-api.git"
+  },
+  "license": "GPL-3.0-only",
+  "private": true,
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node ./dist/index",
+    "lint:apidoc": "swagger-cli validate apidoc/openapi.yaml",
+    "lint:dev": "eslint --fix -- src && npm run lint:apidoc",
+    "lint": "eslint -- src && npm run lint:apidoc",
+    "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -r dotenv/config -t 20000 --exit --require @babel/register",
+    "test:coverage": "nyc --reporter=text npm run test:base -- src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
+    "test": "npm run lint && npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
+    "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
+    "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
+    "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
+    "test:public-routes": "npm run test:base -- -b src/routes/public/*spec.js",
+    "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified && npm run build:apidoc",
+    "build:apidoc": "swagger-cli bundle -o dist/public/openapi.json apidoc/openapi.yaml",
+    "build:apidoc-dev": "swagger-cli bundle -o src/public/openapi.json apidoc/openapi.yaml",
+    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ext '*.yaml' --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
+  },
+  "dependencies": {
+    "@babel/core": "^7.17.7",
+    "@babel/runtime": "^7.17.7",
+    "@json2csv/plainjs": "^7.0.1",
+    "@natlibfi/express-validate-content-type": "^1.0.1",
+    "@natlibfi/marc-record-serializers": "^10.0.2",
+    "@natlibfi/melinda-backend-commons": "^2.0.5",
+    "@natlibfi/melinda-rest-api-client": "^4.0.1",
+    "@natlibfi/passport-natlibfi-keycloak": "^1.0.0",
+    "@natlibfi/sru-client": "^6.0.1",
+    "body-parser": "^1.19.2",
+    "celebrate": "^15.0.1",
+    "cors": "^2.8.5",
+    "excel4node": "^1.8.2",
+    "express": "^4.17.3",
+    "html-to-text": "^9.0.4",
+    "luxon": "^3.1.1",
+    "marc-record-js": "^0.3.2",
+    "mysql2": "^3.2.4",
+    "nodemailer": "^6.7.7",
+    "sequelize": "^6.19.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/eslint-parser": "7.17.0",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/register": "^7.16.11",
+    "@natlibfi/eslint-config-melinda-backend": "^3.0.0",
+    "@natlibfi/fixura": "^2.2.1",
+    "babel-plugin-istanbul": "^6.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "base-64": "^1.0.0",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.11.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-mocha": "^10.0.3",
+    "mariadb": "^3.1.1",
+    "mocha": "^10.2.0",
+    "nock": "^13.2.4",
+    "nodemon": "^3.0.1",
+    "nyc": "^15.1.0",
+    "path": "^0.12.7",
+    "sqlite3": "^5.0.8",
+    "swagger-cli": "^4.0.4"
+  },
+  "eslintConfig": {
+    "extends": "@natlibfi/melinda-backend",
+    "parserOptions": {
+      "requireConfigFile": false
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": "maintained node versions"
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "*/*spec.js",
+      "**/*.spec.js",
+      "**/**/*spec.js",
+      "src/middlewares/turnstile.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  }
+}

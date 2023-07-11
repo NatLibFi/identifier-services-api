@@ -1,0 +1,8 @@
+{
+    "descr": "Can query based on ISMN publisher identifier",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

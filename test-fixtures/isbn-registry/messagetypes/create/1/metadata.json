@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully create a valid ISBN message type",
+  "requestUrl": "/isbn-registry/messagetypes",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

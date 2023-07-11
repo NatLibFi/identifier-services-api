@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can delete ISSN request with two publication linked to it, if no publications have been assigned with ISSN identifier",
+  "requestUrl": "/issn-registry/requests/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 204
+}

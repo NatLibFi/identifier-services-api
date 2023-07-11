@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can activate open ISMN subrange which has free ISMN identifiers",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/1/activate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

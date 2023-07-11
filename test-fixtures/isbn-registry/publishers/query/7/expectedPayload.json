@@ -1,0 +1,15 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 1,
+      "officialName": "FooBar Publisher",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "email": "foo.bar@example.com",
+      "contactPerson": "Foo Bar",
+      "hasQuitted": false,
+      "activeIdentifierIsbn": "978-951-550",
+      "activeIdentifierIsmn": ""
+    }
+  ]
+}

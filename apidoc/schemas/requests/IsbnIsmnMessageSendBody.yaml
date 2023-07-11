@@ -1,0 +1,26 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  publicationId:
+    type: integer
+  messageTemplateId:
+    type: integer
+  batchId:
+    type: integer
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  recipient:
+    $ref: '../patterns/CommonEmail.yaml'
+  subject:
+    type: string
+  messageBody:
+    description: HTML body for email message
+    type: string
+required:
+  - publisherId
+  - messageTemplateId
+  - langCode
+  - recipient
+  - subject
+  - messageBody

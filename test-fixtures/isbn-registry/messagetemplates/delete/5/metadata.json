@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot delete message template if it is linked to a mandatory system action",
+  "requestUrl": "/isbn-registry/messagetemplates/1",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 409
+}

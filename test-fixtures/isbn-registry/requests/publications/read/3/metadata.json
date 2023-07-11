@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, publisher cannot read ISBN/ISMN publication request",
+    "requestUrl": "/isbn-registry/requests/publications/1",
+    "username": "publisher",
+    "password": "publisher",
+    "method": "get",
+    "expectedStatus": 403
+}

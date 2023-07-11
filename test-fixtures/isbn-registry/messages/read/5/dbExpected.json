@@ -1,0 +1,220 @@
+{
+  "isbnRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "prefix": 978,
+      "langGroup": 951,
+      "category": 4,
+      "rangeBegin": "0000",
+      "rangeEnd": "0009",
+      "free": 9,
+      "taken": 1,
+      "canceled": 0,
+      "next": "0001",
+      "isActive": 1,
+      "isClosed": 0,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "isbnSubRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "publisherIdentifier": "978-951-0000",
+      "publisherId": 1,
+      "isbnRangeId": 1,
+      "category": 2,
+      "rangeBegin": "00",
+      "rangeEnd": "99",
+      "free": 89,
+      "taken": 11,
+      "canceled": 0,
+      "deleted": 0,
+      "next": "11",
+      "isActive": 1,
+      "isClosed": 0,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIsbn": [
+    {
+      "id": 1,
+      "officialName": "FooBar",
+      "otherNames": "",
+      "previousNames": "",
+      "promoteSorting": 0,
+      "address": "FooBar 123",
+      "addressLine1": null,
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "1234567",
+      "email": "foo.bar@example.com",
+      "www": "http://example.com",
+      "langCode": "fi-FI",
+      "contactPerson": "Foo Bar",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "978-951-00000",
+      "activeIdentifierIsmn": "",
+      "frequencyCurrent": "1",
+      "frequencyNext": "1",
+      "affiliateOf": null,
+      "affiliates": "",
+      "distributorOf": null,
+      "distributors": "",
+      "classification": "100",
+      "classificationOther": "",
+      "confirmation": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Identifier List",
+      "description": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkitemplate 2",
+      "subject": "New list of identifiers",
+      "langCode": "fi-FI",
+      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here is a set of identifiers for you:<br />#IDENTIFIERS#<br />Regards, #USER#",
+      "messageTypeId": 1,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "identifierBatch": [
+    {
+      "id": 1,
+      "identifierCount": 11,
+      "identifierCanceledCount": 0,
+      "identifierCanceledUsedCount": 0,
+      "identifierDeletedCount": 0,
+      "identifierType": "ISBN",
+      "subRangeId": 1,
+      "publisherId": 1,
+      "publicationId": 0,
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "identifier": [
+    {
+      "id": 1,
+      "identifier": "978-951-0000-00-2",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 2,
+      "identifier": "978-951-0000-01-9",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 3,
+      "identifier": "978-951-0000-02-6",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 4,
+      "identifier": "978-951-0000-03-3",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 5,
+      "identifier": "978-951-0000-04-0",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 6,
+      "identifier": "978-951-0000-05-7",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 7,
+      "identifier": "978-951-0000-06-4",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 8,
+      "identifier": "978-951-0000-07-1",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 9,
+      "identifier": "978-951-0000-08-8",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 10,
+      "identifier": "978-951-0000-09-5",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 11,
+      "identifier": "978-951-0000-10-1",
+      "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    }
+  ],
+  "messageIsbn": [
+    {
+      "id": 1,
+      "publisherId": 1,
+      "groupMessageId": 0,
+      "batchId": 1,
+      "publicationId": 0,
+      "messageTypeId": 1,
+      "messageTemplateId": 1,
+      "recipient": "example@example.com",
+      "subject": "Esimerkkiotsikko",
+      "message": "<p>Esimerkkiviesti</p>",
+      "langCode": "fi-FI",
+      "hasAttachment": 1,
+      "attachmentName": "1.txt",
+      "sent": {},
+      "sentBy": "system"
+    }
+  ]
+}

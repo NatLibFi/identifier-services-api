@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot read ISBN message types",
+  "requestUrl": "/isbn-registry/messagetypes",
+  "method": "get",
+  "expectedStatus": 401
+}

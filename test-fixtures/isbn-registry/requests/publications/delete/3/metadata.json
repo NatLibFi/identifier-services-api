@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot delete publication request isbn/ismn",
+  "requestUrl": "/isbn-registry/requests/publications/1",
+  "method": "delete",
+  "username": "publisher",
+  "password": "publisher",
+  "expectedStatus": 403
+}

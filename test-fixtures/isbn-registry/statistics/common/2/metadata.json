@@ -1,0 +1,8 @@
+{
+  "descr": "Admin can read statistics",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 200
+}

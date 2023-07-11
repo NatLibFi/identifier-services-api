@@ -1,0 +1,12 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "recipient": "foo@example.com",
+      "subject": "Esimerkkiaihe",
+      "messageTemplateName": "Esimerkkitemplate",
+      "sent": {}
+    }
+  ]
+}

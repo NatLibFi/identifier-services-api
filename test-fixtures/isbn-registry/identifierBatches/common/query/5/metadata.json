@@ -1,0 +1,8 @@
+{
+    "descr": "Can query identifier batch using publisherId and have publication batches included to response using includePublications",
+    "requestUrl": "/isbn-registry/identifierbatches/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

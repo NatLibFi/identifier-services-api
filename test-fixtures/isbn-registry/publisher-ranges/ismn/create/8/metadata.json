@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed while deactivating active subranges of chosen publisher",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

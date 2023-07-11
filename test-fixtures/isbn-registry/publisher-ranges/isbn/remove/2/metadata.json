@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can delete ISBN subrange if deletion is valid",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/2",
+  "username": "admin",
+  "password": "admin",
+  "method": "delete",
+  "expectedStatus": 204
+}

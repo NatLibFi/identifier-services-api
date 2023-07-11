@@ -1,0 +1,8 @@
+{
+  "descr": "Should close subrange with proper next value when last identifier is taken, in case taken identifier was canceled",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

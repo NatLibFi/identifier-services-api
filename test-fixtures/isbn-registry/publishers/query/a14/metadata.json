@@ -1,0 +1,8 @@
+{
+    "descr": "Admin can filter based on identifier type: ISMN",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 200
+}

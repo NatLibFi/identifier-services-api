@@ -1,0 +1,53 @@
+get:
+  summary: Retrieve all registry's message type resources
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - messagetypes
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+  responses:
+    '200':
+      description: Resources were found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/CommonMessageTypeList.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"
+
+post:
+  summary: Create new message type to selected registry
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - messagetypes
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/CommonMessageTypeCreateBody.yaml'
+  responses:
+    '201':
+      description: Message type was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/Created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

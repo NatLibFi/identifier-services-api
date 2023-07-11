@@ -1,0 +1,8 @@
+{
+    "descr": "Cannot utilize identifiers from two publisher ranges if batch is generated from subrange of category other than 1",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 409
+}

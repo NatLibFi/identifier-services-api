@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot delete ISSN from publication if its status is ISSN_FROZEN",
+  "requestUrl": "/issn-registry/publications/1/delete-issn",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

@@ -1,0 +1,103 @@
+{
+  "issnForm": [
+    {
+      "id": 2,
+      "publisherId": null,
+      "publisher": "Baz Publisher",
+      "contactPerson": "Baz",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 0,
+      "publicationCountIssn": 0,
+      "publisherCreated": 0,
+      "langCode": "fi-FI",
+      "status": "NOT_HANDLED",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIssn": [
+    {
+      "id": 1,
+      "formId": null,
+      "idOld": null,
+      "officialName": "Foo Publisher",
+      "contactPerson": "{\"name\":[\"Foo Bar\"],\"email\":[\"example@example.com\"]}",
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "formId": 2,
+      "idOld": null,
+      "officialName": "Baz Publisher",
+      "contactPerson": "{\"name\":[\"Baz\"],\"email\":[\"example@example.com\"]}",
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTypeIssn": [
+    {
+      "id": 1,
+      "name": "Random message type",
+      "description": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIssn": [
+    {
+      "id": 1,
+      "messageTypeId": 1,
+      "name": "Random message template",
+      "subject": "Random message",
+      "langCode": "fi-FI",
+      "message": "Test message content",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageIssn": [
+    {
+      "id": 2,
+      "messageTemplateId": 1,
+      "messageTypeId": 1,
+      "publisherId": 2,
+      "formId": 2,
+      "groupMessageId": null,
+      "recipient": "example@example.com",
+      "subject": "Random message 2",
+      "langCode": "fi-FI",
+      "message": "Test message content",
+      "sent": {},
+      "sentBy": "system"
+    }
+  ]
+}

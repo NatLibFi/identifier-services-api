@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can successfully download identifier batch identifiers as text file",
+    "requestUrl": "/isbn-registry/identifierbatches/1/download",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create publisher registry join request with protected attribute: idOld",
+    "requestUrl": "/isbn-registry/requests/publishers",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 422
+}

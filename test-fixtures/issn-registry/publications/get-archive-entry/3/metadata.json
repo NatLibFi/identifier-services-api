@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot read ISSN publication archive entry",
+  "requestUrl": "/issn-registry/publications/1/get-archive-entry",
+  "method": "get",
+  "username": "publisher",
+  "password": "publisher",
+  "expectedStatus": 403
+}

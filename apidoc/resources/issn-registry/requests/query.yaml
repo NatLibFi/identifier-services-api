@@ -1,0 +1,26 @@
+post:
+  summary: Query issn-registry requests
+  tags:
+    - issn-registry
+    - issn-registry requests
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IssnRequestQueryBody.yaml'
+  responses:
+    '200':
+      description: Query was successful
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/responses/IssnRequestList.yaml"
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

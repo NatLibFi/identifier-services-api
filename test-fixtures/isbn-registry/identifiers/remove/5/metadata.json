@@ -1,0 +1,8 @@
+{
+    "descr": "Properly manages removal of ISMN identifier while handling case where the identifier was introduced from other subrangeId than what is defined in batch associated with identifier",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

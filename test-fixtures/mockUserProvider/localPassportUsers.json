@@ -1,0 +1,26 @@
+[
+    {
+        "id": "admin",
+        "password": "admin",
+        "name": "test admin",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": "publisher",
+        "password": "publisher",
+        "name": "test publisher",
+        "roles": [
+            "publisher"
+        ]
+    },
+    {
+        "id": "system",
+        "password": "system",
+        "name": "test system",
+        "roles": [
+            "system"
+        ]
+    }
+]

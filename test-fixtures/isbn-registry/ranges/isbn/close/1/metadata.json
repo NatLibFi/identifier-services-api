@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can close active ISBN range",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/close",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

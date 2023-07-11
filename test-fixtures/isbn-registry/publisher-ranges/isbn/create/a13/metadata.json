@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if given rangeId does not exist",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 404
+}

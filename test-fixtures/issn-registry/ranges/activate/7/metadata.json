@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, may activate range which does not have free identifiers but has available canceled identifiers",
+  "requestUrl": "/issn-registry/ranges/1/activate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

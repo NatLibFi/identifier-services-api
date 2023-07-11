@@ -1,0 +1,28 @@
+post:
+  summary: Query publication requests
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry publication-requests
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/IsbnIsmnPublicationRequestQueryBody.yaml'
+  responses:
+    '200':
+      description: Total count of results and result set limited by given limit and offset parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/IsbnIsmnPublicationRequestList.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

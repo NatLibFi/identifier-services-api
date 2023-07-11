@@ -1,0 +1,24 @@
+post:
+  summary: Create new ISSN request
+  tags:
+    - issn-registry
+    - public
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/IssnRequestCreateBodyPublic.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/Created.yaml'
+    '403':
+      description: Forbidden
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

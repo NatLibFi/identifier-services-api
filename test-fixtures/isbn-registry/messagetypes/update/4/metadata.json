@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot update ISBN message type",
+  "requestUrl": "/isbn-registry/messagetypes/1",
+  "method": "put",
+  "expectedStatus": 401
+}

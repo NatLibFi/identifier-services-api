@@ -1,0 +1,144 @@
+type: object
+properties:
+  officialName:
+    type: string
+    maximum: 100
+  publisherIdentifierStr:
+    type: string
+    maximum: 20
+  locality:
+    type: string
+    maximum: 50
+  address:
+    type: string
+    maximum: 50
+  zip:
+    type: string
+    maximum: 10
+  city:
+    type: string
+    maximum: 50
+  contactPerson:
+    type: string
+    maximum: 100
+  phone:
+    type: string
+    maximum: 30
+  email:
+    type: string
+    maximum: 100
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  publishedBefore:
+    type: boolean
+  publicationsPublic:
+    type: boolean
+  publishingActivity:
+    $ref: '../enums/IsbnIsmnPublishingActivity.yaml'
+  publishingActivityAmount:
+    type: string
+    maximum: 5
+  publicationType:
+    $ref: '../enums/IsbnIsmnPublicationType.yaml'
+  publicationFormat:
+    $ref: '../enums/IsbnIsmnPublicationFormat.yaml'
+  firstName1:
+    type: string
+    maximum: 50
+  lastName1:
+    type: string
+    maximum: 50
+  role1:
+    type: array
+    maxItems: 4
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName2:
+    type: string
+    maximum: 50
+  lastName2:
+    type: string
+    maximum: 50
+  role2:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName3:
+    type: string
+    maximum: 50
+  lastName3:
+    type: string
+    maximum: 50
+  role3:
+    type: array
+    maxItems: 4
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  firstName4:
+    type: string
+    maximum: 50
+  lastName4:
+    type: string
+    maximum: 50
+  role4:
+    type: array
+    maxItems: 4
+    items:
+      $ref: '../enums/IsbnIsmnAuthorRole.yaml'
+  title:
+    type: string
+    maximum: 200
+  subtitle:
+    type: string
+    maximum: 200
+  mapScale:
+    type: string
+    maximum: 50
+  language:
+    $ref: '../enums/CommonPublicationLanguage.yaml'
+  year:
+    $ref: '../patterns/CommonYear.yaml'
+  month:
+    $ref: '../patterns/CommonMonth.yaml'
+  series:
+    type: string
+    maximum: 200
+  issn:
+    $ref: '../patterns/CommonIssnIdentifier.yaml'
+  volume:
+    type: string
+    maximum: 20
+  printingHouse:
+    type: string
+    maximum: 100
+  printingHouseCity:
+    type: string
+    maximum: 50
+  copies:
+    type: string
+    maximum: 10
+  edition:
+    $ref: '../patterns/IsbnIsmnEdition.yaml'
+  type:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnPublicationPrintType.yaml'
+  typeOther:
+    type: string
+    maximum: 100
+  fileformat:
+    type: array
+    items:
+      $ref: '../enums/IsbnIsmnPublicationElectronicalFormat.yaml'
+  fileformatOther:
+    type: string
+    maximum: 100
+  comments:
+    type: string
+    maximum: 2000
+  publicationsIntra:
+    type: boolean
+  noIdentifierGranted:
+    type: boolean
+  onProcess:
+    type: boolean

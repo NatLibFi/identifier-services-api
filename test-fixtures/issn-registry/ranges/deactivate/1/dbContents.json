@@ -1,0 +1,18 @@
+{
+  "issnRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "block": "1797",
+      "rangeBegin": "0008",
+      "rangeEnd": "9994",
+      "free": 1000,
+      "taken": 0,
+      "next": "0008",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

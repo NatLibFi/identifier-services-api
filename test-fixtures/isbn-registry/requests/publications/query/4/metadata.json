@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot query ISBN/ISMN publication request",
+    "requestUrl": "/isbn-registry/requests/publications/query",
+    "method": "post",
+    "expectedStatus": 401
+}

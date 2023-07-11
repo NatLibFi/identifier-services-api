@@ -1,0 +1,8 @@
+{
+  "descr": "System can get statistics",
+  "requestUrl": "/issn-registry/statistics",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

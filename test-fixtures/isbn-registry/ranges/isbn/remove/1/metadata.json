@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can remove ISBN range if there are no linked subranges",
+  "requestUrl": "/isbn-registry/ranges/isbn/1",
+  "username": "system",
+  "password": "system",
+  "method": "delete",
+  "expectedStatus": 204
+}

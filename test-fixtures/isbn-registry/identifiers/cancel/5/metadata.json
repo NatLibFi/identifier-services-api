@@ -1,0 +1,8 @@
+{
+    "descr": "If identifier was last of type/filetype removed, property is properly set to empty string instead of stringified object",
+    "requestUrl": "/isbn-registry/identifiers/cancel",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

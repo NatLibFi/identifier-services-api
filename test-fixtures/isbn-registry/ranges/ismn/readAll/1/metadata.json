@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully read ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn",
+  "username": "system",
+  "password": "system",
+  "method": "get",
+  "expectedStatus": 200
+}

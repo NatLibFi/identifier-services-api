@@ -1,0 +1,30 @@
+post:
+  summary: Send email message and save it to database
+  security:
+    - bearerAuth: []
+  tags:
+    - isbn-registry
+    - isbn-registry messages
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/IsbnIsmnMessageSendBody.yaml'
+  responses:
+    '201':
+      description: Message was sent and saved to database
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/Created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/UnexpectedError.yaml'

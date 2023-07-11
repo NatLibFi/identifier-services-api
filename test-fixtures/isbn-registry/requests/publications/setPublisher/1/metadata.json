@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can update ISBN/ISMN publication request publisher",
+    "requestUrl": "/isbn-registry/requests/publications/2/set-publisher",
+    "username": "system",
+    "password": "system",
+    "method": "put",
+    "expectedStatus": 200
+}

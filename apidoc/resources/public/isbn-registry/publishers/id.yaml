@@ -1,0 +1,18 @@
+get:
+  summary: Retrieve publisher information
+  tags:
+    - isbn-registry
+    - public
+  parameters:
+    - $ref: "../../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Publisher was found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/IsbnIsmnPublisherPublic.yaml'
+    '404':
+      description: Not found
+    default:
+      $ref: "../../../../responses/UnexpectedError.yaml"

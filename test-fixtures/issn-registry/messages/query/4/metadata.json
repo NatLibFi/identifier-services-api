@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot query ISSN related messages",
+  "requestUrl": "/issn-registry/messages/query",
+  "method": "post",
+  "expectedStatus": 401
+}

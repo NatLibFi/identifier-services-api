@@ -1,0 +1,8 @@
+{
+    "descr": "If identifier was last of publications identifiers, batch is removed and publication is set to be onProcess",
+    "requestUrl": "/isbn-registry/identifiers/cancel",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 204
+}

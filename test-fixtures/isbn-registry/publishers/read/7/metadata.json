@@ -1,0 +1,8 @@
+{
+    "descr": "activeIdentifierIsbn/activeIdentifierIsmn attributes does not affect whether entity is interpreted as part of publisher registry",
+    "requestUrl": "/isbn-registry/publishers/2",
+    "method": "get",
+    "username": "system",
+    "password": "system",
+    "expectedStatus": 404
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed and display second page of results",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

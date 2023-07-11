@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot delete ISBN subrange even if deletion is valid",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/2",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "delete",
+  "expectedStatus": 403
+}

@@ -1,0 +1,69 @@
+{
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkinimi",
+      "description": "Esimerkkikuvaus",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkitemplate",
+      "subject": "Esimerkkiaihe",
+      "langCode": "fi-FI",
+      "message": "<p>Testiviesti</p>\n<p>#EXAMPLE_TAG#</p>",
+      "messageTypeId": 1,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIsbn": [
+    {
+      "id": 1,
+      "officialName": "FooBar",
+      "otherNames": "OtherFooBar, OtherAnotherFooBar",
+      "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+      "address": "FooBar 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "1234567",
+      "email": "foo.bar@example.com",
+      "www": "http://example.com",
+      "langCode": "fi-FI",
+      "contactPerson": "Foo Bar",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "",
+      "frequencyCurrent": "1",
+      "frequencyNext": "1",
+      "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+      "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
+      "classification": ["40", "100"],
+      "classificationOther": "",
+      "confirmation": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "messageIsbn": [
+    {
+      "id": 1,
+      "messageTemplateId": 1,
+      "messageTypeId": 1,
+      "publisherId": 1,
+      "groupMessageId": 0,
+      "recipient": "foo@example.com",
+      "subject": "Esimerkkiaihe",
+      "message": "<p>Esimerkkiviesti</p><br />Terveisin,<br />FooBar<br />",
+      "langCode": "fi-FI",
+      "hasAttachment": 0,
+      "attachmentName": "",
+      "sentBy": "SYSTEM"
+    }
+  ]
+}

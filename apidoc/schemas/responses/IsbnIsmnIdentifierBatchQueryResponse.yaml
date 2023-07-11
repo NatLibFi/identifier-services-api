@@ -1,0 +1,36 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        identifierType:
+          type: string
+        identifierCount:
+          type: integer
+        identifierCanceledCount:
+          type: string
+        identifierDeletedCount:
+          type: string
+        identifiers:
+          description: Identifiers belonging to the batch. Available only if publicationId query param was used.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              identifier:
+                type: string
+              publicationType:
+                type: string
+        publisherRangeIdentifier:
+          description: Publisher range of which the identifier batch belongs to. Available only if publisherId query param was used.
+          type: string
+        created:
+          type: string

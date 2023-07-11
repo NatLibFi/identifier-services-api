@@ -1,0 +1,8 @@
+{
+    "descr": "Cannot update type information after identifier has been granted",
+    "requestUrl": "/isbn-registry/requests/publications/1",
+    "username": "system",
+    "password": "system",
+    "method": "put",
+    "expectedStatus": 422
+}

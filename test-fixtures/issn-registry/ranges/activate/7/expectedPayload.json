@@ -1,0 +1,16 @@
+  {
+    "id": 1,
+    "idOld": null,
+    "block": "1797",
+    "rangeBegin": "0008",
+    "rangeEnd": "9994",
+    "free": 0,
+    "taken": 1000,
+    "next": "",
+    "isActive": true,
+    "isClosed": false,
+    "created": {},
+    "createdBy": "system",
+    "modified": {},
+    "modifiedBy": "system"
+  }

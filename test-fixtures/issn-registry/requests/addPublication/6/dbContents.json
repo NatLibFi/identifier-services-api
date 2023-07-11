@@ -1,0 +1,62 @@
+{
+  "publisherIssn": [
+    {
+      "id": 1,
+      "formId": null,
+      "idOld": null,
+      "officialName": "Foo Publisher",
+      "contactPerson": {
+        "name": ["Foo Bar"],
+        "email": ["example@example.com"]
+      },
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": "2022-11-06 00:00:00",
+      "createdBy": "system",
+      "modified": "2022-11-06 00:00:00",
+      "modifiedBy": "system"
+    }
+  ],
+  "issnForm": [
+    {
+      "id": 1,
+      "publisherId": 1,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 0,
+      "publicationCountIssn": 0,
+      "publisherCreated": 0,
+      "langCode": "fi-FI",
+      "status": "NOT_NOTIFIED",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "issnFormArchive": [
+    {
+      "id": 1,
+      "idOld": null,
+      "formId": 1,
+      "publisher": "Foo Publisher",
+      "contactPerson": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "publicationCount": 2,
+      "langCode": "fi-FI",
+      "createdBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create a valid ISBN range if values of said range are already used by other range",
+  "requestUrl": "/isbn-registry/ranges/isbn",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

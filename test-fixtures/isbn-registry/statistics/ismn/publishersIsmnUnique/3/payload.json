@@ -1,0 +1,6 @@
+{
+  "type": "PUBLISHERS_ISMN_UNIQUE",
+  "begin": "2020-01-01",
+  "end": "2020-12-30",
+  "format": "json"
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail if cancelled ID cannot be found in db",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 404
+}

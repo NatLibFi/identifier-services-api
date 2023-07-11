@@ -1,0 +1,19 @@
+type: object
+properties:
+  totalDoc:
+    type: integer
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient:
+          type: string
+        subject:
+          type: string
+        messageTemplateName:
+          type: string
+        sent:
+          type: string

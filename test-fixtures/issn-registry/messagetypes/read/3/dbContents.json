@@ -1,0 +1,11 @@
+{
+  "messageTypeIssn": [
+    {
+      "id": 1,
+      "name": "Esimerkkinimi",
+      "description": "Esimerkkikuvaus",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

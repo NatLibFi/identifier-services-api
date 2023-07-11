@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can create ISBN subrange when range has available subranges",
+  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

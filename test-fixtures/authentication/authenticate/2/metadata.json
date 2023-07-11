@@ -1,0 +1,7 @@
+{
+    "descr": "Should fail, user cannot authenticate with invalid credentials.",
+    "requestUrl": "/auth",
+    "method": "post",
+    "expectedStatus": 401,
+    "authTestHeader": "YWRtaW46cGFzc3dvcmQ="
+}

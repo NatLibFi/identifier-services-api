@@ -1,0 +1,72 @@
+# KB node pipeline
+
+name: KB node pipeline
+
+on: push
+
+jobs:
+  build-node-versions:
+    name: Node version matrix
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+      env:
+        NPM_CONFIG_IGNORE_SCRIPTS: true
+    - run: npm audit --package-lock-only --production --audit-level=high
+    - run: npm ci
+    - run: npm test
+    - run: npm run build --if-present
+
+  license-scan:
+    name: License compliance check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: mikaelvesavuori/license-compliance-action@main
+        with:
+          exclude_pattern: /^@natlibfi/
+
+  njsscan:
+    name: Njsscan check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+    - name: nodejsscan scan
+      id: njsscan
+      uses: ajinabraham/njsscan-action@master
+      with:
+        args: '.'
+
+  openshift-webhook:
+    name: OpenShift webhook for image builder
+    needs: [build-node-versions, njsscan]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Staging webhook
+        uses: joelwmale/webhook-action@master
+        if: github.ref == 'refs/heads/test'
+        with:
+          url: ${{ secrets.WEBHOOK_URL_TEST }}
+          body: '{}'
+      - name: Production webhook
+        uses: joelwmale/webhook-action@master
+        if: github.ref == 'refs/heads/master'
+        with:
+          url: ${{ secrets.WEBHOOK_URL_PROD }}
+          body: '{}'

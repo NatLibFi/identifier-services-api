@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot remove ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn/1",
+  "method": "delete",
+  "expectedStatus": 401
+}

@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot update ISSN publisher information",
+  "requestUrl": "/issn-registry/publishers/1",
+  "method": "put",
+  "expectedStatus": 401
+}

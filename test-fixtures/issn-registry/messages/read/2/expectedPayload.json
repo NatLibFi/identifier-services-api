@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "publisherId": 1,
+  "formId": 1,
+  "messageTemplateId": 1,
+  "messageTypeId": 1,
+  "groupMessageId": null,
+  "recipient": "example@example.com",
+  "langCode": "fi-FI",
+  "message": "<p>Example</p>",
+  "subject": "THIS IS AN AUTOMATED TEST",
+  "sent": {},
+  "sentBy": "system"
+}

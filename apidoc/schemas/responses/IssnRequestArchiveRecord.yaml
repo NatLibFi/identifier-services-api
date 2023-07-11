@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: integer
+  idOld:
+    type: integer
+  formId:
+    type: integer
+  publisher:
+    type: string
+  contactPerson:
+    type: string
+  email:
+    type: string
+  phone:
+    type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  publicationCount:
+    type: integer
+    description: Total number of publications associated with the request during request creation
+  langCode:
+    $ref: "../enums/CommonLangCode.yaml"
+  created:
+    type: string
+  createdBy:
+    type: string

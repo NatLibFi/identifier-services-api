@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot remove ISBN range even if there are no linked subranges",
+  "requestUrl": "/isbn-registry/ranges/isbn/1",
+  "method": "delete",
+  "expectedStatus": 401
+}

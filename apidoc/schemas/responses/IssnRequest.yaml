@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    type: integer
+  publisherId:
+    type: integer
+  publisherName:
+    type: string
+  publisher:
+    type: string
+  contactPerson:
+    type: string
+  email:
+    type: string
+  phone:
+    type: string
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  publicationCount:
+    type: integer
+    description: Total number of publications associated with the request
+  publicationCountIssn:
+    type: integer
+    description: Number of publications associated with the request that have been assigned an ISSN-identifier
+  publisherCreated:
+    type: boolean
+    description: Whether ISSN-registry publisher has been created from the ISSN request information
+  langCode:
+    $ref: "../enums/CommonLangCode.yaml"
+  status:
+    $ref: "../enums/IssnRequestStatus.yaml"
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

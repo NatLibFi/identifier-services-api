@@ -1,0 +1,8 @@
+{
+    "descr": "Fails with NOT FOUND if publisher is associated with publication which has identifier (i.e., it's not request it's publisher registry entry)",
+    "requestUrl": "/isbn-registry/requests/publishers/1",
+    "username": "system",
+    "password": "system",
+    "method": "delete",
+    "expectedStatus": 404
+}

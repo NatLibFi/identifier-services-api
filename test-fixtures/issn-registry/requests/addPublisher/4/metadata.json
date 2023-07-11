@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot create new publisher from ISSN request information",
+  "requestUrl": "/issn-registry/requests/1/add-publisher",
+  "method": "post",
+  "expectedStatus": 401
+}

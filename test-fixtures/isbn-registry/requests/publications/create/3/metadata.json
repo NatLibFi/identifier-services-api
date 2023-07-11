@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, publisher can create publication request with complete book information isbn/ismn",
+  "requestUrl": "/isbn-registry/requests/publications",
+  "method": "post",
+  "username": "publisher",
+  "password": "publisher",
+  "expectedStatus": 201
+}

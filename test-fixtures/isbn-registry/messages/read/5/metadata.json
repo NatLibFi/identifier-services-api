@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully read ISBN message that includes previous systems attachment information",
+  "requestUrl": "/isbn-registry/messages/1",
+  "username": "system",
+  "password": "system",
+  "method": "get",
+  "expectedStatus": 200
+}

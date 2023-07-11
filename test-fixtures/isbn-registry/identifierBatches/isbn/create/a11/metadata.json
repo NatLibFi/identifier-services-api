@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, can create identifier batch using count parameter if pre-conditions are met",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 201
+}

@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot create ISSN range",
+  "requestUrl": "/issn-registry/ranges",
+  "method": "post",
+  "expectedStatus": 401
+}

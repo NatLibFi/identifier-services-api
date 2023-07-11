@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, unauthenticated cannot read all ISBN ranges",
+  "requestUrl": "/isbn-registry/ranges/isbn",
+  "method": "get",
+  "expectedStatus": 401
+}

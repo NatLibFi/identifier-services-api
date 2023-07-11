@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, can use publisherID in querying ISBN/ISMN publication request",
+    "requestUrl": "/isbn-registry/requests/publications/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

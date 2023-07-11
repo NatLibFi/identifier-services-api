@@ -1,0 +1,33 @@
+type: object
+properties:
+  publisher:
+    type: string
+    maximum: 100
+  contactPerson:
+    type: string
+    maximum: 100
+  email:
+    $ref: '../patterns/CommonEmail.yaml'
+    maximum: 100
+  phone:
+    type: string
+    maximum: 30
+  address:
+    type: string
+    maximum: 50
+  zip:
+    type: string
+    maximum: 10
+  city:
+    type: string
+    maximum: 50
+  langCode:
+    $ref: "../enums/CommonLangCode.yaml"
+required:
+  - publisher
+  - contactPerson
+  - email
+  - address
+  - zip
+  - city
+  - langCode

@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can send message",
+  "requestUrl": "/isbn-registry/messages/send",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

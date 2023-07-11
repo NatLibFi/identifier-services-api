@@ -1,0 +1,7 @@
+{
+  "name": "Esimerkkitemplate muokattu",
+  "subject": "Esimerkkiaihe muokattu",
+  "langCode": "fi-FI",
+  "message": "<p>Testiviesti</p>\n<p>Lisätty tekstiä</p>\n<p>#EXAMPLE_TAG#</p>",
+  "messageTypeId": 2
+}

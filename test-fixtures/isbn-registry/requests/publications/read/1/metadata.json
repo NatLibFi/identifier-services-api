@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can read ISBN/ISMN publication request",
+    "requestUrl": "/isbn-registry/requests/publications/1",
+    "username": "system",
+    "password": "system",
+    "method": "get",
+    "expectedStatus": 200
+}

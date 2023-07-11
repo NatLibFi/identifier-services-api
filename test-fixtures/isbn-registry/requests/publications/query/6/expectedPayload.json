@@ -1,0 +1,13 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 2,
+      "officialName": "XYZ Publishing",
+      "langCode": "fi-FI",
+      "publicationType": "BOOK",
+      "title": "Test book",
+      "comments": ""
+    }
+  ]
+}

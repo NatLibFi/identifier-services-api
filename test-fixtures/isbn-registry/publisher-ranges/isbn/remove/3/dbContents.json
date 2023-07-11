@@ -1,0 +1,70 @@
+{
+  "isbnRange": [
+    {
+      "id": 2,
+      "prefix": 978,
+      "langGroup": 951,
+      "category": 4,
+      "rangeBegin": "8900",
+      "rangeEnd": "9499",
+      "free": 599,
+      "taken": 1,
+      "canceled": 0,
+      "next": "8901",
+      "isActive": 1,
+      "isClosed": 0,
+      "idOld": null,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "publisherIsbn": [
+    {
+      "id": 2,
+      "officialName": "XYZ Publisher Request",
+      "otherNames": "",
+      "address": "XYZ 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "98765432",
+      "email": "xyz@example.com",
+      "www": "",
+      "langCode": "en-GB",
+      "contactPerson": "Baz Baz",
+      "additionalInfo": "",
+      "hasQuitted": 0,
+      "yearQuitted": "",
+      "activeIdentifierIsbn": "978-951-8900",
+      "activeIdentifierIsmn": "",
+      "frequencyCurrent": "2",
+      "frequencyNext": "2",
+      "affiliates": "",
+      "distributors": "",
+      "classification": ["100"],
+      "classificationOther": "",
+      "confirmation": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "isbnSubRange": [
+    {
+      "id": 2,
+      "publisherIdentifier": "978-951-8900",
+      "isbnRangeId": 2,
+      "publisherId": 2,
+      "category": 4,
+      "rangeBegin": "00",
+      "rangeEnd": "99",
+      "free": 100,
+      "taken": 0,
+      "canceled": 0,
+      "deleted": 0,
+      "next": "00",
+      "isActive": 1,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

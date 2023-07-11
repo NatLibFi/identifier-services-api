@@ -1,0 +1,28 @@
+get:
+  summary: Retrieve ISSN request archive record
+  security:
+    - bearerAuth: []
+  tags:
+    - issn-registry
+    - issn-registry requests
+  parameters:
+    - $ref: "../../../parameters/path/id.yaml"
+  responses:
+    '200':
+      description: Resource was found
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/IssnRequestArchiveRecord.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Could not retrieve due to conflict (multiple associated archive records)
+    '422':
+      description: Cannot process id given as parameter
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

@@ -1,0 +1,22 @@
+{
+  "publisherIssn": [
+    {
+      "id": 1,
+      "formId": null,
+      "idOld": null,
+      "officialName": "Foo Publisher",
+      "contactPerson": "{\"name\":[\"Foo Bar\",\"Baz Bar\"],\"email\":[\"example@example.com\",\"example@example.com\"]}",
+      "emailCommon": "",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "langCode": "fi-FI",
+      "additionalInfo": "This publisher is only for API tests",
+      "created": {},
+      "createdBy": "admin",
+      "modified": {},
+      "modifiedBy": "admin"
+    }
+  ]
+}

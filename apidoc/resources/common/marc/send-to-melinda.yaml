@@ -1,0 +1,28 @@
+post:
+  summary: Attempts to save MARC record generated from publication to Melinda through Melinda REST API
+  security:
+    - bearerAuth: []
+  tags:
+    - common
+    - marc
+    - melinda
+  parameters:
+    - $ref: "../../../parameters/path/registry.yaml"
+    - $ref: "../../../parameters/path/publicationId.yaml"
+  responses:
+    '200':
+      description: MARC record(s) generated from selected publication was/were successfully transfered to Melinda REST API
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/CommonMelindaSaveResponse.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Publication information of which to generate the transferable MARC could not be found
+    '500':
+      description: Internal server error occurred during Melinda connection
+    default:
+      $ref: "../../../responses/UnexpectedError.yaml"

@@ -1,0 +1,7 @@
+{
+    "descr": "Should succeed, user can authenticate with proper credentials.",
+    "requestUrl": "/auth",
+    "method": "post",
+    "expectedStatus": 200,
+    "authTestHeader": "YWRtaW46YWRtaW4="
+}

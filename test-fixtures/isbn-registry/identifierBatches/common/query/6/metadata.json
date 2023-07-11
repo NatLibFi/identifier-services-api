@@ -1,0 +1,8 @@
+{
+    "descr": "Using publisherId for query defaults to not including publication batches",
+    "requestUrl": "/isbn-registry/identifierbatches/query",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

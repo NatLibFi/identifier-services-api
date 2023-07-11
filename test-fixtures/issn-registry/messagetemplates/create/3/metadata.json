@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot create ISSN message template",
+  "requestUrl": "/issn-registry/messagetemplates",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "post",
+  "expectedStatus": 403
+}

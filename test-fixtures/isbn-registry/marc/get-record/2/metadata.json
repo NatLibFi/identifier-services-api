@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can get marc record out of ISBN registry publication request",
+  "requestUrl": "/isbn-registry/marc/1",
+  "username": "admin",
+  "password": "admin",
+  "method": "get",
+  "expectedStatus": 200
+}

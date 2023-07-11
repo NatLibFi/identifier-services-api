@@ -1,0 +1,78 @@
+type: object
+properties:
+  officialName:
+    type: string
+    maximum: 100
+  otherNames:
+    type: string
+    maximum: 200
+  previousNames:
+    type: array
+    maxItems: 7
+    items:
+      type: string
+      maximum: 40
+  address:
+    type: string
+    maximum: 50
+  addressLine1:
+    type: string
+    maximum: 50
+  zip:
+    type: string
+    maximum: 10
+  city:
+    type: string
+    maximum: 50
+  phone:
+    type: string
+    maximum: 30
+  email:
+    type: string
+    maximum: 100
+  www:
+    type: string
+    maximum: 100
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  contactPerson:
+    type: string
+    maximum: 100
+  frequencyCurrent:
+    type: string
+    maximum: 50
+  frequencyNext:
+    type: string
+    maximum: 50
+  affiliateOf:
+    type: string
+    maximum: 50
+  affiliates:
+    type: string
+    maximum: 200
+  distributorOf:
+    type: string
+    maximum: 200
+  distributors:
+    type: string
+    maximum: 50
+  classification:
+    type: array
+    maxItems: 5
+    items:
+      type: string
+      maximum: 6
+  classificationOther:
+    type: string
+    maximum: 50
+  additionalInfo:
+    type: string
+    maximum: 2000
+  yearQuitted:
+    type: integer
+    minimum: 1800
+    maximum: 2123
+  hasQuitted:
+    type: boolean
+  promoteSorting:
+    type: boolean

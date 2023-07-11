@@ -1,0 +1,8 @@
+{
+    "descr": "Prevents deletion when the ISMN batch given was not the latest one but the previous latest one was deleted",
+    "requestUrl": "/isbn-registry/identifierbatches/1",
+    "username": "system",
+    "password": "system",
+    "method": "delete",
+    "expectedStatus": 409
+}

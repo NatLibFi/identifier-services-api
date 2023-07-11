@@ -1,0 +1,9 @@
+{
+  "langCode": "fi-FI",
+  "message": "Tämä viesti on testijärjestelmästä / This message is from test system.<br /><br />FooBar (foo.bar@example.com),<br />FooBar 123<br />00000 Foobarila<br /><br />Here is a link to identifiers for you:<br />http://localhost:8098/isbn-registry/identifierbatches/1<br />Regards, test system",
+  "publisherId": 1,
+  "recipient": "foo.bar@example.com",
+  "subject": "TESTI/TEST MESSAGE New list of identifiers",
+  "templateId": 1,
+  "batchId": 1
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, publisher can query publishers public properties",
+    "requestUrl": "/isbn-registry/publishers/query",
+    "username": "publisher",
+    "password": "publisher",
+    "method": "post",
+    "expectedStatus": 200
+}

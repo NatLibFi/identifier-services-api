@@ -1,0 +1,100 @@
+type: object
+properties:
+  id:
+    type: integer
+  formId:
+    type: integer
+  publisherId:
+    type: integer
+  publisher:
+    type: string
+  title:
+    type: string
+  subtitle:
+    type: string
+  issn:
+    type: string
+  placeOfPublication:
+    type: string
+  printer:
+    type: string
+  issuedFromYear:
+    type: string
+  issuedFromNumber:
+    type: string
+  frequency:
+    $ref: '../enums/IssnPublicationFrequency.yaml'
+  frequencyOther:
+    type: string
+  language:
+    $ref: '../enums/CommonPublicationLanguage.yaml'
+  publicationType:
+    $ref: '../enums/IssnPublicationType.yaml'
+  publicationTypeOther:
+    type: string
+  medium:
+    $ref: '../enums/IssnPublicationMedium.yaml'
+  mediumOther:
+    type: string
+  url:
+    type: string
+  previous:
+    type: object
+    properties:
+      title:
+        type: array
+        items:
+          type: string
+      issn:
+        type: array
+        items:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+      lastIssue:
+        type: array
+        items:
+          type: string
+  mainSeries:
+    type: object
+    properties:
+      title:
+        type: array
+        items:
+          type: string
+      issn:
+        type: array
+        items:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+  subseries:
+    type: object
+    properties:
+      title:
+        type: array
+        items:
+          type: string
+      issn:
+        type: array
+        items:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+  anotherMedium:
+    type: object
+    properties:
+      title:
+        type: array
+        items:
+          type: string
+      issn:
+        type: array
+        items:
+          $ref: '../patterns/CommonIssnIdentifier.yaml'
+  additionalInfo:
+    type: string
+  status:
+    $ref: '../enums/IssnPublicationStatus.yaml'
+  created:
+    type: string
+  createdBy:
+    type: string
+  modified:
+    type: string
+  modifiedBy:
+    type: string

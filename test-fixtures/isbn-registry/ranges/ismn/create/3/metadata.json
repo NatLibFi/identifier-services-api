@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot create ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "post",
+  "expectedStatus": 403
+}

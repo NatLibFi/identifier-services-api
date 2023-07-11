@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully deactivate activated ISMN range",
+  "requestUrl": "/isbn-registry/ranges/ismn/1/deactivate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

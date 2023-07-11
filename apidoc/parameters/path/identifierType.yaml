@@ -1,0 +1,9 @@
+name: identifierType
+in: path
+required: true
+description: The type of identifiers to interact with in isbn-registry
+schema:
+  type: string
+  enum:
+    - isbn
+    - ismn

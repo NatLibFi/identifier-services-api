@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail with unauthorized status, unauthenticated cannot read identifier batch information through non-public endpoint",
+    "requestUrl": "/isbn-registry/identifierbatches/1",
+    "method": "get",
+    "expectedStatus": 401
+}

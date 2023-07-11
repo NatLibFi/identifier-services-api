@@ -1,0 +1,8 @@
+{
+    "descr": "ISBN publisher autocomplete return value does not include publisher requests",
+    "requestUrl": "/isbn-registry/publishers/autocomplete",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

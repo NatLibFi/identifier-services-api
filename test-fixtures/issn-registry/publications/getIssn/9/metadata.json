@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot assign ISSN if publication has issn already (usedIssn association)",
+  "requestUrl": "/issn-registry/publications/1/get-issn",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 409
+}

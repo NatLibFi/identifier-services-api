@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system creates ISMN subrange and updates next value accordingly while closing range (cancelled identifier chosen)",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 201
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, system cannot open closed ISBN range if it has not available subranges",
+  "requestUrl": "/isbn-registry/ranges/isbn/1/open",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

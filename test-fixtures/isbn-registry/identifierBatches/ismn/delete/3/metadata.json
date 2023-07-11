@@ -1,0 +1,8 @@
+{
+    "descr": "Publisher cannot delete identifierbatch of ISMN identifiers",
+    "requestUrl": "/isbn-registry/identifierbatches/1",
+    "username": "publisher",
+    "password": "publisher",
+    "method": "delete",
+    "expectedStatus": 403
+}

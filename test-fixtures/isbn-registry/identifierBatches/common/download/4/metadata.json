@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot download identifier batch identifiers from non-public endpoint",
+    "requestUrl": "/isbn-registry/identifierbatches/1/download",
+    "method": "post",
+    "expectedStatus": 401
+}

@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, admin can update ISBN/ISMN publication request.  onProcess attribute is automatically updated.",
+    "requestUrl": "/isbn-registry/requests/publications/2",
+    "username": "admin",
+    "password": "admin",
+    "method": "put",
+    "expectedStatus": 200
+}

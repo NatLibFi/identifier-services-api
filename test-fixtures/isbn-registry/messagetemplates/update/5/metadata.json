@@ -1,0 +1,8 @@
+{
+  "descr": "Cannot update message_type_id for template that is unique and mandatory for system configuration",
+  "requestUrl": "/isbn-registry/messagetemplates/1",
+  "username": "system",
+  "password": "system",
+  "method": "put",
+  "expectedStatus": 409
+}

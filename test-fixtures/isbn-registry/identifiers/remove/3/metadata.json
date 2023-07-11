@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, publisher cannot remove identifier from publication",
+    "requestUrl": "/isbn-registry/identifiers/remove",
+    "username": "publisher",
+    "password": "publisher",
+    "method": "post",
+    "expectedStatus": 403
+}

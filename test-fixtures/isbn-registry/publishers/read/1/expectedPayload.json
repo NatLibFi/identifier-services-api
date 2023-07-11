@@ -1,0 +1,56 @@
+{
+  "id": 1,
+  "officialName": "FooBar Publisher",
+  "otherNames": "OtherFooBar, OtherAnotherFooBar",
+  "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+  "address": "FooBar 123",
+  "addressLine1": null,
+  "zip": "00000",
+  "city": "Foobarila",
+  "phone": "1234567",
+  "email": "foo.bar@example.com",
+  "www": "http://example.com",
+  "langCode": "fi-FI",
+  "contactPerson": "Foo Bar",
+  "additionalInfo": "",
+  "hasQuitted": false,
+  "yearQuitted": "",
+  "activeIdentifierIsbn": "978-951-550",
+  "activeIdentifierIsmn": "979-0-55001",
+  "frequencyCurrent": "1",
+  "frequencyNext": "1",
+  "affiliateOf": null,
+  "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+  "distributorOf": null,
+  "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
+  "classification": ["40", "100"],
+  "classificationOther": "",
+  "isbnSubRanges": [
+    {
+      "id": 1,
+      "publisherIdentifier": "978-951-550",
+      "free": 1000,
+      "canceled": 0,
+      "isActive": true,
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "ismnSubRanges": [
+    {
+      "id": 1,
+      "publisherIdentifier": "979-0-55001",
+      "free": 1000,
+      "canceled": 0,
+      "isActive": true,
+      "created": {},
+      "createdBy": "system"
+    }
+  ],
+  "confirmation": "",
+  "promoteSorting": false,
+  "created": {},
+  "createdBy": "system",
+  "modified": {},
+  "modifiedBy": "system"
+}

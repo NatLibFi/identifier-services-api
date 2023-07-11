@@ -1,0 +1,6 @@
+{
+    "descr": "Should fail, unauthenticated cannot make autocomplete search request regarding ISBN publishers",
+    "requestUrl": "/isbn-registry/publishers/autocomplete",
+    "method": "post",
+    "expectedStatus": 401
+}

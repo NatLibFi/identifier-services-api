@@ -1,0 +1,6 @@
+type: string
+enum:
+  - PRINTED
+  - ONLINE
+  - CDROM
+  - OTHER

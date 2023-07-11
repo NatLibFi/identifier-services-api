@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can delete publication request isbn/ismn if it has not been assigned identifiers and has \"no identifier granted\" property",
+  "requestUrl": "/isbn-registry/requests/publications/1",
+  "method": "delete",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 204
+}

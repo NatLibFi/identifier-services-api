@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create ISMN subrange that has got inequal length to range category",
+  "requestUrl": "/isbn-registry/publisher-ranges/ismn/",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 409
+}

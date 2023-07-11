@@ -1,0 +1,18 @@
+{
+  "ismnRange": [
+    {
+      "prefix": "979-0",
+      "category": 5,
+      "rangeBegin": "55001",
+      "rangeEnd": "55025",
+      "free": 0,
+      "taken": 25,
+      "canceled": 0,
+      "next": "55026",
+      "isActive": 0,
+      "isClosed": 0,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "descr": "Can add new subseries",
+  "requestUrl": "/issn-registry/publications/1",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

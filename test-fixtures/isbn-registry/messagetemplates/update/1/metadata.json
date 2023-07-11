@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can successfully update ISBN message template",
+  "requestUrl": "/isbn-registry/messagetemplates/1",
+  "username": "system",
+  "password": "system",
+  "method": "put",
+  "expectedStatus": 200
+}

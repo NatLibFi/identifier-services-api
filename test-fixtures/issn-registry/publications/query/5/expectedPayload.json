@@ -1,0 +1,14 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 1,
+      "title": "Foo title",
+      "issn": "",
+      "language": "FIN",
+      "medium": "PRINTED",
+      "status": "NO_PREPUBLICATION_RECORD",
+      "created": {}
+    }
+  ]
+}

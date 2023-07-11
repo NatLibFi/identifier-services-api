@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can create ISSN publisher without form association",
+  "requestUrl": "/issn-registry/publishers",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 201
+}

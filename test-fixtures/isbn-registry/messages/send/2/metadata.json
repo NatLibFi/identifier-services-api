@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, admin can send message",
+  "requestUrl": "/isbn-registry/messages/send",
+  "username": "admin",
+  "password": "admin",
+  "method": "post",
+  "expectedStatus": 201
+}

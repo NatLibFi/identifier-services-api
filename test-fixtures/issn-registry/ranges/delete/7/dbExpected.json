@@ -1,0 +1,45 @@
+{
+  "issnRange": [
+    {
+      "id": 1,
+      "idOld": null,
+      "block": "1797",
+      "rangeBegin": "0008",
+      "rangeEnd": "9994",
+      "free": 1000,
+      "taken": 0,
+      "next": "0008",
+      "isActive": 0,
+      "isClosed": 0,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "idOld": null,
+      "block": "1798",
+      "rangeBegin": "0003",
+      "rangeEnd": "999X",
+      "free": 1000,
+      "taken": 0,
+      "next": "0003",
+      "isActive": 1,
+      "isClosed": 0,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "issnCanceled": [
+    {
+      "id": 1,
+      "issn": "1797-0016",
+      "issnRangeId": 1,
+      "canceled": {},
+      "canceledBy": "system"
+    }
+  ]
+}

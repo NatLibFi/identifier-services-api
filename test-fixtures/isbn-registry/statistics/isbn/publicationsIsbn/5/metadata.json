@@ -1,0 +1,8 @@
+{
+  "descr": "Cancellation information in publications publisher officialName information regarding type results into status of 'I' in statistics only for said type",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

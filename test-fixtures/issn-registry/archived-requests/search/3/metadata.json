@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot search ISSN request archive information",
+  "requestUrl": "/issn-registry/archived-requests/search",
+  "method": "post",
+  "username": "publisher",
+  "password": "publisher",
+  "expectedStatus": 403
+}

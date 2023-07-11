@@ -1,0 +1,8 @@
+{
+    "descr": "Cannot create identifier batch of more than 10k identifiers even if there would be enough free identifiers in subrange",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

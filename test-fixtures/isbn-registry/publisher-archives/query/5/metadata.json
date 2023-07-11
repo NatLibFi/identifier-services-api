@@ -1,0 +1,8 @@
+{
+  "descr": "Should produce 404 error when publisher archive entry is not found",
+  "requestUrl": "/isbn-registry/publisher-archives/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 404
+}

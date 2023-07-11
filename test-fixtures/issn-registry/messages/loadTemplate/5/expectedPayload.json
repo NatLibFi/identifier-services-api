@@ -1,0 +1,8 @@
+{
+  "langCode": "fi-FI",
+  "message": "Tämä viesti on testijärjestelmästä / This message is from test system.<br /><br />Foo Publisher (foo.bar@example.com),<br />Foo Street 1<br />00000 Foobarila<br /><br />Here are your new identifier for title Foo title:<br />Foo title<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ISSN 1797-0008 (painettu)<br /><br />Regards, test system",
+  "publisherId": 1,
+  "recipient": "foo.bar@example.com",
+  "subject": "TESTI/TEST MESSAGE Publisher summary",
+  "messageTemplateId": 2
+}

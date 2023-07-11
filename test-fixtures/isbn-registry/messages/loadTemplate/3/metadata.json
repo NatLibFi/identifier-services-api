@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, publisher cannot load default template for sending new publisher identifier",
+  "requestUrl": "/isbn-registry/messages/loadtemplate",
+  "username": "publisher",
+  "password": "publisher",
+  "method": "post",
+  "expectedStatus": 403
+}

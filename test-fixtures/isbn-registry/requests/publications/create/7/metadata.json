@@ -1,0 +1,8 @@
+{
+  "descr": "Should fail, cannot create publication request if publication is not meant for public release",
+  "requestUrl": "/isbn-registry/requests/publications",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 422
+}

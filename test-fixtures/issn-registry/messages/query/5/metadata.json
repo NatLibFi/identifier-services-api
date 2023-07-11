@@ -1,0 +1,8 @@
+{
+  "descr": "Paging works, newest message comes first",
+  "requestUrl": "/issn-registry/messages/query",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

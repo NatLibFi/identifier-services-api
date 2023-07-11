@@ -1,0 +1,8 @@
+{
+    "descr": "If there is no identifierbatch associated with publication, response contains identifierBatchId of null",
+    "requestUrl": "/isbn-registry/requests/publications/1",
+    "username": "system",
+    "password": "system",
+    "method": "get",
+    "expectedStatus": 200
+}

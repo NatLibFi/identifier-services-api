@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system may delete ISSN from publication if status is not ISSN_FROZEN (insert to canceledIssn table)",
+  "requestUrl": "/issn-registry/publications/1/delete-issn",
+  "method": "post",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}

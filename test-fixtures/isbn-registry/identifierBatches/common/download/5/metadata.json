@@ -1,0 +1,8 @@
+{
+    "descr": "If identifier batch identifiers are linked to publication, cannot download them as text file",
+    "requestUrl": "/isbn-registry/identifierbatches/1/download",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

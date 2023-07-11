@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot update ISBN/ISMN publication request publisher if publication has already identifiers assigned",
+    "requestUrl": "/isbn-registry/requests/publications/1/set-publisher",
+    "username": "system",
+    "password": "system",
+    "method": "put",
+    "expectedStatus": 409
+}

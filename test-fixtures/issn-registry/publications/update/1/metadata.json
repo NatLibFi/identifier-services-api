@@ -1,0 +1,8 @@
+{
+  "descr": "Should succeed, system can update ISSN publication information",
+  "requestUrl": "/issn-registry/publications/1",
+  "method": "put",
+  "username": "system",
+  "password": "system",
+  "expectedStatus": 200
+}
