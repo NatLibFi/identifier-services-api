@@ -66,7 +66,7 @@ jobs:
           body: '{}'
       - name: Production webhook
         uses: joelwmale/webhook-action@master
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         with:
           url: ${{ secrets.WEBHOOK_URL_PROD }}
           body: '{}'
