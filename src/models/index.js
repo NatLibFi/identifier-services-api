@@ -58,8 +58,8 @@ if (NODE_ENV === 'test') {
     dialectOptions: DB_DIALECT_OPTIONS,
     define: isMysqlOrMaria(DB_DIALECT) ? {
       engine: 'InnoDB',
-      charset: 'utf8',
-      collate: 'utf8_swedish_ci'
+      charset: 'utf8mb3',
+      collate: 'utf8mb3_swedish_ci'
     } : undefined,
     logging: false
   });
