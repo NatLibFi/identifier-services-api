@@ -50,7 +50,7 @@ import {
   KEYCLOAK_ALGORITHMS,
   KEYCLOAK_AUDIENCE,
   KEYCLOAK_ISSUER,
-  KEYCLOAK_PUBLIC_KEY,
+  KEYCLOAK_JWKS_URL,
   PASSPORT_LOCAL_USERS,
   TLS_KEY,
   TLS_CERT,
@@ -91,10 +91,10 @@ export default async function run() { // eslint-disable-line
   // Initialize passport middleware
   const passportMiddlewares = await generatePassportMiddlewares({
     keycloakOpts: {
-      publicKey: KEYCLOAK_PUBLIC_KEY,
       algorithms: KEYCLOAK_ALGORITHMS,
       audience: KEYCLOAK_AUDIENCE,
-      issuer: KEYCLOAK_ISSUER
+      issuer: KEYCLOAK_ISSUER,
+      jwksUrl: KEYCLOAK_JWKS_URL
     },
     localUsers: PASSPORT_LOCAL_USERS
   });
