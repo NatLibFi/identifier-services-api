@@ -1,5 +1,5 @@
 {
-    "descr": "Cannot delete ISMN batch if it was not latest batch given from subrange",
+    "descr": "Prevents deletion when the ISMN batch given was not the latest one but the previous latest one was deleted",
     "requestUrl": "/isbn-registry/identifierbatches/1",
     "username": "system",
     "password": "system",

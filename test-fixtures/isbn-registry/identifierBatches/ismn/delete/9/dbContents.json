@@ -1,23 +1,4 @@
 {
-  "isbnRange": [
-    {
-      "id": 1,
-      "prefix": 978,
-      "langGroup": 951,
-      "category": 3,
-      "rangeBegin": "550",
-      "rangeEnd": "889",
-      "free": 339,
-      "taken": 1,
-      "canceled": 0,
-      "next": "551",
-      "isActive": 1,
-      "isClosed": 0,
-      "idOld": null,
-      "createdBy": "system",
-      "modifiedBy": "system"
-    }
-  ],
   "ismnRange": [
     {
       "id": 1,
@@ -25,10 +6,10 @@
       "category": 5,
       "rangeBegin": "55001",
       "rangeEnd": "55025",
-      "free": 24,
-      "taken": 1,
+      "free": 23,
+      "taken": 2,
       "canceled": 0,
-      "next": "55002",
+      "next": "55003",
       "isActive": 1,
       "isClosed": 0,
       "createdBy": "system",
@@ -52,8 +33,8 @@
       "additionalInfo": "",
       "hasQuitted": 0,
       "yearQuitted": "",
-      "activeIdentifierIsbn": "978-951-550",
-      "activeIdentifierIsmn": "979-0-55001",
+      "activeIdentifierIsbn": "",
+      "activeIdentifierIsmn": "979-0-55002",
       "frequencyCurrent": "1",
       "frequencyNext": "1",
       "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
@@ -61,26 +42,6 @@
       "classification": ["40", "100"],
       "classificationOther": "",
       "confirmation": "",
-      "createdBy": "system",
-      "modifiedBy": "system"
-    }
-  ],
-  "isbnSubRange": [
-    {
-      "id": 1,
-      "publisherIdentifier": "978-951-550",
-      "isbnRangeId": 1,
-      "publisherId": 1,
-      "category": 3,
-      "rangeBegin": "000",
-      "rangeEnd": "999",
-      "free": 1000,
-      "taken": 0,
-      "canceled": 0,
-      "deleted": 0,
-      "next": "000",
-      "isActive": 1,
-      "isClosed": 0,
       "createdBy": "system",
       "modifiedBy": "system"
     }
@@ -95,11 +56,30 @@
       "category": 3,
       "rangeBegin": "000",
       "rangeEnd": "999",
-      "free": 996,
-      "taken": 4,
+      "free": 0,
+      "taken": 1000,
       "canceled": 0,
       "deleted": 0,
-      "next": "004",
+      "next": "1000",
+      "isActive": 0,
+      "isClosed": 1,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    },
+    {
+      "id": 2,
+      "idOld": null,
+      "publisherIdentifier": "979-0-55002",
+      "publisherId": 1,
+      "ismnRangeId": 1,
+      "category": 3,
+      "rangeBegin": "000",
+      "rangeEnd": "999",
+      "free": 998,
+      "taken": 2,
+      "canceled": 0,
+      "deleted": 1,
+      "next": "002",
       "isActive": 1,
       "isClosed": 0,
       "createdBy": "system",
@@ -109,24 +89,12 @@
   "identifierBatch": [
     {
       "id": 1,
-      "identifierCount": 3,
+      "identifierCount": 0,
       "identifierCanceledCount": 0,
-      "identifierCanceledUsedCount": 0,
+      "identifierCanceledUsedCount": 4,
       "identifierDeletedCount": 0,
       "identifierType": "ISMN",
-      "subRangeId": 1,
-      "publisherId": 1,
-      "publicationId": 0,
-      "createdBy": "system"
-    },
-    {
-      "id": 2,
-      "identifierCount": 1,
-      "identifierCanceledCount": 0,
-      "identifierCanceledUsedCount": 0,
-      "identifierDeletedCount": 0,
-      "identifierType": "ISMN",
-      "subRangeId": 1,
+      "subRangeId": 2,
       "publisherId": 1,
       "publicationId": 0,
       "createdBy": "system"
@@ -135,27 +103,27 @@
   "identifier": [
     {
       "id": 1,
-      "identifier": "979-0-55001-000-0",
+      "identifier": "979-0-55001-997-3",
       "identifierBatchId": 1,
       "subRangeId": 1
     },
     {
       "id": 2,
-      "identifier": "979-0-55001-001-7",
+      "identifier": "979-0-55001-998-0",
       "identifierBatchId": 1,
       "subRangeId": 1
     },
     {
       "id": 3,
-      "identifier": "979-0-55001-002-4",
+      "identifier": "979-0-55001-999-7",
       "identifierBatchId": 1,
       "subRangeId": 1
     },
     {
       "id": 4,
-      "identifier": "979-0-55001-003-1",
-      "identifierBatchId": 2,
-      "subRangeId": 1
+      "identifier": "979-0-55002-000-9",
+      "identifierBatchId": 1,
+      "subRangeId": 2
     }
   ]
 }

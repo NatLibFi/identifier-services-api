@@ -8,10 +8,10 @@ TABLE_PREFIX='test'
 
 WEBSITE_USER='WEB-FOO'
 
-KEYCLOAK_PUBLIC_KEY=''
 KEYCLOAK_ALGORITHMS='[]'
 KEYCLOAK_AUDIENCE=''
 KEYCLOAK_ISSUER=''
+KEYCLOAK_JWKS_URL=''
 ROLE_MAP='{"admin": ["admin"], "system": ["system"], "publisher": ["publisher"]}'
 
 PASSPORT_LOCAL_USERS=file://test-fixtures/mockUserProvider/localPassportUsers.json
