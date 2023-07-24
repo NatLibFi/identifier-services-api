@@ -35,6 +35,27 @@
       "modifiedBy": "system"
     }
   ],
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Identifier List",
+      "description": "",
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Example template",
+      "subject": "New list of identifiers",
+      "langCode": "fi-FI",
+      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here is a set of identifiers for you:<br />#IDENTIFIERS#<br />Regards, #USER#",
+      "messageTypeId": 1,
+      "createdBy": "system",
+      "modifiedBy": "system"
+    }
+  ],
   "publisherIsbn": [
     {
       "id": 1,
@@ -95,11 +116,11 @@
       "category": 3,
       "rangeBegin": "000",
       "rangeEnd": "999",
-      "free": 996,
-      "taken": 4,
+      "free": 997,
+      "taken": 3,
       "canceled": 0,
       "deleted": 0,
-      "next": "004",
+      "next": "003",
       "isActive": 1,
       "isClosed": 0,
       "createdBy": "system",
@@ -110,18 +131,6 @@
     {
       "id": 1,
       "identifierCount": 3,
-      "identifierCanceledCount": 0,
-      "identifierCanceledUsedCount": 0,
-      "identifierDeletedCount": 0,
-      "identifierType": "ISMN",
-      "subRangeId": 1,
-      "publisherId": 1,
-      "publicationId": 0,
-      "createdBy": "system"
-    },
-    {
-      "id": 2,
-      "identifierCount": 1,
       "identifierCanceledCount": 0,
       "identifierCanceledUsedCount": 0,
       "identifierDeletedCount": 0,
@@ -150,12 +159,24 @@
       "identifier": "979-0-55001-002-4",
       "identifierBatchId": 1,
       "subRangeId": 1
-    },
+    }
+  ],
+  "messageIsbn": [
     {
-      "id": 4,
-      "identifier": "979-0-55001-003-1",
-      "identifierBatchId": 2,
-      "subRangeId": 1
+      "id": 1,
+      "publisherId": 1,
+      "groupMessageId": 0,
+      "batchId": 1,
+      "publicationId": 0,
+      "messageTypeId": 1,
+      "messageTemplateId": 1,
+      "recipient": "example@example.com",
+      "subject": "Esimerkkiotsikko",
+      "message": "<p>Esimerkkiviesti</p>",
+      "langCode": "fi-FI",
+      "hasAttachment": 0,
+      "attachmentName": "",
+      "sentBy": "system"
     }
   ]
 }

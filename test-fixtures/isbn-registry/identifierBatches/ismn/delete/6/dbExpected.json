@@ -14,7 +14,9 @@
       "isActive": 1,
       "isClosed": 0,
       "idOld": null,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -31,7 +33,35 @@
       "next": "55002",
       "isActive": 1,
       "isClosed": 0,
+      "idOld": null,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTypeIsbn": [
+    {
+      "id": 1,
+      "name": "Identifier List",
+      "description": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Example template",
+      "subject": "New list of identifiers",
+      "langCode": "fi-FI",
+      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here is a set of identifiers for you:<br />#IDENTIFIERS#<br />Regards, #USER#",
+      "messageTypeId": 1,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -40,8 +70,9 @@
       "id": 1,
       "officialName": "FooBar Publisher",
       "otherNames": "OtherFooBar, OtherAnotherFooBar",
-      "previousNames": ["PriorFoo", "AnotherPriorFoo"],
+      "previousNames": "{\"name\":[\"PriorFoo\",\"AnotherPriorFoo\"]}",
       "address": "FooBar 123",
+      "addressLine1": null,
       "zip": "00000",
       "city": "Foobarila",
       "phone": "1234567",
@@ -56,18 +87,24 @@
       "activeIdentifierIsmn": "979-0-55001",
       "frequencyCurrent": "1",
       "frequencyNext": "1",
+      "affiliateOf": null,
       "affiliates": "FooBar Suomi\nBazBar 123\n00000 Foobarila",
+      "distributorOf": null,
       "distributors": "Foo Jakelu\nBazBar 123\n00000 Foobarila",
-      "classification": ["40", "100"],
+      "classification": "40,100",
       "classificationOther": "",
+      "promoteSorting": 0,
       "confirmation": "",
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
   "isbnSubRange": [
     {
       "id": 1,
+      "idOld": null,
       "publisherIdentifier": "978-951-550",
       "isbnRangeId": 1,
       "publisherId": 1,
@@ -81,7 +118,9 @@
       "next": "000",
       "isActive": 1,
       "isClosed": 0,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -95,14 +134,16 @@
       "category": 3,
       "rangeBegin": "000",
       "rangeEnd": "999",
-      "free": 996,
-      "taken": 4,
+      "free": 997,
+      "taken": 3,
       "canceled": 0,
       "deleted": 0,
-      "next": "004",
+      "next": "003",
       "isActive": 1,
       "isClosed": 0,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -115,20 +156,9 @@
       "identifierDeletedCount": 0,
       "identifierType": "ISMN",
       "subRangeId": 1,
-      "publisherId": 1,
       "publicationId": 0,
-      "createdBy": "system"
-    },
-    {
-      "id": 2,
-      "identifierCount": 1,
-      "identifierCanceledCount": 0,
-      "identifierCanceledUsedCount": 0,
-      "identifierDeletedCount": 0,
-      "identifierType": "ISMN",
-      "subRangeId": 1,
       "publisherId": 1,
-      "publicationId": 0,
+      "created": {},
       "createdBy": "system"
     }
   ],
@@ -137,25 +167,41 @@
       "id": 1,
       "identifier": "979-0-55001-000-0",
       "identifierBatchId": 1,
-      "subRangeId": 1
+      "subRangeId": 1,
+      "publicationType": ""
     },
     {
       "id": 2,
       "identifier": "979-0-55001-001-7",
       "identifierBatchId": 1,
-      "subRangeId": 1
+      "subRangeId": 1,
+      "publicationType": ""
     },
     {
       "id": 3,
       "identifier": "979-0-55001-002-4",
       "identifierBatchId": 1,
-      "subRangeId": 1
-    },
+      "subRangeId": 1,
+      "publicationType": ""
+    }
+  ],
+  "messageIsbn": [
     {
-      "id": 4,
-      "identifier": "979-0-55001-003-1",
-      "identifierBatchId": 2,
-      "subRangeId": 1
+      "id": 1,
+      "publisherId": 1,
+      "groupMessageId": 0,
+      "batchId": 1,
+      "publicationId": 0,
+      "messageTypeId": 1,
+      "messageTemplateId": 1,
+      "recipient": "example@example.com",
+      "subject": "Esimerkkiotsikko",
+      "message": "<p>Esimerkkiviesti</p>",
+      "langCode": "fi-FI",
+      "hasAttachment": 0,
+      "attachmentName": "",
+      "sent": {},
+      "sentBy": "system"
     }
   ]
 }
