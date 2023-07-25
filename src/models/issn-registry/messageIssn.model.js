@@ -44,7 +44,10 @@ export default function (sequelize, dialect) {
       },
       recipient: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          is: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$/ // eslint-disable-line require-unicode-regexp
+        }
       },
       subject: {
         type: DataTypes.STRING(150),

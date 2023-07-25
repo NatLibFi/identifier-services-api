@@ -29,10 +29,11 @@
 
 import {DataTypes} from 'sequelize';
 
+import {isValidIssnIdentifier} from './validators';
 import {isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
+/* eslint-disable new-cap, functional/no-this-expressions */
 export default function (sequelize, dialect) {
   sequelize.define(
     'issnRange', {
@@ -51,15 +52,52 @@ export default function (sequelize, dialect) {
       },
       rangeBegin: {
         type: DataTypes.STRING(4),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isValidRangeBegin(value) {
+            if (value.length !== 4) {
+              throw new Error('ISSN range begin must be length of 4');
+            }
+
+            const beginValue = `${this.block}-${value}`;
+            isValidIssnIdentifier(beginValue);
+
+            const beginNumber = Number(value.slice(0, -1));
+            const endNumber = Number(this.rangeEnd.slice(0, -1));
+
+            if (beginNumber > endNumber) {
+              throw new Error('ISSN range begin cannot be greater than range end');
+            }
+          }
+        }
       },
       rangeEnd: {
         type: DataTypes.STRING(4),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isValidRangeBegin(value) {
+            if (value.length !== 4) {
+              throw new Error('ISSN range end must be length of 4');
+            }
+
+            const endValue = `${this.block}-${value}`;
+            isValidIssnIdentifier(endValue);
+
+            const beginNumber = Number(this.rangeBegin.slice(0, -1));
+            const endNumber = Number(value.slice(0, -1));
+
+            if (beginNumber > endNumber) {
+              throw new Error('ISSN range begin cannot be greater than range end');
+            }
+          }
+        }
       },
       free: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          min: 0
+        }
       },
       taken: {
         type: DataTypes.INTEGER,
@@ -68,17 +106,43 @@ export default function (sequelize, dialect) {
       },
       next: {
         type: DataTypes.STRING(4),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isValidNext(value) {
+            if (value !== '' && value.length !== 4) {
+              throw new Error('ISSN range next must be length of 4');
+            }
+
+            if (value !== '') {
+              const nextValue = `${this.block}-${value}`;
+              return isValidIssnIdentifier(nextValue);
+            }
+          }
+        }
       },
       isActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        validate: {
+          isValid(value) {
+            if (this.isClosed && value) {
+              throw new Error('ISSN range cannot be active while it\'s closed');
+            }
+          }
+        }
       },
       isClosed: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        validate: {
+          isValid(value) {
+            if (this.isActive && value) {
+              throw new Error('ISSN range cannot be closed while it\'s active');
+            }
+          }
+        }
       },
       createdBy: {
         type: DataTypes.STRING(30)

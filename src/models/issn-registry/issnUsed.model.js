@@ -29,6 +29,7 @@
 
 import {DataTypes} from 'sequelize';
 
+import {isValidIssnIdentifier} from './validators';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
@@ -61,7 +62,10 @@ export default function (sequelize, dialect) {
       issn: {
         type: DataTypes.STRING(9),
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isValidIssnIdentifier
+        }
       },
       createdBy: {
         type: DataTypes.STRING(30)

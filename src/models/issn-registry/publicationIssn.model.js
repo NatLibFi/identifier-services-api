@@ -29,6 +29,7 @@
 
 import {DataTypes} from 'sequelize';
 
+import {isValidIssnIdentifier} from './validators';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 import {jsonToPreviousString, previousStringToJson} from '../modelUtils';
@@ -76,7 +77,14 @@ export default function (sequelize, dialect) {
       },
       issn: {
         type: DataTypes.STRING(9),
-        defaultValue: ''
+        defaultValue: '',
+        validate: {
+          isValidPublicationIssn(value) {
+            if (value !== '') {
+              return isValidIssnIdentifier(value);
+            }
+          }
+        }
       },
       placeOfPublication: {
         type: DataTypes.STRING(100),

@@ -51,7 +51,10 @@ export default function (sequelize, dialect) {
         type: DataTypes.STRING(150)
       },
       langCode: {
-        type: DataTypes.STRING(8)
+        type: DataTypes.STRING(8),
+        validate: {
+          is: /^fi-FI$|^en-GB$|^sv-SE$/ // eslint-disable-line require-unicode-regexp
+        }
       },
       message: {
         allowNull: false,
