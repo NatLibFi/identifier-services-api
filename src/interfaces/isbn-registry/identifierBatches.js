@@ -271,23 +271,26 @@ export default function () {
         .map(i => i.identifier.split('-')[i.identifier.split('-').length - 2]); // for ISBN/ISMN identifiers, second to last entry when splitting with '-' is the number of entry in that subrange
 
       const previousNext = String(Number(subrange.next) - 1).padStart(subrange.category, '0');
-      if (!batchSubrangeIdentifiersNextNumbers.includes(previousNext)) {
+      if (!batchSubrangeIdentifiersNextNumbers.includes(previousNext) && identifierBatch.identifierCount > 0) {
         throw new ApiError(HttpStatus.CONFLICT, 'Cannot delete batch since it was not latest batch given from subrange.');
       }
 
-      const subrangeUpdate = {
-        next: String(Number(subrange.next) - identifierBatch.identifierCount).padStart(subrange.category, '0'),
-        free: subrange.free + identifierBatch.identifierCount,
-        taken: subrange.taken - identifierBatch.identifierCount,
-        modifiedBy: user.id
-      };
+      // If other than canceled identifiers were assigned from main subrange, counters of the main range need to be updated
+      if (identifierBatch.identifierCount > 0) {
+        const subrangeUpdate = {
+          next: String(Number(subrange.next) - identifierBatch.identifierCount).padStart(subrange.category, '0'),
+          free: subrange.free + identifierBatch.identifierCount,
+          taken: subrange.taken - identifierBatch.identifierCount,
+          modifiedBy: user.id
+        };
 
-      if (subrange.isClosed) { // eslint-disable-line functional/no-conditional-statements
-        subrangeUpdate.isClosed = false; // eslint-disable-line functional/immutable-data
+        if (subrange.isClosed) { // eslint-disable-line functional/no-conditional-statements
+          subrangeUpdate.isClosed = false; // eslint-disable-line functional/immutable-data
+        }
+
+        // Update values to db
+        await subrange.update(subrangeUpdate, {transaction: t});
       }
-
-      // Update values to db
-      await subrange.update(subrangeUpdate, {transaction: t});
 
       // If batch was linked to publication, remove identifiers information from publicationRequest
       if (identifierBatch.publicationId && identifierBatch.publicationId > 0) {

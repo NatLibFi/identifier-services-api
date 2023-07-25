@@ -1,5 +1,5 @@
 {
-  "descr": "Should fail, cannot activate ISBN subrange if it does not have free identifiers (even if it has not been closed)",
+  "descr": "Should fail, cannot activate ISBN subrange if it does not have free identifiers (next value set to invalid value for test to work)",
   "requestUrl": "/isbn-registry/publisher-ranges/isbn/1/activate",
   "username": "system",
   "password": "system",

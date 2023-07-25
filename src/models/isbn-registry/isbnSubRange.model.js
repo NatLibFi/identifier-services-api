@@ -30,9 +30,10 @@
 import {DataTypes} from 'sequelize';
 
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
+import {ISBN_REGISTRY_ISBN_RANGE_LENGTH} from '../../interfaces/constants';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
+/* eslint-disable new-cap, functional/no-this-expressions */
 
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
@@ -63,25 +64,94 @@ export default function (sequelize, dialect) {
         allowNull: false,
         type: DataTypes.STRING(15),
         validate: {
-          is: /^[0-9-]+$/u
+          is: /^978-95(?:1|2)-[0-9]{1,5}$/u,
+          matchesCategory(value) {
+            const publisherIdentifierAsArray = value.split('-');
+            const publisherIdentifierNumber = publisherIdentifierAsArray.at(-1);
+            const rangeCategory = ISBN_REGISTRY_ISBN_RANGE_LENGTH - this.category;
+
+            if (publisherIdentifierNumber.length !== rangeCategory) {
+              throw new Error('Publisher identifier value does not match category');
+            }
+          }
         },
         unique: true
       },
       category: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        validate: {
+          min: 1,
+          max: 5,
+          matchesPublisherIdentifier(value) {
+            const publisherIdentifierAsArray = this.publisherIdentifier.split('-');
+            const publisherIdentifierNumber = publisherIdentifierAsArray.at(-1);
+            const rangeCategory = ISBN_REGISTRY_ISBN_RANGE_LENGTH - value;
+
+            if (publisherIdentifierNumber.length !== rangeCategory) {
+              throw new Error('Category does not match publisher identifier value');
+            }
+          }
+        }
       },
       rangeBegin: {
         allowNull: false,
-        type: DataTypes.STRING(5)
+        type: DataTypes.STRING(5),
+        validate: {
+          isValidRangeBegin(value) {
+            if (value.length !== this.rangeEnd.length) {
+              throw new Error('Range begin and range end need to have equal length value');
+            }
+
+            if (value.length !== this.category) {
+              throw new Error('Range begin length must match range category');
+            }
+
+            const rangeBeginNumber = Number(value);
+            const rangeEndNumber = Number(this.rangeEnd);
+
+            if (isNaN(rangeBeginNumber) || isNaN(rangeEndNumber)) {
+              throw new Error('Range begin and end values must be numeric values');
+            }
+
+            if (rangeBeginNumber > rangeEndNumber) {
+              throw new Error('Range begin cannot be greater than range end');
+            }
+          }
+        }
       },
       rangeEnd: {
         allowNull: false,
-        type: DataTypes.STRING(5)
+        type: DataTypes.STRING(5),
+        validate: {
+          isValidRangeBegin(value) {
+            if (value.length !== this.rangeBegin.length) {
+              throw new Error('Range begin and range end need to have equal length value');
+            }
+
+            if (value.length !== this.category) {
+              throw new Error('Range begin length must match range category');
+            }
+
+            const rangeBeginNumber = Number(this.rangeBegin);
+            const rangeEndNumber = Number(value);
+
+            if (isNaN(rangeBeginNumber) || isNaN(rangeEndNumber)) {
+              throw new Error('Range begin and end values must be numeric values');
+            }
+
+            if (rangeBeginNumber > rangeEndNumber) {
+              throw new Error('Range begin cannot be greater than range end');
+            }
+          }
+        }
       },
       free: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        validate: {
+          min: 0
+        }
       },
       taken: {
         defaultValue: 0,
@@ -100,17 +170,51 @@ export default function (sequelize, dialect) {
       },
       next: {
         allowNull: false,
-        type: DataTypes.STRING(5)
+        type: DataTypes.STRING(5),
+        validate: {
+          isValidNext(value) {
+            if (this.canceled === 0 && (!this.isClosed || this.isActive) && value.length !== this.category) {
+              throw new Error('Next value length should match range category');
+            }
+
+            const nextNumber = Number(value);
+            if (isNaN(nextNumber)) {
+              throw new Error('Next value needs to be numerical');
+            }
+
+            if (nextNumber < Number(this.rangeBegin)) {
+              throw new Error('Next value cannot be smaller than rangeBegin');
+            }
+
+            if (nextNumber > Number(this.rangeEnd) && (this.isActive || !this.isClosed)) {
+              throw new Error('Next value may be greater than range end value only when range is closed and not active');
+            }
+          }
+        }
       },
       isActive: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
-        defaultValue: 1
+        defaultValue: 1,
+        validate: {
+          isValid(value) {
+            if (this.isClosed && value) {
+              throw new Error('Subrange cannot be active while it\'s closed');
+            }
+          }
+        }
       },
       isClosed: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
-        defaultValue: 0
+        defaultValue: 0,
+        validate: {
+          isValid(value) {
+            if (this.isActive && value) {
+              throw new Error('Subrange cannot be closed while it\'s active');
+            }
+          }
+        }
       },
       idOld: {
         type: DataTypes.INTEGER

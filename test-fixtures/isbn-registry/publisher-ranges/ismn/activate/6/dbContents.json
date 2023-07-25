@@ -60,7 +60,7 @@
       "taken": 1000,
       "canceled": 0,
       "deleted": 1000,
-      "next": "1000",
+      "next": "999",
       "isActive": 0,
       "isClosed": 0,
       "createdBy": "system",

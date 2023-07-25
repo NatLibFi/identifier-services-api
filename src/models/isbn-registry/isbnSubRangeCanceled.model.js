@@ -32,7 +32,7 @@ import {DataTypes} from 'sequelize';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
+/* eslint-disable new-cap, functional/no-this-expressions */
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];
@@ -65,11 +65,18 @@ export default function (sequelize, dialect) {
       identifier: {
         unique: true,
         allowNull: false,
-        type: DataTypes.STRING(13)
+        type: DataTypes.STRING(13),
+        validate: {
+          is: /^978-95(?:1|2)-[0-9]{1,5}$/u
+        }
       },
       category: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        validate: {
+          min: 1,
+          max: 5
+        }
       },
       idOld: {
         type: DataTypes.INTEGER

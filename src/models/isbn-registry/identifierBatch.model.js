@@ -64,7 +64,10 @@ export default function (sequelize, dialect) {
       },
       identifierType: {
         allowNull: false,
-        type: DataTypes.STRING(4)
+        type: DataTypes.STRING(4),
+        validate: {
+          is: /^ISBN$|^ISMN$/ // eslint-disable-line require-unicode-regexp
+        }
       },
       identifierCount: {
         allowNull: false,

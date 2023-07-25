@@ -124,7 +124,7 @@ export function calculateCheckDigitIsbn(isbn) {
   }
 
   // Unsupported
-  throw new Error('Cannot calculate check digit for given ISBN');
+  throw new Error(`Cannot calculate check digit for value ${isbn}`);
 
   /**
    * Calculates ISBN-13 check digit. Used also for calculating ISMN check digit.

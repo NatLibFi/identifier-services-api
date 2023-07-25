@@ -109,11 +109,11 @@
       "category": 3,
       "rangeBegin": "000",
       "rangeEnd": "999",
-      "free": 990,
-      "taken": 10,
+      "free": 996,
+      "taken": 4,
       "canceled": 0,
-      "deleted": 7,
-      "next": "010",
+      "deleted": 0,
+      "next": "004",
       "isActive": 1,
       "isClosed": 0,
       "created": {},
@@ -133,6 +133,19 @@
       "subRangeId": 1,
       "publicationId": 0,
       "publisherId": 1,
+      "created": {},
+      "createdBy": "system"
+    },
+    {
+      "id": 2,
+      "identifierCount": 1,
+      "identifierCanceledCount": 0,
+      "identifierCanceledUsedCount": 0,
+      "identifierDeletedCount": 0,
+      "identifierType": "ISMN",
+      "subRangeId": 1,
+      "publisherId": 1,
+      "publicationId": 0,
       "created": {},
       "createdBy": "system"
     }
@@ -156,6 +169,13 @@
       "id": 3,
       "identifier": "979-0-55001-002-4",
       "identifierBatchId": 1,
+      "subRangeId": 1,
+      "publicationType": ""
+    },
+    {
+      "id": 4,
+      "identifier": "979-0-55001-003-1",
+      "identifierBatchId": 2,
       "subRangeId": 1,
       "publicationType": ""
     }

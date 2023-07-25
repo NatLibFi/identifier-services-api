@@ -29,10 +29,11 @@
 
 import {DataTypes} from 'sequelize';
 
+import {isValidIsbnOrIsmnIdentifier} from './validators';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
+/* eslint-disable new-cap,functional/no-this-expressions */
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];
@@ -69,15 +70,43 @@ export default function (sequelize, dialect) {
       identifier: {
         unique: true,
         allowNull: false,
-        type: DataTypes.STRING(20)
+        type: DataTypes.STRING(20),
+        validate: {
+          isValidIsbnOrIsmnIdentifier
+        }
       },
       identifierType: {
         allowNull: false,
-        type: DataTypes.STRING(4)
+        type: DataTypes.STRING(4),
+        validate: {
+          is: /^ISBN$|^ISMN$/ // eslint-disable-line require-unicode-regexp
+        }
       },
       category: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        validate: {
+          isValidCategory(value) {
+            if (this.identifierType === 'ISBN') {
+              if (value > 5 || value < 1) {
+                throw new Error('Invalid category for ISBN');
+              }
+
+              return;
+            }
+
+            if (this.identifierType === 'ISMN') {
+              // Canceled identifier category value mirrors publisher range category value
+              if (![1, 2, 3, 5].includes(value)) {
+                throw new Error('Invalid category for ISMN');
+              }
+
+              return;
+            }
+
+            throw new Error('Invalid identifierType');
+          }
+        }
       },
       subRangeId: {
         field: 'publisher_identifier_range_id',

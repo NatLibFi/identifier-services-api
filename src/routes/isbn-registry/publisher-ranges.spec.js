@@ -45,7 +45,6 @@ describe('app', () => {
     describe('#close', generateTestSuite('isbn', 'close'));
     describe('#create', generateTestSuite('isbn', 'create'));
     describe('#deactivate', generateTestSuite('isbn', 'deactivate'));
-    describe('#get-publications', generateTestSuite('isbn', 'get-publications'));
     describe('#open', generateTestSuite('isbn', 'open'));
     describe('#read', generateTestSuite('isbn', 'read'));
     describe('#remove', generateTestSuite('isbn', 'remove'));
@@ -56,7 +55,6 @@ describe('app', () => {
     describe('#close', generateTestSuite('ismn', 'close'));
     describe('#create', generateTestSuite('ismn', 'create'));
     describe('#deactivate', generateTestSuite('ismn', 'deactivate'));
-    describe('#get-publications', generateTestSuite('ismn', 'get-publications'));
     describe('#open', generateTestSuite('ismn', 'open'));
     describe('#read', generateTestSuite('ismn', 'read'));
     describe('#remove', generateTestSuite('ismn', 'remove'));
