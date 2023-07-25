@@ -137,7 +137,7 @@
       "publisherIdentifier": "978-951-8901",
       "isbnRangeId": 2,
       "publisherId": 1,
-      "category": 4,
+      "category": 2,
       "rangeBegin": "00",
       "rangeEnd": "99",
       "free": 100,
@@ -159,7 +159,7 @@
       "idOld": null,
       "rangeId": 2,
       "identifier": "978-951-8900",
-      "category": 2,
+      "category": 4,
       "canceled": {},
       "canceledBy": "system"
     }

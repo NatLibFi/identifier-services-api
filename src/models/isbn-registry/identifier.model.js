@@ -29,6 +29,9 @@
 
 import {DataTypes} from 'sequelize';
 
+import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES} from '../../interfaces/constants';
+
+import {isValidIsbnOrIsmnIdentifier} from './validators';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
@@ -61,7 +64,10 @@ export default function (sequelize, dialect) {
       identifier: {
         unique: true,
         allowNull: false,
-        type: DataTypes.STRING(20)
+        type: DataTypes.STRING(20),
+        validate: {
+          isValidIsbnOrIsmnIdentifier
+        }
       },
       subRangeId: {
         field: 'publisher_identifier_range_id',
@@ -71,7 +77,19 @@ export default function (sequelize, dialect) {
       publicationType: {
         allowNull: false,
         type: DataTypes.STRING(25),
-        defaultValue: ''
+        defaultValue: '',
+        validate: {
+          isValidPublicationType(value) {
+            const validPublicationTypes = [
+              ...Object.values(ISBN_REGISTRY_PUBLICATION_PRINT_TYPES),
+              ...Object.values(ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES)
+            ];
+
+            if (value !== '' && !validPublicationTypes.includes(value)) {
+              throw new Error('Invalid publication type');
+            }
+          }
+        }
       }
     },
     {
