@@ -151,7 +151,7 @@ export default function () {
    */
   async function readPublic(id) {
     const result = await identifierBatchModel.findByPk(id, {
-      attributes: ['id', 'identifierType', 'identifierCount', 'publisherId', 'publisherIdentifier'],
+      attributes: ['id', 'identifierType', 'identifierCount', 'publisherId', 'publicationId', 'subRangeId'],
       include: [
         {
           association: 'identifiers',
