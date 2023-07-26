@@ -173,7 +173,7 @@ export default async function run() { // eslint-disable-line
     if (err) {
       // If error was an already managed error, send defined status and message as response
       if (err instanceof ApiError) {
-        logger.debug(`ApiError message: ${err.message}`);
+        logger.info(`ApiError message: ${err.message}`);
         return res.status(err.status).json({message: err.message});
       }
 
