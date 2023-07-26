@@ -31,6 +31,8 @@ import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createHash} from 'crypto';
 
+import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+
 import sequelize from '../../models';
 import {ApiError, isAdmin} from '../../utils';
 import {COMMON_IDENTIFIER_TYPES} from '../constants';
@@ -42,6 +44,8 @@ import {NODE_ENV} from '../../config';
  * @returns Interface to interact with ISBN-registry identifier batches
  */
 export default function () {
+  const logger = createLogger();
+
   const identifierModel = sequelize.models.identifier;
   const identifierCanceledModel = sequelize.models.identifierCanceled;
   const identifierBatchModel = sequelize.models.identifierBatch;
@@ -126,6 +130,8 @@ export default function () {
         return {...filteredDoc, publisherName: publisher.officialName};
       }
 
+      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
+
       // If identifierBatch considers publication, it is not accessible by publishers/non-authenticated users
       if (doc.publicationId && doc.publicationId !== 0) {
         throw new ApiError(HttpStatus.NOT_FOUND);
@@ -145,6 +151,7 @@ export default function () {
    */
   async function readPublic(id) {
     const result = await identifierBatchModel.findByPk(id, {
+      attributes: ['id', 'identifierType', 'identifierCount', 'publisherId', 'publicationId', 'subRangeId'],
       include: [
         {
           association: 'identifiers',
@@ -487,7 +494,6 @@ export default function () {
    * @returns {Object} Paged result set if query was successful, otherwise throws ApiError
    */
   async function query(guiOpts) {
-
     const attributes = ['id', 'subRangeId', 'identifierType', 'identifierCount', 'identifierCanceledCount', 'identifierDeletedCount', 'created'];
     const {publisherId, publicationId, includePublications, offset, limit} = guiOpts;
     const conditions = getConditions({publisherId, publicationId, includePublications});

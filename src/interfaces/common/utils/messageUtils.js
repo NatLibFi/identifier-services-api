@@ -192,7 +192,8 @@ export function translatePublicationTypeIsbn(type, langCode) {
  * Utility function for prefixing email subject when emailing from test environment
  * @param {string} subject Message subject
  * @returns Test-prefixed message body
- */export function getTestPrefixedSubject(subject) {
+ */
+export function getTestPrefixedSubject(subject) {
   return `TESTI/TEST MESSAGE ${subject}`;
 }
 

@@ -208,7 +208,6 @@ export default function (identifierType) {
    * @returns True if succeed, false on failure
    */
   async function remove(id) {
-
     // Search for range to be deleted
     const range = await rangeModel.findByPk(id);
 

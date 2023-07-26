@@ -98,7 +98,7 @@ export default function () {
    */
     function _filterResult(doc, user) {
       if (isAdmin(user)) {
-      // Remove category information, etc. regarding subranges from response as it's not useful
+        // Remove category information, etc. regarding subranges from response as it's not useful
         const formattedIsbnSubranges = doc.isbnSubRanges
           .map(({id, publisherIdentifier, free, canceled, isActive, created, createdBy}) => ({id, publisherIdentifier, free, canceled, isActive, created, createdBy}));
         const formattedIsmnSubranges = doc.ismnSubRanges
@@ -106,6 +106,8 @@ export default function () {
 
         return {...doc, isbnSubRanges: formattedIsbnSubranges, ismnSubRanges: formattedIsmnSubranges};
       }
+
+      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
 
       const {id, officialName, previousNames, otherNames, address, hasQuitted,
         city, zip, phone, www, isbnSubRanges, ismnSubRanges, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
@@ -189,7 +191,7 @@ export default function () {
       };
     }
 
-      if (result !== null && !_isPublisherRegistryEntry(result)) { // eslint-disable-line
+    if (result !== null && !_isPublisherRegistryEntry(result)) { // eslint-disable-line
       logger.info('Publisher with id exists but is not part of publisher registry');
     }
 
@@ -372,10 +374,12 @@ export default function () {
           [Op.and]: [
             {...textConditions},
             {...hasQuittedCondition},
-            {[Op.or]: [
-              {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
-              {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
-            ]},
+            {
+              [Op.or]: [
+                {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
+                {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
+              ]
+            },
             {...categoryCondition}
           ]
         },
@@ -407,7 +411,7 @@ export default function () {
 
       // Return result if there is one
       if (countResult > 0) {
-      // Filter attributes based on user role
+        // Filter attributes based on user role
         const filteredResult = result
           .map(v => v.toJSON())
           .map(v => _filterResult(v, user));
@@ -464,10 +468,12 @@ export default function () {
    * @returns {Object} Publisher object with attributes filtered appropriate to user permissions
    */
     function _filterResult(doc, user) {
-    // If user is admin or system user, return all attributes defined for db query
+      // If user is admin or system user, return all attributes defined for db query
       if (isAdmin(user)) {
         return doc;
       }
+
+      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
 
       // Otherwise, return pre-defined, filtered, set of information
       const {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
@@ -578,10 +584,12 @@ export default function () {
         where: {
           [Op.and]: [
             {...textConditions},
-            {[Op.or]: [
-              {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
-              {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
-            ]}
+            {
+              [Op.or]: [
+                {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
+                {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
+              ]
+            }
           ]
         },
         limit,
@@ -610,7 +618,7 @@ export default function () {
 
       // Return result if there is one
       if (countResult > 0) {
-      // Filter attributes based on user role
+        // Filter attributes based on user role
         const filteredResult = result
           .map(v => v.toJSON())
           .map(v => _filterResult(v));
@@ -629,7 +637,6 @@ export default function () {
    * @returns {Object} Publisher object with attributes filtered
    */
     function _filterResult(doc) {
-      // Otherwise, return pre-defined, filtered, set of information
       const {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
       return {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn};
     }
@@ -719,10 +726,12 @@ export default function () {
       where: {
         [Op.and]: [
           {...textConditions},
-          {[Op.or]: [
-            {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
-            {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
-          ]}
+          {
+            [Op.or]: [
+              {'$isbnSubRanges.publisher_identifier$': {[Op.ne]: ''}},
+              {'$ismnSubRanges.publisher_identifier$': {[Op.ne]: ''}}
+            ]
+          }
         ]
       },
       limit,
