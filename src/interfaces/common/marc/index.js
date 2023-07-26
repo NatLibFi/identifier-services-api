@@ -33,6 +33,8 @@ import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
 import {createMelindaApiRecordClient as createMelindaApiClient} from '@natlibfi/melinda-rest-api-client';
 import createMelindaSruClient from '@natlibfi/sru-client';
 
+import {createLogger} from '@natlibfi/melinda-backend-commons';
+
 import sequelize from '../../../models';
 import {ApiError} from '../../../utils';
 import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../constants';
@@ -45,6 +47,8 @@ import {MELINDA_API_PASSWORD, MELINDA_API_URL, MELINDA_API_USER, MELINDA_CREATE_
  * @returns Interface to interact with MARC-records
  */
 export default function (registry) {
+  const logger = createLogger();
+
   const {publicationModel} = getPublicationModelByRegistry(registry);
 
   // Establish Melinda connections if parameters are available
@@ -54,6 +58,7 @@ export default function (registry) {
 
   /* istanbul ignore if */
   if (MELINDA_API_URL && MELINDA_API_USER && MELINDA_API_PASSWORD) {
+    logger.debug('Melinda API configuration was found');
     melindaApiClient = createMelindaApiClient({
       melindaApiUrl: MELINDA_API_URL,
       melindaApiUsername: MELINDA_API_USER,
@@ -63,6 +68,7 @@ export default function (registry) {
 
   /* istanbul ignore if */
   if (MELINDA_SRU_URL) {
+    logger.debug('Melinda SRU configuration was found');
     melindaSruClient = createMelindaSruClient({url: MELINDA_SRU_URL, recordSchema: 'marcxml'});
   }
   /* eslint-enable functional/no-conditional-statements,functional/no-let */
@@ -137,6 +143,7 @@ export default function (registry) {
      * @returns Array of serialized objects
      */
     function formatRecords(records, format) {
+      logger.debug(`Formatting ${records.length} MARC records to ${format} format`);
       if (format === 'marc-record-js') {
         return records;
       }
@@ -185,8 +192,10 @@ export default function (registry) {
     async function createMelindaRecord(record) {
       try {
         const {databaseId, recordStatus, ids} = await melindaApiClient.create(record, MELINDA_CREATE_RECORD_PARAMS);
+        logger.debug(`Create record operation ended with status ${recordStatus} and databaseId ${databaseId}`);
         result.records = [{databaseId, recordStatus, ids}, ...result.records]; // eslint-disable-line functional/immutable-data
       } catch (err) {
+        logger.debug(`Creation of Melinda record failed with error ${err}`);
         result.errors += 1; // eslint-disable-line functional/immutable-data
       }
     }
