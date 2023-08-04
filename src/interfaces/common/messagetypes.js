@@ -158,7 +158,7 @@ export default function (registry) {
 
 
   /**
-   * Get associations regardin message types
+   * Get associations regarding message types
    * @param {string} registry Registry to interact witch
    * @returns Array of sequelize models that contain message_type_id as FK column
    */

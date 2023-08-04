@@ -82,7 +82,6 @@ export default function () {
     const t = await sequelize.transaction();
 
     try {
-
       const {
         publisherId,
         formId,
@@ -161,7 +160,6 @@ export default function () {
    */
   /* eslint-disable max-depth,max-statements,functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function resend(messageId, messageOptions, user) {
-
     const {recipient} = messageOptions;
     const originalMessage = await messageIssnModelInterface.read(messageId);
 
@@ -191,7 +189,6 @@ export default function () {
   /* eslint-disable max-params,max-statements,max-depth,complexity,prefer-destructuring */
   /* eslint-disable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function loadTemplate(doc, user) {
-
     const {code, publisherId, formId} = doc;
     let form;
 

@@ -78,7 +78,7 @@ export default function () {
    * @returns {boolean} True on success, otherwise throws ApiError
    */
   async function cancel(identifier, user, queryOpts = {}) { // eslint-disable-line require-await
-    logger.info(`Start ISBN-registry cancellation process of identifier ${identifier}`);
+    logger.debug(`Start ISBN-registry cancellation process of identifier ${identifier}`);
     return cancelIdentifier(identifier, user, false, queryOpts);
   }
 
@@ -93,7 +93,7 @@ export default function () {
    * @returns {boolean} True on success, otherwise throws ApiError
    */
   async function remove(identifier, user, queryOpts = {}) { // eslint-disable-line require-await
-    logger.info(`Start ISBN-registry permanent removal process of identifier ${identifier}`);
+    logger.debug(`Start ISBN-registry permanent removal process of identifier ${identifier}`);
     return cancelIdentifier(identifier, user, true, queryOpts);
   }
 
@@ -164,7 +164,7 @@ export default function () {
 
       // If it's the only identifier of the batch that is not either canceled or deleted, we need to delete batch instead of updating it
       if (totalCount === 1 || identifierBatch.identifierCanceledCount + identifierBatch.identifierDeletedCount === totalCount - 1) {
-        logger.info('Identifier was last of identifiers associated with identifier batch. Identifier batch will be removed.');
+        logger.debug('Identifier was last of identifiers associated with identifier batch. Identifier batch will be removed.');
 
         // Delete batch
         await identifierBatch.destroy({transaction: t});
@@ -176,8 +176,8 @@ export default function () {
 
         // If identifier is associated with publication, empty the publication entities identifier definitions
         if (publication) {
-          logger.info(`Identifier was last of identifiers associated with a publication id ${publication.id}.`);
-          logger.info(`Publication id ${publication.id} will have its identifier information removed and status set to onProcess`);
+          logger.debug(`Identifier was last of identifiers associated with a publication id ${publication.id}.`);
+          logger.debug(`Publication id ${publication.id} will have its identifier information removed and status set to onProcess`);
 
           const publicationUpdateInformation = {
             publicationIdentifierPrint: '',
@@ -190,19 +190,19 @@ export default function () {
           await publication.update(publicationUpdateInformation, {transaction: t});
         }
       } else {
-        logger.info(`Identifier was not last of identifiers associated with identifier batch. Identifier batch id ${identifierBatch.id} will remain in the database.`);
+        logger.debug(`Identifier was not last of identifiers associated with identifier batch. Identifier batch id ${identifierBatch.id} will remain in the database.`);
 
         // If identifier was not last of the batch, update batch information depending if the deletion is permanent or not
         // At this time, batch does not have modifiedBy attribute in the table definitions and thus user information regarding update cannot be preserved
         if (permanent) {
           // Update batch deleted count
-          logger.info(`Incrementing deleted count of batch id ${identifierBatch.id}`);
+          logger.debug(`Incrementing deleted count of batch id ${identifierBatch.id}`);
 
           const identifierBatchUpdate = {identifierDeletedCount: identifierBatch.identifierDeletedCount + 1};
           await identifierBatch.update(identifierBatchUpdate, {transaction: t});
         } else {
           // Update batch canceled count
-          logger.info(`Incrementing canceled count of batch id ${identifierBatch.id}`);
+          logger.debug(`Incrementing canceled count of batch id ${identifierBatch.id}`);
 
           const identifierBatchUpdate = {identifierCanceledCount: identifierBatch.identifierCanceledCount + 1};
           await identifierBatch.update(identifierBatchUpdate, {transaction: t});
@@ -212,7 +212,7 @@ export default function () {
         // Note: type/filetype information is left intact so there is some information left of the type of identifier that has been canceled.
         // This information is to be utilized in the statistics in future so do not change this unless same information is preserved in some other manner.
         if (identifierBatch.publicationId) {
-          logger.info(`Removing identifier ${identifier} from publication id ${publication.id} identifier information`);
+          logger.debug(`Removing identifier ${identifier} from publication id ${publication.id} identifier information`);
 
           const publicationJson = publication.toJSON();
           const publicationUpdateInformation = {
@@ -247,7 +247,7 @@ export default function () {
         };
 
         // Update subrange to database
-        logger.info(`Incrementing deleted count of subrange id ${subrange.id}`);
+        logger.debug(`Incrementing deleted count of subrange id ${subrange.id}`);
         await subrange.update(subrangeUpdate, {transaction: t});
       } else {
         // Create canceled identifier object
@@ -262,7 +262,7 @@ export default function () {
 
         // Create new canceled identifier entry to db
         await identifierCanceledModel.create(canceledIdentifier, {transaction: t});
-        logger.info(`Created new canceled identifier entry`);
+        logger.debug(`Created new canceled identifier entry`);
 
         // Update subrange attributes
         const subrangeUpdate = {
@@ -276,7 +276,7 @@ export default function () {
         }
 
         // Save update to db
-        logger.info(`Incrementing canceled count of subrange id ${subrange.id}`);
+        logger.debug(`Incrementing canceled count of subrange id ${subrange.id}`);
         await subrange.update(subrangeUpdate, {transaction: t});
       }
 
@@ -304,6 +304,7 @@ export default function () {
      * @returns {(string|null)} Stringified JSON representation of identifiers if there were identifiers. Otherwise null or empty string.
      */
     function removeIdentifierFromPublicationIdentifierSet(identifiers, identifierToRemove) {
+      logger.debug(`Removing identifier ${identifierToRemove} from identifier set of ${identifiers}`);
       // If identifier string is empty or value is null, the value should not change
       if (identifiers === '' || identifiers === null) {
         return identifiers;
