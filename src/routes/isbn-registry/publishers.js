@@ -42,10 +42,10 @@ export default function (permissionMiddleware) {
       [Segments.PARAMS]: validateRequestId
     }), read)
     .post('/query', permissionMiddleware('publishers', 'query'), celebrate({
-      [Segments.PARAMS]: validateIsbnPublisherQueryBody
+      [Segments.BODY]: validateIsbnPublisherQueryBody
     }), query)
     .post('/autocomplete', permissionMiddleware('publishers', 'autocomplete'), celebrate({
-      [Segments.PARAMS]: validateIsbnPublisherQueryBody
+      [Segments.BODY]: validateIsbnPublisherQueryBody
     }), autocomplete)
     .put('/:id', permissionMiddleware('publishers', 'update'), celebrate({
       [Segments.PARAMS]: validateRequestId

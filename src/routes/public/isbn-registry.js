@@ -65,7 +65,7 @@ export default function () {
       [Segments.PARAMS]: validateRequestId
     }), readPublisherPublic)
     .post('/publishers/query', celebrate({
-      [Segments.PARAMS]: validateQueryBody
+      [Segments.BODY]: validateQueryBody
     }), queryPublisherPublic)
 
     // Identifier batches

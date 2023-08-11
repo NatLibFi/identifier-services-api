@@ -1,0 +1,6 @@
+{
+    "descr": "Limit has maximum of 50",
+    "requestUrl": "/public/isbn-registry/publishers/query",
+    "method": "post",
+    "expectedStatus": 422
+}
