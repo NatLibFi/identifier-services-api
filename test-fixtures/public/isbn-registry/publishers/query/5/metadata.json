@@ -1,0 +1,6 @@
+{
+    "descr": "May query using ISMN. Identifier does not need to be active.",
+    "requestUrl": "/public/isbn-registry/publishers/query",
+    "method": "post",
+    "expectedStatus": 200
+}

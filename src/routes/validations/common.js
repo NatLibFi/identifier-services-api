@@ -33,6 +33,6 @@ export const validateRequestId = {
 
 export const validateQueryBody = {
   searchText: Joi.string().allow(''),
-  limit: Joi.number().integer().min(0),
+  limit: Joi.number().integer().min(0).max(50),
   offset: Joi.number().integer().min(0)
 };

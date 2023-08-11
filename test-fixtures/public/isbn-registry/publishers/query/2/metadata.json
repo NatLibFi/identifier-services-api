@@ -1,0 +1,6 @@
+{
+    "descr": "Empty query does not contain requests",
+    "requestUrl": "/public/isbn-registry/publishers/query",
+    "method": "post",
+    "expectedStatus": 200
+}
