@@ -382,7 +382,7 @@ export default function () {
     message.message = message.message.replace('#PUBLISHER#', messagePublisher.officialName);
     message.message = message.message.replace('#ADDRESS#', `${messagePublisher.address}<br />${messagePublisher.zip} ${messagePublisher.city}`);
     message.message = message.message.replace('#TITLE#', title);
-    message.message = subtitle ? message.message.replace('#SUBTITLE#', subtitle) : message.message.replace('#SUBTITLE#', '');
+    message.message = subtitle ? message.message.replace('#SUBTITLE#', ` : ${subtitle}`) : message.message.replace('#SUBTITLE#', '');
 
 
     if (NODE_ENV === 'production') {

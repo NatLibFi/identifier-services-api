@@ -1,6 +1,6 @@
 {
   "langCode": "fi-FI",
-  "message": "Tämä viesti on testijärjestelmästä / This message is from test system.<br /><br />Foo (foo@example.com),<br />Foo Street<br />00001 Foo City<br /><br />Here are your identifier(s) for publication Foo Book - Foo Subtitle:<br />ISBN 978-951-00000-0-7 (pehmeäkantinen)<br />ISBN 978-951-00000-1-4 (kovakantinen)<br />ISBN 978-951-00000-2-1 (PDF)<br />ISBN 978-951-00000-3-8 (CD-ROM)<br />Regards, test system",
+  "message": "Tämä viesti on testijärjestelmästä / This message is from test system.<br /><br />Foo (foo@example.com),<br />Foo Street<br />00001 Foo City<br /><br />Here are your identifier(s) for publication Foo Book : Foo Subtitle:<br />ISBN 978-951-00000-0-7 (pehmeäkantinen)<br />ISBN 978-951-00000-1-4 (kovakantinen)<br />ISBN 978-951-00000-2-1 (PDF)<br />ISBN 978-951-00000-3-8 (CD-ROM)<br />Regards, test system",
   "publisherId": 1,
   "publicationId": 1,
   "recipient": "foo@example.com",

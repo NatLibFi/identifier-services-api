@@ -85,7 +85,7 @@ export const validateIsbnPublisherQueryBody = {
   hasQuitted: Joi.boolean(),
   category: Joi.number().integer().min(1).max(7),
   identifierType: Joi.string().regex(/^ISBN$|^ISMN$/u),
-  limit: Joi.number().integer().min(0),
+  limit: Joi.number().integer().min(0).max(50),
   offset: Joi.number().integer().min(0)
 };
 

@@ -1,0 +1,8 @@
+{
+  "descr": "Manages empty subtitle",
+  "requestUrl": "/isbn-registry/messages/loadtemplate",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

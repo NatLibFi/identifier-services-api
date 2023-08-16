@@ -123,7 +123,7 @@
       "role3": null,
       "role4": null,
       "series": "Foo Series",
-      "subtitle": "Foo Subtitle",
+      "subtitle": "",
       "title": "Foo Book",
       "type": ["PAPERBACK", "HARDBACK"],
       "typeOther": "Esimerkki julkaisumuodon lisätiedosta",
