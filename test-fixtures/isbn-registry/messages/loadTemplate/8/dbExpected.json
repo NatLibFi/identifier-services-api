@@ -14,13 +14,16 @@
       "next": "00001",
       "isActive": 1,
       "isClosed": 0,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
   "isbnSubRange": [
     {
       "id": 1,
+      "idOld": null,
       "publisherIdentifier": "978-951-00000",
       "publisherId": 1,
       "isbnRangeId": 1,
@@ -34,7 +37,9 @@
       "next": "4",
       "isActive": 1,
       "isClosed": 0,
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -43,7 +48,7 @@
       "id": 1,
       "officialName": "FooBar",
       "otherNames": "",
-      "previousNames": [],
+      "previousNames": "",
       "promoteSorting": 0,
       "address": "FooBar 123",
       "addressLine1": null,
@@ -65,10 +70,12 @@
       "affiliates": "",
       "distributorOf": null,
       "distributors": "",
-      "classification": ["100"],
+      "classification": "100",
       "classificationOther": "",
       "confirmation": "",
+      "created": {},
       "createdBy": "system",
+      "modified": {},
       "modifiedBy": "system"
     }
   ],
@@ -80,10 +87,11 @@
       "comments": null,
       "contactPerson": "Foobar Baz",
       "copies": null,
+      "created": {},
       "createdBy": "system",
       "edition": null,
       "email": "foo@example.com",
-      "fileformat": ["PDF", "CD_ROM"],
+      "fileformat": "PDF,CD_ROM",
       "fileformatOther": "Esimerkki tiedostomuodon lisätiedosta",
       "firstName1": "Foobar",
       "firstName2": null,
@@ -98,6 +106,7 @@
       "lastName4": null,
       "locality": null,
       "mapScale": null,
+      "modified": {},
       "modifiedBy": "system",
       "month": "12",
       "noIdentifierGranted": 0,
@@ -118,18 +127,43 @@
       "publisherIdentifierStr": null,
       "publishingActivity": "OCCASIONAL",
       "publishingActivityAmount": "1",
-      "role1": ["AUTHOR"],
+      "role1": "AUTHOR",
       "role2": null,
       "role3": null,
       "role4": null,
       "series": "Foo Series",
-      "subtitle": "Foo Subtitle",
+      "subtitle": "",
       "title": "Foo Book",
-      "type": ["PAPERBACK", "HARDBACK"],
+      "type": "PAPERBACK,HARDBACK",
       "typeOther": "Esimerkki julkaisumuodon lisätiedosta",
       "volume": "1",
       "year": "2049",
       "zip": "00001"
+    }
+  ],
+  "messageTypeIsbn": [
+    {
+      "id": 5,
+      "name": "Identifier created ISBN",
+      "description": "",
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
+    }
+  ],
+  "messageTemplateIsbn": [
+    {
+      "id": 1,
+      "name": "Esimerkkitemplate 3",
+      "subject": "New identifiers for #TITLE#",
+      "langCode": "fi-FI",
+      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here are your identifier(s) for publication #TITLE##SUBTITLE#:<br />#IDENTIFIERS#<br />Regards, #USER#",
+      "messageTypeId": 5,
+      "created": {},
+      "createdBy": "system",
+      "modified": {},
+      "modifiedBy": "system"
     }
   ],
   "identifierBatch": [
@@ -143,28 +177,8 @@
       "subRangeId": 1,
       "publicationId": 1,
       "publisherId": 1,
+      "created": {},
       "createdBy": "system"
-    }
-  ],
-  "messageTypeIsbn": [
-    {
-      "id": 5,
-      "name": "Identifier created ISBN",
-      "description": "",
-      "createdBy": "system",
-      "modifiedBy": "system"
-    }
-  ],
-  "messageTemplateIsbn": [
-    {
-      "id": 1,
-      "name": "Esimerkkitemplate 3",
-      "subject": "New identifiers for #TITLE#",
-      "langCode": "fi-FI",
-      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here are your identifier(s) for publication #TITLE##SUBTITLE#:<br />#IDENTIFIERS#<br />Regards, #USER#",
-      "messageTypeId": 5,
-      "createdBy": "system",
-      "modifiedBy": "system"
     }
   ],
   "identifier": [

@@ -158,7 +158,7 @@
       "name": "Esimerkkitemplate 3",
       "subject": "New identifiers for #TITLE#",
       "langCode": "fi-FI",
-      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here are your identifier(s) for publication #TITLE# - #SUBTITLE#:<br />#IDENTIFIERS#<br />Regards, #USER#",
+      "message": "#PUBLISHER# (#EMAIL#),<br />#ADDRESS#<br /><br />Here are your identifier(s) for publication #TITLE##SUBTITLE#:<br />#IDENTIFIERS#<br />Regards, #USER#",
       "messageTypeId": 5,
       "created": {},
       "createdBy": "system",
