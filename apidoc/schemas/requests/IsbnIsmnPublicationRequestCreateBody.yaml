@@ -19,8 +19,7 @@ properties:
     type: string
     maximum: 30
   email:
-    type: string
-    maximum: 100
+    $ref: '../patterns/CommonEmail.yaml'
   langCode:
     $ref: '../enums/CommonLangCode.yaml'
   publishedBefore:

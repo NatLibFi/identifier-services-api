@@ -33,7 +33,8 @@ import {
   validateCreateIssnPublisher,
   validateUpdateIssnPublisher,
   validateQueryBody,
-  validateRequestId
+  validateRequestId,
+  validatePublisherAutocompleteBody
 } from '../validations';
 
 import {issnPublisherFactory} from '../../interfaces';
@@ -56,7 +57,7 @@ export default function (permissionMiddleware) {
       [Segments.PARAMS]: validateRequestId
     }), remove)
     .post('/autocomplete', permissionMiddleware('issnPublishers', 'autocomplete'), celebrate({
-      [Segments.BODY]: validateQueryBody
+      [Segments.BODY]: validatePublisherAutocompleteBody
     }), autocomplete)
     .post('/query', permissionMiddleware('issnPublishers', 'read'), celebrate({
       [Segments.BODY]: validateQueryBody
