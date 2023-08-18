@@ -20,6 +20,7 @@ properties:
     maximum: 30
   email:
     $ref: '../patterns/CommonEmail.yaml'
+    maximum: 100
   langCode:
     $ref: '../enums/CommonLangCode.yaml'
   publishedBefore:
