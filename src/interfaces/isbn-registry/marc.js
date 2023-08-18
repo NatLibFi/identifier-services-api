@@ -370,8 +370,8 @@ function generate250({publication}) {
   return [];
 }
 
-function generate255({publication, isMap}) {
-  if (isMap && publication.mapScale) {
+function generate255({publication, map}) {
+  if (map && publication.mapScale) {
     return [
       {
         tag: '255',
@@ -451,7 +451,7 @@ function generate264b({publication, electronical}) {
   ];
 }
 
-function generate336({music, isMap}) {
+function generate336({music, map}) {
   /* eslint-disable functional/no-let,functional/no-conditional-statements */
   let subfields;
 
@@ -460,7 +460,7 @@ function generate336({music, isMap}) {
       {code: 'a', value: 'nuottikirjoitus'},
       {code: 'b', value: 'ntm'}
     ];
-  } else if (isMap) {
+  } else if (map) {
     subfields = [
       {code: 'a', value: 'kartografinen kuva'},
       {code: 'b', value: 'cri'}
@@ -620,7 +620,7 @@ function generate594() {
       tag: '594',
       ind1: ' ',
       ind2: ' ',
-      subfields: [{code: 'a', value: 'ENNAKKOTIETO KANSALLISKIRJASTO.'}, {code: '5', value: 'FENNI'}]
+      subfields: [{code: 'a', value: 'ENNAKKOTIETO KANSALLISKIRJASTO'}, {code: '5', value: 'FENNI'}]
     },
     {
       tag: '594',
