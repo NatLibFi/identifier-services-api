@@ -27,7 +27,10 @@
 
 import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
-import {ROLE_MAP} from '../config';
+
+import {createLogger, createExpressLogger} from '@natlibfi/melinda-backend-commons';
+
+import {ENABLE_PROXY, PROXY_CUSTOM_HEADER, ROLE_MAP} from '../config';
 
 export {ApiError} from './apiError';
 
@@ -52,6 +55,19 @@ export function getRolesFromKeycloakRoles(userKeycloakRoles) {
 
 export function isAdmin(user) {
   return user && typeof user === 'object' && user.applicationRoles && Array.isArray(user.applicationRoles) && ['admin', 'system'].some(role => user.applicationRoles.includes(role));
+}
+
+export function getExpressLogger() {
+  const logger = createLogger();
+
+  if (!ENABLE_PROXY || !PROXY_CUSTOM_HEADER) {
+    logger.info('Using basic melinda backend commons logger');
+    return createExpressLogger();
+  }
+
+  logger.info('Logger is parsing origin IP from custom header');
+  const msg = `{{req.headers["${PROXY_CUSTOM_HEADER}"]}} HTTP {{req.method}} {{req.path}} - {{res.statusCode}} {{res.responseTime}}ms`;
+  return createExpressLogger({msg});
 }
 
 // Function parseBoolean defined below this comment is part of melinda-commons-js package and has the following license file associated to it:

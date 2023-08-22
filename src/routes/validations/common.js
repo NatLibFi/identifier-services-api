@@ -36,3 +36,7 @@ export const validateQueryBody = {
   limit: Joi.number().integer().min(0).max(50),
   offset: Joi.number().integer().min(0)
 };
+
+export const validatePublisherAutocompleteBody = {
+  searchText: Joi.string().allow('')
+};

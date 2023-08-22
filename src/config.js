@@ -55,6 +55,7 @@ export const UI_URL = readEnvironmentVariable('UI_URL', {defaultValue: 'http://l
 export const CORS_WHITELIST = readEnvironmentVariable('CORS_WHITELIST', {defaultValue: ['http://localhost:8080'], format: JSON.parse});
 
 export const ENABLE_PROXY = readEnvironmentVariable('ENABLE_PROXY', {defaultValue: false, format: parseBoolean});
+export const PROXY_CUSTOM_HEADER = readEnvironmentVariable('PROXY_CUSTOM_HEADER', {defaultValue: ''});
 
 // CONNECTIONS CONFIG
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {defaultValue: 8080, format: v => Number(v)});

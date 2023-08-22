@@ -107,7 +107,7 @@ export default function () {
         return {...doc, isbnSubRanges: formattedIsbnSubranges, ismnSubRanges: formattedIsmnSubranges};
       }
 
-      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
+      logger.warn(`Non-admin user used legacy, now admin-only, interface`);
 
       const {id, officialName, previousNames, otherNames, address, hasQuitted,
         city, zip, phone, www, isbnSubRanges, ismnSubRanges, activeIdentifierIsbn, activeIdentifierIsmn} = doc;
@@ -473,7 +473,7 @@ export default function () {
         return doc;
       }
 
-      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
+      logger.warn(`Non-admin user used legacy, now admin-only, interface`);
 
       // Otherwise, return pre-defined, filtered, set of information
       const {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn} = doc;

@@ -27,7 +27,7 @@
 
 /* eslint-disable max-statements,no-unused-vars,require-await*/
 import {generatePassportMiddlewares} from '@natlibfi/passport-natlibfi-keycloak';
-import {createLogger, createExpressLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '@natlibfi/melinda-backend-commons';
 
 import express from 'express';
 import cors from 'cors';
@@ -40,7 +40,7 @@ import path from 'path';
 import sequelize from './models';
 import * as routes from './routes';
 
-import {ApiError, bodyParse} from './utils';
+import {ApiError, bodyParse, getExpressLogger} from './utils';
 import {getUserApplicationRoles, generateUserAuthorizationMiddleware, generatePermissionMiddleware} from './middlewares';
 
 import {
@@ -125,7 +125,7 @@ export default async function run() { // eslint-disable-line
   // Set express configurations
   app.disable('x-powered-by');
   app.enable('trust proxy', ENABLE_PROXY);
-  app.use(createExpressLogger());
+  app.use(getExpressLogger());
   app.use(cors(corsOptions));
   app.use(bodyParse());
 

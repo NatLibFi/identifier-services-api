@@ -26,6 +26,7 @@
  */
 
 export {
+  validatePublisherAutocompleteBody,
   validateQueryBody,
   validateRequestId
 } from './common';

@@ -29,7 +29,7 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateIsbnPublisherQueryBody} from '../validations';
+import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody} from '../validations';
 
 import {publishersIsbnFactory} from '../../interfaces';
 
@@ -45,7 +45,7 @@ export default function (permissionMiddleware) {
       [Segments.BODY]: validateIsbnPublisherQueryBody
     }), query)
     .post('/autocomplete', permissionMiddleware('publishers', 'autocomplete'), celebrate({
-      [Segments.BODY]: validateIsbnPublisherQueryBody
+      [Segments.BODY]: validatePublisherAutocompleteBody
     }), autocomplete)
     .put('/:id', permissionMiddleware('publishers', 'update'), celebrate({
       [Segments.PARAMS]: validateRequestId
