@@ -130,7 +130,7 @@ export default function () {
         return {...filteredDoc, publisherName: publisher.officialName};
       }
 
-      logger.warn(`Non-admin user ${user?.id} used legacy, now admin-only, interface`);
+      logger.warn(`Non-admin user used legacy, now admin-only, interface`);
 
       // If identifierBatch considers publication, it is not accessible by publishers/non-authenticated users
       if (doc.publicationId && doc.publicationId !== 0) {
