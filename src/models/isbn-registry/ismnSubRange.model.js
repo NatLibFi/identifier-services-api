@@ -188,8 +188,10 @@ export default function (sequelize, dialect) {
               throw new Error('Next value cannot be smaller than rangeBegin');
             }
 
-            if (nextNumber > Number(this.rangeEnd) && (this.isActive || !this.isClosed)) {
-              throw new Error('Next value may be greater than range end value only when range is closed and not active');
+            if (nextNumber > Number(this.rangeEnd) + 1) {
+              // Note: next value may be exactly one greater than range end after last identifier from range has been given
+              // Subrange might be active after this in situation if there are cancelled identifiers available for reuse
+              throw new Error('Next value may not be greater than +1 from range end ever');
             }
           }
         }
