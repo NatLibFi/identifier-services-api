@@ -718,7 +718,7 @@ export default function (identifierType) {
 
     // Prioritize usage of canceled identifiers from the active range
     const canceledIdentifierSearchSubranges = useCanceledFromAnyRange ? await subRangeModel.findAll({where: {publisherId, category: activePublisherSubrange.category}, transaction: t}) : [activePublisherSubrange];
-    const canceledIdentifiers = await await identifierCanceledModel.findAll({
+    const canceledIdentifiers = await identifierCanceledModel.findAll({
       where: {
         identifierType: IDENTIFIER_TYPE,
         publisherId,
