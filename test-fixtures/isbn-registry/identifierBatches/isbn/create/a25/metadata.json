@@ -1,0 +1,8 @@
+{
+    "descr": "Identifier type check prevents use of wrong type of canceled identifiers",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 409
+}

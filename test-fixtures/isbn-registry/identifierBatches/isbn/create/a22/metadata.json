@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot ISBN+ISMN subrange for creating ISBN identifiers",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}

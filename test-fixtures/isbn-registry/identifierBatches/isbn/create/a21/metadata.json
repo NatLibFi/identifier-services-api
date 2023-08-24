@@ -1,0 +1,8 @@
+{
+    "descr": "Combination of canceled identifiers and new identifiers from two subrange works if pre-conditions for such creation are met",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}

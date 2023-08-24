@@ -1,0 +1,8 @@
+{
+    "descr": "Can utilize identifiers from two publisher ranges if pre-conditions are met while closing previous subrange if canceled identifier is utilized also",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "admin",
+    "password": "admin",
+    "method": "post",
+    "expectedStatus": 201
+}
