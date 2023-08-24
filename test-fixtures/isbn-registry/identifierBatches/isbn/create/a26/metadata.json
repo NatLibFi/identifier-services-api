@@ -1,5 +1,5 @@
 {
-    "descr": "Identifier type check prevents use of wrong type of canceled identifiers (publicationId)",
+    "descr": "Identifier type check prevents use of wrong type of canceled identifiers (count)",
     "requestUrl": "/isbn-registry/identifierbatches/isbn",
     "username": "admin",
     "password": "admin",
