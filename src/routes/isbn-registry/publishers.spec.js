@@ -44,5 +44,6 @@ describe('app', () => {
     describe('#query', generateTestSuite('query'));
     describe('#read', generateTestSuite('read'));
     describe('#update', generateTestSuite('update'));
+    describe('#download-email-list', generateTestSuite('download-email-list'));
   });
 });

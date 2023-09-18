@@ -119,7 +119,8 @@ IsbnIsmnPublisherQueryBodyAdmin:
   $ref: './requests/IsbnIsmnPublisherQueryBodyAdmin.yaml'
 IsbnIsmnPublisherQueryBodyPublic:
   $ref: './requests/IsbnIsmnPublisherQueryBodyPublic.yaml'
-
+IsbnIsmnPublisherEmailDownloadQueryBody:
+  $ref: './requests/IsbnIsmnPublisherEmailDownloadQueryBody.yaml'
 
 IsbnIsmnPublisherAdmin:
   $ref: './responses/IsbnIsmnPublisherAdmin.yaml'
@@ -131,6 +132,8 @@ IsbnIsmnPublisherListAdmin:
   $ref: './responses/IsbnIsmnPublisherListAdmin.yaml'
 IsbnIsmnPublisherListPublic:
   $ref: './responses/IsbnIsmnPublisherListPublic.yaml'
+IsbnIsmnPublisherEmailDownload:
+  $ref: './responses/IsbnIsmnPublisherEmailDownload.yaml'
 
 # ranges
 IsbnRangeCreateBody:
