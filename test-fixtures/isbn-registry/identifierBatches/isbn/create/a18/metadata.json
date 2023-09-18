@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, cannot create identifier batch for publication if there are not enough identifiers (wont use other publisher same category publisher ranges)",
+    "requestUrl": "/isbn-registry/identifierbatches/isbn",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 409
+}
