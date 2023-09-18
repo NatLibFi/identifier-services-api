@@ -43,6 +43,7 @@ export {
   validateUpdatePublisherRequestIsbn,
   validateIsbnPublisherQueryBody,
   validateIsbnRegistryPublisherArchiveQuery,
+  validateIsbnRegistryPublisherEmailDownloadQueryBody,
   validateCreateIssnPublisher,
   validateUpdateIssnPublisher
 } from './publisher';

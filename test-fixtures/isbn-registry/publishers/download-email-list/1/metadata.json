@@ -1,0 +1,8 @@
+{
+    "descr": "Should succeed, system can fetch publishers email listing as JSON",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

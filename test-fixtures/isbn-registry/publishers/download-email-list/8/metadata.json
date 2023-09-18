@@ -1,0 +1,8 @@
+{
+    "descr": "Empty and invalid emails are not included to list",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

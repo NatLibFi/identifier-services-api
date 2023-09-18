@@ -159,6 +159,8 @@ paths:
     $ref: "./resources/isbn-registry/publishers/query.yaml"
   /isbn-registry/publishers/autocomplete:
     $ref: "./resources/isbn-registry/publishers/autocomplete.yaml"
+  /isbn-registry/publishers/download-email-list:
+    $ref: "./resources/isbn-registry/publishers/download-email-list.yaml"
 
  # ISBN-registry ranges
   /isbn-registry/ranges/{identifierType}:
