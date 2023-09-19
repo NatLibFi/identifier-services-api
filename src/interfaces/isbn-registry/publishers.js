@@ -58,7 +58,7 @@ export default function () {
     queryPublic,
     update,
     autoComplete,
-    downloadEmailList
+    getEmailList
   };
 
   /**
@@ -762,20 +762,23 @@ export default function () {
   }
 
   /**
-   * Temporary method for downloading publisher email list for group emailing purposes
+   * Method for getting publisher email list for group emailing purposes
    * @param {Object} opts Filter options
-   * @returns Array of ISBN-registry publisher emails
+   * @returns Object containing data property, which contains array of ISBN-registry publisher emails
    */
-  async function downloadEmailList(opts) {
+  async function getEmailList(opts) {
     validateOpts(opts);
 
     const {category, identifierType, langCode} = opts;
+
+    // Subrange category is calculated by: TYPE_RANGE_LENGTH - RANGE_CATEGORY
+    const subrangeCategory = calculateSubrangeCategory(category, identifierType);
     const subrangeModel = getSubrangeModel(identifierType);
 
     const publisherIds = await subrangeModel.findAll({
       attributes: ['publisherId'],
       where: {
-        category
+        category: subrangeCategory
       }
     });
 
@@ -798,6 +801,18 @@ export default function () {
     return result
       .map(({email}) => email)
       .filter(isValidEmail);
+
+    function calculateSubrangeCategory(category, identifierType) {
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+        return ISBN_REGISTRY_ISBN_RANGE_LENGTH - category;
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+        return ISBN_REGISTRY_ISMN_RANGE_LENGTH - category;
+      }
+
+      throw new Error('Invalid identifier type');
+    }
 
     function validateOpts(opts) {
       const {category, identifierType} = opts;

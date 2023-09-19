@@ -112,11 +112,18 @@ export default function (permissionMiddleware) {
 
   async function downloadEmailList(req, res, next) {
     try {
-      const result = await publishers.downloadEmailList(req.body);
+      const result = await publishers.getEmailList(req.body);
 
       if (result) {
         if (req.body.format === 'txt') {
-          const formattedResult = result.reduce((prev, cur) => `${prev}\r\n${cur}`, '');
+          const formattedResult = result.reduce((prev, cur) => {
+            if (prev === '') {
+              return cur;
+            }
+
+            return `${prev}\r\n${cur}`;
+          }, '');
+
           return res.status(HttpStatus.OK).attachment('isbn-registry-publisher-emails.txt').send(formattedResult);
         }
 
