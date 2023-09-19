@@ -1,0 +1,8 @@
+{
+    "descr": "Category value is validated based on identifier type",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 422
+}

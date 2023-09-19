@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 
 info:
-  version: 2.0.2
+  version: 2.1.0
   title: Identifier Services API
   contact:
     name: Identifier Services support
@@ -159,6 +159,8 @@ paths:
     $ref: "./resources/isbn-registry/publishers/query.yaml"
   /isbn-registry/publishers/autocomplete:
     $ref: "./resources/isbn-registry/publishers/autocomplete.yaml"
+  /isbn-registry/publishers/download-email-list:
+    $ref: "./resources/isbn-registry/publishers/download-email-list.yaml"
 
  # ISBN-registry ranges
   /isbn-registry/ranges/{identifierType}:

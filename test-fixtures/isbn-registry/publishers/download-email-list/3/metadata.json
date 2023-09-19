@@ -1,0 +1,8 @@
+{
+    "descr": "Should fail, publisher cannot fetch publishers email listing as JSON",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "publisher",
+    "password": "publisher",
+    "method": "post",
+    "expectedStatus": 403
+}

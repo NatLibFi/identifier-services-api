@@ -1,0 +1,8 @@
+{
+    "descr": "Category variable is properly interpreted as range category (i.e. not subrange category)",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

@@ -29,7 +29,7 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody} from '../validations';
+import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody, validateIsbnRegistryPublisherEmailDownloadQueryBody} from '../validations';
 
 import {publishersIsbnFactory} from '../../interfaces';
 
@@ -47,6 +47,9 @@ export default function (permissionMiddleware) {
     .post('/autocomplete', permissionMiddleware('publishers', 'autocomplete'), celebrate({
       [Segments.BODY]: validatePublisherAutocompleteBody
     }), autocomplete)
+    .post('/download-email-list', permissionMiddleware('publishers', 'downloadEmails'), celebrate({
+      [Segments.BODY]: validateIsbnRegistryPublisherEmailDownloadQueryBody
+    }), downloadEmailList)
     .put('/:id', permissionMiddleware('publishers', 'update'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), update);
@@ -99,6 +102,36 @@ export default function (permissionMiddleware) {
 
       if (result) {
         return res.status(HttpStatus.OK).json(result);
+      }
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async function downloadEmailList(req, res, next) {
+    try {
+      const result = await publishers.getEmailList(req.body);
+
+      if (result) {
+        if (req.body.format === 'txt') {
+          const formattedResult = result.reduce((prev, cur) => {
+            if (prev === '') {
+              return cur;
+            }
+
+            return `${prev}\r\n${cur}`;
+          }, '');
+
+          return res.status(HttpStatus.OK).attachment('isbn-registry-publisher-emails.txt').send(formattedResult);
+        }
+
+        if (req.body.format === 'json') {
+          return res.status(HttpStatus.OK).json({data: result});
+        }
+
+        throw new Error('Unsupported format');
       }
 
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR);

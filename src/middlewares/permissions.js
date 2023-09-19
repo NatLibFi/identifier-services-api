@@ -50,6 +50,10 @@ export const permissions = {
     update: [
       'admin',
       'system'
+    ],
+    downloadEmails: [
+      'admin',
+      'system'
     ]
   },
   issnPublishers: {

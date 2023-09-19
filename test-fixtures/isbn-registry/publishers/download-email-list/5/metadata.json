@@ -1,0 +1,8 @@
+{
+    "descr": "Language filter works",
+    "requestUrl": "/isbn-registry/publishers/download-email-list",
+    "username": "system",
+    "password": "system",
+    "method": "post",
+    "expectedStatus": 200
+}

@@ -38,6 +38,8 @@ import {ApiError, isAdmin} from '../../utils';
 import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
 import {generateQuery, emptyQueryResult} from '../interfaceUtils';
 
+import regexPatterns from '../../routes/validations/patterns';
+
 /**
  * ISBN publishers interface. Contains read, query and update operations.
  * @returns Interface to interact with ISBN publishers that are part of publisher registry
@@ -55,7 +57,8 @@ export default function () {
     query,
     queryPublic,
     update,
-    autoComplete
+    autoComplete,
+    getEmailList
   };
 
   /**
@@ -756,5 +759,87 @@ export default function () {
     });
 
     return result.map(item => item.toJSON());
+  }
+
+  /**
+   * Method for getting publisher email list for group emailing purposes
+   * @param {Object} opts Filter options
+   * @returns Object containing data property, which contains array of ISBN-registry publisher emails
+   */
+  async function getEmailList(opts) {
+    validateOpts(opts);
+
+    const {category, identifierType, langCode} = opts;
+
+    // Subrange category is calculated by: TYPE_RANGE_LENGTH - RANGE_CATEGORY
+    const subrangeCategory = calculateSubrangeCategory(category, identifierType);
+    const subrangeModel = getSubrangeModel(identifierType);
+
+    const publisherIds = await subrangeModel.findAll({
+      attributes: ['publisherId'],
+      where: {
+        category: subrangeCategory
+      }
+    });
+
+    const formattedPublisherIds = publisherIds.reduce((prev, cur) => {
+      const {publisherId} = cur;
+      if (!publisherId) {
+        return prev;
+      }
+
+      return [...prev, publisherId];
+    }, []);
+
+    const result = await publisherModel.findAll({
+      attributes: ['email'],
+      where: {
+        [Op.and]: [{id: formattedPublisherIds}, {langCode}]
+      }
+    });
+
+    return result
+      .map(({email}) => email)
+      .filter(isValidEmail);
+
+    function calculateSubrangeCategory(category, identifierType) {
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+        return ISBN_REGISTRY_ISBN_RANGE_LENGTH - category;
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+        return ISBN_REGISTRY_ISMN_RANGE_LENGTH - category;
+      }
+
+      throw new Error('Invalid identifier type');
+    }
+
+    function validateOpts(opts) {
+      const {category, identifierType} = opts;
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN && (category < 1 || category > 5)) {
+        throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Invalid category definition for ISBN publisher');
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN && ![3, 5, 6, 7].includes(category)) {
+        throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Invalid category definition for ISMN publisher');
+      }
+    }
+
+    function getSubrangeModel(identifierType) {
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+        return isbnSubRangeModel;
+      }
+
+      if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+        return ismnSubRangeModel;
+      }
+
+      throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Invalid identifier type selected');
+    }
+
+    function isValidEmail(email) {
+      return email && typeof email === 'string' && regexPatterns.email.test(email);
+    }
   }
 }

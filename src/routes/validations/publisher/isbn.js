@@ -92,3 +92,10 @@ export const validateIsbnPublisherQueryBody = {
 export const validateIsbnRegistryPublisherArchiveQuery = {
   publisherId: Joi.number().integer().required()
 };
+
+export const validateIsbnRegistryPublisherEmailDownloadQueryBody = {
+  identifierType: Joi.string().regex(/^ISBN$|^ISMN$/u),
+  category: Joi.number().integer().min(1).max(7),
+  format: Joi.string().regex(/^txt$|^json$/u),
+  langCode: Joi.string().regex(regexPatterns.langCode)
+};
