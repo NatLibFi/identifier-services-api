@@ -9,7 +9,9 @@ updates:
       interval: "daily"
       time: "06:30"
       timezone: "Europe/Helsinki"
-    target-branch: "dependencies"
+    target-branch: "test"
+    pull-request-branch-name:
+      separator: "-"
 
   # Minor updates to npm production dependencies daily
   - package-ecosystem: "npm"
@@ -21,4 +23,6 @@ updates:
     versioning-strategy: lockfile-only
     allow:
       - dependency-type: "production"
-    target-branch: "dependencies"
+    target-branch: "test"
+    pull-request-branch-name:
+      separator: "-"
