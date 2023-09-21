@@ -26,3 +26,8 @@ updates:
     target-branch: "test"
     pull-request-branch-name:
       separator: "-"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
