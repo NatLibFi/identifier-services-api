@@ -79,7 +79,7 @@ export default function (registry) {
   const issnFormModel = sequelize.models.issnForm;
 
   return {
-    getRecord,
+    getRecords,
     sendToMelinda,
     searchFromMelinda
   };
@@ -112,7 +112,7 @@ export default function (registry) {
    * @param {string} format Format to serialize the record
    * @returns {Array} Array of stringified representations of MARC records
    */
-  async function getRecord(id, format = 'text') {
+  async function getRecords(id, format = 'text') {
     const publication = await publicationModel.findByPk(id);
 
     /* istanbul ignore if */
@@ -178,7 +178,7 @@ export default function (registry) {
       throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Cannot send data to Melinda due to error in service configuration. Please contact system administrator.');
     }
 
-    const records = await getRecord(id, 'marc-record-js'); // Note: this returns array of marc-record-js objects
+    const records = await getRecords(id, 'marc-record-js'); // Note: this returns array of marc-record-js objects
 
     // Init result
     const result = {errors: 0, records: []};
@@ -191,11 +191,11 @@ export default function (registry) {
 
     async function createMelindaRecord(record) {
       try {
-        const {databaseId, recordStatus, ids} = await melindaApiClient.create(record, MELINDA_CREATE_RECORD_PARAMS);
-        logger.debug(`Create record operation ended with status ${recordStatus} and databaseId ${databaseId}`);
-        result.records = [{databaseId, recordStatus, ids}, ...result.records]; // eslint-disable-line functional/immutable-data
+        const apiResponse = await melindaApiClient.create(record, MELINDA_CREATE_RECORD_PARAMS);
+        logger.debug(`Create record operation ended with status ${apiResponse.recordStatus} and databaseId ${apiResponse.databaseId}`);
+        result.records = [apiResponse, ...result.records]; // eslint-disable-line functional/immutable-data
       } catch (err) {
-        logger.debug(`Creation of Melinda record failed with error ${err}`);
+        logger.warn(`Creating record to Melinda failed with following error: ${err}`);
         result.errors += 1; // eslint-disable-line functional/immutable-data
       }
     }

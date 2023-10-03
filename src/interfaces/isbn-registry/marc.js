@@ -35,16 +35,15 @@ import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISB
 /**
  * Convert ISBN-registry publication entry to MARC record
  * @param {Object} publication ISBN-registry publication
- * @param {boolean} overloadElectronicalDefinition Forces generation of MARC consider electronical form of publication.
- * @returns {Record} Record object constructed using marc-record-js library
+ * @param {string} electronicalRecordPublicationType Publication type to produce MARC record for if publication considers of electronical type
+ * @returns {Object} Record object constructed using marc-record-js library
  */
 /* eslint-disable max-lines */
-export function convertToMarcIsbnIsmn(publication, overloadElectronicalDefinition = undefined) {
+export function convertToMarcIsbnIsmn(publication, electronicalRecordPublicationType = null) {
   /* eslint-disable functional/no-conditional-statements */
   const marcRecord = new Record();
 
-  // Attributes affecting field generation
-  const electronical = typeof overloadElectronicalDefinition === 'undefined' ? isElectronical(publication) : overloadElectronicalDefinition;
+  const electronical = isElectronical(electronicalRecordPublicationType);
   const music = isMusic(publication);
   const dissertation = isDissertation(publication);
   const map = isMap(publication);
@@ -57,7 +56,6 @@ export function convertToMarcIsbnIsmn(publication, overloadElectronicalDefinitio
   }
 
   // Add control fields
-
   // 007 for electronical publications
   if (electronical) {
     marcRecord.insertControlField(['007', 'cr||| ||||||||']);
@@ -100,7 +98,7 @@ export function convertToMarcIsbnIsmn(publication, overloadElectronicalDefinitio
   ];
 
   // Generate datafields
-  const generatorParams = {publication, electronical, music, dissertation, map};
+  const generatorParams = {publication, electronical, music, dissertation, map, electronicalRecordPublicationType};
 
   const dataFields = dataFieldGenerators.map(dfg => dfg(generatorParams)).flat();
 
@@ -172,7 +170,7 @@ function generate008({publication, electronical, music}) {
   /* eslint-enable functional/no-let, functional/no-conditional-statements */
 }
 
-function generate020({publication, electronical, music}) {
+function generate020({publication, electronical, music, electronicalRecordPublicationType}) {
   /* eslint-disable functional/no-let,functional/no-conditional-statements */
   // For music material, field is not produced
   if (music) {
@@ -185,7 +183,6 @@ function generate020({publication, electronical, music}) {
   } else if (!electronical && !publication.publicationIdentifierPrint) {
     return [];
   }
-
 
   // For non-music, field is based on identifiers
   // Identifiers used are based on whether record is electronical or not
@@ -203,21 +200,37 @@ function generate020({publication, electronical, music}) {
 
   // 020 is generated for preview purposes also for requests that have not been yet given any identifiers
   if (Object.keys(identifiers).length === 0) {
-    return addTypes('020', ' ', types, electronical);
+    return addTypes('020', ' ', types, electronical, electronicalRecordPublicationType);
   }
 
-  return _generateFields(identifiers, electronical);
+  return _generateFields(identifiers, electronical, electronicalRecordPublicationType);
 
-  function _generateFields(identifiers, electronical) {
+
+  function _generateFields(identifiers, electronical, electronicalRecordPublicationType) {
+    const field = {tag: '020', ind1: ' ', ind2: ' '};
+
+    // For electronical material, only one 020 is generated as each type will generate its own record
+    if (electronical) {
+      const identifier = Object.keys(identifiers).find(k => identifiers[k] === electronicalRecordPublicationType);
+      if (!identifier) {
+        throw new Error('Could not find the chosen electronical type from publication identifiers');
+      }
+
+      const typeStr = getTypeStr(identifiers[identifier], true);
+      const subfields = typeStr
+        ? [{code: 'a', value: identifier}, {code: 'q', value: typeStr}]
+        : [{code: 'a', value: identifier}];
+
+      return [{...field, subfields: [...subfields]}];
+    }
+
+
     return Object.keys(identifiers).map(k => {
-      const field = {tag: '020', ind1: ' ', ind2: ' '};
-
       // Get fileformat and construct $q based on it
-      const typeStr = getTypeStr(identifiers[k], electronical);
-      const subfields = typeStr ? [
-        {code: 'a', value: k},
-        {code: 'q', value: typeStr}
-      ] : [{code: 'a', value: k}];
+      const typeStr = getTypeStr(identifiers[k], false);
+      const subfields = typeStr
+        ? [{code: 'a', value: k}, {code: 'q', value: typeStr}]
+        : [{code: 'a', value: k}];
 
       return {...field, subfields: [...subfields]};
     });
@@ -226,7 +239,7 @@ function generate020({publication, electronical, music}) {
   /* eslint-enable functional/no-let,functional/no-conditional-statements */
 }
 
-function generate024({publication, electronical, music}) {
+function generate024({publication, electronical, music, electronicalRecordPublicationType}) {
   /* eslint-disable functional/no-let,functional/no-conditional-statements */
 
   if (!music) {
@@ -251,15 +264,29 @@ function generate024({publication, electronical, music}) {
 
   // 024 is generated for preview purposes also for requests that have not been yet given any identifiers
   if (Object.keys(identifiers).length === 0) {
-    return addTypes('024', '2', types, electronical);
+    return addTypes('024', '2', types, electronical, electronicalRecordPublicationType);
   }
 
-  return _generateFields(identifiers, electronical);
+  return _generateFields(identifiers, electronical, electronicalRecordPublicationType);
 
-  function _generateFields(identifiers, electronical) {
+  function _generateFields(identifiers, electronical, electronicalRecordPublicationType) {
+    const field = {tag: '024', ind1: '2', ind2: ' '};
+
+    if (electronical) {
+      const identifier = Object.keys(identifiers).find(k => identifiers[k] === electronicalRecordPublicationType);
+      if (!identifier) {
+        throw new Error('Could not find the chosen electronical type from publication identifiers');
+      }
+
+      const typeStr = getTypeStr(identifiers[identifier], true);
+      const subfields = typeStr
+        ? [{code: 'a', value: identifier}, {code: 'q', value: typeStr}]
+        : [{code: 'a', value: identifier}];
+
+      return [{...field, subfields: [...subfields]}];
+    }
+
     return Object.keys(identifiers).map(k => {
-      const field = {tag: '024', ind1: '2', ind2: ' '};
-
       // Get fileformat and construct $q based on it
       const typeStr = getTypeStr(identifiers[k], electronical);
       const subfields = typeStr ? [
@@ -714,10 +741,25 @@ function parseIdentifiers(publication, electronical) {
   return publication.publicationIdentifierPrint ? JSON.parse(publication.publicationIdentifierPrint) : null;
 }
 
-function addTypes(field, ind1, types, electronical = false) {
+// eslint-disable-next-line max-params
+function addTypes(field, ind1, types, electronical = false, electronicalRecordPublicationType = null) {
   if (types) {
+    const datafield = {tag: field, ind1, ind2: ' '};
+
+    if (electronical) {
+      if (!electronicalRecordPublicationType) {
+        return [];
+      }
+
+      const subfields = [
+        {code: 'a', value: ''},
+        {code: 'q', value: electronicalRecordPublicationType}
+      ];
+
+      return subfields.some(sf => sf.value !== '') ? [{...datafield, subfields}] : [];
+    }
+
     return types.map(t => {
-      const datafield = {tag: field, ind1, ind2: ' '};
       const subfields = [
         {code: 'a', value: ''},
         t ? {code: 'q', value: getTypeStr(t, electronical)} : undefined
@@ -738,8 +780,16 @@ function isMusic(publication) {
   return publication.publicationType === ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC;
 }
 
-function isElectronical(publication) {
-  return publication.publicationFormat === ISBN_REGISTRY_FORMATS.ELECTRONICAL;
+function isElectronical(electronicalRecordPublicationType) {
+  if (electronicalRecordPublicationType === null) {
+    return false;
+  }
+
+  if (Object.keys(ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES).includes(electronicalRecordPublicationType)) {
+    return true;
+  }
+
+  throw new Error('Unsupported type definition for MARC record generation in ISBN-registry');
 }
 
 function isDissertation(publication) {
