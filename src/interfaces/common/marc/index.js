@@ -181,7 +181,7 @@ export default function (registry) {
     const records = await getRecords(id, 'marc-record-js'); // Note: this returns array of marc-record-js objects
 
     // Init result
-    const result = {errors: 0, records: []};
+    const result = {errors: [], records: []};
 
     // Create records to Melinda
     await Promise.all(records.map(r => createMelindaRecord(r)));
@@ -196,7 +196,7 @@ export default function (registry) {
         result.records = [apiResponse, ...result.records]; // eslint-disable-line functional/immutable-data
       } catch (err) {
         logger.warn(`Creating record to Melinda failed with following error: ${err}`);
-        result.errors += 1; // eslint-disable-line functional/immutable-data
+        result.errors = [err, ...result.errors]; // eslint-disable-line functional/immutable-data
       }
     }
   }
