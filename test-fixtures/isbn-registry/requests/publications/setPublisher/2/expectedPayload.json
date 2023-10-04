@@ -1,6 +1,7 @@
 {
   "id": 2,
   "identifierBatchId": null,
+  "hasAssociatedMessage": false,
   "publisherId": 1,
   "publisherName": "FooBar Publisher",
   "officialName": "XYZ Publishing",

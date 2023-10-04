@@ -126,6 +126,8 @@ properties:
     type: boolean
   onProcess:
     type: boolean
+  hasAssociatedMessage:
+    type: boolean
   created:
     type: string
   createdBy:

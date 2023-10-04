@@ -49,6 +49,7 @@ export default function () {
   const identifierBatchModel = sequelize.models.identifierBatch;
   const publicationModel = sequelize.models.publicationIsbn;
   const publisherModel = sequelize.models.publisherIsbn;
+  const messageIsbnModel = sequelize.models.messageIsbn;
 
   const publicationModelInterface = abstractModelInterface(publicationModel);
   const publisherModelInterface = abstractModelInterface(publisherModel);
@@ -179,8 +180,12 @@ export default function () {
     const {publisher, ...formattedResult} = result.toJSON();
     formattedResult.publisherName = publisher ? publisher.officialName : null; // eslint-disable-line functional/immutable-data
 
+    // Feature request: ISBN/ISMN publication request page should view whether it is already associated with message
+    const associatedMessages = await messageIsbnModel.findAll({where: {publicationId: id}});
+
     return {
       identifierBatchId: identifierBatch ? identifierBatch.id : null,
+      hasAssociatedMessage: Boolean(associatedMessages && associatedMessages.length > 0),
       ...formattedResult
     };
   }

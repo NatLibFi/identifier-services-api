@@ -1,6 +1,7 @@
 {
   "id": 2,
   "identifierBatchId": null,
+  "hasAssociatedMessage": false,
   "publisherId": null,
   "publisherName": null,
   "officialName": "XYZ Publishing",
