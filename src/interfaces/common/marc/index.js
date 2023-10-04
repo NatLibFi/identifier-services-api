@@ -184,15 +184,7 @@ export default function (registry) {
     const result = {errors: [], records: []};
 
     // Create records to Melinda
-
-    // DEV: testing whether rate limiting is required
-    /* eslint-disable */
-    for (let i = 0; i < records.length; i++) {
-      await createMelindaRecord(records[i]);
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    /* eslint-enable */
-    //await Promise.all(records.map(r => createMelindaRecord(r)));
+    await Promise.all(records.map(r => createMelindaRecord(r)));
 
     return result;
 
