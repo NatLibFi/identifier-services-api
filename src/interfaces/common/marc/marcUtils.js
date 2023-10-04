@@ -49,14 +49,21 @@ const publicationIsbnModelInterface = abstractModelInterface(publicationIsbnMode
  */
 export function convertToMarc({registry, publication, publisher, form}) {
   if (registry === COMMON_REGISTRY_TYPES.ISBN_ISMN) {
-    // May produce one or two records depending whether type is PRINT, ELECTRONICAL or PRINT_ELECTRONICAL
-    if (publication.publicationFormat === ISBN_REGISTRY_FORMATS.PRINT_ELECTRONICAL) {
-      return [
-        convertToMarcIsbnIsmn(publication, true),
-        convertToMarcIsbnIsmn(publication, false)
-      ];
+    // May produce one or more records depending whether type is PRINT, ELECTRONICAL or PRINT_ELECTRONICAL
+    // Each electronical distinct type will produce new record
+    if (publication.publicationFormat !== ISBN_REGISTRY_FORMATS.PRINT) {
+      if (publication.publicationFormat === ISBN_REGISTRY_FORMATS.PRINT_ELECTRONICAL) {
+        return [
+          convertToMarcIsbnIsmn(publication), // Print
+          ...publication.fileformat.map(electronicalRecordPublicationType => convertToMarcIsbnIsmn(publication, electronicalRecordPublicationType)) // All electronical types
+        ];
+      }
+
+      // All electronical types
+      return publication.fileformat.map(electronicalRecordPublicationType => convertToMarcIsbnIsmn(publication, electronicalRecordPublicationType));
     }
 
+    // Print record only
     return [convertToMarcIsbnIsmn(publication)];
   }
 
