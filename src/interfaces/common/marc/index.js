@@ -184,18 +184,29 @@ export default function (registry) {
     const result = {errors: [], records: []};
 
     // Create records to Melinda
-    await Promise.all(records.map(r => createMelindaRecord(r)));
 
-    // Return result
+    // DEV: testing whether rate limiting is required
+    /* eslint-disable */
+    for (let i = 0; i < records.length; i++) {
+      await createMelindaRecord(records[i]);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    /* eslint-enable */
+    //await Promise.all(records.map(r => createMelindaRecord(r)));
+
     return result;
 
     async function createMelindaRecord(record) {
       try {
         const apiResponse = await melindaApiClient.create(record, MELINDA_CREATE_RECORD_PARAMS);
-        logger.debug(`Create record operation ended with status ${apiResponse.recordStatus} and databaseId ${apiResponse.databaseId}`);
+        logger.debug(`Create record operation was successful with status ${apiResponse.recordStatus} and databaseId ${apiResponse.databaseId}`);
         result.records = [apiResponse, ...result.records]; // eslint-disable-line functional/immutable-data
       } catch (err) {
-        logger.warn(`Creating record to Melinda failed with following error: ${err}`);
+        const status = err?.status ?? 'Unknown status';
+        const payload = err?.payload ?? 'Unknown error';
+
+        logger.warn(`Creating record to Melinda failed with status ${status} and payload "${payload}".`);
+
         result.errors = [err, ...result.errors]; // eslint-disable-line functional/immutable-data
       }
     }
