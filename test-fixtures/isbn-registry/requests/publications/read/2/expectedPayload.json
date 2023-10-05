@@ -4,6 +4,7 @@
   "publisherId": 1,
   "publisherName": "FooBar Publisher",
   "identifierBatchId": 1,
+  "hasAssociatedMessage": false,
   "officialName": "FooBar Publisher",
   "publisherIdentifierStr": null,
   "publicationIdentifierPrint": "{\"978-951-550-000-7\":\"PAPERBACK\",\"978-951-550-001-4\":\"HARDBACK\"}",
