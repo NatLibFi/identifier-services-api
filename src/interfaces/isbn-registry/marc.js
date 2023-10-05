@@ -503,8 +503,7 @@ function generate336({sheetmusic, map, audiobook}) {
   } else if (audiobook) {
     subfields = [
       {code: 'a', value: 'puhe'},
-      {code: 'b', value: 'spw'},
-      {code: '2', value: 'rdacontent'}
+      {code: 'b', value: 'spw'}
     ];
   } else {
     subfields = [
