@@ -257,8 +257,7 @@ export default function () {
   /* eslint-enable max-statements */
 
   /**
-   * Query publisher registry publishers. Some attributes are available to search only for admin or higher
-   * level users.
+   * Query publisher registry publishers for admin level users.
    * @param {Object} guiOpts Search options
    * @param {Object} user User making the request
    * @returns Result set of the query
@@ -292,6 +291,11 @@ export default function () {
     if (trimmedSearchText) {
 
       if (trimmedSearchText.match(/^97(?:8|9)-(?:951|952)-\d+/u) !== null) {
+        // Edge case: there are no ISMN publisher identifiers that start the defined regexp
+        // May skip db query alltogether
+        if (identifierType === COMMON_IDENTIFIER_TYPES.ISMN) {
+          return emptyQueryResult;
+        }
 
         const subrangeResult = await sequelize.models.isbnSubRange.findAll({
           attributes: ['publisherId'],
@@ -310,6 +314,11 @@ export default function () {
 
         publisherIds = subrangeResult.map(v => v.publisherId);
       } else if (trimmedSearchText.match(/^979-0-\d+/u) !== null) {
+        // Edge case: there are no ISBN publisher identifiers that start the defined regexp
+        // May skip db query alltogether
+        if (identifierType === COMMON_IDENTIFIER_TYPES.ISBN) {
+          return emptyQueryResult;
+        }
 
         // ISMN publisher identifier
         const subrangeResult = await sequelize.models.ismnSubRange.findAll({
@@ -357,10 +366,10 @@ export default function () {
         return {totalDoc: result.count, results: filteredResult};
       }
     } else {
-      // Search by attributes other than identifier
+      // Search by attributes other than publisher identifier
 
       // Define free-text search attributes
-      const textSearchAttributes = _determineQueryAttributes(user);
+      const textSearchAttributes = _determineQueryAttributes(user); // Admin users may query all attributes, other users only a selected set
       const textConditions = trimmedSearchText ? {[Op.or]: generateQuery(textSearchAttributes, trimmedSearchText)} : undefined;
 
       // Admin may filter based on hasQuitted attribute

@@ -1,8 +1,8 @@
 {
-    "descr": "Non-admin may not use hasQuitted filter",
+    "descr": "Non-admin may not use hasQuitted filter as the request should fail alltogether",
     "requestUrl": "/isbn-registry/publishers/query",
     "method": "post",
     "username": "publisher",
     "password": "publisher",
-    "expectedStatus": 422
+    "expectedStatus": 403
 }
