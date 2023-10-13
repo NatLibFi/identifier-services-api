@@ -45,8 +45,14 @@ export const permissions = {
       'admin',
       'system'
     ],
-    read: ['all'],
-    query: ['all'],
+    read: [
+      'admin',
+      'system'
+    ],
+    query: [
+      'admin',
+      'system'
+    ],
     update: [
       'admin',
       'system'

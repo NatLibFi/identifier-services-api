@@ -1,8 +1,8 @@
 {
-    "descr": "Non-admin cannot filter based on identifier category",
+    "descr": "Non-admin cannot filter based on identifier category as request should fail alltogether",
     "requestUrl": "/isbn-registry/publishers/query",
     "method": "post",
     "username": "publisher",
     "password": "publisher",
-    "expectedStatus": 422
+    "expectedStatus": 403
 }

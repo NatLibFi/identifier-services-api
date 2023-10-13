@@ -56,7 +56,7 @@ export default function (permissionMiddleware, registry) {
 
   async function getMarcRecord(req, res, next) {
     try {
-      const result = await marc.getRecord(req.params.id, req.query.format);
+      const result = await marc.getRecords(req.params.id, req.query.format);
 
       if (result) {
         if (req.query.download) {

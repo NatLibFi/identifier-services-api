@@ -1,9 +1,10 @@
+
 {
   "id": 1,
-  "identifierBatchId": 1,
-  "hasAssociatedMessage": false,
   "publisherId": 1,
   "publisherName": "FooBar Publisher",
+  "identifierBatchId": 1,
+  "hasAssociatedMessage": true,
   "officialName": "FooBar Publisher",
   "publisherIdentifierStr": null,
   "publicationIdentifierPrint": "{\"978-951-550-000-7\":\"PAPERBACK\",\"978-951-550-001-4\":\"HARDBACK\"}",
@@ -37,7 +38,7 @@
   "lastName4": null,
   "role4": [],
   "title": "Foo Book",
-  "subtitle": "Foo Subtitle Altered",
+  "subtitle": "Foo Subtitle",
   "mapScale": null,
   "language": "FIN",
   "year": "2049",

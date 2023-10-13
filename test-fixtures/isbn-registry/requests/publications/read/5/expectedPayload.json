@@ -4,6 +4,7 @@
   "publisherId": null,
   "publisherName": null,
   "identifierBatchId": null,
+  "hasAssociatedMessage": false,
   "officialName": "FooBar Publisher",
   "publisherIdentifierStr": null,
   "publicationIdentifierPrint": "",

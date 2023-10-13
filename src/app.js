@@ -182,9 +182,16 @@ export default async function run() { // eslint-disable-line
         if (isCelebrateError(err)) {
           const validationErrorAttribute = err.details.get('params') ? 'params' : err.details.get('body') ? 'body' : null; // eslint-disable-line no-nested-ternary
           const validationErrorFields = validationErrorAttribute ? err.details.get(validationErrorAttribute).details.map(validationError => validationError?.context?.label).join(', ') : 'Unknown field';
+          const validationErrorMessage = `Validation failed (${validationErrorFields})`;
 
-          logger.info(`Validation errors were found in following labels: ${validationErrorFields}`);
-          return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({message: 'Validation failed'});
+          logger.info(validationErrorMessage);
+
+          // Return full validation failure information only for admin endpoints
+          if (req.path.startsWith('/public')) {
+            return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({message: 'Validation failed'});
+          }
+
+          return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({message: validationErrorMessage});
         }
       } catch (unmanagedCelebrateError) {
         logger.warn('Could not manage celebrate error properly');
