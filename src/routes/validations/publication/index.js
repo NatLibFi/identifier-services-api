@@ -25,5 +25,5 @@
  *
  */
 
-export {validateCreatePublicationRequestIsbn, validateQueryPublicationRequestIsbn, validateSetPublisher, validateUpdatePublicationRequestIsbn} from './publicationRequestIsbn';
+export {validateCreatePublicationRequestIsbn, validateCreatePublicationRequestIsbnAdmin, validateQueryPublicationRequestIsbn, validateSetPublisher, validateUpdatePublicationRequestIsbn} from './publicationRequestIsbn';
 export {validateCreatePublicationIssn, validateUpdatePublicationIssn, validateIssnPublicationQueryBody} from './issn';

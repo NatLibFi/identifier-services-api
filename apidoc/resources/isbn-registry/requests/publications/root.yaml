@@ -10,7 +10,7 @@ post:
     content:
       application/json:
         schema:
-            $ref: '../../../../schemas/requests/IsbnIsmnPublicationRequestCreateBody.yaml'
+            $ref: '../../../../schemas/requests/IsbnIsmnPublicationRequestCreateBodyAdmin.yaml'
   responses:
     '201':
       description: Resource was created

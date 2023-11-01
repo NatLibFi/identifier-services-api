@@ -1,0 +1,6 @@
+{
+  "descr": "Should fail, cannot create with admin endpoint mini-information in public endpoint",
+  "requestUrl": "/public/isbn-registry/requests/publications",
+  "method": "post",
+  "expectedStatus": 422
+}

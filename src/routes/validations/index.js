@@ -50,6 +50,7 @@ export {
 
 export {
   validateCreatePublicationRequestIsbn,
+  validateCreatePublicationRequestIsbnAdmin,
   validateQueryPublicationRequestIsbn,
   validateSetPublisher,
   validateUpdatePublicationRequestIsbn,
