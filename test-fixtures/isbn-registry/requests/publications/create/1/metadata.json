@@ -1,5 +1,5 @@
 {
-  "descr": "Should succeed, system can create publication request with complete book information isbn/ismn",
+  "descr": "Should succeed, system can create publication request with minimum book information isbn/ismn",
   "requestUrl": "/isbn-registry/requests/publications",
   "method": "post",
   "username": "system",

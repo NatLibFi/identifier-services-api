@@ -30,7 +30,7 @@ import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
 import {
-  validateCreatePublicationRequestIsbn,
+  validateCreatePublicationRequestIsbnAdmin,
   validateUpdatePublicationRequestIsbn,
   validateSetPublisher,
   validateQueryPublicationRequestIsbn,
@@ -44,7 +44,7 @@ export default function (permissionMiddleware) {
 
   return new Router()
     .post('/', permissionMiddleware('publicationRequests', 'create'), celebrate({
-      [Segments.BODY]: validateCreatePublicationRequestIsbn
+      [Segments.BODY]: validateCreatePublicationRequestIsbnAdmin
     }), create)
     .get('/:id', permissionMiddleware('publicationRequests', 'read'), celebrate({
       [Segments.PARAMS]: validateRequestId

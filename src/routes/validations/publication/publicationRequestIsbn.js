@@ -78,6 +78,31 @@ export const validateCreatePublicationRequestIsbn = {
   turnstileToken: Joi.string()
 };
 
+export const validateCreatePublicationRequestIsbnAdmin = {
+  officialName: Joi.string().max(100).required(),
+  address: Joi.string().allow('').max(50).required(),
+  zip: Joi.string().allow('').max(10).required(),
+  city: Joi.string().allow('').max(50).required(),
+  contactPerson: Joi.string().allow('').max(100).required(),
+  phone: Joi.string().allow('').max(30).required(),
+  email: Joi.string().allow('').regex(regexPatterns.email).max(100).required(),
+  langCode: Joi.string().regex(regexPatterns.langCode).required(),
+  publicationsPublic: Joi.boolean().invalid(false).required(),
+  publishingActivity: Joi.string().regex(regexPatterns.publishingActivity),
+  publicationType: Joi.string().regex(regexPatterns.publicationType).required(),
+  publicationFormat: Joi.string().regex(regexPatterns.publicationFormat).required(),
+  firstName1: Joi.string().max(50).required(),
+  lastName1: Joi.string().max(50).required(),
+  role1: Joi.array().items(Joi.string().regex(regexPatterns.authorRoles)).max(4).required(),
+  title: Joi.string().max(200).required(),
+  subtitle: Joi.string().allow('').max(200),
+  language: Joi.string().regex(regexPatterns.publicationLanguage).required(),
+  year: Joi.string().regex(regexPatterns.yearString).required(),
+  month: Joi.string().regex(regexPatterns.monthString).required(),
+  type: Joi.array().items(Joi.string().regex(regexPatterns.publicationPrintType)).max(4),
+  fileformat: Joi.array().items(Joi.string().regex(regexPatterns.publicationElectronicalType)).max(4)
+};
+
 export const validateUpdatePublicationRequestIsbn = {
   officialName: Joi.string().max(100),
   publisherIdentifierStr: Joi.string().allow('').max(20),

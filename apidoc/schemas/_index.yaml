@@ -158,8 +158,8 @@ IsbnIsmnPublicationRequest:
 IsbnIsmnPublicationRequestList:
   $ref: './responses/IsbnIsmnPublicationRequestList.yaml'
 
-IsbnIsmnPublicationRequestCreateBody:
-  $ref: './requests/IsbnIsmnPublicationRequestCreateBody.yaml'
+IsbnIsmnPublicationRequestCreateBodyAdmin:
+  $ref: './requests/IsbnIsmnPublicationRequestCreateBodyAdmin.yaml'
 IsbnIsmnPublicationRequestUpdateBody:
   $ref: './requests/IsbnIsmnPublicationRequestUpdateBody.yaml'
 IsbnIsmnPublicationRequestQueryBody:

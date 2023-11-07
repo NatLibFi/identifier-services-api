@@ -507,7 +507,6 @@ export default function () {
       return true;
     }
 
-
     // If format is print, allow only type attribute
     if (doc.publicationFormat === ISBN_REGISTRY_FORMATS.PRINT && (doc.fileformat && doc.fileformat.length > 0)) {
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Fileformat cannot be defined if publication is of PRINT format');
@@ -518,8 +517,8 @@ export default function () {
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Type cannot be defined if publication is of ELECTRONICAL format');
     }
 
-    // If format is print electronical, require both types of attribute (type, fileformat)
-    if (doc.publicationFormat === ISBN_REGISTRY_FORMATS.PRINT_ELECTRONICAL && (!doc.fileformat || !doc.type)) {
+    // If format is print electronical, require both types of attribute (type, fileformat) to have some values
+    if (doc.publicationFormat === ISBN_REGISTRY_FORMATS.PRINT_ELECTRONICAL && (!doc.fileformat || doc.fileformat.length === 0 || !doc.type || doc.type.length === 0)) {
       throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'For publications with format PRINT_ELECTRONICAL, both type and fileformat are required');
     }
 
