@@ -45,6 +45,6 @@ describe('app', () => {
     describe('#read', generateTestSuite('read'));
     describe('#update', generateTestSuite('update'));
     describe('#download-email-list', generateTestSuite('download-email-list'));
-    describe.only('#get-information-package', generateTestSuite('get-information-package'));
+    describe('#get-information-package', generateTestSuite('get-information-package'));
   });
 });
