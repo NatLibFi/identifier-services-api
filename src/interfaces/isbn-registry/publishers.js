@@ -1003,7 +1003,7 @@ export default function () {
         throw Error(`Unable to translate key ${recordKey}`);
       }
 
-      function transformAndTranslatePublisherInformationRecordValue(recordValue) {
+      function transformAndTranslatePublisherInformationRecordValue(k, recordValue) {
         if (recordValue === '' || recordValue === null || recordValue === undefined) {
           return '-';
         }
@@ -1013,7 +1013,12 @@ export default function () {
         }
 
         if (Array.isArray(recordValue)) {
-          return recordValue.length > 0 ? recordValue.join(', ') : '-';
+          if (recordValue.length === 0) {
+            return '-';
+          }
+
+          // Translate classifications
+          return k === 'classification' ? recordValue.join(', ') : recordValue.map(translateClassification).join(', ');
         }
 
         // Sanity check
@@ -1032,7 +1037,7 @@ export default function () {
         // Add translated headings of publisher base information
         /* eslint-disable functional/immutable-data */
         Object.keys(publisherBaseInformation).forEach(k => {
-          result[translatePublisherInformationRecordKey(k)] = transformAndTranslatePublisherInformationRecordValue(publisherBaseInformation[k]);
+          result[translatePublisherInformationRecordKey(k)] = transformAndTranslatePublisherInformationRecordValue(k, publisherBaseInformation[k]);
         });
 
         // Add subranges as distinct entries
@@ -1047,7 +1052,7 @@ export default function () {
         // Add archive entry if it exist. Translate keys.
         if (archiveRecord && typeof archiveRecord === 'object') {
           Object.keys(archiveRecord).forEach(k => {
-            result[`Arkistotieto / ${translatePublisherInformationRecordKey(k)}`] = transformAndTranslatePublisherInformationRecordValue(archiveRecord[k]);
+            result[`Arkistotieto / ${translatePublisherInformationRecordKey(k)}`] = transformAndTranslatePublisherInformationRecordValue(k, archiveRecord[k]);
           });
         } else {
           result.Arkistotieto = 'Ei ole';
@@ -1056,6 +1061,107 @@ export default function () {
         /* eslint-enable functional/immutable-data */
 
         return result;
+      }
+
+      // For future reference: create a identifier-services-commons package that has shared utility functions
+      // between API and various UIs (such as this translation utility)
+      function translateClassification(classification) {
+        const translations = [
+          {label: 'Yleistä', value: '000'},
+          {label: 'Kirja-Ala. Kirjastotoimi', value: '015'},
+          {label: 'Oppikirjat', value: '030'},
+          {label: 'Lasten ja nuorten kirjat', value: '035'},
+          {label: 'Virallisjulkaisut', value: '040'},
+          {label: 'Korkeakoulujen ja yliopistojen julkaisut', value: '045'},
+          {label: 'Elektroniset julkaisut', value: '050'},
+          {label: 'Audiovisuaalinen aineisto. Videot', value: '055'},
+          {label: 'Filosofia', value: '100'},
+          {label: 'Psykologia', value: '120'},
+          {label: 'Paranormaalit ilmiöt. Okkultismi. Astrologia', value: '130'},
+          {label: 'Uskonto. Teologia', value: '200'},
+          {label: 'Kristinusko', value: '210'},
+          {label: 'Ortodoksinen kirkko', value: '211'},
+          {label: 'Muut uskonnot', value: '270'},
+          {label: 'Yhteiskuntatieteet. Sosiologia', value: '300'},
+          {label: 'Poliittinen tutkimus. Kansainvälinen politiikka', value: '310'},
+          {label: 'Sotatiede', value: '315'},
+          {label: 'Sosiologia', value: '316'},
+          {label: 'Taloustieteet', value: '320'},
+          {label: 'Oikeus', value: '330'},
+          {label: 'Julkinen hallinto', value: '340'},
+          {label: 'Kasvatus. Opetus. Koulutus.', value: '350'},
+          {label: 'Perinnetieteet', value: '370'},
+          {label: 'Kotiseutututkimus', value: '375'},
+          {label: 'Sosiaalipolitiikka. Sosiaalihuolto', value: '380'},
+          {label: 'Joukkotiedotus. Media', value: '390'},
+          {label: 'Kirjallisuudentutkimus', value: '400'},
+          {label: 'Kaunokirjallisuus', value: '410'},
+          {label: 'Runous', value: '420'},
+          {label: 'Sarjakuvat', value: '440'},
+          {label: 'Science Fiction', value: '450'},
+          {label: 'Rikosromaanit', value: '460'},
+          {label: 'Kielitiede', value: '470'},
+          {label: 'Seksuaaliset vähemmistöt', value: '480'},
+          {label: 'Vähemmistöt', value: '490'},
+          {label: 'Luonnontieteet', value: '500'},
+          {label: 'Matematiikka. Tilastotiede', value: '510'},
+          {label: 'Tähtitiede', value: '520'},
+          {label: 'Fysiikka', value: '530'},
+          {label: 'Kemia', value: '540'},
+          {label: 'Geologia', value: '550'},
+          {label: 'Biologia', value: '560'},
+          {label: 'Eläintiede', value: '570'},
+          {label: 'Kasvitiede', value: '580'},
+          {label: 'Ympäristötieteet. Ympäristönsuojelu', value: '590'},
+          {label: 'Teknologia', value: '600'},
+          {label: 'Insinööritieteet. Tekniikka', value: '610'},
+          {label: 'Teollisuuden alat', value: '620'},
+          {label: 'Rakentaminen', value: '621'},
+          {label: 'Liikenne. Posti', value: '622'},
+          {label: 'Tietotekniikka. Viestintätekniikka', value: '630'},
+          {label: 'Lääketiede. Psykiatria', value: '640'},
+          {label: 'Hammaslääketiede', value: '650'},
+          {label: 'Eläinlääketiede', value: '660'},
+          {label: 'Farmasia. Homeopatia', value: '670'},
+          {label: 'Metsätalous. Metsänhoito', value: '672'},
+          {label: 'Maatalous', value: '680'},
+          {label: 'Käsi- ja kotiteollisuus', value: '690'},
+          {label: 'Taide', value: '700'},
+          {label: 'Esittävät taiteet', value: '710'},
+          {label: 'Teatteri. Elokuva', value: '720'},
+          {label: 'Tanssi', value: '730'},
+          {label: 'Kuvataiteet', value: '740'},
+          {label: 'Taidehistoria', value: '750'},
+          {label: 'Arkkitehtuuri. Taideteollisuus', value: '760'},
+          {label: 'Muoti', value: '765'},
+          {label: 'Musiikki', value: '770'},
+          {label: 'Antiikki. Keräily', value: '780'},
+          {label: 'Kaupunki- ja aluesuunnittelu', value: '790'},
+          {label: 'Huvit ja harrastukset', value: '800'},
+          {label: 'Urheilu', value: '810'},
+          {label: 'Pelit', value: '820'},
+          {label: 'Metsästys ja kalastus', value: '830'},
+          {label: 'Puutarhanhoito', value: '840'},
+          {label: 'Kotitalous', value: '850'},
+          {label: 'Kauneus ja terveys', value: '860'},
+          {label: 'Valokuvaus', value: '870'},
+          {label: 'Matkailu', value: '880'},
+          {label: 'Huumori', value: '890'},
+          {label: 'Historia', value: '900'},
+          {label: 'Maantiede', value: '910'},
+          {label: 'Kartat ja kartastot', value: '920'},
+          {label: 'Arkeologia', value: '930'},
+          {label: 'Sukututkimus', value: '940'},
+          {label: 'Numismatiikka', value: '950'}
+        ];
+
+        const translation = translations.find(({value}) => value === classification);
+
+        if (!translation) {
+          throw new ApiError(HttpStatus.CONFLICT, `Could not find translation for classification class ${classification}`);
+        }
+
+        return translation;
       }
     }
   }
