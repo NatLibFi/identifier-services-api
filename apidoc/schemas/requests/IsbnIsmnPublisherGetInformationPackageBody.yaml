@@ -1,0 +1,9 @@
+type: object
+properties:
+  publisherId:
+    type: integer
+  format:
+    type: string
+    enum:
+      - json
+      - xlsx

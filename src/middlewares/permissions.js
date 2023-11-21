@@ -60,6 +60,10 @@ export const permissions = {
     downloadEmails: [
       'admin',
       'system'
+    ],
+    getInformationPackage: [
+      'admin',
+      'system'
     ]
   },
   issnPublishers: {

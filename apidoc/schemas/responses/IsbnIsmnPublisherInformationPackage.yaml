@@ -1,0 +1,105 @@
+type: object
+properties:
+  officialName:
+    type: string
+  otherNames:
+    type: string
+  previousNames:
+    type: array
+    items:
+      type: string
+  address:
+    type: string
+  addressLine1:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  www:
+    type: string
+  langCode:
+    $ref: '../enums/CommonLangCode.yaml'
+  contactPerson:
+    type: string
+  hasQuitted:
+    type: boolean
+  yearQuitted:
+    type: string
+  frequencyCurrent:
+    type: string
+  frequencyNext:
+    type: string
+  affiliateOf:
+    type: string
+  affiliates:
+    type: string
+  distributorOf:
+    type: string
+  distributors:
+    type: string
+  classification:
+    type: array
+    items:
+      type: string
+  classificationOther:
+    type: string
+  isbnSubRanges:
+    type: array
+    items:
+      type: object
+      properties:
+        publisherIdentifier:
+          type: string
+  ismnSubRanges:
+    type: array
+    items:
+      type: object
+      properties:
+        publisherIdentifier:
+          type: string
+  archiveRecord:
+    type: object
+    properties:
+      officialName:
+        type: string
+      otherNames:
+        type: string
+      address:
+        type: string
+      zip:
+        type: string
+      city:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      www:
+        type: string
+      langCode:
+        $ref: '../enums/CommonLangCode.yaml'
+      contactPerson:
+        type: string
+      frequencyCurrent:
+        type: string
+      frequencyNext:
+        type: string
+      affiliateOf:
+        type: string
+      affiliates:
+        type: string
+      distributorOf:
+        type: string
+      distributors:
+        type: string
+      classification:
+        type: array
+        items:
+          type: string
+      classificationOther:
+        type: string
