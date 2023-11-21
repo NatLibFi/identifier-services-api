@@ -13,6 +13,7 @@ post:
           $ref: '../../../schemas/requests/IsbnIsmnPublisherGetInformationPackageBody.yaml'
   responses:
     '200':
+      description: Package generation was ok
       content:
         application/json:
           schema:
