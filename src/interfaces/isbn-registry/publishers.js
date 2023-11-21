@@ -33,6 +33,8 @@ import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
 
+import * as xl from 'excel4node';
+
 import sequelize from '../../models';
 import {ApiError, isAdmin} from '../../utils';
 import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
@@ -58,7 +60,8 @@ export default function () {
     queryPublic,
     update,
     autoComplete,
-    getEmailList
+    getEmailList,
+    getInformationPackage
   };
 
   /**
@@ -849,6 +852,211 @@ export default function () {
 
     function isValidEmail(email) {
       return email && typeof email === 'string' && regexPatterns.email.test(email);
+    }
+  }
+
+  /**
+   * Method for creating publisher information package regarding the publisher information saved to registry.
+   * @param {number} publisherId ID of publisher
+   * @param {Object} user User making the request
+   * @param {string} format format in which to construct the package
+   * @returns Object containing data in chosen format
+   */
+  async function getInformationPackage(publisherId, user, format = 'json') {
+    // Sanity check
+    if (!isAdmin(user)) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'Forbidden');
+    }
+
+    const result = await publisherModel.findByPk(publisherId, {
+      // Note: Attributes specifications by superusers
+      attributes: [
+        'officialName',
+        'otherNames',
+        'previousNames',
+        'address',
+        'addressLine1',
+        'zip',
+        'city',
+        'phone',
+        'email',
+        'www',
+        'langCode',
+        'contactPerson',
+        'yearQuitted',
+        'hasQuitted',
+        'frequencyCurrent',
+        'frequencyNext',
+        'affiliateOf',
+        'affiliates',
+        'distributorOf',
+        'distributors',
+        'classification',
+        'classificationOther'
+      ],
+      include: [
+        {
+          association: 'archiveRecord',
+          attributes: [
+            'officialName',
+            'otherNames',
+            'address',
+            'zip',
+            'city',
+            'phone',
+            'email',
+            'www',
+            'langCode',
+            'contactPerson',
+            'frequencyCurrent',
+            'frequencyNext',
+            'affiliateOf',
+            'affiliates',
+            'distributorOf',
+            'distributors',
+            'classification',
+            'classificationOther'
+          ]
+        },
+        {
+          association: 'isbnSubRanges',
+          attributes: ['publisherIdentifier']
+        },
+        {
+          association: 'ismnSubRanges',
+          attributes: ['publisherIdentifier']
+        }
+      ]
+    });
+
+    if (!result || !_isPublisherRegistryEntry(result)) {
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    }
+
+    // For testing purposes: always keep JSON aligned with the input that is to be transformed to XLSX
+    const resultAsJson = result.toJSON();
+    if (format === 'json') {
+      return resultAsJson;
+    }
+
+    return formatToXlsx(resultAsJson);
+
+
+    function formatToXlsx(data) {
+      const formattedAndTranslatedData = reformatAndTranslateJsonData(data);
+
+      const wb = new xl.Workbook({author: 'National Library of Finland'});
+      const ws = wb.addWorksheet('Kustantajan tiedot');
+      writeData(formattedAndTranslatedData, ws);
+
+      return wb;
+
+      function writeData(jsonData, ws) {
+        // First objects attributes are used as headers
+        const headers = Object.keys(jsonData);
+
+        // Columns generation loop
+        headers.forEach((header, idx) => {
+          const columnIdx = idx + 1;
+          ws.cell(1, columnIdx)
+            .string(String(header))
+            .style({font: {bold: true}});
+
+          // Write data to row 2
+          const rowIdx = 2;
+          ws.cell(rowIdx, columnIdx).string(String(jsonData[header]));
+        });
+
+        return ws;
+      }
+
+      function translatePublisherInformationRecordKey(recordKey) {
+        const translations = {
+          'officialName': 'Kustantajan nimi',
+          'otherNames': 'Muut nimimuodot',
+          'previousNames': 'Aikaisemmat nimet',
+          'address': 'Lähiosoite',
+          'addressLine1': 'Lisäosoiterivi',
+          'zip': 'Postinumero',
+          'city': 'Postitoimipaikka',
+          'phone': 'Puhelinnumero',
+          'email': 'Sähköpostiosoite',
+          'www': 'Verkkosivu',
+          'langCode': 'Asiointikieli',
+          'contactPerson': 'Yhteyshenkilön nimi',
+          'yearQuitted': 'Lopetusvuosi',
+          'hasQuitted': 'Lopettanut toimintansa',
+          'frequencyCurrent': 'Arvio kustannusmäärästä kuluvana vuonna',
+          'frequencyNext': 'Arvio kustannusmäärästä tulevana vuonna',
+          'affiliateOf': 'Emoyhtiö',
+          'affiliates': 'Tytäryhtiöt',
+          'distributorOf': 'Jakelijat',
+          'distributors': 'Yhtiöt joiden jakelija tai edustaja',
+          'classification': 'Kustannustoiminnan aihealueet',
+          'classificationOther': 'Muu kustannustoiminnan aihealue'
+        };
+
+        if (Object.keys(translations).includes(recordKey)) {
+          return translations[recordKey];
+        }
+
+        throw Error(`Unable to translate key ${recordKey}`);
+      }
+
+      function transformAndTranslatePublisherInformationRecordValue(recordValue) {
+        if (recordValue === '' || recordValue === null || recordValue === undefined) {
+          return '-';
+        }
+
+        if (typeof recordValue === 'boolean') {
+          return recordValue ? 'Kyllä' : 'Ei';
+        }
+
+        if (Array.isArray(recordValue)) {
+          return recordValue.length > 0 ? recordValue.join(', ') : '-';
+        }
+
+        // Sanity check
+        if (typeof recordValue !== 'string') {
+          throw new Error(`Cannot export value ${recordValue} to XLSX as it is not in transformable format`);
+        }
+
+        return recordValue;
+      }
+
+      function reformatAndTranslateJsonData(jsonData) {
+        const {isbnSubRanges, ismnSubRanges, archiveRecord, ...publisherBaseInformation} = jsonData;
+
+        const result = {};
+
+        // Add translated headings of publisher base information
+        /* eslint-disable functional/immutable-data */
+        Object.keys(publisherBaseInformation).forEach(k => {
+          result[translatePublisherInformationRecordKey(k)] = transformAndTranslatePublisherInformationRecordValue(publisherBaseInformation[k]);
+        });
+
+        // Add subranges as distinct entries
+        isbnSubRanges.forEach((v, i) => {
+          result[`Kustantajatunnus_ISBN_${i + 1}`] = v.publisherIdentifier;
+        });
+
+        ismnSubRanges.forEach((v, i) => {
+          result[`Kustantajatunnus_ISMN_${i + 1}`] = v.publisherIdentifier;
+        });
+
+        // Add archive entry if it exist. Translate keys.
+        if (archiveRecord && typeof archiveRecord === 'object') {
+          Object.keys(archiveRecord).forEach(k => {
+            result[`Arkistotieto / ${translatePublisherInformationRecordKey(k)}`] = transformAndTranslatePublisherInformationRecordValue(archiveRecord[k]);
+          });
+        } else {
+          result.Arkistotieto = 'Ei ole';
+        }
+
+        /* eslint-enable functional/immutable-data */
+
+        return result;
+      }
     }
   }
 }

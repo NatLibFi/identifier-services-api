@@ -161,6 +161,8 @@ paths:
     $ref: "./resources/isbn-registry/publishers/autocomplete.yaml"
   /isbn-registry/publishers/download-email-list:
     $ref: "./resources/isbn-registry/publishers/download-email-list.yaml"
+  /isbn-registry/publishers/get-information-package:
+    $ref: "./resources/isbn-registry/publishers/get-information-package.yaml"
 
  # ISBN-registry ranges
   /isbn-registry/ranges/{identifierType}:
