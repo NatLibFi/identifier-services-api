@@ -1041,7 +1041,7 @@ export default function () {
           }
 
           // Translate classifications
-          return k === 'classification' ? recordValue.join(', ') : recordValue.map(translateClassification).join(', ');
+          return k === 'classification' ? recordValue.map(translateClassification).join(', ') : recordValue.join(', ');
         }
 
         // Sanity check
@@ -1181,10 +1181,11 @@ export default function () {
         const translation = translations.find(({value}) => value === classification);
 
         if (!translation) {
-          throw new ApiError(HttpStatus.CONFLICT, `Could not find translation for classification class ${classification}`);
+          // per superuser request
+          return 'Tuntematon luokitus';
         }
 
-        return translation;
+        return translation.label;
       }
     }
   }
