@@ -29,7 +29,7 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody, validateIsbnRegistryPublisherEmailDownloadQueryBody} from '../validations';
+import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody, validateIsbnRegistryPublisherEmailDownloadQueryBody, validateIsbnRegistryPublisherGetInformationPackageQueryBody} from '../validations';
 
 import {publishersIsbnFactory} from '../../interfaces';
 
@@ -50,6 +50,9 @@ export default function (permissionMiddleware) {
     .post('/download-email-list', permissionMiddleware('publishers', 'downloadEmails'), celebrate({
       [Segments.BODY]: validateIsbnRegistryPublisherEmailDownloadQueryBody
     }), downloadEmailList)
+    .post('/get-information-package', permissionMiddleware('publishers', 'getInformationPackage'), celebrate({
+      [Segments.BODY]: validateIsbnRegistryPublisherGetInformationPackageQueryBody
+    }), getInformationPackage)
     .put('/:id', permissionMiddleware('publishers', 'update'), celebrate({
       [Segments.PARAMS]: validateRequestId
     }), update);
@@ -125,6 +128,29 @@ export default function (permissionMiddleware) {
           }, '');
 
           return res.status(HttpStatus.OK).attachment('isbn-registry-publisher-emails.txt').send(formattedResult);
+        }
+
+        if (req.body.format === 'json') {
+          return res.status(HttpStatus.OK).json({data: result});
+        }
+
+        throw new Error('Unsupported format');
+      }
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async function getInformationPackage(req, res, next) {
+    try {
+      const {publisherId, format} = req.body;
+      const result = await publishers.getInformationPackage(publisherId, req.user, format);
+
+      if (result) {
+        if (req.body.format === 'xlsx') {
+          return result.write(`isbn-registry-publisher.${req.body.id}-information-package.xlsx`, res);
         }
 
         if (req.body.format === 'json') {

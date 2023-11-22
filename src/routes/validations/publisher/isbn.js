@@ -99,3 +99,8 @@ export const validateIsbnRegistryPublisherEmailDownloadQueryBody = {
   format: Joi.string().regex(/^txt$|^json$/u),
   langCode: Joi.string().regex(regexPatterns.langCode)
 };
+
+export const validateIsbnRegistryPublisherGetInformationPackageQueryBody = {
+  publisherId: Joi.number().integer().required(),
+  format: Joi.string().regex(/^json$|^xlsx$/u).required()
+};

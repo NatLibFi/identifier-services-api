@@ -44,6 +44,7 @@ export {
   validateIsbnPublisherQueryBody,
   validateIsbnRegistryPublisherArchiveQuery,
   validateIsbnRegistryPublisherEmailDownloadQueryBody,
+  validateIsbnRegistryPublisherGetInformationPackageQueryBody,
   validateCreateIssnPublisher,
   validateUpdateIssnPublisher
 } from './publisher';

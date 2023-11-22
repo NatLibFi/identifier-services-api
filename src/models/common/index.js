@@ -25,5 +25,4 @@
  *
  */
 
-export {validateCreatePublisherRequestIsbn, validateUpdatePublisherRequestIsbn, validateIsbnPublisherQueryBody, validateIsbnRegistryPublisherArchiveQuery, validateIsbnRegistryPublisherEmailDownloadQueryBody, validateIsbnRegistryPublisherGetInformationPackageQueryBody} from './isbn';
-export {validateCreateIssnPublisher, validateUpdateIssnPublisher} from './issn';
+export {default as audietEntryModel} from './auditEntry.model';
