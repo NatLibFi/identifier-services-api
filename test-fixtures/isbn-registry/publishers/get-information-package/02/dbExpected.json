@@ -149,5 +149,16 @@
       "modified": {},
       "modifiedBy": "system"
     }
+  ],
+  "auditEntry": [
+    {
+      "id": 1,
+      "created": {},
+      "operation": "ISBN_PUBLISHER_INFORMATION_PACKAGE_DOWNLOAD",
+      "primaryTable": "test_isbn_registry_publisher",
+      "primaryTablePrimaryKey": 1,
+      "user": "admin",
+      "comment": "Format: json"
+    }
   ]
 }

@@ -37,7 +37,7 @@ import * as xl from 'excel4node';
 
 import sequelize from '../../models';
 import {ApiError, isAdmin} from '../../utils';
-import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
+import {AUDIT_OPERATION_TYPES, COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
 import {generateQuery, emptyQueryResult} from '../interfaceUtils';
 
 import regexPatterns from '../../routes/validations/patterns';
@@ -48,6 +48,8 @@ import regexPatterns from '../../routes/validations/patterns';
  */
 export default function () {
   const logger = createLogger();
+
+  const auditEntryModel = sequelize.models.auditEntry;
 
   const publisherModel = sequelize.models.publisherIsbn;
   const isbnSubRangeModel = sequelize.models.isbnSubRange;
@@ -933,14 +935,35 @@ export default function () {
       throw new ApiError(HttpStatus.NOT_FOUND);
     }
 
-    // For testing purposes: always keep JSON aligned with the input that is to be transformed to XLSX
-    const resultAsJson = result.toJSON();
-    if (format === 'json') {
-      return resultAsJson;
+    const formattedResult = getFormattedResult(result, format);
+
+    // Save audit entry
+    await auditEntryModel.create({
+      user: user.id,
+      operation: AUDIT_OPERATION_TYPES.ISBN_PUBLISHER_INFORMATION_PACKAGE_DOWNLOAD,
+      primaryTable: publisherModel.tableName,
+      primaryTablePrimaryKey: publisherId,
+      comment: `Format: ${format}`
+    });
+
+    return formattedResult;
+
+
+    function getFormattedResult(result, format) {
+      // Always keep JSON aligned with the input that is to be transformed to XLSX
+      // Since XLSX output does not yet have automated tests
+      const resultAsJson = result.toJSON();
+
+      if (format === 'json') {
+        return resultAsJson;
+      }
+
+      if (format === 'xlsx') {
+        return formatToXlsx(resultAsJson);
+      }
+
+      throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Invalid format definition');
     }
-
-    return formatToXlsx(resultAsJson);
-
 
     function formatToXlsx(data) {
       const formattedAndTranslatedData = reformatAndTranslateJsonData(data);

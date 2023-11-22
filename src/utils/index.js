@@ -54,7 +54,17 @@ export function getRolesFromKeycloakRoles(userKeycloakRoles) {
 }
 
 export function isAdmin(user) {
-  return user && typeof user === 'object' && user.applicationRoles && Array.isArray(user.applicationRoles) && ['admin', 'system'].some(role => user.applicationRoles.includes(role));
+  return hasRequiredProperties(user) && hasAdminRole(user);
+
+  function hasRequiredProperties(user) {
+    const requiredProperties = ['id', 'applicationRoles'];
+    return user && typeof user === 'object' && requiredProperties.every(property => Object.keys(user).includes(property)) && typeof user.id === 'string' && user.id.length > 0;
+  }
+
+  function hasAdminRole(user) {
+    const adminRoles = ['admin', 'system'];
+    return adminRoles.some(role => user.applicationRoles.includes(role));
+  }
 }
 
 export function getExpressLogger() {

@@ -37,6 +37,8 @@ import applyIsbnRegistryAssociations from './isbn-registry/associations';
 import * as issnRegistryModels from './issn-registry';
 import applyIssnRegistryAssociations from './issn-registry/associations';
 
+import * as commonModels from './common';
+
 /* eslint-disable functional/no-let,functional/no-conditional-statements,no-process-env */
 let sequelize;
 
@@ -68,7 +70,8 @@ if (NODE_ENV === 'test') {
 // Define models
 const models = [
   ...Object.keys(isbnRegistryModels).map(k => isbnRegistryModels[k]),
-  ...Object.keys(issnRegistryModels).map(k => issnRegistryModels[k])
+  ...Object.keys(issnRegistryModels).map(k => issnRegistryModels[k]),
+  ...Object.keys(commonModels).map(k => commonModels[k])
 ];
 
 // Use sequelize instance to initiate models
