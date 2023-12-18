@@ -223,14 +223,8 @@ function generate245({publication}) {
     return [];
   }
 
-  let subfieldAValue = publication.title;
+  const subfieldAValue = publication.subtitle ? `${publication.title}.` : `${publication.title} :`;
   const subfieldBValue = publication.subtitle ? `${publication.subtitle}.` : undefined;
-
-  if (!publication.subtitle) {
-    subfieldAValue += '.';
-  } else if (publication.subtitle) {
-    subfieldAValue += ' :';
-  }
 
   return {
     tag: '245', ind1: '0', ind2: '0',
