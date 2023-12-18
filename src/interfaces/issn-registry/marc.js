@@ -204,7 +204,9 @@ function generate042() {
 }
 
 function generate222({publication, electronical}) {
-  if (!publication.title) {
+  const anotherMedium = getTitleAndIssnFromJson(publication.anotherMedium);
+
+  if (!publication.title || anotherMedium.length === 0) {
     return [];
   }
 
@@ -462,21 +464,23 @@ function getTitleAndIssnFromJson(v) {
   }
 
   // Return array of values that can be gathered through looping the paired properties
-  return [...Array(v.title.length).keys()].map(idx => {
-    const result = {};
+  return [...Array(v.title.length).keys()]
+    .map(idx => {
+      const result = {};
 
-    /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
-    if (v.title.length - 1 >= idx) {
-      result.title = v.title[idx];
-    }
+      /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
+      if (v.title.length - 1 >= idx) {
+        result.title = v.title[idx];
+      }
 
-    if (v.issn.length - 1 >= idx) {
-      result.issn = v.issn[idx];
-    }
-    /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
+      if (v.issn.length - 1 >= idx) {
+        result.issn = v.issn[idx];
+      }
+      /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
 
-    return Object.keys.length > 0 ? result : undefined;
-  });
+      return Object.keys(result).length > 0 ? result : undefined;
+    })
+    .filter(v => v !== undefined);
 }
 
 function generateLOW() {
