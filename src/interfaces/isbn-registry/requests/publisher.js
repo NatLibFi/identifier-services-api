@@ -305,7 +305,7 @@ export default function () {
       'additionalInfo'
     ];
 
-    const attributes = ['id', 'officialName', 'email', 'langCode', 'created', 'additionalInfo'];
+    const attributes = ['id', 'officialName', 'email', 'langCode', 'created', 'additionalInfo', 'created'];
     const {searchText, limit, offset} = guiOpts;
     const order = [['id', 'DESC']];
 
@@ -316,10 +316,12 @@ export default function () {
       where: {
         [Op.and]: [
           {...conditions},
-          {[Op.and]: [
-            {'$isbnSubRanges.id$': null},
-            {'$ismnSubRanges.id$': null}
-          ]}
+          {
+            [Op.and]: [
+              {'$isbnSubRanges.id$': null},
+              {'$ismnSubRanges.id$': null}
+            ]
+          }
         ]
       },
       include: [
