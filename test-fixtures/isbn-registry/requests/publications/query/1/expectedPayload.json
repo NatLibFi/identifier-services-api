@@ -7,7 +7,8 @@
       "langCode": "fi-FI",
       "publicationType": "BOOK",
       "title": "Test book",
-      "comments": ""
+      "comments": "",
+      "created": {}
     },
     {
       "id": 1,
@@ -15,7 +16,8 @@
       "langCode": "fi-FI",
       "publicationType": "BOOK",
       "title": "Foo Book",
-      "comments": "Esimerkki käsittelytiedosta"
+      "comments": "Esimerkki käsittelytiedosta",
+      "created": {}
     }
   ]
 }
