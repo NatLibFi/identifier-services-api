@@ -7,7 +7,8 @@
       "langCode": "fi-FI",
       "publicationType": "BOOK",
       "title": "Foo Book",
-      "comments": "Esimerkki käsittelytiedosta"
+      "comments": "Esimerkki käsittelytiedosta",
+      "created": {}
     }
   ]
 }
