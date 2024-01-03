@@ -305,7 +305,7 @@ export default function () {
       'additionalInfo'
     ];
 
-    const attributes = ['id', 'officialName', 'email', 'langCode', 'created', 'additionalInfo', 'created'];
+    const attributes = ['id', 'officialName', 'email', 'langCode', 'created', 'additionalInfo'];
     const {searchText, limit, offset} = guiOpts;
     const order = [['id', 'DESC']];
 
