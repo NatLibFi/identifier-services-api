@@ -35,11 +35,14 @@ export default function ({rootPath} = {}) {
 
   return {populate, close, dump};
 
+  // Note: use this ONLY for in-memory sqlite for automated testing with trusted files!
+  // Contains eval etc.
   async function populate(input, dbInitRequired) {
     try {
       if (dbInitRequired) {
         const data = Array.isArray(input) ? clone(getFixture({components: input})) : clone(input);
         const promises = [];
+        const modifiedTimeUpdatePromises = [];
 
         await sequelize.sync({force: true});
         const {models} = sequelize; // eslint-disable-line no-unused-vars
@@ -51,7 +54,27 @@ export default function ({rootPath} = {}) {
           });
         });
 
+        // Set modified value (Sequelize default: updatedAt) if it's defined in the db initialization object attributes and there is id to use as reference
+        // Since this attribute is auto-updated by sequelize internals, this the chosen way to pre-define the value when initializing in-memory db from JSON file
+        // The process is done in separate step because the database entity needs to exist (and have id) before it can be updated
+        // As of the current date, Sequelize seems to not allow setting updatedAt during create operation
+        Object.keys(data).forEach(name => {
+          const model = `models.${name}`;
+
+          data[name].forEach(item => {
+            const hasId = Object.keys(item).includes('id');
+            const hasModified = Object.keys(item).includes('modified');
+
+            if (hasId && hasModified) { // eslint-disable-line functional/no-conditional-statements
+              // Derived from GitHub issue comment of GitHub user jzyds proposing use of sequelize.query: https://github.com/sequelize/sequelize/issues/12386#issuecomment-1280004433
+              modifiedTimeUpdatePromises.push(`UPDATE ${eval(model).tableName} SET modified = '${item.modified}' WHERE id = ${item.id}`); // eslint-disable-line functional/immutable-data,no-eval
+            }
+          });
+        });
+
         await Promise.all(promises.map(p => eval(p))); // eslint-disable-line no-eval
+        await Promise.all(modifiedTimeUpdatePromises.map(p => sequelize.query(p))); // eslint-disable-line no-eval
+
         return;
       }
 
