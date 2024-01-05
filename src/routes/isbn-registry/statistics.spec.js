@@ -41,7 +41,8 @@ describe('app', () => {
   });
 
   describe('ISBN-registry statistics', () => {
-    describe('#statistics', generateTestSuite('common'));
+    describe('#statistics general', generateTestSuite('common'));
+    describe.only('#monthly', generateTestSuite('monthly'));
 
     describe('#progressIsbn', generateTestSuite('isbn', 'progressIsbn'));
     describe('#publicationsIsbn', generateTestSuite('isbn', 'publicationsIsbn'));
