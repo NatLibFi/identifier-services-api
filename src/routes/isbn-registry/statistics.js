@@ -34,6 +34,7 @@ import {
 } from '../validations';
 
 import {statisticsIsbnFactory} from '../../interfaces';
+import {ApiError} from '../../utils';
 
 export default function (permissionMiddleware) {
 
@@ -62,7 +63,7 @@ export default function (permissionMiddleware) {
             return res.attachment('isbn-registry-statistics.csv').send(formattedResult);
           }
 
-          return res.status(HttpStatus.OK).attachment(`isbn-registry-statistics.${req.body.format}`).send(formattedResult);
+          throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Unsupported statistics format');
         }
 
         // Defaults to JSON if format was not defined
