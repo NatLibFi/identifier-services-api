@@ -204,7 +204,8 @@ function generate042() {
 }
 
 function generate222({publication, electronical}) {
-  const anotherMedium = getTitleAndIssnFromJson(publication.anotherMedium);
+  // Filtering done due to possibility of empty entries to enforce JSON schema format
+  const anotherMedium = getTitleAndIssnFromJson(publication.anotherMedium).filter(({title}) => title && title.length > 0);
 
   if (!publication.title || anotherMedium.length === 0) {
     return [];
@@ -225,7 +226,7 @@ function generate245({publication}) {
     return [];
   }
 
-  const subfieldAValue = publication.subtitle ? `${publication.title}.` : `${publication.title} :`;
+  const subfieldAValue = publication.subtitle ? `${publication.title} :` : `${publication.title}.`;
   const subfieldBValue = publication.subtitle ? `${publication.subtitle}.` : undefined;
 
   return {
