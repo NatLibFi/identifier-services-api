@@ -88,7 +88,8 @@ export function convertToMarcIssn({publication, publisher, form}) {
   ];
 
   // Generate datafields
-  const generatorParams = {publication, publisher, form, electronical};
+  const hasF776 = generate776({publication, electronical}).length > 0;
+  const generatorParams = {publication, publisher, form, electronical, hasF776};
 
   const dataFields = dataFieldGenerators.map(dfg => dfg(generatorParams)).flat();
 
@@ -203,15 +204,12 @@ function generate042() {
   return {tag: '042', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'finb'}]};
 }
 
-function generate222({publication, electronical}) {
-  // Filtering done due to possibility of empty entries to enforce JSON schema format
-  const anotherMedium = getTitleAndIssnFromJson(publication.anotherMedium).filter(({title}) => title && title.length > 0);
-
-  if (!publication.title || anotherMedium.length === 0) {
+function generate222({publication, electronical, hasF776}) {
+  if (!publication.title) {
     return [];
   }
 
-  if (publication.medium === ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER) {
+  if (publication.medium === ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER || !hasF776) {
     return {tag: '222', ind1: ' ', ind2: '0', subfields: [{code: 'a', value: publication.title}]};
   }
 
