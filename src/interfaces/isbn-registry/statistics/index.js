@@ -577,7 +577,7 @@ export default function () {
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT I.id) as c FROM ${publisherRangeModel.tableName} PIR ` +
                   `INNER JOIN ${identifierModel.tableName} I ON I.publisher_identifier_range_id = PIR.id ` +
                   `INNER JOIN ${identifierBatchModel.tableName} IB ON I.identifier_batch_id = IB.id ` +
-                  `WHERE IB.created BETWEEN :begin AND :end ` +
+                  `WHERE IB.identifier_type = :identifierType AND IB.created BETWEEN :begin AND :end ` +
                   `${_getConditionString(conditions)}` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
@@ -586,7 +586,8 @@ export default function () {
       logging: (sql, timingMs) => logger.debug(`SQL took ${timingMs} ms`),
       replacements: {
         begin,
-        end: `${end} 23:59:59`
+        end: `${end} 23:59:59`,
+        identifierType
       },
       type: QueryTypes.SELECT
     });
