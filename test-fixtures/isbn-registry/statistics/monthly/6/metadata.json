@@ -1,0 +1,8 @@
+{
+  "descr": "Statistics data is correct: ISMN publication requests + self-publisher assigned ISMN",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

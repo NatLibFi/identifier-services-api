@@ -547,7 +547,7 @@ export default function () {
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIsbnModel.tableName} ` +
                   `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
-                  `${_getMusicCondition(music)}` +
+                  `${_getSheetMusicCondition(music)}` +
                   `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
@@ -561,8 +561,8 @@ export default function () {
       type: QueryTypes.SELECT
     });
 
-    function _getMusicCondition(music) {
-      return music ? `AND publication_type = "${ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC}" ` : '';
+    function _getSheetMusicCondition(music) {
+      return music ? `AND publication_type = "${ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC}" ` : `AND publication_type != "${ISBN_REGISTRY_PUBLICATION_TYPES.SHEET_MUSIC}" `;
     }
   }
 
