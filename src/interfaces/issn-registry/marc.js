@@ -88,7 +88,8 @@ export function convertToMarcIssn({publication, publisher, form}) {
   ];
 
   // Generate datafields
-  const generatorParams = {publication, publisher, form, electronical};
+  const hasF776 = generate776({publication, electronical}).length > 0;
+  const generatorParams = {publication, publisher, form, electronical, hasF776};
 
   const dataFields = dataFieldGenerators.map(dfg => dfg(generatorParams)).flat();
 
@@ -203,12 +204,12 @@ function generate042() {
   return {tag: '042', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'finb'}]};
 }
 
-function generate222({publication, electronical}) {
+function generate222({publication, electronical, hasF776}) {
   if (!publication.title) {
     return [];
   }
 
-  if (publication.medium === ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER) {
+  if (publication.medium === ISSN_REGISTRY_PUBLICATION_MEDIUM.OTHER || !hasF776) {
     return {tag: '222', ind1: ' ', ind2: '0', subfields: [{code: 'a', value: publication.title}]};
   }
 
@@ -217,26 +218,19 @@ function generate222({publication, electronical}) {
   return {tag: '222', ind1: ' ', ind2: '0', subfields: [{code: 'a', value: publication.title}, subfieldB]};
 }
 
-function generate245({publication, publisher}) {
+function generate245({publication}) {
   /* eslint-disable functional/no-let,functional/no-conditional-statements,no-nested-ternary */
   if (!publication.title) {
     return [];
   }
 
-  let subfieldAValue = publication.title;
-  const subfieldBValue = publication.subtitle ? publisher.officialName ? `${publication.subtitle} /` : `${publication.subtitle}.` : undefined;
-  const subfieldCValue = publisher.officialName ? `${publisher.officialName}.` : undefined;
+  const subfieldAValue = publication.subtitle ? `${publication.title} :` : `${publication.title}.`;
+  const subfieldBValue = publication.subtitle ? `${publication.subtitle}.` : undefined;
 
-  if (!publication.subtitle && !publisher.officialName) {
-    subfieldAValue += '.';
-  } else if (publication.subtitle) {
-    subfieldAValue += ' :';
-  } else if (publisher.officialName) {
-    subfieldAValue += ' /';
-  }
-
-  return {tag: '245', ind1: '0', ind2: '0',
-    subfields: [{code: 'a', value: subfieldAValue}, {code: 'b', value: subfieldBValue}, {code: 'c', value: subfieldCValue}].filter(v => v.value)};
+  return {
+    tag: '245', ind1: '0', ind2: '0',
+    subfields: [{code: 'a', value: subfieldAValue}, {code: 'b', value: subfieldBValue}].filter(v => v.value)
+  };
   /* eslint-enable functional/no-let,functional/no-conditional-statements,no-nested-ternary */
 }
 
@@ -417,8 +411,10 @@ function generate776({publication, electronical}) {
       return {tag: '776', ind1: '0', ind2: '8', subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: '9', value: 'FENNI<KEEP>'}]};
     }
 
-    return {tag: '776', ind1: '0', ind2: '8',
-      subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: 'x', value: series.issn}, {code: '9', value: 'FENNI<KEEP>'}]};
+    return {
+      tag: '776', ind1: '0', ind2: '8',
+      subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: 'x', value: series.issn}, {code: '9', value: 'FENNI<KEEP>'}]
+    };
   }
 }
 
@@ -437,8 +433,10 @@ function generate780({publication}) {
       return {tag: '780', ind1: '0', ind2: '0', subfields: [{code: 't', value: series.title}, {code: '9', value: 'FENNI<KEEP>'}]};
     }
 
-    return {tag: '780', ind1: '0', ind2: '0',
-      subfields: [{code: 't', value: series.title}, {code: 'x', value: series.issn}, {code: '9', value: 'FENNI<KEEP>'}]};
+    return {
+      tag: '780', ind1: '0', ind2: '0',
+      subfields: [{code: 't', value: series.title}, {code: 'x', value: series.issn}, {code: '9', value: 'FENNI<KEEP>'}]
+    };
   }
 }
 
@@ -465,21 +463,23 @@ function getTitleAndIssnFromJson(v) {
   }
 
   // Return array of values that can be gathered through looping the paired properties
-  return [...Array(v.title.length).keys()].map(idx => {
-    const result = {};
+  return [...Array(v.title.length).keys()]
+    .map(idx => {
+      const result = {};
 
-    /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
-    if (v.title.length - 1 >= idx) {
-      result.title = v.title[idx];
-    }
+      /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
+      if (v.title.length - 1 >= idx) {
+        result.title = v.title[idx];
+      }
 
-    if (v.issn.length - 1 >= idx) {
-      result.issn = v.issn[idx];
-    }
-    /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
+      if (v.issn.length - 1 >= idx) {
+        result.issn = v.issn[idx];
+      }
+      /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
 
-    return Object.keys.length > 0 ? result : undefined;
-  });
+      return Object.keys(result).length > 0 ? result : undefined;
+    })
+    .filter(v => v !== undefined);
 }
 
 function generateLOW() {

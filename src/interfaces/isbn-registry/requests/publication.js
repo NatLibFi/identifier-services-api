@@ -154,12 +154,14 @@ export default function () {
    * @returns Publication request as object
    */
   async function read(id) {
-    const result = await publicationModel.findByPk(id, {include: [
-      {
-        association: 'publisher',
-        attributes: ['id', 'officialName']
-      }
-    ]});
+    const result = await publicationModel.findByPk(id, {
+      include: [
+        {
+          association: 'publisher',
+          attributes: ['id', 'officialName']
+        }
+      ]
+    });
 
     // Include identifierBatch information to response so that loadTemplate functionality may be utilized
     const identifierBatches = await identifierBatchModel.findAll({where: {publicationId: id}});
@@ -294,7 +296,7 @@ export default function () {
    * @returns Object containing results if succeeds, otherwise throws ApiError
    */
   async function query(guiOpts) {
-    const attributes = ['id', 'title', 'officialName', 'langCode', 'publicationType', 'comments'];
+    const attributes = ['id', 'title', 'officialName', 'langCode', 'publicationType', 'comments', 'created'];
     const {offset, limit, searchText, state} = guiOpts;
     const order = [['id', 'DESC']];
     const trimmedSearchText = searchText ? searchText.trim() : undefined;

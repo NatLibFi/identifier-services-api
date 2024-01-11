@@ -316,10 +316,12 @@ export default function () {
       where: {
         [Op.and]: [
           {...conditions},
-          {[Op.and]: [
-            {'$isbnSubRanges.id$': null},
-            {'$ismnSubRanges.id$': null}
-          ]}
+          {
+            [Op.and]: [
+              {'$isbnSubRanges.id$': null},
+              {'$ismnSubRanges.id$': null}
+            ]
+          }
         ]
       },
       include: [

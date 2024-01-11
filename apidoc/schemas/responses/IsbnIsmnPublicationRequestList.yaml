@@ -19,3 +19,5 @@ properties:
           type: string
         comments:
           type: string
+        created:
+          type: string
