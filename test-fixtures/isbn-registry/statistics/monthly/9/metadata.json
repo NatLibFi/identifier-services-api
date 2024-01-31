@@ -1,5 +1,5 @@
 {
-  "descr": "Statistics data is correct: ISMN identifiers assigned to self-publisher (test env id = 1).",
+  "descr": "Statistics data is correct: ISBN identifiers assigned to state publisher (test env id = 2).",
   "requestUrl": "/isbn-registry/statistics",
   "username": "system",
   "password": "system",
