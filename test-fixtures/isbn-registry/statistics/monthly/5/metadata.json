@@ -1,5 +1,5 @@
 {
-  "descr": "Statistics data is correct: ISBN publication requests + self-publisher assigned ISBN",
+  "descr": "Statistics data is correct: ISBN publication requests  (negative test for ISMN publication requests) + self-publisher assigned ISBN",
   "requestUrl": "/isbn-registry/statistics",
   "username": "system",
   "password": "system",
