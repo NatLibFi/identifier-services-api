@@ -1,0 +1,8 @@
+{
+  "descr": "Statistics data is correct: ISBN identifiers assigned to small publishers (category of associated subranges = 1, excluding some publishers, e.g., self-publisher).",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}
