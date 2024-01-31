@@ -1,0 +1,6 @@
+{
+  "descr": "Accepts email addresses with capital letters in local part",
+  "requestUrl": "/public/isbn-registry/requests/publications",
+  "method": "post",
+  "expectedStatus": 201
+}
