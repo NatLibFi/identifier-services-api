@@ -48,3 +48,4 @@ UNIVERSITY_PUBLISHER_ID_ISBN=3
 TURNSTILE_URL=''
 TURNSTILE_SECRET_KEY=''
 DISABLE_TURNSTILE=true
+TZ=UTC # Required for test created/modified/sent values to work as placed in test db initialization files

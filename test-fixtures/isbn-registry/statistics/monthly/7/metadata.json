@@ -1,0 +1,8 @@
+{
+  "descr": "Statistics data is correct: ISMN identifiers assigned to self-publisher (test env id = 1).",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

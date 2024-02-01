@@ -1,0 +1,8 @@
+{
+  "descr": "Statistics data is correct: ISBN publishers and publisher request related data",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}

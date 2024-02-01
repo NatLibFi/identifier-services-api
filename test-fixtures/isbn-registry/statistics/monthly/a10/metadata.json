@@ -1,0 +1,8 @@
+{
+  "descr": "Statistics data is correct: ISBN identifiers assigned to HY university publisher (test env id = 3).",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 200
+}
