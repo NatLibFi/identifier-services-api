@@ -1,0 +1,8 @@
+{
+  "descr": "Results into validation failed with unsupported format definition",
+  "requestUrl": "/issn-registry/statistics",
+  "method": "post",
+  "username": "admin",
+  "password": "admin",
+  "expectedStatus": 422
+}

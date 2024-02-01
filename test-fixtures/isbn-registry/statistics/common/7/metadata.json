@@ -1,0 +1,8 @@
+{
+  "descr": "Unsupported statistics type results into error",
+  "requestUrl": "/isbn-registry/statistics",
+  "username": "system",
+  "password": "system",
+  "method": "post",
+  "expectedStatus": 422
+}
