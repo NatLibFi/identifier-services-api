@@ -106,14 +106,17 @@ export default function (sequelize, dialect) {
       url: {
         type: DataTypes.STRING(100)
       },
-      previous: {
+      // Note: attribute name does not directly map to column name. This is due to 'previous' being reserved built-int method for Sequelize ORM model.
+      // previousEntity (as model attribute) -> previous (as table column)
+      previousEntity: {
         type: DataTypes.STRING(850),
+        field: 'previous',
         /* eslint-disable functional/no-this-expressions */
         get() {
-          return this.getDataValue('previous') ? previousStringToJson(this.getDataValue('previous')) : this.getDataValue('previous');
+          return this.getDataValue('previousEntity') ? previousStringToJson(this.getDataValue('previousEntity')) : this.getDataValue('previousEntity');
         },
         set(v) {
-          this.setDataValue('previous', jsonToPreviousString(v));
+          this.setDataValue('previousEntity', jsonToPreviousString(v));
         }
         /* eslint-enable functional/no-this-expressions */
       },

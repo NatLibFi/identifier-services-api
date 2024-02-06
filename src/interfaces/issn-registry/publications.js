@@ -36,6 +36,7 @@ import abstractModelInterface from '../common/abstractModelInterface';
 import {ISSN_REGISTRY_FORM_STATUS, ISSN_REGISTRY_PUBLICATION_MEDIUM, ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
 import {generateQuery} from '../interfaceUtils';
 import {calculateCheckDigitIssn, validateIssn} from './rangeUtils';
+import {transformIssnPublicationFromDb} from './utils';
 
 
 /**
@@ -89,7 +90,8 @@ export default function () {
       }
 
       // Format JSONified values
-      const previous = getPublicationJSONattribute(doc.previous, ['title', 'issn', 'lastIssue']);
+      // Note: column previous is managed through attribute previousEntity because of Sequalize reserved attributes for models
+      const previousEntity = getPublicationJSONattribute(doc.previous, ['title', 'issn', 'lastIssue']);
       const mainSeries = getPublicationJSONattribute(doc.mainSeries);
       const subseries = getPublicationJSONattribute(doc.subseries);
       const anotherMedium = getPublicationJSONattribute(doc.anotherMedium);
@@ -97,7 +99,7 @@ export default function () {
       // Save publication to db
       const result = await publicationIssnModelInterface.create({
         ...doc,
-        previous,
+        previousEntity,
         mainSeries,
         subseries,
         anotherMedium,
@@ -111,7 +113,7 @@ export default function () {
       // Save archive entry
       await publicationIssnArchiveModelInterface.create({
         ...doc,
-        previous,
+        previousEntity, // Here previousEntity also maps to column 'previous'
         mainSeries,
         subseries,
         anotherMedium,
@@ -165,7 +167,7 @@ export default function () {
     });
 
     if (result !== null) {
-      return result.toJSON();
+      return transformIssnPublicationFromDb(result.toJSON());
     }
 
     throw new ApiError(HttpStatus.NOT_FOUND);
@@ -180,7 +182,7 @@ export default function () {
     const result = await publicationIssnArchiveModel.findOne({where: {publicationId: id}});
 
     if (result !== null) {
-      return result.toJSON();
+      return transformIssnPublicationFromDb(result.toJSON());
     }
 
     throw new ApiError(HttpStatus.NOT_FOUND);
@@ -195,7 +197,7 @@ export default function () {
    */
   async function update(id, doc, user) {
     const jsonAttributes = {
-      previous: doc.previous ? getPublicationJSONattribute(doc.previous, ['title', 'issn', 'lastIssue']) : undefined,
+      previousEntity: doc.previous ? getPublicationJSONattribute(doc.previous, ['title', 'issn', 'lastIssue']) : undefined,
       mainSeries: doc.mainSeries ? getPublicationJSONattribute(doc.mainSeries) : undefined,
       subseries: doc.subseries ? getPublicationJSONattribute(doc.subseries) : undefined,
       anotherMedium: doc.anotherMedium ? getPublicationJSONattribute(doc.anotherMedium) : undefined
@@ -213,6 +215,7 @@ export default function () {
     delete dbDoc.created;
     delete dbDoc.createdBy;
     delete dbDoc.modified;
+    delete dbDoc.previous; // saved through attribute previousEntity, which maps to 'previous' column in db
     /* eslint-enable functional/immutable-data */
 
     // Abstract interface both finds and updates
@@ -318,7 +321,7 @@ export default function () {
       order
     });
 
-    const formattedResults = result.rows.map(v => v.toJSON());
+    const formattedResults = result.rows.map(v => transformIssnPublicationFromDb(v.toJSON()));
     return {totalDoc: result.count, results: formattedResults};
   }
 
