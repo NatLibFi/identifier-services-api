@@ -115,7 +115,7 @@ export default function (permissionMiddleware) {
 
   async function downloadEmailList(req, res, next) {
     try {
-      const result = await publishers.getEmailList(req.body);
+      const result = await publishers.getEmailList(req.body, req.user);
 
       if (result) {
         if (req.body.format === 'txt') {
