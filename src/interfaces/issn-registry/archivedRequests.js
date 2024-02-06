@@ -31,6 +31,7 @@ import HttpStatus from 'http-status';
 
 import sequelize from '../../models';
 import {ApiError} from '../../utils';
+import {transformIssnPublicationFromDb} from './utils';
 
 /**
  * Issn registry form archive interface. Contains read operation for archive information to be able to be read.
@@ -62,7 +63,7 @@ export default function () {
         throw new ApiError(HttpStatus.CONFLICT, 'There exists more than one archive entry for the form');
       }
 
-      return result[0].toJSON();
+      return transformIssnPublicationFromDb(result[0].toJSON());
     }
 
     throw new ApiError(HttpStatus.NOT_FOUND);

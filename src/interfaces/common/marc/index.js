@@ -40,6 +40,7 @@ import {ApiError} from '../../../utils';
 import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../constants';
 import {convertToMarc, getRecordIdentifiers} from './marcUtils';
 import {MELINDA_API_PASSWORD, MELINDA_API_URL, MELINDA_API_USER, MELINDA_CREATE_RECORD_PARAMS, MELINDA_SRU_URL} from '../../../config';
+import {transformIssnPublicationFromDb} from '../../issn-registry/utils';
 
 /**
  * MARC interface for both ISBN and ISSN registries.
@@ -130,7 +131,7 @@ export default function (registry) {
     }
 
     const opts = registry === COMMON_REGISTRY_TYPES.ISSN
-      ? {publication: publication.toJSON(), form: form ? form.toJSON() : {}, publisher: publisher ? publisher.toJSON() : {}}
+      ? {publication: transformIssnPublicationFromDb(publication.toJSON()), form: form ? form.toJSON() : {}, publisher: publisher ? publisher.toJSON() : {}}
       : {publication: publication.toJSON()};
 
     const result = convertToMarc({registry, ...opts});
