@@ -105,7 +105,7 @@ export default function () {
       // so that the link between archive record and publication can be established
       /* eslint-disable functional/no-loop-statements,no-await-in-loop */
       for (const publication of publications) {
-        const previous = getPublicationJSONattribute(publication.previous, ['title', 'issn', 'lastIssue']);
+        const previousEntity = getPublicationJSONattribute(publication.previous, ['title', 'issn', 'lastIssue']);
         const mainSeries = getPublicationJSONattribute(publication.mainSeries);
         const subseries = getPublicationJSONattribute(publication.subseries);
         const anotherMedium = getPublicationJSONattribute(publication.anotherMedium);
@@ -113,7 +113,7 @@ export default function () {
         const publicationResult = await publicationIssnModel.create({
           ...publication,
           ...metadata,
-          previous,
+          previousEntity, // Maps to column 'previous' in db
           mainSeries,
           subseries,
           anotherMedium,
@@ -124,7 +124,7 @@ export default function () {
         // Save archive information
         await publicationIssnArchiveModel.create({
           ...publication,
-          previous,
+          previousEntity, // Maps to column 'previous' in db
           mainSeries,
           subseries,
           anotherMedium,

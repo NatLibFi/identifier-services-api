@@ -29,6 +29,7 @@
 
 import fixturesFactory, {READERS} from '@natlibfi/fixura';
 import sequelize from '../../models';
+import {transformIssnPublicationFromDb, transformIssnPublicationToDb} from '../../interfaces/issn-registry/utils';
 
 export default function ({rootPath} = {}) {
   const {getFixture} = fixturesFactory({root: rootPath, reader: READERS.JSON});
@@ -49,9 +50,16 @@ export default function ({rootPath} = {}) {
         Object.keys(data).forEach(name => {
           const model = `models.${name}`;
 
-          data[name].forEach(item => {
-            promises.push(`${model}.create(${JSON.stringify(item)})`); // eslint-disable-line functional/immutable-data
-          });
+          // Required to simulate how API behaves due to need to map attribute previous to previousEntity for Sequalize ORM model (since the attribute is reserved).
+          if ([models.publicationIssn.name, models.publicationIssnArchive.name].includes(name)) { // eslint-disable-line functional/no-conditional-statements
+            data[name].forEach(item => {
+              promises.push(`${model}.create(${JSON.stringify(transformIssnPublicationToDb(item))})`); // eslint-disable-line functional/immutable-data
+            });
+          } else { // eslint-disable-line functional/no-conditional-statements
+            data[name].forEach(item => {
+              promises.push(`${model}.create(${JSON.stringify(item)})`); // eslint-disable-line functional/immutable-data
+            });
+          }
         });
 
         // Set modified value (Sequelize default: updatedAt) if it's defined in the db initialization object attributes and there is id to use as reference
@@ -99,7 +107,13 @@ export default function ({rootPath} = {}) {
       try {
         eval(`models.${name}.findAll({raw: true})`) // eslint-disable-line no-eval
           .then(queryResult => {
-            resolve({[name]: queryResult});
+            // Required due to raw:true still resulting of mapping Sequelize model attibutes instead of returning db column name
+            // Since previous-attribute is reserved for Sequelize ISSN publication/publicationArchiveEntry attribute name had to be altered
+            if ([models.publicationIssn.name, models.publicationIssnArchive.name].includes(name)) {
+              return resolve({[name]: queryResult.map(transformIssnPublicationFromDb)});
+            }
+
+            return resolve({[name]: queryResult});
           });
       } catch (err) {
         reject(err);

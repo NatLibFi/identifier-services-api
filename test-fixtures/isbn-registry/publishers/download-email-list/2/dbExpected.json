@@ -133,5 +133,16 @@
       "modified": {},
       "modifiedBy": "system"
     }
+  ],
+  "auditEntry": [
+    {
+      "id": 1,
+      "user": "admin",
+      "operation": "ISBN_PUBLISHER_EMAIL_LIST_DOWNLOAD",
+      "primaryTable": null,
+      "primaryTablePrimaryKey": null,
+      "comment": "Publisher range category: 3, Identifier type: ISBN, Language: fi-FI",
+      "created": {}
+    }
   ]
 }

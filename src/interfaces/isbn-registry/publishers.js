@@ -778,9 +778,10 @@ export default function () {
   /**
    * Method for getting publisher email list for group emailing purposes
    * @param {Object} opts Filter options
+   * @param {Object} user User object
    * @returns Object containing data property, which contains array of ISBN-registry publisher emails
    */
-  async function getEmailList(opts) {
+  async function getEmailList(opts, user) {
     validateOpts(opts);
 
     const {category, identifierType, langCode} = opts;
@@ -810,6 +811,15 @@ export default function () {
       where: {
         [Op.and]: [{id: formattedPublisherIds}, {langCode}]
       }
+    });
+
+    // Save audit entry
+    await auditEntryModel.create({
+      user: user.id,
+      operation: AUDIT_OPERATION_TYPES.ISBN_PUBLISHER_EMAIL_LIST_DOWNLOAD,
+      primaryTable: null,
+      primaryTablePrimaryKey: null,
+      comment: `Publisher range category: ${category}, Identifier type: ${identifierType}, Language: ${langCode}`
     });
 
     return result
