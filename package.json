@@ -51,7 +51,7 @@
     "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "excel4node": "^1.8.2",
-    "express": "^4.17.3",
+    "express": "^4.19.2",
     "html-to-text": "^9.0.4",
     "luxon": "^3.1.1",
     "marc-record-js": "^0.3.2",
