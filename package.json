@@ -55,7 +55,7 @@
     "html-to-text": "^9.0.4",
     "luxon": "^3.1.1",
     "marc-record-js": "^0.3.2",
-    "mysql2": "^3.2.4",
+    "mysql2": "^3.9.7",
     "nodemailer": "^6.7.7",
     "sequelize": "^6.19.2"
   },
