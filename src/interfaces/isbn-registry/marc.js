@@ -74,7 +74,7 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
   }
 
   // 008 added for all publications
-  marcRecord.insertControlField(['008', generate008({publication, electronical, sheetmusic})]);
+  marcRecord.insertControlField(['008', generate008({publication, electronical, sheetmusic, dissertation})]);
 
   // Add datafields
   const dataFieldGenerators = [
@@ -118,7 +118,7 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
 }
 
 // eslint-disable-next-line max-statements
-function generate008({publication, electronical, sheetmusic}) {
+function generate008({publication, electronical, sheetmusic, dissertation}) {
   const {language, year} = publication;
 
   /* eslint-disable functional/no-let, functional/no-conditional-statements */
@@ -164,8 +164,11 @@ function generate008({publication, electronical, sheetmusic}) {
       field += ' ';
     }
 
+    // 24-27
+    field += dissertation ? 'm   ' : '    ';
+
     // 24-34
-    field += '     |0| 0|';
+    field += ' |0| 0|';
   }
 
   // 35-37
@@ -356,10 +359,7 @@ function generate100({publication}) {
         tag: '100',
         ind1: '1',
         ind2: ' ',
-        subfields: [
-          {code: 'a', value: `${publication.lastName1}, ${publication.firstName1},`},
-          {code: 'g', value: 'ENNAKKOTIETO.'}
-        ]
+        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1},`}]
       }
     ];
   }
@@ -674,8 +674,7 @@ function generate502({publication, dissertation}) {
         ind2: ' ',
         subfields: [
           {code: 'a', value: 'Väitöskirja :'},
-          {code: 'c', value: `${publication.officialName}.`},
-          {code: '9', value: 'FENNI<KEEP>'}
+          {code: 'c', value: `${publication.officialName}.`}
         ]
       }
     ];
@@ -712,10 +711,7 @@ function generate700({publication}) {
         tag: '700',
         ind1: '1',
         ind2: ' ',
-        subfields: [
-          {code: 'a', value: `${publication.lastName1}, ${publication.firstName1}, `},
-          {code: 'g', value: 'ENNAKKOTIETO.'}
-        ]
+        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1}, `}]
       }
     ];
   }
@@ -728,10 +724,7 @@ function generate700({publication}) {
           tag: '700',
           ind1: '1',
           ind2: ' ',
-          subfields: [
-            {code: 'a', value: `${publication[`lastName${v}`]}, ${publication[`firstName${v}`]}, `},
-            {code: 'g', value: 'ENNAKKOTIETO.'}
-          ]
+          subfields: [{code: 'a', value: `${publication[`lastName${v}`]}, ${publication[`firstName${v}`]}, `}]
         }
       ];
     }
