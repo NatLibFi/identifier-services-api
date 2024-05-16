@@ -359,7 +359,7 @@ function generate100({publication}) {
         tag: '100',
         ind1: '1',
         ind2: ' ',
-        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1},`}]
+        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1}.`}]
       }
     ];
   }
@@ -711,7 +711,7 @@ function generate700({publication}) {
         tag: '700',
         ind1: '1',
         ind2: ' ',
-        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1}, `}]
+        subfields: [{code: 'a', value: `${publication.lastName1}, ${publication.firstName1}.`}]
       }
     ];
   }
@@ -724,7 +724,7 @@ function generate700({publication}) {
           tag: '700',
           ind1: '1',
           ind2: ' ',
-          subfields: [{code: 'a', value: `${publication[`lastName${v}`]}, ${publication[`firstName${v}`]}, `}]
+          subfields: [{code: 'a', value: `${publication[`lastName${v}`]}, ${publication[`firstName${v}`]}.`}]
         }
       ];
     }
