@@ -260,7 +260,9 @@ function generate024({publication, electronical, sheetmusic, electronicalRecordP
   // If there are no identifiers, no 024 is generated
   if (electronical && !publication.publicationIdentifierElectronical) {
     return [];
-  } else if (!publication.publicationIdentifierPrint) {
+  }
+
+  if (!electronical && !publication.publicationIdentifierPrint) {
     return [];
   }
 
