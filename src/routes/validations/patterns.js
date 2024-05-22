@@ -31,7 +31,7 @@ export default {
   yearString: /^[0-9]{4}$/u,
   monthString: /^0[1-9]{1}$|^1[0-2]{1}$/u,
   dateString: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/u,
-  email: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$/u,
+  email: /^[a-zA-Z0-9._%+-]{1,64}@[a-z0-9.-]{1,200}\.[a-z]{2,5}$/u,
   langCode: /^fi-FI$|^en-GB$|^sv-SE$/u,
   publishingActivity: /^OCCASIONAL$|^CONTINUOUS$/u,
   publicationType: /^BOOK$|^DISSERTATION$|^SHEET_MUSIC$|^MAP$|^OTHER$/u,
