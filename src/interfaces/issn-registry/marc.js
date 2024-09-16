@@ -408,12 +408,12 @@ function generate776({publication, electronical}) {
     const subfieldI = electronical ? 'Painettu: ' : 'Verkkoaineisto: ';
 
     if (!series.issn) {
-      return {tag: '776', ind1: '0', ind2: '8', subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: '9', value: 'FENNI<KEEP>'}]};
+      return {tag: '776', ind1: '0', ind2: '8', subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}]};
     }
 
     return {
       tag: '776', ind1: '0', ind2: '8',
-      subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: 'x', value: series.issn}, {code: '9', value: 'FENNI<KEEP>'}]
+      subfields: [{code: 'i', value: subfieldI}, {code: 't', value: series.title}, {code: 'x', value: series.issn}]
     };
   }
 }

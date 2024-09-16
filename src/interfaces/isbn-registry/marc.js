@@ -750,8 +750,7 @@ function generate776({publication, electronical}) {
           ind2: '8',
           subfields: [
             {code: 'i', value: subfieldI},
-            {code: 'z', value: identifier},
-            {code: '9', value: 'FENNI<KEEP>'}
+            {code: 'z', value: identifier}
           ]
         };
       });
