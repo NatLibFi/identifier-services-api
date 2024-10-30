@@ -182,7 +182,7 @@ function generate008({publication, electronical}) {
 
 function generate022({publication}) {
   if (publication.issn) {
-    return {tag: '022', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: publication.issn}, {code: '2', value: 'a'}]};
+    return {tag: '022', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: publication.issn}, {code: '2', value: '_a'}]};
   }
 
   return [];
