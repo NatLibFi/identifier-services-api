@@ -670,7 +670,7 @@ function generateTestField() {
 }
 
 function generate500() {
-  return {tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'ENNAKKOTIETO / KANSALLISKIRJASTO.'}]};
+  return {tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Ennakkotieto / Kansalliskirjasto.'}]};
 }
 
 function generate502({publication, dissertation}) {
@@ -697,7 +697,7 @@ function generate594() {
       tag: '594',
       ind1: ' ',
       ind2: ' ',
-      subfields: [{code: 'a', value: 'ENNAKKOTIETO KANSALLISKIRJASTO'}, {code: '5', value: 'FENNI'}]
+      subfields: [{code: 'a', value: 'Ennakkotieto / Kansalliskirjasto'}, {code: '5', value: 'FENNI'}]
     },
     {
       tag: '594',
