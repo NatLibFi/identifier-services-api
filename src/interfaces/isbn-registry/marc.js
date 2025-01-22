@@ -703,7 +703,7 @@ function generate594() {
       tag: '594',
       ind1: ' ',
       ind2: ' ',
-      subfields: [{code: 'a', value: 'EI VASTAANOTETTU'}, {code: '5', value: 'FENNI'}]
+      subfields: [{code: 'a', value: 'Ei vastaanotettu'}, {code: '5', value: 'FENNI'}]
     }
   ];
 }
