@@ -432,7 +432,7 @@ export default function (identifierType) {
 
       if (subrange.canceled > 0) {
         // Delete canceled identifiers that need to be deleted
-        const canceledIdentifierDestroyResult = await subRangeCanceledModel.destroy({
+        const canceledIdentifierDestroyResult = await identifierCanceledModel.destroy({
           where: {
             identifierType: IDENTIFIER_TYPE,
             subRangeId: subrange.id
@@ -440,6 +440,7 @@ export default function (identifierType) {
           transaction: t
         });
 
+        // Confirm that the result was as expected
         if (canceledIdentifierDestroyResult !== subrange.canceled) {
           throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error in removing canceled identifiers during subrange removal');
         }
