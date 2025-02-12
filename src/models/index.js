@@ -27,6 +27,8 @@
 
 import {Sequelize} from 'sequelize';
 
+import {createLogger} from '@natlibfi/melinda-backend-commons';
+
 import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV} from '../config';
 import {DB_TYPES} from './constants';
 import {isMysqlOrMaria, isValidDatabaseDialect} from './utils';
@@ -42,6 +44,8 @@ import * as commonModels from './common';
 /* eslint-disable functional/no-let,functional/no-conditional-statements,no-process-env */
 let sequelize;
 
+const logger = createLogger();
+
 // Guards to check validity of dialect configuration
 if (NODE_ENV === 'test' && DB_DIALECT !== DB_TYPES.sqlite) {
   throw new Error('Wont run automated tests if db dialect is not set to sqlite');
@@ -53,12 +57,18 @@ if (!isValidDatabaseDialect(DB_DIALECT)) {
 
 // Use SQLite in-memory for automated tests
 if (NODE_ENV === 'test') {
+  logger.debug('using in-memory SQLite as database');
   sequelize = new Sequelize('sqlite::memory', {logging: false});
 } else {
+  const applyEngineDefinitions = isMysqlOrMaria(DB_DIALECT);
+
+  logger.info(`using DB dialect of ${DB_DIALECT}`);
+  logger.info('apply DB engine definitions regarding engine, charset and collate: ', applyEngineDefinitions);
+
   sequelize = new Sequelize(DB_URI, {
     dialect: DB_DIALECT,
     dialectOptions: DB_DIALECT_OPTIONS,
-    define: isMysqlOrMaria(DB_DIALECT) ? {
+    define: applyEngineDefinitions ? {
       engine: 'InnoDB',
       charset: 'utf8mb3',
       collate: 'utf8mb3_swedish_ci'
