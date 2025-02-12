@@ -63,7 +63,7 @@ if (NODE_ENV === 'test') {
   const applyEngineDefinitions = isMysqlOrMaria(DB_DIALECT);
 
   logger.info(`using DB dialect of ${DB_DIALECT}`);
-  logger.info('apply DB engine definitions regarding engine, charset and collate: ', applyEngineDefinitions);
+  logger.info(`apply DB engine definitions regarding engine, charset and collate: ${applyEngineDefinitions}`);
 
   sequelize = new Sequelize(DB_URI, {
     dialect: DB_DIALECT,
