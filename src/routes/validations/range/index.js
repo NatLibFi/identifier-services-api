@@ -32,26 +32,26 @@ export const validateCreateRangeIsbn = {
   prefix: Joi.number().integer().min(978).max(979).required(),
   langGroup: Joi.number().integer().min(951).max(952).required(),
   category: Joi.number().integer().min(1).max(5).required(),
-  rangeBegin: Joi.string().regex(regexPatterns.numberString).max(5).required(),
-  rangeEnd: Joi.string().regex(regexPatterns.numberString).max(5).required()
+  rangeBegin: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).max(5).required(),
+  rangeEnd: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).max(5).required()
 };
 
 export const validateCreateRangeIsmn = {
-  prefix: Joi.string().regex(/^979-0$/u).required(),
+  prefix: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(/^979-0$/u).required(),
   category: Joi.number().integer().min(3).max(7).required(),
-  rangeBegin: Joi.string().regex(regexPatterns.numberString).max(7).required(),
-  rangeEnd: Joi.string().regex(regexPatterns.numberString).max(7).required()
+  rangeBegin: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).max(7).required(),
+  rangeEnd: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).max(7).required()
 };
 
 export const validateCreateSubRange = {
   publisherId: Joi.number().integer().required(),
   rangeId: Joi.number().integer().required(),
-  selectedPublisherIdentifier: Joi.string().regex(regexPatterns.publisherIdentifierIsbn).required()
+  selectedPublisherIdentifier: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.publisherIdentifierIsbn).required()
 };
 
 export const validateCreateRangeIssn = {
-  block: Joi.string().regex(regexPatterns.numberString).min(4).max(4).required(),
-  rangeBegin: Joi.string().regex(regexPatterns.numberString).min(3).max(3).required(),
-  rangeEnd: Joi.string().regex(regexPatterns.numberString).min(3).max(3).required(),
+  block: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).min(4).max(4).required(),
+  rangeBegin: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).min(3).max(3).required(),
+  rangeEnd: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.numberString).min(3).max(3).required(),
   isActive: Joi.boolean().required()
 };

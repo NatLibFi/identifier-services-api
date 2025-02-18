@@ -43,5 +43,5 @@ export const validateCreateIdentifierBatch = {
 };
 
 export const validateCancelOrRemoveIdentifier = {
-  identifier: Joi.string().regex(regexPatterns.isbnOrIsmnIdentifier).required()
+  identifier: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.isbnOrIsmnIdentifier).required()
 };
