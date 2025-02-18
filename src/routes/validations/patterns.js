@@ -55,5 +55,6 @@ export default {
   issnRequestStatus: /^NOT_HANDLED$|^NOT_NOTIFIED$|^COMPLETED$|^REJECTED$/u,
   issnPublicationStatus: /^NO_ISSN_GRANTED$|^NO_PREPUBLICATION_RECORD$|^ISSN_FROZEN$|^WAITING_FOR_CONTROL_COPY$|^COMPLETED$/u,
   isbnOrIsmnIdentifier: /^97(?:8|9)-(?:0|951|952)-[0-9]{1,7}-[0-9]{1,5}-[0-9]{1}$/u,
-  marcFormats: /^text$|^json$|^iso2709$/u
+  marcFormats: /^text$|^json$|^iso2709$/u,
+  utf8mb4: /[\u{10000}-\u{10FFFF}]/u
 };

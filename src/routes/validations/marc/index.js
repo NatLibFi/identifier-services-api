@@ -30,6 +30,6 @@ import {Joi} from 'celebrate';
 import regexPatterns from '../patterns';
 
 export const validateGetMarcRecord = {
-  format: Joi.string().regex(regexPatterns.marcFormats),
+  format: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.marcFormats),
   download: Joi.boolean()
 };

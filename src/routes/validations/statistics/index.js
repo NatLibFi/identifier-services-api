@@ -29,15 +29,15 @@ import {Joi} from 'celebrate';
 import regexPatterns from '../patterns';
 
 export const validateStatisticsRequestIsbn = {
-  type: Joi.string().regex(regexPatterns.statisticsTypesIsbn).required(),
-  begin: Joi.string().regex(regexPatterns.dateString),
-  end: Joi.string().regex(regexPatterns.dateString),
-  format: Joi.string().regex(regexPatterns.statisticsFormats).required()
+  type: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.statisticsTypesIsbn).required(),
+  begin: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.dateString),
+  end: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.dateString),
+  format: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.statisticsFormats).required()
 };
 
 export const validateStatisticsRequestIssn = {
-  type: Joi.string().regex(regexPatterns.statisticsTypesIssn).required(),
-  begin: Joi.string().regex(regexPatterns.dateString),
-  end: Joi.string().regex(regexPatterns.dateString),
-  format: Joi.string().regex(regexPatterns.statisticsFormats).required()
+  type: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.statisticsTypesIssn).required(),
+  begin: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.dateString),
+  end: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.dateString),
+  format: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.statisticsFormats).required()
 };

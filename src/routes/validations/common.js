@@ -26,17 +26,18 @@
  */
 
 import {Joi} from 'celebrate';
+import regexPatterns from './patterns';
 
 export const validateRequestId = {
   id: Joi.number().integer().required()
 };
 
 export const validateQueryBody = {
-  searchText: Joi.string().allow(''),
+  searchText: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow(''),
   limit: Joi.number().integer().min(0).max(50),
   offset: Joi.number().integer().min(0)
 };
 
 export const validatePublisherAutocompleteBody = {
-  searchText: Joi.string().allow('')
+  searchText: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('')
 };
