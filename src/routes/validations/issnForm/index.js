@@ -32,39 +32,39 @@ import {validateCreatePublicationIssn} from '../publication/issn';
 
 
 const formCreateObject = {
-  publisher: Joi.string().max(100).required(),
-  contactPerson: Joi.string().allow('').max(100).required(),
-  email: Joi.string().allow('').regex(regexPatterns.email).max(100).required(),
-  phone: Joi.string().allow('').max(30),
-  address: Joi.string().allow('').max(50).required(),
-  zip: Joi.string().allow('').max(10).required(),
-  city: Joi.string().allow('').max(50).required(),
-  langCode: Joi.string().regex(regexPatterns.langCode).required()
+  publisher: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100).required(),
+  contactPerson: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(100).required(),
+  email: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').regex(regexPatterns.email).max(100).required(),
+  phone: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(30),
+  address: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50).required(),
+  zip: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(10).required(),
+  city: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50).required(),
+  langCode: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.langCode).required()
 };
 
 export const validateCreateIssnRequest = {
   form: Joi.object(formCreateObject).required(),
   publications: Joi.array().items(Joi.object(validateCreatePublicationIssn)).min(1).max(4).required(),
-  turnstileToken: Joi.string()
+  turnstileToken: Joi.string().regex(regexPatterns.utf8mb4, {invert: true})
 };
 
 export const validateUpdateIssnRequest = {
-  publisher: Joi.string().max(100),
-  contactPerson: Joi.string().max(100).allow(''),
-  email: Joi.string().regex(regexPatterns.email).allow('').max(100),
-  phone: Joi.string().allow('').max(30),
-  address: Joi.string().allow('').max(50),
-  zip: Joi.string().allow('').max(10),
-  city: Joi.string().allow('').max(50),
-  langCode: Joi.string().regex(regexPatterns.langCode),
-  status: Joi.string().regex(regexPatterns.issnRequestStatus)
+  publisher: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100),
+  contactPerson: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100).allow(''),
+  email: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.email).allow('').max(100),
+  phone: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(30),
+  address: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50),
+  zip: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(10),
+  city: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50),
+  langCode: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.langCode),
+  status: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.issnRequestStatus)
 };
 
 export const validateQueryIssnRequest = {
-  searchText: Joi.string().allow(''),
+  searchText: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow(''),
   limit: Joi.number().integer().min(0),
   offset: Joi.number().integer().min(0),
-  status: Joi.string().regex(regexPatterns.issnRequestStatus),
+  status: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.issnRequestStatus),
   publisherId: Joi.number().integer().min(0)
 };
 

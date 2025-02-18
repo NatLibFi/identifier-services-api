@@ -29,33 +29,33 @@ import {Joi} from 'celebrate';
 import regexPatterns from '../patterns';
 
 export const validateCreateIssnPublisher = {
-  officialName: Joi.string().max(100).required(),
+  officialName: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100).required(),
   contactPerson: Joi.object({
-    name: Joi.array().items(Joi.string().max(100)).max(5),
-    email: Joi.array().items(Joi.string().max(100)).max(5)
+    name: Joi.array().items(Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100)).max(5),
+    email: Joi.array().items(Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100)).max(5)
   }),
-  emailCommon: Joi.string().allow('').regex(regexPatterns.email).max(100),
-  phone: Joi.string().max(30),
-  address: Joi.string().max(50).required(),
-  zip: Joi.string().max(10).required(),
-  city: Joi.string().max(50).required(),
-  langCode: Joi.string().regex(regexPatterns.langCode).required(),
-  additionalInfo: Joi.string().max(2000)
+  emailCommon: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').regex(regexPatterns.email).max(100),
+  phone: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(30),
+  address: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(50).required(),
+  zip: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(10).required(),
+  city: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(50).required(),
+  langCode: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.langCode).required(),
+  additionalInfo: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(2000)
 };
 
 // Note: in update operation no fields are required
 // one can update only the desired value
 export const validateUpdateIssnPublisher = {
-  officialName: Joi.string().max(100),
+  officialName: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(100),
   contactPerson: Joi.object({
-    name: Joi.array().items(Joi.string().allow('').max(100)).max(5),
-    email: Joi.array().items(Joi.string().allow('').max(100)).max(5)
+    name: Joi.array().items(Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(100)).max(5),
+    email: Joi.array().items(Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(100)).max(5)
   }),
-  emailCommon: Joi.string().allow('').regex(regexPatterns.email).max(100),
-  phone: Joi.string().allow('').max(30),
-  address: Joi.string().allow('').max(50),
-  zip: Joi.string().allow('').max(10),
-  city: Joi.string().allow('').max(50),
-  langCode: Joi.string().regex(regexPatterns.langCode),
-  additionalInfo: Joi.string().allow('').max(2000)
+  emailCommon: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').regex(regexPatterns.email).max(100),
+  phone: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(30),
+  address: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50),
+  zip: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(10),
+  city: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(50),
+  langCode: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.langCode),
+  additionalInfo: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).allow('').max(2000)
 };
