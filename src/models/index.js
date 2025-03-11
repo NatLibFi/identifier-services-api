@@ -29,7 +29,7 @@ import {Sequelize} from 'sequelize';
 
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
-import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV} from '../config';
+import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED} from '../config';
 import {DB_TYPES} from './constants';
 import {isMysqlOrMaria, isValidDatabaseDialect} from './utils';
 
@@ -65,6 +65,8 @@ if (NODE_ENV === 'test') {
   logger.info(`using DB dialect of "${DB_DIALECT}"`);
   logger.info(`apply DB engine definitions regarding engine, charset and collate: ${applyEngineDefinitions}`);
 
+  const logDbBenchmark = (_message, timeMS) => logger.debug(`SQL took ${timeMS}ms`);
+
   sequelize = new Sequelize(DB_URI, {
     dialect: DB_DIALECT,
     dialectOptions: DB_DIALECT_OPTIONS,
@@ -73,7 +75,8 @@ if (NODE_ENV === 'test') {
       charset: 'utf8mb3',
       collate: 'utf8mb3_swedish_ci'
     } : undefined,
-    logging: false
+    benchmark: DB_BENCHMARK_ENABLED,
+    logging: DB_BENCHMARK_ENABLED ? logDbBenchmark : false
   });
 }
 

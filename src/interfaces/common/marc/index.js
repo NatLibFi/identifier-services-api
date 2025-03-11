@@ -59,7 +59,7 @@ export default function (registry) {
 
   /* istanbul ignore if */
   if (MELINDA_API_URL && MELINDA_API_USER && MELINDA_API_PASSWORD) {
-    logger.debug('Melinda API configuration was found');
+    logger.debug(`Melinda API configuration was found for the following registry ${registry}`);
     melindaApiClient = createMelindaApiClient({
       melindaApiUrl: MELINDA_API_URL,
       melindaApiUsername: MELINDA_API_USER,
