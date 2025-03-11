@@ -35,6 +35,7 @@ export const NODE_ENV = readEnvironmentVariable('NODE_ENV', {defaultValue: 'deve
 export const DB_URI = readEnvironmentVariable('DB_URI', {defaultValue: 'sqlite::memory'});
 export const DB_DIALECT = readEnvironmentVariable('DB_DIALECT', {defaultValue: 'sqlite'});
 export const DB_DIALECT_OPTIONS = readEnvironmentVariable('DB_DIALECT_OPTIONS', {defaultValue: {}, format: JSON.parse});
+export const DB_BENCHMARK_ENABLED = readEnvironmentVariable('DB_BENCHMARK_ENABLED', {defaultValue: false, format: parseBoolean});
 
 export const TABLE_PREFIX = readEnvironmentVariable('TABLE_PREFIX', {defaultValue: 'system'});
 

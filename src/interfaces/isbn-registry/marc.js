@@ -675,20 +675,28 @@ function generate500() {
 
 function generate502({publication, dissertation}) {
   if (dissertation && publication.officialName) {
+    const subfieldA = getSubfieldAValue(publication.officialName, publication.year);
+
     return [
       {
         tag: '502',
         ind1: ' ',
         ind2: ' ',
-        subfields: [
-          {code: 'a', value: 'Väitöskirja :'},
-          {code: 'c', value: `${publication.officialName}.`}
-        ]
+        subfields: [{code: 'a', value: subfieldA}]
       }
     ];
   }
 
   return [];
+
+
+  function getSubfieldAValue(officialName, publicationYear) {
+    if (!publicationYear) {
+      return `Väitöskirja--${officialName}.`;
+    }
+
+    return `Väitöskirja--${officialName}, ${publicationYear}.`;
+  }
 }
 
 function generate594() {
