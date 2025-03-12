@@ -45,7 +45,7 @@
     "@natlibfi/marc-record-serializers": "^10.0.2",
     "@natlibfi/melinda-backend-commons": "^2.0.5",
     "@natlibfi/melinda-rest-api-client": "^4.0.1",
-    "@natlibfi/passport-natlibfi-keycloak": "^2.1.5",
+    "@natlibfi/passport-natlibfi-keycloak": "^2.1.6",
     "@natlibfi/sru-client": "^6.0.1",
     "body-parser": "^1.19.2",
     "celebrate": "^15.0.1",
