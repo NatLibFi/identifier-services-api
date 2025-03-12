@@ -38,8 +38,8 @@
     "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
   },
   "dependencies": {
-    "@babel/core": "^7.17.7",
-    "@babel/runtime": "^7.17.7",
+    "@babel/core": "^7.26.10",
+    "@babel/runtime": "^7.26.10",
     "@json2csv/plainjs": "^7.0.1",
     "@natlibfi/express-validate-content-type": "^1.0.1",
     "@natlibfi/marc-record-serializers": "^10.0.2",
