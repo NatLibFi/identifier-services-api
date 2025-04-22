@@ -27,7 +27,7 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
-import Record from 'marc-record-js';
+import {MarcRecord} from '@natlibfi/marc-record';
 import {NODE_ENV} from '../../config';
 
 import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../constants';
@@ -41,7 +41,7 @@ import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISB
 /* eslint-disable max-lines,max-statements */
 export function convertToMarcIsbnIsmn(publication, electronicalRecordPublicationType = null) {
   /* eslint-disable functional/no-conditional-statements */
-  const marcRecord = new Record();
+  const marcRecord = new MarcRecord();
 
   const electronical = isElectronical(electronicalRecordPublicationType);
   const sheetmusic = isSheetMusic(publication);
@@ -51,30 +51,32 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
 
   // Set leader, is different for sheetmusic
   if (sheetmusic) {
-    marcRecord.setLeader('00000ncm a22000008i 4500');
+    // eslint-disable-next-line functional/immutable-data
+    marcRecord.leader = '00000ncm a22000008i 4500';
   } else {
-    marcRecord.setLeader('00000nam a22000008i 4500');
+    // eslint-disable-next-line functional/immutable-data
+    marcRecord.leader = '00000nam a22000008i 4500';
   }
 
   // Add control fields
   // 007 for electronical publications
   if (electronical) {
     // For all electronical records
-    marcRecord.insertControlField(['007', 'cr||| ||||||||']);
+    marcRecord.insertField({tag: '007', value: 'cr||| ||||||||'});
 
     // For audiobooks
     if (audiobook) {
-      marcRecord.insertControlField(['007', 'sr|uunnnnnuneu']);
+      marcRecord.insertField({tag: '007', value: 'sr|uunnnnnuneu'});
     }
   }
 
   // 007 for print sheet music
   if (sheetmusic && !electronical) {
-    marcRecord.insertControlField(['007', 'qu']);
+    marcRecord.insertField({tag: '007', value: 'qu'});
   }
 
   // 008 added for all publications
-  marcRecord.insertControlField(['008', generate008({publication, electronical, sheetmusic, dissertation})]);
+  marcRecord.insertField({tag: '008', value: generate008({publication, electronical, sheetmusic, dissertation})});
 
   // Add datafields
   const dataFieldGenerators = [
