@@ -27,7 +27,7 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
-import Record from 'marc-record-js';
+import {MarcRecord} from '@natlibfi/marc-record';
 import {DateTime} from 'luxon';
 
 import {ISSN_PUBLICATION_TYPES, ISSN_REGISTRY_PUBLICATION_MEDIUM} from '../constants';
@@ -36,27 +36,28 @@ import {NODE_ENV} from '../../config';
 /**
  * Convert ISSN-registry publication entry to MARC record
  * @param {Object} rawInformation ISSN-registry publication, publisher and form objects to construct MARC from
- * @returns {Record} Record object constructed using marc-record-js library
+ * @returns {Object} Record object constructed using marc-record-js library
  */
 /* eslint-disable max-lines */
 export function convertToMarcIssn({publication, publisher, form}) {
   /* eslint-disable functional/no-conditional-statements */
-  const marcRecord = new Record();
+  const marcRecord = new MarcRecord();
 
   // Attributes affecting field generation
   const electronical = isElectronical(publication);
 
   // Set leader
-  marcRecord.setLeader('00000nas a22000008i 4500');
+  // eslint-disable-next-line functional/immutable-data
+  marcRecord.leader = '00000nas a22000008i 4500';
 
   // Add control fields
   // 007 is generated only for electronical publications
   if (electronical) {
-    marcRecord.insertControlField(['007', 'cr||||||||||||']);
+    marcRecord.insertField({tag: '007', value: 'cr||||||||||||'});
   }
 
   // 008 added for all publications
-  marcRecord.insertControlField(['008', generate008({publication, electronical})]);
+  marcRecord.insertField({tag: '008', value: generate008({publication, electronical})});
 
   // Add datafields
   const dataFieldGenerators = [

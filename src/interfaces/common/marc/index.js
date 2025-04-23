@@ -149,7 +149,7 @@ export default function (registry) {
         return records;
       }
 
-      const serializableRecords = records.map(r => MarcRecordSerializers.Json.from(JSON.stringify(r.toJsonObject())));
+      const serializableRecords = records.map(r => MarcRecordSerializers.Json.from(JSON.stringify(r.toObject())));
 
       if (format === 'text') {
         return serializableRecords.map(r => MarcRecordSerializers.Text.to(r));
