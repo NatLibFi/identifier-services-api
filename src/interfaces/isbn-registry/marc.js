@@ -583,8 +583,8 @@ function generate341({electronical, audiobook}) {
           ind1: ' ',
           ind2: ' ',
           subfields: [
-            {code: 'a', value: 'kuuloon perustuva'},
-            {code: '2', value: 'mts/fin'}
+            {code: 'a', value: 'auditory'},
+            {code: '2', value: 'sapdv'}
           ]
         }
       ];
@@ -596,8 +596,8 @@ function generate341({electronical, audiobook}) {
         ind1: ' ',
         ind2: ' ',
         subfields: [
-          {code: 'a', value: 'tekstiin perustuva'},
-          {code: '2', value: 'mts/fin'}
+          {code: 'a', value: 'textual'},
+          {code: '2', value: 'sapdv'}
         ]
       }
     ];
