@@ -1,10 +1,12 @@
+import functional from "eslint-plugin-functional";
+
 // Eslint configuration object for src
 const configSrc = {
   files: [
     "src/*"
   ],
   linterOptions: {
-    reportUnusedDisableDirectives: true,
+    reportUnusedDisableDirectives: "off",
   },
   rules: {
     "no-console": "warn",
@@ -48,5 +50,9 @@ const configIgnores = {
 
 export default [
   configSrc,
-  configIgnores
+  configIgnores,
+  functional.configs.externalVanillaRecommended,
+  functional.configs.recommended,
+  functional.configs.stylistic,
+  functional.configs.disableTypeChecked
 ];
