@@ -5,9 +5,6 @@ const configSrc = {
   files: [
     "src/*"
   ],
-  linterOptions: {
-    reportUnusedDisableDirectives: "off",
-  },
   rules: {
     "no-console": "warn",
     "eqeqeq": ["error", "always"],
