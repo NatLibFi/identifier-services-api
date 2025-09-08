@@ -29,8 +29,8 @@ import {calculateCheckDigitIsbn} from '../../interfaces/isbn-registry/ranges/isb
 
 export function isValidIsbnOrIsmnIdentifier(value) {
   // Note: ISBN validation regexp considers only Finnish ISBN language groups
-  const isbnIdentifierRegex = /^978-95(?:1|2)-[0-9]{1,5}-[0-9]{1,5}-[0-9]$/; // eslint-disable-line require-unicode-regexp
-  const ismnIdentifierRegex = /^979-0-[0-9]{3,7}-[0-9]{1,5}-[0-9]$/; // eslint-disable-line require-unicode-regexp
+  const isbnIdentifierRegex = /^978-95(?:1|2)-[0-9]{1,5}-[0-9]{1,5}-[0-9]$/;
+  const ismnIdentifierRegex = /^979-0-[0-9]{3,7}-[0-9]{1,5}-[0-9]$/;
 
   if (!isbnIdentifierRegex.test(value) && !ismnIdentifierRegex.test(value)) {
     throw new Error('Only ISBN and ISMN identifier values are allowed!');

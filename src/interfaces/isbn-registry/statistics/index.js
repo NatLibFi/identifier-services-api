@@ -43,9 +43,8 @@ import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} fro
  * ISBN statistics interface.
  * @returns Interface to interact with ISBN statistics
  */
-/* eslint-disable max-lines */
 export default function () {
-  const logger = createLogger(); // eslint-disable-line
+  const logger = createLogger();
 
   const publisherIsbnModel = sequelize.models.publisherIsbn;
   const publicationIsbnModel = sequelize.models.publicationIsbn;
@@ -78,7 +77,7 @@ export default function () {
    * @param {string} type Type of statistics
    * @returns Formatted item
    */
-  async function formatStatistics(format, jsonData, type) { // eslint-disable-line require-await
+  async function formatStatistics(format, jsonData, type) {
     if (format === 'xlsx') {
       const statisticsType = `ISBN_REGISTRY_${type}`;
       return formatStatisticsToXlsx(statisticsType, jsonData, type);
@@ -97,7 +96,7 @@ export default function () {
    * @param {Object} params Parameters for retrieving statistics
    * @returns Object containing required statistics
    */
-  async function getStatistics({type, begin, end}) { // eslint-disable-line require-await
+  async function getStatistics({type, begin, end}) {
     if (Object.keys(STATISTICS).includes(type)) {
       return STATISTICS[type].getter({begin, end, identifierType: STATISTICS[type].identifierType});
     }
@@ -115,11 +114,11 @@ export default function () {
 
     // SQL query
     const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
-                  `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
-                  'WHERE PIR.id IN ' +
-                  `  (SELECT min(PIR.id) FROM ${publisherRangeModel.tableName} PIR GROUP BY PIR.publisher_id) ` +
-                  'AND PIR.created BETWEEN :begin AND :end ' +
-                  'ORDER BY P.official_name ASC';
+      `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
+      'WHERE PIR.id IN ' +
+      `  (SELECT min(PIR.id) FROM ${publisherRangeModel.tableName} PIR GROUP BY PIR.publisher_id) ` +
+      'AND PIR.created BETWEEN :begin AND :end ' +
+      'ORDER BY P.official_name ASC';
 
     const result = await sequelize.query(query, {
       benchmark: true,
@@ -147,9 +146,9 @@ export default function () {
 
     // SQL query
     const query = `SELECT * FROM ${publisherIsbnModel.tableName} P ` +
-                  `INNER JOIN (SELECT publisher_id, publisher_identifier, created AS pir_created FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end) PIR ` +
-                  'ON P.id = PIR.publisher_id ' +
-                  'ORDER BY P.official_name ASC';
+      `INNER JOIN (SELECT publisher_id, publisher_identifier, created AS pir_created FROM ${publisherRangeModel.tableName} WHERE created BETWEEN :begin AND :end) PIR ` +
+      'ON P.id = PIR.publisher_id ' +
+      'ORDER BY P.official_name ASC';
 
     const result = await sequelize.query(query, {
       benchmark: true,
@@ -170,7 +169,6 @@ export default function () {
       .map(previousNameEntry => formatPublisherToPIID(previousNameEntry, previousNameEntry.publisher_identifier, identifierType, true))
       .flat();
 
-    // eslint-disable-next-line functional/immutable-data
     return [formattedResult, previousNameEntries]
       .flat()
       .sort((x, y) => x.Registrant_Name.toLowerCase().localeCompare(y.Registrant_Name.toLowerCase()));
@@ -190,12 +188,10 @@ export default function () {
 
       // If publisher entry exists in result set, but does not consider the latest publisher range
       // Change the entry in result set so that latest publisher range entry is included to result set
-      // eslint-disable-next-line functional/no-conditional-statements
       const prevCreatedDate = new Date(prev[existingEntryIdx].pir_created);
       const curCreatedDate = new Date(cur.pir_created);
 
       if (prevCreatedDate < curCreatedDate) {
-        // eslint-disable-next-line functional/immutable-data
         prev[existingEntryIdx] = cur;
         return prev;
       }
@@ -218,10 +214,10 @@ export default function () {
   async function getAuthorPublisherPublicationStatistics({begin, end, identifierType}) {
     // SQL query
     const query = `SELECT * FROM ${publicationIsbnModel.tableName} ` +
-                  `WHERE publisher_id = :publisherId AND ` +
-                  'publication_identifier_type = :identifierType AND ' +
-                  '((created BETWEEN :begin AND :end) OR (modified BETWEEN :begin AND :end)) ' +
-                  'ORDER BY official_name ASC';
+      `WHERE publisher_id = :publisherId AND ` +
+      'publication_identifier_type = :identifierType AND ' +
+      '((created BETWEEN :begin AND :end) OR (modified BETWEEN :begin AND :end)) ' +
+      'ORDER BY official_name ASC';
 
     const result = await sequelize.query(query, {
       benchmark: true,
@@ -299,7 +295,6 @@ export default function () {
   }
 
   // Does not yet have automated tests
-  /* eslint-disable max-statements,functional/immutable-data */
   async function getMonthlyStatistics({begin, end}) {
     // Init result set
     // Transform dates and get array of year/months
@@ -388,13 +383,12 @@ export default function () {
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
         Object.keys(v).forEach(k => {
-          result[k] = v[k]; // eslint-disable-line functional/immutable-data
+          result[k] = v[k];
         });
       });
 
       // Fill zeroes as if no entries exist, this is formatted as zero
       Object.keys(result).forEach(k => {
-        /* eslint-disable functional/no-conditional-statements */
         if (result[k] === '') {
           result[k] = '0';
         }
@@ -406,7 +400,6 @@ export default function () {
       return result;
     }
   }
-  /* eslint-enable max-statements,functional/immutable-data */
 
 
   // Returns array of strings representing months between beginDate and endDate in format of
@@ -433,7 +426,7 @@ export default function () {
           return;
         }
 
-        results.push(`${month} / ${year}`); // eslint-disable-line functional/immutable-data
+        results.push(`${month} / ${year}`);
         return;
       });
     });
@@ -477,14 +470,13 @@ export default function () {
 
   // MONTHLY STATS GETTER FUNCTIONS
   // These contain SQL queries for retrieving statistics
-  // eslint-disable-next-line require-await
   async function _getByMessageCount({begin, end}) {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'sent');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'sent');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${messageIsbnModel.tableName} WHERE ` +
-                  `sent BETWEEN :begin AND :end ` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `sent BETWEEN :begin AND :end ` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,
@@ -498,16 +490,16 @@ export default function () {
     });
   }
 
-  async function _getCreatedPublisherCount({begin, end, identifierType}) { // eslint-disable-line require-await
+  async function _getCreatedPublisherCount({begin, end, identifierType}) {
     const publisherRangeModel = _getPublisherRangeModel(identifierType);
 
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'P.created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'P.created');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT P.id) as c FROM ${publisherIsbnModel.tableName} P ` +
-                  `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
-                  `WHERE P.created BETWEEN :begin AND :end ` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `INNER JOIN ${publisherRangeModel.tableName} PIR ON P.id = PIR.publisher_id ` +
+      `WHERE P.created BETWEEN :begin AND :end ` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,
@@ -520,13 +512,13 @@ export default function () {
     });
   }
 
-  async function _getCreatedPublisherRequests({begin, end}) { // eslint-disable-line require-await
+  async function _getCreatedPublisherRequests({begin, end}) {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
-                  `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,
@@ -540,15 +532,14 @@ export default function () {
     });
   }
 
-  // eslint-disable-next-line require-await
   async function _getCreatedPublicationRequests({begin, end, music}) {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIsbnModel.tableName} ` +
-                  `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
-                  `${_getSheetMusicCondition(music)}` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `WHERE created BETWEEN :begin AND :end AND created_by = :websiteUser ` +
+      `${_getSheetMusicCondition(music)}` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,
@@ -566,7 +557,6 @@ export default function () {
     }
   }
 
-  // eslint-disable-next-line require-await
   async function _getCreatedIdentifierCount({begin, end, identifierType, publisherId, excludePublisherIds, category}) {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'IB.created');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'IB.created');
@@ -575,11 +565,11 @@ export default function () {
     const conditions = [_getPublisherConditions(publisherId, excludePublisherIds), _getCategoryConditions(category)].filter(condition => condition !== '');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT I.id) as c FROM ${publisherRangeModel.tableName} PIR ` +
-                  `INNER JOIN ${identifierModel.tableName} I ON I.publisher_identifier_range_id = PIR.id ` +
-                  `INNER JOIN ${identifierBatchModel.tableName} IB ON I.identifier_batch_id = IB.id ` +
-                  `WHERE IB.identifier_type = :identifierType AND IB.created BETWEEN :begin AND :end ` +
-                  `${_getConditionString(conditions)}` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `INNER JOIN ${identifierModel.tableName} I ON I.publisher_identifier_range_id = PIR.id ` +
+      `INNER JOIN ${identifierBatchModel.tableName} IB ON I.identifier_batch_id = IB.id ` +
+      `WHERE IB.identifier_type = :identifierType AND IB.created BETWEEN :begin AND :end ` +
+      `${_getConditionString(conditions)}` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,
@@ -621,13 +611,13 @@ export default function () {
     }
   }
 
-  async function _getModifiedPublisherCount({begin, end}) { // eslint-disable-line require-await
+  async function _getModifiedPublisherCount({begin, end}) {
     const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
     const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
 
     const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIsbnModel.tableName} ` +
-                  `WHERE modified BETWEEN :begin AND :end ` +
-                  `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+      `WHERE modified BETWEEN :begin AND :end ` +
+      `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
     return sequelize.query(query, {
       benchmark: true,

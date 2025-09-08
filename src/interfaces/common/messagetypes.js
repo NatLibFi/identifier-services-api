@@ -96,7 +96,7 @@ export default function (registry) {
    * @param {Object} user User information
    * @returns Resulting database entry in JSON format if success. Throws ApiError on failure.
    */
-  async function create(doc, user) { // eslint-disable-line require-await
+  async function create(doc, user) {
     const dbDoc = {...doc, createdBy: user.id, modifiedBy: user.id};
     return messageTypeModelInterface.create(dbDoc);
   }

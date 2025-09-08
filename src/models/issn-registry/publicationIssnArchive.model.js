@@ -33,8 +33,6 @@ import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {jsonToPreviousString, previousStringToJson} from '../modelUtils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
-
 export default function (sequelize, dialect) {
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];
 
@@ -111,47 +109,39 @@ export default function (sequelize, dialect) {
       previousEntity: {
         type: DataTypes.STRING(850),
         field: 'previous',
-        /* eslint-disable functional/no-this-expressions */
         get() {
           return this.getDataValue('previousEntity') ? previousStringToJson(this.getDataValue('previousEntity')) : this.getDataValue('previousEntity');
         },
         set(v) {
           this.setDataValue('previousEntity', jsonToPreviousString(v));
         }
-        /* eslint-enable functional/no-this-expressions */
       },
       mainSeries: {
         type: DataTypes.STRING(850),
-        /* eslint-disable functional/no-this-expressions */
         get() {
           return this.getDataValue('mainSeries') ? previousStringToJson(this.getDataValue('mainSeries')) : this.getDataValue('mainSeries');
         },
         set(v) {
           this.setDataValue('mainSeries', jsonToPreviousString(v));
         }
-        /* eslint-enable functional/no-this-expressions */
       },
       subseries: {
         type: DataTypes.STRING(850),
-        /* eslint-disable functional/no-this-expressions */
         get() {
           return this.getDataValue('subseries') ? previousStringToJson(this.getDataValue('subseries')) : this.getDataValue('subseries');
         },
         set(v) {
           this.setDataValue('subseries', jsonToPreviousString(v));
         }
-        /* eslint-enable functional/no-this-expressions */
       },
       anotherMedium: {
         type: DataTypes.STRING(850),
-        /* eslint-disable functional/no-this-expressions */
         get() {
           return this.getDataValue('anotherMedium') ? previousStringToJson(this.getDataValue('anotherMedium')) : this.getDataValue('anotherMedium');
         },
         set(v) {
           this.setDataValue('anotherMedium', jsonToPreviousString(v));
         }
-        /* eslint-enable functional/no-this-expressions */
       },
       additionalInfo: {
         type: DataTypes.STRING(1000)
