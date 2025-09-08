@@ -27,8 +27,6 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
-/* eslint-disable max-lines */
-
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
@@ -92,7 +90,7 @@ export default function () {
       return _filterResult(formattedResult, user);
     }
 
-    if (result !== null && !_isPublisherRegistryEntry(result)) { // eslint-disable-line
+    if (result !== null && !_isPublisherRegistryEntry(result)) {
       logger.info('Publisher with id exists but is not part of publisher registry');
     }
 
@@ -199,7 +197,7 @@ export default function () {
       };
     }
 
-    if (result !== null && !_isPublisherRegistryEntry(result)) { // eslint-disable-line
+    if (result !== null && !_isPublisherRegistryEntry(result)) {
       logger.info('Publisher with id exists but is not part of publisher registry');
     }
 
@@ -214,7 +212,6 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} Updated publisher registry entry
    */
-  /* eslint-disable max-statements */
   async function update(id, doc, user) {
 
     // Note: associations must be included so it can be known if
@@ -236,7 +233,6 @@ export default function () {
       const publisherJson = publisher.toJSON();
 
       // Remove attributes not allowed to update/overwrite
-      /* eslint-disable no-unused-vars */
       const {
         activeIdentifierIsbn,
         activeIdentifierIsmn,
@@ -244,7 +240,6 @@ export default function () {
         createdBy,
         ...dbDoc
       } = {...doc, modifiedBy: user.id};
-      /* eslint-enable no-unused-vars */
 
       if (_modifiesProtectedAttributes(publisherJson, doc)) {
         throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Cannot update value of protected attribute');
@@ -259,7 +254,6 @@ export default function () {
 
     throw new ApiError(HttpStatus.NOT_FOUND);
   }
-  /* eslint-enable max-statements */
 
   /**
    * Query publisher registry publishers for admin level users.
@@ -267,7 +261,6 @@ export default function () {
    * @param {Object} user User making the request
    * @returns Result set of the query
    */
-  /* eslint-disable max-statements,complexity */
   async function query(guiOpts, user) {
     // NOTE: there exists a known, most likely a sequelize-related, bug regarding the row set being limited incorrectly.
     // Basically the reason seems to be that the duplicate entries are cut from the resulting rows attribute after the limiter
@@ -345,8 +338,7 @@ export default function () {
       }
     }
 
-    /* eslint-disable functional/no-conditional-statements */
-    if (publisherIds !== null) { // eslint-disable-line no-negated-condition
+    if (publisherIds !== null) {
 
       // Note: since we are using publisher IDs as base for the search, there is no need for additionally make sure
       // publisher is linked to an publisher range. ID based search is also distinct by default so no need for
@@ -497,14 +489,12 @@ export default function () {
       return {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn};
     }
   }
-  /* eslint-enable max-statements */
 
   /**
    * Public query publisher functionality.
    * @param {Object} guiOpts Search options
    * @returns Result set of the query
    */
-  /* eslint-disable max-statements,complexity */
   async function queryPublic(guiOpts) {
     // NOTE: there exists a known, most likely a sequelize-related, bug regarding the row set being limited incorrectly.
     // Basically the reason seems to be that the duplicate entries are cut from the resulting rows attribute after the limiter
@@ -563,8 +553,7 @@ export default function () {
       }
     }
 
-    /* eslint-disable functional/no-conditional-statements */
-    if (publisherIds !== null) { // eslint-disable-line no-negated-condition
+    if (publisherIds !== null) {
 
       // Note: since we are using publisher IDs as base for the search, there is no need for additionally make sure
       // publisher is linked to an publisher range. ID based search is also distinct by default so no need for
@@ -658,7 +647,6 @@ export default function () {
       return {id, officialName, otherNames, hasQuitted, activeIdentifierIsbn, activeIdentifierIsmn};
     }
   }
-  /* eslint-enable max-statements */
 
   /**
    * Function to test whether publisherModel entry is part of publisher registry.
@@ -721,11 +709,8 @@ export default function () {
    * @param {Object} guiOpts Search options
    * @returns Result set of the query
    */
-  /* eslint-disable max-statements,complexity */
-
   async function autoComplete(guiOpts) {
 
-    /* eslint-disable functional/no-let */
     const {searchText} = guiOpts;
     const offset = 0;
     const limit = 10;
@@ -1068,7 +1053,6 @@ export default function () {
         const result = {};
 
         // Add translated headings of publisher base information
-        /* eslint-disable functional/immutable-data */
         Object.keys(publisherBaseInformation).forEach(k => {
           result[translatePublisherInformationRecordKey(k)] = transformAndTranslatePublisherInformationRecordValue(k, publisherBaseInformation[k]);
         });
@@ -1090,8 +1074,6 @@ export default function () {
         } else {
           result.Arkistotieto = 'Ei ole';
         }
-
-        /* eslint-enable functional/immutable-data */
 
         return result;
       }

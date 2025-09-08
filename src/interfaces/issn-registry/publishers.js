@@ -62,7 +62,6 @@ export default function () {
    * @param {Object} user User creating the new publication
    * @returns {Object} Created publisher as object
    */
-  /* eslint-disable-next-line max-statements */
   async function create(doc, user) {
     const result = await publisherIssnModelInterface.create({
       ...doc,
@@ -84,14 +83,12 @@ export default function () {
     const dbDoc = {...doc, modifiedBy: user.id};
 
     // Sanity verification: Remove attributes not allowed to update/overwrite
-    /* eslint-disable functional/immutable-data */
     delete dbDoc.id;
     delete dbDoc.idOld;
     delete dbDoc.formId;
     delete dbDoc.created;
     delete dbDoc.createdBy;
     delete dbDoc.modified;
-    /* eslint-enable functional/immutable-data */
 
     const result = await publisherIssnModelInterface.update(id, dbDoc);
     return result.toJSON();
@@ -105,7 +102,6 @@ export default function () {
    * @param {Object} user User removing the publication
    * @returns True if removal was successful, otherwise throws ApiError
    */
-  // eslint-disable-next-line max-statements
   async function remove(id, user) {
     const t = await sequelize.transaction();
     try {
@@ -123,7 +119,7 @@ export default function () {
       // If publisher was created through a form and afterwards deassociated with said form, remove note that publisher was created from form
       if (issnPublisher.formId && issnPublisher.formId !== 0) {
         const creationForm = await issnFormModel.findByPk(issnPublisher.formId, {transaction: t});
-        if (creationForm !== null) { // eslint-disable-line functional/no-conditional-statements
+        if (creationForm !== null) {
           await creationForm.update({publisherCreated: false, modifiedBy: user.id}, {transaction: t});
         }
       }
@@ -178,8 +174,6 @@ export default function () {
    * @param {Object} guiOpts Search options
    * @returns Result set of the query
    */
-  /* eslint-disable max-statements,complexity */
-
   async function autoComplete(guiOpts) {
     const {searchText} = guiOpts;
     const attributes = ['id', 'officialName'];
