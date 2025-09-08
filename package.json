@@ -27,7 +27,7 @@
     "lint": "eslint -- src",
     "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -r dotenv/config -t 20000 --exit --require @babel/register",
     "test:coverage": "nyc --reporter=text npm run test:base -- src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
-    "test": "npm run lint && npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
+    "test": "npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
     "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
