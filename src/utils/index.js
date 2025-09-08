@@ -25,11 +25,11 @@
  *
  */
 
-import validateContentType from '@natlibfi/express-validate-content-type';
 import bodyParser from 'body-parser';
 
 import {createLogger, createExpressLogger} from '@natlibfi/melinda-backend-commons';
 
+import validateContentType from '../middlewares/validate-content-type';
 import {ENABLE_PROXY, PROXY_CUSTOM_HEADER, ROLE_MAP} from '../config';
 
 export {ApiError} from './apiError';
