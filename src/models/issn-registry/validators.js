@@ -28,7 +28,7 @@
 import {calculateCheckDigitIssn} from '../../interfaces/issn-registry/rangeUtils';
 
 export function isValidIssnIdentifier(value) {
-  const issnIdentifierRegex = /^[0-9]{4}-[0-9]{3}[0-9X]$/; // eslint-disable-line require-unicode-regexp
+  const issnIdentifierRegex = /^[0-9]{4}-[0-9]{3}[0-9X]$/;
 
   if (!issnIdentifierRegex.test(value)) {
     throw new Error('Only valid ISSN identifiers allowed');

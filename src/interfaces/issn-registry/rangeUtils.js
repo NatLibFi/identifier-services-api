@@ -44,12 +44,12 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
 
   let sumOfDigits = 0;
 
-  // eslint-disable-next-line functional/no-loop-statements,no-plusplus
+  // eslint-disable-next-line functional/no-loop-statements
   for (let i = 0; i < formattedIssnWithoutCheckDigit.length; i++) {
     sumOfDigits += Number(formattedIssnWithoutCheckDigit.charAt(i)) * (8 - i);
   }
 
-  const checkDigit = (11 - (sumOfDigits % 11)) % 11; // eslint-disable-line no-extra-parens
+  const checkDigit = (11 - (sumOfDigits % 11)) % 11;
 
   // Validate that the value is sane
   if (isNaN(checkDigit) || checkDigit < 0 || checkDigit > 10) {
@@ -60,7 +60,7 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
 
   // Tests input consists of string length of 7 and each character is a number
   function inputIsValid(v) {
-    return v.match(/^[0-9]{7}$/); // eslint-disable-line
+    return v.match(/^[0-9]{7}$/);
   }
 }
 /* eslint-enable functional/no-let */
@@ -71,7 +71,7 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
  * @returns {boolean} True if ISSN given as parameter si valid, otherwise false
  */
 export function validateIssn(issn) {
-  if (!issn.match(/^[0-9]{4}-[0-9]{3}[0-9X]{1}$/)) { // eslint-disable-line require-unicode-regexp
+  if (!issn.match(/^[0-9]{4}-[0-9]{3}[0-9X]{1}$/)) {
     return false;
   }
 

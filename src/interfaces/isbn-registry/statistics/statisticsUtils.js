@@ -42,7 +42,6 @@ import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_
  * @returns Formatted object or array of formatted objects if previousNamesOnly is set to true
  */
 export function formatPublisherToPIID(publisher, publisherIdentifier, identifierType, previousNamesOnly = false) {
-  /* eslint-disable camelcase */
   // Using PIID headers as attribute values
   if (previousNamesOnly) {
     const previousNames = publisher.previous_names;
@@ -87,8 +86,6 @@ export function formatPublisherToPIID(publisher, publisherIdentifier, identifier
       ISNI: ''
     };
   }
-
-  /* eslint-enable camelcase */
 }
 
 /**
@@ -100,7 +97,6 @@ export function formatPublisherToPIID(publisher, publisherIdentifier, identifier
  * @returns Formatted object
  */
 export function formatPublicationToPIID(publication, identifier, publicationFormat, identifierType) {
-  /* eslint-disable camelcase */
   // Using PIID headers as attribute values
   const isCancelled = _publicationIsCanceled();
 
@@ -129,7 +125,6 @@ export function formatPublicationToPIID(publication, identifier, publicationForm
     Registrant_ID: '',
     ISNI: ''
   };
-  /* eslint-enable camelcase */
 
   /**
    * Utility function to determine whether publication is cancelled or not.
@@ -145,6 +140,6 @@ export function formatPublicationToPIID(publication, identifier, publicationForm
     // If publication name contains format and cancellation information, it means that only the defined format is cancelled
     const typeIsCanceled = publication.official_name.match(/cancelled/u) && publication.official_name.includes(publicationFormat);
 
-    return (publicationIsCanceled && !cancellationIncludesTypeInfo) || (cancellationIncludesTypeInfo && typeIsCanceled); // eslint-disable-line no-extra-parens
+    return (publicationIsCanceled && !cancellationIncludesTypeInfo) || (cancellationIncludesTypeInfo && typeIsCanceled);
   }
 }

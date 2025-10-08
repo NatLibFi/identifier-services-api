@@ -46,18 +46,18 @@ export default function ({rootPath} = {}) {
         const modifiedTimeUpdatePromises = [];
 
         await sequelize.sync({force: true});
-        const {models} = sequelize; // eslint-disable-line no-unused-vars
+        const {models} = sequelize;
         Object.keys(data).forEach(name => {
           const model = `models.${name}`;
 
           // Required to simulate how API behaves due to need to map attribute previous to previousEntity for Sequalize ORM model (since the attribute is reserved).
-          if ([models.publicationIssn.name, models.publicationIssnArchive.name].includes(name)) { // eslint-disable-line functional/no-conditional-statements
+          if ([models.publicationIssn.name, models.publicationIssnArchive.name].includes(name)) {
             data[name].forEach(item => {
-              promises.push(`${model}.create(${JSON.stringify(transformIssnPublicationToDb(item))})`); // eslint-disable-line functional/immutable-data
+              promises.push(`${model}.create(${JSON.stringify(transformIssnPublicationToDb(item))})`);
             });
-          } else { // eslint-disable-line functional/no-conditional-statements
+          } else {
             data[name].forEach(item => {
-              promises.push(`${model}.create(${JSON.stringify(item)})`); // eslint-disable-line functional/immutable-data
+              promises.push(`${model}.create(${JSON.stringify(item)})`);
             });
           }
         });
@@ -73,15 +73,15 @@ export default function ({rootPath} = {}) {
             const hasId = Object.keys(item).includes('id');
             const hasModified = Object.keys(item).includes('modified');
 
-            if (hasId && hasModified) { // eslint-disable-line functional/no-conditional-statements
+            if (hasId && hasModified) {
               // Derived from GitHub issue comment of GitHub user jzyds proposing use of sequelize.query: https://github.com/sequelize/sequelize/issues/12386#issuecomment-1280004433
-              modifiedTimeUpdatePromises.push(`UPDATE ${eval(model).tableName} SET modified = '${item.modified}' WHERE id = ${item.id}`); // eslint-disable-line functional/immutable-data,no-eval
+              modifiedTimeUpdatePromises.push(`UPDATE ${eval(model).tableName} SET modified = '${item.modified}' WHERE id = ${item.id}`);
             }
           });
         });
 
-        await Promise.all(promises.map(p => eval(p))); // eslint-disable-line no-eval
-        await Promise.all(modifiedTimeUpdatePromises.map(p => sequelize.query(p))); // eslint-disable-line no-eval
+        await Promise.all(promises.map(p => eval(p)));
+        await Promise.all(modifiedTimeUpdatePromises.map(p => sequelize.query(p)));
 
         return;
       }
@@ -90,7 +90,7 @@ export default function ({rootPath} = {}) {
       await sequelize.sync({force: true});
       return;
     } catch (err) {
-      console.log(err); // eslint-disable-line
+      console.log(err);
       throw err;
     }
 
@@ -101,11 +101,11 @@ export default function ({rootPath} = {}) {
   }
 
   async function dump() {
-    const {models} = sequelize; // eslint-disable-line no-unused-vars
+    const {models} = sequelize;
 
     const results = await Promise.all(Object.keys(models).map(name => new Promise((resolve, reject) => {
       try {
-        eval(`models.${name}.findAll({raw: true})`) // eslint-disable-line no-eval
+        eval(`models.${name}.findAll({raw: true})`)
           .then(queryResult => {
             // Required due to raw:true still resulting of mapping Sequelize model attibutes instead of returning db column name
             // Since previous-attribute is reserved for Sequelize ISSN publication/publicationArchiveEntry attribute name had to be altered

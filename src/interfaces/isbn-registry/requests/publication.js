@@ -90,7 +90,7 @@ export default function () {
 
     // Inform customer that the request was successfully received if system is configured to send emails
     // If logged in user is initiating the creation of request, do not send confirmation email
-    /* eslint-disable no-process-env,functional/no-let,functional/no-conditional-statements */
+    /* eslint-disable functional/no-let */
     if (SEND_EMAILS && !user && !copy) {
       let messageBody = getNotifyClientMessageBody(doc.langCode);
       let subject = getNotifyClientMessageSubject(doc.langCode);
@@ -118,7 +118,7 @@ export default function () {
       }
     }
 
-    /* eslint-enable no-process-env,functional/no-let,functional/no-conditional-statements */
+    /* eslint-enable functional/no-let */
     return result.toJSON();
 
     function getNotifyClientMessageBody(lang) {
@@ -180,7 +180,7 @@ export default function () {
 
     // Do not include publisher object, but instead implement new virtual attribute publisherName
     const {publisher, ...formattedResult} = result.toJSON();
-    formattedResult.publisherName = publisher ? publisher.officialName : null; // eslint-disable-line functional/immutable-data
+    formattedResult.publisherName = publisher ? publisher.officialName : null;
 
     // Feature request: ISBN/ISMN publication request page should view whether it is already associated with message
     const associatedMessages = await messageIsbnModel.findAll({where: {publicationId: id}});
@@ -199,16 +199,13 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns Publication request as object
    */
-  /* eslint-disable max-statements,max-depth */
   async function update(id, doc, user) {
     // Interfaces between old schema and noSQL-like schema
     const publication = await publicationModelInterface.read(id);
     const dbDoc = {...doc, modifiedBy: user.id};
 
     // Test whether request have been accepted as this affect what attributes can be updated
-    // eslint-disable-next-line functional/no-conditional-statements
     if (_getState(publication) === 'ACCEPTED') {
-      /* eslint-disable functional/immutable-data */
       if (doc.noIdentifierGranted || doc.onProcess === true) {
         throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'Cannot alter state of publication request after identifiers have been granted');
       }
@@ -235,7 +232,7 @@ export default function () {
     }
 
     // If request has state NEW when it's updated, automatically update request state to IN_PROGRESS
-    if (_getState(publication) === 'NEW') { // eslint-disable-line
+    if (_getState(publication) === 'NEW') {
       dbDoc.onProcess = true;
     }
 
@@ -246,7 +243,6 @@ export default function () {
     delete dbDoc.createdBy;
     delete dbDoc.created;
     delete dbDoc.modified;
-    /* eslint-enable functional/immutable-data */
 
     // Format sanity check, produces error if does not pass
     _publicationFormatSanityCheck(dbDoc);
@@ -258,7 +254,6 @@ export default function () {
     await publication.update(dbDoc);
     return read(id);
   }
-  /* eslint-enable max-statements,max-depth */
 
   /**
    * Removes publication request entry from database. Entry can be removed only if no identifier has been granted.
@@ -309,7 +304,6 @@ export default function () {
 
     return {totalDoc: result.count, results: result.rows.map(r => r.toJSON())};
 
-    // eslint-disable-next-line require-await
     async function searchByAttributes(attr, stateConditions) {
       const {publisherId, searchText} = attr;
       const searchAttributes = ['officialName', 'contactPerson', 'email', 'comments', 'title', 'subtitle'];
@@ -332,7 +326,6 @@ export default function () {
       });
     }
 
-    // eslint-disable-next-line require-await
     async function searchByIdentifier(identifier, stateConditions) {
       const identifierSearchTerm = `%${identifier}%`;
       return publicationModel.findAndCountAll({
@@ -371,7 +364,6 @@ export default function () {
     }
 
     // Some attributes should not be copied ever, e.g., identifiers and request metadata information
-    /* eslint-disable no-unused-vars*/
     const {
       id: _id,
       publicationIdentifierPrint,
@@ -385,10 +377,9 @@ export default function () {
       modifiedBy,
       ...dbDoc
     } = readResult.toJSON();
-    /* eslint-enable no-unused-vars*/
 
     // Add copy information to title
-    dbDoc.title = `${dbDoc.title} (copy)`; // eslint-disable-line functional/immutable-data
+    dbDoc.title = `${dbDoc.title} (copy)`;
 
     return create(dbDoc, user, true);
   }
@@ -404,7 +395,7 @@ export default function () {
     const publication = await publicationModelInterface.read(id);
 
     // Verifies publisher can be found from database if the publisherId is not null
-    publisherId === null || await publisherModelInterface.read(publisherId); // eslint-disable-line no-unused-expressions
+    publisherId === null || await publisherModelInterface.read(publisherId);
 
     if (_getState(publication) === 'ACCEPTED') {
       throw new ApiError(HttpStatus.CONFLICT, 'Cannot set publisher to publication which already has assigned identifiers!');
@@ -415,9 +406,8 @@ export default function () {
       modifiedBy: user.id
     };
 
-    // eslint-disable-next-line functional/no-conditional-statements
     if (_getState(publication) === 'NEW') {
-      updateDoc.onProcess = true; // eslint-disable-line functional/immutable-data
+      updateDoc.onProcess = true;
     }
 
     await publication.update(updateDoc);
@@ -440,7 +430,6 @@ export default function () {
       }
     }
 
-    // eslint-disable-next-line no-extra-parens
     if (((publication.publicationIdentifierPrint !== '' || publication.publicationIdentifierElectronical !== '')) && !publication.noIdentifierGranted) {
       return 'ACCEPTED';
     }
@@ -538,8 +527,8 @@ export default function () {
       const lastName = doc[`lastName${authorIndex}`];
       const roles = doc[`role${authorIndex}`];
 
-      if (firstName || lastName || (roles && roles.length > 0)) { // eslint-disable-line
-        if (!firstName || !lastName || (!roles || roles.length === 0)) { // eslint-disable-line
+      if (firstName || lastName || (roles && roles.length > 0)) {
+        if (!firstName || !lastName || (!roles || roles.length === 0)) {
           throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, `Disallowing update because author ${authorIndex} has incomplete information`);
         }
       }

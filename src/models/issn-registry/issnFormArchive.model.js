@@ -32,8 +32,6 @@ import {DataTypes} from 'sequelize';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
-
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];

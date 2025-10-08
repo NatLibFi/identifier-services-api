@@ -53,7 +53,7 @@ export default function (registry) {
   const {publicationModel} = getPublicationModelByRegistry(registry);
 
   // Establish Melinda connections if parameters are available
-  /* eslint-disable functional/no-conditional-statements,functional/no-let */
+  /* eslint-disable functional/no-let */
   let melindaApiClient = false;
   let melindaSruClient = false;
 
@@ -72,7 +72,7 @@ export default function (registry) {
     logger.debug('Melinda SRU configuration was found');
     melindaSruClient = createMelindaSruClient({url: MELINDA_SRU_URL, recordSchema: 'marcxml'});
   }
-  /* eslint-enable functional/no-conditional-statements,functional/no-let */
+  /* eslint-enable functional/no-let */
 
 
   // Required by issn registry marc generation in addition to publication model
@@ -93,7 +93,6 @@ export default function (registry) {
   function getPublicationModelByRegistry(registryType) {
     const models = {};
 
-    /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
     /* istanbul ignore else */
     if (registryType === COMMON_REGISTRY_TYPES.ISBN_ISMN) {
       models.publicationModel = sequelize.models.publicationIsbn;
@@ -102,7 +101,6 @@ export default function (registry) {
     } else {
       throw new Error('Invalid registry type');
     }
-    /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
 
     return models;
   }
@@ -193,14 +191,14 @@ export default function (registry) {
       try {
         const apiResponse = await melindaApiClient.create(record, MELINDA_CREATE_RECORD_PARAMS);
         logger.debug(`Create record operation was successful with status ${apiResponse.recordStatus} and databaseId ${apiResponse.databaseId}`);
-        result.records = [apiResponse, ...result.records]; // eslint-disable-line functional/immutable-data
+        result.records = [apiResponse, ...result.records];
       } catch (err) {
         const status = err?.status ?? 'Unknown status';
         const payload = err?.payload ?? 'Unknown error';
 
         logger.warn(`Creating record to Melinda failed with status ${status} and payload "${payload}".`);
 
-        result.errors = [err, ...result.errors]; // eslint-disable-line functional/immutable-data
+        result.errors = [err, ...result.errors];
       }
     }
   }
@@ -227,13 +225,13 @@ export default function (registry) {
 
     return textRecords;
 
-    async function process(identifierType, identifier) { // eslint-disable-line require-await
+    async function process(identifierType, identifier) {
       const sruSearchIndex = getSearchIndex(identifierType);
 
       return new Promise((resolve, reject) => {
         melindaSruClient.searchRetrieve(`${sruSearchIndex}=${identifier}`)
           .on('record', record => {
-            results.push(record); // eslint-disable-line functional/immutable-data
+            results.push(record);
           })
           .on('error', reject)
           .on('end', resolve);

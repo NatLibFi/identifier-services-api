@@ -32,7 +32,6 @@ import {DataTypes} from 'sequelize';
 import {isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
 export default function (sequelize, dialect) {
   sequelize.define(
     'messageTemplateIsbn', {
@@ -53,7 +52,7 @@ export default function (sequelize, dialect) {
       langCode: {
         type: DataTypes.STRING(8),
         validate: {
-          is: /^fi-FI$|^en-GB$|^sv-SE$/ // eslint-disable-line require-unicode-regexp
+          is: /^fi-FI$|^en-GB$|^sv-SE$/
         }
       },
       message: {

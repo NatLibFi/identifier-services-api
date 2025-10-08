@@ -45,7 +45,6 @@ import abstractModelInterface from '../../common/abstractModelInterface';
  * @param identifierType Type of identifiers to interact with (ISBN|ISMN)
  * @returns Interface to interact with ranges of chosen type
  */
-/* eslint-disable max-lines */
 export default function (identifierType) {
   const logger = createLogger();
   const {rangeModel, subRangeModel, subRangeCanceledModel, publisherModel} = getModels(identifierType);
@@ -157,7 +156,7 @@ export default function (identifierType) {
    * @returns Resulting database entry in JSON format if success. Throws ApiError on failure.
    */
 
-  /* eslint-disable max-statements,functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   async function create(doc, user) {
 
     // Generate payload
@@ -197,7 +196,7 @@ export default function (identifierType) {
    * Reads all ranges.
    * @returns Promise of array consisting of range objects
    */
-  async function readAll() { // eslint-disable-line require-await
+  async function readAll() {
     const result = await rangeModel.findAll();
     return result.map(v => v.toJSON());
   }
@@ -353,8 +352,7 @@ export default function (identifierType) {
   * @param {Object} user User initiating the job
   * @returns Generated publisher identifier on success, ApiError on failure
   */
-  /* eslint-disable complexity,max-statements,max-depth,functional/no-let,functional/no-conditional-statements,
-  functional/immutable-data,functional/no-loop-statements*/
+  /* eslint-disable functional/no-let,functional/no-loop-statements*/
   async function generateSubrange({rangeId, publisherId, selectedPublisherIdentifier}, user) {
 
     // Start transaction
@@ -412,7 +410,7 @@ export default function (identifierType) {
         });
 
         // Format identifiers
-        const usedFormatted = used.map(v => v.toJSON()).map(({publisherIdentifier, ...rest}) => publisherIdentifier); // eslint-disable-line no-unused-vars
+        const usedFormatted = used.map(v => v.toJSON()).map(({publisherIdentifier, ...rest}) => publisherIdentifier);
 
         // Verify identifier is not in use already
         if (usedFormatted.includes(canceledIdentifier.identifier)) {
@@ -454,7 +452,7 @@ export default function (identifierType) {
           },
           transaction: t
         });
-        const usedFormatted = used.map(v => v.toJSON()).map(({publisherIdentifier, ...rest}) => publisherIdentifier); // eslint-disable-line no-unused-vars
+        const usedFormatted = used.map(v => v.toJSON()).map(({publisherIdentifier, ...rest}) => publisherIdentifier);
 
         // Check identifier is not used in identifier table
         if (!_checkAvailability(publisherIdentifier, range, usedFormatted)) {
@@ -468,7 +466,7 @@ export default function (identifierType) {
           },
           transaction: t
         });
-        const usedCanceledFormatted = usedCanceled.map(v => v.toJSON()).map(({identifier, ...rest}) => identifier); // eslint-disable-line no-unused-vars
+        const usedCanceledFormatted = usedCanceled.map(v => v.toJSON()).map(({identifier, ...rest}) => identifier);
 
         // Check identifier is not used in ranges canceled identifier table
         if (!_checkAvailability(publisherIdentifier, range, usedCanceledFormatted)) {
@@ -562,7 +560,7 @@ export default function (identifierType) {
       throw err;
     }
   }
-  /* eslint-enable complexity,max-statements,max-depth,functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 
   /**
    * Generates options for creating new subrange for publisher. Options consist of publisher identifiers within the selected range

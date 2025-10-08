@@ -69,7 +69,6 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns Created resource as object
    */
-  // eslint-disable-next-line max-statements
   async function create(doc, user = false) {
     // Start transaction
     const t = await sequelize.transaction();
@@ -95,7 +94,7 @@ export default function () {
 
       // Inform customer that the request was successfully received if system is configured to send emails
       // and user who initiated the request is not logged in
-      /* eslint-disable no-process-env,functional/no-let,functional/no-conditional-statements */
+      /* eslint-disable functional/no-let */
       if (!user && SEND_EMAILS) {
         let messageBody = getNotifyClientMessageBody(doc.langCode);
         let subject = getNotifyClientMessageSubject(doc.langCode);
@@ -122,7 +121,7 @@ export default function () {
           logger.error('Encountered error when attempting to send ISBN registry publisher request confirmation email using nodemailer.');
         }
       }
-      /* eslint-enable no-process-env,functional/no-let,functional/no-conditional-statements */
+      /* eslint-enable functional/no-let */
 
       // Return saved publisher information
       return result.toJSON();
@@ -182,7 +181,7 @@ export default function () {
 
     // Publisher request entries and publisher registry entries are managed at separate endpoints
     if (result !== null && _isPublisherRequestEntry(result)) {
-      const {isbnSubRanges, ismnSubRanges, ...formattedResult} = result.toJSON(); // eslint-disable-line no-unused-vars
+      const {isbnSubRanges, ismnSubRanges, ...formattedResult} = result.toJSON();
       return formattedResult;
     }
 
@@ -275,16 +274,14 @@ export default function () {
       const dbDoc = {...doc, modifiedBy: user.id};
 
       // Remove attributes not allowed to update/overwrite
-      /* eslint-disable functional/immutable-data */
       delete dbDoc.confirmation;
       delete dbDoc.activeIdentifierIsbn;
       delete dbDoc.activeIdentifierIsmn;
       delete dbDoc.createdBy;
-      /* eslint-enable functional/immutable-data */
 
       const result = await publisherRequest.update(dbDoc);
 
-      const {isbnSubRanges, ismnSubRanges, ...formattedResult} = result.toJSON(); // eslint-disable-line no-unused-vars
+      const {isbnSubRanges, ismnSubRanges, ...formattedResult} = result.toJSON();
       return formattedResult;
     }
 
@@ -351,7 +348,7 @@ export default function () {
 
     const formattedResults = result.rows
       .map(v => v.toJSON())
-      .map(({isbnSubRanges, ismnSubRanges, ...v}) => v); // eslint-disable-line no-unused-vars
+      .map(({isbnSubRanges, ismnSubRanges, ...v}) => v);
 
     return {totalDoc: result.count, results: formattedResults};
   }

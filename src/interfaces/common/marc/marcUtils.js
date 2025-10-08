@@ -76,7 +76,7 @@ export function convertToMarc({registry, publication, publisher, form}) {
 
 // Retrieves publication identifiers for selected publication in selected registry
 /* istanbul ignore next */
-export async function getRecordIdentifiers({registry, publicationId}) { // eslint-disable-line require-await
+export async function getRecordIdentifiers({registry, publicationId}) {
   if (registry === COMMON_REGISTRY_TYPES.ISBN_ISMN) {
     return getIsbnRegistryPublicationIdentifiers(publicationId);
   }

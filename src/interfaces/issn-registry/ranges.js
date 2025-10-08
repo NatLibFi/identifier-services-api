@@ -35,8 +35,6 @@ import abstractModelInterface from '../common/abstractModelInterface';
 import {testOverlap1, testOverlap2} from '../isbn-registry/ranges/isbnUtils';
 import {calculateCheckDigitIssn} from './rangeUtils';
 
-/* eslint-disable max-lines */
-
 /**
  * ISSN range interface. Contains CRUD operations and a number of helper functions.
  * @returns Interface to interact with ISSN ranges
@@ -66,7 +64,6 @@ export default function () {
    * @param {Object} user User creating the new publication
    * @returns {Object} Created range as object
    */
-  /* eslint-disable max-statements,functional/no-conditional-statements */
   async function create(doc, user) {
     const t = await sequelize.transaction();
     try {
@@ -165,7 +162,6 @@ export default function () {
       };
     }
   }
-  /* eslint-enable max-statements,functional/no-conditional-statements */
 
   /**
    * Deletes ISSN range based on identifier given as parameter. Range may be deleted if no identifiers

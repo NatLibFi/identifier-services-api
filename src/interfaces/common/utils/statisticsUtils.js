@@ -121,13 +121,11 @@ export function formatStatisticsToXlsx(statisticsType, jsonData) {
         .style({font: {bold: true}});
 
       // Rows generation loop
-      /* eslint-disable functional/no-conditional-statements*/
       jsonData.forEach((entry, entryIdx) => {
         // Row number is entryIdx + 2 since entryIdx indexing starts at 0 and in first index is the header
         const rowIdx = entryIdx + 2;
         ws.cell(rowIdx, columnIdx).string(String(entry[header]));
       });
-      /* eslint-enable functional/no-conditional-statements*/
     });
 
     return ws;

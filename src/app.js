@@ -25,7 +25,7 @@
  *
  */
 
-/* eslint-disable max-statements,no-unused-vars,require-await*/
+/* eslint-disable no-unused-vars*/
 import {generatePassportMiddlewares} from '@natlibfi/passport-natlibfi-keycloak';
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
@@ -65,10 +65,10 @@ export default async function run() { // eslint-disable-line
   // INITIALIZATION
   // Test Sequelize ORM DB connection if not running tests
   /* istanbul ignore if */
-  if (NODE_ENV !== 'test') { // eslint-disable-line functional/no-conditional-statements
+  if (NODE_ENV !== 'test') {
     try {
       await sequelize.authenticate();
-      logger.info('Sequelize ORM has established database connection successfully.'); // eslint-disable-line
+      logger.info('Sequelize ORM has established database connection successfully.');
     } catch (error) {
       logger.error('Unable to connect to the database');
       throw new Error('Unable to connect database');
@@ -76,15 +76,12 @@ export default async function run() { // eslint-disable-line
   }
 
   // Log email config
-  /* eslint-disable functional/no-conditional-statements */
   /* istanbul ignore if */
   if (SEND_EMAILS) {
     logger.warn('Sending emails is ON');
   } else {
     logger.warn('Sending emails is OFF (they will be saved to database nonetheless)');
   }
-  /* eslint-enable functional/no-conditional-statements */
-
 
   const app = express();
 
@@ -107,14 +104,13 @@ export default async function run() { // eslint-disable-line
   // Initialize cors options
   function whiteListCB(origin, callback) {
     const originIsWhitelisted = !origin || CORS_WHITELIST.indexOf(origin) !== -1;
-    /* eslint-disable functional/no-conditional-statements,callback-return */
+
     if (originIsWhitelisted) {
       callback(null, true);
     } else {
       logger.info(`Request from origin ${origin} is not whitelisted.`);
       callback(new ApiError(HttpStatus.FORBIDDEN, 'Not allowed by CORS'), false);
     }
-    /* eslint-enable functional/no-conditional-statements,callback-return */
   }
 
   const corsOptions = {
@@ -132,9 +128,8 @@ export default async function run() { // eslint-disable-line
   // ROUTES
 
   // Auth is available only for automated testing
-  // eslint-disable-next-line functional/no-conditional-statements
   if (NODE_ENV === 'test') {
-    app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares)); //eslint-disable-line
+    app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares));
   }
 
   app.use('/', express.static(path.resolve(__dirname, 'public')));
@@ -180,7 +175,7 @@ export default async function run() { // eslint-disable-line
       // If error was celebate error, throw appropriate status and message
       try {
         if (isCelebrateError(err)) {
-          const validationErrorAttribute = err.details.get('params') ? 'params' : err.details.get('body') ? 'body' : null; // eslint-disable-line no-nested-ternary
+          const validationErrorAttribute = err.details.get('params') ? 'params' : err.details.get('body') ? 'body' : null;
           const validationErrorFields = validationErrorAttribute ? err.details.get(validationErrorAttribute).details.map(validationError => validationError?.context?.label).join(', ') : 'Unknown field';
           const validationErrorMessage = `Validation failed (${validationErrorFields})`;
 

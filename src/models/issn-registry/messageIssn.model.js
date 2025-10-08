@@ -32,7 +32,6 @@ import {DataTypes} from 'sequelize';
 import {isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap */
 export default function (sequelize, dialect) {
   sequelize.define(
     'messageIssn', {
@@ -46,7 +45,7 @@ export default function (sequelize, dialect) {
         type: DataTypes.STRING(100),
         allowNull: false,
         validate: {
-          is: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$/ // eslint-disable-line require-unicode-regexp
+          is: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$/
         }
       },
       subject: {

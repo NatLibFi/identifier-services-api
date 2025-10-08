@@ -7,7 +7,7 @@
  */
 export function transformIssnPublicationFromDb(publication) {
   const publicationWithPrevious = {...publication, previous: publication.previousEntity};
-  delete publicationWithPrevious.previousEntity; // eslint-disable-line functional/immutable-data
+  delete publicationWithPrevious.previousEntity;
   return publicationWithPrevious;
 }
 
@@ -23,6 +23,6 @@ export function transformIssnPublicationFromDb(publication) {
  */
 export function transformIssnPublicationToDb(publication) {
   const publicationWithPreviousEntity = {...publication, previousEntity: publication.previous};
-  delete publicationWithPreviousEntity.previous; // eslint-disable-line functional/immutable-data
+  delete publicationWithPreviousEntity.previous;
   return publicationWithPreviousEntity;
 }

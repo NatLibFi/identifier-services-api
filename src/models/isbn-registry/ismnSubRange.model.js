@@ -33,7 +33,6 @@ import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../interfaces/constants';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap, functional/no-this-expressions */
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];

@@ -33,7 +33,6 @@ import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {jsonToPreviousString, previousStringToJson} from '../modelUtils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap,functional/no-this-expressions */
 export default function (sequelize, dialect) {
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];
 
@@ -67,14 +66,12 @@ export default function (sequelize, dialect) {
       },
       contactPerson: {
         type: DataTypes.STRING(1200),
-        /* eslint-disable functional/no-this-expressions */
         get() {
           return this.getDataValue('contactPerson') ? previousStringToJson(this.getDataValue('contactPerson')) : this.getDataValue('contactPerson');
         },
         set(v) {
           this.setDataValue('contactPerson', jsonToPreviousString(v));
         }
-        /* eslint-enable functional/no-this-expressions */
       },
       emailCommon: {
         type: DataTypes.STRING(100)

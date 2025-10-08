@@ -75,8 +75,6 @@ export default function () {
    * @param {Object} user User sending the message
    * @returns Message information saved to db as JSON on success, otherwise throws ApiError
    */
-  /* eslint-disable complexity,max-statements,max-depth */
-  /* eslint-disable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function send(message, user) {
     // Start transaction
     const t = await sequelize.transaction();
@@ -146,8 +144,6 @@ export default function () {
       throw err;
     }
   }
-  /* eslint-enable max-statements,max-depth */
-  /* eslint-enable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
 
 
   /**
@@ -158,7 +154,6 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} Message that was send and saved to database as JSON
    */
-  /* eslint-disable max-depth,max-statements,functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function resend(messageId, messageOptions, user) {
     const {recipient} = messageOptions;
     const originalMessage = await messageIssnModelInterface.read(messageId);
@@ -177,7 +172,6 @@ export default function () {
     // Utilize send functionality to resend message
     return send(message, user);
   }
-  /* eslint-enable max-depth,max-statements,functional/immutable-data,functional/no-let,functional/no-conditional-statements */
 
   /**
    * Generates email message based on parameter information (e.g., template, publisherId, etc.).
@@ -186,8 +180,7 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} message object as JSON that can be displayed in front-end text editor
    */
-  /* eslint-disable max-params,max-statements,max-depth,complexity,prefer-destructuring */
-  /* eslint-disable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   async function loadTemplate(doc, user) {
     const {code, publisherId, formId} = doc;
     let form;
@@ -329,7 +322,6 @@ export default function () {
       return messageBody.replace('#PUBLICATIONS#', html);
     }
 
-    // eslint-disable-next-line
     async function getPublicationsByFormId(formId) {
       return publicationIssnModel.findAll({
         where: {
@@ -338,7 +330,6 @@ export default function () {
       });
     }
 
-    // eslint-disable-next-line
     async function getPublicationsByPublisherId(publisherId) {
       return publicationIssnModel.findAll({
         where: {
@@ -347,8 +338,7 @@ export default function () {
       });
     }
   }
-  /* eslint-enable max-params,max-statements,complexity,prefer-destructuring*/
-  /* eslint-enable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 
   /**
    * Queries ISSN messages

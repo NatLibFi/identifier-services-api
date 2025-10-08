@@ -77,7 +77,7 @@ export default function () {
    * @param {Object} queryOpts Sequelize query options
    * @returns {boolean} True on success, otherwise throws ApiError
    */
-  async function cancel(identifier, user, queryOpts = {}) { // eslint-disable-line require-await
+  async function cancel(identifier, user, queryOpts = {}) {
     logger.debug(`Start ISBN-registry cancellation process of identifier ${identifier}`);
     return cancelIdentifier(identifier, user, false, queryOpts);
   }
@@ -92,7 +92,7 @@ export default function () {
    * @param {Object} queryOpts Sequelize query options
    * @returns {boolean} True on success, otherwise throws ApiError
    */
-  async function remove(identifier, user, queryOpts = {}) { // eslint-disable-line require-await
+  async function remove(identifier, user, queryOpts = {}) {
     logger.debug(`Start ISBN-registry permanent removal process of identifier ${identifier}`);
     return cancelIdentifier(identifier, user, true, queryOpts);
   }
@@ -106,7 +106,6 @@ export default function () {
    * @param {Object} queryOpts Sequelize query options (mainly transaction)
    * @returns {boolean} True if cancellation operation was successful, otherwise throws ApiError
    */
-  /* eslint-disable max-params,max-statements,complexity,functional/no-conditional-statements,functional/immutable-data */
   async function cancelIdentifier(identifier, user, permanent = false, queryOpts = {}) {
 
     // Define transaction, prioritize use of existing one if it's given in queryOpts
@@ -127,7 +126,7 @@ export default function () {
       }
 
       // Retrieve identifier, identifier batch, subrange and publication information associated with identifier
-      const identifierObject = identifierObjects[0]; // eslint-disable-line
+      const identifierObject = identifierObjects[0];
       const identifierBatch = await identifierBatchModel.findByPk(identifierObject.identifierBatchId, {transaction: t});
 
       // Cannot delete identifier without having identifier batch to operate on
@@ -328,5 +327,4 @@ export default function () {
       return Object.keys(result).length === 0 ? '' : JSON.stringify(result);
     }
   }
-  /* eslint-enable max-params,max-statements,complexity */
 }

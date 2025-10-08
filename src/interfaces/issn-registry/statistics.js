@@ -43,9 +43,8 @@ import {DB_DIALECT} from '../../config';
  * ISSN-registry statistics interface.
  * @returns Interface to interact with ISSN statistics
  */
-/* eslint-disable max-lines */
 export default function () {
-  const logger = createLogger(); // eslint-disable-line
+  const logger = createLogger();
 
   const rangeModel = sequelize.models.issnRange;
   const issnUsedModel = sequelize.models.issnUsed;
@@ -72,7 +71,7 @@ export default function () {
    * @param {string} type Type of statistics
    * @returns Formatted item
    */
-  async function formatStatistics(format, jsonData, type) { // eslint-disable-line require-await
+  async function formatStatistics(format, jsonData, type) {
     if (format === 'xlsx') {
       const statisticsType = `ISSN_REGISTRY_${type}`;
       return formatStatisticsToXlsx(statisticsType, jsonData, type);
@@ -94,7 +93,7 @@ export default function () {
    * @param {Object} params Parameters for retrieving statistics
    * @returns Object containing required statistics
    */
-  async function getStatistics({type, begin, end}) { // eslint-disable-line require-await
+  async function getStatistics({type, begin, end}) {
     if (Object.keys(STATISTICS).includes(type)) {
       return STATISTICS[type].getter({begin, end});
     }
@@ -123,16 +122,15 @@ export default function () {
 
     return {sheets: [firstSheetResult, formattedSecondSheetResult]};
 
-    // eslint-disable-next-line require-await
     async function _getRangeMonthlyStatistics({begin, end}) {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'IU.created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'IU.created');
 
       const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, IR.block AS block, COUNT(DISTINCT IU.id) as c FROM ${rangeModel.tableName} IR ` +
-                    `INNER JOIN ${issnUsedModel.tableName} IU ON IU.issn_range_id = IR.id ` +
-                    `WHERE IU.created BETWEEN :begin AND :end ` +
-                    `GROUP BY ${yearDefinition}, ${monthDefinition}, IR.block ` +
-                    `ORDER BY ${yearDefinition}, ${monthDefinition}, IR.block`;
+        `INNER JOIN ${issnUsedModel.tableName} IU ON IU.issn_range_id = IR.id ` +
+        `WHERE IU.created BETWEEN :begin AND :end ` +
+        `GROUP BY ${yearDefinition}, ${monthDefinition}, IR.block ` +
+        `ORDER BY ${yearDefinition}, ${monthDefinition}, IR.block`;
 
       return sequelize.query(query, {
         benchmark: true,
@@ -160,21 +158,20 @@ export default function () {
     const rows = [];
 
     const publishersCreatedCounts = await _getCreatedPublisherCount({begin, end});
-    rows.push(_formatResultSet('Luotu', publishersCreatedCounts, headers)); // eslint-disable-line functional/immutable-data
+    rows.push(_formatResultSet('Luotu', publishersCreatedCounts, headers));
 
     const publishersModifiedCounts = await _getModifiedPublisherCount({begin, end});
-    rows.push(_formatResultSet('Muokattu', publishersModifiedCounts, headers)); // eslint-disable-line functional/immutable-data
+    rows.push(_formatResultSet('Muokattu', publishersModifiedCounts, headers));
 
     return rows;
 
-    // eslint-disable-next-line require-await
     async function _getCreatedPublisherCount({begin, end}) {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
       const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIssnModel.tableName} ` +
-                    `WHERE created BETWEEN :begin AND :end ` +
-                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+        `WHERE created BETWEEN :begin AND :end ` +
+        `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         benchmark: true,
@@ -187,14 +184,13 @@ export default function () {
       });
     }
 
-    // eslint-disable-next-line require-await
     async function _getModifiedPublisherCount({begin, end}) {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'modified');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'modified');
 
       const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publisherIssnModel.tableName} ` +
-                    `WHERE modified BETWEEN :begin AND :end ` +
-                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+        `WHERE modified BETWEEN :begin AND :end ` +
+        `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         benchmark: true,
@@ -218,20 +214,19 @@ export default function () {
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
         Object.keys(v).forEach(k => {
-          result[k] = v[k]; // eslint-disable-line functional/immutable-data
+          result[k] = v[k];
         });
       });
 
       // Fill zeroes
       Object.keys(result).forEach(k => {
-        /* eslint-disable functional/no-conditional-statements */
         if (result[k] === '') {
-          result[k] = '0'; // eslint-disable-line functional/immutable-data
+          result[k] = '0';
         }
       });
 
       // Add state information to row
-      result['Aktiviteetin tyyppi'] = state; // eslint-disable-line functional/immutable-data
+      result['Aktiviteetin tyyppi'] = state;
 
       return result;
     }
@@ -242,7 +237,6 @@ export default function () {
    * @param {Object} dateParams Begin and end parameters
    * @returns Array containing results
    */
-  /* eslint-disable functional/immutable-data */
   async function getIssnPublicationStatistics({begin, end}) {
     // Transform dates and get array of year/months
     const beginDate = new Date(begin);
@@ -268,14 +262,13 @@ export default function () {
 
     return rows;
 
-    // eslint-disable-next-line require-await
     async function _getPublicationsByDateAndStatus({begin, end, status}) {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
       const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${publicationIssnModel.tableName} ` +
-                    `WHERE created BETWEEN :begin AND :end AND status = :status ` +
-                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+        `WHERE created BETWEEN :begin AND :end AND status = :status ` +
+        `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         benchmark: true,
@@ -300,13 +293,12 @@ export default function () {
       // Looping through array object keys to assign them to result
       transformedResult.forEach(v => {
         Object.keys(v).forEach(k => {
-          result[k] = v[k]; // eslint-disable-line functional/immutable-data
+          result[k] = v[k];
         });
       });
 
       // Fill zeroes
       Object.keys(result).forEach(k => {
-        /* eslint-disable functional/no-conditional-statements */
         if (result[k] === '') {
           result[k] = '0';
         }
@@ -318,7 +310,6 @@ export default function () {
       return result;
     }
   }
-  /* eslint-enable functional/immutable-data */
 
   /**
    * Retrieve statistics regarding ISSN forms
@@ -335,14 +326,13 @@ export default function () {
       return {'Kuukausi': `${r.y}-${r.m}`, 'Määrä': r.c};
     }
 
-    // eslint-disable-next-line require-await
     async function _getCreatedForms({begin, end}) {
       const yearDefinition = getSQLDateDefinition(DB_DIALECT, 'year', 'created');
       const monthDefinition = getSQLDateDefinition(DB_DIALECT, 'month', 'created');
 
       const query = `SELECT ${yearDefinition} as y, ${monthDefinition} AS m, COUNT(DISTINCT id) as c FROM ${issnFormModel.tableName} ` +
-                    `WHERE created BETWEEN :begin AND :end ` +
-                    `GROUP BY ${yearDefinition}, ${monthDefinition}`;
+        `WHERE created BETWEEN :begin AND :end ` +
+        `GROUP BY ${yearDefinition}, ${monthDefinition}`;
 
       return sequelize.query(query, {
         benchmark: true,
@@ -380,7 +370,7 @@ export default function () {
           return;
         }
 
-        results.push(`${year}-${month}`); // eslint-disable-line functional/immutable-data
+        results.push(`${year}-${month}`);
         return;
       });
     });

@@ -32,7 +32,6 @@ import {DataTypes} from 'sequelize';
 import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap,functional/no-this-expressions */
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];
@@ -77,15 +76,12 @@ export default function (sequelize, dialect) {
         set(v) {
         // TO DO: setter should validate only either JSON values or empty strings
         // Consider saving null values as empty strings.
-        /* eslint-disable functional/no-conditional-statements */
           if (v === null || v.length === 0) {
             this.setDataValue('previousNames', '');
           } else {
             this.setDataValue('previousNames', JSON.stringify({name: v}));
           }
         }
-        /* eslint-enable functional/no-conditional-statements */
-
       },
       address: {
         allowNull: false,

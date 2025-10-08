@@ -90,7 +90,6 @@ export default ({rootPath}) => {
             return it.skip(`${sub} ${descr}`);
           }
 
-          /* eslint-disable max-statements */
           return it(`${sub} ${descr}`, async () => {
             const pgFixtures = await pgFixturesFactory({rootPath: dir});
             await pgFixtures.populate([sub, 'dbContents.json'], dbInitRequired);
@@ -111,7 +110,7 @@ export default ({rootPath}) => {
             //   1. Endpoints returning arrays
             //   2. Endpoints returning result of queries ({totalDoc, results})
             //   3. Endpoints returning objects
-            /* eslint-disable functional/no-conditional-statements */
+
             if (expectedPayload) {
               if (Array.isArray(response.body)) {
                 expect(response.body.map(doc => filterDoc(doc))).to.eql(expectedPayload);
@@ -132,14 +131,14 @@ export default ({rootPath}) => {
               const db = await pgFixtures.dump();
               expect(formatDump(db)).to.eql(expectedDb);
             }
-            /* eslint-enable functional/no-conditional-statements */
+
             return;
 
             // Generate test request based on whether authorization header and payload are defined:
             // 1. Authentication test (requires specific headers)
             // 2. Tests having payload data
             // 3. Test that do not have payload data
-            // eslint-disable-next-line require-await
+
             async function testRequestWithPayload(authTestHeader = false, payloadData = false) {
               if (authTestHeader) {
                 return requester[method](requestUrl).set('Authorization', `Basic ${authTestHeader}`);
@@ -264,14 +263,14 @@ export default ({rootPath}) => {
   }
 
   function formatDump(dump) {
-    /* eslint-disable no-mixed-operators */
+
     const result = {};
 
     // Each item in table is formatted so that it does not contain timestamps
     // Regarding attribute "canceled" this means, if it does not represent number (like number of canceled identifiers) it is formatted as empty object
     // Empty tables are not returned so in case of emtpy db returned value is empty object
     dump.forEach(table => Object.keys(table).filter(k => table[k].length > 0).forEach(k => {
-      result[k] = table[k].map(doc => removeAttributes(doc, true)); // eslint-disable-line functional/immutable-data
+      result[k] = table[k].map(doc => removeAttributes(doc, true));
     }));
 
     return result;

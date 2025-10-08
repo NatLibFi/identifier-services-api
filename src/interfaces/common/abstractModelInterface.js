@@ -52,7 +52,6 @@ export default function (model) {
    * @param {Object} transaction Sequelize transaction to use for running the query
    * @returns Promise which resolves into created sequelize model instance
    */
-  // eslint-disable-next-line require-await
   async function create(doc, transaction = undefined) {
     return model.create(doc, {transaction});
   }
@@ -78,7 +77,7 @@ export default function (model) {
       // Check that only one row was removed
       if (result === 1) {
         // If transaction was declared in this scope, it needs to be committed in this scope also
-        if (!transaction) { // eslint-disable-line functional/no-conditional-statements
+        if (!transaction) {
           await t.commit();
         }
 
@@ -88,7 +87,7 @@ export default function (model) {
       throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Could not properly delete entity from database');
     } catch (err) {
       // If transaction was declared in this scope, rollback transaction
-      if (!transaction) { // eslint-disable-line functional/no-conditional-statements
+      if (!transaction) {
         await t.rollback();
       }
 
@@ -120,7 +119,6 @@ export default function (model) {
    * @param {Object} transaction Sequelize transaction to use for running the query
    * @returns Promise which resolves into sequelize model instance if successful. Throws ApiError if entity could not be found using id.
    */
-  // eslint-disable-next-line require-await
   async function read(id, transaction = undefined) {
     const entity = await model.findByPk(id, {transaction});
 
@@ -137,7 +135,6 @@ export default function (model) {
    * @param {Object} transaction Sequelize transaction to use for running the query
    * @returns ApiError or JSON representation of read database instance
    */
-  // eslint-disable-next-line require-await
   async function readJSON(id, transaction = undefined) {
     const result = await read(id, transaction);
     return result.toJSON();

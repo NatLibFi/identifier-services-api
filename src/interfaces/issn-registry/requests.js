@@ -70,7 +70,6 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns Created resource as object
    */
-  /* eslint-disable-next-line max-statements */
   async function create(doc, user = false) {
     const t = await sequelize.transaction();
 
@@ -103,7 +102,7 @@ export default function () {
       // Save publications and their archive information
       // Loop is used instead of resolving Promise.all
       // so that the link between archive record and publication can be established
-      /* eslint-disable functional/no-loop-statements,no-await-in-loop */
+      /* eslint-disable functional/no-loop-statements */
       for (const publication of publications) {
         const previousEntity = getPublicationJSONattribute(publication.previous, ['title', 'issn', 'lastIssue']);
         const mainSeries = getPublicationJSONattribute(publication.mainSeries);
@@ -172,7 +171,7 @@ export default function () {
     if (result !== null) {
       // Change virtual attribute of publisher name
       const {publisherIssn, ...formattedResult} = result.toJSON();
-      formattedResult.publisherName = publisherIssn?.officialName ? publisherIssn.officialName : null; // eslint-disable-line functional/immutable-data
+      formattedResult.publisherName = publisherIssn?.officialName ? publisherIssn.officialName : null;
 
       return formattedResult;
     }
@@ -187,7 +186,6 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns Updated ISSN request form as object
    */
-  // eslint-disable-next-line max-statements
   async function update(id, doc, user) {
     const t = await sequelize.transaction();
     try {
@@ -208,7 +206,6 @@ export default function () {
       const dbDoc = {...doc, modifiedBy: user.id};
 
       // Sanity verification: Remove attributes not allowed to update/overwrite
-      /* eslint-disable functional/immutable-data */
       delete dbDoc.publisherId;
       delete dbDoc.publicationCount;
       delete dbDoc.publicationCountIssn;
@@ -216,7 +213,6 @@ export default function () {
       delete dbDoc.created;
       delete dbDoc.createdBy;
       delete dbDoc.modified;
-      /* eslint-enable functional/immutable-data */
 
       // Save to db
       await issnRequest.update(dbDoc, {transaction: t});
@@ -261,7 +257,6 @@ export default function () {
    * @param {number} id Id of document to update
    * @returns True if process succeeds, otherwise throws ApiError
    */
-  // eslint-disable-next-line max-statements
   async function remove(id) {
     const t = await sequelize.transaction();
 
@@ -418,7 +413,6 @@ export default function () {
     try {
       const issnRequest = await issnFormModelInterface.read(id, t);
 
-      // eslint-disable-next-line functional/no-conditional-statements
       if (publisherId !== null) {
         await publisherIssnModelInterface.read(publisherId, t); // Verifies publisher can be found from db
       }
@@ -451,14 +445,12 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} Created ISSN publisher object
    */
-  // eslint-disable-next-line max-statements
   async function addPublisher(id, user) {
     const t = await sequelize.transaction();
     try {
       const issnRequest = await issnFormModelInterface.read(id, t);
 
       // Test that publisher has not been created from this form before
-      // eslint-disable-next-line no-extra-parens
       if (issnRequest.publisherCreated || (issnRequest.publisherId !== null && issnRequest.publisherId > 0)) {
         throw new ApiError(HttpStatus.CONFLICT, 'ISSN form is already associated with publisher');
       }
@@ -516,7 +508,7 @@ export default function () {
    * @param {number} id ID of request form to read associated archive record from database
    * @returns {Object} Request form object if it was found from database, otherwise throws ApiError
    */
-  async function getArchiveRecord (id) {
+  async function getArchiveRecord(id) {
     const result = await issnFormArchiveModel.findAll({
       where: {
         formId: id

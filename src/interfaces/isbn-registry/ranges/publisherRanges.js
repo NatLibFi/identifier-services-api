@@ -45,7 +45,6 @@ import abstractModelInterface from '../../common/abstractModelInterface';
  * @param identifierType Type of identifiers to interact with (ISBN|ISMN)
  * @returns Interface to interact with publisher ranges (i.e. subranges)
  */
-/* eslint-disable max-lines */
 export default function (identifierType) {
   // Validate identifier type before initialization of interface
   validateIdentifierType(identifierType);
@@ -182,7 +181,6 @@ export default function (identifierType) {
    * @param {Object} transaction Sequelize transaction object. Required for identifier generation.
    * @returns Updated subrange as JSON on success, ApiError on failure
    */
-  /* eslint-disable functional/no-conditional-statements,max-statements,max-depth */
   async function activate(id, user, transaction = false) {
     // Create transaction if it does not exist
     const t = transaction || await sequelize.transaction();
@@ -246,8 +244,6 @@ export default function (identifierType) {
       throw err;
     }
   }
-  /* eslint-enable functional/no-conditional-statements,max-statements,max-depth */
-
 
   /**
    * Deactivate subrange.
@@ -294,7 +290,6 @@ export default function (identifierType) {
   * @param {Object} user User making the request
   * @returns Updated range as JSON on success, ApiError on failure
   */
-  // eslint-disable-next-line max-statements
   async function close(id, user) {
     // Start transaction
     const t = await sequelize.transaction();
@@ -310,7 +305,6 @@ export default function (identifierType) {
       }
 
       // If SubRange was active, update publisher subrange attribute to empty
-      // eslint-disable-next-line functional/no-conditional-statements
       if (subrange.isActive) {
         await publisher.update({[SUBRANGE_PUBLISHER_ATTRIBUTE]: '', modifiedBy: user.id}, {transaction: t});
       }
@@ -338,7 +332,6 @@ export default function (identifierType) {
   * @param {Object} user User making the request
   * @returns Updated subrange as JSON on success, ApiError on failure
   */
-  /* eslint-disable functional/no-conditional-statements,max-depth,max-statements */
   async function open(id, user) {
     const t = await sequelize.transaction();
     try {
@@ -371,8 +364,6 @@ export default function (identifierType) {
       throw err;
     }
   }
-  /* eslint-enable functional/no-conditional-statements,max-depth,max-statements */
-
 
   /**
    * Cancels publisher range. Publisher range can be canceled if there are no associations to it and it was last given subrange from its associated range.
@@ -381,7 +372,6 @@ export default function (identifierType) {
    * @param {Object} user User invoking publisher range cancellation
    * @returns True if succeed, ApiError on failure
    */
-  /* eslint-disable max-depth,max-statements */
   async function remove(id, user) {
     const t = await sequelize.transaction();
 
@@ -400,7 +390,6 @@ export default function (identifierType) {
 
       // Test whether subrange can be canceled by decreasing range pointers or if it should be moved to
       // canceled subranges table
-      // eslint-disable-next-line functional/no-conditional-statements
       if (_previousRangeModelDeleteTest(range, subrange.publisherIdentifier)) {
         // Update range counters and next value
         const rangeUpdateDoc = {
@@ -410,7 +399,7 @@ export default function (identifierType) {
           modifiedBy: user.id
         };
         await range.update(rangeUpdateDoc, {transaction: t});
-      } else { // eslint-disable-line functional/no-conditional-statements
+      } else {
         // Place identifier to cancelled identifiers table
         const canceledSubRange = {
           identifier: subrange.publisherIdentifier,
@@ -449,7 +438,6 @@ export default function (identifierType) {
       // Update active subrange information to publisher entity if needed
       const publisher = await publisherModelInterface.read(subrange.publisherId, t);
 
-      // eslint-disable-next-line functional/no-conditional-statements
       if (publisher[SUBRANGE_PUBLISHER_ATTRIBUTE] === subrange.publisherIdentifier) {
         await publisher.update({[SUBRANGE_PUBLISHER_ATTRIBUTE]: '', modifiedBy: user.id}, {transaction: t});
       }
@@ -477,7 +465,7 @@ export default function (identifierType) {
      * @param {string} publisherIdentifier Publisher identifier which deletion to test for
      * @returns {boolean} True if deletion is valid, otherwise false
      */
-    /* eslint-disable functional/no-conditional-statements, functional/no-let */
+    /* eslint-disable functional/no-let */
     function _previousRangeModelDeleteTest(range, publisherIdentifier) {
       // Create identifier from previous value of next pointer
       // If it matches the identifier we can verify deletion via decreasing pointer is ok.
@@ -498,9 +486,8 @@ export default function (identifierType) {
 
       return false;
     }
-    /* eslint-enable functional/no-conditional-statements, functional/no-let */
+    /* eslint-enable functional/no-let */
   }
-  /* eslint-enable max-depth */
 
   /**
  * Function to test whether publisher range can be deleted. Publisher range may be deleted if
@@ -509,7 +496,6 @@ export default function (identifierType) {
  * @param {string} subRangeId Id of Subrange to validate deletion for
  * @returns {boolean} True if subrange can be deleted, False if subrange cannot be deleted
  */
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
   async function _canDeleteSubRange(subRangeId) {
     const subRange = await subRangeModelInterface.read(subRangeId);
 
@@ -573,7 +559,7 @@ export default function (identifierType) {
    * @param {Object} user User generating the identifiers
    * @returns {Object} Generated identifier batch if generation was successfull, otherwise throws instance of ApiError
    */
-  async function generateIdentifierBatchWrapper(publisherId, count, publicationId = 0, user) { // eslint-disable-line default-param-last
+  async function generateIdentifierBatchWrapper(publisherId, count, publicationId = 0, user) {
     // Start transaction. Transaction is started here in the wrapper as the recursive function needs to use same transaction until it exists.
     const t = await sequelize.transaction();
     try {
@@ -608,7 +594,7 @@ export default function (identifierType) {
  * @param {boolean} useCanceledFromAnyRange Defines if canceled identifiers from any publisher's range sharing category may be used. If false, only canceled identifiers from active range are used.
  * @returns {Object} Generated identifier batch if generation was successfull, otherwise throws instance of ApiError
  */
-  /* eslint-disable complexity,max-params,max-statements,max-depth,functional/no-let,functional/no-conditional-statements,functional/no-loop-statements,functional/immutable-data */
+  /* eslint-disable functional/no-let,functional/no-loop-statements */
   async function generateIdentifierBatch(publisherId, count, publicationId, user, t, useCanceledFromAnyRange = false) {
     // Test that either only count or publicationId is defined
     if (count && publicationId) {
@@ -774,8 +760,8 @@ export default function (identifierType) {
 
           // Cancel identifiers that were generated from the currently active range so that they can be reused after new active range is set
           // Cancellation is done through the identifier interface so that all the related entities are taken care of
-          for (let n = 0; n < identifiersToCancel.length; n++) { // eslint-disable-line no-plusplus
-            await identifierInterface.cancel(identifiersToCancel[n].identifier, user, {transaction: t}); // eslint-disable-line no-await-in-loop
+          for (let n = 0; n < identifiersToCancel.length; n++) {
+            await identifierInterface.cancel(identifiersToCancel[n].identifier, user, {transaction: t});
           }
         }
 
@@ -797,7 +783,7 @@ export default function (identifierType) {
       const nextPointer = Number(activePublisherSubrange.next);
 
       // Generating new identifier objects
-      for (let x = nextPointer; x < nextPointer + newIdentifiersRequiredCount; x++) { // eslint-disable-line no-plusplus
+      for (let x = nextPointer; x < nextPointer + newIdentifiersRequiredCount; x++) {
         const tmp = String(x).padStart(activePublisherSubrange.category, '0');
 
         // Guards provide sanity check regarding generated identifiers
@@ -824,7 +810,7 @@ export default function (identifierType) {
         results[formattedIdentifier] = publicationType;
 
         // Increase publication type index counter
-        publicationTypeIdx++; // eslint-disable-line no-plusplus
+        publicationTypeIdx++;
       }
 
       // Update subrange
@@ -851,7 +837,7 @@ export default function (identifierType) {
     }
 
     // Re-assign canceled identifiers. Note: could optimize decreaseCanceled to bulk operation.
-    for (let i = 0; i < canceledIdentifiersRequiredCount; i++) { // eslint-disable-line no-plusplus
+    for (let i = 0; i < canceledIdentifiersRequiredCount; i++) {
       const publicationType = publicationTypes.length > 0 ? publicationTypes[publicationTypeIdx] : '';
 
       identifierObjects.push({
@@ -867,7 +853,7 @@ export default function (identifierType) {
       usedCanceledIdentifiers.push(canceledIdentifiers[i]);
 
       // Decrease canceled pointer from subrange
-      const canceledIdentifierSubRange = await subRangeModelInterface.read(canceledIdentifiers[i].subRangeId, t); // eslint-disable-line no-await-in-loop
+      const canceledIdentifierSubRange = await subRangeModelInterface.read(canceledIdentifiers[i].subRangeId, t);
 
       if (canceledIdentifierSubRange.canceled - 1 < 0) {
         throw new ApiError(HttpStatus.CONFLICT, 'Cannot decrease canceled if subrange has not got enough canceled identifiers');
@@ -880,10 +866,10 @@ export default function (identifierType) {
         modifiedBy: user.id
       };
 
-      await canceledIdentifierSubRange.update(canceledSubRangeUpdateDoc, {transaction: t}); // eslint-disable-line no-await-in-loop
+      await canceledIdentifierSubRange.update(canceledSubRangeUpdateDoc, {transaction: t});
 
       // Increase publication type index counter
-      publicationTypeIdx++; // eslint-disable-line no-plusplus
+      publicationTypeIdx++;
     }
 
     // Create identifier batch entity

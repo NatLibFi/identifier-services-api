@@ -77,8 +77,6 @@ export default function () {
    * @param {Object} user User sending the message
    * @returns {Object} Message information saved to db as JSON
    */
-  /* eslint-disable complexity,max-statements,max-depth */
-  /* eslint-disable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function send(message, user) {
 
     const {
@@ -153,8 +151,6 @@ export default function () {
     // Process completed successfully. Return the message entity saved to database.
     return result.toJSON();
   }
-  /* eslint-enable max-statements,max-depth */
-  /* eslint-enable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
 
   /**
    * Resend a ISBN-registry message that has been sent previously and can be found from database. Email is sent to the address
@@ -164,7 +160,6 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} Message that was send and saved to database as JSON
    */
-  /* eslint-disable max-depth,max-statements,functional/immutable-data,functional/no-let,functional/no-conditional-statements */
   async function resend(messageId, messageOptions, user) {
 
     const {recipient} = messageOptions;
@@ -189,7 +184,6 @@ export default function () {
 
     return send(message, user);
   }
-  /* eslint-enable max-depth,max-statements,functional/immutable-data,functional/no-let,functional/no-conditional-statements */
 
   /**
    * Generates email message based on parameter information (e.g., template, publisherId, etc.).
@@ -198,8 +192,7 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns {Object} Object containing message loaded from a template
    */
-  /* eslint-disable max-params,max-statements,max-depth,complexity,prefer-destructuring */
-  /* eslint-disable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   async function loadTemplate(doc, user) {
     const {code, publisherId, publicationId, identifierBatchId} = doc;
 
@@ -429,8 +422,7 @@ export default function () {
       return true;
     }
   }
-  /* eslint-enable max-params,max-statements,complexity,prefer-destructuring*/
-  /* eslint-enable functional/immutable-data,functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 
   /**
    * Queries ISBN messages

@@ -53,7 +53,7 @@ export function getUserApplicationRoles(req, res, next) {
   }
 
   const userApplicationRoles = getRolesFromKeycloakRoles(req.user.roles);
-  req.user.applicationRoles = userApplicationRoles; // eslint-disable-line functional/immutable-data
+  req.user.applicationRoles = userApplicationRoles;
   return next();
 }
 
