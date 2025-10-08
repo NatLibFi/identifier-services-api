@@ -112,7 +112,7 @@ export default async function run() { // eslint-disable-line
       callback(null, true);
     } else {
       logger.info(`Request from origin ${origin} is not whitelisted.`);
-      callback(new Error('Not allowed by CORS'), false);
+      callback(new ApiError(HttpStatus.FORBIDDEN, 'Not allowed by CORS'), false);
     }
     /* eslint-enable functional/no-conditional-statements,callback-return */
   }
