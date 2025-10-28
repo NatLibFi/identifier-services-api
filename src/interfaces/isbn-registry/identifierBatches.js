@@ -196,7 +196,6 @@ export default function () {
     }
   }
 
-  /* eslint-disable max-statements,complexity */
   /**
    * Safely removes identifier batch by cancelling the identifiers. Identifiers may be reused. Batch may be removed if it:
    *   - Does not contain deleted or canceled identifier
@@ -291,8 +290,8 @@ export default function () {
           modifiedBy: user.id
         };
 
-        if (subrange.isClosed) { // eslint-disable-line functional/no-conditional-statements
-          subrangeUpdate.isClosed = false; // eslint-disable-line functional/immutable-data
+        if (subrange.isClosed) {
+          subrangeUpdate.isClosed = false;
         }
 
         // Update values to db
@@ -323,7 +322,7 @@ export default function () {
       }
 
       // Manage canceled identifier re-cancellation
-      /* eslint-disable functional/no-conditional-statements, functional/immutable-data,functional/no-let */
+      /* eslint-disable functional/no-let */
       if (identifierBatch.identifierCanceledUsedCount > 0) {
 
         // Helper variables required for gathering the identifiers that can be canceled through update operation to subrange counters
@@ -377,7 +376,7 @@ export default function () {
             };
 
             // Add cancelled entry to db
-            await identifierCanceledModel.create(identifierCanceledEntry, {transaction: t}); // eslint-disable-line no-await-in-loop
+            await identifierCanceledModel.create(identifierCanceledEntry, {transaction: t});
 
             // Update range information
             const identifierSubrangeUpdate = {
@@ -386,17 +385,16 @@ export default function () {
             };
 
             // If range was closed, re-open it
-            // eslint-disable-next-line
             if (identifierSubrange.isClosed) {
               identifierSubrangeUpdate.isClosed = false;
             }
 
             // Update range to db
-            await identifierSubrange.update(identifierSubrangeUpdate, {transaction: t}); // eslint-disable-line
+            await identifierSubrange.update(identifierSubrangeUpdate, {transaction: t});
           }
         }
       }
-      /* eslint-enable functional/no-conditional-statements, functional/immutable-data,functional/no-let */
+      /* eslint-enable functional/no-let */
 
       // Delete identifiers
       await Promise.all(identifiers.map(i => i.destroy({transaction: t})));
@@ -415,8 +413,6 @@ export default function () {
       throw err;
     }
   }
-  /* eslint-enable max-statements,complexity */
-
 
   /**
    * Retrieves an identifier batch and retuns it as an formatted string suited for .txt file download.
@@ -424,8 +420,6 @@ export default function () {
    * @param {Object} user User requesting to read the batch
    * @returns {string} Identifier batch identifiers as string concatenated with '\r\n' and including short descriptive header on success, otherwise throws ApiError
    */
-
-  /* eslint-disable max-statements */
   async function download(id) {
     const result = await identifierBatchModel.findByPk(id, {
       attributes: ['id', 'publicationId'],
@@ -461,7 +455,7 @@ export default function () {
       headerText += `Following identifiers have been assigned to publisher ${result.publisher.officialName}\r\n\r\n`;
 
       // Add test header for test environment
-      if (NODE_ENV !== 'production') { // eslint-disable-line
+      if (NODE_ENV !== 'production') {
         headerText += 'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n';
         headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\r\n';
         headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\r\n\r\n';
@@ -486,7 +480,6 @@ export default function () {
 
     throw new ApiError(HttpStatus.NOT_FOUND);
   }
-  /* eslint-enable max-statements */
 
   /**
    * Queries ISBN-registry identifier batches based on given attributes.
@@ -543,7 +536,7 @@ export default function () {
     return {totalDoc: result.count, results: filteredResult};
 
     function filterResult(result) {
-      const {subRangeId, ...rest} = result.toJSON(); // eslint-disable-line no-unused-vars
+      const {subRangeId, ...rest} = result.toJSON();
       return rest;
     }
 
@@ -582,7 +575,7 @@ export default function () {
      * @param {Object[]} publisherRanges Set of publisher ranges to append information from
      */
     function appendPublisherRangeInformation(identifierBatch, publisherRanges) {
-      const {subRangeId, ...rest} = identifierBatch.toJSON(); // eslint-disable-line no-unused-vars
+      const {subRangeId, ...rest} = identifierBatch.toJSON();
       const publisherRange = publisherRanges.find(v => v.id === identifierBatch.subRangeId);
 
       return {

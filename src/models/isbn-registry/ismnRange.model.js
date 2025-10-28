@@ -32,7 +32,6 @@ import {DataTypes} from 'sequelize';
 import {isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap, functional/no-this-expressions */
 export default function (sequelize, dialect) {
   sequelize.define(
     'ismnRange', {
@@ -46,7 +45,7 @@ export default function (sequelize, dialect) {
         allowNull: false,
         type: DataTypes.STRING(5),
         validate: {
-          is: /^979-0$/ // eslint-disable-line require-unicode-regexp
+          is: /^979-0$/
         }
       },
       category: {

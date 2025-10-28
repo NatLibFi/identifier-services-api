@@ -38,16 +38,13 @@ import {NODE_ENV} from '../../config';
  * @param {Object} rawInformation ISSN-registry publication, publisher and form objects to construct MARC from
  * @returns {Object} Record object constructed using marc-record-js library
  */
-/* eslint-disable max-lines */
 export function convertToMarcIssn({publication, publisher, form}) {
-  /* eslint-disable functional/no-conditional-statements */
   const marcRecord = new MarcRecord();
 
   // Attributes affecting field generation
   const electronical = isElectronical(publication);
 
   // Set leader
-  // eslint-disable-next-line functional/immutable-data
   marcRecord.leader = '00000nas a22000008i 4500';
 
   // Add control fields
@@ -98,7 +95,6 @@ export function convertToMarcIssn({publication, publisher, form}) {
   dataFields.forEach(df => marcRecord.appendField(df));
 
   return marcRecord;
-  /* eslint-enable functional/no-conditional-statements */
 }
 
 function isElectronical(publication) {
@@ -106,7 +102,7 @@ function isElectronical(publication) {
 }
 
 function generate008({publication, electronical}) {
-  /* eslint-disable functional/no-let, functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   const date = new Date();
 
   // Constructing field without immutability constraint
@@ -154,7 +150,7 @@ function generate008({publication, electronical}) {
   field += '| ';
 
   return field;
-  /* eslint-enable functional/no-let, functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 
   function getPublicationTypeInfo(publication) {
     const mapToCharacterP = [
@@ -220,7 +216,6 @@ function generate222({publication, electronical, hasF776}) {
 }
 
 function generate245({publication}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements,no-nested-ternary */
   if (!publication.title) {
     return [];
   }
@@ -232,7 +227,6 @@ function generate245({publication}) {
     tag: '245', ind1: '0', ind2: '0',
     subfields: [{code: 'a', value: subfieldAValue}, {code: 'b', value: subfieldBValue}].filter(v => v.value)
   };
-  /* eslint-enable functional/no-let,functional/no-conditional-statements,no-nested-ternary */
 }
 
 function generate263({publication}) {
@@ -331,13 +325,11 @@ function generate362({publication}) {
 
 function generateTestField() {
   // For all other cases than production, generate a notification field that
-  /* eslint-disable functional/no-conditional-statements,no-process-env */
   if (NODE_ENV !== 'production') {
     return [{tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'TUNNISTEREKISTERIN TESTITIETUE'}]}];
   }
 
   return [];
-  /* eslint-enable functional/no-conditional-statements,no-process-env */
 }
 
 function generate500() {
@@ -468,7 +460,6 @@ function getTitleAndIssnFromJson(v) {
     .map(idx => {
       const result = {};
 
-      /* eslint-disable functional/immutable-data,functional/no-conditional-statements */
       if (v.title.length - 1 >= idx) {
         result.title = v.title[idx];
       }
@@ -476,7 +467,6 @@ function getTitleAndIssnFromJson(v) {
       if (v.issn.length - 1 >= idx) {
         result.issn = v.issn[idx];
       }
-      /* eslint-enable functional/immutable-data,functional/no-conditional-statements */
 
       return Object.keys(result).length > 0 ? result : undefined;
     })

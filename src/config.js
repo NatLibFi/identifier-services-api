@@ -74,12 +74,10 @@ export const MELINDA_SRU_URL = readEnvironmentVariable('MELINDA_SRU_URL', {defau
 
 // EMAIL CONFIG
 // Note: For other NODE environments than production/development, emails are always disabled
-/* eslint-disable no-process-env*/
 export const SEND_EMAILS = ['production', 'development'].includes(NODE_ENV) ? readEnvironmentVariable('SEND_EMAILS', {defaultValue: false, format: parseBoolean}) : false;
 export const SMTP_CONFIG = ['production', 'development'].includes(NODE_ENV) ? readEnvironmentVariable('SMTP_CONFIG', {defaultValue: {}, format: JSON.parse}) : {};
 export const ISBN_EMAIL = readEnvironmentVariable('ISBN_EMAIL', {defaultValue: ''});
 export const ISSN_EMAIL = readEnvironmentVariable('ISSN_EMAIL', {defaultValue: ''});
-/* eslint-enable no-process-env*/
 
 // MESSAGE TYPE CONFIG
 // IMPORTANT NOTE: defaults are utilized in tests, change these defaults and you will break tests

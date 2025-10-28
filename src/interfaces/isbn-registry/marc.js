@@ -38,9 +38,7 @@ import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISB
  * @param {string} electronicalRecordPublicationType Publication type to produce MARC record for if publication considers of electronical type
  * @returns {Object} Record object constructed using marc-record-js library
  */
-/* eslint-disable max-lines,max-statements */
 export function convertToMarcIsbnIsmn(publication, electronicalRecordPublicationType = null) {
-  /* eslint-disable functional/no-conditional-statements */
   const marcRecord = new MarcRecord();
 
   const electronical = isElectronical(electronicalRecordPublicationType);
@@ -51,10 +49,8 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
 
   // Set leader, is different for sheetmusic
   if (sheetmusic) {
-    // eslint-disable-next-line functional/immutable-data
     marcRecord.leader = '00000ncm a22000008i 4500';
   } else {
-    // eslint-disable-next-line functional/immutable-data
     marcRecord.leader = '00000nam a22000008i 4500';
   }
 
@@ -116,14 +112,12 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
   dataFields.forEach(df => marcRecord.appendField(df));
 
   return marcRecord;
-  /* eslint-enable functional/no-conditional-statements */
 }
 
-// eslint-disable-next-line max-statements
 function generate008({publication, electronical, sheetmusic, dissertation}) {
   const {language, year} = publication;
 
-  /* eslint-disable functional/no-let, functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   const date = new Date();
 
   // Constructing field without immutability constraint
@@ -180,11 +174,11 @@ function generate008({publication, electronical, sheetmusic, dissertation}) {
   field += '| ';
 
   return field;
-  /* eslint-enable functional/no-let, functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generate020({publication, electronical, sheetmusic, electronicalRecordPublicationType}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   // For sheetmusic material, field is not produced
   if (sheetmusic) {
     return [];
@@ -249,11 +243,11 @@ function generate020({publication, electronical, sheetmusic, electronicalRecordP
     });
   }
 
-  /* eslint-enable functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generate024({publication, electronical, sheetmusic, electronicalRecordPublicationType}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
 
   if (!sheetmusic) {
     return [];
@@ -312,7 +306,7 @@ function generate024({publication, electronical, sheetmusic, electronicalRecordP
       return {...field, subfields};
     });
   }
-  /* eslint-enable functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generate040() {
@@ -442,7 +436,7 @@ function generate263({publication}) {
 
 function generate264a({publication, dissertation}) {
   // Do not generate if there are no values for subfield A
-  if ((!dissertation && !publication.city) || (dissertation && !publication.locality)) { // eslint-disable-line
+  if ((!dissertation && !publication.city) || (dissertation && !publication.locality)) {
     return [];
   }
 
@@ -491,7 +485,7 @@ function generate264b({publication, electronical}) {
 }
 
 function generate336({sheetmusic, map, audiobook}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   let subfields;
 
   if (sheetmusic) {
@@ -527,7 +521,7 @@ function generate336({sheetmusic, map, audiobook}) {
       ]
     }
   ];
-  /* eslint-enable functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generate337({electronical}) {
@@ -626,7 +620,7 @@ function generate347({electronical, audiobook, electronicalRecordPublicationType
 }
 
 function generate490({publication}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
 
   if (publication.series) {
     let subfieldA = publication.series;
@@ -657,18 +651,16 @@ function generate490({publication}) {
   }
 
   return [];
-  /* eslint-enable functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generateTestField() {
   // For all other cases than production, generate a notification field that
-  /* eslint-disable functional/no-conditional-statements,no-process-env */
   if (NODE_ENV !== 'production') {
     return [{tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'TUNNISTEREKISTERIN TESTITIETUE'}]}];
   }
 
   return [];
-  /* eslint-enable functional/no-conditional-statements,no-process-env */
 }
 
 function generate500() {
@@ -719,7 +711,7 @@ function generate594() {
 }
 
 function generate700({publication}) {
-  /* eslint-disable functional/no-let,functional/no-conditional-statements */
+  /* eslint-disable functional/no-let */
   let fields = [];
 
   if (publication.role1 && !publication.role1.includes('AUTHOR')) {
@@ -749,7 +741,7 @@ function generate700({publication}) {
   });
 
   return fields;
-  /* eslint-enable functional/no-let,functional/no-conditional-statements */
+  /* eslint-enable functional/no-let */
 }
 
 function generate776({publication, electronical}) {
@@ -794,7 +786,6 @@ function parseIdentifiers(publication, electronical) {
   return publication.publicationIdentifierPrint ? JSON.parse(publication.publicationIdentifierPrint) : null;
 }
 
-// eslint-disable-next-line max-params
 function addTypes(field, ind1, types, electronical = false, electronicalRecordPublicationType = null) {
   if (types) {
     const datafield = {tag: field, ind1, ind2: ' '};
