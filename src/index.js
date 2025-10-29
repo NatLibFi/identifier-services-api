@@ -56,7 +56,7 @@ async function run() {
     }
 
     function handleTermination({code = 0}) {
-      process.exit(code); // eslint-disable-line no-process-exit
+      process.exit(code);
     }
   }
 }

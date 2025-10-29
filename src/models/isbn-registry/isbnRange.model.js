@@ -32,8 +32,6 @@ import {DataTypes} from 'sequelize';
 import {isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
-/* eslint-disable new-cap, functional/no-this-expressions*/
-
 export default function (sequelize, dialect) {
   sequelize.define(
     'isbnRange', {

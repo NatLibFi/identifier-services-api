@@ -76,7 +76,6 @@ export default function () {
    * @param {Object} user User creating the new publication
    * @returns {Object} Created publication as object
    */
-  /* eslint-disable-next-line max-statements */
   async function create(formId, doc, user) {
     const t = await sequelize.transaction();
 
@@ -207,7 +206,6 @@ export default function () {
 
     // Sanity verification: Remove attributes not allowed to update/overwrite
     // These should be taken care by validation, but just to be sure
-    /* eslint-disable functional/immutable-data */
     delete dbDoc.id;
     delete dbDoc.formId;
     delete dbDoc.publisherId;
@@ -216,7 +214,6 @@ export default function () {
     delete dbDoc.createdBy;
     delete dbDoc.modified;
     delete dbDoc.previous; // saved through attribute previousEntity, which maps to 'previous' column in db
-    /* eslint-enable functional/immutable-data */
 
     // Abstract interface both finds and updates
     await publicationIssnModelInterface.update(id, dbDoc);
@@ -239,7 +236,6 @@ export default function () {
    * @param {Object} user User removing the publication
    * @returns True if removal was successful, otherwise throws ApiError
    */
-  // eslint-disable-next-line max-statements
   async function remove(id, user) {
     const t = await sequelize.transaction();
     try {
@@ -331,7 +327,6 @@ export default function () {
    * @param {Object} user User assigning the ISSN
    * @returns {Object} Created issnUsed identifier object
    */
-  /* eslint-disable max-statements,complexity,functional/no-conditional-statements */
   async function getIssn(publicationId, user) {
     const t = await sequelize.transaction();
 
@@ -385,8 +380,8 @@ export default function () {
         }
 
         // If there was canceled ISSN identifier, use it and its rangeId
-        issnIdentifier.issn = canceledIdentifier.issn; // eslint-disable-line
-        issnIdentifier.issnRangeId = canceledIdentifier.issnRangeId // eslint-disable-line
+        issnIdentifier.issn = canceledIdentifier.issn;
+        issnIdentifier.issnRangeId = canceledIdentifier.issnRangeId
 
         // Delete canceled identifier from db
         const canceledIssnDeleteCount = await issnCanceledModel.destroy({where: {id: canceledIdentifier.id}}, {transaction: t});
@@ -421,7 +416,7 @@ export default function () {
         }
 
         // Set identifier information to new ISSN entity. Range information is already there
-        issnIdentifier.issn = newIssn; // eslint-disable-line
+        issnIdentifier.issn = newIssn;
 
         // Testing if this value was last from the range
         if (range.next === range.rangeEnd) {
@@ -477,7 +472,7 @@ export default function () {
 
       // If all publications associated with form have issn, set status to NOT_NOTIFIED
       if (form.publicationCount === formUpdateInfo.publicationCountIssn) {
-        formUpdateInfo.status = ISSN_REGISTRY_FORM_STATUS.NOT_NOTIFIED; // eslint-disable-line
+        formUpdateInfo.status = ISSN_REGISTRY_FORM_STATUS.NOT_NOTIFIED;
       }
 
       await form.update(formUpdateInfo, {transaction: t});
@@ -499,7 +494,6 @@ export default function () {
       throw err;
     }
   }
-  /* eslint-enable max-statements,complexity,functional/no-conditional-statements */
 
   /**
    * Remove ISSN identifier. Removed identifier becomes available for reuse.
@@ -509,7 +503,6 @@ export default function () {
    * @param {Object} user User removing the ISSN
    * @returns {Object} Updated publicatino object
    */
-  /* eslint-disable max-statements,complexity,functional/no-conditional-statements */
   async function deleteIssn(publicationId, user) {
     const t = await sequelize.transaction();
 
@@ -539,7 +532,7 @@ export default function () {
       }
 
       // Assign used issn entity for db operations
-      const usedIssn = allIssnAssociations.rows[0]; // eslint-disable-line prefer-destructuring
+      const usedIssn = allIssnAssociations.rows[0];
 
       // Publication information needs to match the identifier information
       if (publication.issn !== usedIssn.issn) {
@@ -575,18 +568,18 @@ export default function () {
 
         // If range was closed, open and activate it
         if (range.isClosed) {
-          rangeUpdateInfo.isActive = true; // eslint-disable-line
-          rangeUpdateInfo.isClosed = false; // eslint-disable-line
+          rangeUpdateInfo.isActive = true;
+          rangeUpdateInfo.isClosed = false;
         }
 
         // If removed identifier was equal to one generated from ranges block and rangeEnd information, set rangeEnd as next value
         if (usedIssn.issn === `${range.block}-${range.rangeEnd}`) {
-          rangeUpdateInfo.next = range.rangeEnd; // eslint-disable-line
+          rangeUpdateInfo.next = range.rangeEnd;
         } else {
           // Otherwise calculate next value out of the issn by decreasing the base and calculating check digit
           const newNextBase = (Number(range.next.substring(0, 3)) - 1).toString().padStart(3, '0');
           const newNextCheckDigit = calculateCheckDigitIssn(`${range.block}${newNextBase}`);
-          rangeUpdateInfo.next = `${newNextBase}${newNextCheckDigit}`; // eslint-disable-line
+          rangeUpdateInfo.next = `${newNextBase}${newNextCheckDigit}`;
         }
 
         // Validate that the updated next value is generates a valid ISSN identifier
@@ -618,7 +611,7 @@ export default function () {
 
       // Update form status if it's NOT_NOTIFIED
       if (form.status === ISSN_REGISTRY_FORM_STATUS.NOT_NOTIFIED) {
-        formUpdateInfo.status = ISSN_REGISTRY_FORM_STATUS.NOT_HANDLED; // eslint-disable-line
+        formUpdateInfo.status = ISSN_REGISTRY_FORM_STATUS.NOT_HANDLED;
       }
 
       await form.update(formUpdateInfo, {transaction: t});
@@ -644,5 +637,4 @@ export default function () {
       throw err;
     }
   }
-  /* eslint-enable max-statements,complexity,functional/no-conditional-statements */
 }

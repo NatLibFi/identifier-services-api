@@ -104,7 +104,7 @@ export default function (registry) {
    * @param {Object} user User information
    * @returns Resulting database entry in JSON format if success. Throws ApiError on failure.
    */
-  async function create(doc, user) { // eslint-disable-line require-await
+  async function create(doc, user) {
     const dbDoc = {...doc, createdBy: user.id, modifiedBy: user.id};
 
     // Require message type definition to be proper
@@ -150,7 +150,7 @@ export default function (registry) {
     const formattedResults = result.map(messageTemplate => {
       const messageTemplateAsJson = messageTemplate.toJSON();
       const result = {...messageTemplateAsJson, messageTypeName: messageTemplate[messageTypeAssociationName].name};
-      delete result[messageTypeAssociationName]; // eslint-disable-line functional/immutable-data
+      delete result[messageTypeAssociationName];
       return result;
     });
 

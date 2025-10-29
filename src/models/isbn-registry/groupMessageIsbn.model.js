@@ -33,7 +33,6 @@ import {canApplyIndex, isMysqlOrMaria} from '../utils';
 import {TABLE_PREFIX} from '../../config';
 
 // NOTE: not in use
-/* eslint-disable new-cap,functional/no-this-expressions */
 /* istanbul ignore next */
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index

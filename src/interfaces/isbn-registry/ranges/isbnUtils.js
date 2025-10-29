@@ -131,7 +131,7 @@ export function calculateCheckDigitIsbn(isbn) {
    * @param {string} identifier ISBN-13 identifier without check digit and dashes (ISBN-13 or ISMN)
    * @returns Check digit in string format
    */
-  /* eslint-disable functional/no-conditional-statements,no-param-reassign,no-extra-parens */
+  /* eslint-disable no-param-reassign */
   function calculateIsbn13CheckDigit(identifier) {
     const sum = identifier.split('').reduce((acc, char, i) => {
       if (i % 2 === 0) {
@@ -144,7 +144,7 @@ export function calculateCheckDigitIsbn(isbn) {
 
     return `${(10 - (sum % 10)) % 10}`;
   }
-  /* eslint-enable functional/no-conditional-statements,no-param-reassign,no-extra-parens */
+  /* eslint-enable no-param-reassign */
 }
 
 /**
@@ -180,8 +180,8 @@ export function isbnRangeOverlapsExisting(range, isbnRanges) {
    */
   function hasOverlap(range1, range2) {
     return range1.prefix === range2.prefix &&
-    range1.langGroup === range2.langGroup &&
-    (testOverlap1(range1, range2) || testOverlap2(range1, range2));
+      range1.langGroup === range2.langGroup &&
+      (testOverlap1(range1, range2) || testOverlap2(range1, range2));
   }
 }
 
