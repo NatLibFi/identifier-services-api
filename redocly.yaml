@@ -1,0 +1,7 @@
+extends:
+  - recommended
+rules:
+  info-license: off
+  no-empty-servers: off
+  operation-operationId: off
+  security-defined: off
