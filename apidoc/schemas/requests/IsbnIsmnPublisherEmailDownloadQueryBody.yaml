@@ -20,4 +20,4 @@ required:
   - category
   - format
   - identifierType
-  - language
+  - langCode
