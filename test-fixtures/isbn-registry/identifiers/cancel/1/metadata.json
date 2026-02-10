@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, system can successfully cancel identifier from publication if no message has yet been sent",
-    "requestUrl": "/isbn-registry/identifiers/cancel",
-    "username": "system",
-    "password": "system",
-    "method": "post",
-    "expectedStatus": 204
-}

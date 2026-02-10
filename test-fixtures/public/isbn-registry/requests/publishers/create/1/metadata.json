@@ -1,6 +1,0 @@
-{
-    "descr": "Should succeed, unauthenticated can create publisher registry join request",
-    "requestUrl": "/public/isbn-registry/requests/publishers",
-    "method": "post",
-    "expectedStatus": 201
-}

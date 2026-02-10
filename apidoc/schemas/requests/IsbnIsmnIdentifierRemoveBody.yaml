@@ -1,4 +1,0 @@
-type: object
-properties:
-  identifier:
-    $ref: '../patterns/IsbnIsmnIdentifier.yaml'

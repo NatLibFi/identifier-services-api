@@ -1,6 +1,0 @@
-{
-    "descr": "Should succeed, status query to /ping endpoint succeeds",
-    "requestUrl": "/ping",
-    "method": "get",
-    "expectedStatus": 200
-}

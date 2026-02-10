@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot delete ISSN publication",
-  "requestUrl": "/issn-registry/publications/1",
-  "method": "delete",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 403
-}

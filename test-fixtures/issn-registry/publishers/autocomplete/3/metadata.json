@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot query ISSN publisher autocomplete endpoint",
-  "requestUrl": "/issn-registry/publishers/autocomplete",
-  "method": "post",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 403
-}

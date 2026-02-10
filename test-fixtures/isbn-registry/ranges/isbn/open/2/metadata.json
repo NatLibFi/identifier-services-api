@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can open closed ISBN range if it has available subranges",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/open",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 200
-}

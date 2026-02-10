@@ -1,6 +1,0 @@
-type: string
-enum:
-  - ISSN
-  - PUBLISHERS
-  - PUBLICATIONS
-  - FORMS

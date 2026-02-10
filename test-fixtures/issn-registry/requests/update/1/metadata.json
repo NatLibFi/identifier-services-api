@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can update ISSN request",
-  "requestUrl": "/issn-registry/requests/1",
-  "method": "put",
-  "username": "system",
-  "password": "system",
-  "expectedStatus": 200
-}

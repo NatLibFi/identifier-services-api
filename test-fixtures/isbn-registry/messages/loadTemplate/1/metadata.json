@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can successfully load default template for sending new publisher identifier",
-  "requestUrl": "/isbn-registry/messages/loadtemplate",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 200
-}

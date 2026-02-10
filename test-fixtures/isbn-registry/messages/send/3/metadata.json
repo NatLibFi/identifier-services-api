@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot send message",
-  "requestUrl": "/isbn-registry/messages/send",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

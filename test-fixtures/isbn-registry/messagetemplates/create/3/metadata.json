@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot create ISBN message template",
-  "requestUrl": "/isbn-registry/messagetemplates",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

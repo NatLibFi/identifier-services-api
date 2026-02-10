@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed but result into empty response: query does not include publisher requests to result set",
-    "requestUrl": "/isbn-registry/publishers/query",
-    "username": "system",
-    "password": "system",
-    "method": "post",
-    "expectedStatus": 200
-}

@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully read ISMN range",
-  "requestUrl": "/isbn-registry/ranges/ismn",
-  "username": "admin",
-  "password": "admin",
-  "method": "get",
-  "expectedStatus": 200
-}

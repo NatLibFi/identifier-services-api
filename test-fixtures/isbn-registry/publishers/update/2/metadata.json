@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, admin can update publishers",
-    "requestUrl": "/isbn-registry/publishers/3",
-    "username": "admin",
-    "password": "admin",
-    "method": "put",
-    "expectedStatus": 200
-}

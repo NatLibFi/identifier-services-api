@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, system cannot activate already active ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/activate",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 409
-}

@@ -1,8 +1,0 @@
-{
-    "descr": "Should fail, publisher cannot make autocomplete search request regarding ISBN publishers",
-    "requestUrl": "/isbn-registry/publishers/autocomplete",
-    "username": "publisher",
-    "password": "publisher",
-    "method": "post",
-    "expectedStatus": 403
-}

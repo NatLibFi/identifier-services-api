@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can successfully read ISSN message types",
-  "requestUrl": "/issn-registry/messagetypes",
-  "username": "system",
-  "password": "system",
-  "method": "get",
-  "expectedStatus": 200
-}

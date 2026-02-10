@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot read statistics",
-  "requestUrl": "/isbn-registry/statistics",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

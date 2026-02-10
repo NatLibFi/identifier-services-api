@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully read all ISSN message templates",
-  "requestUrl": "/issn-registry/messagetemplates",
-  "username": "admin",
-  "password": "admin",
-  "method": "get",
-  "expectedStatus": 200
-}

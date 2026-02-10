@@ -1,8 +1,0 @@
-[
-  {
-    "id": 1,
-    "officialName": "FooBar Publisher",
-    "otherNames": "OtherFooBar, OtherAnotherFooBar",
-    "previousNames": ["PriorFoo", "AnotherPriorFoo"]
-  }
-]

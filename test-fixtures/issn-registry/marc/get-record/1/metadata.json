@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can get marc record out of ISSN registry publication",
-  "requestUrl": "/issn-registry/marc/1",
-  "username": "system",
-  "password": "system",
-  "method": "get",
-  "expectedStatus": 200
-}

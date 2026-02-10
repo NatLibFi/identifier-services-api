@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully delete ISSN ranges if no identifiers have been given yet",
-  "requestUrl": "/issn-registry/ranges/1",
-  "username": "admin",
-  "password": "admin",
-  "method": "delete",
-  "expectedStatus": 204
-}

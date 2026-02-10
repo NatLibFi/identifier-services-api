@@ -1,7 +1,0 @@
-type: string
-enum:
-  - PDF
-  - EPUB
-  - CD_ROM
-  - MP3
-  - OTHER

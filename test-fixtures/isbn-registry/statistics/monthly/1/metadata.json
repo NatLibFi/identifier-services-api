@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can read monthly statistics in JSON format. Data is correct when database is empty.",
-  "requestUrl": "/isbn-registry/statistics",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 200
-}

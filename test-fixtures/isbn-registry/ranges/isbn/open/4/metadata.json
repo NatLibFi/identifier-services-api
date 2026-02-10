@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot open closed ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/open",
-  "method": "post",
-  "expectedStatus": 401
-}

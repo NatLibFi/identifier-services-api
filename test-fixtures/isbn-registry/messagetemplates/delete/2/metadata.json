@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully delete ISBN message template if it is not used in any system action",
-  "requestUrl": "/isbn-registry/messagetemplates/1",
-  "username": "admin",
-  "password": "admin",
-  "method": "delete",
-  "expectedStatus": 204
-}

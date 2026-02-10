@@ -1,8 +1,0 @@
-{
-    "descr": "Should fail, cannot create identifier batch for publisher who has quitted",
-    "requestUrl": "/isbn-registry/identifierbatches/isbn",
-    "username": "system",
-    "password": "system",
-    "method": "post",
-    "expectedStatus": 409
-}

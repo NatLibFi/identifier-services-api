@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, system can make autocomplete search request regarding ISBN publishers",
-    "requestUrl": "/isbn-registry/publishers/autocomplete",
-    "username": "system",
-    "password": "system",
-    "method": "post",
-    "expectedStatus": 200
-}

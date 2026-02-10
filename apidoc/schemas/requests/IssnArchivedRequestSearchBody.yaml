@@ -1,6 +1,0 @@
-type: object
-properties:
-  formId:
-    type: integer
-required:
-  - formId

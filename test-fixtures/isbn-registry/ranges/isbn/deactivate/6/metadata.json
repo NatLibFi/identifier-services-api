@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, system cannot deactivate closed ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/deactivate",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 409
-}

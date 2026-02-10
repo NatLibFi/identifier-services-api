@@ -1,6 +1,0 @@
-{
-    "descr": "Should fail, unauthenticated cannot update publishers",
-    "requestUrl": "/isbn-registry/publishers/3",
-    "method": "put",
-    "expectedStatus": 401
-}

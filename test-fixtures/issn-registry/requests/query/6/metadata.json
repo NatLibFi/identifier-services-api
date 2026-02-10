@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, can use publisherId as search term",
-  "requestUrl": "/issn-registry/requests/query",
-  "method": "post",
-  "username": "system",
-  "password": "system",
-  "expectedStatus": 200
-}

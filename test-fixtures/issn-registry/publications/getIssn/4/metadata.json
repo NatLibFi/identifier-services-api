@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot assign ISSN to publication",
-  "requestUrl": "/issn-registry/publications/1/get-issn",
-  "method": "post",
-  "expectedStatus": 401
-}

@@ -1,6 +1,0 @@
-type: object
-properties:
-  searchText:
-    type: string
-required:
-  - searchText

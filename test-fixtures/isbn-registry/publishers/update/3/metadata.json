@@ -1,8 +1,0 @@
-{
-    "descr": "Should fail, publisher cannot update publishers",
-    "requestUrl": "/isbn-registry/publishers/3",
-    "username": "publisher",
-    "password": "publisher",
-    "method": "put",
-    "expectedStatus": 403
-}

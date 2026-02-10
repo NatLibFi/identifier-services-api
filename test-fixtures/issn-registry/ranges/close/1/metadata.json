@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can successfully close open ISSN range",
-  "requestUrl": "/issn-registry/ranges/1/close",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 200
-}

@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot update ISSN request",
-  "requestUrl": "/issn-registry/requests/1",
-  "method": "put",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 403
-}

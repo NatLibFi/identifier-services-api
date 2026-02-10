@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can successfully delete ISSN message template if it is not only one tied to an action",
-  "requestUrl": "/issn-registry/messagetemplates/1",
-  "username": "system",
-  "password": "system",
-  "method": "delete",
-  "expectedStatus": 204
-}

@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can successfully delete ISBN message type that is not defined mandatory for system",
-  "requestUrl": "/isbn-registry/messagetypes/10",
-  "username": "system",
-  "password": "system",
-  "method": "delete",
-  "expectedStatus": 204
-}

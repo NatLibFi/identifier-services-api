@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, admin can successfully read identifier batch information",
-    "requestUrl": "/isbn-registry/identifierbatches/1",
-    "username": "admin",
-    "password": "admin",
-    "method": "get",
-    "expectedStatus": 200
-}

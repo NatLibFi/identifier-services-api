@@ -1,8 +1,0 @@
-{
-    "descr": "Should fail, publisher cannot query publishers through admin endpoint",
-    "requestUrl": "/isbn-registry/publishers/query",
-    "username": "publisher",
-    "password": "publisher",
-    "method": "post",
-    "expectedStatus": 403
-}

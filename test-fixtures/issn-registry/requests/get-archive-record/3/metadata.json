@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher can not read ISSN request archive record",
-  "requestUrl": "/issn-registry/requests/1/get-archive-record",
-  "method": "get",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 403
-}

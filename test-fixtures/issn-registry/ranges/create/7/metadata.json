@@ -1,8 +1,0 @@
-{
-  "descr": "Prevents creating range which rangeBegin is creater than rangeEnd",
-  "requestUrl": "/issn-registry/ranges",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 409
-}

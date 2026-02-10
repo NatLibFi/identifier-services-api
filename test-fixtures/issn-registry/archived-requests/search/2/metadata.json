@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can search ISSN request archive information",
-  "requestUrl": "/issn-registry/archived-requests/search",
-  "method": "post",
-  "username": "admin",
-  "password": "admin",
-  "expectedStatus": 200
-}

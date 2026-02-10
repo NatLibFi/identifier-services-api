@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, publisher can create ISSN request with two publication linked to it",
-  "requestUrl": "/issn-registry/requests",
-  "method": "post",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 201
-}

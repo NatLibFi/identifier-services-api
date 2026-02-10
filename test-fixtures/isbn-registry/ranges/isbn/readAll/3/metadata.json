@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot read all ISBN ranges",
-  "requestUrl": "/isbn-registry/ranges/isbn",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "get",
-  "expectedStatus": 403
-}

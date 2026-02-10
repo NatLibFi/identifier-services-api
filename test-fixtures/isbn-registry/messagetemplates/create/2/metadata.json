@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully create ISBN message template",
-  "requestUrl": "/isbn-registry/messagetemplates",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 201
-}

@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisherId that cannot be found results into 404 error",
-  "requestUrl": "/isbn-registry/messages/send",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 404
-}

@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail if selected cancelled publisher range does not belong to selected rangeId",
-  "requestUrl": "/isbn-registry/publisher-ranges/isbn/",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 409
-}

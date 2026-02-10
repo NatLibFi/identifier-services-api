@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can query ISSN publication information using title attribute",
-  "requestUrl": "/issn-registry/publications/query",
-  "method": "post",
-  "username": "admin",
-  "password": "admin",
-  "expectedStatus": 200
-}

@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, admin can retrieve publisher information package as JSON",
-    "requestUrl": "/isbn-registry/publishers/get-information-package",
-    "username": "admin",
-    "password": "admin",
-    "method": "post",
-    "expectedStatus": 200
-}

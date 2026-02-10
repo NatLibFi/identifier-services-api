@@ -1,6 +1,0 @@
-type: object
-properties:
-  publisherId:
-    type: integer
-required:
-  - publisherId

@@ -1,8 +1,0 @@
-{
-  "descr": "Publisher cannot get statistics",
-  "requestUrl": "/issn-registry/statistics",
-  "method": "post",
-  "username": "publisher",
-  "password": "publisher",
-  "expectedStatus": 403
-}

@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot create ISSN request through non-public endpoint",
-  "requestUrl": "/issn-registry/requests",
-  "method": "post",
-  "expectedStatus": 401
-}

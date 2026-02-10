@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, admin can read publisher request",
-    "requestUrl": "/isbn-registry/requests/publishers/1",
-    "username": "admin",
-    "password": "admin",
-    "method": "get",
-    "expectedStatus": 200
-}

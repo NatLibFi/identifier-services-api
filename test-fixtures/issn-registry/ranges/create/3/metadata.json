@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot create ISSN range",
-  "requestUrl": "/issn-registry/ranges",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

@@ -1,8 +1,0 @@
-{
-    "descr": "Manages publication changes for publication format PRINT",
-    "requestUrl": "/isbn-registry/identifiers/remove",
-    "username": "system",
-    "password": "system",
-    "method": "post",
-    "expectedStatus": 204
-}

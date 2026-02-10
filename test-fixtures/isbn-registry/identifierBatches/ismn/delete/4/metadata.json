@@ -1,6 +1,0 @@
-{
-    "descr": "Unauthenticated cannot delete identifierbatch of ISMN identifiers",
-    "requestUrl": "/isbn-registry/identifierbatches/1",
-    "method": "delete",
-    "expectedStatus": 401
-}

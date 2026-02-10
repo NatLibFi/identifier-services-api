@@ -1,5 +1,0 @@
-type: array
-items:
-  type: string
-  description: >-
-    Each item in array is stringified MARC record generated using marc-record-js

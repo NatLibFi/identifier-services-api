@@ -1,8 +1,0 @@
-type: object
-properties:
-  name:
-    type: string
-    maximum: 50
-  description:
-    type: string
-    maximum: 200

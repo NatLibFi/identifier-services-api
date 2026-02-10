@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot create a valid ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

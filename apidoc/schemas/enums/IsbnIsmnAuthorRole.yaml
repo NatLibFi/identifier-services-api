@@ -1,6 +1,0 @@
-type: string
-enum:
-  - AUTHOR
-  - ILLUSTRATOR
-  - TRANSLATOR
-  - EDITOR

@@ -1,6 +1,0 @@
-{
-    "descr": "Should fail, user cannot authenticate without providing credentials.",
-    "requestUrl": "/auth",
-    "method": "post",
-    "expectedStatus": 401
-}

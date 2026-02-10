@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, publisher cannot open closed ISSN range",
-  "requestUrl": "/issn-registry/ranges/1/open",
-  "username": "publisher",
-  "password": "publisher",
-  "method": "post",
-  "expectedStatus": 403
-}

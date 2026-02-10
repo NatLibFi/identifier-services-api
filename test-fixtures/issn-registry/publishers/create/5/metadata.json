@@ -1,8 +1,0 @@
-{
-  "descr": "Can create publisher with minimal information",
-  "requestUrl": "/issn-registry/publishers",
-  "method": "post",
-  "username": "system",
-  "password": "system",
-  "expectedStatus": 201
-}

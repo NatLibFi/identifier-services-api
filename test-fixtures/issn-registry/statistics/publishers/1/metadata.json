@@ -1,8 +1,0 @@
-{
-  "descr": "Can retrieve ISSN publisher statistics in JSON format with correct data",
-  "requestUrl": "/issn-registry/statistics",
-  "method": "post",
-  "username": "system",
-  "password": "system",
-  "expectedStatus": 200
-}

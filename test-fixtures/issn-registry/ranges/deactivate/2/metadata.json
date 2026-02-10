@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully deactivate inactive ISSN range which was active",
-  "requestUrl": "/issn-registry/ranges/1/deactivate",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 200
-}

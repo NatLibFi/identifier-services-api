@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can update ISSN publisher information",
-  "requestUrl": "/issn-registry/publishers/1",
-  "method": "put",
-  "username": "admin",
-  "password": "admin",
-  "expectedStatus": 200
-}

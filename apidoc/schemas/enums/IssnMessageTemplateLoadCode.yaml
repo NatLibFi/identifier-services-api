@@ -1,4 +1,0 @@
-type: string
-enum:
-  - form_handled
-  - publisher_summary

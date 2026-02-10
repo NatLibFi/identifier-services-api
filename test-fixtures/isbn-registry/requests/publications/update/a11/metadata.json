@@ -1,8 +1,0 @@
-{
-    "descr": "Should fail, cannot update incomplete author information",
-    "requestUrl": "/isbn-registry/requests/publications/2",
-    "username": "system",
-    "password": "system",
-    "method": "put",
-    "expectedStatus": 422
-}

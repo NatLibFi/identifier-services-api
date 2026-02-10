@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully create ISSN message template",
-  "requestUrl": "/issn-registry/messagetemplates",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 201
-}

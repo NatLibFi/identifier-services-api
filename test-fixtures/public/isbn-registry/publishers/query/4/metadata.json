@@ -1,6 +1,0 @@
-{
-    "descr": "May query using ISBN identifier",
-    "requestUrl": "/public/isbn-registry/publishers/query",
-    "method": "post",
-    "expectedStatus": 200
-}

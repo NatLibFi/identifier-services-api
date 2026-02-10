@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, system can read ISSN publisher information",
-  "requestUrl": "/issn-registry/publishers/1",
-  "method": "get",
-  "username": "system",
-  "password": "system",
-  "expectedStatus": 200
-}

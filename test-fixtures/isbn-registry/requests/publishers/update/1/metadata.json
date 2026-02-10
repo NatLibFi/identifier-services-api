@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, system can update publisher request",
-    "requestUrl": "/isbn-registry/requests/publishers/2",
-    "username": "system",
-    "password": "system",
-    "method": "put",
-    "expectedStatus": 200
-}

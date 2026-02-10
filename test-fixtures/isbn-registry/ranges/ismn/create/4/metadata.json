@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot create ISMN range",
-  "requestUrl": "/isbn-registry/ranges/ismn",
-  "method": "post",
-  "expectedStatus": 401
-}

@@ -1,4 +1,0 @@
-type: object
-allOf:
-  - $ref: './IsbnIsmnPublicationRequestCreateBody.yaml'
-  - $ref: './CommonTurnstileToken.yaml'

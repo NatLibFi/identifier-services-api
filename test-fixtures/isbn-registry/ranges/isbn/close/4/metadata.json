@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot close active ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/close",
-  "method": "post",
-  "expectedStatus": 401
-}

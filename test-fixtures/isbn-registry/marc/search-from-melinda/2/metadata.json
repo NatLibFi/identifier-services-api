@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail with generic code, as admin can search from Melinda but the connection is not configured",
-  "requestUrl": "/isbn-registry/marc/1/search-from-melinda",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 500
-}

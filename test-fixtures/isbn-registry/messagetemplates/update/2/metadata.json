@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can successfully update ISBN message template",
-  "requestUrl": "/isbn-registry/messagetemplates/1",
-  "username": "admin",
-  "password": "admin",
-  "method": "put",
-  "expectedStatus": 200
-}

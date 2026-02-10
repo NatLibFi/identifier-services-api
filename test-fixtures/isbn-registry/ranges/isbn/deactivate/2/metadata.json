@@ -1,8 +1,0 @@
-{
-  "descr": "Should succeed, admin can deactivate activated ISBN range",
-  "requestUrl": "/isbn-registry/ranges/isbn/1/deactivate",
-  "username": "admin",
-  "password": "admin",
-  "method": "post",
-  "expectedStatus": 200
-}

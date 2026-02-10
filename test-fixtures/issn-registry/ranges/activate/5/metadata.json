@@ -1,8 +1,0 @@
-{
-  "descr": "Should fail, cannot activate closed range",
-  "requestUrl": "/issn-registry/ranges/1/activate",
-  "username": "system",
-  "password": "system",
-  "method": "post",
-  "expectedStatus": 409
-}

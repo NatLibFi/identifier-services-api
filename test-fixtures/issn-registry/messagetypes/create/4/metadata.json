@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot create a ISSN message type",
-  "requestUrl": "/issn-registry/messagetypes",
-  "method": "post",
-  "expectedStatus": 401
-}

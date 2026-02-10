@@ -1,6 +1,0 @@
-{
-  "descr": "Should fail, unauthenticated cannot read all ISBN message templates",
-  "requestUrl": "/isbn-registry/messagetemplates",
-  "method": "get",
-  "expectedStatus": 401
-}

@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, null is an allowed value if publisherId needs to be cleared",
-    "requestUrl": "/isbn-registry/requests/publications/2/set-publisher",
-    "username": "system",
-    "password": "system",
-    "method": "put",
-    "expectedStatus": 200
-}

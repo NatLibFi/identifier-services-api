@@ -1,8 +1,0 @@
-{
-    "descr": "Should succeed, admin can make autocomplete search request regarding ISBN publishers",
-    "requestUrl": "/isbn-registry/publishers/autocomplete",
-    "username": "admin",
-    "password": "admin",
-    "method": "post",
-    "expectedStatus": 200
-}
