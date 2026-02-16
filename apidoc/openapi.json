@@ -1,0 +1,202 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "Identifier Services API v2",
+    "contact": {
+      "name": "Identifier Services support",
+      "url": "https://www.kansalliskirjasto.fi/fi/palvelut/isbn-tunnus"
+    }
+  },
+  "tags": [
+    {
+      "name": "monograph",
+      "description": "Monograph publication and related identifier management"
+    },
+    {
+      "name": "isbn",
+      "description": "ISBN identifier management"
+    }
+  ],
+  "paths": {
+    "/v2/health": {
+      "get": {
+        "operationId": "getApiHealth",
+        "summary": "Retrieve API health status",
+        "security": [],
+        "tags": [
+          "public"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/monograph/isbn-ranges": {
+      "get": {
+        "operationId": "readAllIsbnRanges",
+        "summary": "Read all ISBN ranges information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resources could be read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/isbn-range"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect"
+      }
+    },
+    "schemas": {
+      "error": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "URI where user can read more about problem",
+            "example": "about:blank"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code",
+            "example": 401
+          },
+          "title": {
+            "type": "string",
+            "description": "Error title",
+            "example": "Unauthorized"
+          },
+          "detail": {
+            "type": "string",
+            "description": "Error description",
+            "example": "The requested operation is not permitted for unauthorized users."
+          },
+          "instance": {
+            "type": "string",
+            "description": "Original request path",
+            "example": "/monograph/isbn-ranges/1"
+          }
+        }
+      },
+      "created-metadata": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 36,
+            "example": "foobar"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-12-01T00:00:00.000Z"
+          }
+        }
+      },
+      "modified-metadata": {
+        "type": "object",
+        "properties": {
+          "modified": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 36,
+            "example": "foobar"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "example": "2024-12-01T00:00:00.000Z"
+          }
+        }
+      },
+      "isbn-range": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "gs1": {
+                "type": "string",
+                "example": "979"
+              },
+              "registrationGroup": {
+                "type": "string",
+                "example": "952"
+              },
+              "rangeBegin": {
+                "type": "string",
+                "example": "0"
+              },
+              "rangeEnd": {
+                "type": "string",
+                "example": "1"
+              },
+              "active": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      }
+    },
+    "responses": {
+      "error": {
+        "description": "Error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,3 +7,5 @@ coverage
 .env*
 .prettierrc
 package-lock.json
+*.csv
+dev-certs

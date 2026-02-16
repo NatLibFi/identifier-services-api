@@ -1,0 +1,11 @@
+get:
+  operationId: getApiHealth
+  summary: Retrieve API health status
+  security: []
+  tags:
+    - public
+  responses:
+    '200':
+      description: OK
+    default:
+      $ref: '../../responses/error.yaml'

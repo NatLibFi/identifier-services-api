@@ -1,0 +1,11 @@
+# This file instructs Redocly's linter to ignore the rules contained for specific parts of your API.
+apidoc/openapi.yaml:
+  no-empty-servers:
+    - '#/openapi'
+  info-license:
+    - '#/info'
+  struct:
+    - '#/components/securitySchemes/openId'
+apidoc/resources/health/root.yaml:
+  operation-4xx-response:
+    - '#/get/responses'

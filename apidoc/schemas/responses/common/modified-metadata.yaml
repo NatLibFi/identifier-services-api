@@ -1,0 +1,10 @@
+type: object
+properties:
+  modified:
+    type: string
+    minLength: 1
+    maxLength: 36
+    example: foobar
+  modifiedAt:
+    type: string
+    example: '2024-12-01T00:00:00.000Z'

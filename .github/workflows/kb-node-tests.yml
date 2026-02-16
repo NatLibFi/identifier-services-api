@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -25,8 +25,9 @@ jobs:
         env:
           NPM_CONFIG_IGNORE_SCRIPTS: true
       - run: npm audit --package-lock-only --production --audit-level=high
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm test
+      # In no circumstances do not remove the build step here: it confirms TypeScript syntax used is compatible with Node runtime
       - run: npm run build --if-present
 
   license-scan:
@@ -58,6 +59,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Next webhook
+        uses: joelwmale/webhook-action@master
+        if: github.ref == 'refs/heads/next'
+        with:
+          url: ${{ secrets.WEBHOOK_URL_NEXT }}
+          body: '{}'
       - name: Staging webhook
         uses: joelwmale/webhook-action@master
         if: github.ref == 'refs/heads/test'

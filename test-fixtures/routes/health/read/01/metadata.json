@@ -1,0 +1,6 @@
+{
+  "description": "[guest] can read API health",
+  "url": "/",
+  "method": "GET",
+  "expectedStatus": 200
+}

@@ -138,3 +138,12 @@ private-package-installs
 
 # apidoc dev build
 src/public
+
+# all csv-files
+*.csv
+
+# debug middleware
+src/middlewares/debug-middleware.ts
+
+# dev shell scripts
+*.sh

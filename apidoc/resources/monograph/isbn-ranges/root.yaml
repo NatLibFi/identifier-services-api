@@ -1,0 +1,24 @@
+get:
+  operationId: readAllIsbnRanges
+  summary: Read all ISBN ranges information
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - isbn
+  responses:
+    '200':
+      description: Resources could be read
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../../schemas/responses/monograph/isbn-range.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    default:
+      $ref: '../../../responses/error.yaml'

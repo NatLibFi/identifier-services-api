@@ -1,0 +1,67 @@
+{
+  "name": "@natlibfi/identifier-services-api",
+  "description": "Identifier Services API",
+  "author": {
+    "name": "The National Library of Finland"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/natlibfi/identifier-services-api",
+  "bugs": {
+    "url": "https://github.com/natlibfi/identifier-services-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:natlibfi/identifier-services-api.git"
+  },
+  "license": "MIT",
+  "private": true,
+  "version": "2.0.0-alpha.1",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:apidoc": "npm run lint:apidoc && redocly bundle apidoc/openapi.yaml -o apidoc/openapi.json --ext json",
+    "test": "NODE_ENV=test vitest",
+    "lint:apidoc": "redocly lint --extends recommended apidoc/openapi.yaml",
+    "lint:src": "eslint -- src",
+    "dev": "node --env-file-if-exists=.env.dev --watch src/server.ts",
+    "prettify:src": "prettier --write \"./src/**/*.ts\"",
+    "prettify:test-fixtures": "prettier --write \"./test-fixtures/**/*.json\""
+  },
+  "dependencies": {
+    "@natlibfi/passport-natlibfi-keycloak": "^3.0.4",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-winston": "^4.2.0",
+    "helmet": "^8.1.0",
+    "http-status": "^2.1.0",
+    "isbn3": "^2.0.3",
+    "kysely": "^0.28.10",
+    "luxon": "^3.7.2",
+    "mysql2": "^3.15.0",
+    "qs": "^6.14.1",
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@redocly/cli": "^2.18.1",
+    "@testcontainers/mysql": "^11.11.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^25.0.10",
+    "better-sqlite3": "^12.6.2",
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.0",
+    "testcontainers": "^11.11.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.55.0",
+    "uuid": "^13.0.0",
+    "vitest": "^4.0.18"
+  }
+}

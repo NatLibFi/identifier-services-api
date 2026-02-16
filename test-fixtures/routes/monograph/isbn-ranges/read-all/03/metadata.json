@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot read all ISBN ranges",
+  "url": "/monograph/isbn-ranges",
+  "method": "GET",
+  "role": "publisher",
+  "expectedStatus": 403
+}

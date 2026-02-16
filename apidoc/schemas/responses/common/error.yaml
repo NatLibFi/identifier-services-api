@@ -1,0 +1,22 @@
+type: object
+properties:
+  type:
+    type: string
+    description: URI where user can read more about problem
+    example: about:blank
+  status:
+    type: number
+    description: HTTP status code
+    example: 401
+  title:
+    type: string
+    description: Error title
+    example: Unauthorized
+  detail:
+    type: string
+    description: Error description
+    example: The requested operation is not permitted for unauthorized users.
+  instance:
+    type: string
+    description: Original request path
+    example: /monograph/isbn-ranges/1

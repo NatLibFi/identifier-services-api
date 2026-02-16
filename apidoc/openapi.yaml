@@ -1,0 +1,25 @@
+openapi: '3.1.0'
+
+info:
+  version: 2.0.0
+  title: Identifier Services API v2
+  contact:
+    name: Identifier Services support
+    url: https://www.kansalliskirjasto.fi/fi/palvelut/isbn-tunnus
+tags:
+  - name: monograph
+    description: Monograph publication and related identifier management
+  - name: isbn
+    description: ISBN identifier management
+
+paths:
+  /v2/health:
+    $ref: './resources/health/root.yaml'
+
+  /monograph/isbn-ranges:
+    $ref: './resources/monograph/isbn-ranges/root.yaml'
+
+components:
+  securitySchemes:
+    openId:
+      type: openIdConnect

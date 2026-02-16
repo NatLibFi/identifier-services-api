@@ -1,0 +1,23 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      gs1:
+        type: string
+        example: '979'
+      registrationGroup:
+        type: string
+        example: '952'
+      rangeBegin:
+        type: string
+        example: '0'
+      rangeEnd:
+        type: string
+        example: '1'
+      active:
+        type: boolean
+        example: true
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

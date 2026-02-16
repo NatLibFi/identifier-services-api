@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 404,
+  "title": "Not found",
+  "detail": "Requested resource /foo was not found.",
+  "instance": "/foo"
+}

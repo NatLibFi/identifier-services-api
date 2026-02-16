@@ -1,0 +1,59 @@
+{
+  "include": ["src/", "declarations.d.ts"],
+  "exclude": ["vitest.config.ts"],
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // Environment Settings
+    "module": "nodenext",
+    "target": "esnext",
+    "types": ["node"],
+    "lib": ["esnext"],
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Style Options
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    "strict": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+
+    // Customized options
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+
+    "allowUnreachableCode": false,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+
+    // Only allow syntax accepted by Node >= 23.6
+    "erasableSyntaxOnly": true,
+
+    // Proposed options from Node docs: https://nodejs.org/api/typescript.html#type-stripping
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true
+  }
+}

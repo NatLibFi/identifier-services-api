@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot read all ISBN ranges",
+  "url": "/monograph/isbn-ranges",
+  "method": "GET",
+  "expectedStatus": 401
+}
