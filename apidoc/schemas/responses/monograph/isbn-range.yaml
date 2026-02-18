@@ -7,17 +7,20 @@ allOf:
       gs1:
         type: string
         example: '979'
-      registrationGroup:
+      registration_group:
         type: string
         example: '952'
-      rangeBegin:
+      range_begin:
         type: string
         example: '0'
-      rangeEnd:
+      range_end:
         type: string
         example: '1'
       active:
         type: boolean
         example: true
+      # free:
+      #   type: integer
+      #   example: 1
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

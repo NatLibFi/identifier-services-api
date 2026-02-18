@@ -1,0 +1,6 @@
+{
+  "description": "[guest] can read API health using v2 routing",
+  "url": "/v2",
+  "method": "GET",
+  "expectedStatus": 200
+}

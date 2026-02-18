@@ -123,9 +123,12 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   app.use(authenticationMiddleware, roleMapMiddleware);
 
   // Routes requiring authentication
-  app.use('/monograph', allowAdminOnly, monographRouter);
+  app.use('/v2/monograph', allowAdminOnly, monographRouter);
 
   // Public routes
+  app.use('/v2', healthRouter);
+
+  // TMP support for v1 ping
   app.use('/', healthRouter);
 
   // Manage not found and errors

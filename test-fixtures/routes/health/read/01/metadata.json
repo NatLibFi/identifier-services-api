@@ -1,5 +1,5 @@
 {
-  "description": "[guest] can read API health",
+  "description": "[guest] can read API health using v1 routing",
   "url": "/",
   "method": "GET",
   "expectedStatus": 200

@@ -3,5 +3,5 @@
   "status": 403,
   "title": "Forbidden",
   "detail": "You do not have permission to perform the requested operation.",
-  "instance": "/monograph/isbn-ranges"
+  "instance": "/v2/monograph/isbn-ranges"
 }

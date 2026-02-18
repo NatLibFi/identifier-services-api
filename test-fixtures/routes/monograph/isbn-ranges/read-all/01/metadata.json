@@ -1,6 +1,6 @@
 {
   "description": "[admin] can read all ISBN ranges",
-  "url": "/monograph/isbn-ranges",
+  "url": "/v2/monograph/isbn-ranges",
   "method": "GET",
   "role": "admin",
   "expectedStatus": 200

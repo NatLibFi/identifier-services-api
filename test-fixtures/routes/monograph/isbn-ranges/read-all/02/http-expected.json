@@ -3,5 +3,5 @@
   "status": 401,
   "title": "Unauthorized",
   "detail": "The requested operation is not permitted for unauthorized users.",
-  "instance": "/monograph/isbn-ranges"
+  "instance": "/v2/monograph/isbn-ranges"
 }

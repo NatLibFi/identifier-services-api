@@ -1,5 +1,5 @@
 {
-  "description": "[guest] receives not found response when requesting for resource that does not exist",
+  "description": "[guest] receives not found response when requesting for resource that does not exist in v1 routing",
   "url": "/foo",
   "method": "GET",
   "expectedStatus": 404
