@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
+import { afterEach, beforeEach, test, describe, inject, expect, onTestFailed } from 'vitest';
 
 import { createConnection, type Connection } from 'mysql2/promise';
 import { CompiledQuery, Kysely } from 'kysely';
@@ -30,6 +30,9 @@ describe('database', async () => {
 
   test('can create to database successfully using test config', async () => {
     // Note: must create database before Kysely can access it
+    onTestFailed(async () => {
+      await mysql2Connection.query(`DROP DATABASE \`${database}\``);
+    });
 
     // @ts-expect-error implicit object type
     createKyselySingleton({ ...dbConfig, database });
@@ -48,6 +51,9 @@ describe('database', async () => {
 
   test('throws error when attempting to create database multiple times', async () => {
     // Attempt create two Kysely instances
+    onTestFailed(async () => {
+      await mysql2Connection.query(`DROP DATABASE \`${database}\``);
+    });
 
     // @ts-expect-error implicit object type
     createKyselySingleton({ ...dbConfig, database });
@@ -61,6 +67,9 @@ describe('database', async () => {
 
   test('allows getting same Kysely singleton multiple times', async () => {
     // Create Kysely instance
+    onTestFailed(async () => {
+      await mysql2Connection.query(`DROP DATABASE \`${database}\``);
+    });
 
     // @ts-expect-error implicit object type
     createKyselySingleton({ ...dbConfig, database });
