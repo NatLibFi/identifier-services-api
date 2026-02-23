@@ -11,7 +11,7 @@ import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../t
 
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 
-describe('getIsbnRangeConflict', async () => {
+describe('getIsbnRangeConflicts', async () => {
   let mysql2Connection: Connection;
   let database: string;
 
@@ -60,7 +60,7 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(initialIsbnRange);
+    expect(result).toStrictEqual([initialIsbnRange]);
   });
 
   test('Finds conflict between when ranges overlap (different range length) #1', async () => {
@@ -73,7 +73,7 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(initialIsbnRange);
+    expect(result).toStrictEqual([initialIsbnRange]);
   });
 
   test('Finds conflict between when ranges overlap (different range length) #2', async () => {
@@ -85,7 +85,7 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(initialIsbnRange);
+    expect(result).toStrictEqual([initialIsbnRange]);
   });
 
   test('Does not find conflict when gs1 does not match', async () => {
@@ -97,7 +97,7 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(undefined);
+    expect(result).toStrictEqual([]);
   });
 
   test('Does not find conflict when registration_group does not match', async () => {
@@ -109,7 +109,7 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(undefined);
+    expect(result).toStrictEqual([]);
   });
 
   test('Does not find conflict when gs1 and registration_group matches, but ranges do not overlap', async () => {
@@ -121,6 +121,6 @@ describe('getIsbnRangeConflict', async () => {
     };
 
     const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
-    expect(result).toStrictEqual(undefined);
+    expect(result).toStrictEqual([]);
   });
 });

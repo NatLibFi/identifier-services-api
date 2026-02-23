@@ -4,3 +4,4 @@ const routers = ['monograph', 'isbn-ranges'];
 
 runIntegrationTestSuite(routers, 'read-all');
 runIntegrationTestSuite(routers, 'create');
+runIntegrationTestSuite(routers, 'patch');

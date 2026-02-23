@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISBN range cannot be created due to conflict between existing ISBN ranges (ids: 2)",
+  "instance": "/v2/monograph/isbn-ranges/1"
+}

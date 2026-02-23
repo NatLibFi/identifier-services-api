@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may deactivate active ISBN range",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 200
+}

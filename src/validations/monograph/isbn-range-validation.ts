@@ -48,4 +48,63 @@ export const createIsbnRangeSchema = z
     }
   });
 
+export const updateIsbnRangeSchema = z
+  .object({
+    active: z.boolean().optional(),
+    range_begin: z.string().min(1).max(5).regex(numbersOnlyString).optional(),
+    range_end: z.string().min(1).max(5).regex(numbersOnlyString).optional(),
+  })
+  .superRefine((data, ctx) => {
+    const beginNumber = data.range_begin ? Number(data.range_begin.replaceAll(/^0+/g, '')) : undefined;
+    const endNumber = data.range_end ? Number(data.range_end.replaceAll(/^0+/g, '')) : undefined;
+
+    if (beginNumber && isNaN(beginNumber)) {
+      ctx.addIssue({
+        path: ['range_begin'],
+        code: 'custom',
+        message: 'Range begin could not be interpreted as number',
+      });
+    }
+
+    if (endNumber && isNaN(endNumber)) {
+      ctx.addIssue({
+        path: ['range_end'],
+        code: 'custom',
+        message: 'Range end could not be interpreted as number',
+      });
+    }
+
+    if (beginNumber && endNumber && beginNumber > endNumber) {
+      ctx.addIssue({
+        path: ['range_begin'],
+        code: 'custom',
+        message: 'Range begin cannot be less than range end',
+      });
+    }
+
+    const activeIsSet = data.active !== undefined;
+    const activeAndEdit = activeIsSet && (beginNumber !== undefined || endNumber !== undefined);
+
+    if (activeAndEdit) {
+      ctx.addIssue({
+        path: ['active'],
+        code: 'custom',
+        message: 'Having active and range_begin/range_end adjusted simultaneously is not allowed',
+      });
+    }
+
+    const noOperationDefined = [data.active, data.range_begin, data.range_end].every(
+      (attribute) => attribute === undefined,
+    );
+
+    if (noOperationDefined) {
+      ctx.addIssue({
+        path: ['active'],
+        code: 'custom',
+        message: 'No attribute to edit was defined',
+      });
+    }
+  });
+
 export type CreateIsbnRangeHttp = z.infer<typeof createIsbnRangeSchema>;
+export type UpdateIsbnRangeHttp = z.infer<typeof updateIsbnRangeSchema>;

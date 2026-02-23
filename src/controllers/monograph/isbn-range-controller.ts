@@ -20,3 +20,12 @@ export async function createIsbnRange(req: Request, res: Response, next: NextFun
     return next(error);
   }
 }
+
+export async function updateIsbnRange(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await isbnRangeInterface.updateIsbnRange(Number(req.params['id']), req.body, req.user);
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

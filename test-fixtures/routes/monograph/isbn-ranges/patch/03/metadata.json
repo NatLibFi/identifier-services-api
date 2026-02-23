@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not deactivate active ISBN range",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

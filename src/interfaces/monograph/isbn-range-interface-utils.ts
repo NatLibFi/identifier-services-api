@@ -12,7 +12,7 @@ export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHt
   const db = getKysely();
   const currentIsbnRanges = await db.selectFrom('isbn_range').selectAll().execute();
 
-  const conflictingRange = currentIsbnRanges.find((currentIsbnRange) => {
+  const conflictingRanges = currentIsbnRanges.filter((currentIsbnRange) => {
     const gs1Matches = currentIsbnRange.gs1 === isbnRangeCreateDoc.gs1;
     const registrationGroupMatches = currentIsbnRange.registration_group === isbnRangeCreateDoc.registration_group;
 
@@ -29,5 +29,5 @@ export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHt
     return gs1Matches && registrationGroupMatches && rangesOverlap;
   });
 
-  return conflictingRange;
+  return conflictingRanges;
 }

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] range adjustment is disallowed when some of current ISBN ranges conflict the change",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

@@ -66,10 +66,21 @@ export function validateRequestQuery(schema: ZodType) {
   };
 }
 
-export function validateRequestParams(schema: ZodType) {
+export function validateRequestParams(schema: ZodType, id = true) {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       schema.parse(req.params);
+
+      // id specific rule: verify id can be cast as number and is not larger than max safe integer
+      if (!id) {
+        return next();
+      }
+
+      const idNumber = Number(req.params['id']);
+      if (isNaN(idNumber) || idNumber >= Number.MAX_SAFE_INTEGER) {
+        throw new ApiValidationError([`Parameter id (${req.params['id']}) is not valid`]);
+      }
+
       return next();
     } catch (error) {
       if (error instanceof ZodError) {

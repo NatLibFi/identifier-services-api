@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not deactivate active ISBN range",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "PATCH",
+  "expectedStatus": 401
+}
