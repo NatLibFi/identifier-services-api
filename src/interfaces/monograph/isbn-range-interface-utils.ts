@@ -17,11 +17,11 @@ export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHt
     const registrationGroupMatches = currentIsbnRange.registration_group === isbnRangeCreateDoc.registration_group;
 
     const currentRangeStartNumber = Number(currentIsbnRange.range_begin.padEnd(ISBN_RANGE_MAX_LENGTH, '0'));
-    const currentRangeEndNumber = Number(currentIsbnRange.range_end.padEnd(ISBN_RANGE_MAX_LENGTH, '0'));
+    const currentRangeEndNumber = Number(currentIsbnRange.range_end.padEnd(ISBN_RANGE_MAX_LENGTH, '9'));
     const currentRangeTestDoc = { rangeBegin: currentRangeStartNumber, rangeEnd: currentRangeEndNumber };
 
     const testedRangeStartNumber = Number(isbnRangeCreateDoc.range_begin.padEnd(ISBN_RANGE_MAX_LENGTH, '0'));
-    const testedRangeEndNumber = Number(isbnRangeCreateDoc.range_end.padEnd(ISBN_RANGE_MAX_LENGTH, '0'));
+    const testedRangeEndNumber = Number(isbnRangeCreateDoc.range_end.padEnd(ISBN_RANGE_MAX_LENGTH, '9'));
     const testedRangeTestDoc = { rangeBegin: testedRangeStartNumber, rangeEnd: testedRangeEndNumber };
 
     const rangesOverlap = testRangeOverlap(currentRangeTestDoc, testedRangeTestDoc);

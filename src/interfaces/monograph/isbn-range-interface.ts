@@ -52,7 +52,7 @@ export async function createIsbnRange(
 ): Promise<CreatedResponse> {
   const conflictingIsbnRange = await getIsbnRangeConflict(isbnRangeCreateDoc);
 
-  if (conflictingIsbnRange) {
+  if (conflictingIsbnRange !== undefined) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',

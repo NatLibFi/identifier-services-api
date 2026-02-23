@@ -1,0 +1,7 @@
+{
+  "description": "[admin] disallows creation when required information is missing",
+  "url": "/v2/monograph/isbn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

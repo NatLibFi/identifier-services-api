@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[registration_group] Invalid option: expected one of \"951\"|\"952\"",
+  "instance": "/v2/monograph/isbn-ranges"
+}
