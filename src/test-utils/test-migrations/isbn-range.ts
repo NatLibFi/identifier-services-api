@@ -4,7 +4,7 @@ import type { Database } from '../../db/types.ts';
 export async function createIsbnRangeTable(db: Kysely<Database>): Promise<void> {
   await db.schema
     .createTable('isbn_range')
-    .addColumn('id', 'integer', (col) => col.primaryKey().notNull())
+    .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
     .addColumn('gs1', 'varchar(3)', (col) => col.notNull())
     .addColumn('registration_group', 'varchar(3)', (col) => col.notNull())
     .addColumn('range_begin', 'varchar(7)', (col) => col.notNull())

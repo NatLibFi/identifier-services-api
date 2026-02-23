@@ -8,7 +8,7 @@ import qs from 'qs';
 
 import { generatePassportMiddlewares } from '@natlibfi/passport-natlibfi-keycloak';
 
-import { allowAdminOnly, generateAuthenticationMiddleware, generateRoleMapMiddleware } from './middlewares/auth.ts';
+import { generateAuthenticationMiddleware, generateRoleMapMiddleware } from './middlewares/auth.ts';
 import handleErrors from './middlewares/handle-errors.ts';
 import handleNotFound from './middlewares/handle-not-found.ts';
 import validateContentType from './middlewares/content-type.ts';
@@ -123,7 +123,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   app.use(authenticationMiddleware, roleMapMiddleware);
 
   // Routes requiring authentication
-  app.use('/v2/monograph', allowAdminOnly, monographRouter);
+  app.use('/v2/monograph', monographRouter);
 
   // Public routes
   app.use('/v2', healthRouter);

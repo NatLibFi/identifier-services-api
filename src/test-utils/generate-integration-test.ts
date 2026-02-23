@@ -1,12 +1,15 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import Sinon from 'sinon';
 import { describe, inject, onTestFailed, test } from 'vitest';
 
 import startApp from '../app.ts';
 
 import { dropTestDatabase, initializeTestDb, validateDbState } from './test-database-utils.ts';
 import { getAccessToken, sendTestHttpRequest, validateHttpResponse } from './test-http-utils.ts';
+
+import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE } from './test-constants.ts';
 
 import type { UnknownObject } from '../generic-types.ts';
 
@@ -68,6 +71,13 @@ function runTest(testRootPath: string) {
 
   // Generate test defitinion. Note skip and only directives are defined here based on given metadata.
   test.skipIf(Boolean(metadata.skip))(`${metadata.description}`, { only: Boolean(metadata.only) }, async () => {
+    // Step 0 - initialize mock date so that all db entries are created in pre-defined datetime
+    const CLOCK = Sinon.useFakeTimers({
+      now: TEST_CREATION_DATE.toJSDate(),
+      shouldAdvanceTime: false,
+      toFake: ['Date'],
+    });
+
     // Step 1 - initialize db if initialized date was given
     // @ts-expect-error vitest injection
     const dbConfig = inject('dbConfig');
@@ -82,7 +92,14 @@ function runTest(testRootPath: string) {
       if (database) {
         await dropTestDatabase(dbConfig, database);
       }
+
+      if (CLOCK) {
+        CLOCK.restore();
+      }
     });
+
+    // DB initialization is completed. Step forward in time to expected modified date where HTTP calls are processed.
+    CLOCK.setSystemTime(TEST_MODIFICATION_DATE.toJSDate());
 
     // Step 2 - start application server in free port
     // https://expressjs.com/de/api.html#app.listen -> "If port is omitted or is 0, the operating system will assign an arbitrary unused port"
@@ -118,6 +135,9 @@ function runTest(testRootPath: string) {
     if (database) {
       await dropTestDatabase(dbConfig, database); // Note: also drops Kysely singleton
     }
+
+    // Reset clock
+    CLOCK.restore();
   });
 }
 

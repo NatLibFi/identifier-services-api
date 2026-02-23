@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create ISBN range",
+  "url": "/v2/monograph/isbn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

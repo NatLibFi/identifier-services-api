@@ -30,8 +30,6 @@ export function generateRoleMapMiddleware(applicationRoleMap: ApplicationRoleMap
     if (passportAuthenticationWasSuccessful) {
       // @ts-expect-error typescript does not understand intermediate variable passportAuthenticationWasSuccessful
       const userApplicationRoles = getApplicationRoles(req.user.roles, applicationRoleMap);
-
-      // @ts-expect-error typescript does not understand intermediate variable passportAuthenticationWasSuccessful
       req.user.applicationRoles = userApplicationRoles;
     }
 

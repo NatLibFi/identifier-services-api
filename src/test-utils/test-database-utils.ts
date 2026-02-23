@@ -118,9 +118,14 @@ async function initTable(db: Kysely<Database>, tableInfo: TestDatabaseTableInfo)
 
   dataEntries.forEach(fixObjectDateInfo);
 
-  // Insert entries to table. This will throw error if definitions in dbInit do not match table schema.
-  // @ts-expect-error dynamic insert
-  await db.insertInto(table).values(dataEntries).execute();
+  // Insert entries to table if they have been defined.
+  // Note that for all tables defined in db-expected an initialization definition is required
+  // Some initialization definitions may not contain entries
+
+  if (dataEntries.length > 0) {
+    // @ts-expect-error dynamic insert
+    await db.insertInto(table).values(dataEntries).execute();
+  }
 }
 
 // Note: fixes object attribute in place so it's not a pure function

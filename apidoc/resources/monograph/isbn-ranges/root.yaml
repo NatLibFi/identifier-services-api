@@ -1,5 +1,5 @@
 get:
-  operationId: readAllIsbnRanges
+  operationId: getIsbnRanges
   summary: Read all ISBN ranges information
   security:
     - openId:
@@ -20,5 +20,39 @@ get:
       description: Unauthorized
     '403':
       description: Forbidden
+    default:
+      $ref: '../../../responses/error.yaml'
+
+post:
+  operationId: createIsbnRange
+  summary: Create a new ISBN range
+  security:
+    - openId:
+        - admin
+  description: Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.
+  tags:
+    - monograph
+    - isbn
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/isbn-range/isbn-range-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
     default:
       $ref: '../../../responses/error.yaml'

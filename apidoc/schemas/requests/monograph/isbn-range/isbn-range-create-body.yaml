@@ -1,0 +1,27 @@
+type: object
+properties:
+  gs1:
+    type: string
+    enum:
+      - '978'
+      - '979'
+  registration_group:
+    type: string
+    enum:
+      - '951'
+      - '952'
+  range_begin:
+    type: string
+    minLength: 1
+    maxLength: 5
+    example: '99000'
+  range_end:
+    type: string
+    minLength: 1
+    maxLength: 5
+    example: '99999'
+required:
+  - gs1
+  - registration_group
+  - range_begin
+  - range_end

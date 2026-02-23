@@ -39,7 +39,7 @@
     },
     "/monograph/isbn-ranges": {
       "get": {
-        "operationId": "readAllIsbnRanges",
+        "operationId": "getIsbnRanges",
         "summary": "Read all ISBN ranges information",
         "security": [
           {
@@ -71,6 +71,59 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createIsbnRange",
+        "summary": "Create a new ISBN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.",
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/isbn-range-create-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -159,15 +212,15 @@
                 "type": "string",
                 "example": "979"
               },
-              "registrationGroup": {
+              "registration_group": {
                 "type": "string",
                 "example": "952"
               },
-              "rangeBegin": {
+              "range_begin": {
                 "type": "string",
                 "example": "0"
               },
-              "rangeEnd": {
+              "range_end": {
                 "type": "string",
                 "example": "1"
               },
@@ -184,6 +237,52 @@
             "$ref": "#/components/schemas/modified-metadata"
           }
         ]
+      },
+      "isbn-range-create-body": {
+        "type": "object",
+        "properties": {
+          "gs1": {
+            "type": "string",
+            "enum": [
+              "978",
+              "979"
+            ]
+          },
+          "registration_group": {
+            "type": "string",
+            "enum": [
+              "951",
+              "952"
+            ]
+          },
+          "range_begin": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5,
+            "example": "99000"
+          },
+          "range_end": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5,
+            "example": "99999"
+          }
+        },
+        "required": [
+          "gs1",
+          "registration_group",
+          "range_begin",
+          "range_end"
+        ]
+      },
+      "created": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 123
+          }
+        }
       }
     },
     "responses": {
