@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not remove ISBN range",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

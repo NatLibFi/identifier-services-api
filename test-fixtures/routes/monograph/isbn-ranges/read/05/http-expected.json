@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[id] Invalid string: must match pattern /^[0-9]+$/",
+  "instance": "/v2/monograph/isbn-ranges/abc123"
+}

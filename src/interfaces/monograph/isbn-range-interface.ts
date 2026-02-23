@@ -105,6 +105,18 @@ export async function updateIsbnRange(id: number, isbnRangeUpdateDoc: UpdateIsbn
   return readIsbnRange(id);
 }
 
+export async function deleteIsbnRange(id: number) {
+  const db = getKysely();
+
+  // Read to confirm range exists - this will also take care of returning 404
+  await readIsbnRange(id);
+
+  // TODO: verify no publisher ranges are associated with the ISBN range
+  await db.deleteFrom('isbn_range').where('id', '=', id).executeTakeFirstOrThrow();
+
+  return;
+}
+
 export async function processIsbnRangeActiveEdit(id: number, active: boolean, user: RequestUser) {
   const currentRange = await readIsbnRange(id, false);
 

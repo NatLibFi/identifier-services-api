@@ -1,0 +1,7 @@
+{
+  "description": "[admin] attempting to read ISBN range with non-numeric id results into 422",
+  "url": "/v2/monograph/isbn-ranges/abc123",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 422
+}

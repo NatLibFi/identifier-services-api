@@ -1,0 +1,7 @@
+{
+  "description": "[admin] attempting to read ISBN range not existing results into 404",
+  "url": "/v2/monograph/isbn-ranges/123",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 404
+}

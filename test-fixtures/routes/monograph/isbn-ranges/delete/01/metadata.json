@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may remove ISBN range when it does not have any associated publisher ranges",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

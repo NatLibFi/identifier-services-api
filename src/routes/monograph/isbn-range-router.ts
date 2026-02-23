@@ -10,6 +10,9 @@ const isbnRangeRouter = Router();
 isbnRangeRouter.get('/', isbnRangeControllers.readIsbnRanges);
 isbnRangeRouter.post('/', validateRequestBody(createIsbnRangeSchema), isbnRangeControllers.createIsbnRange);
 
+isbnRangeRouter.get('/:id', validateRequestParams(idParameterSchema, true), isbnRangeControllers.readIsbnRange);
+isbnRangeRouter.delete('/:id', validateRequestParams(idParameterSchema, true), isbnRangeControllers.deleteIsbnRange);
+
 isbnRangeRouter.patch(
   '/:id',
   validateRequestParams(idParameterSchema, true),
