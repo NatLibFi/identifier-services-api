@@ -16,8 +16,10 @@ paths:
   /v2/health:
     $ref: './resources/health/root.yaml'
 
-  /monograph/isbn-ranges:
+  /v2/monograph/isbn-ranges:
     $ref: './resources/monograph/isbn-ranges/root.yaml'
+  /v2/monograph/isbn-ranges/{id}:
+    $ref: './resources/monograph/isbn-ranges/id.yaml'
 
 components:
   securitySchemes:
