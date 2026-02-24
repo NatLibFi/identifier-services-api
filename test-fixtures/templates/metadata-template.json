@@ -1,0 +1,7 @@
+{
+  "description": "[<role>] <description>",
+  "url": "/v2/<endpoint>",
+  "method": "GET",
+  "role": "<role>",
+  "expectedStatus": 200
+}
