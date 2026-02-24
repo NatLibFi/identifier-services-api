@@ -4,13 +4,13 @@ allOf:
       id:
         type: integer
         example: 1
-      officialName:
+      official_name:
         type: string
-      otherNames:
+      other_names:
         type: array
         items:
           type: string
-      previousNames:
+      previous_names:
         type: array
         items:
           type: string
@@ -30,13 +30,13 @@ allOf:
         type:
           - string
           - 'null'
-      hasQuitted:
+      has_quitted:
         type: boolean
       www:
         type:
           - string
           - 'null'
-      # TODO: isbnIdentifiers
-      # TODO: ismnIdentifiers
+      # TODO: isbn_identifiers
+      # TODO: ismn_identifiers
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

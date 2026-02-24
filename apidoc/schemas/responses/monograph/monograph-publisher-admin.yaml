@@ -4,13 +4,13 @@ allOf:
       id:
         type: integer
         example: 1
-      officialName:
+      official_name:
         type: string
-      otherNames:
+      other_names:
         type: array
         items:
           type: string
-      previousNames:
+      previous_names:
         type: array
         items:
           type: string
@@ -36,9 +36,9 @@ allOf:
         type:
           - string
           - 'null'
-      langCode:
+      lang_code:
         type: string
-      contactPersons:
+      contact_persons:
         type: array
         items:
           type: object
@@ -47,25 +47,26 @@ allOf:
               type: string
             email:
               type: string
-      additionalInfo:
+      additional_info:
         type:
           - string
           - 'null'
-      yearQuitted:
+      year_quitted:
         type:
-          - string
+          - number
           - 'null'
-      hasQuitted:
+        min: 1900
+      has_quitted:
         type: boolean
-      frequencyCurrent:
+      frequency_current:
         type:
           - string
           - 'null'
-      frequencyNext:
+      frequency_next:
         type:
           - string
           - 'null'
-      affiliateOf:
+      affiliate_of:
         type:
           - string
           - 'null'
@@ -73,7 +74,7 @@ allOf:
         type:
           - string
           - 'null'
-      distributorOf:
+      distributor_of:
         type:
           - string
           - 'null'
@@ -85,14 +86,14 @@ allOf:
         type: array
         items:
           type: string
-      classificationOther:
+      classification_other:
         type:
           - string
           - 'null'
-      promoteSorting:
+      promote_sorting:
         type: boolean
-      # TODO: associatedPublishers
-      # TODO: isbnIdentifiers
-      # TODO: ismnIdentifiers
+      # TODO: associated_publishers
+      # TODO: isbn_identifiers
+      # TODO: ismn_identifiers
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

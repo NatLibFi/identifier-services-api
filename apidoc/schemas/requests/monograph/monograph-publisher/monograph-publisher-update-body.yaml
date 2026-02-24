@@ -1,17 +1,17 @@
 type: object
 properties:
-  officialName:
+  official_name:
     type: string
     minLength: 1
     maxLength: 100
-  otherNames:
+  other_names:
     type: array
     maxItems: 10
     items:
       type: string
       minLength: 1
       maxLength: 100
-  previousNames:
+  previous_names:
     type: array
     maxItems: 10
     items:
@@ -46,9 +46,9 @@ properties:
       - string
       - 'null'
     maxLength: 100
-  langCode:
+  lang_code:
     $ref: '../../../enums/lang-code.yaml'
-  contactPersons:
+  contact_persons:
     type: array
     maxItems: 10
     items:
@@ -61,29 +61,29 @@ properties:
         email:
           type: string
           maxLength: 100
-  additionalInfo:
+  additional_info:
     type:
       - string
       - 'null'
     maxLength: 2000
-  yearQuitted:
+  year_quitted:
     type:
       - string
       - 'null'
     maxLength: 4
-  hasQuitted:
+  has_quitted:
     type: boolean
-  frequencyCurrent:
+  frequency_current:
     type:
       - string
       - 'null'
     maxLength: 50
-  frequencyNext:
+  frequency_next:
     type:
       - string
       - 'null'
     maxLength: 50
-  affiliateOf:
+  affiliate_of:
     type:
       - string
       - 'null'
@@ -93,7 +93,7 @@ properties:
       - string
       - 'null'
     maxLength: 200
-  distributorOf:
+  distributor_of:
     type:
       - string
       - 'null'
@@ -110,10 +110,10 @@ properties:
       type: string
       minLength: 3
       maxLength: 3
-  classificationOther:
+  classification_other:
     type:
       - string
       - 'null'
     maxLength: 50
-  promoteSorting:
+  promote_sorting:
     type: boolean
