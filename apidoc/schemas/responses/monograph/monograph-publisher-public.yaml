@@ -1,0 +1,42 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      officialName:
+        type: string
+      otherNames:
+        type: array
+        items:
+          type: string
+      previousNames:
+        type: array
+        items:
+          type: string
+      address:
+        type:
+          - string
+          - 'null'
+      zip:
+        type:
+          - string
+          - 'null'
+      city:
+        type:
+          - string
+          - 'null'
+      phone:
+        type:
+          - string
+          - 'null'
+      hasQuitted:
+        type: boolean
+      www:
+        type:
+          - string
+          - 'null'
+      # TODO: isbnIdentifiers
+      # TODO: ismnIdentifiers
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

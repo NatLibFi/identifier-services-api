@@ -21,6 +21,9 @@ paths:
   /v2/monograph/isbn-ranges/{id}:
     $ref: './resources/monograph/isbn-ranges/id.yaml'
 
+  /v2/monograph/publishers/{id}:
+    $ref: './resources/monograph/publishers/id.yaml'
+
 components:
   securitySchemes:
     openId:

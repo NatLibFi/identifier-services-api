@@ -1,0 +1,98 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      officialName:
+        type: string
+      otherNames:
+        type: array
+        items:
+          type: string
+      previousNames:
+        type: array
+        items:
+          type: string
+      address:
+        type:
+          - string
+          - 'null'
+      zip:
+        type:
+          - string
+          - 'null'
+      city:
+        type:
+          - string
+          - 'null'
+      phone:
+        type:
+          - string
+          - 'null'
+      email:
+        type: string
+      www:
+        type:
+          - string
+          - 'null'
+      langCode:
+        type: string
+      contactPersons:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+      additionalInfo:
+        type:
+          - string
+          - 'null'
+      yearQuitted:
+        type:
+          - string
+          - 'null'
+      hasQuitted:
+        type: boolean
+      frequencyCurrent:
+        type:
+          - string
+          - 'null'
+      frequencyNext:
+        type:
+          - string
+          - 'null'
+      affiliateOf:
+        type:
+          - string
+          - 'null'
+      affiliates:
+        type:
+          - string
+          - 'null'
+      distributorOf:
+        type:
+          - string
+          - 'null'
+      distributors:
+        type:
+          - string
+          - 'null'
+      classicications:
+        type: array
+        items:
+          type: string
+      classificationOther:
+        type:
+          - string
+          - 'null'
+      promoteSorting:
+        type: boolean
+      # TODO: associatedPublishers
+      # TODO: isbnIdentifiers
+      # TODO: ismnIdentifiers
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

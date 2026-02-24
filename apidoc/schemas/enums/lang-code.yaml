@@ -1,0 +1,5 @@
+type: string
+enum:
+  - fi-FI
+  - sv-SE
+  - en-GB
