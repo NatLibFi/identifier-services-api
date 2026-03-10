@@ -10,6 +10,7 @@ export const createIsbnRangeSchema = z
     range_begin: z.string().min(1).max(5).regex(numbersOnlyString),
     range_end: z.string().min(1).max(5).regex(numbersOnlyString),
   })
+  .strict()
   .superRefine((data, ctx) => {
     const rangeLengthConsistent = data.range_begin.length === data.range_end.length;
     if (!rangeLengthConsistent) {
@@ -54,6 +55,7 @@ export const updateIsbnRangeSchema = z
     range_begin: z.string().min(1).max(5).regex(numbersOnlyString).optional(),
     range_end: z.string().min(1).max(5).regex(numbersOnlyString).optional(),
   })
+  .strict()
   .superRefine((data, ctx) => {
     const beginNumber = data.range_begin ? Number(data.range_begin.replaceAll(/^0+/g, '')) : undefined;
     const endNumber = data.range_end ? Number(data.range_end.replaceAll(/^0+/g, '')) : undefined;

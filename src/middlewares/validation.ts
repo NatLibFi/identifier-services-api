@@ -23,7 +23,10 @@ export function validateRequestBody(schema: ZodType) {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessages = error.issues.map(({ path, message }) => `[${path.join('.')}] ${message}`);
+        const errorMessages = error.issues.map(({ path, message }) =>
+          path.length > 0 ? `[${path.join('.')}] ${message}` : message,
+        );
+
         throw new ApiValidationError(errorMessages);
       }
 

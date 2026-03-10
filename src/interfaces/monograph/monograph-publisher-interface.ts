@@ -127,5 +127,5 @@ export async function updateMonographPublisher(
   });
 
   // Use consistent return value between processing. This will be one additional read as overhead, but currently it's acceptable.
-  return readMonographPublisher(id);
+  return readMonographPublisher(id, user);
 }

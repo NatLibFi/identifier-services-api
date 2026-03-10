@@ -20,3 +20,16 @@ export async function deleteMonographPublisher(req: Request, res: Response, next
     return next(error);
   }
 }
+
+export async function updateMonographPublisher(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherInterface.updateMonographPublisher(
+      Number(req.params['id']),
+      req.body,
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

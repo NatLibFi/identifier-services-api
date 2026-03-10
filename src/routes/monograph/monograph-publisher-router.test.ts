@@ -4,3 +4,4 @@ const routers = ['monograph', 'monograph-publisher'];
 
 runIntegrationTestSuite(routers, 'read');
 runIntegrationTestSuite(routers, 'delete');
+runIntegrationTestSuite(routers, 'update');
