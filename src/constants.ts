@@ -98,3 +98,5 @@ export const MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES = [
   '940',
   '950',
 ];
+
+export const STRINGIFIED_EMPTY_ARRAY = JSON.stringify([]);

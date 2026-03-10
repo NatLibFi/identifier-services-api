@@ -18,7 +18,7 @@ export interface MonographPublisher {
   www: string | null;
   lang_code: string;
   contact_persons: JSONColumnType<MonographPublisherContactPerson[]>;
-  additional_information: string | null;
+  additional_info: string | null;
   year_quitted: number | null;
   has_quitted: boolean;
   frequency_current: string | null;
@@ -45,7 +45,7 @@ export type MonographPublisherReadGuest = Omit<
   | 'email'
   | 'lang_code'
   | 'contact_persons'
-  | 'additional_information'
+  | 'additional_info'
   | 'year_quitted'
   | 'frequency_current'
   | 'frequency_next'

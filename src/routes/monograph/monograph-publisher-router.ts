@@ -4,9 +4,19 @@ import * as monographPublisherControllers from '../../controllers/monograph/mono
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
-import { updateMonographPublisherSchema } from '../../validations/monograph/monograph-publisher-validation.ts';
+import {
+  createMonographPublisherSchema,
+  updateMonographPublisherSchema,
+} from '../../validations/monograph/monograph-publisher-validation.ts';
 
 const isbnRangeRouter = Router();
+
+isbnRangeRouter.post(
+  '/',
+  allowAdminOnly,
+  validateRequestBody(createMonographPublisherSchema),
+  monographPublisherControllers.createMonographPublisher,
+);
 
 isbnRangeRouter.get(
   '/:id',

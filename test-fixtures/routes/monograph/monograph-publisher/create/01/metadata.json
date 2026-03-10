@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create new monograph publisher",
+  "url": "/v2/monograph/monograph-publishers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

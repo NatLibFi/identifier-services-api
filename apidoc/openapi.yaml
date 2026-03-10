@@ -21,8 +21,10 @@ paths:
   /v2/monograph/isbn-ranges/{id}:
     $ref: './resources/monograph/isbn-ranges/id.yaml'
 
-  /v2/monograph/publishers/{id}:
-    $ref: './resources/monograph/publishers/id.yaml'
+  /v2/monograph/monograph-publishers:
+    $ref: './resources/monograph/monograph-publishers/root.yaml'
+  /v2/monograph/monograph-publishers/{id}:
+    $ref: './resources/monograph/monograph-publishers/id.yaml'
 
 components:
   securitySchemes:

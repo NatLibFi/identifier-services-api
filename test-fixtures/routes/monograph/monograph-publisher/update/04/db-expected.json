@@ -9,7 +9,7 @@
       "zip": "00000",
       "city": "Foo city",
       "phone": "123456789",
-      "email": "example@example.com",
+      "email": "example@example.localhost",
       "www": "http://example.localhost",
       "lang_code": "fi-FI",
       "contact_persons": [
@@ -18,7 +18,7 @@
           "email": "erkki.esimerkki@example.localhost"
         }
       ],
-      "additional_information": "Example of additional information",
+      "additional_info": "Example of additional information",
       "year_quitted": null,
       "has_quitted": false,
       "frequency_current": "100",

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create new monograph publisher with full information",
+  "url": "/v2/monograph/monograph-publishers",
+  "method": "POST",
+  "expectedStatus": 401
+}

@@ -1,4 +1,5 @@
 import { getKysely } from '../../db/database.ts';
+import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
 import {
   getCurrentTime,
   removeUndefinedProperties,
@@ -13,9 +14,79 @@ import type {
   MonographPublisherSelect,
   MonographPublisherUpdate,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
-import type { UpdateMonographPublisherHttp } from '../../validations/monograph/monograph-publisher-validation.ts';
+
+import type {
+  CreateMonographPublisherHttp,
+  UpdateMonographPublisherHttp,
+} from '../../validations/monograph/monograph-publisher-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
+import type { CreatedResponse } from '../interface-common-types.ts';
+import { STRINGIFIED_EMPTY_ARRAY } from '../../constants.ts';
+
+export async function createMonographPublisher(
+  monographPublisherCreateDoc: CreateMonographPublisherHttp,
+  user: RequestUser,
+): Promise<CreatedResponse> {
+  const {
+    official_name,
+    other_names,
+    previous_names,
+    address,
+    zip,
+    city,
+    phone,
+    email,
+    www,
+    lang_code,
+    contact_persons,
+    additional_info,
+    frequency_current,
+    frequency_next,
+    affiliate_of,
+    affiliates,
+    distributor_of,
+    distributors,
+    classifications,
+    classification_other,
+  } = monographPublisherCreateDoc;
+
+  const db = getKysely();
+
+  const result = await db
+    .insertInto('monograph_publisher')
+    .values({
+      official_name,
+      other_names: other_names ? JSON.stringify(other_names) : STRINGIFIED_EMPTY_ARRAY,
+      previous_names: previous_names ? JSON.stringify(previous_names) : STRINGIFIED_EMPTY_ARRAY,
+      address: address ?? null,
+      zip: zip ?? null,
+      city: city ?? null,
+      phone: phone ?? null,
+      email: email ?? null,
+      www: www ?? null,
+      lang_code,
+      contact_persons: contact_persons ? JSON.stringify(contact_persons) : STRINGIFIED_EMPTY_ARRAY,
+      additional_info: additional_info ?? null,
+      year_quitted: null,
+      has_quitted: false,
+      frequency_current: frequency_current ?? null,
+      frequency_next: frequency_next ?? null,
+      affiliate_of: affiliate_of ?? null,
+      affiliates: affiliates ?? null,
+      distributor_of: distributor_of ?? null,
+      distributors: distributors ?? null,
+      classifications: classifications ? JSON.stringify(classifications) : STRINGIFIED_EMPTY_ARRAY,
+      classification_other: classification_other ?? null,
+      promote_sorting: false,
+      created: getCurrentTime(),
+      created_by: user.id,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .executeTakeFirstOrThrow();
+
+  return { id: Number(result.insertId) };
+}
 
 export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
   const db = getKysely();

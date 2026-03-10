@@ -1,0 +1,115 @@
+type: object
+properties:
+  official_name:
+    type: string
+    minLength: 1
+    maxLength: 100
+  other_names:
+    type: array
+    maxItems: 10
+    items:
+      type: string
+      minLength: 1
+      maxLength: 100
+  previous_names:
+    type: array
+    maxItems: 10
+    items:
+      type: string
+      minLength: 1
+      maxLength: 100
+  address:
+    type:
+      - string
+      - 'null'
+    maxLength: 100
+  zip:
+    type:
+      - string
+      - 'null'
+    maxLength: 10
+  city:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+  phone:
+    type:
+      - string
+      - 'null'
+    maxLength: 30
+  email:
+    type: string
+    maxLength: 100
+  www:
+    type:
+      - string
+      - 'null'
+    maxLength: 100
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  contact_persons:
+    type: array
+    maxItems: 10
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 100
+  additional_info:
+    type:
+      - string
+      - 'null'
+    maxLength: 2000
+  frequency_current:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+  frequency_next:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+  affiliate_of:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+  affiliates:
+    type:
+      - string
+      - 'null'
+    maxLength: 200
+  distributor_of:
+    type:
+      - string
+      - 'null'
+    maxLength: 200
+  distributors:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+  classicications:
+    type: array
+    maxItems: 5
+    items:
+      type: string
+      minLength: 3
+      maxLength: 3
+  classification_other:
+    type:
+      - string
+      - 'null'
+    maxLength: 50
+required:
+  - official_name
+  - email
+  - lang_code
+  - contact_persons

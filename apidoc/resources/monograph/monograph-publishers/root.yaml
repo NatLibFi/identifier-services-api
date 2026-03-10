@@ -1,0 +1,32 @@
+post:
+  operationId: createMonographPublisher
+  summary: Create a new monograph publisher
+  security:
+    - openId:
+        - admin
+  description: Creates a new monograph publisher which is placed as part of monograph publisher registry.
+  tags:
+    - monograph
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/monograph-publisher/monograph-publisher-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

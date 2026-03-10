@@ -17,7 +17,7 @@ export async function createMonographPublisherTable(db: Kysely<Database>): Promi
     .addColumn('www', 'varchar(100)')
     .addColumn('lang_code', 'varchar(5)', (col) => col.notNull())
     .addColumn('contact_persons', 'json')
-    .addColumn('additional_information', 'varchar(2000)')
+    .addColumn('additional_info', 'varchar(2000)')
     .addColumn('year_quitted', 'smallint', (col) => col.unsigned())
     .addColumn('has_quitted', 'boolean')
     .addColumn('frequency_current', 'varchar(50)')

@@ -3,6 +3,15 @@ import HttpStatus from 'http-status';
 
 import * as monographPublisherInterface from '../../interfaces/monograph/monograph-publisher-interface.ts';
 
+export async function createMonographPublisher(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherInterface.createMonographPublisher(req.body, req.user);
+    return res.status(HttpStatus.CREATED).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function readMonographPublisher(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await monographPublisherInterface.readMonographPublisher(Number(req.params['id']), req.user);
