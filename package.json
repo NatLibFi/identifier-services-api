@@ -28,7 +28,8 @@
     "lint:src": "eslint -- src",
     "dev": "node --env-file-if-exists=.env.dev --watch src/server.ts",
     "prettify:src": "prettier --write \"./src/**/*.ts\"",
-    "prettify:test-fixtures": "prettier --write \"./test-fixtures/**/*.json\""
+    "prettify:test-fixtures": "prettier --write \"./test-fixtures/**/*.json\"",
+    "prepare-commit": "npm run build && npm run build:apidoc && npm run lint:src && npm run prettify:src && npm run prettify:test-fixtures && npm run test -- --run"
   },
   "dependencies": {
     "@natlibfi/passport-natlibfi-keycloak": "^3.0.4",
