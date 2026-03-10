@@ -22,3 +22,21 @@ export function validateGetById<T>(dbResult: T[]): T {
 export function getCurrentTime() {
   return DateTime.utc().toJSDate();
 }
+
+export function removeUndefinedProperties<T>(entity: Partial<T>) {
+  if (typeof entity !== 'object' || entity === null || Object.keys(entity).length === 0) {
+    throw new Error(
+      'Given entry is not supported for removeUndefinedAttributes: verify paramtere is an object containing at least one property',
+    );
+  }
+
+  Object.keys(entity).forEach((key) => {
+    const value = entity[key as keyof T];
+    if (value === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete entity[key as keyof T];
+    }
+  });
+
+  return entity;
+}

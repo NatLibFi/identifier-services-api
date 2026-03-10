@@ -279,6 +279,154 @@
           }
         }
       }
+    },
+    "/v2/monograph/publishers/{id}": {
+      "get": {
+        "operationId": "readmonographPublisher",
+        "summary": "Read monograph publisher information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publisher-admin"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updatemonographPublisher",
+        "summary": "Update ISBN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-publisher-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publisher-admin"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deletemonographPublisher",
+        "summary": "Delete ISBN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -451,6 +599,331 @@
             "minLength": 1,
             "maxLength": 5,
             "example": "99999"
+          }
+        }
+      },
+      "monograph-publisher-admin": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "official_name": {
+                "type": "string"
+              },
+              "other_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "previous_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": "string"
+              },
+              "www": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lang_code": {
+                "type": "string"
+              },
+              "contact_persons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "additional_info": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "year_quitted": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 1900
+              },
+              "has_quitted": {
+                "type": "boolean"
+              },
+              "frequency_current": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "frequency_next": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "affiliate_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "affiliates": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "distributor_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "distributors": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "classicications": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "classification_other": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "promote_sorting": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "lang-code": {
+        "type": "string",
+        "enum": [
+          "fi-FI",
+          "sv-SE",
+          "en-GB"
+        ]
+      },
+      "monograph-publisher-update-body": {
+        "type": "object",
+        "properties": {
+          "official_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "other_names": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "previous_names": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "zip": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 10
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 30
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "www": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "contact_persons": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "email": {
+                  "type": "string",
+                  "maxLength": 100
+                }
+              }
+            }
+          },
+          "additional_info": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "year_quitted": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "maxLength": 4
+          },
+          "has_quitted": {
+            "type": "boolean"
+          },
+          "frequency_current": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "frequency_next": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "affiliate_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "affiliates": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "distributor_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "distributors": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "classicications": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          },
+          "classification_other": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 50
+          },
+          "promote_sorting": {
+            "type": "boolean"
           }
         }
       }

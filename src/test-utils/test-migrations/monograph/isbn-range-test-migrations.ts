@@ -1,5 +1,5 @@
 import type { Kysely } from 'kysely';
-import type { Database } from '../../db/types.ts';
+import type { Database } from '../../../db/types.ts';
 
 export async function createIsbnRangeTable(db: Kysely<Database>): Promise<void> {
   await db.schema

@@ -22,7 +22,7 @@ properties:
     type:
       - string
       - 'null'
-    maxLength: 50
+    maxLength: 100
   zip:
     type:
       - string
@@ -40,7 +40,7 @@ properties:
     maxLength: 30
   email:
     type: string
-    maxLength: 50
+    maxLength: 100
   www:
     type:
       - string
@@ -68,7 +68,7 @@ properties:
     maxLength: 2000
   year_quitted:
     type:
-      - string
+      - number
       - 'null'
     maxLength: 4
   has_quitted:

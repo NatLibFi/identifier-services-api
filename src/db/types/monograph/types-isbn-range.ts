@@ -13,16 +13,7 @@ export interface IsbnRange {
   modified_by: string;
 }
 
-// Read types are done to satisfy instances where Generated<number> cannot be applied
-export interface IsbnRangeRead {
+// TODO: insertable, selectable, and updateable types
+export interface IsbnRangeRead extends Omit<IsbnRange, 'id'> {
   id: number;
-  gs1: string;
-  registration_group: string;
-  range_begin: string;
-  range_end: string;
-  active: boolean;
-  created: Date;
-  created_by: string;
-  modified: Date;
-  modified_by: string;
 }

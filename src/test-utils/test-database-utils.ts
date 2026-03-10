@@ -6,7 +6,10 @@ import { createConnection } from 'mysql2/promise';
 import { expect } from 'vitest';
 
 import { createKyselySingleton, dropKyselySingleton, getKysely } from '../db/database.ts';
-import { createIsbnRangeTable } from './test-migrations/isbn-range.ts';
+
+import { createIsbnRangeTable } from './test-migrations/monograph/isbn-range-test-migrations.ts';
+import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
+
 import type { Database } from '../db/types.ts';
 import type { UnknownObject } from '../generic-types.ts';
 
@@ -25,6 +28,7 @@ interface TestDatabaseTableInfo {
   constructorFn: (db: Kysely<Database>) => Promise<void>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataEntries: Record<string, any>[];
+  jsonColumns: string[];
 }
 
 // Creates test database using UUIDv4 as db name to avoid collisions to reasonable degree.
@@ -88,6 +92,14 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       constructorFn: createIsbnRangeTable,
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['isbn_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    monograph_publisher: {
+      table: 'monograph_publisher',
+      constructorFn: createMonographPublisherTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publisher'],
+      jsonColumns: ['other_names', 'previous_names', 'contact_persons', 'classifications'],
     },
   };
 
@@ -113,10 +125,12 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
 }
 
 async function initTable(db: Kysely<Database>, tableInfo: TestDatabaseTableInfo) {
-  const { dataEntries, table } = tableInfo;
+  const { dataEntries, jsonColumns, table } = tableInfo;
   await tableInfo.constructorFn(db);
 
+  // These fixes are needed due to limitations of json as fixture data type
   dataEntries.forEach(fixObjectDateInfo);
+  dataEntries.forEach((dataEntry: UnknownObject) => fixObjectJsonInfo(dataEntry, jsonColumns));
 
   // Insert entries to table if they have been defined.
   // Note that for all tables defined in db-expected an initialization definition is required
@@ -141,5 +155,12 @@ function fixObjectDateInfo(object: UnknownObject) {
 
     const attrAsDate = new Date(object[dateAttribute]);
     object[dateAttribute] = attrAsDate;
+  });
+}
+
+// Fixes JSON attribute in place so that db initialization object will have stringified JSON as required by DB handling library
+function fixObjectJsonInfo(object: UnknownObject, jsonColumns: string[]) {
+  jsonColumns.forEach((jsonColumn) => {
+    object[jsonColumn] = JSON.stringify(object[jsonColumn]);
   });
 }

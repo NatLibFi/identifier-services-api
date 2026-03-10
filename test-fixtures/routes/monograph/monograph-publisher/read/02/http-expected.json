@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "official_name": "Example publisher",
+  "other_names": ["Example othername #1", "Example othername #2"],
+  "previous_names": ["Example previousname #1", "Example previousname #2"],
+  "address": "Foo street 123",
+  "zip": "00000",
+  "city": "Foo city",
+  "phone": "123456789",
+  "www": "http://example.localhost",
+  "has_quitted": false
+}

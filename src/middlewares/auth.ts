@@ -4,6 +4,7 @@ import HttpStatus from 'http-status';
 import type { ApplicationRoleMap } from '../app.ts';
 import { getApplicationRoles, isAdmin } from '../utils/permission-utils.ts';
 import { ApiError } from '../utils/api-error.ts';
+import { APPLICATION_ROLES } from '../constants.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function generateAuthenticationMiddleware(passportMiddlewares: any) {
@@ -55,4 +56,12 @@ export function allowAdminOnly(req: Request, _res: Response, next: NextFunction)
     'Forbidden',
     'You do not have permission to perform the requested operation.',
   );
+}
+
+export function hasAdminApplicationRole(appplicationRoles?: string[]) {
+  if (!appplicationRoles) {
+    return false;
+  }
+
+  return appplicationRoles.includes(APPLICATION_ROLES.ADMIN);
 }

@@ -55,7 +55,7 @@ allOf:
         type:
           - number
           - 'null'
-        min: 1900
+        minimum: 1900
       has_quitted:
         type: boolean
       frequency_current:
