@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { langCodeEnum } from '../common-validation-enum.ts';
+import { langCodeEnum, monographIdentifierEnum } from '../common-validation-enum.ts';
 import { contactPersonSchema } from '../common-validation.ts';
 import { MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES } from '../../constants.ts';
 
@@ -57,5 +57,16 @@ export const updateMonographPublisherSchema = z
   })
   .strict();
 
+export const searchMonographPublisherSchema = z
+  .object({
+    search_text: z.string().max(100).optional(),
+    has_quitted: z.boolean().optional(),
+    identifier_type: z.enum(monographIdentifierEnum).optional(),
+    limit: z.number().min(1).max(50),
+    offset: z.number().min(0).max(100000),
+  })
+  .strict();
+
 export type CreateMonographPublisherHttp = z.infer<typeof createMonographPublisherSchema>;
 export type UpdateMonographPublisherHttp = z.infer<typeof updateMonographPublisherSchema>;
+export type SearchMonographPublisherHttp = z.infer<typeof searchMonographPublisherSchema>;

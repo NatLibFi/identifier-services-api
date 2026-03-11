@@ -25,6 +25,8 @@ paths:
     $ref: './resources/monograph/monograph-publishers/root.yaml'
   /v2/monograph/monograph-publishers/{id}:
     $ref: './resources/monograph/monograph-publishers/id.yaml'
+  /v2/monograph/monograph-publishers/search:
+    $ref: './resources/monograph/monograph-publishers/search.yaml'
 
 components:
   securitySchemes:

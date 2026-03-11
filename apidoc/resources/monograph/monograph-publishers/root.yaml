@@ -7,6 +7,7 @@ post:
   description: Creates a new monograph publisher which is placed as part of monograph publisher registry.
   tags:
     - monograph
+    - monograph-publisher
   requestBody:
     required: true
     content:

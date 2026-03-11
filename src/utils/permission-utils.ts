@@ -20,7 +20,7 @@ export function getApplicationRoles(userKeycloakRoles: string[], applicationRole
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isAdmin(user: Record<string, any> | undefined) {
+export function isAdmin(user: Record<string, any> | undefined): boolean {
   if (!user || !hasRequiredProperties(user)) {
     return false;
   }

@@ -6,3 +6,5 @@ runIntegrationTestSuite(routers, 'create');
 runIntegrationTestSuite(routers, 'read');
 runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'update');
+
+runIntegrationTestSuite(routers, 'search');

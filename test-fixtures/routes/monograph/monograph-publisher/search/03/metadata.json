@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] can search monograph publishers using official name as search text",
+  "url": "/v2/monograph/monograph-publishers/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 200
+}

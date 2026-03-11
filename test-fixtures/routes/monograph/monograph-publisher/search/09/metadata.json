@@ -1,0 +1,7 @@
+{
+  "description": "[admin] limit and offset works (id 1 returned with limit=1/offset=1 since limit=1/offset=0 should be id 2 as should sort by id desc)",
+  "url": "/v2/monograph/monograph-publishers/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

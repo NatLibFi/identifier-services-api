@@ -293,7 +293,8 @@
         ],
         "description": "Creates a new monograph publisher which is placed as part of monograph publisher registry.",
         "tags": [
-          "monograph"
+          "monograph",
+          "monograph-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -337,16 +338,12 @@
     "/v2/monograph/monograph-publishers/{id}": {
       "get": {
         "operationId": "readmonographPublisher",
-        "summary": "Read monograph publisher information",
-        "security": [
-          {
-            "openId": [
-              "admin"
-            ]
-          }
-        ],
+        "summary": "Read monograph publisher information. Returned information depends on user application role.",
+        "security": [],
         "tags": [
-          "monograph"
+          "monograph",
+          "monograph-publisher",
+          "public"
         ],
         "parameters": [
           {
@@ -359,7 +356,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/monograph-publisher-admin"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/monograph-publisher-admin"
+                    },
+                    {
+                      "$ref": "#/components/schemas/monograph-publisher-guest"
+                    }
+                  ]
                 }
               }
             }
@@ -475,6 +479,65 @@
           },
           "409": {
             "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/monograph-publishers/search": {
+      "post": {
+        "operationId": "searchMonographPublisher",
+        "summary": "Create a monograph publishers",
+        "security": [],
+        "tags": [
+          "monograph",
+          "monograph-publisher",
+          "public"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-publisher-search-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/monograph-publisher-admin"
+                      },
+                      {
+                        "$ref": "#/components/schemas/monograph-publisher-guest"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -974,6 +1037,73 @@
           }
         ]
       },
+      "monograph-publisher-guest": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "official_name": {
+                "type": "string"
+              },
+              "other_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "previous_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "has_quitted": {
+                "type": "boolean"
+              },
+              "www": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
       "monograph-publisher-update-body": {
         "type": "object",
         "properties": {
@@ -1139,6 +1269,39 @@
             "type": "boolean"
           }
         }
+      },
+      "monograph-publisher-search-body": {
+        "type": "object",
+        "properties": {
+          "search_text": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "has_quitted": {
+            "type": "boolean"
+          },
+          "identifier_type": {
+            "type": "string",
+            "enum": [
+              "ISBN",
+              "ISMN"
+            ]
+          },
+          "limit": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "offset": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
       }
     },
     "responses": {

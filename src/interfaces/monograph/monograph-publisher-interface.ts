@@ -1,6 +1,7 @@
 import { getKysely } from '../../db/database.ts';
 import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
 import {
+  constructTextLikeSearch,
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
@@ -17,11 +18,13 @@ import type {
 
 import type {
   CreateMonographPublisherHttp,
+  SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
 import { STRINGIFIED_EMPTY_ARRAY } from '../../constants.ts';
+import { isAdmin } from '../../utils/permission-utils.ts';
 
 export async function createMonographPublisher(
   monographPublisherCreateDoc: CreateMonographPublisherHttp,
@@ -199,4 +202,42 @@ export async function updateMonographPublisher(
 
   // Use consistent return value between processing. This will be one additional read as overhead, but currently it's acceptable.
   return readMonographPublisher(id, user);
+}
+
+export async function searchMonographPublisher(searchParameters: SearchMonographPublisherHttp, user: RequestUser) {
+  const {
+    search_text,
+    has_quitted,
+    // TODO identifier_type,
+    limit,
+    offset,
+  } = searchParameters;
+
+  const publicSearchAttributes = ['official_name', 'other_names', 'previous_names'];
+  const adminSearchAttributes = publicSearchAttributes.concat(['email']);
+  const searchAttributes = isAdmin(user) ? adminSearchAttributes : publicSearchAttributes;
+
+  const db = getKysely();
+
+  // TODO: use separate publisher identifier search if string begins with publisher identifier
+  // TODO: evaluate if need for category filter
+
+  let query = db.selectFrom('monograph_publisher').selectAll();
+
+  if (search_text) {
+    query = query.where((eb) => constructTextLikeSearch(eb, searchAttributes, search_text));
+  }
+
+  if (has_quitted) {
+    query = query.where('has_quitted', '=', true);
+  }
+
+  query = query.orderBy('id', 'desc').limit(limit).offset(offset);
+  const result = await query.execute();
+
+  if (isAdmin(user)) {
+    return result.map(asMonographPublisherAdminRead);
+  }
+
+  return result.map(asMonographPublisherGuestRead);
 }

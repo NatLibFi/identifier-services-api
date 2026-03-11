@@ -10,6 +10,11 @@ export const LANG_CODES = {
   'en-GB': 'en-GB',
 };
 
+export const MONOGRAPH_IDENTIFIERS = {
+  ISBN: 'ISBN',
+  ISMN: 'ISMN',
+};
+
 export const MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES = [
   '000',
   '015',

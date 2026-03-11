@@ -6,6 +6,7 @@ import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
   createMonographPublisherSchema,
+  searchMonographPublisherSchema,
   updateMonographPublisherSchema,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 
@@ -16,6 +17,12 @@ isbnRangeRouter.post(
   allowAdminOnly,
   validateRequestBody(createMonographPublisherSchema),
   monographPublisherControllers.createMonographPublisher,
+);
+
+isbnRangeRouter.post(
+  '/search',
+  validateRequestBody(searchMonographPublisherSchema),
+  monographPublisherControllers.searchMonographPublisher,
 );
 
 isbnRangeRouter.get(

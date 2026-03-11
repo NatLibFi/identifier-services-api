@@ -3,6 +3,8 @@ import HttpStatus from 'http-status';
 import { ApiError } from '../../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
+import type { ExpressionBuilder } from 'kysely';
+
 export function validateGetById<T>(dbResult: T[]): T {
   if (dbResult.length === 0 || dbResult[0] === undefined) {
     throw new ApiError(HttpStatus.NOT_FOUND, 'Not found', 'Requested entry could not be found');
@@ -39,4 +41,14 @@ export function removeUndefinedProperties<T>(entity: Partial<T>) {
   });
 
   return entity;
+}
+
+export function constructTextLikeSearch<DB, TB extends keyof DB>(
+  eb: ExpressionBuilder<DB, TB>,
+  attributeList: string[],
+  searchText: string,
+) {
+  // @ts-expect-error dynamically constructed conditions
+  const conditions = attributeList.map((attr) => eb(attr, 'like', `%${searchText}%`));
+  return eb.or(conditions);
 }
