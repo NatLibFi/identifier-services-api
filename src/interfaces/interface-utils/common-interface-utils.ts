@@ -3,7 +3,8 @@ import HttpStatus from 'http-status';
 import { ApiError } from '../../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
-import type { ExpressionBuilder } from 'kysely';
+import { sql } from 'kysely';
+import type { ExpressionBuilder, ReferenceExpression } from 'kysely';
 
 export function validateGetById<T>(dbResult: T[]): T {
   if (dbResult.length === 0 || dbResult[0] === undefined) {
@@ -49,6 +50,14 @@ export function constructTextLikeSearch<DB, TB extends keyof DB>(
   searchText: string,
 ) {
   // @ts-expect-error dynamically constructed conditions
-  const conditions = attributeList.map((attr) => eb(attr, 'like', `%${searchText}%`));
+  const conditions = attributeList.map((attr) => eb(eb.fn('lower', attr), 'like', searchText));
   return eb.or(conditions);
+}
+
+export function constructJsonContainsSearch<DB, TB extends keyof DB>(
+  eb: ExpressionBuilder<DB, TB>,
+  attribute: ReferenceExpression<DB, TB>,
+  searchText: string,
+) {
+  return eb(eb.fn('lower', [eb.fn('json_extract', [attribute, sql.lit('$')])]), 'like', searchText);
 }

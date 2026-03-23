@@ -1,7 +1,7 @@
 import { getKysely } from '../../db/database.ts';
 import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
 import {
-  constructTextLikeSearch,
+  constructJsonContainsSearch,
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
@@ -145,10 +145,6 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     offset,
   } = searchParameters;
 
-  const publicSearchAttributes = ['official_name', 'other_names', 'previous_names'];
-  const adminSearchAttributes = publicSearchAttributes.concat(['email']);
-  const searchAttributes = isAdmin(user) ? adminSearchAttributes : publicSearchAttributes;
-
   const db = getKysely();
 
   // TODO: use separate publisher identifier search if string begins with publisher identifier
@@ -157,7 +153,24 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   let query = db.selectFrom('monograph_publisher');
 
   if (search_text) {
-    query = query.where((eb) => constructTextLikeSearch(eb, searchAttributes, search_text));
+    const normalizedSearch = `%${search_text}%`.toLowerCase();
+
+    query = query.where((eb) => {
+      if (isAdmin(user)) {
+        return eb.or([
+          eb(eb.fn('lower', ['official_name']), 'like', normalizedSearch),
+          eb(eb.fn('lower', ['email']), 'like', normalizedSearch),
+          constructJsonContainsSearch(eb, 'other_names', normalizedSearch),
+          constructJsonContainsSearch(eb, 'previous_names', normalizedSearch),
+        ]);
+      }
+
+      return eb.or([
+        eb(eb.fn('lower', ['official_name']), 'like', normalizedSearch),
+        constructJsonContainsSearch(eb, 'other_names', normalizedSearch),
+        constructJsonContainsSearch(eb, 'previous_names', normalizedSearch),
+      ]);
+    });
   }
 
   if (has_quitted) {

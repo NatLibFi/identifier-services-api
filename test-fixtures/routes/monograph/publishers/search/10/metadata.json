@@ -1,0 +1,7 @@
+{
+  "description": "[admin] search comparison is case insensitive",
+  "url": "/v2/monograph/publishers/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}
