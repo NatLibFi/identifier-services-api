@@ -1,3 +1,7 @@
 {
-  "id": 1
+  "type": "about:blank",
+  "status": 404,
+  "title": "Not found",
+  "detail": "Requested resource /v2/monograph/publishers was not found.",
+  "instance": "/v2/monograph/publishers"
 }

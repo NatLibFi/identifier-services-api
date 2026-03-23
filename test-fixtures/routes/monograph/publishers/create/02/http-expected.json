@@ -1,7 +1,0 @@
-{
-  "type": "about:blank",
-  "status": 401,
-  "title": "Unauthorized",
-  "detail": "The requested operation is not permitted for unauthorized users.",
-  "instance": "/v2/monograph/publishers"
-}

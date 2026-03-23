@@ -1,7 +1,0 @@
-{
-  "type": "about:blank",
-  "status": 422,
-  "title": "Validation error",
-  "detail": "[lang_code] Invalid option: expected one of \"fi-FI\"|\"sv-SE\"|\"en-GB\"",
-  "instance": "/v2/monograph/publishers"
-}

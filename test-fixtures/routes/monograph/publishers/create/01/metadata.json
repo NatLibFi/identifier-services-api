@@ -1,7 +1,7 @@
 {
-  "description": "[admin] can create new monograph publisher",
+  "description": "[admin] cannot directly create new monograph publisher: creations must occur through request -> accept request pipeline",
   "url": "/v2/monograph/publishers",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 201
+  "expectedStatus": 404
 }

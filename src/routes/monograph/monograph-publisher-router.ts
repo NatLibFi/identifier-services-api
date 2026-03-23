@@ -5,19 +5,11 @@ import { validateRequestBody, validateRequestParams } from '../../middlewares/va
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
-  createMonographPublisherSchema,
   searchMonographPublisherSchema,
   updateMonographPublisherSchema,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 
 const isbnRangeRouter = Router();
-
-isbnRangeRouter.post(
-  '/',
-  allowAdminOnly,
-  validateRequestBody(createMonographPublisherSchema),
-  monographPublisherControllers.createMonographPublisher,
-);
 
 isbnRangeRouter.post(
   '/search',

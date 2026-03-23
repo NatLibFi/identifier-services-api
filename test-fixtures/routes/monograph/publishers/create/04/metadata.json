@@ -1,7 +1,0 @@
-{
-  "description": "[admin] cannot create new monograph publisher if mandatory attributes are missing (lang_code)",
-  "url": "/v2/monograph/publishers",
-  "method": "POST",
-  "role": "admin",
-  "expectedStatus": 422
-}
