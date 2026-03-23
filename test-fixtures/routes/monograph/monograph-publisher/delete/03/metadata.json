@@ -1,7 +1,0 @@
-{
-  "description": "[publisher] cannot delete monograph publisher information",
-  "url": "/v2/monograph/monograph-publishers/1",
-  "method": "DELETE",
-  "role": "publisher",
-  "expectedStatus": 403
-}

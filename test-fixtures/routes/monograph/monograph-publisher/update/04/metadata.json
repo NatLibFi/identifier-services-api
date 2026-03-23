@@ -1,7 +1,0 @@
-{
-  "description": "[admin] editing JSON attribute information produces expected result",
-  "url": "/v2/monograph/monograph-publishers/1",
-  "method": "PATCH",
-  "role": "admin",
-  "expectedStatus": 200
-}

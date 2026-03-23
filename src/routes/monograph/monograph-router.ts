@@ -7,6 +7,6 @@ import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 const monographRouter = Router();
 monographRouter.use('/isbn-ranges', allowAdminOnly, isbnRangeRouter);
-monographRouter.use('/monograph-publishers', monographPublisherRouter);
+monographRouter.use('/publishers', monographPublisherRouter);
 
 export default monographRouter;

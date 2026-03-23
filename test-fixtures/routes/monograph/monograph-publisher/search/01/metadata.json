@@ -1,7 +1,0 @@
-{
-  "description": "[admin] can search monograph publishers using official name as search text",
-  "url": "/v2/monograph/monograph-publishers/search",
-  "method": "POST",
-  "role": "admin",
-  "expectedStatus": 200
-}

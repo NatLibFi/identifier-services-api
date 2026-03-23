@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] can read limited monograph publisher information",
+  "url": "/v2/monograph/publishers/1",
+  "method": "GET",
+  "role": "publisher",
+  "expectedStatus": 200
+}

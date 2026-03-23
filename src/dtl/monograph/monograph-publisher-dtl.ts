@@ -2,8 +2,11 @@ import type {
   MonographPublisherReadGuest,
   MonographPublisherSelect,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
+import type { UnknownObject } from '../../generic-types.ts';
 
-export function asMonographPublisherAdminRead(monographPublisher: MonographPublisherSelect): MonographPublisherSelect {
+export function asMonographPublisherAdminRead(
+  monographPublisher: MonographPublisherSelect | UnknownObject,
+): MonographPublisherSelect {
   const {
     id,
     official_name,
@@ -68,7 +71,7 @@ export function asMonographPublisherAdminRead(monographPublisher: MonographPubli
 }
 
 export function asMonographPublisherGuestRead(
-  monographPublisher: MonographPublisherSelect,
+  monographPublisher: MonographPublisherSelect | UnknownObject,
 ): MonographPublisherReadGuest {
   const { id, official_name, other_names, previous_names, address, zip, city, phone, www, has_quitted } =
     monographPublisher;

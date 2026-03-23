@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can delete monograph publisher information that does not have associated publisher identifiers",
+  "url": "/v2/monograph/publishers/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

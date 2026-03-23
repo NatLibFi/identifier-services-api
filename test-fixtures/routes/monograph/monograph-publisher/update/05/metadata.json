@@ -1,7 +1,0 @@
-{
-  "description": "[admin] cannot edit metadata",
-  "url": "/v2/monograph/monograph-publishers/1",
-  "method": "PATCH",
-  "role": "admin",
-  "expectedStatus": 422
-}

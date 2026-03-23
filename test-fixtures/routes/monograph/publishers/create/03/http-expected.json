@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 403,
+  "title": "Forbidden",
+  "detail": "You do not have permission to perform the requested operation.",
+  "instance": "/v2/monograph/publishers"
+}

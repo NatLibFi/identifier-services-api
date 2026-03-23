@@ -1,7 +1,0 @@
-{
-  "description": "[publisher] searching using email does not produce results from email field",
-  "url": "/v2/monograph/monograph-publishers/search",
-  "method": "POST",
-  "role": "publisher",
-  "expectedStatus": 200
-}

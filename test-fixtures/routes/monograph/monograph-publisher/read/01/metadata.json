@@ -1,7 +1,0 @@
-{
-  "description": "[admin] can read monograph publisher information",
-  "url": "/v2/monograph/monograph-publishers/1",
-  "method": "GET",
-  "role": "admin",
-  "expectedStatus": 200
-}

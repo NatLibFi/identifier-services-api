@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot edit metadata attributes (created_by)",
+  "url": "/v2/monograph/publishers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

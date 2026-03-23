@@ -48,6 +48,7 @@ export async function searchMonographPublisher(req: Request, res: Response, next
     const result = await monographPublisherInterface.searchMonographPublisher(req.body, req.user);
     return res.status(HttpStatus.OK).json(result);
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 }

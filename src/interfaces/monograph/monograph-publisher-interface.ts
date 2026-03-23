@@ -222,7 +222,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   // TODO: use separate publisher identifier search if string begins with publisher identifier
   // TODO: evaluate if need for category filter
 
-  let query = db.selectFrom('monograph_publisher').selectAll();
+  let query = db.selectFrom('monograph_publisher');
 
   if (search_text) {
     query = query.where((eb) => constructTextLikeSearch(eb, searchAttributes, search_text));
@@ -232,12 +232,21 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     query = query.where('has_quitted', '=', true);
   }
 
-  query = query.orderBy('id', 'desc').limit(limit).offset(offset);
+  const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
+  query = query.selectAll().orderBy('id', 'desc').limit(limit).offset(offset);
+
   const result = await query.execute();
+  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
 
   if (isAdmin(user)) {
-    return result.map(asMonographPublisherAdminRead);
+    return {
+      totalDoc,
+      results: result.map(asMonographPublisherAdminRead),
+    };
   }
 
-  return result.map(asMonographPublisherGuestRead);
+  return {
+    totalDoc,
+    results: result.map(asMonographPublisherGuestRead),
+  };
 }

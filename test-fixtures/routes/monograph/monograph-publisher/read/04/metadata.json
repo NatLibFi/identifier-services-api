@@ -1,7 +1,0 @@
-{
-  "description": "[admin] return 404 when publisher with given id cannot be found",
-  "url": "/v2/monograph/monograph-publishers/123",
-  "method": "GET",
-  "role": "admin",
-  "expectedStatus": 404
-}

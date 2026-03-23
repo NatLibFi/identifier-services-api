@@ -1,6 +1,6 @@
 import { runIntegrationTestSuite } from '../../test-utils/generate-integration-test.ts';
 
-const routers = ['monograph', 'monograph-publisher'];
+const routers = ['monograph', 'publishers'];
 
 runIntegrationTestSuite(routers, 'create');
 runIntegrationTestSuite(routers, 'read');

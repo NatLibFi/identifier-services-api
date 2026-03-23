@@ -1,7 +1,0 @@
-{
-  "type": "about:blank",
-  "status": 422,
-  "title": "Validation error",
-  "detail": "Unrecognized key: \"modified_by\"",
-  "instance": "/v2/monograph/monograph-publishers/1"
-}

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "Unrecognized key: \"created_by\"",
+  "instance": "/v2/monograph/publishers"
+}

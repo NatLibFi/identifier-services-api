@@ -1,6 +1,0 @@
-{
-  "description": "[guest] empty search works",
-  "url": "/v2/monograph/monograph-publishers/search",
-  "method": "POST",
-  "expectedStatus": 200
-}

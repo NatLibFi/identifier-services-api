@@ -280,7 +280,7 @@
         }
       }
     },
-    "/v2/monograph/monograph-publishers": {
+    "/v2/monograph/publishers": {
       "post": {
         "operationId": "createMonographPublisher",
         "summary": "Create a new monograph publisher",
@@ -335,7 +335,7 @@
         }
       }
     },
-    "/v2/monograph/monograph-publishers/{id}": {
+    "/v2/monograph/publishers/{id}": {
       "get": {
         "operationId": "readmonographPublisher",
         "summary": "Read monograph publisher information. Returned information depends on user application role.",
@@ -486,7 +486,7 @@
         }
       }
     },
-    "/v2/monograph/monograph-publishers/search": {
+    "/v2/monograph/publishers/search": {
       "post": {
         "operationId": "searchMonographPublisher",
         "summary": "Create a monograph publishers",
