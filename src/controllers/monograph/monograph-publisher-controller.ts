@@ -23,12 +23,8 @@ export async function deleteMonographPublisher(req: Request, res: Response, next
 
 export async function updateMonographPublisher(req: Request, res: Response, next: NextFunction) {
   try {
-    const result = await monographPublisherInterface.updateMonographPublisher(
-      Number(req.params['id']),
-      req.body,
-      req.user,
-    );
-    return res.status(HttpStatus.OK).json(result);
+    await monographPublisherInterface.updateMonographPublisher(Number(req.params['id']), req.body, req.user);
+    return res.status(HttpStatus.NO_CONTENT).end();
   } catch (error) {
     return next(error);
   }
@@ -39,7 +35,6 @@ export async function searchMonographPublisher(req: Request, res: Response, next
     const result = await monographPublisherInterface.searchMonographPublisher(req.body, req.user);
     return res.status(HttpStatus.OK).json(result);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 }

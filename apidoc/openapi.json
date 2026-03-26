@@ -360,15 +360,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Resource was updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/monograph-publisher-admin"
-                }
-              }
-            }
+          "204": {
+            "description": "Resource was updated"
           },
           "401": {
             "description": "Unauthorized"

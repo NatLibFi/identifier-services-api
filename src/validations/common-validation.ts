@@ -8,5 +8,5 @@ export const idParameterSchema = z.object({
 
 export const contactPersonSchema = z.object({
   name: z.string().min(1).max(100),
-  email: z.email().max(100),
+  email: z.email().max(100).nullable(),
 });

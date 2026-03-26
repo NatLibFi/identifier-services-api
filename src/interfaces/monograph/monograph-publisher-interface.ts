@@ -60,7 +60,7 @@ export async function updateMonographPublisher(
   const db = getKysely();
 
   // Read to confirm monograph publisher exists - this will also take care of returning 404
-  await readMonographPublisher(id);
+  await readMonographPublisher(id, user, false);
 
   // Update
   const {
@@ -133,7 +133,7 @@ export async function updateMonographPublisher(
   });
 
   // Use consistent return value between processing. This will be one additional read as overhead, but currently it's acceptable.
-  return readMonographPublisher(id, user);
+  return;
 }
 
 export async function searchMonographPublisher(searchParameters: SearchMonographPublisherHttp, user: RequestUser) {
@@ -173,8 +173,8 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     });
   }
 
-  if (has_quitted) {
-    query = query.where('has_quitted', '=', true);
+  if (typeof has_quitted === 'boolean') {
+    query = query.where('has_quitted', '=', has_quitted);
   }
 
   const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
