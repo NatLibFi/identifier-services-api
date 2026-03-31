@@ -57,11 +57,13 @@ export function runIntegrationTestSuite(routers: string[], controllerFunction: s
   const testPaths = testDefinitions.map((testDefinition) => path.join(controllerTestRoot, testDefinition.name));
 
   describe(`${routers.join('/')}:${controllerFunction}`, async () => {
-    testPaths.forEach(runTest);
+    for (const testPath of testPaths) {
+      await runTest(testPath);
+    }
   });
 }
 
-function runTest(testRootPath: string) {
+async function runTest(testRootPath: string) {
   // Read and validate test definition
   const testDefinition: TestDefinition = readTestContents(testRootPath);
   validateTestDefinition(testDefinition);
@@ -84,7 +86,17 @@ function runTest(testRootPath: string) {
     let database: string | undefined;
 
     if (dbInit) {
-      database = await initializeTestDb(dbConfig, dbInit);
+      // It seems mysql may throw error on too many connections
+      // This will fail test in a way that CLOCK.restore() will not be called
+      // And result into an Sinon error which will hide the underlying reason
+      // This try-catch block is here only for handling the case so that proper
+      // error message is thrown and may be debugged
+      try {
+        database = await initializeTestDb(dbConfig, dbInit);
+      } catch (error) {
+        CLOCK.restore();
+        throw error;
+      }
     }
 
     // Make sure that db is dropped in case test fails

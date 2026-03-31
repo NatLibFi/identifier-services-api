@@ -1,0 +1,12 @@
+type: object
+properties:
+  publisher_identifier:
+    type: string
+  isbn_range_id:
+    type: number
+  monograph_publisher_id:
+    type: number
+required:
+  - publisher_identifier
+  - isbn_range_id
+  - monograph_publisher_id

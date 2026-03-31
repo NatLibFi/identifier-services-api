@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create valid ISBN publisher range",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

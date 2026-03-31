@@ -1,0 +1,24 @@
+delete:
+  operationId: deleteIsbnPublisherRange
+  summary: Delete ISBN publisher range
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - isbn
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Resource was deleted
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    default:
+      $ref: '../../../responses/error.yaml'

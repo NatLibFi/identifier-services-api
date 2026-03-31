@@ -48,10 +48,12 @@ export async function testDatabaseConnection(db: Kysely<Database>) {
   throw new Error('Could not establish database connection properly');
 }
 
-export function dropKyselySingleton() {
+export async function dropKyselySingleton() {
   if (!db) {
     throw Error('Kysely singleton was not defined and cannot be dropped');
   }
+
+  await db.destroy();
 
   // This function should never be used outside of tests. We can declare type safety for db to avoid unnecessary undefined checks.
   // @ts-expect-error disable typechecking for test-only case

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] validation requires publisher identifier in correct format",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

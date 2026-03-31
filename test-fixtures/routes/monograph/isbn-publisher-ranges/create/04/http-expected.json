@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISBN range id 1 does not contain publisher identifier of 978-951-99000.",
+  "instance": "/v2/monograph/isbn-publisher-ranges"
+}

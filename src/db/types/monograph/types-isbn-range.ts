@@ -1,4 +1,4 @@
-import type { Generated } from 'kysely';
+import type { Generated, Updateable, Insertable, Selectable } from 'kysely';
 
 export interface IsbnRange {
   id: Generated<number>;
@@ -13,7 +13,6 @@ export interface IsbnRange {
   modified_by: string;
 }
 
-// TODO: insertable, selectable, and updateable types
-export interface IsbnRangeRead extends Omit<IsbnRange, 'id'> {
-  id: number;
-}
+export type IsbnRangeInsert = Insertable<IsbnRange>;
+export type IsbnRangeUpdate = Updateable<IsbnRange>;
+export type IsbnRangeSelect = Selectable<IsbnRange>;

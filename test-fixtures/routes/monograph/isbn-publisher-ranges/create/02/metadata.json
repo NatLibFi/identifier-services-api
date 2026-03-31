@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create valid ISBN publisher range",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "expectedStatus": 401
+}

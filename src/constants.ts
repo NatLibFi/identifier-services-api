@@ -15,6 +15,13 @@ export const MONOGRAPH_IDENTIFIERS = {
   ISMN: 'ISMN',
 };
 
+export const STRINGIFIED_EMPTY_ARRAY = JSON.stringify([]);
+
+export const ISBN_IDENTIFIER_LENGTH = 13;
+export const ISMN_IDENTIFIER_LENGTH = 13;
+
+export const SYSTEM_USER = 'SYSTEM';
+
 export const MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES = [
   '000',
   '015',
@@ -103,5 +110,3 @@ export const MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES = [
   '940',
   '950',
 ];
-
-export const STRINGIFIED_EMPTY_ARRAY = JSON.stringify([]);

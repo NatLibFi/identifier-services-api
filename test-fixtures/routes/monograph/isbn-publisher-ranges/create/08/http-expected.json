@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[monograph_publisher_id] Invalid input: expected number, received undefined",
+  "instance": "/v2/monograph/isbn-publisher-ranges"
+}

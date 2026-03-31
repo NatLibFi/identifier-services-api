@@ -14,7 +14,7 @@ export interface MonographPublisher {
   zip: string | null;
   city: string | null;
   phone: string | null;
-  email: string;
+  email: string | null;
   www: string | null;
   lang_code: string;
   contact_persons: JSONColumnType<MonographPublisherContactPerson[]>;

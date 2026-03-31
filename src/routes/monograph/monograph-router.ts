@@ -1,12 +1,14 @@
 import { Router } from 'express';
 
 import isbnRangeRouter from './isbn-range-router.ts';
+import isbnPublisherRangeRouter from './isbn-publisher-range-router.ts';
 import monographPublisherRouter from './monograph-publisher-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 const monographRouter = Router();
 monographRouter.use('/isbn-ranges', allowAdminOnly, isbnRangeRouter);
+monographRouter.use('/isbn-publisher-ranges', allowAdminOnly, isbnPublisherRangeRouter);
 monographRouter.use('/publishers', monographPublisherRouter);
 
 export default monographRouter;

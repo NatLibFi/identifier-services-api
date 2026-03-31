@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 404,
+  "title": "Not found",
+  "detail": "Selected ISBN range id 2 could not be found.",
+  "instance": "/v2/monograph/isbn-publisher-ranges"
+}

@@ -48,7 +48,8 @@ describe('getIsbnRangeConflicts', async () => {
 
   afterEach(async () => {
     await mysql2Connection.query(`DROP DATABASE \`${database}\``);
-    dropKyselySingleton();
+    await mysql2Connection.destroy();
+    await dropKyselySingleton();
   });
 
   test('Finds conflict between when ranges overlap (same range length)', async () => {

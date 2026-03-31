@@ -280,6 +280,103 @@
         }
       }
     },
+    "/v2/monograph/isbn-publisher-ranges": {
+      "post": {
+        "operationId": "createIsbnPublisherRange",
+        "summary": "Create a new ISBN publisher range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "Creates a new ISBN publisher range with associations to ISBN range and monograph publisher.",
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/isbn-publisher-range-create-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/isbn-publisher-ranges/{id}": {
+      "delete": {
+        "operationId": "deleteIsbnPublisherRange",
+        "summary": "Delete ISBN publisher range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "isbn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/publishers/{id}": {
       "get": {
         "operationId": "readmonographPublisher",
@@ -656,6 +753,25 @@
             "example": "99999"
           }
         }
+      },
+      "isbn-publisher-range-create-body": {
+        "type": "object",
+        "properties": {
+          "publisher_identifier": {
+            "type": "string"
+          },
+          "isbn_range_id": {
+            "type": "number"
+          },
+          "monograph_publisher_id": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "publisher_identifier",
+          "isbn_range_id",
+          "monograph_publisher_id"
+        ]
       },
       "monograph-publisher-admin": {
         "allOf": [

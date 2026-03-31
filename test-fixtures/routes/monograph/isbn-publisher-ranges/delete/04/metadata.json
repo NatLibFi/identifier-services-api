@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete ISBN publisher range if any of identfiers is canceled",
+  "url": "/v2/monograph/isbn-publisher-ranges/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

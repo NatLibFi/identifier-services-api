@@ -1,0 +1,7 @@
+{
+  "description": "[admin] publication numbers part of ISBN identifier is correctly zero-padded",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

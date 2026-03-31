@@ -1,0 +1,7 @@
+{
+  "description": "[admin] validation requires isbn_range_id as mandatory",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

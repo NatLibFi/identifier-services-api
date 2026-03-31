@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot create ISBN publisher range if selected ISBN range does not exist",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 404
+}

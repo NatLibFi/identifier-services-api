@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot create valid ISBN publisher range",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

@@ -26,6 +26,7 @@ describe('database', async () => {
 
   afterEach(async () => {
     await mysql2Connection.query(`DROP DATABASE \`${database}\``);
+    await mysql2Connection.destroy();
   });
 
   test('can create to database successfully using test config', async () => {
@@ -46,7 +47,7 @@ describe('database', async () => {
     expect(testQueryResult.rows[0]).toStrictEqual({ result: 1 });
 
     // Drop Kysely singleton
-    dropKyselySingleton();
+    await dropKyselySingleton();
   });
 
   test('throws error when attempting to create database multiple times', async () => {
@@ -62,7 +63,7 @@ describe('database', async () => {
     expect(() => createKyselySingleton({ ...dbConfig, database })).toThrowError();
 
     // Drop successfully created Kysely singleton
-    dropKyselySingleton();
+    await dropKyselySingleton();
   });
 
   test('allows getting same Kysely singleton multiple times', async () => {

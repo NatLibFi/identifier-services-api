@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISBN publisher range 978-951-95000 has already been created and assigned to a monograph publisher.",
+  "instance": "/v2/monograph/isbn-publisher-ranges"
+}

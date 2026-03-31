@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot delete ISBN publisher range even if pre-conditions for the operation are met",
+  "url": "/v2/monograph/isbn-publisher-ranges/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

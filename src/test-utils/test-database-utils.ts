@@ -8,6 +8,8 @@ import { expect } from 'vitest';
 import { createKyselySingleton, dropKyselySingleton, getKysely } from '../db/database.ts';
 
 import { createIsbnRangeTable } from './test-migrations/monograph/isbn-range-test-migrations.ts';
+import { createIsbnPublisherRangeTable } from './test-migrations/monograph/isbn-publisher-range-test-migrations.ts';
+import { createIsbnIdentifierTable } from './test-migrations/monograph/isbn-identifier-test-migrations.ts';
 import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
 
 import type { Database } from '../db/types.ts';
@@ -37,6 +39,7 @@ export async function createTestDatabase(dbConfig: PoolOptions): Promise<string>
 
   const mysql2Connection = await createConnection(dbConfig);
   await mysql2Connection.query(`CREATE DATABASE \`${database}\``);
+  await mysql2Connection.destroy();
 
   return database;
 }
@@ -44,8 +47,9 @@ export async function createTestDatabase(dbConfig: PoolOptions): Promise<string>
 export async function dropTestDatabase(dbConfig: TestDatabaseConfig, database: string): Promise<boolean> {
   const mysql2Connection = await createConnection(dbConfig);
   await mysql2Connection.query(`DROP DATABASE IF EXISTS \`${database}\``);
+  await mysql2Connection.destroy();
 
-  dropKyselySingleton();
+  await dropKyselySingleton();
 
   return true;
 }
@@ -70,6 +74,8 @@ export async function validateDbState(dbExpected: UnknownObject) {
   const dbTables = dbTablesRaw.map(({ name }) => name);
 
   // Verify there are no more or less tables than expected
+  expectedTables.sort();
+  dbTables.sort();
   expect(expectedTables).toStrictEqual(dbTables);
 
   // Now it's safe to verify table content by iterating through each expected table as we know tables match
@@ -100,6 +106,20 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['monograph_publisher'],
       jsonColumns: ['other_names', 'previous_names', 'contact_persons', 'classifications'],
+    },
+    isbn_publisher_range: {
+      table: 'isbn_publisher_range',
+      constructorFn: createIsbnPublisherRangeTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['isbn_publisher_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    isbn_identifier: {
+      table: 'isbn_identifier',
+      constructorFn: createIsbnIdentifierTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['isbn_identifier'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
     },
   };
 

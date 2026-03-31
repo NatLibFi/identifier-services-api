@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISBN publisher range id 1 cannot be deleted due to an constraint: has canceled or assigned identifiers",
+  "instance": "/v2/monograph/isbn-publisher-ranges/1"
+}

@@ -6,7 +6,7 @@ import { getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
 import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
 import { asIsbnRangeAdminRead } from '../../dtl/monograph/isbn-range-dtl.ts';
 
-import type { IsbnRangeRead } from '../../db/types/monograph/types-isbn-range.ts';
+import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp, UpdateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -52,10 +52,10 @@ export async function createIsbnRange(
   return { id: Number(result.insertId) };
 }
 
-export async function readIsbnRange(id: number, useDtl = true) {
+export async function readIsbnRange(id: number, useDtl = true): Promise<IsbnRangeSelect> {
   const db = getKysely();
   const dbResult = await db.selectFrom('isbn_range').selectAll().where('id', '=', id).execute();
-  const isbnRangeResult = validateGetById<IsbnRangeRead>(dbResult);
+  const isbnRangeResult = validateGetById<IsbnRangeSelect>(dbResult);
 
   return useDtl ? asIsbnRangeAdminRead(isbnRangeResult) : isbnRangeResult;
 }
