@@ -14,6 +14,7 @@ import { rangeContainsIdentifier } from '../interface-utils/range-interface-util
 import type { CreateIsbnPublisherRangeHttp } from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
@@ -39,6 +40,17 @@ export async function createIsbnPublisherRange(
     );
   }
 
+  const availableIsbnRangePublisherRanges = await getAvailableIsbnPublisherRanges(isbn_range_id);
+  const isAvailable = availableIsbnRangePublisherRanges.includes(publisher_identifier);
+
+  if (!isAvailable) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `ISBN range id ${isbn_range_id} available ISBN publisher ranges do not contain publisher identifier of ${publisher_identifier}.`,
+    );
+  }
+
   const monographPublisher = await db
     .selectFrom('monograph_publisher')
     .selectAll()
@@ -53,6 +65,7 @@ export async function createIsbnPublisherRange(
     );
   }
 
+  // Sanity check
   const existingIsbnPublisherRange = await db
     .selectFrom('isbn_publisher_range')
     .selectAll()
