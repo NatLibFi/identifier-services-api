@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot activate ISBN range id 1 as it does not have any more available ISBN publisher ranges.",
+  "instance": "/v2/monograph/isbn-ranges/1"
+}

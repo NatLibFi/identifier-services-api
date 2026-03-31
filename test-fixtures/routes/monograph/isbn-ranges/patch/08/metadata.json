@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot activate ISBN range which does not have any more available ISBN publisher ranges",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

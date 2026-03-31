@@ -2,7 +2,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
+import { getAvailableIsbnPublisherRanges, getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
 import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
 import { asIsbnRangeAdminRead } from '../../dtl/monograph/isbn-range-dtl.ts';
 
@@ -113,7 +113,15 @@ export async function processIsbnRangeActiveEdit(id: number, active: boolean, us
     );
   }
 
-  // TODO: allow activate only of there are free publisher ranges
+  const availableIsbnPublisherRanges = await getAvailableIsbnPublisherRanges(id);
+  if (active && availableIsbnPublisherRanges.length === 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Cannot activate ISBN range id ${currentRange.id} as it does not have any more available ISBN publisher ranges.`,
+    );
+  }
+
   const db = getKysely();
   await db
     .updateTable('isbn_range')
