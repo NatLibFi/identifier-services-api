@@ -1,3 +1,5 @@
+import HttpStatus from 'http-status';
+
 import { getKysely } from '../../db/database.ts';
 import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
 import {
@@ -6,22 +8,24 @@ import {
   removeUndefinedProperties,
   validateGetById,
 } from '../interface-utils/common-interface-utils.ts';
+import { isAdmin } from '../../utils/permission-utils.ts';
+import { getMonographPublisherIsbnRanges } from './monograph-publisher-interface-utils.ts';
+import { ApiError } from '../../utils/api-error.ts';
+
 import {
   asMonographPublisherAdminRead,
   asMonographPublisherGuestRead,
 } from '../../dtl/monograph/monograph-publisher-dtl.ts';
 
+import type { RequestUser } from '../../generic-types.ts';
 import type {
   MonographPublisherSelect,
   MonographPublisherUpdate,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
-
 import type {
   SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
-import type { RequestUser } from '../../generic-types.ts';
-import { isAdmin } from '../../utils/permission-utils.ts';
 
 export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
   const db = getKysely();
@@ -47,6 +51,15 @@ export async function deleteMonographPublisher(id: number) {
   await readMonographPublisher(id);
 
   // TODO: constraints related to associations
+  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
+  if (isbnPublisherRanges.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `ISBN range id ${id} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
+    );
+  }
+
   await db.deleteFrom('monograph_publisher').where('id', '=', id).executeTakeFirstOrThrow();
 
   return;

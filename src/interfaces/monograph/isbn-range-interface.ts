@@ -168,7 +168,6 @@ export async function processIsbnRangeEdit(
     );
   }
 
-  // TODO: verify existing publisher ranges do not conflict with range adjustment (e.g., publisher ranges may not exist for given range)
   const db = getKysely();
   await db
     .updateTable('isbn_range')
