@@ -80,7 +80,20 @@ export async function deleteIsbnRange(id: number) {
   // Read to confirm range exists - this will also take care of returning 404
   await readIsbnRange(id);
 
-  // TODO: verify no publisher ranges are associated with the ISBN range
+  const { count: numAssociatedPublisherRanges } = await db
+    .selectFrom('isbn_publisher_range')
+    .select(db.fn.countAll<number>().as('count'))
+    .where('isbn_range_id', '=', id)
+    .executeTakeFirstOrThrow();
+
+  if (numAssociatedPublisherRanges !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `ISBN range id ${id} has ${numAssociatedPublisherRanges} associated ISBN publisher ranges.`,
+    );
+  }
+
   await db.deleteFrom('isbn_range').where('id', '=', id).executeTakeFirstOrThrow();
 
   return;
@@ -93,7 +106,11 @@ export async function processIsbnRangeActiveEdit(id: number, active: boolean, us
     (active === true && currentRange.active === true) || (active === false && currentRange.active === false);
 
   if (noStateChange) {
-    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', `ISBN ${currentRange.id} has already active=${active}`);
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `ISBN range id ${currentRange.id} has already active=${active}`,
+    );
   }
 
   // TODO: allow activate only of there are free publisher ranges
