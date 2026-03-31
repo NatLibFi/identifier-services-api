@@ -60,9 +60,9 @@
       "publisher_identifier": "978-951-95000",
       "monograph_publisher_id": 1,
       "isbn_range_id": 1,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "admin",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "admin"
     }
   ],
@@ -73,9 +73,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": true,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -84,9 +84,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -95,9 +95,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -106,9 +106,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -117,9 +117,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -128,9 +128,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -139,9 +139,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -150,9 +150,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -161,9 +161,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     },
     {
@@ -172,9 +172,9 @@
       "isbn_publisher_range_id": 1,
       "monograph_manifestation_id": null,
       "canceled": false,
-      "created": "2026-01-20T12:00:00.000Z",
+      "created": "2025-01-20T12:00:00.000Z",
       "created_by": "SYSTEM",
-      "modified": "2026-01-20T12:00:00.000Z",
+      "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     }
   ]

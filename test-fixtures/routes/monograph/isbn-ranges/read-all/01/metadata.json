@@ -3,5 +3,6 @@
   "url": "/v2/monograph/isbn-ranges",
   "method": "GET",
   "role": "admin",
-  "expectedStatus": 200
+  "expectedStatus": 200,
+  "only": true
 }
