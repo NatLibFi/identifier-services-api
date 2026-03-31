@@ -9,7 +9,11 @@ import {
   validateGetById,
 } from '../interface-utils/common-interface-utils.ts';
 import { isAdmin } from '../../utils/permission-utils.ts';
-import { getMonographPublisherIsbnRanges } from './monograph-publisher-interface-utils.ts';
+import {
+  getMonographPublisherIsbnRanges,
+  searchMonographPublisherWithRange,
+  useIsbnPublisherIdentifierSearch,
+} from './monograph-publisher-interface-utils.ts';
 import { ApiError } from '../../utils/api-error.ts';
 
 import {
@@ -160,10 +164,17 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
 
   const db = getKysely();
 
-  // TODO: use separate publisher identifier search if string begins with publisher identifier
   // TODO: evaluate if need for category filter
 
   let query = db.selectFrom('monograph_publisher');
+
+  // Process search that targets ISBN publisher identifier as separate block
+  if (!!search_text && useIsbnPublisherIdentifierSearch(search_text)) {
+    const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
+    return result;
+  }
+
+  // TODO: ISMN publisher identifier search
 
   if (search_text) {
     const normalizedSearch = `%${search_text}%`.toLowerCase();

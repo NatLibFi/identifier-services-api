@@ -14,7 +14,7 @@
     }
   ],
   "isbn_publisher_range": [
-        {
+    {
       "id": 1,
       "publisher_identifier": "978-951-0",
       "monograph_publisher_id": 1,

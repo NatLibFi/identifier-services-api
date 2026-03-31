@@ -1,0 +1,17 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 2,
+      "official_name": "Another example publisher",
+      "other_names": [],
+      "previous_names": [],
+      "address": null,
+      "zip": null,
+      "city": null,
+      "phone": null,
+      "www": null,
+      "has_quitted": false
+    }
+  ]
+}
