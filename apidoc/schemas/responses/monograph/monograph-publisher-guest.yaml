@@ -36,7 +36,14 @@ allOf:
         type:
           - string
           - 'null'
-      # TODO: isbn_identifiers
+      isbn_publisher_identifiers:
+        type: array
+        items:
+          type: object
+          properties:
+            publisher_identifier:
+              type: string
+              example: '978-951-0'
       # TODO: ismn_identifiers
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

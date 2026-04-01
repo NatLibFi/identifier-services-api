@@ -1,4 +1,6 @@
+import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
 import type {
+  MonographPublisherReadAdmin,
   MonographPublisherReadGuest,
   MonographPublisherSelect,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
@@ -6,7 +8,8 @@ import type { UnknownObject } from '../../generic-types.ts';
 
 export function asMonographPublisherAdminRead(
   monographPublisher: MonographPublisherSelect | UnknownObject,
-): MonographPublisherSelect {
+  isbnRanges: IsbnPublisherRangeSelect[],
+): MonographPublisherReadAdmin {
   const {
     id,
     official_name,
@@ -63,6 +66,7 @@ export function asMonographPublisherAdminRead(
     classifications,
     classification_other,
     promote_sorting,
+    isbn_publisher_ranges: isbnRanges.map(({ id, publisher_identifier }) => ({ id, publisher_identifier })),
     created,
     created_by,
     modified,
@@ -72,6 +76,7 @@ export function asMonographPublisherAdminRead(
 
 export function asMonographPublisherGuestRead(
   monographPublisher: MonographPublisherSelect | UnknownObject,
+  isbnPublisherRanges: IsbnPublisherRangeSelect[],
 ): MonographPublisherReadGuest {
   const { id, official_name, other_names, previous_names, address, zip, city, phone, www, has_quitted } =
     monographPublisher;
@@ -87,5 +92,6 @@ export function asMonographPublisherGuestRead(
     phone,
     www,
     has_quitted,
+    isbn_publisher_ranges: isbnPublisherRanges.map(({ publisher_identifier }) => ({ publisher_identifier })),
   };
 }

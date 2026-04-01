@@ -35,6 +35,12 @@
       "classifications": ["800", "820"],
       "classification_other": null,
       "promote_sorting": false,
+      "isbn_publisher_ranges": [
+        {
+          "id": 1,
+          "publisher_identifier": "978-951-95000"
+        }
+      ],
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",

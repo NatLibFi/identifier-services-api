@@ -1,6 +1,6 @@
 import type { Generated, Updateable, JSONColumnType, Insertable, Selectable } from 'kysely';
 
-interface MonographPublisherContactPerson {
+export interface MonographPublisherContactPerson {
   name: string;
   email: string;
 }
@@ -40,7 +40,14 @@ export type MonographPublisherInsert = Insertable<MonographPublisher>;
 export type MonographPublisherUpdate = Updateable<MonographPublisher>;
 export type MonographPublisherSelect = Selectable<MonographPublisher>;
 
-export type MonographPublisherReadGuest = Omit<
+export interface MonographPublisherReadAdmin extends MonographPublisherSelect {
+  isbn_publisher_ranges: {
+    id: number;
+    publisher_identifier: string;
+  }[];
+}
+
+export interface MonographPublisherReadGuest extends Omit<
   MonographPublisherSelect,
   | 'email'
   | 'lang_code'
@@ -60,4 +67,8 @@ export type MonographPublisherReadGuest = Omit<
   | 'created_by'
   | 'modified'
   | 'modified_by'
->;
+> {
+  isbn_publisher_ranges: {
+    publisher_identifier: string;
+  }[];
+}

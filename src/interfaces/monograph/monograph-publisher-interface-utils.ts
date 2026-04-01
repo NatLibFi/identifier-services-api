@@ -52,7 +52,7 @@ export async function searchMonographPublisherWithRange(
   // If problems do occur split the query to two: one retrieving distinct result set and other count for totalDoc
   const isbnPublisherRanges = await db
     .selectFrom('isbn_publisher_range')
-    .select('monograph_publisher_id')
+    .selectAll()
     .where('publisher_identifier', 'like', `${searchString}%`)
     .execute();
 
@@ -74,8 +74,18 @@ export async function searchMonographPublisherWithRange(
 
   // Return value is dependent on user role
   const resultDtl = isAdmin(user)
-    ? result.map(asMonographPublisherAdminRead)
-    : result.map(asMonographPublisherGuestRead);
+    ? result.map((p) => {
+        const filteredIsbnPublisherRanges = isbnPublisherRanges.filter(
+          ({ monograph_publisher_id }) => monograph_publisher_id === p.id,
+        );
+        return asMonographPublisherAdminRead(p, filteredIsbnPublisherRanges);
+      })
+    : result.map((p) => {
+        const filteredIsbnPublisherRanges = isbnPublisherRanges.filter(
+          ({ monograph_publisher_id }) => monograph_publisher_id === p.id,
+        );
+        return asMonographPublisherGuestRead(p, filteredIsbnPublisherRanges);
+      });
 
   return {
     totalDoc,

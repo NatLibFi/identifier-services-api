@@ -11,7 +11,12 @@
       "city": null,
       "phone": null,
       "www": null,
-      "has_quitted": false
+      "has_quitted": false,
+      "isbn_publisher_ranges": [
+        {
+          "publisher_identifier": "978-951-95001"
+        }
+      ]
     }
   ]
 }

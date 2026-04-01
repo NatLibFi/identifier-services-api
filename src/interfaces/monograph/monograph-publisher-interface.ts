@@ -36,16 +36,18 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
   const dbResult = await db.selectFrom('monograph_publisher').selectAll().where('id', '=', id).execute();
   const monographPublisherResult = validateGetById<MonographPublisherSelect>(dbResult);
 
+  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
+
   if (!useDtl) {
     return monographPublisherResult;
   }
 
   const isAdmin = hasAdminApplicationRole(user?.applicationRoles);
   if (isAdmin) {
-    return asMonographPublisherAdminRead(monographPublisherResult);
+    return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges);
   }
 
-  return asMonographPublisherGuestRead(monographPublisherResult);
+  return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges);
 }
 
 export async function deleteMonographPublisher(id: number) {
@@ -204,18 +206,29 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
   query = query.selectAll().orderBy('id', 'desc').limit(limit).offset(offset);
 
-  const result = await query.execute();
+  // @ts-expect-error query builder does not understand typing here
+  const result: MonographPublisherSelect[] = await query.execute();
   const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
 
   if (isAdmin(user)) {
     return {
       totalDoc,
-      results: result.map(asMonographPublisherAdminRead),
+      results: await Promise.all(
+        result.map(async (p) => {
+          const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
+          return asMonographPublisherAdminRead(p, isbnPublisherRanges);
+        }),
+      ),
     };
   }
 
   return {
     totalDoc,
-    results: result.map(asMonographPublisherGuestRead),
+    results: await Promise.all(
+      result.map(async (p) => {
+        const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
+        return asMonographPublisherGuestRead(p, isbnPublisherRanges);
+      }),
+    ),
   };
 }

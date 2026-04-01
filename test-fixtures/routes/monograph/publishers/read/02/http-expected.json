@@ -8,5 +8,10 @@
   "city": "Foo city",
   "phone": "123456789",
   "www": "http://example.localhost",
-  "has_quitted": false
+  "has_quitted": false,
+  "isbn_publisher_ranges": [
+    {
+      "publisher_identifier": "978-951-95000"
+    }
+  ]
 }
