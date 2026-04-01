@@ -24,7 +24,7 @@ jobs:
           cache: 'npm'
         env:
           NPM_CONFIG_IGNORE_SCRIPTS: true
-      - run: npm audit --package-lock-only --production --audit-level=high
+      - run: npm audit --package-lock-only --omit=dev --audit-level=high
       - run: npm ci --ignore-scripts
       - run: npm test
       # In no circumstances do not remove the build step here: it confirms TypeScript syntax used is compatible with Node runtime
