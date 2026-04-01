@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Selected monograph publisher id 1 has quitted and cannot be assigned ISBN publisher identifiers to.",
+  "instance": "/v2/monograph/isbn-publisher-ranges"
+}

@@ -65,6 +65,14 @@ export async function createIsbnPublisherRange(
     );
   }
 
+  if (monographPublisher.has_quitted) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Selected monograph publisher id ${monograph_publisher_id} has quitted and cannot be assigned ISBN publisher identifiers to.`,
+    );
+  }
+
   // Sanity check
   const existingIsbnPublisherRange = await db
     .selectFrom('isbn_publisher_range')
