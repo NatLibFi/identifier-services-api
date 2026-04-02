@@ -1,0 +1,7 @@
+{
+  "description": "[admin] ISBN range information regarding available ranges is correct",
+  "url": "/v2/monograph/isbn-ranges/1",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

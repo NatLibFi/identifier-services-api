@@ -5,7 +5,7 @@
   "range_begin": "0",
   "range_end": "1",
   "active": true,
-  "available_publisher_ranges": ["978-951-0", "978-951-1"],
+  "available_publisher_ranges": ["978-951-0"],
   "created": "2025-01-20T12:00:00.000Z",
   "created_by": "TEST_USER_1",
   "modified": "2025-01-20T12:00:00.000Z",

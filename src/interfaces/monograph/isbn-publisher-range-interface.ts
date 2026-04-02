@@ -40,7 +40,7 @@ export async function createIsbnPublisherRange(
     );
   }
 
-  const availableIsbnRangePublisherRanges = await getAvailableIsbnPublisherRanges(isbn_range_id);
+  const availableIsbnRangePublisherRanges = await getAvailableIsbnPublisherRanges(isbnRange);
   const isAvailable = availableIsbnRangePublisherRanges.includes(publisher_identifier);
 
   if (!isAvailable) {

@@ -1,10 +1,12 @@
 import { ISBN_RANGE_MAX_LENGTH } from '../../constants/monograph/isbn-constants.ts';
+
 import { getKysely } from '../../db/database.ts';
-import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
+
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 import { testRangeOverlap } from '../interface-utils/range-interface-utils.ts';
-import { readIsbnRange } from './isbn-range-interface.ts';
+
+import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
+import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 
 /**
  * Find potential conflicts with currently defined ISBN ranges. Conflict occurs if:
@@ -35,10 +37,9 @@ export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHt
   return conflictingRanges;
 }
 
-export async function getAvailableIsbnPublisherRanges(isbnRangeId: number) {
+export async function getAvailableIsbnPublisherRanges(isbnRange: IsbnRangeSelect) {
   const db = getKysely();
 
-  const isbnRange = await readIsbnRange(isbnRangeId, true);
   const isbnRangePublisherIdentifiers = getAllIsbnPublisherRanges(isbnRange);
   const associatedIsbnPublisherRanges = await db
     .selectFrom('isbn_publisher_range')

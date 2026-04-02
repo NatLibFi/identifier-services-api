@@ -19,8 +19,5 @@ allOf:
       active:
         type: boolean
         example: true
-      # free:
-      #   type: integer
-      #   example: 1
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

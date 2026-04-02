@@ -2,9 +2,13 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getAvailableIsbnPublisherRanges, getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
+import {
+  getAllIsbnPublisherRanges,
+  getAvailableIsbnPublisherRanges,
+  getIsbnRangeConflict,
+} from './isbn-range-interface-utils.ts';
 import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
-import { asIsbnRangeAdminRead } from '../../dtl/monograph/isbn-range-dtl.ts';
+import { asIsbnRangeAdminRead, type IsbnRangeRead } from '../../dtl/monograph/isbn-range-dtl.ts';
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp, UpdateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
@@ -14,7 +18,24 @@ import type { RequestUser } from '../../generic-types.ts';
 export async function getIsbnRanges() {
   const db = getKysely();
   const result = await db.selectFrom('isbn_range').selectAll().execute();
-  return result.map(asIsbnRangeAdminRead);
+
+  return await Promise.all(
+    result.map(async (r) => {
+      const total = getAllIsbnPublisherRanges(r).length;
+      const { taken } = await db
+        .selectFrom('isbn_publisher_range')
+        .select(db.fn.countAll<number>().as('taken'))
+        .where('isbn_range_id', '=', r.id)
+        .executeTakeFirstOrThrow();
+
+      // DTL confirms base attributes which are then extended
+      return {
+        ...asIsbnRangeAdminRead(r),
+        free: total - taken,
+        taken,
+      };
+    }),
+  );
 }
 
 export async function createIsbnRange(
@@ -52,12 +73,17 @@ export async function createIsbnRange(
   return { id: Number(result.insertId) };
 }
 
-export async function readIsbnRange(id: number, useDtl = true): Promise<IsbnRangeSelect> {
+export async function readIsbnRange(id: number): Promise<IsbnRangeRead> {
   const db = getKysely();
   const dbResult = await db.selectFrom('isbn_range').selectAll().where('id', '=', id).execute();
-  const isbnRangeResult = validateGetById<IsbnRangeSelect>(dbResult);
 
-  return useDtl ? asIsbnRangeAdminRead(isbnRangeResult) : isbnRangeResult;
+  const isbnRangeResult = validateGetById<IsbnRangeSelect>(dbResult);
+  const availablePublisherRanges = await getAvailableIsbnPublisherRanges(isbnRangeResult);
+
+  return {
+    ...asIsbnRangeAdminRead(isbnRangeResult),
+    available_publisher_ranges: availablePublisherRanges,
+  };
 }
 
 export async function updateIsbnRange(id: number, isbnRangeUpdateDoc: UpdateIsbnRangeHttp, user: RequestUser) {
@@ -70,8 +96,7 @@ export async function updateIsbnRange(id: number, isbnRangeUpdateDoc: UpdateIsbn
     await processIsbnRangeEdit(id, range_begin, range_end, user);
   }
 
-  // Use consistent return value between processing. This will be one additional read as overhead, but currently it's acceptable.
-  return readIsbnRange(id);
+  return;
 }
 
 export async function deleteIsbnRange(id: number) {
@@ -100,7 +125,7 @@ export async function deleteIsbnRange(id: number) {
 }
 
 export async function processIsbnRangeActiveEdit(id: number, active: boolean, user: RequestUser) {
-  const currentRange = await readIsbnRange(id, false);
+  const currentRange = await readIsbnRange(id);
 
   const noStateChange =
     (active === true && currentRange.active === true) || (active === false && currentRange.active === false);
@@ -113,8 +138,7 @@ export async function processIsbnRangeActiveEdit(id: number, active: boolean, us
     );
   }
 
-  const availableIsbnPublisherRanges = await getAvailableIsbnPublisherRanges(id);
-  if (active && availableIsbnPublisherRanges.length === 0) {
+  if (active && currentRange.available_publisher_ranges.length === 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
@@ -142,7 +166,7 @@ export async function processIsbnRangeEdit(
   range_end: string | undefined,
   user: RequestUser,
 ) {
-  const currentRange = await readIsbnRange(id, false);
+  const currentRange = await readIsbnRange(id);
 
   // Verify range adjustment does not conflict with other existing ranges
   const proposedRangeEdit = {
