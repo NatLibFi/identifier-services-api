@@ -7,6 +7,7 @@ import {
   canDeleteIsbnPublisherRange,
   generateIsbnIdentifierDbEntry,
   getIsbnIdentifiers,
+  getNumberOfIdentifiers,
 } from './isbn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { rangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
@@ -130,7 +131,7 @@ export async function createIsbnPublisherRange(
   return { id: resultId };
 }
 
-export async function deleteIsbnRange(isbnPublisherRangeId: number) {
+export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
   const db = getKysely();
 
   const isbnPublisherRange = await db
@@ -158,6 +159,20 @@ export async function deleteIsbnRange(isbnPublisherRangeId: number) {
 
   // Remove all associated identifiers in same transaction where the ISBN publisher identifier is removed
   await db.transaction().execute(async (trx) => {
+    const isbnIdentifierResult = await trx
+      .deleteFrom('isbn_identifier')
+      .where('isbn_publisher_range_id', '=', isbnPublisherRangeId)
+      .executeTakeFirstOrThrow();
+
+    // Verify removal of identifiers succeeded
+    const expectedIdentifierDeleteCount = getNumberOfIdentifiers(isbnPublisherRange);
+
+    if (Number(isbnIdentifierResult.numDeletedRows) !== expectedIdentifierDeleteCount) {
+      throw new Error(
+        `ISBN identifiers associated with ISBN publisher range were not properly deleted (count after delete was ${Number(isbnIdentifierResult.numDeletedRows)}).`,
+      );
+    }
+
     const publisherRangeResult = await trx
       .deleteFrom('isbn_publisher_range')
       .where('id', '=', isbnPublisherRangeId)
@@ -165,21 +180,6 @@ export async function deleteIsbnRange(isbnPublisherRangeId: number) {
 
     if (Number(publisherRangeResult.numDeletedRows) !== 1) {
       throw new Error('Only ISBN publisher range should have been deleted.');
-    }
-
-    await trx
-      .deleteFrom('isbn_identifier')
-      .where('isbn_publisher_range_id', '=', isbnPublisherRangeId)
-      .executeTakeFirstOrThrow();
-
-    // Verify removal of identifiers succeeded
-    const { count } = await trx
-      .selectFrom('isbn_identifier')
-      .select(db.fn.countAll<number>().as('count'))
-      .executeTakeFirstOrThrow();
-
-    if (count !== 0) {
-      throw new Error('ISBN identifiers associated with ISBN publisher range were not properly deleted.');
     }
   });
 

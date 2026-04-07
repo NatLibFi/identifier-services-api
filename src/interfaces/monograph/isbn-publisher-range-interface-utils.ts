@@ -83,3 +83,27 @@ export function generateIsbnIdentifierDbEntry(
     modified_by: SYSTEM_USER,
   };
 }
+
+export function getNumberOfIdentifiers(isbnPublisherRange: IsbnPublisherRangeSelect) {
+  const [gs1, registrationGroup, registrant] = isbnPublisherRange.publisher_identifier.split('-');
+
+  // Sanity checks
+  if (!gs1 || !registrationGroup || !registrant) {
+    throw new Error(`Invalid publisher identifier observed in ISBN publisher range id ${isbnPublisherRange.id}`);
+  }
+
+  const registrantIdentifierCountMap: Record<number, number> = {
+    1: 100000,
+    2: 10000,
+    3: 1000,
+    4: 100,
+    5: 10,
+  };
+
+  const result = registrantIdentifierCountMap[registrant.length];
+  if (!result) {
+    throw new Error(`Could not map registrant length (${registrant.length}) to identifier count`);
+  }
+
+  return result;
+}

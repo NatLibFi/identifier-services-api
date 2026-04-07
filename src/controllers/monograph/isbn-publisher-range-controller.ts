@@ -14,7 +14,7 @@ export async function createIsbnRange(req: Request, res: Response, next: NextFun
 
 export async function deleteIsbnRange(req: Request, res: Response, next: NextFunction) {
   try {
-    await isbnPublisherRangeInterface.deleteIsbnRange(Number(req.params['id']));
+    await isbnPublisherRangeInterface.deleteIsbnPublisherRange(Number(req.params['id']));
     return res.status(HttpStatus.NO_CONTENT).end();
   } catch (error) {
     return next(error);
