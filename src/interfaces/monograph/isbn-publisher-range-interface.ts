@@ -43,6 +43,7 @@ export async function createIsbnPublisherRange(
 
   const availableIsbnRangePublisherRanges = await getAvailableIsbnPublisherRanges(isbnRange);
   const isAvailable = availableIsbnRangePublisherRanges.includes(publisher_identifier);
+  const isLastAvailable = availableIsbnRangePublisherRanges.filter((v) => v !== publisher_identifier).length === 0;
 
   if (!isAvailable) {
     throw new ApiError(
@@ -93,6 +94,19 @@ export async function createIsbnPublisherRange(
 
   // Processed within transaction to create ISBN identifiers associated with the ISBN publisher range in batches of 1k
   const resultId = await db.transaction().execute(async (trx) => {
+    // When last ISBN publisher range is assigned, deactivate range
+    if (isLastAvailable) {
+      await trx
+        .updateTable('isbn_range')
+        .set({
+          active: false,
+          modified_by: user.id,
+          modified: getCurrentTime(),
+        })
+        .where('id', '=', isbn_range_id)
+        .executeTakeFirstOrThrow();
+    }
+
     const result = await trx
       .insertInto('isbn_publisher_range')
       .values({

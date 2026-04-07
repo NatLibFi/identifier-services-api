@@ -1,0 +1,7 @@
+{
+  "description": "[admin] deactivates parent ISBN range if ISBN publisher range was last available",
+  "url": "/v2/monograph/isbn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}
