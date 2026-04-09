@@ -50,17 +50,17 @@ export function getIsbnIdentifiers(publisherIdentifier: string) {
 export async function canDeleteIsbnPublisherRange(isbnPublisherRange: IsbnPublisherRangeSelect) {
   // API v1 had tests regarding associated identifiers and batches -> the new schema does not support these checks
 
-  // Test if any identifier associated with ISBN publisher range is either canceled or assigned to manifestation
+  // Test if any identifier associated with ISBN publisher range is assigned to manifestation
   const db = getKysely();
   const { count: identifierUsedCount } = await db
     .selectFrom('isbn_identifier')
     .select(db.fn.countAll<number>().as('count'))
     .where('isbn_publisher_range_id', '=', isbnPublisherRange.id)
-    .where((eb) => eb.or([eb('canceled', '=', true), eb('monograph_publication_manifestation_id', 'is not', null)]))
+    .where('monograph_publication_manifestation_id', 'is not', null)
     .executeTakeFirstOrThrow();
 
   if (identifierUsedCount !== 0) {
-    return { result: false, reason: 'has canceled or assigned identifiers' };
+    return { result: false, reason: 'has assigned identifiers' };
   }
 
   // TODO: figure out way to verify no ISBN identifiers has not been made public or used as well as add any other required logic
@@ -76,7 +76,6 @@ export function generateIsbnIdentifierDbEntry(
     identifier: isbnIdentifier,
     isbn_publisher_range_id: isbnPublisherRangeId,
     monograph_publication_manifestation_id: null,
-    canceled: false,
     created: getCurrentTime(),
     created_by: SYSTEM_USER,
     modified: getCurrentTime(),
