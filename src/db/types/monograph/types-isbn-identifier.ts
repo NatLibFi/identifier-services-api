@@ -4,7 +4,7 @@ export interface IsbnIdentifier {
   id: Generated<number>;
   identifier: string;
   isbn_publisher_range_id: number;
-  monograph_manifestation_id: number | null;
+  monograph_publication_manifestation_id: number | null;
   canceled: boolean;
   created: Date;
   created_by: string;

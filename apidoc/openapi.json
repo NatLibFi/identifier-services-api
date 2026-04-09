@@ -569,6 +569,55 @@
           }
         }
       }
+    },
+    "/v2/monograph/publications/{id}": {
+      "get": {
+        "operationId": "readMonographPublication",
+        "summary": "Read monograph publication information.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1255,6 +1304,316 @@
         "required": [
           "limit",
           "offset"
+        ]
+      },
+      "expression-type": {
+        "type": "string",
+        "enum": [
+          "BOOK",
+          "DISSERTATION",
+          "SHEET_MUSIC",
+          "MAP",
+          "OTHER"
+        ]
+      },
+      "item-language": {
+        "type": "string",
+        "enum": [
+          "FIN",
+          "SWE",
+          "ENG",
+          "SMI",
+          "SPA",
+          "FRE",
+          "GER",
+          "RUS",
+          "MUL"
+        ]
+      },
+      "expression-author-roles": {
+        "type": "string",
+        "enum": [
+          "AUTHOR",
+          "TRANSLATOR"
+        ]
+      },
+      "monograph-expression-author": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/expression-author-roles"
+            }
+          },
+          "isni": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "manifestation-type": {
+        "type": "string",
+        "enum": [
+          "PAPERBACK",
+          "HARDBACK",
+          "SPIRAL_BINDING",
+          "OTHER_PRINT",
+          "PDF",
+          "EPUB",
+          "CD_ROM",
+          "MP3",
+          "OTHER"
+        ]
+      },
+      "manifestation-author-roles": {
+        "type": "string",
+        "enum": [
+          "ILLUSTRATOR",
+          "EDITOR"
+        ]
+      },
+      "monograph-manifestation-author": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/manifestation-author-roles"
+            }
+          },
+          "isni": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "monograph-publication-manifestation": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "monograph_publication_expression_id": {
+                "type": "number",
+                "example": 1
+              },
+              "monograph_publication_request_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "manifestation_type": {
+                "$ref": "#/components/schemas/manifestation-type"
+              },
+              "manifestation_type_other": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "manifestation_edition": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "map_scale": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "authors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-manifestation-author"
+                }
+              },
+              "publication_year": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publication_month": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "series": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "issn": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "volume": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "printing_information": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "printing_number": {
+                      "type": "number"
+                    },
+                    "printing_house": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "printing_house_city": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "copies": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "cancelled": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "monograph-publication-expression": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "monograph_publication_id": {
+                "type": "number"
+              },
+              "expression_type": {
+                "$ref": "#/components/schemas/expression-type"
+              },
+              "expression_language": {
+                "$ref": "#/components/schemas/item-language"
+              },
+              "authors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-expression-author"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
+              "subtitle": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "manifestations": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-publication-manifestation"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "monograph-publication": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "monograph_publisher_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "primary_title": {
+                "type": "string"
+              },
+              "expressions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-publication-expression"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
         ]
       }
     },

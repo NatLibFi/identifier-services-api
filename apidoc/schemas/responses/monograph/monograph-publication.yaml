@@ -1,0 +1,18 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      monograph_publisher_id:
+        type:
+          - number
+          - 'null'
+      primary_title:
+        type: string
+      expressions:
+        type: array
+        items:
+          $ref: './monograph-publication-expression.yaml'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

@@ -1,0 +1,77 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      monograph_publication_expression_id:
+        type: number
+        example: 1
+      monograph_publication_request_id:
+        type:
+          - number
+          - 'null'
+      manifestation_type:
+        $ref: '../../enums/monograph/manifestation-type.yaml'
+      manifestation_type_other:
+        type:
+          - string
+          - 'null'
+      manifestation_edition:
+        type:
+          - string
+          - 'null'
+      map_scale:
+        type:
+          - string
+          - 'null'
+      authors:
+        type: array
+        items:
+          $ref: './monograph-manifestation-author.yaml'
+      publication_year:
+        type:
+          - string
+          - 'null'
+      publication_month:
+        type:
+          - string
+          - 'null'
+      series:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            issn:
+              type:
+                - string
+                - 'null'
+            volume:
+              type:
+                - string
+                - 'null'
+      printing_information:
+        type: array
+        items:
+          type: object
+          properties:
+            printing_number:
+              type: number
+            printing_house:
+              type:
+                - string
+                - 'null'
+            printing_house_city:
+              type:
+                - string
+                - 'null'
+            copies:
+              type:
+                - string
+                - 'null'
+      cancelled:
+        type: boolean
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

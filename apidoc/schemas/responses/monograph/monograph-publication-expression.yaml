@@ -1,0 +1,28 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      monograph_publication_id:
+        type: number
+      expression_type:
+        $ref: '../../enums/monograph/expression-type.yaml'
+      expression_language:
+        $ref: '../../enums/item-language.yaml'
+      authors:
+        type: array
+        items:
+          $ref: './monograph-expression-author.yaml'
+      title:
+        type: string
+      subtitle:
+        type:
+          - string
+          - 'null'
+      manifestations:
+        type: array
+        items:
+          $ref: './monograph-publication-manifestation.yaml'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

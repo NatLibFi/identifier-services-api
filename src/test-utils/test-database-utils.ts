@@ -14,6 +14,10 @@ import { createMonographPublisherTable } from './test-migrations/monograph/monog
 
 import type { Database } from '../db/types.ts';
 import type { UnknownObject } from '../generic-types.ts';
+import { createMonographPublicationTable } from './test-migrations/monograph/monograph-publication-test-migrations.ts';
+import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
+import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
+import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
 
 interface TestDatabaseConfig {
   host: string;
@@ -120,6 +124,34 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['isbn_identifier'],
       jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    monograph_publication: {
+      table: 'monograph_publication',
+      constructorFn: createMonographPublicationTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publication'],
+      jsonColumns: [],
+    },
+    monograph_publication_request: {
+      table: 'monograph_publication_request',
+      constructorFn: createMonographPublicationRequestTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publication_request'],
+      jsonColumns: [],
+    },
+    monograph_publication_expression: {
+      table: 'monograph_publication_expression',
+      constructorFn: createMonographPublicationExpressionTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publication_expression'],
+      jsonColumns: ['authors'],
+    },
+    monograph_publication_manifestation: {
+      table: 'monograph_publication_manifestation',
+      constructorFn: createMonographPublicationManifestationTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publication_manifestation'],
+      jsonColumns: ['authors', 'series', 'printing_information'],
     },
   };
 

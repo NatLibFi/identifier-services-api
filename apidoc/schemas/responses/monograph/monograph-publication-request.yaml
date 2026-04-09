@@ -1,0 +1,67 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      monograph_publisher_id:
+        type:
+          - number
+          - 'null'
+      monograph_publication_id:
+        type: number
+      official_name:
+        type: string
+      publisher_identifier_str:
+        type:
+          - string
+          - 'null'
+      address:
+        type:
+          - string
+          - 'null'
+      zip:
+        type:
+          - string
+          - 'null'
+      city:
+        type:
+          - string
+          - 'null'
+      phone:
+        type:
+          - string
+          - 'null'
+      email:
+        type:
+          - string
+          - 'null'
+      lang_code:
+        $ref: '../../enums/lang-code.yaml'
+      contact_person:
+        type:
+          - string
+          - 'null'
+      published_before:
+        type: boolean
+      publishing_activity:
+        type:
+          - string
+          - 'null'
+      publishing_activity_amount:
+        type:
+          - string
+          - 'null'
+      publications_intra:
+        type: boolean
+      publications_public:
+        type: boolean
+      comments:
+        type:
+          - string
+          - 'null'
+      publications:
+        type: array
+        items:
+          $ref: './monograph-publication.yaml'
+  - $ref: '../common/created-metadata.yaml'

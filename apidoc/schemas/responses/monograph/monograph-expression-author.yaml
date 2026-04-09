@@ -1,0 +1,16 @@
+type: object
+properties:
+  first_name:
+    type: string
+  last_name:
+    type:
+      - string
+      - 'null'
+  roles:
+    type: array
+    items:
+      $ref: '../../enums/monograph/expression-author-roles.yaml'
+  isni:
+    type:
+      - string
+      - 'null'
