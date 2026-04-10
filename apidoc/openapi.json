@@ -618,6 +618,55 @@
           }
         }
       }
+    },
+    "/v2/monograph/publication-requests/{id}": {
+      "get": {
+        "operationId": "readMonographPublicationRequest",
+        "summary": "Read monograph publication request information.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication-request"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication-request"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1613,6 +1662,109 @@
           },
           {
             "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "monograph-publication-request": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "monograph_publisher_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "monograph_publication_id": {
+                "type": "number"
+              },
+              "official_name": {
+                "type": "string"
+              },
+              "publisher_identifier_str": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lang_code": {
+                "$ref": "#/components/schemas/lang-code"
+              },
+              "contact_person": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "published_before": {
+                "type": "boolean"
+              },
+              "publishing_activity": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publishing_activity_amount": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publications_intra": {
+                "type": "boolean"
+              },
+              "publications_public": {
+                "type": "boolean"
+              },
+              "comments": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publication": {
+                "$ref": "#/components/schemas/monograph-publication"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
           }
         ]
       }

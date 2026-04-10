@@ -60,8 +60,6 @@ allOf:
         type:
           - string
           - 'null'
-      publications:
-        type: array
-        items:
-          $ref: './monograph-publication.yaml'
+      publication:
+        $ref: './monograph-publication.yaml'
   - $ref: '../common/created-metadata.yaml'

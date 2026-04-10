@@ -34,9 +34,8 @@ paths:
   /v2/monograph/publications/{id}:
     $ref: './resources/monograph/publications/id.yaml'
 
-  # NEXT:
-  # /v2/monograph/publication-requests/{id}:
-  # $ref: './resources/monograph/publication-requests/id.yaml'
+  /v2/monograph/publication-requests/{id}:
+    $ref: './resources/monograph/publication-requests/id.yaml'
 
 components:
   securitySchemes:
