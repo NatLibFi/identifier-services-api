@@ -19,7 +19,7 @@ export interface MonographPublicationRequest {
   publications_intra: boolean;
   publications_public: boolean;
   comments: string | null;
-  on_process: boolean;
+  request_state: string;
   created: Date;
   created_by: string;
   modified: Date;

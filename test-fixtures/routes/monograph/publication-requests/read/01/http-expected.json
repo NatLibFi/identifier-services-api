@@ -17,7 +17,7 @@
   "publications_intra": false,
   "publications_public": true,
   "comments": "Example comment",
-  "on_process": false,
+  "request_state": "ACCEPTED",
   "publication": {
     "id": 1,
     "monograph_publisher_id": 1,

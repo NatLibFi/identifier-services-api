@@ -1,0 +1,8 @@
+{
+  "description": "TODO: [admin] Searches using primary_title of associated publication",
+  "url": "/v2/monograph/publication-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200,
+  "skip": true
+}

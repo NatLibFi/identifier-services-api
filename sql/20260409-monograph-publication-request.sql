@@ -1,4 +1,4 @@
--- Monograph publication request v2.0.0-alpha.1
+-- Monograph publication request v2.0.0-alpha.2
 CREATE TABLE monograph_publication_request (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publisher_id INT UNSIGNED,
@@ -18,7 +18,7 @@ CREATE TABLE monograph_publication_request (
   publications_intra BOOLEAN NOT NULL,
   publications_public BOOLEAN NOT NULL,
   comments VARCHAR(2000),
-  on_process BOOLEAN NOT NULL,
+  request_state VARCHAR(20) NOT NULL,
   created DATETIME NOT NULL,
   created_by VARCHAR(36) NOT NULL,
   modified DATETIME NOT NULL,

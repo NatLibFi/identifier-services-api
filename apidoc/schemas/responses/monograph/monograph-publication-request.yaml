@@ -60,6 +60,8 @@ allOf:
         type:
           - string
           - 'null'
+      state:
+        $ref: '../../enums/monograph/request-state.yaml'
       publication:
         $ref: './monograph-publication.yaml'
   - $ref: '../common/created-metadata.yaml'

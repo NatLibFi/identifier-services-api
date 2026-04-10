@@ -1,0 +1,8 @@
+{
+  "description": "TODO: [admin] Searches using official_name",
+  "url": "/v2/monograph/publication-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200,
+  "skip": true
+}

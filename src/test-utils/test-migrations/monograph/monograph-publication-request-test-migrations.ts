@@ -22,7 +22,7 @@ export async function createMonographPublicationRequestTable(db: Kysely<Database
     .addColumn('publications_intra', 'boolean', (col) => col.notNull())
     .addColumn('publications_public', 'boolean', (col) => col.notNull())
     .addColumn('comments', 'varchar(2000)')
-    .addColumn('on_process', 'boolean', (col) => col.notNull())
+    .addColumn('request_state', 'varchar(20)', (col) => col.notNull())
     .addColumn('created', 'datetime', (col) => col.notNull())
     .addColumn('created_by', 'varchar(36)', (col) => col.notNull())
     .addColumn('modified', 'datetime', (col) => col.notNull())

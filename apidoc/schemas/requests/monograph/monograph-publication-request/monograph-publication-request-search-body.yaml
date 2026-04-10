@@ -1,0 +1,22 @@
+type: object
+properties:
+  search_text:
+    type:
+      - string
+      - 'null'
+    maxLength: 100
+  request_state:
+    oneOf:
+      - type: 'null'
+      - $ref: '../../../enums/monograph/request-state'
+  limit:
+    type: number
+    minimum: 1
+    maximum: 50
+  offset:
+    type: number
+    minimum: 0
+    maximum: 100000
+required:
+  - limit
+  - offset

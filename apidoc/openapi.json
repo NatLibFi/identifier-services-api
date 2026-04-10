@@ -709,13 +709,13 @@
       "created-metadata": {
         "type": "object",
         "properties": {
-          "created": {
+          "created_by": {
             "type": "string",
             "minLength": 1,
             "maxLength": 36,
             "example": "foobar"
           },
-          "createdAt": {
+          "created": {
             "type": "string",
             "example": "2024-12-01T00:00:00.000Z"
           }
@@ -724,13 +724,13 @@
       "modified-metadata": {
         "type": "object",
         "properties": {
-          "modified": {
+          "modified_by": {
             "type": "string",
             "minLength": 1,
             "maxLength": 36,
             "example": "foobar"
           },
-          "modifiedAt": {
+          "modified": {
             "type": "string",
             "example": "2024-12-01T00:00:00.000Z"
           }
@@ -1665,6 +1665,15 @@
           }
         ]
       },
+      "request-state": {
+        "type": "string",
+        "enum": [
+          "NEW",
+          "IN_PROCESS",
+          "ACCEPTED",
+          "REJECTED"
+        ]
+      },
       "monograph-publication-request": {
         "allOf": [
           {
@@ -1757,6 +1766,9 @@
                   "string",
                   "null"
                 ]
+              },
+              "state": {
+                "$ref": "#/components/schemas/request-state"
               },
               "publication": {
                 "$ref": "#/components/schemas/monograph-publication"

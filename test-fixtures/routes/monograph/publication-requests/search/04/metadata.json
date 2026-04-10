@@ -1,0 +1,7 @@
+{
+  "description": "[admin] paging works",
+  "url": "/v2/monograph/publication-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -1,0 +1,20 @@
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: number
+    publication_primary_title:
+      type: string
+    official_name:
+      type: string
+    contact_person:
+      type:
+        - string
+        - 'null'
+    email:
+      type:
+        - string
+        - 'null'
+    created:
+      type: string
