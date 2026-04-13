@@ -1,5 +1,3 @@
-// import HttpStatus from 'http-status';
-
 import { getKysely } from '../../db/database.ts';
 import { validateGetById } from '../interface-utils/common-interface-utils.ts';
 
@@ -10,10 +8,9 @@ import {
 import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import {
-  getDbPublicationEntryV1,
-  getDbPublicationExpressionEntryV1,
-  getDbPublicationManifestationEntriesV1,
-  getDbPublicationRequestEntryV1,
+  getDbPublicationEntry,
+  getDbPublicationExpressionEntry,
+  getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
 
 import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
@@ -40,13 +37,7 @@ export async function createMonographPublicationRequest(
   monographPublicationRequestCreateDoc: CreateMonographPublicationRequestV1Http,
   user: RequestUser,
 ): Promise<CreatedResponse> {
-  const v2Publication = getDbPublicationEntryV1(monographPublicationRequestCreateDoc, user);
-  const v2PublicationRequest = getDbPublicationRequestEntryV1(monographPublicationRequestCreateDoc, user);
-  const v2PublicationExpression = getDbPublicationExpressionEntryV1(monographPublicationRequestCreateDoc, user);
-  const v2PublicationManifestations = getDbPublicationManifestationEntriesV1(
-    monographPublicationRequestCreateDoc,
-    user,
-  );
+  const publication = getDbPublicationEntry(monographPublicationRequestCreateDoc, user);
 
   const db = getKysely();
 
@@ -54,46 +45,49 @@ export async function createMonographPublicationRequest(
     // 1. Create publication
     const publicationResult = await trx
       .insertInto('monograph_publication')
-      .values(v2Publication)
+      .values(publication)
       .executeTakeFirstOrThrow();
 
-    const publicationResultId = Number(publicationResult.insertId);
+    const publicationId = Number(publicationResult.insertId);
 
     // 2. Create request and associate with publication
+    const publicationRequest = getDbPublicationRequestEntry(monographPublicationRequestCreateDoc, user, publicationId);
     const publicationRequestResult = await trx
       .insertInto('monograph_publication_request')
-      .values({
-        monograph_publication_id: publicationResultId,
-        ...v2PublicationRequest,
-      })
+      .values(publicationRequest)
       .executeTakeFirstOrThrow();
-    const publicationRequestResultId = Number(publicationRequestResult.insertId);
+    const publicationRequestId = Number(publicationRequestResult.insertId);
 
     // 3. Create expression and associate with publication
-    const publicationExpressionResult = await trx
-      .insertInto('monograph_publication_expression')
-      .values({
-        monograph_publication_id: publicationResultId,
-        ...v2PublicationExpression,
-      })
-      .executeTakeFirstOrThrow();
-    const publicationExpressionResultId = Number(publicationExpressionResult.insertId);
-
-    // 4. Create manifestations and associate with expression and request
+    const expressions = getDbPublicationExpressionEntry(monographPublicationRequestCreateDoc, user, publicationId);
     await Promise.all(
-      v2PublicationManifestations.map(async (m) => {
-        await trx
-          .insertInto('monograph_publication_manifestation')
-          .values({
-            monograph_publication_expression_id: publicationExpressionResultId,
-            monograph_publication_request_id: publicationRequestResultId,
-            ...m,
-          })
+      expressions.map(async (e) => {
+        const { manifestations, ...dbExpression } = e;
+
+        const expressionResult = await trx
+          .insertInto('monograph_publication_expression')
+          .values(dbExpression)
           .executeTakeFirstOrThrow();
+
+        const expressionResultId = Number(expressionResult.insertId);
+
+        // 4. Create manifestations and associate with expression and request
+        await Promise.all(
+          manifestations.map(async (m) => {
+            await trx
+              .insertInto('monograph_publication_manifestation')
+              .values({
+                ...m,
+                monograph_publication_expression_id: expressionResultId,
+                monograph_publication_request_id: publicationRequestId,
+              })
+              .executeTakeFirstOrThrow();
+          }),
+        );
       }),
     );
 
-    return publicationRequestResultId;
+    return publicationRequestId;
   });
 
   return { id: resultId };

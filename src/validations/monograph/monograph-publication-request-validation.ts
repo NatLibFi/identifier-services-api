@@ -1,4 +1,5 @@
 import * as z from 'zod';
+
 import {
   langCodeEnum,
   monographExpressionTypeEnum,
@@ -16,8 +17,11 @@ import {
 } from '../../constants.ts';
 import { getCurrentTime } from '../../interfaces/interface-utils/common-interface-utils.ts';
 
+import { createMonographPublicationExpressionSchema } from './monograph-publication-expression-validation.ts';
+
 export const createMonographPublicationRequestV1Schema = z
   .object({
+    version: z.literal(1), // This schema must explicitly define use of v1
     officialName: z.string().min(1).max(100),
     publisherIdentifierStr: z.string().max(20).optional(),
     locality: z.enum(['Helsinki']).optional(),
@@ -161,6 +165,75 @@ export const createMonographPublicationRequestV1Schema = z
     }
   });
 
+const monographPublicationRequestSchema = z
+  .object({
+    official_name: z.string().min(1).max(100),
+    publisher_identifier_str: z.string().max(20).optional().nullable(),
+    locality: z.enum(['Helsinki']).optional().nullable(),
+    contact_person: z.string().min(1).max(100),
+    address: z.string().min(1).max(50).optional().nullable(), // Contact information is optional for Admin UI purposes
+    zip: z
+      .string()
+      .regex(/^[0-9]{5}$/, 'forms.errors.common.zip-format')
+      .optional()
+      .nullable(),
+    city: z.string().min(1).max(50).optional().nullable(),
+    phone: z
+      .string()
+      .regex(/^[0-9+-\s]{4,30}$/, 'forms.errors.common.phone-format')
+      .optional()
+      .nullable(),
+    email: z.email().optional().nullable(),
+    lang_code: z.enum(langCodeEnum),
+    published_before: z.boolean(),
+    publications_public: z.literal(true),
+    publishing_activity: z.enum(monographPublishingActivityEnum),
+    publishing_activity_amount: z
+      .string()
+      .max(5)
+      .regex(/^([0-9-]+)?$/),
+    comments: z.string().max(2000).optional().nullable(),
+  })
+  .strict()
+  .superRefine((data, ctx) => {
+    // Require email or phone as request contact
+    if (!data.email && !data.phone) {
+      ctx.addIssue({
+        path: ['email'],
+        code: 'custom',
+        message: 'Having email or phone as contact information is mandatory',
+      });
+    }
+  });
+
+export const createMonographPublicationRequestV2Schema = z
+  .object({
+    version: z.literal(2), // This schema must explicitly define use of v2
+    request: monographPublicationRequestSchema,
+    expressions: z.array(createMonographPublicationExpressionSchema).min(1).max(5),
+  })
+  .strict()
+  .superRefine((data, ctx) => {
+    // Locality is also mandatory for dissertations
+    const isDissertation = data.expressions.some((e) => e.expression_type === MONOGRAPH_EXPRESSION_TYPES.DISSERTATION);
+    if (isDissertation && !data.request.locality) {
+      ctx.addIssue({
+        path: ['locality'],
+        code: 'custom',
+        message: 'Locality is mandatory for dissertations',
+      });
+    }
+
+    // Locality should also be defined only for dissertations
+    if (!isDissertation && !!data.request.locality) {
+      ctx.addIssue({
+        path: ['locality'],
+        code: 'custom',
+        message: 'Locality cannot be defined if expressions consider dissertation',
+      });
+    }
+  });
+
 export const searchMonographPublicationRequestSchema = z
   .object({
     search_text: z.string().max(100).optional(),
@@ -170,5 +243,13 @@ export const searchMonographPublicationRequestSchema = z
   })
   .strict();
 
+// Use discriminated union on "version" attribute to validate request against the desired version
+export const createMonographPublicationRequestSchema = z.discriminatedUnion('version', [
+  createMonographPublicationRequestV1Schema,
+  createMonographPublicationRequestV2Schema,
+]);
+
 export type CreateMonographPublicationRequestV1Http = z.infer<typeof createMonographPublicationRequestV1Schema>;
+export type CreateMonographPublicationRequestV2Http = z.infer<typeof createMonographPublicationRequestV2Schema>;
+
 export type SearchMonographPublicationRequestHttp = z.infer<typeof searchMonographPublicationRequestSchema>;

@@ -5,7 +5,7 @@ import { validateRequestBody, validateRequestParams } from '../../middlewares/va
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
-  createMonographPublicationRequestV1Schema,
+  createMonographPublicationRequestSchema,
   searchMonographPublicationRequestSchema,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 
@@ -13,7 +13,8 @@ const monographPublicationRouter = Router();
 
 monographPublicationRouter.post(
   '/',
-  validateRequestBody(createMonographPublicationRequestV1Schema),
+  // TODO: middleware for turnstile
+  validateRequestBody(createMonographPublicationRequestSchema),
   monographPublicationRequestController.createMonographPublicationRequest,
 );
 

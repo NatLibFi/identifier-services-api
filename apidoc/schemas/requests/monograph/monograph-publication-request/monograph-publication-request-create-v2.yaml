@@ -1,0 +1,78 @@
+type: object
+required:
+  - version
+  - request
+  - expressions
+properties:
+  version:
+    type: number
+    minimum: 2
+    maximum: 2
+  request:
+    type: object
+    required:
+      - official_name
+      - contact_person
+      - lang_code
+    properties:
+      official_name:
+        type: string
+        maximum: 100
+      publisher_identifier_str:
+        type: string
+        maximum: 20
+      locality:
+        type:
+          - string
+          - 'null'
+        enum:
+          - Helsinki
+      address:
+        type:
+          - string
+          - 'null'
+        maximum: 50
+      zip:
+        type:
+          - string
+          - 'null'
+        maximum: 10
+      city:
+        type:
+          - string
+          - 'null'
+        maximum: 50
+      contact_person:
+        type: string
+        maximum: 100
+      phone:
+        type:
+          - string
+          - 'null'
+        maximum: 30
+      email:
+        type:
+          - string
+          - 'null'
+        maximum: 100
+      lang_code:
+        $ref: '../../../enums/lang-code.yaml'
+      published_before:
+        type: boolean
+      publications_public:
+        type: boolean
+        enum:
+          - true
+      publishing_activity:
+        $ref: '../../../enums/monograph/publishing-activity.yaml'
+      publishing_activity_amount:
+        type: string
+      comments:
+        maximum: 2000
+        type:
+          - string
+          - 'null'
+  expressions:
+    type: array
+    items:
+      $ref: '../monograph-publication-expression/monograph-publication-expression-create-base.yaml'

@@ -1,0 +1,87 @@
+type: object
+required:
+  - manifestation_type
+  - authors
+  - publication_year
+  - publication_month
+properties:
+  manifestation_type:
+    $ref: '../../../enums/monograph/manifestation-type.yaml'
+  manifestation_type_other:
+    type:
+      - string
+      - 'null'
+  manifestation_edition:
+    maximum: 2
+    type:
+      - string
+      - 'null'
+  map_scale:
+    maximum: 50
+    type:
+      - string
+      - 'null'
+  authors:
+    type: array
+    items:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maximum: 50
+        last_name:
+          type: string
+          maximum: 50
+        isni:
+          type:
+            - string
+            - 'null'
+          minimum: 16
+          maximum: 16
+        roles:
+          type: array
+          items:
+            $ref: '../../../enums/monograph/manifestation-author-roles.yaml'
+  publication_year:
+    $ref: '../../../patterns/year-string.yaml'
+  publication_month:
+    $ref: '../../../patterns/year-string.yaml'
+  series:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          maximum: 200
+        issn:
+          oneOf:
+            - $ref: '../../../patterns/issn-identifier.yaml'
+            - type: 'null'
+        volume:
+          maximum: 20
+          type:
+            - string
+            - 'null'
+  printing_information:
+    type: array
+    items:
+      type: object
+      properties:
+        printing_number:
+          type: number
+        printing_house:
+          maximum: 100
+          type:
+            - string
+            - 'null'
+        printing_house_city:
+          maximum: 50
+          type:
+            - string
+            - 'null'
+        copies:
+          maximum: 10
+          type:
+            - string
+            - 'null'

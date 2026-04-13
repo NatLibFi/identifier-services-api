@@ -1,6 +1,10 @@
 # Support v1 schema until ui-public form is updated
 type: object
 properties:
+  version:
+    type: number
+    minimum: 1
+    maximum: 1
   officialName:
     type: string
     maximum: 100
@@ -156,6 +160,7 @@ properties:
     type: string
     maximum: 2000
 required:
+  - version
   - officialName
   - address
   - zip

@@ -636,6 +636,9 @@
                 "oneOf": [
                   {
                     "$ref": "#/components/schemas/monograph-publication-request-create-v1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/monograph-publication-request-create-v2"
                   }
                 ]
               }
@@ -1739,6 +1742,11 @@
       "monograph-publication-request-create-v1": {
         "type": "object",
         "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 1
+          },
           "officialName": {
             "type": "string",
             "maximum": 100
@@ -1971,6 +1979,7 @@
           }
         },
         "required": [
+          "version",
           "officialName",
           "address",
           "zip",
@@ -1990,6 +1999,303 @@
           "role1",
           "title"
         ]
+      },
+      "monograph-publication-manifestation-create-base": {
+        "type": "object",
+        "required": [
+          "manifestation_type",
+          "authors",
+          "publication_year",
+          "publication_month"
+        ],
+        "properties": {
+          "manifestation_type": {
+            "$ref": "#/components/schemas/manifestation-type"
+          },
+          "manifestation_type_other": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manifestation_edition": {
+            "maximum": 2,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "map_scale": {
+            "maximum": 50,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "maximum": 50
+                },
+                "last_name": {
+                  "type": "string",
+                  "maximum": 50
+                },
+                "isni": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minimum": 16,
+                  "maximum": 16
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/manifestation-author-roles"
+                  }
+                }
+              }
+            }
+          },
+          "publication_year": {
+            "$ref": "#/components/schemas/year-string"
+          },
+          "publication_month": {
+            "$ref": "#/components/schemas/year-string"
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maximum": 200
+                },
+                "issn": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/issn-identifier"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "volume": {
+                  "maximum": 20,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "printing_information": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "printing_number": {
+                  "type": "number"
+                },
+                "printing_house": {
+                  "maximum": 100,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "printing_house_city": {
+                  "maximum": 50,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "copies": {
+                  "maximum": 10,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "monograph-publication-expression-create-base": {
+        "type": "object",
+        "required": [
+          "expression_type",
+          "expression_language",
+          "authors",
+          "title",
+          "manifestations"
+        ],
+        "properties": {
+          "expression_type": {
+            "$ref": "#/components/schemas/expression-type"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "maximum": 50
+                },
+                "last_name": {
+                  "type": "string",
+                  "maximum": 50
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/expression-author-roles"
+                  }
+                }
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "maximum": 200
+          },
+          "subtitle": {
+            "type": "string",
+            "maximum": 200
+          },
+          "expression_language": {
+            "$ref": "#/components/schemas/item-language"
+          },
+          "manifestations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/monograph-publication-manifestation-create-base"
+            }
+          }
+        }
+      },
+      "monograph-publication-request-create-v2": {
+        "type": "object",
+        "required": [
+          "version",
+          "request",
+          "expressions"
+        ],
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 2
+          },
+          "request": {
+            "type": "object",
+            "required": [
+              "official_name",
+              "contact_person",
+              "lang_code"
+            ],
+            "properties": {
+              "official_name": {
+                "type": "string",
+                "maximum": 100
+              },
+              "publisher_identifier_str": {
+                "type": "string",
+                "maximum": 20
+              },
+              "locality": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "Helsinki"
+                ]
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 10
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "contact_person": {
+                "type": "string",
+                "maximum": 100
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 30
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 100
+              },
+              "lang_code": {
+                "$ref": "#/components/schemas/lang-code"
+              },
+              "published_before": {
+                "type": "boolean"
+              },
+              "publications_public": {
+                "type": "boolean",
+                "enum": [
+                  true
+                ]
+              },
+              "publishing_activity": {
+                "$ref": "#/components/schemas/publishing-activity"
+              },
+              "publishing_activity_amount": {
+                "type": "string"
+              },
+              "comments": {
+                "maximum": 2000,
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "expressions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/monograph-publication-expression-create-base"
+            }
+          }
+        }
       },
       "request-state": {
         "type": "string",

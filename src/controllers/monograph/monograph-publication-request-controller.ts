@@ -8,7 +8,6 @@ export async function createMonographPublicationRequest(req: Request, res: Respo
     const result = await monographPublicationRequestInterface.createMonographPublicationRequest(req.body, req.user);
     return res.status(HttpStatus.CREATED).json(result);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 }

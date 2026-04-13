@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create entry using v2 form schema",
+  "url": "/v2/monograph/publication-requests",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

@@ -1,0 +1,37 @@
+type: object
+required:
+  - expression_type
+  - expression_language
+  - authors
+  - title
+  - manifestations
+properties:
+  expression_type:
+    $ref: '../../../enums/monograph/expression-type.yaml'
+  authors:
+    type: array
+    items:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maximum: 50
+        last_name:
+          type: string
+          maximum: 50
+        roles:
+          type: array
+          items:
+            $ref: '../../../enums/monograph/expression-author-roles.yaml'
+  title:
+    type: string
+    maximum: 200
+  subtitle:
+    type: string
+    maximum: 200
+  expression_language:
+    $ref: '../../../enums/item-language.yaml'
+  manifestations:
+    type: array
+    items:
+      $ref: '../monograph-publication-manifestation/monograph-publication-manifestation-create-base.yaml'

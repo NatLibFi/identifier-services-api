@@ -12,6 +12,7 @@ post:
         schema:
           oneOf:
             - $ref: '../../../schemas/requests/monograph/monograph-publication-request/monograph-publication-request-create-v1.yaml'
+            - $ref: '../../../schemas/requests/monograph/monograph-publication-request/monograph-publication-request-create-v2.yaml'
   responses:
     '201':
       description: Resource was created
