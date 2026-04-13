@@ -1,0 +1,178 @@
+{
+  "monograph_publication_request": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "monograph_publication_id": 1,
+      "official_name": "FooBar Publisher",
+      "publisher_identifier_str": "978-951-550",
+      "address": "Foo Street",
+      "zip": "00000",
+      "city": "Foo City",
+      "phone": "123456789",
+      "email": "example@example.localhost",
+      "lang_code": "fi-FI",
+      "contact_person": "Foo Person",
+      "published_before": true,
+      "publishing_activity": "OCCASIONAL",
+      "publishing_activity_amount": "1",
+      "publications_intra": false,
+      "publications_public": true,
+      "comments": "This payload is from original v1 tests",
+      "request_state": "NEW",
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    }
+  ],
+  "monograph_publication": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "primary_title": "Foo Book 2",
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    }
+  ],
+  "monograph_publication_expression": [
+    {
+      "id": 1,
+      "monograph_publication_id": 1,
+      "expression_type": "BOOK",
+      "expression_language": "FIN",
+      "authors": [
+        { "first_name": "Foobar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Barfoo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Foo-Foo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] }
+      ],
+      "title": "Foo Book 2",
+      "subtitle": "Subtitle",
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    }
+  ],
+  "monograph_publication_manifestation": [
+    {
+      "id": 1,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "HARDBACK",
+      "manifestation_type_other": null,
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
+      "printing_information": [
+        {
+          "printing_number": 1,
+          "printing_house": "Foo Kirjapaino",
+          "printing_house_city": "Foobarila",
+          "copies": "800"
+        }
+      ],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    },
+    {
+      "id": 2,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "PAPERBACK",
+      "manifestation_type_other": null,
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
+      "printing_information": [
+        {
+          "printing_number": 1,
+          "printing_house": "Foo Kirjapaino",
+          "printing_house_city": "Foobarila",
+          "copies": "800"
+        }
+      ],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    },
+    {
+      "id": 3,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "OTHER_PRINT",
+      "manifestation_type_other": "Korttipakka",
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
+      "printing_information": [
+        {
+          "printing_number": 1,
+          "printing_house": "Foo Kirjapaino",
+          "printing_house_city": "Foobarila",
+          "copies": "800"
+        }
+      ],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    },
+    {
+      "id": 4,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "PDF",
+      "manifestation_type_other": null,
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
+      "printing_information": [],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    },
+    {
+      "id": 5,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "OTHER",
+      "manifestation_type_other": "Ohjelmistobinääri, joka tulostaa teoksen näytölle",
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
+      "printing_information": [],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "publisher",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "publisher"
+    }
+  ]
+}

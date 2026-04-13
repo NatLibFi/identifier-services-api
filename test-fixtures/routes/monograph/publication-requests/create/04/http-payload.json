@@ -1,0 +1,19 @@
+{
+  "officialName": "FooBar Publisher",
+  "contactPerson": "Foo Person",
+  "email": "example@example.localhost",
+  "langCode": "fi-FI",
+  "publishedBefore": true,
+  "publicationsPublic": true,
+  "publishingActivity": "OCCASIONAL",
+  "publishingActivityAmount": "1",
+  "publicationType": "BOOK",
+  "firstName1": "Foobar",
+  "lastName1": "Baz",
+  "role1": ["AUTHOR"],
+  "title": "Foo Book 2",
+  "language": "FIN",
+  "year": "2049",
+  "month": "12",
+  "type": ["PAPERBACK"]
+}

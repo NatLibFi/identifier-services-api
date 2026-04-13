@@ -1,0 +1,31 @@
+post:
+  operationId: createMonographPublicationRequest
+  summary: Create a new monograph publication request
+  security: []
+  tags:
+    - monograph
+    - monograph-publication-request
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: '../../../schemas/requests/monograph/monograph-publication-request/monograph-publication-request-create-v1.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

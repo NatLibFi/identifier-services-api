@@ -10,8 +10,8 @@ export interface MonographSeriesInformation {
 
 export interface MonographPrintingInformation {
   printing_number: number;
-  printing_house: string;
-  city: string | null;
+  printing_house: string | null;
+  printing_house_city: string | null;
   copies: string | null;
 }
 

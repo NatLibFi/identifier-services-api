@@ -4,9 +4,18 @@ import * as monographPublicationRequestController from '../../controllers/monogr
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
-import { searchMonographPublicationRequestSchema } from '../../validations/monograph/monograph-publication-request-validation.ts';
+import {
+  createMonographPublicationRequestV1Schema,
+  searchMonographPublicationRequestSchema,
+} from '../../validations/monograph/monograph-publication-request-validation.ts';
 
 const monographPublicationRouter = Router();
+
+monographPublicationRouter.post(
+  '/',
+  validateRequestBody(createMonographPublicationRequestV1Schema),
+  monographPublicationRequestController.createMonographPublicationRequest,
+);
 
 monographPublicationRouter.post(
   '/search',

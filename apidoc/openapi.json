@@ -619,6 +619,58 @@
         }
       }
     },
+    "/v2/monograph/publication-requests": {
+      "post": {
+        "operationId": "createMonographPublicationRequest",
+        "summary": "Create a new monograph publication request",
+        "security": [],
+        "tags": [
+          "monograph",
+          "monograph-publication-request"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/monograph-publication-request-create-v1"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/publication-requests/{id}": {
       "get": {
         "operationId": "readMonographPublicationRequest",
@@ -1663,6 +1715,280 @@
           {
             "$ref": "#/components/schemas/modified-metadata"
           }
+        ]
+      },
+      "publishing-activity": {
+        "type": "string",
+        "enum": [
+          "CONTINUOUS",
+          "OCCASIONAL"
+        ]
+      },
+      "year-string": {
+        "type": "string",
+        "pattern": "^[1-2][0-9]{3}$"
+      },
+      "month-string": {
+        "type": "string",
+        "pattern": "^[0-1][0-9]$"
+      },
+      "issn-identifier": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{3}[0-9X]{1}$"
+      },
+      "monograph-publication-request-create-v1": {
+        "type": "object",
+        "properties": {
+          "officialName": {
+            "type": "string",
+            "maximum": 100
+          },
+          "publisherIdentifierStr": {
+            "type": "string",
+            "maximum": 20
+          },
+          "locality": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "Helsinki"
+            ]
+          },
+          "address": {
+            "type": "string",
+            "maximum": 50
+          },
+          "zip": {
+            "type": "string",
+            "maximum": 10
+          },
+          "city": {
+            "type": "string",
+            "maximum": 50
+          },
+          "contactPerson": {
+            "type": "string",
+            "maximum": 100
+          },
+          "phone": {
+            "type": "string",
+            "maximum": 30
+          },
+          "email": {
+            "type": "string",
+            "maximum": 100
+          },
+          "langCode": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "publishedBefore": {
+            "type": "boolean"
+          },
+          "publicationsPublic": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "publishingActivity": {
+            "$ref": "#/components/schemas/publishing-activity"
+          },
+          "publishingActivityAmount": {
+            "type": "string"
+          },
+          "publicationType": {
+            "$ref": "#/components/schemas/expression-type"
+          },
+          "publicationFormat": {
+            "type": "string",
+            "enum": [
+              "PRINT",
+              "ELECTRONICAL",
+              "PRINT_ELECTRONICAL"
+            ]
+          },
+          "firstName1": {
+            "type": "string",
+            "maximum": 50
+          },
+          "lastName1": {
+            "type": "string",
+            "maximum": 50
+          },
+          "role1": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/expression-author-roles"
+                },
+                {
+                  "$ref": "#/components/schemas/manifestation-author-roles"
+                }
+              ]
+            }
+          },
+          "firstName2": {
+            "type": "string",
+            "maximum": 50
+          },
+          "lastName2": {
+            "type": "string",
+            "maximum": 50
+          },
+          "role2": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/expression-author-roles"
+                },
+                {
+                  "$ref": "#/components/schemas/manifestation-author-roles"
+                }
+              ]
+            }
+          },
+          "firstName3": {
+            "type": "string",
+            "maximum": 50
+          },
+          "lastName3": {
+            "type": "string",
+            "maximum": 50
+          },
+          "role3": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/expression-author-roles"
+                },
+                {
+                  "$ref": "#/components/schemas/manifestation-author-roles"
+                }
+              ]
+            }
+          },
+          "firstName4": {
+            "type": "string",
+            "maximum": 50
+          },
+          "lastName4": {
+            "type": "string",
+            "maximum": 50
+          },
+          "role4": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/expression-author-roles"
+                },
+                {
+                  "$ref": "#/components/schemas/manifestation-author-roles"
+                }
+              ]
+            }
+          },
+          "title": {
+            "type": "string",
+            "maximum": 200
+          },
+          "subtitle": {
+            "type": "string",
+            "maximum": 200
+          },
+          "mapScale": {
+            "type": "string",
+            "maximum": 50
+          },
+          "language": {
+            "$ref": "#/components/schemas/item-language"
+          },
+          "year": {
+            "$ref": "#/components/schemas/year-string"
+          },
+          "month": {
+            "$ref": "#/components/schemas/month-string"
+          },
+          "series": {
+            "type": "string",
+            "maximum": 200
+          },
+          "issn": {
+            "$ref": "#/components/schemas/issn-identifier"
+          },
+          "volume": {
+            "type": "string",
+            "maximum": 20
+          },
+          "printingHouse": {
+            "type": "string",
+            "maximum": 100
+          },
+          "printingHouseCity": {
+            "type": "string",
+            "maximum": 50
+          },
+          "copies": {
+            "type": "string",
+            "maximum": 10
+          },
+          "edition": {
+            "type": "string",
+            "maximum": 2
+          },
+          "type": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/manifestation-type"
+            }
+          },
+          "typeOther": {
+            "type": "string",
+            "maximum": 100
+          },
+          "fileformat": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/manifestation-type"
+            }
+          },
+          "fileformatOther": {
+            "type": "string",
+            "maximum": 100
+          },
+          "comments": {
+            "type": "string",
+            "maximum": 2000
+          }
+        },
+        "required": [
+          "officialName",
+          "address",
+          "zip",
+          "city",
+          "contactPerson",
+          "phone",
+          "email",
+          "langCode",
+          "publicationsPublic",
+          "publicationType",
+          "publicationFormat",
+          "language",
+          "year",
+          "month",
+          "firstName1",
+          "lastName1",
+          "role1",
+          "title"
         ]
       },
       "request-state": {
