@@ -122,7 +122,7 @@ export async function searchMonographPublicationRequest(searchParameters: Search
   }
 
   if (request_state) {
-    query.where('request_state', '=', request_state);
+    query = query.where('request_state', '=', request_state);
   }
 
   const countQuery = query.clearSelect().select((eb) => eb.fn.countAll<number>().as('totalDoc'));
