@@ -165,7 +165,7 @@ export const createMonographPublicationRequestV1Schema = z
     }
   });
 
-const monographPublicationRequestSchema = z
+const monographPublicationRequestBaseSchema = z
   .object({
     official_name: z.string().min(1).max(100),
     publisher_identifier_str: z.string().max(20).optional().nullable(),
@@ -206,10 +206,44 @@ const monographPublicationRequestSchema = z
     }
   });
 
+export const updateMonographPublicationRequestSchema = z
+  .object({
+    official_name: z.string().min(1).max(100).optional(),
+    publisher_identifier_str: z.string().max(20).optional().nullable(),
+    locality: z.string().optional().nullable(),
+    contact_person: z.string().max(100).optional(),
+    address: z.string().max(50).optional().nullable(), // Contact information is optional for Admin UI purposes
+    zip: z
+      .string()
+      .regex(/^[0-9]{5}$/, 'forms.errors.common.zip-format')
+      .optional()
+      .nullable(),
+    city: z.string().max(50).optional().nullable(),
+    phone: z
+      .string()
+      .regex(/^[0-9+-\s]{4,30}$/, 'forms.errors.common.phone-format')
+      .optional()
+      .nullable(),
+    email: z.email().optional().nullable(),
+    lang_code: z.enum(langCodeEnum).optional(),
+    published_before: z.boolean().optional(),
+    publications_public: z.boolean().optional(),
+    publications_intra: z.boolean().optional(),
+    publishing_activity: z.enum(monographPublishingActivityEnum).optional(),
+    publishing_activity_amount: z
+      .string()
+      .max(5)
+      .regex(/^([0-9-]+)?$/)
+      .optional()
+      .nullable(),
+    comments: z.string().max(2000).optional().nullable(),
+  })
+  .strict();
+
 export const createMonographPublicationRequestV2Schema = z
   .object({
     version: z.literal(2), // This schema must explicitly define use of v2
-    request: monographPublicationRequestSchema,
+    request: monographPublicationRequestBaseSchema,
     expressions: z.array(createMonographPublicationExpressionSchema).min(1).max(5),
   })
   .strict()
@@ -251,5 +285,7 @@ export const createMonographPublicationRequestSchema = z.discriminatedUnion('ver
 
 export type CreateMonographPublicationRequestV1Http = z.infer<typeof createMonographPublicationRequestV1Schema>;
 export type CreateMonographPublicationRequestV2Http = z.infer<typeof createMonographPublicationRequestV2Schema>;
+
+export type UpdateMonographPublicationRequestHttp = z.infer<typeof updateMonographPublicationRequestSchema>;
 
 export type SearchMonographPublicationRequestHttp = z.infer<typeof searchMonographPublicationRequestSchema>;

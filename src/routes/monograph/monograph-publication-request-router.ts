@@ -7,6 +7,7 @@ import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
   createMonographPublicationRequestSchema,
   searchMonographPublicationRequestSchema,
+  updateMonographPublicationRequestSchema,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 
 const monographPublicationRouter = Router();
@@ -30,6 +31,14 @@ monographPublicationRouter.get(
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublicationRequestController.readMonographPublicationRequest,
+);
+
+monographPublicationRouter.patch(
+  '/:id',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  validateRequestBody(updateMonographPublicationRequestSchema),
+  monographPublicationRequestController.updateMonographPublicationRequest,
 );
 
 export default monographPublicationRouter;

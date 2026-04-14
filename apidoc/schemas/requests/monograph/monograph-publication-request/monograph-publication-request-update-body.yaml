@@ -1,0 +1,58 @@
+type: object
+properties:
+  official_name:
+    type: string
+    maximum: 100
+  publisher_identifier_str:
+    type:
+      - string
+      - 'null'
+    maximum: 20
+  locality:
+    type:
+      - string
+      - 'null'
+  address:
+    type:
+      - string
+      - 'null'
+  zip:
+    type:
+      - string
+      - 'null'
+  city:
+    type:
+      - string
+      - 'null'
+  contact_person:
+    type: string
+    maximum: 100
+  phone:
+    type:
+      - string
+      - 'null'
+    maximum: 30
+  email:
+    type:
+      - string
+      - 'null'
+    maximum: 100
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  published_before:
+    type: boolean
+  publications_public:
+    type: boolean
+  publications_intra:
+    type: boolean
+  publishing_activity:
+    $ref: '../../../enums/monograph/publishing-activity.yaml'
+  publishing_activity_amount:
+    type:
+      - string
+      - 'null'
+  comments:
+    maximum: 2000
+    type:
+      - string
+      - 'null'

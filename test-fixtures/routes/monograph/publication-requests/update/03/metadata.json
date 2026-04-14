@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not update monograph publication request information",
+  "url": "/v2/monograph/publication-requests/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

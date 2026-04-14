@@ -1,5 +1,9 @@
 import { getKysely } from '../../db/database.ts';
-import { validateGetById } from '../interface-utils/common-interface-utils.ts';
+import {
+  getCurrentTime,
+  removeUndefinedProperties,
+  validateGetById,
+} from '../interface-utils/common-interface-utils.ts';
 
 import {
   asMonographPublicationRequestAdminRead,
@@ -17,6 +21,7 @@ import type { MonographPublicationRequestSelect } from '../../db/types/monograph
 import type {
   CreateMonographPublicationRequestV1Http,
   SearchMonographPublicationRequestHttp,
+  UpdateMonographPublicationRequestHttp,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
@@ -31,6 +36,36 @@ export async function readMonographPublicationRequest(id: number) {
   const result = asMonographPublicationRequestAdminRead(monographPublicationRequest, publication);
 
   return result;
+}
+
+export async function updateMonographPublicationRequest(
+  id: number,
+  updateDoc: UpdateMonographPublicationRequestHttp,
+  user: RequestUser,
+) {
+  const db = getKysely();
+
+  const dbResult = await db.selectFrom('monograph_publication_request').selectAll().where('id', '=', id).execute();
+  validateGetById<MonographPublicationRequestSelect>(dbResult);
+
+  const definedUpdateDoc = removeUndefinedProperties(updateDoc);
+  await db.transaction().execute(async (trx) => {
+    const updateResult = await trx
+      .updateTable('monograph_publication_request')
+      .set({
+        ...definedUpdateDoc,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      })
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+
+    if (Number(updateResult.numUpdatedRows) !== 1) {
+      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+    }
+  });
+
+  return;
 }
 
 export async function createMonographPublicationRequest(

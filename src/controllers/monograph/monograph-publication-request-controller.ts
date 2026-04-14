@@ -21,6 +21,19 @@ export async function readMonographPublicationRequest(req: Request, res: Respons
   }
 }
 
+export async function updateMonographPublicationRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationRequestInterface.updateMonographPublicationRequest(
+      Number(req.params['id']),
+      req.body,
+      req.user,
+    );
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function searchMonographPublicationRequest(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await monographPublicationRequestInterface.searchMonographPublicationRequest(req.body);
