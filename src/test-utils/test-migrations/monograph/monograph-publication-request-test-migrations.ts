@@ -9,6 +9,7 @@ export async function createMonographPublicationRequestTable(db: Kysely<Database
     .addColumn('monograph_publication_id', 'integer')
     .addColumn('official_name', 'varchar(100)', (col) => col.notNull())
     .addColumn('publisher_identifier_str', 'varchar(20)')
+    .addColumn('locality', 'varchar(50)')
     .addColumn('address', 'varchar(100)')
     .addColumn('zip', 'varchar(10)')
     .addColumn('city', 'varchar(50)')

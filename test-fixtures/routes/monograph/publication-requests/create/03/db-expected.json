@@ -6,6 +6,7 @@
       "monograph_publication_id": 1,
       "official_name": "FooBar Publisher",
       "publisher_identifier_str": "978-951-550",
+      "locality": null,
       "address": "Foo Street",
       "zip": "00000",
       "city": "Foo City",

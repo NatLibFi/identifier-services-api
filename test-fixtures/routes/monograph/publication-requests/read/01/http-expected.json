@@ -4,6 +4,7 @@
   "monograph_publication_id": 1,
   "official_name": "Foo Publisher",
   "publisher_identifier_str": null,
+  "locality": null,
   "address": "Foo street",
   "zip": "00000",
   "city": "Foo city",

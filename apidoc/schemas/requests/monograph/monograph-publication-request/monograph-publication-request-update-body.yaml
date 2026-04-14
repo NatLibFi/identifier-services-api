@@ -12,18 +12,22 @@ properties:
     type:
       - string
       - 'null'
+    maximum: 50
   address:
     type:
       - string
       - 'null'
+    maximum: 100
   zip:
     type:
       - string
       - 'null'
+    maximum: 10
   city:
     type:
       - string
       - 'null'
+    maximum: 50
   contact_person:
     type: string
     maximum: 100
@@ -51,6 +55,7 @@ properties:
     type:
       - string
       - 'null'
+    maximum: 5
   comments:
     maximum: 2000
     type:

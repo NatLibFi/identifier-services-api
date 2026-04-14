@@ -210,18 +210,18 @@ export const updateMonographPublicationRequestSchema = z
   .object({
     official_name: z.string().min(1).max(100).optional(),
     publisher_identifier_str: z.string().max(20).optional().nullable(),
-    locality: z.string().optional().nullable(),
+    locality: z.string().max(50).optional().nullable(), // Should always be Helsinki but this gives final control to superusers
     contact_person: z.string().max(100).optional(),
     address: z.string().max(50).optional().nullable(), // Contact information is optional for Admin UI purposes
     zip: z
       .string()
-      .regex(/^[0-9]{5}$/, 'forms.errors.common.zip-format')
+      .regex(/^[0-9]{5}$/)
       .optional()
       .nullable(),
     city: z.string().max(50).optional().nullable(),
     phone: z
       .string()
-      .regex(/^[0-9+-\s]{4,30}$/, 'forms.errors.common.phone-format')
+      .regex(/^[0-9+-\s]{4,30}$/)
       .optional()
       .nullable(),
     email: z.email().optional().nullable(),

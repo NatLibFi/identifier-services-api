@@ -6,6 +6,7 @@ export interface MonographPublicationRequest {
   monograph_publication_id: number;
   official_name: string;
   publisher_identifier_str: string | null;
+  locality: string | null;
   address: string | null;
   zip: string | null;
   city: string | null;

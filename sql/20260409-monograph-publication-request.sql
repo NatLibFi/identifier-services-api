@@ -1,10 +1,11 @@
--- Monograph publication request v2.0.0-alpha.2
+-- Monograph publication request v2.0.0-alpha.3
 CREATE TABLE monograph_publication_request (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publisher_id INT UNSIGNED,
   monograph_publication_id INT UNSIGNED NOT NULL,
   official_name VARCHAR(100) NOT NULL,
   publisher_identifier_str VARCHAR(20),
+  locality VARCHAR(50),
   `address` VARCHAR(100),
   zip VARCHAR(10),
   city VARCHAR(50),

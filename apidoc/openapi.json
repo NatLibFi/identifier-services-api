@@ -2386,6 +2386,12 @@
                   "null"
                 ]
               },
+              "locality": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
               "address": {
                 "type": [
                   "string",
@@ -2429,10 +2435,7 @@
                 "type": "boolean"
               },
               "publishing_activity": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": "string"
               },
               "publishing_activity_amount": {
                 "type": [
@@ -2452,7 +2455,7 @@
                   "null"
                 ]
               },
-              "state": {
+              "request_state": {
                 "$ref": "#/components/schemas/request-state"
               },
               "publication": {
@@ -2483,25 +2486,29 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "maximum": 50
           },
           "address": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "maximum": 100
           },
           "zip": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "maximum": 10
           },
           "city": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "maximum": 50
           },
           "contact_person": {
             "type": "string",
@@ -2540,7 +2547,8 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "maximum": 5
           },
           "comments": {
             "maximum": 2000,

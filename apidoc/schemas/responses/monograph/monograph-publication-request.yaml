@@ -16,6 +16,10 @@ allOf:
         type:
           - string
           - 'null'
+      locality:
+        type:
+          - string
+          - 'null'
       address:
         type:
           - string
@@ -45,9 +49,7 @@ allOf:
       published_before:
         type: boolean
       publishing_activity:
-        type:
-          - string
-          - 'null'
+        type: string
       publishing_activity_amount:
         type:
           - string
@@ -60,7 +62,7 @@ allOf:
         type:
           - string
           - 'null'
-      state:
+      request_state:
         $ref: '../../enums/monograph/request-state.yaml'
       publication:
         $ref: './monograph-publication.yaml'
