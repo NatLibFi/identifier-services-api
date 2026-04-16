@@ -11,3 +11,12 @@ export async function readMonographPublication(req: Request, res: Response, next
     return next(error);
   }
 }
+
+export async function updateMonographPublication(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationInterface.updateMonographPublication(Number(req.params['id']), req.body, req.user);
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

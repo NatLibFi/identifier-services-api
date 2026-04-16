@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not update monograph publication information if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publications/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

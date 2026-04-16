@@ -1,0 +1,8 @@
+type: object
+required:
+  - primary_title
+properties:
+  primary_title:
+    type: string
+    minimum: 1
+    maximum: 200

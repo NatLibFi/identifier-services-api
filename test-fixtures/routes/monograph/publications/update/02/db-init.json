@@ -1,0 +1,13 @@
+{
+  "monograph_publication": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "primary_title": "Example title",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ]
+}
