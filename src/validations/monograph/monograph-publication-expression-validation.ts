@@ -29,4 +29,15 @@ export const createMonographPublicationExpressionSchema = z
   })
   .strict();
 
-export type CreateMonographPublicationExpression = z.infer<typeof createMonographPublicationManifestationSchema>;
+export const updateMonographPublicationExpressionSchema = z
+  .object({
+    expression_type: z.enum(monographExpressionTypeEnum).optional(),
+    expression_language: z.enum(publicationLanguageEnum).optional(),
+    authors: z.array(monographPublicationExpressionAuthorSchema).min(1).max(8).optional(),
+    title: z.string().min(1).max(200).optional(),
+    subtitle: z.string().max(200).optional().nullable(),
+  })
+  .strict();
+
+export type CreateMonographPublicationExpression = z.infer<typeof createMonographPublicationExpressionSchema>;
+export type UpdateMonographPublicationExpression = z.infer<typeof updateMonographPublicationExpressionSchema>;

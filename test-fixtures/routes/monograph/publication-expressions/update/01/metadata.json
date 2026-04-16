@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may update monograph publication expression information",
+  "url": "/v2/monograph/publication-expressions/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}

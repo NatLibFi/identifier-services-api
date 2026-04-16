@@ -34,6 +34,9 @@ paths:
   /v2/monograph/publications/{id}:
     $ref: './resources/monograph/publications/id.yaml'
 
+  /v2/monograph/publication-expressions/{id}:
+    $ref: './resources/monograph/publication-expressions/id.yaml'
+
   /v2/monograph/publication-requests:
     $ref: './resources/monograph/publication-requests/root.yaml'
   /v2/monograph/publication-requests/{id}:

@@ -1,0 +1,28 @@
+type: object
+properties:
+  expression_type:
+    $ref: '../../../enums/monograph/expression-type.yaml'
+  authors:
+    type: array
+    items:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maximum: 50
+        last_name:
+          type: string
+          maximum: 50
+        roles:
+          type: array
+          items:
+            $ref: '../../../enums/monograph/expression-author-roles.yaml'
+  title:
+    type: string
+    minimum: 1
+    maximum: 200
+  subtitle:
+    type: string
+    maximum: 200
+  expression_language:
+    $ref: '../../../enums/item-language.yaml'
