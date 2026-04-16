@@ -32,7 +32,6 @@ const monographPublicationManifestationSeriesSchema = z
 
 const monographPublicationManifestationPrintingInformationSchema = z
   .object({
-    printing_number: z.number().max(100),
     printing_house: z.string().max(100),
     printing_house_city: z.string().max(50).nullable(),
     copies: z.string().max(10).nullable(),

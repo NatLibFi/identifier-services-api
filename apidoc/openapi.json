@@ -1653,9 +1653,6 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "printing_number": {
-                      "type": "number"
-                    },
                     "printing_house": {
                       "type": [
                         "string",
@@ -2155,9 +2152,6 @@
             "items": {
               "type": "object",
               "properties": {
-                "printing_number": {
-                  "type": "number"
-                },
                 "printing_house": {
                   "maximum": 100,
                   "type": [

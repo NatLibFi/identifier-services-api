@@ -327,7 +327,6 @@ export function getDbPublicationManifestationEntriesV1(
   const printingInformation = printingHouse // Generate printing_information entry only if printing_house information is available
     ? [
         {
-          printing_number: 1,
           printing_house: printingHouse ?? null,
           printing_house_city: printingHouseCity ?? null,
           copies: copies ?? null,

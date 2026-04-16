@@ -73,7 +73,6 @@
       "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
       "printing_information": [
         {
-          "printing_number": 1,
           "printing_house": "Foo Kirjapaino",
           "printing_house_city": "Foobarila",
           "copies": "800"
@@ -99,7 +98,6 @@
       "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
       "printing_information": [
         {
-          "printing_number": 1,
           "printing_house": "Foo Kirjapaino",
           "printing_house_city": "Foobarila",
           "copies": "800"
@@ -125,7 +123,6 @@
       "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
       "printing_information": [
         {
-          "printing_number": 1,
           "printing_house": "Foo Kirjapaino",
           "printing_house_city": "Foobarila",
           "copies": "800"

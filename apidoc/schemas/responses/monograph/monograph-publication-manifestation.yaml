@@ -57,8 +57,6 @@ allOf:
         items:
           type: object
           properties:
-            printing_number:
-              type: number
             printing_house:
               type:
                 - string

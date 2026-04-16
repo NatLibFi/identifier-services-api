@@ -54,7 +54,6 @@
             "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],
             "printing_information": [
               {
-                "printing_number": 1,
                 "printing_house": "Example Print Oy",
                 "printing_house_city": "Foobarila",
                 "copies": "800"
