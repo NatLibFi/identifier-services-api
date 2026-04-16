@@ -32,7 +32,7 @@ export async function readMonographPublicationRequest(id: number) {
   const dbResult = await db.selectFrom('monograph_publication_request').selectAll().where('id', '=', id).execute();
   const monographPublicationRequest = validateGetById<MonographPublicationRequestSelect>(dbResult);
 
-  const publication = await readMonographPublication(id);
+  const publication = await readMonographPublication(monographPublicationRequest.monograph_publication_id);
   const result = asMonographPublicationRequestAdminRead(monographPublicationRequest, publication);
 
   return result;
