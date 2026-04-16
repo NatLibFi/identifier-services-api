@@ -98,4 +98,43 @@ export const createMonographPublicationManifestationSchema = z
     }
   });
 
+export const updateMonographPublicationManifestationSchema = z
+  .object({
+    cancelled: z.boolean().optional(),
+    manifestation_type: z.enum(monographManifestationTypeEnum).optional(),
+    manifestation_type_other: z.string().max(100).optional().nullable(),
+    map_scale: z.string().max(50).optional().nullable(),
+    publication_year: z.string().min(4).max(4).regex(yearString).optional(),
+    publication_month: z.string().min(2).max(2).regex(monthString).optional(),
+    authors: z.array(monographPublicationManifestationAuthorSchema).min(0).max(8).optional(),
+    series: z.array(monographPublicationManifestationSeriesSchema).max(5).optional(),
+    printing_information: z.array(monographPublicationManifestationPrintingInformationSchema).max(10).optional(),
+    manifestation_edition: z
+      .string()
+      .max(2)
+      .regex(/^([0-9]{1}$|^[1-9]{1}[0-9]{1})?$/)
+      .optional(),
+  })
+  .strict()
+  .superRefine((data, ctx) => {
+    // Require type other definition if type is one of ambiguous types
+    if (data.manifestation_type) {
+      const needTypeOther = [
+        MONOGRAPH_MANIFESTATION_TYPES_PRINT.OTHER_PRINT,
+        MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL.OTHER,
+      ].includes(data.manifestation_type);
+
+      if (needTypeOther && !data.manifestation_type_other) {
+        ctx.addIssue({
+          path: ['manifestation_type_other'],
+          code: 'custom',
+          message: 'Additional type definition is required for manifestations having type of OTHER or OTHER_PRINT',
+        });
+      }
+    }
+
+    // Publishing date validation done within interface as only year or month may be updated
+  });
+
 export type CreateMonographPublicationManifestation = z.infer<typeof createMonographPublicationManifestationSchema>;
+export type UpdateMonographPublicationManifestation = z.infer<typeof updateMonographPublicationManifestationSchema>;

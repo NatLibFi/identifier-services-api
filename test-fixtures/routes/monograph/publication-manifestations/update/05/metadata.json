@@ -1,0 +1,8 @@
+{
+  "description": "TODO: [admin] may not update manifestation_type information when ISMN identifier has been assigned",
+  "url": "/v2/monograph/publication-manifestations/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409,
+  "skip": true
+}

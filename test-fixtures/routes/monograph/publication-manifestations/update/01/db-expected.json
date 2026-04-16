@@ -1,0 +1,24 @@
+{
+  "monograph_publication_manifestation": [
+    {
+      "id": 1,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "OTHER",
+      "manifestation_type_other": "ohjelmistobinääri",
+      "manifestation_edition": "1",
+      "map_scale": null,
+      "authors": [{ "first_name": "Eero", "last_name": "Esimerkki", "isni": null, "roles": ["ILLUSTRATOR"] }],
+      "publication_year": "2024",
+      "publication_month": "12",
+      "series": [],
+      "printing_information": [],
+      "cancelled": true,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "isbn_identifier": []
+}

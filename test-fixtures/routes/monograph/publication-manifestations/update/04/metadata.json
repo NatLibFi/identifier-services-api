@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not update manifestation_type information when ISBN identifier has been assigned",
+  "url": "/v2/monograph/publication-manifestations/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

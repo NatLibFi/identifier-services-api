@@ -36,4 +36,7 @@ export interface MonographPublicationManifestation {
 
 export type MonographPublicationManifestationInsert = Insertable<MonographPublicationManifestation>;
 export type MonographPublicationManifestationUpdate = Updateable<MonographPublicationManifestation>;
-export type MonographPublicationManifestationSelect = Selectable<MonographPublicationManifestation>;
+export interface MonographPublicationManifestationSelect extends Selectable<MonographPublicationManifestation> {
+  isbn_identifier: string | null;
+  // ismn_identifier: string | null;
+}

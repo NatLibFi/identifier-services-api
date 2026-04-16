@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Monograph publisher manifestation already has identifier assigned. Property manifestation_type cannot be changed after an identifier has been assigned.",
+  "instance": "/v2/monograph/publication-manifestations/1"
+}

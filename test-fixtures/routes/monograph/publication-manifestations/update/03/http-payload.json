@@ -1,0 +1,9 @@
+{
+  "manifestation_type": "OTHER",
+  "manifestation_type_other": "ohjelmistobinääri",
+  "manifestation_edition": "1",
+  "authors": [{ "first_name": "Eero", "last_name": "Esimerkki", "isni": null, "roles": ["ILLUSTRATOR"] }],
+  "series": [],
+  "printing_information": [],
+  "cancelled": true
+}

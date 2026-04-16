@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not update monograph publication manifestation information",
+  "url": "/v2/monograph/publication-manifestations/1",
+  "method": "PATCH",
+  "expectedStatus": 401
+}

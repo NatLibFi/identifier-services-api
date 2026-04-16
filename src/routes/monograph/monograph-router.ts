@@ -5,6 +5,7 @@ import isbnPublisherRangeRouter from './isbn-publisher-range-router.ts';
 import monographPublisherRouter from './monograph-publisher-router.ts';
 import monographPublicationRouter from './monograph-publication-router.ts';
 import monographPublicationExpressionRouter from './monograph-publication-expression-router.ts';
+import monographPublicationManifestationRouter from './monograph-publication-manifestation-router.ts';
 import monographPublicationRequestRouter from './monograph-publication-request-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
@@ -15,6 +16,7 @@ monographRouter.use('/isbn-publisher-ranges', allowAdminOnly, isbnPublisherRange
 monographRouter.use('/publishers', monographPublisherRouter);
 monographRouter.use('/publications', allowAdminOnly, monographPublicationRouter);
 monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
+monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);
 monographRouter.use('/publication-requests', monographPublicationRequestRouter);
 
 export default monographRouter;

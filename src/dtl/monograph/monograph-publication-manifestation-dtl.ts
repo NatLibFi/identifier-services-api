@@ -5,7 +5,10 @@ export interface MonographPublicationManifestationAdminRead extends MonographPub
   ismn_identifier?: string | null; // TODO: make not optional
 }
 
-export interface ValidatedMonographPublicationManifestationAdminRead extends MonographPublicationManifestationSelect {
+export interface ValidatedMonographPublicationManifestationAdminRead extends Omit<
+  MonographPublicationManifestationSelect,
+  'isbn_identifier'
+> {
   identifier: string | null;
 }
 

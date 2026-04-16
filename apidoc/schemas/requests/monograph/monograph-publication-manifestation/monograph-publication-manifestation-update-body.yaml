@@ -1,9 +1,4 @@
 type: object
-required:
-  - manifestation_type
-  - authors
-  - publication_year
-  - publication_month
 properties:
   manifestation_type:
     $ref: '../../../enums/monograph/manifestation-type.yaml'
