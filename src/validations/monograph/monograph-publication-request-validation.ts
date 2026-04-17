@@ -208,6 +208,9 @@ const monographPublicationRequestBaseSchema = z
 
 export const updateMonographPublicationRequestSchema = z
   .object({
+    // Note: even though defined to same schema, interface will allow updating this property only when no other properties are defined
+    // Purpose of being overly defensive about this update is because the linking will carry over to all subentities
+    monograph_publisher_id: z.number().min(1).nullable().optional(),
     official_name: z.string().min(1).max(100).optional(),
     publisher_identifier_str: z.string().max(20).optional().nullable(),
     locality: z.string().max(50).optional().nullable(), // Should always be Helsinki but this gives final control to superusers

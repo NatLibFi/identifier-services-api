@@ -1,0 +1,7 @@
+{
+  "description": "[admin] updating monograph publisher association does not succeed when publisher id cannot be found from publisher registry",
+  "url": "/v2/monograph/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 404
+}

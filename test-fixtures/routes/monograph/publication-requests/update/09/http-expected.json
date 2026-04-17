@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 404,
+  "title": "Not found",
+  "detail": "Could not find publisher id 2 from publisher registry",
+  "instance": "/v2/monograph/publication-requests/1"
+}

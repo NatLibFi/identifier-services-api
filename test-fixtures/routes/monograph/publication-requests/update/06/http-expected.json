@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot change publisher associated to request since the request has already been processed.",
+  "instance": "/v2/monograph/publication-requests/1"
+}

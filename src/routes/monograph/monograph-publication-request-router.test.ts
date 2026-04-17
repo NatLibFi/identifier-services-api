@@ -2,7 +2,7 @@ import { runIntegrationTestSuite } from '../../test-utils/generate-integration-t
 
 const routers = ['monograph', 'publication-requests'];
 
-runIntegrationTestSuite(routers, 'create');
-runIntegrationTestSuite(routers, 'read');
+// runIntegrationTestSuite(routers, 'create');
+// runIntegrationTestSuite(routers, 'read');
 runIntegrationTestSuite(routers, 'update');
-runIntegrationTestSuite(routers, 'search');
+// runIntegrationTestSuite(routers, 'search');

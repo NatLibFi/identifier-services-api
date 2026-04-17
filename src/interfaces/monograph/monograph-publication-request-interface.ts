@@ -1,3 +1,5 @@
+import HttpStatus from 'http-status';
+
 import { getKysely } from '../../db/database.ts';
 import {
   getCurrentTime,
@@ -12,10 +14,13 @@ import {
 import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import {
+  changePublicationRequestPublisher,
   getDbPublicationEntry,
   getDbPublicationExpressionEntry,
   getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
+
+import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
 import type {
@@ -25,7 +30,7 @@ import type {
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
-import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import { ApiError } from '../../utils/api-error.ts';
 
 export async function readMonographPublicationRequest(id: number) {
   const db = getKysely();
@@ -50,6 +55,27 @@ export async function updateMonographPublicationRequest(
   const validatedDbResult = validateGetById<MonographPublicationRequestSelect>(dbResult);
 
   const definedUpdateDoc = removeUndefinedProperties(updateDoc);
+
+  // Check first whether update considers monograph publisher association or other properties
+  // Deny updating these at same time
+  const updatesOtherThanPublisher =
+    Object.keys(definedUpdateDoc).filter((k) => k !== 'monograph_publisher_id').length > 0;
+
+  if (definedUpdateDoc.monograph_publisher_id !== undefined && updatesOtherThanPublisher) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Monograph publisher id cannot be updated simultaneously to updating other publication request properties.',
+    );
+  }
+
+  // Process update to monograph publisher association and return directly after the update
+  if (definedUpdateDoc.monograph_publisher_id !== undefined) {
+    await changePublicationRequestPublisher(validatedDbResult, definedUpdateDoc.monograph_publisher_id, user);
+    return;
+  }
+
+  // Process update to other attributes than monograph publisher association
 
   // If request has state of NEW, first update operation will automatically transfer state to IN_PROCESS
   if (validatedDbResult.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW) {

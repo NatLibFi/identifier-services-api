@@ -1,0 +1,7 @@
+{
+  "description": "[admin] deny attempt to update monograph publisher association when request has already been processed",
+  "url": "/v2/monograph/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

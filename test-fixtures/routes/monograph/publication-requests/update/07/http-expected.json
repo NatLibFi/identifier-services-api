@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Out of sync error between publication request and publication has resulted into discarding the update: publicatino request has publisher id of 1 and publication has publisher id of null",
+  "instance": "/v2/monograph/publication-requests/1"
+}

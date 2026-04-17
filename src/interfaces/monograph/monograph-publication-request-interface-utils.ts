@@ -1,6 +1,15 @@
+import HttpStatus from 'http-status';
+
+import { getKysely } from '../../db/database.ts';
 import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
 
-import { APPLICATION_USER_UI_PUBLIC, MONOGRAPH_MANIFESTATION_TYPES } from '../../constants.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
+
+import {
+  APPLICATION_USER_UI_PUBLIC,
+  MONOGRAPH_MANIFESTATION_TYPES,
+  MONOGRAPH_PUBLICATION_REQUEST_STATES,
+} from '../../constants.ts';
 import {
   monographExpressionAuthorRoleEnum,
   monographManifestationAuthorRoleEnum,
@@ -13,6 +22,8 @@ import type {
 import type { CreateMonographPublicationManifestation } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
 import type { MonographPrintingInformation } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
+import { ApiError } from '../../utils/api-error.ts';
 
 export function getExpressionAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
   if (!firstName || !lastName || !roles || roles.length === 0) {
@@ -396,4 +407,114 @@ export function getDbPublicationManifestationEntriesV2(
     modified: getCurrentTime(),
     modified_by: user?.id ?? APPLICATION_USER_UI_PUBLIC,
   };
+}
+
+export async function changePublicationRequestPublisher(
+  publicationRequest: MonographPublicationRequestSelect,
+  newPublisherId: number | null,
+  user: RequestUser,
+) {
+  const db = getKysely();
+
+  // If request has been completed, deny changing publisher
+  const { request_state } = publicationRequest;
+  if (
+    request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED ||
+    request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED
+  ) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot change publisher associated to request since the request has already been processed.',
+    );
+  }
+
+  // Confirm any associated manifestations do not have identifier associated yet.
+  const publication = await readMonographPublication(publicationRequest.monograph_publication_id);
+  const hasIdentifier = publication.expressions.some((expression) => {
+    const manifestationHasIdentifier = expression.manifestations.some(
+      (manifestation) => manifestation.identifier !== null && manifestation.identifier.length > 0,
+    );
+    return manifestationHasIdentifier;
+  });
+
+  if (hasIdentifier) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot change publisher for publication request due to identifiers have been already assigned for associated manifestation',
+    );
+  }
+
+  // Confirm new publisher exists if defined
+  if (newPublisherId !== null) {
+    const publisherResult = await db
+      .selectFrom('monograph_publisher')
+      .select('id')
+      .where('id', '=', newPublisherId)
+      .executeTakeFirst();
+    if (!publisherResult) {
+      throw new ApiError(
+        HttpStatus.NOT_FOUND,
+        'Not found',
+        `Could not find publisher id ${newPublisherId} from publisher registry`,
+      );
+    }
+  }
+
+  // Sanity check: request and publication owner should always be in sync
+  // If this breaks, inform instead of allowing silently re-sync the value as there might be a larger data sync problem that needs to be investigated
+  if (publicationRequest.monograph_publisher_id !== publication.monograph_publisher_id) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Out of sync error between publication request and publication has resulted into discarding the update: publicatino request has publisher id of ${publicationRequest.monograph_publisher_id} and publication has publisher id of ${publication.monograph_publisher_id}`,
+    );
+  }
+
+  const updateDoc: {
+    monograph_publisher_id: number | null;
+    request_state?: string;
+  } = {
+    monograph_publisher_id: newPublisherId,
+  };
+
+  // Auto-update request state if need be
+  if (publicationRequest.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW) {
+    updateDoc.request_state = MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS;
+  }
+
+  await db.transaction().execute(async (trx) => {
+    // Change publisher for the request
+    const updateResult = await trx
+      .updateTable('monograph_publication_request')
+      .set({
+        ...updateDoc,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      })
+      .where('id', '=', publicationRequest.id)
+      .executeTakeFirstOrThrow();
+
+    if (Number(updateResult.numUpdatedRows) !== 1) {
+      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+    }
+
+    // Change publisher for the publication
+    const publicationUpdateResult = await trx
+      .updateTable('monograph_publication')
+      .set({
+        monograph_publisher_id: newPublisherId,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      })
+      .where('id', '=', publicationRequest.monograph_publication_id)
+      .executeTakeFirstOrThrow();
+
+    if (Number(publicationUpdateResult.numUpdatedRows) !== 1) {
+      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+    }
+  });
+
+  return;
 }

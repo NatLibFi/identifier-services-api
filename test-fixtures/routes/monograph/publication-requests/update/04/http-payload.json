@@ -1,0 +1,18 @@
+{
+  "monograph_publisher_id": 1,
+  "official_name": "FooBar Publisher",
+  "publisher_identifier_str": null,
+  "address": null,
+  "zip": null,
+  "city": null,
+  "phone": null,
+  "email": null,
+  "lang_code": "fi-FI",
+  "contact_person": "",
+  "published_before": true,
+  "publishing_activity": "OCCASIONAL",
+  "publishing_activity_amount": null,
+  "publications_intra": true,
+  "publications_public": false,
+  "comments": null
+}

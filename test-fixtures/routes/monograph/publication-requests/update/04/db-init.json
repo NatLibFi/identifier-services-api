@@ -1,0 +1,30 @@
+{
+  "monograph_publication_request": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "monograph_publication_id": 1,
+      "official_name": "FooBar Publisher",
+      "publisher_identifier_str": "978-951-550",
+      "locality": null,
+      "address": "Foo Street",
+      "zip": "00000",
+      "city": "Foo City",
+      "phone": "123456789",
+      "email": "example@example.localhost",
+      "lang_code": "fi-FI",
+      "contact_person": "Foo Person",
+      "published_before": true,
+      "publishing_activity": "OCCASIONAL",
+      "publishing_activity_amount": "1",
+      "publications_intra": false,
+      "publications_public": true,
+      "comments": "This payload is from original v1 tests",
+      "request_state": "NEW",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ]
+}

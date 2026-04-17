@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Monograph publisher id cannot be updated simultaneously to updating other publication request properties.",
+  "instance": "/v2/monograph/publication-requests/1"
+}

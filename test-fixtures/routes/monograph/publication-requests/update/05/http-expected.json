@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot change publisher for publication request due to identifiers have been already assigned for associated manifestation",
+  "instance": "/v2/monograph/publication-requests/1"
+}

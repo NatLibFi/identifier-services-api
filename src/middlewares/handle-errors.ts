@@ -8,7 +8,7 @@ import respondWithProblemDocument from '../utils/problem-json.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function (error: Error, req: Request, res: Response, _next: NextFunction) {
-  // console.log(error);
+  console.log(error);
   const logger = getApplicationLogger();
 
   if (error) {
