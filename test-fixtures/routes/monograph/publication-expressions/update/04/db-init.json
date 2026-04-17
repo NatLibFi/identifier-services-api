@@ -1,4 +1,22 @@
 {
+  "monograph_publication_expression": [
+    {
+      "id": 1,
+      "monograph_publication_id": 1,
+      "expression_type": "BOOK",
+      "expression_language": "SWE",
+      "authors": [
+        { "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Martti", "last_name": "Esimerkki", "isni": null, "roles": ["TRANSLATOR"] }
+      ],
+      "title": "Example title",
+      "subtitle": "Example subtitle",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
   "monograph_publication_manifestation": [
     {
       "id": 1,
@@ -29,5 +47,16 @@
       "modified_by": "TEST_USER_1"
     }
   ],
-  "isbn_identifier": []
+  "isbn_identifier": [
+    {
+      "id": 1,
+      "identifier": "978-951-95000-0-3",
+      "isbn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ]
 }

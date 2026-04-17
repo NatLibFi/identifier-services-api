@@ -14,6 +14,7 @@ import type {
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
 import { ApiError } from '../../utils/api-error.ts';
+import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 export async function updateMonographPublicationManifestation(
   id: number,
@@ -79,6 +80,12 @@ export async function updateMonographPublicationManifestation(
   // Remove undefined values to have full control over update
   const definedUpdateDoc = removeUndefinedProperties(processedUpdateDoc);
 
+  // Check whether request is associated and requires automatic state update from NEW to IN_PROCESS
+  const request = validatedDbResult.monograph_publication_request_id
+    ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
+    : undefined;
+  const requestStateNeedsUpdate = request?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
+
   await db.transaction().execute(async (trx) => {
     const updateResult = await trx
       .updateTable('monograph_publication_manifestation')
@@ -92,6 +99,23 @@ export async function updateMonographPublicationManifestation(
 
     if (Number(updateResult.numUpdatedRows) !== 1) {
       throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+    }
+
+    // Update associated request if necessary
+    if (requestStateNeedsUpdate) {
+      const requestUpdateResult = await trx
+        .updateTable('monograph_publication_request')
+        .set({
+          request_state: MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
+          modified: getCurrentTime(),
+          modified_by: user.id,
+        })
+        .where('id', '=', validatedDbResult.monograph_publication_request_id)
+        .executeTakeFirstOrThrow();
+
+      if (Number(requestUpdateResult.numUpdatedRows) !== 1) {
+        throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+      }
     }
   });
 

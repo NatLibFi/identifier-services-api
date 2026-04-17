@@ -25,6 +25,7 @@ import type {
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
+import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 export async function readMonographPublicationRequest(id: number) {
   const db = getKysely();
@@ -46,9 +47,16 @@ export async function updateMonographPublicationRequest(
   const db = getKysely();
 
   const dbResult = await db.selectFrom('monograph_publication_request').selectAll().where('id', '=', id).execute();
-  validateGetById<MonographPublicationRequestSelect>(dbResult);
+  const validatedDbResult = validateGetById<MonographPublicationRequestSelect>(dbResult);
 
   const definedUpdateDoc = removeUndefinedProperties(updateDoc);
+
+  // If request has state of NEW, first update operation will automatically transfer state to IN_PROCESS
+  if (validatedDbResult.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW) {
+    // @ts-expect-error API validation does not know of request_state type on purpose
+    definedUpdateDoc.request_state = MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS;
+  }
+
   await db.transaction().execute(async (trx) => {
     const updateResult = await trx
       .updateTable('monograph_publication_request')

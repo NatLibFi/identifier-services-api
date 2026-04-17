@@ -1,0 +1,7 @@
+{
+  "description": "[admin] monograph publication request state is updated, if state is NEW during the update of expression",
+  "url": "/v2/monograph/publication-expressions/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}

@@ -1,0 +1,79 @@
+{
+  "monograph_publication_request": [
+    {
+      "id": 1,
+      "monograph_publisher_id": 1,
+      "monograph_publication_id": 1,
+      "official_name": "Foo Publisher",
+      "publisher_identifier_str": null,
+      "locality": null,
+      "address": "Foo street",
+      "zip": "00000",
+      "city": "Foo city",
+      "phone": "123456789",
+      "email": "example@example.localhost",
+      "lang_code": "fi-FI",
+      "contact_person": "Foo Person",
+      "published_before": true,
+      "publishing_activity": "CONTINUOUS",
+      "publishing_activity_amount": "0",
+      "publications_intra": false,
+      "publications_public": true,
+      "comments": "Example comment",
+      "request_state": "IN_PROCESS",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publication_expression": [
+    {
+      "id": 1,
+      "monograph_publication_id": 1,
+      "expression_type": "BOOK",
+      "expression_language": "SWE",
+      "authors": [
+        { "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Martti", "last_name": "Esimerkki", "isni": null, "roles": ["TRANSLATOR"] }
+      ],
+      "title": "Example title",
+      "subtitle": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publication_manifestation": [
+    {
+      "id": 1,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "PAPERBACK",
+      "manifestation_type_other": null,
+      "manifestation_edition": null,
+      "map_scale": null,
+      "authors": [
+        { "first_name": "Eero", "last_name": "Esimerkki", "isni": null, "roles": ["ILLUSTRATOR"] },
+        { "first_name": "Elli", "last_name": "Esimerkki", "isni": null, "roles": ["EDITOR"] }
+      ],
+      "publication_year": "2024",
+      "publication_month": "12",
+      "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],
+      "printing_information": [
+        {
+          "printing_house": "Example Print Oy",
+          "printing_house_city": "Foobarila",
+          "copies": "800"
+        }
+      ],
+      "cancelled": false,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "isbn_identifier": []
+}

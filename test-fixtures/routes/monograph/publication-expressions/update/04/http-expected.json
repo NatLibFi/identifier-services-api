@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "One of expression manifestations already has an identifier assigned. Property expression_type cannot be changed after an identifier has been assigned for any manifestation.",
+  "instance": "/v2/monograph/publication-expressions/1"
+}

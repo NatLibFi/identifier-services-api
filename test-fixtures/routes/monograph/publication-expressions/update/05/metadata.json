@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not update expression_type information after manifestation has identifier",
+  "url": "/v2/monograph/publication-expressions/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

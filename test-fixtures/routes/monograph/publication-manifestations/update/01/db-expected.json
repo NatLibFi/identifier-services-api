@@ -3,7 +3,7 @@
     {
       "id": 1,
       "monograph_publication_expression_id": 1,
-      "monograph_publication_request_id": 1,
+      "monograph_publication_request_id": null,
       "manifestation_type": "OTHER",
       "manifestation_type_other": "ohjelmistobinääri",
       "manifestation_edition": "1",
