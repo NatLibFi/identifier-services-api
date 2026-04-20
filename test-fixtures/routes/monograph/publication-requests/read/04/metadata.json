@@ -1,0 +1,7 @@
+{
+  "description": "[admin] handles case where publisher is not associated with request",
+  "url": "/v2/monograph/publication-requests/1",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

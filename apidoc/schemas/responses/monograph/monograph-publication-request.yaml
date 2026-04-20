@@ -8,6 +8,10 @@ allOf:
         type:
           - number
           - 'null'
+      monograph_publisher_name:
+        type:
+          - number
+          - 'null'
       monograph_publication_id:
         type: number
       official_name:

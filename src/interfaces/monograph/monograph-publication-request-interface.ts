@@ -22,7 +22,10 @@ import {
 
 import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
-import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
+import type {
+  MonographPublicationRequestSelect,
+  MonographPublicationRequestSelectExtended,
+} from '../../db/types/monograph/types-monograph-publication-request.ts';
 import type {
   CreateMonographPublicationRequestV1Http,
   SearchMonographPublicationRequestHttp,
@@ -35,8 +38,15 @@ import { ApiError } from '../../utils/api-error.ts';
 export async function readMonographPublicationRequest(id: number) {
   const db = getKysely();
 
-  const dbResult = await db.selectFrom('monograph_publication_request').selectAll().where('id', '=', id).execute();
-  const monographPublicationRequest = validateGetById<MonographPublicationRequestSelect>(dbResult);
+  const dbResult = await db
+    .selectFrom('monograph_publication_request')
+    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'monograph_publication_request.monograph_publisher_id')
+    .selectAll('monograph_publication_request')
+    .select(['monograph_publisher.official_name as monograph_publisher_name'])
+    .where('monograph_publication_request.id', '=', id)
+    .execute();
+
+  const monographPublicationRequest = validateGetById<MonographPublicationRequestSelectExtended>(dbResult);
 
   const publication = await readMonographPublication(monographPublicationRequest.monograph_publication_id);
   const result = asMonographPublicationRequestAdminRead(monographPublicationRequest, publication);

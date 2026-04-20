@@ -1,17 +1,21 @@
-import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
+import type {
+  MonographPublicationRequestSelect,
+  MonographPublicationRequestSelectExtended,
+} from '../../db/types/monograph/types-monograph-publication-request.ts';
 import type { MonographPublicationAdminRead } from './monograph-publication-dtl.ts';
 
-export interface MonographPublicationRequestAdminRead extends MonographPublicationRequestSelect {
+export interface MonographPublicationRequestAdminRead extends MonographPublicationRequestSelectExtended {
   publication: MonographPublicationAdminRead;
 }
 
 export function asMonographPublicationRequestAdminRead(
-  monographPublicationRequest: MonographPublicationRequestSelect,
+  monographPublicationRequest: MonographPublicationRequestSelectExtended,
   publication: MonographPublicationAdminRead,
 ): MonographPublicationRequestAdminRead {
   const {
     id,
     monograph_publisher_id,
+    monograph_publisher_name,
     monograph_publication_id,
     official_name,
     publisher_identifier_str,
@@ -39,6 +43,7 @@ export function asMonographPublicationRequestAdminRead(
   return {
     id,
     monograph_publisher_id,
+    monograph_publisher_name,
     monograph_publication_id,
     official_name,
     publisher_identifier_str,

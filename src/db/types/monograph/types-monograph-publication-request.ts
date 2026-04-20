@@ -30,3 +30,7 @@ export interface MonographPublicationRequest {
 export type MonographPublicationRequestInsert = Insertable<MonographPublicationRequest>;
 export type MonographPublicationRequestUpdate = Updateable<MonographPublicationRequest>;
 export type MonographPublicationRequestSelect = Selectable<MonographPublicationRequest>;
+
+export interface MonographPublicationRequestSelectExtended extends Selectable<MonographPublicationRequest> {
+  monograph_publisher_name: string | null;
+}

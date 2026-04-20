@@ -1,7 +1,7 @@
 {
   "id": 1,
-  "monograph_publisher_id": 1,
-  "monograph_publisher_name": "Example publisher",
+  "monograph_publisher_id": null,
+  "monograph_publisher_name": null,
   "monograph_publication_id": 1,
   "official_name": "Foo Publisher",
   "publisher_identifier_str": null,
@@ -19,7 +19,7 @@
   "publications_intra": false,
   "publications_public": true,
   "comments": "Example comment",
-  "request_state": "ACCEPTED",
+  "request_state": "NEW",
   "publication": {
     "id": 1,
     "monograph_publisher_id": 1,
@@ -39,7 +39,7 @@
         "manifestations": [
           {
             "id": 1,
-            "identifier": "978-951-95000-0-3",
+            "identifier": null,
             "monograph_publication_expression_id": 1,
             "monograph_publication_request_id": 1,
             "manifestation_type": "PAPERBACK",
@@ -68,7 +68,7 @@
           },
           {
             "id": 2,
-            "identifier": "978-951-95000-1-0",
+            "identifier": null,
             "monograph_publication_expression_id": 1,
             "monograph_publication_request_id": 1,
             "manifestation_type": "EPUB",
