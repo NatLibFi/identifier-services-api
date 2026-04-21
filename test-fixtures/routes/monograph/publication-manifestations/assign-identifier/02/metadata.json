@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not assign identifier to manifestation",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "expectedStatus": 401
+}

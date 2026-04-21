@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not assign identifier to manifestation if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

@@ -11,7 +11,7 @@ post:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
     '204':
-      description: Approval was successful
+      description: Rejection was successful
     '401':
       description: Unauthorized
     '403':

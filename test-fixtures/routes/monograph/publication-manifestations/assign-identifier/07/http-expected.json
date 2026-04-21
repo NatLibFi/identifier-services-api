@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publication manifestation is associated with does not have publisher defined.",
+  "instance": "/v2/monograph/publication-manifestations/1/assign-identifier"
+}

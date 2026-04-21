@@ -24,7 +24,7 @@ import {
   getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
 
-import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from '../interface-utils/identifier-utils.ts';
+import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from '../interface-utils/monograph-identifier-utils.ts';
 
 import {
   MONOGRAPH_EXPRESSION_TYPES,

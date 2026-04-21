@@ -1,17 +1,17 @@
 post:
-  operationId: reprocessMonographPublicationRequest
-  summary: Transfer monograph publication request from completed state back into processing state. No alterations are made for associated entitites.
+  operationId: assignManifestationIdentifier
+  summary: Assign an ISBN or ISMN identifier for manifestation. Requires the associated publication to have publisher assigned to it, publisher to have free identifiers appropriate for the expression type, and manifestation not being part of rejected publication request.
   security:
     - openId:
         - admin
   tags:
     - monograph
-    - monograph-publication-request
+    - monograph-publication-manifestation
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
     '204':
-      description: Transferring state to IN_PROCESS was successful
+      description: Assignation was successful
     '401':
       description: Unauthorized
     '403':

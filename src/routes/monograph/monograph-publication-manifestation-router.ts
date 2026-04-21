@@ -8,6 +8,12 @@ import { updateMonographPublicationManifestationSchema } from '../../validations
 // Note: adminOnly needs to be applied at main router level
 const monographPublicationManifestationRouter = Router();
 
+monographPublicationManifestationRouter.post(
+  '/:id/assign-identifier',
+  validateRequestParams(idParameterSchema, true),
+  monographPublicationManifestationController.assignManifestationIdentifier,
+);
+
 monographPublicationManifestationRouter.patch(
   '/:id',
   validateRequestParams(idParameterSchema, true),

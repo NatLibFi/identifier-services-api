@@ -15,3 +15,12 @@ export async function updateMonographPublicationManifestation(req: Request, res:
     return next(error);
   }
 }
+
+export async function assignManifestationIdentifier(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationManifestationInterface.assignManifestationIdentifier(Number(req.params['id']), req.user);
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

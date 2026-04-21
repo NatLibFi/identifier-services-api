@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not assign identifier if publisher does not have ISMN identifiers available and associated expression_type is SHEET_MUSIC",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

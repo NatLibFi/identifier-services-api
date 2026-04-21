@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "Could not process linked expression expression_type.",
+  "instance": "/v2/monograph/publication-manifestations/1/assign-identifier"
+}

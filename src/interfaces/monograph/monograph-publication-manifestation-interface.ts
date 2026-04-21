@@ -14,7 +14,13 @@ import type {
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
 import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import {
+  assignIsbnIdentifier,
+  getAssignableIsbnIdentifier,
+  getExpressionIdentifierType,
+} from '../interface-utils/monograph-identifier-utils.ts';
+import { getApplicationLogger } from '../../utils/logging.ts';
 
 export async function updateMonographPublicationManifestation(
   id: number,
@@ -120,4 +126,96 @@ export async function updateMonographPublicationManifestation(
   });
 
   return;
+}
+
+export async function assignManifestationIdentifier(id: number, user: RequestUser) {
+  const logger = getApplicationLogger();
+  const db = getKysely();
+
+  const manifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'isbn_identifier',
+      'isbn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
+    .leftJoin(
+      'monograph_publication_request',
+      'monograph_publication_request.id',
+      'monograph_publication_manifestation.monograph_publication_request_id',
+    )
+    // TODO: left join for ISMN identifier
+    .selectAll('monograph_publication_manifestation')
+    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .select(['monograph_publication_request.request_state as request_state'])
+    .where('monograph_publication_manifestation.id', '=', id)
+    .execute();
+
+  const validManifestation = validateGetById(manifestation);
+
+  // TODO: add ISMN constraint
+  if (validManifestation.isbn_identifier) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Manifestation has already identifier assigned to it.');
+  }
+
+  // Disallow assigning identifier for entries associated with rejected request
+  if (validManifestation.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Publication manifestation is associated rejected publisher request.',
+    );
+  }
+
+  // Check identifier type for expression
+  const identifierType = await getExpressionIdentifierType(validManifestation.monograph_publication_expression_id);
+
+  try {
+    if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
+      const isbnIdentifier = await getAssignableIsbnIdentifier(id);
+
+      await db.transaction().execute(async (trx) => {
+        await assignIsbnIdentifier(id, isbnIdentifier, trx, user);
+      });
+
+      return;
+    }
+  } catch (error) {
+    const hasDetails = error instanceof Error;
+    if (!hasDetails) {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        'Unknown error occurred during identifier assignation.',
+      );
+    }
+
+    if (error.cause === 'Inadequate number of identifiers') {
+      throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Publisher does not have enough available identifiers.');
+    }
+
+    if (error.cause === 'No publisher defined') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publication manifestation is associated with does not have publisher defined.',
+      );
+    }
+
+    // Catch-all in case some cause is added to function but forgotten to add here
+    logger.warn(`Underlying cause for error: ${error.cause}`);
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown error occurred during identifier assignation.',
+    );
+  }
+
+  // TODO: ISMN assignment process
+
+  throw new ApiError(
+    HttpStatus.UNPROCESSABLE_ENTITY,
+    'Unprocessable entity',
+    'Could not process linked expression expression_type.',
+  );
 }

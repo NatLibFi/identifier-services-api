@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may assign ISBN identifier to manifestation if pre-conditions are met",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 204
+}

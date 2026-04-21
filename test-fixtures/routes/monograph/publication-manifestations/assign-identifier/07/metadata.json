@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not assign ISBN identifier to manifestation which does not have publisher",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}
