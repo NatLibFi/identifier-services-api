@@ -17,6 +17,7 @@ import { ApiError } from '../../utils/api-error.ts';
 import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 import {
   assignIsbnIdentifier,
+  deassignIsbnIdentifier,
   getAssignableIsbnIdentifier,
   getExpressionIdentifierType,
 } from '../interface-utils/monograph-identifier-utils.ts';
@@ -153,6 +154,9 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
 
   const validManifestation = validateGetById(manifestation);
 
+  // TODO: add access control mechanism for publisher user
+  // TODO: evaluate appropriate constraints for publisher user
+
   // TODO: add ISMN constraint
   if (validManifestation.isbn_identifier) {
     throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Manifestation has already identifier assigned to it.');
@@ -212,6 +216,83 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
   }
 
   // TODO: ISMN assignment process
+
+  throw new ApiError(
+    HttpStatus.UNPROCESSABLE_ENTITY,
+    'Unprocessable entity',
+    'Could not process linked expression expression_type.',
+  );
+}
+
+export async function deassignManifestationIdentifier(id: number, user: RequestUser) {
+  const logger = getApplicationLogger();
+  const db = getKysely();
+
+  const manifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'isbn_identifier',
+      'isbn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
+    .leftJoin(
+      'monograph_publication_request',
+      'monograph_publication_request.id',
+      'monograph_publication_manifestation.monograph_publication_request_id',
+    )
+    // TODO: left join for ISMN identifier
+    .selectAll('monograph_publication_manifestation')
+    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .select(['monograph_publication_request.request_state as request_state'])
+    .where('monograph_publication_manifestation.id', '=', id)
+    .execute();
+
+  // TODO: check if messages have been sent regarding the publication request
+  // TODO: evaluate if there are other constraints that need to be added
+
+  // TODO: add access control mechanism for publisher user
+  // TODO: evaluate appropriate constraints for publisher user
+
+  const validManifestation = validateGetById(manifestation);
+
+  // TODO: add ISMN constraint
+  if (!validManifestation.isbn_identifier) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Manifestation does not have ISBN identifier assigned to it.');
+  }
+
+  // Disallow assigning identifier for entries associated with rejected request
+  if (
+    validManifestation.request_state &&
+    validManifestation.request_state !== MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS
+  ) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Manifestation that is part of publication request may not have its identifier deassigned unless the request is IN_PROCESS state.',
+    );
+  }
+
+  // Check identifier type for expression
+  const identifierType = await getExpressionIdentifierType(validManifestation.monograph_publication_expression_id);
+
+  try {
+    if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
+      await db.transaction().execute(async (trx) => {
+        await deassignIsbnIdentifier(id, trx, user);
+      });
+
+      return;
+    }
+  } catch (error) {
+    logger.warn('Unexpected error during deassigning manifestation identifier: ', error);
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown error occurred during identifier deassignation.',
+    );
+  }
+
+  // TODO: ISMN deassignment process
 
   throw new ApiError(
     HttpStatus.UNPROCESSABLE_ENTITY,

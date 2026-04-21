@@ -14,6 +14,12 @@ monographPublicationManifestationRouter.post(
   monographPublicationManifestationController.assignManifestationIdentifier,
 );
 
+monographPublicationManifestationRouter.post(
+  '/:id/deassign-identifier',
+  validateRequestParams(idParameterSchema, true),
+  monographPublicationManifestationController.deassignManifestationIdentifier,
+);
+
 monographPublicationManifestationRouter.patch(
   '/:id',
   validateRequestParams(idParameterSchema, true),

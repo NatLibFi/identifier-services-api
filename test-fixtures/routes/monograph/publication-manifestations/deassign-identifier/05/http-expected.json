@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Manifestation that is part of publication request may not have its identifier deassigned unless the request is IN_PROCESS state.",
+  "instance": "/v2/monograph/publication-manifestations/1/deassign-identifier"
+}

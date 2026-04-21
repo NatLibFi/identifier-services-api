@@ -40,7 +40,9 @@ paths:
   /v2/monograph/publication-manifestations/{id}:
     $ref: './resources/monograph/publication-manifestations/id.yaml'
   /v2/monograph/publication-manifestations/{id}/assign-identifier:
-    $ref: './resources/monograph/publication-manifestations/id.yaml'
+    $ref: './resources/monograph/publication-manifestations/assign-identifier.yaml'
+  /v2/monograph/publication-manifestations/{id}/deassign-identifier:
+    $ref: './resources/monograph/publication-manifestations/deassign-identifier.yaml'
 
   /v2/monograph/publication-requests:
     $ref: './resources/monograph/publication-requests/root.yaml'

@@ -132,6 +132,24 @@ export async function assignIsbnIdentifier(
   return;
 }
 
+export async function deassignIsbnIdentifier(manifestationId: number, trx: Transaction<Database>, user: RequestUser) {
+  const assignResult = await trx
+    .updateTable('isbn_identifier')
+    .set({
+      monograph_publication_manifestation_id: null,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .where('monograph_publication_manifestation_id', '=', manifestationId)
+    .executeTakeFirstOrThrow();
+
+  if (Number(assignResult.numUpdatedRows) !== 1) {
+    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+  }
+
+  return;
+}
+
 export async function getAssignableIsbnIdentifiers(monographPublisherId: number, numberOfIdentifiers: number) {
   const db = getKysely();
   const isbnIdentifiers = await db
