@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot re-approve already approved request",
+  "url": "/v2/monograph/publication-requests/1/approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

@@ -235,9 +235,13 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
     .where('monograph_publication_request.id', '=', id)
     .execute();
 
-  const validatedMonographPublicationRequest = validateGetById(monographPublicationRequest);
+  const validMonographPublicationRequest = validateGetById(monographPublicationRequest);
 
-  const publisherId = validatedMonographPublicationRequest.monograph_publisher_id;
+  if (validMonographPublicationRequest.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Publication request has already been approved.');
+  }
+
+  const publisherId = validMonographPublicationRequest.monograph_publisher_id;
   if (!publisherId) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -246,7 +250,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
     );
   }
 
-  const publication = await readMonographPublication(validatedMonographPublicationRequest.monograph_publication_id);
+  const publication = await readMonographPublication(validMonographPublicationRequest.monograph_publication_id);
 
   const manifestationIds = publication.expressions.reduce((p: Record<string, number[]>, n) => {
     const identifierType =
@@ -292,7 +296,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
       }
 
       await changeMonographPublicationRequestState(
-        validatedMonographPublicationRequest.id,
+        validMonographPublicationRequest.id,
         MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED,
         trx,
         user,
@@ -340,7 +344,11 @@ export async function rejectMonographPublicationRequest(id: number, user: Reques
     .where('monograph_publication_request.id', '=', id)
     .execute();
 
-  validateGetById(monographPublicationRequest);
+  const validMonographPublicationRequest = validateGetById(monographPublicationRequest);
+
+  if (validMonographPublicationRequest.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Publication request has already been rejected.');
+  }
 
   try {
     await db.transaction().execute(async (trx) => {
@@ -349,11 +357,7 @@ export async function rejectMonographPublicationRequest(id: number, user: Reques
   } catch (error) {
     const hasDetails = error instanceof Error;
     if (!hasDetails) {
-      throw new ApiError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        'Internal server error',
-        'Unknown error occurred during identifier assignation.',
-      );
+      throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal server error', 'Unknown error has occurred.');
     }
 
     if (error.cause === 'Manifestation has identifier') {
@@ -362,6 +366,44 @@ export async function rejectMonographPublicationRequest(id: number, user: Reques
         'Conflict',
         'Publisher request manifestation has identifier assigned and thus the request cannot be rejected.',
       );
+    }
+
+    // Catch-all in case some cause is added to function but forgotten to add here
+    logger.warn(`Underlying cause for error: ${error.cause}`);
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown error occurred during identifier assignation.',
+    );
+  }
+
+  return;
+}
+
+export async function reprocessMonographPublicationRequest(id: number, user: RequestUser) {
+  const logger = getApplicationLogger();
+  const db = getKysely();
+
+  const monographPublicationRequest = await db
+    .selectFrom('monograph_publication_request')
+    .selectAll()
+    .where('monograph_publication_request.id', '=', id)
+    .execute();
+
+  const validMonographPublicationRequest = validateGetById(monographPublicationRequest);
+
+  if (validMonographPublicationRequest.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Publication request is already in process state.');
+  }
+
+  try {
+    await db.transaction().execute(async (trx) => {
+      await changeMonographPublicationRequestState(id, MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS, trx, user);
+    });
+  } catch (error) {
+    const hasDetails = error instanceof Error;
+    if (!hasDetails) {
+      throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal server error', 'Unknown error has occurred.');
     }
 
     // Catch-all in case some cause is added to function but forgotten to add here

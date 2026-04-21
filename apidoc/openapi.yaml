@@ -48,6 +48,8 @@ paths:
     $ref: './resources/monograph/publication-requests/approve.yaml'
   /v2/monograph/publication-requests/{id}/reject:
     $ref: './resources/monograph/publication-requests/reject.yaml'
+  /v2/monograph/publication-requests/{id}/reprocess:
+    $ref: './resources/monograph/publication-requests/reprocess.yaml'
 
 components:
   securitySchemes:

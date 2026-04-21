@@ -531,7 +531,9 @@ export async function changeMonographPublicationRequestState(
   const allowedStateChanges = [
     MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED,
     MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED,
+    MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
   ];
+
   if (!allowedStateChanges.includes(newState)) {
     throw new Error(`Changing monograph publication request state to ${newState} is not allowed`);
   }

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] already rejected publication request cannot be re-rejected",
+  "url": "/v2/monograph/publication-requests/1/reject",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

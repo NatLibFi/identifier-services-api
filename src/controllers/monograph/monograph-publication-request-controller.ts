@@ -60,3 +60,12 @@ export async function rejectMonographPublicationRequest(req: Request, res: Respo
     return next(error);
   }
 }
+
+export async function reprocessMonographPublicationRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationRequestInterface.reprocessMonographPublicationRequest(Number(req.params['id']), req.user);
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

@@ -40,6 +40,13 @@ monographPublicationRouter.post(
   monographPublicationRequestController.rejectMonographPublicationRequest,
 );
 
+monographPublicationRouter.post(
+  '/:id/reprocess',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublicationRequestController.reprocessMonographPublicationRequest,
+);
+
 monographPublicationRouter.get(
   '/:id',
   allowAdminOnly,
