@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publisher does not have enough available identifiers for request to be approved.",
+  "instance": "/v2/monograph/publication-requests/1/approve"
+}

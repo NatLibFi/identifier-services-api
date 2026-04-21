@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publisher request manifestation has identifier assigned and thus the request cannot be rejected.",
+  "instance": "/v2/monograph/publication-requests/1/reject"
+}

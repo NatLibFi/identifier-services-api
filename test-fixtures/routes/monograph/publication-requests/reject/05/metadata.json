@@ -1,0 +1,7 @@
+{
+  "description": "[admin] manifestation cancelled does not carry meaning when rejecting request",
+  "url": "/v2/monograph/publication-requests/1/reject",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 204
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may reject publication request if pre-conditions are met",
+  "url": "/v2/monograph/publication-requests/1/reject",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 204
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not reject publication request",
+  "url": "/v2/monograph/publication-requests/1/reject",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

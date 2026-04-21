@@ -15,6 +15,8 @@ import {
   monographManifestationAuthorRoleEnum,
 } from '../../validations/common-validation-enum.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+
 import type {
   CreateMonographPublicationRequestV1Http,
   CreateMonographPublicationRequestV2Http,
@@ -23,7 +25,8 @@ import type { CreateMonographPublicationManifestation } from '../../validations/
 import type { MonographPrintingInformation } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
-import { ApiError } from '../../utils/api-error.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
 export function getExpressionAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
   if (!firstName || !lastName || !roles || roles.length === 0) {
@@ -515,6 +518,70 @@ export async function changePublicationRequestPublisher(
       throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
     }
   });
+
+  return;
+}
+
+export async function changeMonographPublicationRequestState(
+  monographPublicationRequestId: number,
+  newState: string,
+  trx: Transaction<Database>,
+  user: RequestUser,
+) {
+  const allowedStateChanges = [
+    MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED,
+    MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED,
+  ];
+  if (!allowedStateChanges.includes(newState)) {
+    throw new Error(`Changing monograph publication request state to ${newState} is not allowed`);
+  }
+
+  // In case changing to accepted state, verify no associated manifestation is unprocessed
+  const requestManifestations = await trx
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'isbn_identifier',
+      'isbn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
+    // TODO: left join for ISMN identifier
+    .select(['monograph_publication_manifestation.id', 'monograph_publication_manifestation.cancelled'])
+    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .where('monograph_publication_request_id', '=', monographPublicationRequestId)
+    .execute();
+
+  // TODO: add ISMN constraint
+  const unprocessedManifestations = requestManifestations.filter((m) => !m.cancelled && !m.isbn_identifier);
+
+  if (newState === MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED && unprocessedManifestations.length > 0) {
+    throw new Error(
+      `Cannot mark request as ACCEPTED since there are ${unprocessedManifestations.length} unprocessed manifestations`,
+    );
+  }
+
+  // In case changing to rejected state, verify no associated manifestation has identifier
+  // TODO: add ISMN constraint
+  const manifestationsWithIdentifier = requestManifestations.filter((m) => Boolean(m.isbn_identifier));
+  if (newState === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED && manifestationsWithIdentifier.length > 0) {
+    throw new Error(
+      `Cannot mark request as REJECTED since there are ${manifestationsWithIdentifier.length} manifestations associated with request that have identifiers`,
+      { cause: 'Manifestation has identifier' },
+    );
+  }
+
+  const updateResult = await trx
+    .updateTable('monograph_publication_request')
+    .set({
+      request_state: newState,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .where('id', '=', monographPublicationRequestId)
+    .executeTakeFirstOrThrow();
+
+  if (Number(updateResult.numUpdatedRows) !== 1) {
+    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+  }
 
   return;
 }

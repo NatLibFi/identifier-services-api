@@ -26,6 +26,20 @@ monographPublicationRouter.post(
   monographPublicationRequestController.searchMonographPublicationRequest,
 );
 
+monographPublicationRouter.post(
+  '/:id/approve',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublicationRequestController.approveMonographPublicationRequest,
+);
+
+monographPublicationRouter.post(
+  '/:id/reject',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublicationRequestController.rejectMonographPublicationRequest,
+);
+
 monographPublicationRouter.get(
   '/:id',
   allowAdminOnly,
