@@ -758,8 +758,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Resource was updated"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication-manifestation"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -803,8 +810,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Assignation was successful"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication-manifestation"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -848,8 +862,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Assignation was successful"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication-manifestation"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"

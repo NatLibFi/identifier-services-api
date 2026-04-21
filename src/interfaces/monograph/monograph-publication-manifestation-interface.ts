@@ -1,11 +1,23 @@
 import HttpStatus from 'http-status';
 
 import { getKysely } from '../../db/database.ts';
+import { ApiError } from '../../utils/api-error.ts';
+import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+
+import { getApplicationLogger } from '../../utils/logging.ts';
 import {
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
 } from '../interface-utils/common-interface-utils.ts';
+import {
+  assignIsbnIdentifier,
+  deassignIsbnIdentifier,
+  getAssignableIsbnIdentifier,
+  getExpressionIdentifierType,
+} from '../interface-utils/monograph-identifier-utils.ts';
+
+import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
 import type { UpdateMonographPublicationManifestation } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
@@ -13,24 +25,11 @@ import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
-import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
-import {
-  assignIsbnIdentifier,
-  deassignIsbnIdentifier,
-  getAssignableIsbnIdentifier,
-  getExpressionIdentifierType,
-} from '../interface-utils/monograph-identifier-utils.ts';
-import { getApplicationLogger } from '../../utils/logging.ts';
 
-export async function updateMonographPublicationManifestation(
-  id: number,
-  updateDoc: UpdateMonographPublicationManifestation,
-  user: RequestUser,
-) {
+export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();
 
-  const dbResult = await db
+  const manifestation = await db
     .selectFrom('monograph_publication_manifestation')
     .leftJoin(
       'isbn_identifier',
@@ -43,10 +42,34 @@ export async function updateMonographPublicationManifestation(
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
 
-  const validatedDbResult = validateGetById<MonographPublicationManifestationSelect>(dbResult);
+  const validatedManifestation = validateGetById(manifestation);
+  return asMonographPublicationManifestationAdminRead(validatedManifestation);
+}
+
+export async function updateMonographPublicationManifestation(
+  id: number,
+  updateDoc: UpdateMonographPublicationManifestation,
+  user: RequestUser,
+) {
+  const db = getKysely();
+
+  const origManifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'isbn_identifier',
+      'isbn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
+    // TODO: left join for ISMN identifier
+    .selectAll('monograph_publication_manifestation')
+    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .where('monograph_publication_manifestation.id', '=', id)
+    .execute();
+
+  const validatedOrigManifestation = validateGetById<MonographPublicationManifestationSelect>(origManifestation);
 
   // Some properties may not be updated if manifestation has been assigned an identifier
-  const hasIdentifier = Boolean(validatedDbResult.isbn_identifier);
+  const hasIdentifier = Boolean(validatedOrigManifestation.isbn_identifier);
   const disallowedChangesAfterIdentifier = [
     'manifestation_type',
     'manifestation_type_other',
@@ -88,7 +111,7 @@ export async function updateMonographPublicationManifestation(
   const definedUpdateDoc = removeUndefinedProperties(processedUpdateDoc);
 
   // Check whether request is associated and requires automatic state update from NEW to IN_PROCESS
-  const request = validatedDbResult.monograph_publication_request_id
+  const request = validatedOrigManifestation.monograph_publication_request_id
     ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
     : undefined;
   const requestStateNeedsUpdate = request?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
@@ -117,7 +140,7 @@ export async function updateMonographPublicationManifestation(
           modified: getCurrentTime(),
           modified_by: user.id,
         })
-        .where('id', '=', validatedDbResult.monograph_publication_request_id)
+        .where('id', '=', validatedOrigManifestation.monograph_publication_request_id)
         .executeTakeFirstOrThrow();
 
       if (Number(requestUpdateResult.numUpdatedRows) !== 1) {
@@ -126,7 +149,7 @@ export async function updateMonographPublicationManifestation(
     }
   });
 
-  return;
+  return readMonographPublicationManifestation(id);
 }
 
 export async function assignManifestationIdentifier(id: number, user: RequestUser) {
@@ -182,7 +205,7 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
         await assignIsbnIdentifier(id, isbnIdentifier, trx, user);
       });
 
-      return;
+      return readMonographPublicationManifestation(id);
     }
   } catch (error) {
     const hasDetails = error instanceof Error;
@@ -281,7 +304,7 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
         await deassignIsbnIdentifier(id, trx, user);
       });
 
-      return;
+      return readMonographPublicationManifestation(id);
     }
   } catch (error) {
     logger.warn('Unexpected error during deassigning manifestation identifier: ', error);

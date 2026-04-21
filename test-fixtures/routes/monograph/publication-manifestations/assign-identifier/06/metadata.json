@@ -1,5 +1,5 @@
 {
-  "description": "[admin] cannot assign ISBN identifier to manifestation if it already has ISBN identifier",
+  "description": "[admin] may not assign ISBN identifier to manifestation if it already has ISBN identifier",
   "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
   "method": "POST",
   "role": "admin",
