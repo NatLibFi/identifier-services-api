@@ -91,7 +91,7 @@ export async function updateMonographPublicationRequest(
   // Process update to monograph publisher association and return directly after the update
   if (definedUpdateDoc.monograph_publisher_id !== undefined) {
     await changePublicationRequestPublisher(validatedDbResult, definedUpdateDoc.monograph_publisher_id, user);
-    return;
+    return readMonographPublicationRequest(id);
   }
 
   // Process update to other attributes than monograph publisher association
@@ -118,7 +118,7 @@ export async function updateMonographPublicationRequest(
     }
   });
 
-  return;
+  return readMonographPublicationRequest(id);
 }
 
 export async function createMonographPublicationRequest(

@@ -45,8 +45,12 @@ patch:
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
-    '204':
+    '200':
       description: Resource was updated
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/monograph-publication-request.yaml'
     '401':
       description: Unauthorized
     '403':

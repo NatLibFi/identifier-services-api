@@ -23,12 +23,12 @@ export async function readMonographPublicationRequest(req: Request, res: Respons
 
 export async function updateMonographPublicationRequest(req: Request, res: Response, next: NextFunction) {
   try {
-    await monographPublicationRequestInterface.updateMonographPublicationRequest(
+    const result = await monographPublicationRequestInterface.updateMonographPublicationRequest(
       Number(req.params['id']),
       req.body,
       req.user,
     );
-    return res.status(HttpStatus.NO_CONTENT).end();
+    return res.status(HttpStatus.OK).json(result);
   } catch (error) {
     return next(error);
   }

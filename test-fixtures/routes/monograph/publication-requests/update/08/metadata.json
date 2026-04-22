@@ -3,5 +3,5 @@
   "url": "/v2/monograph/publication-requests/1",
   "method": "PATCH",
   "role": "admin",
-  "expectedStatus": 204
+  "expectedStatus": 200
 }
