@@ -537,16 +537,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/monograph-publisher-admin"
-                      },
-                      {
-                        "$ref": "#/components/schemas/monograph-publisher-guest"
+                  "type": "object",
+                  "properties": {
+                    "totalDoc": {
+                      "type": "number"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/monograph-publisher-admin"
+                          },
+                          {
+                            "$ref": "#/components/schemas/monograph-publisher-guest"
+                          }
+                        ]
                       }
-                    ]
+                    }
                   }
                 }
               }
@@ -672,6 +680,71 @@
           },
           "422": {
             "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/publications/search": {
+      "post": {
+        "operationId": "searchMonographPublication",
+        "summary": "Search a monograph publication",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-publication-search-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalDoc": {
+                      "type": "number"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/monograph-publication"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -940,6 +1013,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/publication-requests/search": {
+      "post": {
+        "operationId": "searchMonographPublicationRequest",
+        "summary": "Search a monograph publication request",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication-request"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-publication-request-search-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication-request-search-response"
                 }
               }
             }
@@ -2213,6 +2340,35 @@
           }
         }
       },
+      "monograph-publication-search-body": {
+        "type": "object",
+        "properties": {
+          "search_text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "monograph_publisher_id": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "offset": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
       "monograph-publication-expression-update-body": {
         "type": "object",
         "properties": {
@@ -2957,6 +3113,74 @@
           "ACCEPTED",
           "REJECTED"
         ]
+      },
+      "monograph-publication-request-search-body": {
+        "type": "object",
+        "properties": {
+          "search_text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "request_state": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/request-state"
+              }
+            ]
+          },
+          "limit": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "offset": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "monograph-publication-request-search-response": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "publication_primary_title": {
+              "type": "string"
+            },
+            "official_name": {
+              "type": "string"
+            },
+            "contact_person": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "email": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "created": {
+              "type": "string"
+            }
+          }
+        }
       },
       "monograph-publication-request": {
         "allOf": [

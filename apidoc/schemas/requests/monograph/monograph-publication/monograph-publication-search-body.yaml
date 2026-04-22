@@ -5,14 +5,12 @@ properties:
       - string
       - 'null'
     maxLength: 100
-  request_state:
-    oneOf:
-      - type: 'null'
-      - $ref: '../../../enums/monograph/request-state.yaml'
+  monograph_publisher_id:
+    type: number
   limit:
     type: number
     minimum: 1
-    maximum: 50
+    maximum: 10
   offset:
     type: number
     minimum: 0

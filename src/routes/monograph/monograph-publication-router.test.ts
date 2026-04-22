@@ -4,3 +4,5 @@ const routers = ['monograph', 'publications'];
 
 runIntegrationTestSuite(routers, 'read');
 runIntegrationTestSuite(routers, 'update');
+
+runIntegrationTestSuite(routers, 'search');

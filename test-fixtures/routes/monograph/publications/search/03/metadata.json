@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not search monograph publication information if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publications/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

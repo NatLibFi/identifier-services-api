@@ -1,32 +1,25 @@
 post:
-  operationId: searchMonographPublication
-  summary: Search a monograph publication
+  operationId: searchMonographPublicationRequest
+  summary: Search a monograph publication request
   security:
     - openId:
         - admin
   tags:
     - monograph
-    - monograph-publication
+    - monograph-publication-request
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '../../../schemas/requests/monograph/monograph-publication/monograph-publication-search-body.yaml'
+          $ref: '../../../schemas/requests/monograph/monograph-publication-request/monograph-publication-request-search-body.yaml'
   responses:
     '200':
       description: Ok
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              totalDoc:
-                type: number
-              results:
-                type: array
-                items:
-                  $ref: '../../../schemas/responses/monograph/monograph-publication.yaml'
+            $ref: '../../../schemas/responses/monograph/monograph-publication-request-search-response.yaml'
     '401':
       description: Unauthorized
     '403':

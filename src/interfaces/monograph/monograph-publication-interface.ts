@@ -8,7 +8,10 @@ import type { MonographPublicationSelect } from '../../db/types/monograph/types-
 import { asMonographPublicationAdminRead } from '../../dtl/monograph/monograph-publication-dtl.ts';
 import { getPublicationExpressions } from './monograph-publication-interface-utils.ts';
 
-import type { UpdateMonographPublicationHttp } from '../../validations/monograph/monograph-publication-validation.ts';
+import type {
+  SearchMonographPublicationHttp,
+  UpdateMonographPublicationHttp,
+} from '../../validations/monograph/monograph-publication-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 
 export async function readMonographPublication(id: number) {
@@ -48,4 +51,56 @@ export async function updateMonographPublication(
   });
 
   return readMonographPublication(id);
+}
+
+export async function searchMonographPublication(searchParameters: SearchMonographPublicationHttp) {
+  const {
+    search_text,
+    monograph_publisher_id,
+    // TODO user,
+    limit,
+    offset,
+  } = searchParameters;
+
+  const db = getKysely();
+
+  // TODO: logic for publisher user to always have constraint of publication monograph_publisher_id
+
+  let query = db.selectFrom('monograph_publication').select('monograph_publication.id');
+
+  // TODO: ISBN identifier search
+  // TODO: ISMN identifier search
+  // if (search_text && search_text.match(finnishIsbnPublisherStringStart)) {
+  //   return {totalDoc: 0, results: []};
+  // }
+
+  if (search_text) {
+    const normalizedSearch = `%${search_text}%`.toLowerCase();
+
+    query = query.where((eb) => {
+      return eb.or([eb(eb.fn('lower', ['primary_title']), 'like', normalizedSearch)]);
+    });
+  }
+
+  if (monograph_publisher_id) {
+    query = query.where('monograph_publisher_id', '=', monograph_publisher_id);
+  }
+
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('totalDoc'));
+  query = query.orderBy('id', 'desc').limit(limit).offset(offset);
+
+  const result = await query.execute();
+  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+
+  return {
+    totalDoc,
+    results: await Promise.all(
+      result.map(async ({ id }) => {
+        // Might have overhead, but limit is capped in validation
+        // This may be improved after it's known what attributes are required for each view using this endpoint
+        const publication = await readMonographPublication(id);
+        return publication;
+      }),
+    ),
+  };
 }

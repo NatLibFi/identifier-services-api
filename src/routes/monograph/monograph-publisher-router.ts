@@ -9,28 +9,28 @@ import {
   updateMonographPublisherSchema,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 
-const isbnRangeRouter = Router();
+const monographPublisherRouter = Router();
 
-isbnRangeRouter.post(
+monographPublisherRouter.post(
   '/search',
   validateRequestBody(searchMonographPublisherSchema),
   monographPublisherControllers.searchMonographPublisher,
 );
 
-isbnRangeRouter.get(
+monographPublisherRouter.get(
   '/:id',
   validateRequestParams(idParameterSchema),
   monographPublisherControllers.readMonographPublisher,
 );
 
-isbnRangeRouter.delete(
+monographPublisherRouter.delete(
   '/:id',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublisherControllers.deleteMonographPublisher,
 );
 
-isbnRangeRouter.patch(
+monographPublisherRouter.patch(
   '/:id',
   allowAdminOnly,
   validateRequestParams(idParameterSchema, true),
@@ -38,4 +38,4 @@ isbnRangeRouter.patch(
   monographPublisherControllers.updateMonographPublisher,
 );
 
-export default isbnRangeRouter;
+export default monographPublisherRouter;

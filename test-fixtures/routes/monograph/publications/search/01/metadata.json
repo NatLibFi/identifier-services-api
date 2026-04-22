@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may search monograph publication information",
+  "url": "/v2/monograph/publications/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

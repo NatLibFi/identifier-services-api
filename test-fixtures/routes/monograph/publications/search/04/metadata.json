@@ -1,0 +1,7 @@
+{
+  "description": "[admin] monograph publisher filter works (negative test)",
+  "url": "/v2/monograph/publications/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

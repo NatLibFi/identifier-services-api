@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not search monograph publication information",
+  "url": "/v2/monograph/publications/search",
+  "method": "POST",
+  "expectedStatus": 401
+}
