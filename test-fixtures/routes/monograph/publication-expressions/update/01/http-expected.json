@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "monograph_publication_id": 1,
+  "expression_type": "BOOK",
+  "expression_language": "FIN",
+  "authors": [{ "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] }],
+  "title": "Edited title",
+  "subtitle": null,
+  "manifestations": [],
+  "created": "2025-01-20T12:00:00.000Z",
+  "created_by": "TEST_USER_1",
+  "modified": "2026-01-20T12:00:00.000Z",
+  "modified_by": "admin"
+}

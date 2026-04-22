@@ -5,12 +5,12 @@ import * as monographPublicationExpressionInterface from '../../interfaces/monog
 
 export async function updateMonographPublicationExpression(req: Request, res: Response, next: NextFunction) {
   try {
-    await monographPublicationExpressionInterface.updateMonographPublicationExpression(
+    const result = await monographPublicationExpressionInterface.updateMonographPublicationExpression(
       Number(req.params['id']),
       req.body,
       req.user,
     );
-    return res.status(HttpStatus.NO_CONTENT).end();
+    return res.status(HttpStatus.OK).json(result);
   } catch (error) {
     return next(error);
   }

@@ -6,6 +6,10 @@ import {
   removeUndefinedProperties,
   validateGetById,
 } from '../interface-utils/common-interface-utils.ts';
+import { getExpressionsManifestations } from './monograph-publication-interface-utils.ts';
+
+import { ApiError } from '../../utils/api-error.ts';
+import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
 import type { UpdateMonographPublicationExpression } from '../../validations/monograph/monograph-publication-expression-validation.ts';
@@ -13,9 +17,20 @@ import type {
   MonographPublicationExpressionSelect,
   MonographPublicationExpressionUpdate,
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
-import { getExpressionsManifestations } from './monograph-publication-interface-utils.ts';
-import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
+
+export async function readMonographPublicationExpression(id: number) {
+  const db = getKysely();
+
+  const expression = await db.selectFrom('monograph_publication_expression').selectAll().where('id', '=', id).execute();
+
+  const validatedExpression = validateGetById(expression);
+
+  const manifestations = await getExpressionsManifestations([id]);
+  const typedManifestations = manifestations[id] || []; // TS constraint is satisfied like this
+
+  return asMonographPublicationExpressionAdminRead(validatedExpression, typedManifestations);
+}
 
 export async function updateMonographPublicationExpression(
   id: number,
@@ -94,5 +109,5 @@ export async function updateMonographPublicationExpression(
     }
   });
 
-  return;
+  return readMonographPublicationExpression(id);
 }
