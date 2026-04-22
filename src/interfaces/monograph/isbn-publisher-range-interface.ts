@@ -2,7 +2,8 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
+
 import {
   canDeleteIsbnPublisherRange,
   generateIsbnIdentifierDbEntry,
@@ -11,11 +12,16 @@ import {
 } from './isbn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { rangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
+import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
-import type { CreateIsbnPublisherRangeHttp } from '../../validations/monograph/isbn-publisher-range-validation.ts';
+import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
+
+import type {
+  CreateIsbnPublisherRangeHttp,
+  GetIsbnPublisherRangeIdentifiersHttp,
+} from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
@@ -198,4 +204,97 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
   });
 
   return;
+}
+
+export async function getIsbnPublisherRangeIdentifiers(
+  isbnPublisherRangeId: number,
+  filter: GetIsbnPublisherRangeIdentifiersHttp,
+) {
+  const { download, limit, offset, assigned_only, unassigned_only } = filter;
+  const db = getKysely();
+
+  // TODO: evaluate access control
+  // TODO: evaluate whether download should implicitly apply unassigned_only
+
+  // Verify publisher range exists
+  const isbnPublisherRange = await db
+    .selectFrom('isbn_publisher_range')
+    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'isbn_publisher_range.monograph_publisher_id')
+    .select('isbn_publisher_range.id')
+    .select('monograph_publisher.official_name as publisher_name')
+    .where('isbn_publisher_range.id', '=', isbnPublisherRangeId)
+    .execute();
+
+  const validatedIsbnPublisherRange = validateGetById(isbnPublisherRange);
+  const { publisher_name } = validatedIsbnPublisherRange;
+
+  // Having association and official_name is mandatory, but sanity check that it really does exist
+  if (!publisher_name) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Given ISBN range does not seem to have associated publisher name. Please contact system administration and ask reviewing ISBN range id ${isbnPublisherRangeId}`,
+    );
+  }
+
+  let query = db.selectFrom('isbn_identifier').selectAll().where('isbn_publisher_range_id', '=', isbnPublisherRangeId);
+
+  if (unassigned_only && assigned_only) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Cannot process unassigned_only and assigned_only simultaneously',
+    );
+  }
+
+  if (download && (unassigned_only || assigned_only)) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Cannot process unassigned_only or assigned_only together with download',
+    );
+  }
+
+  if (!download && unassigned_only) {
+    query = query.where('monograph_publication_manifestation_id', 'is', null);
+  }
+
+  // Note: done like this to avoid case where assigned only filter would be applied when attribute is undefined
+  if (!download && assigned_only) {
+    query = query.where('monograph_publication_manifestation_id', 'is not', null);
+  }
+
+  const result = await query.orderBy('id', 'asc').limit(limit).offset(offset).execute();
+
+  if (!download) {
+    return result.map(asIsbnIdentifierAdminRead);
+  }
+
+  // Process downloading as text file
+
+  // Old API's formatting for text files
+  let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${publisher_name}\r\n`;
+  headerText += `Följande identifikatorer har tilldelats åt förlaget ${publisher_name}\r\n`;
+  headerText += `Following identifiers have been assigned to publisher ${publisher_name}\r\n\r\n`;
+
+  // Add test header for test environment
+  if (process.env['NODE_ENV'] !== 'production') {
+    headerText +=
+      'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n';
+    headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\r\n';
+    headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\r\n\r\n';
+  }
+
+  const identifierResult = result.reduce((acc, { identifier, monograph_publication_manifestation_id }) => {
+    let identifierInfo = `${acc}${identifier}`;
+
+    if (monograph_publication_manifestation_id !== null) {
+      identifierInfo += ' KÄYTETTY/BEGAGNAD/USED';
+    }
+
+    return `${identifierInfo}\r\n`;
+  }, '');
+
+  // TODO: evaluate if downloads table is required
+  return `${headerText}${identifierResult}`;
 }

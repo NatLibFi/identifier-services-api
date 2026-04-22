@@ -80,7 +80,7 @@ export async function sendTestHttpRequest(
 }
 
 export async function validateHttpResponse(testDefinition: TestDefinition, response: Response) {
-  const { metadata, httpExpected } = testDefinition;
+  const { metadata, httpExpected, httpExpectedTxt } = testDefinition;
   const { expectedStatus } = metadata;
 
   // Status needs to always be defined and match expectations
@@ -95,10 +95,18 @@ export async function validateHttpResponse(testDefinition: TestDefinition, respo
     return;
   }
 
-  // Otherwise it will be tested that there is nothing within response body (as body was not expected)
+  // Next the text body will be tested if such expectation is defined
+  // Note that all txt-files are expected to be read in Windows machines and thus they should be converted using unix2dos if the development machine is Linux
   const responseBody = await response.text();
-  const responseBodyIsEmpty = Object.keys(responseBody).length === 0;
+  if (httpExpectedTxt) {
+    expect(responseBody).toStrictEqual(httpExpectedTxt);
+    return;
+  }
 
+  // TODO: csv for statistics
+
+  // Finally it will be tested that there is nothing within response body (as body was not expected)
+  const responseBodyIsEmpty = Object.keys(responseBody).length === 0;
   expect(responseBodyIsEmpty).toStrictEqual(true);
   return;
 }

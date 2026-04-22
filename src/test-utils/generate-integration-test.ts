@@ -29,6 +29,8 @@ export interface TestDefinition {
   dbInit: Record<string, UnknownObject[]>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   httpExpected: UnknownObject[] | Record<string, any>;
+  httpExpectedTxt?: string;
+  httpExpectedCsv?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   httpPayload: UnknownObject[] | Record<string, any>;
 }
@@ -157,17 +159,26 @@ function readTestContents(testRootPath: string): TestDefinition {
   validateTestFolder(testRootPath);
 
   return {
-    metadata: readJson(testRootPath, 'metadata.json'),
-    dbInit: readJson(testRootPath, 'db-init.json'),
-    dbExpected: readJson(testRootPath, 'db-expected.json'),
-    httpExpected: readJson(testRootPath, 'http-expected.json'),
-    httpPayload: readJson(testRootPath, 'http-payload.json'),
+    metadata: readFile(testRootPath, 'metadata.json'),
+    dbInit: readFile(testRootPath, 'db-init.json'),
+    dbExpected: readFile(testRootPath, 'db-expected.json'),
+    httpExpected: readFile(testRootPath, 'http-expected.json'),
+    httpExpectedTxt: readFile(testRootPath, 'http-expected.txt', false),
+    httpExpectedCsv: readFile(testRootPath, 'http-expected.csv', false),
+    httpPayload: readFile(testRootPath, 'http-payload.json'),
   };
 }
 
 function validateTestFolder(testPath: string) {
   const requiredContent = ['metadata.json'];
-  const optionalContent = ['db-expected.json', 'db-init.json', 'http-expected.json', 'http-payload.json'];
+  const optionalContent = [
+    'db-expected.json',
+    'db-init.json',
+    'http-expected.json',
+    'http-payload.json',
+    'http-expected.txt',
+    'http-expected.csv',
+  ];
   const testContents = readdirSync(testPath, { withFileTypes: true });
 
   const invalidContent = testContents.find(
@@ -238,10 +249,15 @@ function isObject(value: unknown) {
   return typeof value === 'object' && !Array.isArray(value);
 }
 
-function readJson(testRootPath: string, filename: string) {
+function readFile(testRootPath: string, filename: string, parseJson = true) {
   try {
     const fileContent = readFileSync(`${testRootPath}/${filename}`, 'utf-8');
-    return JSON.parse(fileContent);
+
+    if (parseJson) {
+      return JSON.parse(fileContent);
+    }
+
+    return fileContent;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_error) {
     return undefined;

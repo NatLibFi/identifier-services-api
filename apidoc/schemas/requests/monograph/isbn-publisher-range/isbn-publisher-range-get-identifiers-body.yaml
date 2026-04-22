@@ -1,0 +1,16 @@
+type: object
+required:
+  - limit
+  - offset
+properties:
+  download:
+    type: boolean
+  assigned_only:
+    type: boolean
+  unassigned_only:
+    type: boolean
+  limit:
+    type: number
+  offset:
+    type: number
+  # TODO: turnstile_token

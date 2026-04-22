@@ -1,0 +1,7 @@
+{
+  "description": "[admin] text download works",
+  "url": "/v2/monograph/isbn-publisher-ranges/1/get-identifiers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

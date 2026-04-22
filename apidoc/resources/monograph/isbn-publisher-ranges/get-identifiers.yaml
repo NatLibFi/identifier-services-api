@@ -1,0 +1,40 @@
+# Yes, using HTTP POST for get-prefixed endpoint seems to be not correct at first glance
+# However, since turnstile token is used here and we don't yet have HTTP QUERY (i.e., GET requests with body)
+# This was observed as the next best thing
+post:
+  operationId: getIsbnPublisherRangeIdentifiers
+  summary: Get ISBN identifier information regarding identifiers associated with ISBN publisher range id given as request parameter
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - isbn
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/isbn-publisher-range/isbn-publisher-range-get-identifiers-body.yaml'
+  responses:
+    '200':
+      description: Ok
+      content:
+        text/plain:
+          schema:
+            type: string
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/isbn-identifier.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    default:
+      $ref: '../../../responses/error.yaml'
