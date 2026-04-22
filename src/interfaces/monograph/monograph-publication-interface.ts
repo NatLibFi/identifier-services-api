@@ -47,5 +47,5 @@ export async function updateMonographPublication(
     }
   });
 
-  return;
+  return readMonographPublication(id);
 }

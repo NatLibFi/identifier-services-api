@@ -648,8 +648,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Resource was updated"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publication"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
