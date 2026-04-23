@@ -1,0 +1,8 @@
+{
+  "description": "TODO: [admin] may not merge monograph publication if associated expressions share expression_type and expression_language",
+  "url": "/v2/monograph/publications/1/merge",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409,
+  "skip": true
+}

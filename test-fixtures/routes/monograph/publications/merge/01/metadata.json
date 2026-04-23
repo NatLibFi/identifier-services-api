@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may merge monograph publication information if pre-conditions are met",
+  "url": "/v2/monograph/publications/1/merge",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -15,5 +15,7 @@ export const searchMonographPublicationSchema = z
   })
   .strict();
 
+export const mergeMonographPublicationSchema = z.object({ incoming_monograph_publication_id: z.number() }).strict();
+
 export type UpdateMonographPublicationHttp = z.infer<typeof updateMonographPublicationSchema>;
 export type SearchMonographPublicationHttp = z.infer<typeof searchMonographPublicationSchema>;

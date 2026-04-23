@@ -33,6 +33,8 @@ paths:
 
   /v2/monograph/publications/{id}:
     $ref: './resources/monograph/publications/id.yaml'
+  /v2/monograph/publications/{id}/merge:
+    $ref: './resources/monograph/publications/merge.yaml'
   /v2/monograph/publications/search:
     $ref: './resources/monograph/publications/search.yaml'
 

@@ -1,0 +1,8 @@
+{
+  "description": "TODO: [admin] may not merge monograph publication information if publications belong to different publishers",
+  "url": "/v2/monograph/publications/1/merge",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409,
+  "skip": true
+}

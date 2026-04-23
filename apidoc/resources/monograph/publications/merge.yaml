@@ -1,0 +1,37 @@
+post:
+  operationId: mergeMonographPublication
+  summary: Merge monograph two monograph publications into one.
+  security:
+    - openId:
+        - admin
+        # TODO: publisher
+  tags:
+    - monograph
+    - monograph-publication
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/monograph-publication/monograph-publication-merge-body.yaml'
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Publications were merged
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/monograph-publication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'

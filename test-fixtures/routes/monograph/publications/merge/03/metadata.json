@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not merge monograph publication information if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publications/1/merge",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

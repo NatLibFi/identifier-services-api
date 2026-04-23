@@ -1,0 +1,6 @@
+type: object
+required:
+  - incoming_monograph_publication_id
+properties:
+  incoming_monograph_publication_id:
+    type: number

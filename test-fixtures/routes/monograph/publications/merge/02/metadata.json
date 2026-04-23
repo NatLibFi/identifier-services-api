@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not merge monograph publication information",
+  "url": "/v2/monograph/publications/1/merge",
+  "method": "POST",
+  "expectedStatus": 401
+}
