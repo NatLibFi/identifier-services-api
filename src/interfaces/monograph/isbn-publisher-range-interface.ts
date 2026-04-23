@@ -1,3 +1,4 @@
+import ISBN from 'isbn3';
 import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
@@ -214,7 +215,6 @@ export async function getIsbnPublisherRangeIdentifiers(
   const db = getKysely();
 
   // TODO: evaluate access control
-  // TODO: evaluate whether download should implicitly apply unassigned_only
 
   // Verify publisher range exists
   const isbnPublisherRange = await db
@@ -247,11 +247,11 @@ export async function getIsbnPublisherRangeIdentifiers(
     );
   }
 
-  if (download && (unassigned_only || assigned_only)) {
+  if (download && (unassigned_only || assigned_only || limit || offset)) {
     throw new ApiError(
       HttpStatus.UNPROCESSABLE_ENTITY,
       'Unprocessable entity',
-      'Cannot process unassigned_only or assigned_only together with download',
+      'Cannot process unassigned_only, assigned_only, limit or offset together with download',
     );
   }
 
@@ -264,10 +264,33 @@ export async function getIsbnPublisherRangeIdentifiers(
     query = query.where('monograph_publication_manifestation_id', 'is not', null);
   }
 
-  const result = await query.orderBy('id', 'asc').limit(limit).offset(offset).execute();
+  query = query.orderBy('id', 'asc');
+
+  if (!download && limit) {
+    query = query.limit(limit);
+  }
+
+  if (!download && offset) {
+    query = query.offset(offset);
+  }
+
+  const result = await query.execute();
 
   if (!download) {
-    return result.map(asIsbnIdentifierAdminRead);
+    return result.map((r) => {
+      // Re-validate just in case
+      const auditResult = ISBN.audit(r.identifier);
+
+      if (auditResult.validIsbn === false) {
+        throw new Error(`External audit has flagged ISBN ${r.identifier} as invalid.`);
+      }
+
+      if (auditResult.groupname !== 'Finland') {
+        throw new Error(`External audit has flagged ISBN ${r.identifier} as non-Finnish.`);
+      }
+
+      return asIsbnIdentifierAdminRead(r);
+    });
   }
 
   // Process downloading as text file
@@ -286,6 +309,17 @@ export async function getIsbnPublisherRangeIdentifiers(
   }
 
   const identifierResult = result.reduce((acc, { identifier, monograph_publication_manifestation_id }) => {
+    // Re-validate just in case
+    const auditResult = ISBN.audit(identifier);
+
+    if (auditResult.validIsbn === false) {
+      throw new Error(`External audit has flagged ISBN ${identifier} as invalid.`);
+    }
+
+    if (auditResult.groupname !== 'Finland') {
+      throw new Error(`External audit has flagged ISBN ${identifier} as non-Finnish.`);
+    }
+
     let identifierInfo = `${acc}${identifier}`;
 
     if (monograph_publication_manifestation_id !== null) {

@@ -29,7 +29,7 @@ export async function getIsbnPublisherRangeIdentifiers(req: Request, res: Respon
     );
 
     if (req.body.download) {
-      const fileName = `isbn-publisher-range-${req.params['id']}-${req.body.offset}-${req.body.offset + req.body.limit}.txt`;
+      const fileName = `isbn-publisher-range-${req.params['id']}-identifiers.txt`;
       return res.attachment(fileName).send(result);
     }
 

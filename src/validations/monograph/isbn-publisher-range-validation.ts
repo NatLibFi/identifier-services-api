@@ -14,8 +14,8 @@ export const getIsbnPublisherRangeIdentifiersSchema = z.object({
   download: z.boolean().optional(),
   unassigned_only: z.boolean().optional(),
   assigned_only: z.boolean().optional(),
-  limit: z.number(),
-  offset: z.number(),
+  limit: z.number().optional(),
+  offset: z.number().optional(),
   // TODO: turnstile_token
 });
 
