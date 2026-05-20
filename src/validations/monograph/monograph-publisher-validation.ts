@@ -42,5 +42,12 @@ export const searchMonographPublisherSchema = z
   })
   .strict();
 
+export const monographPublisherAutocompleteSchema = z
+  .object({
+    search_text: z.string().max(100),
+  })
+  .strict();
+
 export type UpdateMonographPublisherHttp = z.infer<typeof updateMonographPublisherSchema>;
 export type SearchMonographPublisherHttp = z.infer<typeof searchMonographPublisherSchema>;
+export type AutocompleteMonographPublisherHttp = z.infer<typeof monographPublisherAutocompleteSchema>;

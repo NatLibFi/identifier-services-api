@@ -1,0 +1,16 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      official_name:
+        type: string
+      other_names:
+        type: array
+        items:
+          type: string
+      previous_names:
+        type: array
+        items:
+          type: string

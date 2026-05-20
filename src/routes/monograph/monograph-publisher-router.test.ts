@@ -8,3 +8,4 @@ runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'update');
 
 runIntegrationTestSuite(routers, 'search');
+runIntegrationTestSuite(routers, 'autocomplete');

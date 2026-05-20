@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] can utilize monograph publisher autocomplete",
+  "url": "/v2/monograph/publishers/autocomplete",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 200
+}

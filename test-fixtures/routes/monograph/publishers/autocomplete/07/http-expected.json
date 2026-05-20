@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[search_text] Invalid input: expected string, received undefined",
+  "instance": "/v2/monograph/publishers/autocomplete"
+}

@@ -18,6 +18,7 @@ import { ApiError } from '../../utils/api-error.ts';
 
 import {
   asMonographPublisherAdminRead,
+  asMonographPublisherAutocompleteRead,
   asMonographPublisherGuestRead,
 } from '../../dtl/monograph/monograph-publisher-dtl.ts';
 
@@ -231,4 +232,29 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
       }),
     ),
   };
+}
+
+export async function monographPublisherAutocomplete(search_text: string) {
+  const db = getKysely();
+
+  const normalizedSearch = `%${search_text}%`.toLowerCase();
+
+  const query = db
+    .selectFrom('monograph_publisher')
+    .selectAll()
+    .where((eb) => {
+      return eb.or([
+        eb(eb.fn('lower', ['official_name']), 'like', normalizedSearch),
+        constructJsonContainsSearch(eb, 'other_names', normalizedSearch),
+        constructJsonContainsSearch(eb, 'previous_names', normalizedSearch),
+      ]);
+    })
+    .orderBy('promote_sorting', 'desc')
+    .orderBy('official_name', 'asc')
+    .limit(10)
+    .offset(0);
+
+  const result: MonographPublisherSelect[] = await query.execute();
+
+  return result.map(asMonographPublisherAutocompleteRead);
 }

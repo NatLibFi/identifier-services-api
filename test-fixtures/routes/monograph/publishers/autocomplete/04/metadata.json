@@ -1,0 +1,7 @@
+{
+  "description": "[admin] searches from previous names",
+  "url": "/v2/monograph/publishers/autocomplete",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

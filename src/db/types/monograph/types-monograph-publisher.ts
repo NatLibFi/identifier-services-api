@@ -72,3 +72,8 @@ export interface MonographPublisherReadGuest extends Omit<
     publisher_identifier: string;
   }[];
 }
+
+export type MonographPublisherReadAutocomplete = Omit<
+  MonographPublisherReadGuest,
+  'address' | 'zip' | 'city' | 'phone' | 'www' | 'has_quitted' | 'isbn_publisher_ranges'
+>;

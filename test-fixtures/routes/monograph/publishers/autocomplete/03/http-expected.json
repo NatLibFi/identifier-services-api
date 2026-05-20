@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "official_name": "Example publisher",
+    "other_names": ["Example othername #1", "Example othername #2"],
+    "previous_names": ["Example previousname #1", "Example previousname #2"]
+  }
+]

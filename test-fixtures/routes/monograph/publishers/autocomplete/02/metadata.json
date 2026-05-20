@@ -1,0 +1,6 @@
+{
+  "description": "[guest] can utilize monograph publishers autocomplete",
+  "url": "/v2/monograph/publishers/autocomplete",
+  "method": "POST",
+  "expectedStatus": 200
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] not defining search_text will result into error",
+  "url": "/v2/monograph/publishers/autocomplete",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

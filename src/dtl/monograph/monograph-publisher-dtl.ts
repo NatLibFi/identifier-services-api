@@ -1,6 +1,7 @@
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
 import type {
   MonographPublisherReadAdmin,
+  MonographPublisherReadAutocomplete,
   MonographPublisherReadGuest,
   MonographPublisherSelect,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
@@ -93,5 +94,18 @@ export function asMonographPublisherGuestRead(
     www,
     has_quitted,
     isbn_publisher_ranges: isbnPublisherRanges.map(({ publisher_identifier }) => ({ publisher_identifier })),
+  };
+}
+
+export function asMonographPublisherAutocompleteRead(
+  monographPublisher: MonographPublisherSelect | UnknownObject,
+): MonographPublisherReadAutocomplete {
+  const { id, official_name, other_names, previous_names } = monographPublisher;
+
+  return {
+    id,
+    official_name,
+    other_names,
+    previous_names,
   };
 }

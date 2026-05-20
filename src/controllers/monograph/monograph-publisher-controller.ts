@@ -38,3 +38,12 @@ export async function searchMonographPublisher(req: Request, res: Response, next
     return next(error);
   }
 }
+
+export async function monographPublisherAutocomplete(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherInterface.monographPublisherAutocomplete(req.body['search_text']);
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

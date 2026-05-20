@@ -30,6 +30,8 @@ paths:
     $ref: './resources/monograph/publishers/id.yaml'
   /v2/monograph/publishers/search:
     $ref: './resources/monograph/publishers/search.yaml'
+  /v2/monograph/publishers/autocomplete:
+    $ref: './resources/monograph/publishers/autocomplete.yaml'
 
   /v2/monograph/publications/{id}:
     $ref: './resources/monograph/publications/id.yaml'

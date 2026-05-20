@@ -5,6 +5,7 @@ import { validateRequestBody, validateRequestParams } from '../../middlewares/va
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
+  monographPublisherAutocompleteSchema,
   searchMonographPublisherSchema,
   updateMonographPublisherSchema,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
@@ -15,6 +16,12 @@ monographPublisherRouter.post(
   '/search',
   validateRequestBody(searchMonographPublisherSchema),
   monographPublisherControllers.searchMonographPublisher,
+);
+
+monographPublisherRouter.post(
+  '/autocomplete',
+  validateRequestBody(monographPublisherAutocompleteSchema),
+  monographPublisherControllers.monographPublisherAutocomplete,
 );
 
 monographPublisherRouter.get(
