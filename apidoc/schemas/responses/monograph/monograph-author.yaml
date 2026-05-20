@@ -9,7 +9,7 @@ properties:
   roles:
     type: array
     items:
-      $ref: '../../enums/monograph/manifestation-author-roles.yaml'
+      $ref: '../../enums/monograph/author-roles.yaml'
   isni:
     type:
       - string

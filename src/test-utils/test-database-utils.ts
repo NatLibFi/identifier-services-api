@@ -78,6 +78,7 @@ export async function validateDbState(dbExpected: UnknownObject) {
   const dbTables = dbTablesRaw.map(({ name }) => name);
 
   // Verify there are no more or less tables than expected
+  // and content is exactly as expected for each table
   expectedTables.sort();
   dbTables.sort();
   expect(expectedTables).toStrictEqual(dbTables);

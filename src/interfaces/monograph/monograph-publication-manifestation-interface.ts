@@ -90,14 +90,9 @@ export async function updateMonographPublicationManifestation(
   // JSON columns need separate handling
   const processedUpdateDoc: MonographPublicationManifestationUpdate = {
     ...updateDoc,
-    authors: undefined,
     series: undefined,
     printing_information: undefined,
   };
-
-  if ('authors' in updateDoc) {
-    processedUpdateDoc.authors = JSON.stringify(updateDoc.authors);
-  }
 
   if ('series' in updateDoc) {
     processedUpdateDoc.series = JSON.stringify(updateDoc.series);

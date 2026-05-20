@@ -9,6 +9,7 @@ export interface MonographPublicationExpression {
   authors: JSONColumnType<MonographAuthor[]>;
   title: string;
   subtitle: string | null;
+  map_scale: string | null;
   created: Date;
   created_by: string;
   modified: Date;

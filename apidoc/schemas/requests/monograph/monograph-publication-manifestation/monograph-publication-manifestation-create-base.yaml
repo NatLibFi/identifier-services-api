@@ -1,7 +1,6 @@
 type: object
 required:
   - manifestation_type
-  - authors
   - publication_year
   - publication_month
 properties:
@@ -16,31 +15,6 @@ properties:
     type:
       - string
       - 'null'
-  map_scale:
-    maximum: 50
-    type:
-      - string
-      - 'null'
-  authors:
-    type: array
-    items:
-      type: object
-      properties:
-        first_name:
-          type: string
-          maximum: 50
-        last_name:
-          type: string
-          maximum: 50
-        isni:
-          type:
-            - string
-            - 'null'
-          maximum: 16
-        roles:
-          type: array
-          items:
-            $ref: '../../../enums/monograph/manifestation-author-roles.yaml'
   publication_year:
     $ref: '../../../patterns/year-string.yaml'
   publication_month:

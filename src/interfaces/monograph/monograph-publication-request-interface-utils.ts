@@ -10,10 +10,7 @@ import {
   MONOGRAPH_MANIFESTATION_TYPES,
   MONOGRAPH_PUBLICATION_REQUEST_STATES,
 } from '../../constants.ts';
-import {
-  monographExpressionAuthorRoleEnum,
-  monographManifestationAuthorRoleEnum,
-} from '../../validations/common-validation-enum.ts';
+import { monographAuthorRoleEnum } from '../../validations/common-validation-enum.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
 
@@ -28,13 +25,13 @@ import type { MonographPublicationRequestSelect } from '../../db/types/monograph
 import type { Transaction } from 'kysely';
 import type { Database } from '../../db/types.ts';
 
-export function getExpressionAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
+export function getMonographAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
   if (!firstName || !lastName || !roles || roles.length === 0) {
     return null;
   }
 
-  const expressionAuthorRoles = roles.filter((r) => monographExpressionAuthorRoleEnum.includes(r));
-  if (expressionAuthorRoles.length === 0) {
+  const validMonographAuthorRoles = roles.filter((r) => monographAuthorRoleEnum.includes(r));
+  if (validMonographAuthorRoles.length === 0) {
     return null;
   }
 
@@ -42,25 +39,7 @@ export function getExpressionAuthorV1(firstName?: string, lastName?: string, rol
     first_name: firstName,
     last_name: lastName,
     isni: null,
-    roles: expressionAuthorRoles,
-  };
-}
-
-export function getManifestationAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
-  if (!firstName || !lastName || !roles || roles.length === 0) {
-    return null;
-  }
-
-  const manifestationAuthorRoles = roles.filter((r) => monographManifestationAuthorRoleEnum.includes(r));
-  if (manifestationAuthorRoles.length === 0) {
-    return null;
-  }
-
-  return {
-    first_name: firstName,
-    last_name: lastName,
-    isni: null,
-    roles: manifestationAuthorRoles,
+    roles: validMonographAuthorRoles,
   };
 }
 
@@ -230,6 +209,7 @@ export function getDbPublicationExpressionEntryV1(
   const {
     title,
     subtitle,
+    mapScale,
     firstName1,
     lastName1,
     role1,
@@ -251,14 +231,15 @@ export function getDbPublicationExpressionEntryV1(
       expression_language: monographPublicationRequestCreateDoc.language,
       authors: JSON.stringify(
         [
-          getExpressionAuthorV1(firstName1, lastName1, role1),
-          getExpressionAuthorV1(firstName2, lastName2, role2),
-          getExpressionAuthorV1(firstName3, lastName3, role3),
-          getExpressionAuthorV1(firstName4, lastName4, role4),
+          getMonographAuthorV1(firstName1, lastName1, role1),
+          getMonographAuthorV1(firstName2, lastName2, role2),
+          getMonographAuthorV1(firstName3, lastName3, role3),
+          getMonographAuthorV1(firstName4, lastName4, role4),
         ].filter((v) => v !== null),
       ),
       title,
       subtitle: subtitle ?? null,
+      map_scale: mapScale ?? null,
       manifestations: getDbPublicationManifestationEntriesV1(monographPublicationRequestCreateDoc, user),
       created: getCurrentTime(),
       created_by: user?.id ?? APPLICATION_USER_UI_PUBLIC,
@@ -310,18 +291,6 @@ export function getDbPublicationManifestationEntriesV1(
   monographPublicationRequestId?: number | null,
 ) {
   const {
-    firstName1,
-    lastName1,
-    role1,
-    firstName2,
-    lastName2,
-    role2,
-    firstName3,
-    lastName3,
-    role3,
-    firstName4,
-    lastName4,
-    role4,
     type,
     typeOther,
     fileformat,
@@ -332,7 +301,6 @@ export function getDbPublicationManifestationEntriesV1(
     printingHouseCity,
     copies,
     edition,
-    mapScale,
     series,
     volume,
     issn,
@@ -370,17 +338,8 @@ export function getDbPublicationManifestationEntriesV1(
     ...base,
     cancelled: false,
     manifestation_edition: edition ?? null,
-    map_scale: mapScale ?? null,
     publication_year: year,
     publication_month: month,
-    authors: JSON.stringify(
-      [
-        getManifestationAuthorV1(firstName1, lastName1, role1),
-        getManifestationAuthorV1(firstName2, lastName2, role2),
-        getManifestationAuthorV1(firstName3, lastName3, role3),
-        getManifestationAuthorV1(firstName4, lastName4, role4),
-      ].filter((v) => v !== null),
-    ),
     series: JSON.stringify(seriesInformation),
     created: getCurrentTime(),
     created_by: user?.id ?? APPLICATION_USER_UI_PUBLIC,
@@ -395,12 +354,11 @@ export function getDbPublicationManifestationEntriesV2(
   expressionId?: number,
   monographPublicationRequestId?: number | null,
 ) {
-  const { authors, series, printing_information, ...rest } = manifestationCreateDoc;
+  const { series, printing_information, ...rest } = manifestationCreateDoc;
 
   return {
     ...rest,
     cancelled: false,
-    authors: JSON.stringify(authors),
     series: JSON.stringify(series),
     printing_information: JSON.stringify(printing_information),
     monograph_publication_expression_id: expressionId,

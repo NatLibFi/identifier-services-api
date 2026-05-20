@@ -1,4 +1,4 @@
--- Monograph publication manifestation v2.0.0-alpha.1
+-- Monograph publication manifestation v2.0.0-alpha.2
 CREATE TABLE monograph_publication_manifestation (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publication_expression_id INT UNSIGNED NOT NULL,
@@ -6,8 +6,6 @@ CREATE TABLE monograph_publication_manifestation (
   manifestation_type VARCHAR(50) NOT NULL,
   manifestation_type_other VARCHAR(100),
   manifestation_edition VARCHAR(2),
-  map_scale VARCHAR(50),
-  authors JSON NOT NULL,
   publication_year VARCHAR(4),
   publication_month VARCHAR(2),
   series JSON NOT NULL,

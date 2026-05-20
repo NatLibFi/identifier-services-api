@@ -12,6 +12,7 @@ export async function createMonographPublicationExpressionTable(db: Kysely<Datab
     .addColumn('authors', 'json', (col) => col.notNull())
     .addColumn('title', 'varchar(200)', (col) => col.notNull())
     .addColumn('subtitle', 'varchar(200)')
+    .addColumn('map_scale', 'varchar(50)')
     .addColumn('created', 'datetime', (col) => col.notNull())
     .addColumn('created_by', 'varchar(36)', (col) => col.notNull())
     .addColumn('modified', 'datetime', (col) => col.notNull())

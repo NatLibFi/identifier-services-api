@@ -1,7 +1,5 @@
 import type { Generated, Updateable, Insertable, Selectable, JSONColumnType } from 'kysely';
 
-import type { MonographAuthor } from './types-monograph-author.ts';
-
 export interface MonographSeriesInformation {
   name: string;
   issn: string | null;
@@ -21,8 +19,6 @@ export interface MonographPublicationManifestation {
   manifestation_type: string;
   manifestation_type_other: string | null;
   manifestation_edition: string | null;
-  map_scale: string | null;
-  authors: JSONColumnType<MonographAuthor[]>;
   publication_year: string | null;
   publication_month: string | null;
   series: JSONColumnType<MonographSeriesInformation[]>;

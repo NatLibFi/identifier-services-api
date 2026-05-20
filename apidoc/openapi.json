@@ -2207,14 +2207,16 @@
           "MUL"
         ]
       },
-      "expression-author-roles": {
+      "author-roles": {
         "type": "string",
         "enum": [
           "AUTHOR",
-          "TRANSLATOR"
+          "TRANSLATOR",
+          "ILLUSTRATOR",
+          "EDITOR"
         ]
       },
-      "monograph-expression-author": {
+      "monograph-author": {
         "type": "object",
         "properties": {
           "first_name": {
@@ -2229,7 +2231,7 @@
           "roles": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/expression-author-roles"
+              "$ref": "#/components/schemas/author-roles"
             }
           },
           "isni": {
@@ -2253,39 +2255,6 @@
           "MP3",
           "OTHER"
         ]
-      },
-      "manifestation-author-roles": {
-        "type": "string",
-        "enum": [
-          "ILLUSTRATOR",
-          "EDITOR"
-        ]
-      },
-      "monograph-manifestation-author": {
-        "type": "object",
-        "properties": {
-          "first_name": {
-            "type": "string"
-          },
-          "last_name": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/manifestation-author-roles"
-            }
-          },
-          "isni": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
       },
       "monograph-publication-manifestation": {
         "allOf": [
@@ -2320,18 +2289,6 @@
                   "string",
                   "null"
                 ]
-              },
-              "map_scale": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "authors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/monograph-manifestation-author"
-                }
               },
               "publication_year": {
                 "type": [
@@ -2428,13 +2385,19 @@
               "authors": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/monograph-expression-author"
+                  "$ref": "#/components/schemas/monograph-author"
                 }
               },
               "title": {
                 "type": "string"
               },
               "subtitle": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "map_scale": {
                 "type": [
                   "string",
                   "null"
@@ -2565,7 +2528,7 @@
                 "roles": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/expression-author-roles"
+                    "$ref": "#/components/schemas/author-roles"
                   }
                 }
               }
@@ -2579,6 +2542,13 @@
           "subtitle": {
             "type": "string",
             "maximum": 200
+          },
+          "map_scale": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maximum": 50
           },
           "expression_language": {
             "$ref": "#/components/schemas/item-language"
@@ -2611,42 +2581,6 @@
               "string",
               "null"
             ]
-          },
-          "map_scale": {
-            "maximum": 50,
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "authors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "first_name": {
-                  "type": "string",
-                  "maximum": 50
-                },
-                "last_name": {
-                  "type": "string",
-                  "maximum": 50
-                },
-                "isni": {
-                  "type": [
-                    "string",
-                    "null"
-                  ],
-                  "maximum": 16
-                },
-                "roles": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/manifestation-author-roles"
-                  }
-                }
-              }
-            }
           },
           "publication_year": {
             "$ref": "#/components/schemas/year-string"
@@ -2817,10 +2751,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/expression-author-roles"
-                },
-                {
-                  "$ref": "#/components/schemas/manifestation-author-roles"
+                  "$ref": "#/components/schemas/author-roles"
                 }
               ]
             }
@@ -2839,10 +2770,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/expression-author-roles"
-                },
-                {
-                  "$ref": "#/components/schemas/manifestation-author-roles"
+                  "$ref": "#/components/schemas/author-roles"
                 }
               ]
             }
@@ -2861,10 +2789,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/expression-author-roles"
-                },
-                {
-                  "$ref": "#/components/schemas/manifestation-author-roles"
+                  "$ref": "#/components/schemas/author-roles"
                 }
               ]
             }
@@ -2883,10 +2808,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/expression-author-roles"
-                },
-                {
-                  "$ref": "#/components/schemas/manifestation-author-roles"
+                  "$ref": "#/components/schemas/author-roles"
                 }
               ]
             }
@@ -2990,7 +2912,6 @@
         "type": "object",
         "required": [
           "manifestation_type",
-          "authors",
           "publication_year",
           "publication_month"
         ],
@@ -3010,42 +2931,6 @@
               "string",
               "null"
             ]
-          },
-          "map_scale": {
-            "maximum": 50,
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "authors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "first_name": {
-                  "type": "string",
-                  "maximum": 50
-                },
-                "last_name": {
-                  "type": "string",
-                  "maximum": 50
-                },
-                "isni": {
-                  "type": [
-                    "string",
-                    "null"
-                  ],
-                  "maximum": 16
-                },
-                "roles": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/manifestation-author-roles"
-                  }
-                }
-              }
-            }
           },
           "publication_year": {
             "$ref": "#/components/schemas/year-string"
@@ -3142,7 +3027,7 @@
                 "roles": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/expression-author-roles"
+                    "$ref": "#/components/schemas/author-roles"
                   }
                 }
               }
@@ -3155,6 +3040,13 @@
           "subtitle": {
             "type": "string",
             "maximum": 200
+          },
+          "map_scale": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maximum": 50
           },
           "expression_language": {
             "$ref": "#/components/schemas/item-language"

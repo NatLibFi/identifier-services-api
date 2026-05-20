@@ -1,4 +1,4 @@
--- Monograph publication expression v2.0.0-alpha.1
+-- Monograph publication expression v2.0.0-alpha.2
 CREATE TABLE monograph_publication_expression (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publication_id INT UNSIGNED NOT NULL,
@@ -7,6 +7,7 @@ CREATE TABLE monograph_publication_expression (
   authors JSON NOT NULL,
   title VARCHAR(200) NOT NULL,
   subtitle VARCHAR(200),
+  map_scale VARCHAR(50),
   created DATETIME NOT NULL,
   created_by VARCHAR(36) NOT NULL,
   modified DATETIME NOT NULL,

@@ -16,7 +16,7 @@ properties:
         roles:
           type: array
           items:
-            $ref: '../../../enums/monograph/expression-author-roles.yaml'
+            $ref: '../../../enums/monograph/author-roles.yaml'
   title:
     type: string
     minimum: 1
@@ -24,5 +24,10 @@ properties:
   subtitle:
     type: string
     maximum: 200
+  map_scale:
+    type:
+      - string
+      - 'null'
+    maximum: 50
   expression_language:
     $ref: '../../../enums/item-language.yaml'

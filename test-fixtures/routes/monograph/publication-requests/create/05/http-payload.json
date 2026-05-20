@@ -22,19 +22,18 @@
       "expression_language": "ENG",
       "authors": [
         { "first_name": "Foobar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
-        { "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR", "ILLUSTRATOR"] },
         { "first_name": "Barfoo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
         { "first_name": "Foo-Foo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] }
       ],
       "title": "Foo Book 2",
       "subtitle": "English subtitle",
+      "map_scale": null,
       "manifestations": [
         {
           "manifestation_type": "HARDBACK",
           "manifestation_type_other": null,
           "manifestation_edition": "1",
-          "map_scale": null,
-          "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
           "publication_year": "2049",
           "publication_month": "12",
           "series": [{ "name": "Foo Series", "issn": "1234-5678", "volume": "2" }],
@@ -50,8 +49,6 @@
           "manifestation_type": "OTHER",
           "manifestation_type_other": "Ohjelmistobinääri, joka tulostaa teoksen näytölle",
           "manifestation_edition": "1",
-          "map_scale": null,
-          "authors": [{ "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["ILLUSTRATOR"] }],
           "publication_year": "2049",
           "publication_month": "12",
           "series": [],
@@ -64,20 +61,19 @@
       "expression_language": "FIN",
       "authors": [
         { "first_name": "Foobar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
-        { "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
+        { "first_name": "Ba-Bar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR", "ILLUSTRATOR"] },
         { "first_name": "Barfoo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
         { "first_name": "Foo-Foo", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] },
         { "first_name": "Baz", "last_name": "Baz", "isni": null, "roles": ["TRANSLATOR"] }
       ],
       "title": "Foo Book 2",
       "subtitle": "Suomenkielinen alaotsikko",
+      "map_scale": null,
       "manifestations": [
         {
           "manifestation_type": "HARDBACK",
           "manifestation_type_other": null,
           "manifestation_edition": "1",
-          "map_scale": null,
-          "authors": [],
           "publication_year": "2049",
           "publication_month": "12",
           "series": [],

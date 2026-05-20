@@ -1,17 +1,8 @@
 import * as z from 'zod';
-import { monographManifestationAuthorRoleEnum, monographManifestationTypeEnum } from '../common-validation-enum.ts';
+import { monographManifestationTypeEnum } from '../common-validation-enum.ts';
 import { issnLikeString, monthString, yearString } from '../common-validation-regex.ts';
 import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL, MONOGRAPH_MANIFESTATION_TYPES_PRINT } from '../../constants.ts';
 import { getCurrentTime } from '../../interfaces/interface-utils/common-interface-utils.ts';
-
-const monographPublicationManifestationAuthorSchema = z
-  .object({
-    first_name: z.string().min(1).max(50),
-    last_name: z.string().min(1).max(50),
-    isni: z.string().min(16).max(16).nullable(),
-    roles: z.array(z.enum(monographManifestationAuthorRoleEnum)).min(1).max(4),
-  })
-  .strict();
 
 const monographPublicationManifestationSeriesSchema = z
   .object({
@@ -44,10 +35,8 @@ export const createMonographPublicationManifestationSchema = z
     monograph_publication_request_id: z.number().optional(), // Used when adding new manifestation to existing request.
     manifestation_type: z.enum(monographManifestationTypeEnum),
     manifestation_type_other: z.string().max(100).optional().nullable(),
-    map_scale: z.string().max(50).optional().nullable(),
     publication_year: z.string().min(4).max(4).regex(yearString),
     publication_month: z.string().min(2).max(2).regex(monthString),
-    authors: z.array(monographPublicationManifestationAuthorSchema).min(0).max(8),
     series: z.array(monographPublicationManifestationSeriesSchema).max(5),
     printing_information: z.array(monographPublicationManifestationPrintingInformationSchema).max(10),
     manifestation_edition: z
@@ -103,10 +92,8 @@ export const updateMonographPublicationManifestationSchema = z
     cancelled: z.boolean().optional(),
     manifestation_type: z.enum(monographManifestationTypeEnum).optional(),
     manifestation_type_other: z.string().max(100).optional().nullable(),
-    map_scale: z.string().max(50).optional().nullable(),
     publication_year: z.string().min(4).max(4).regex(yearString).optional(),
     publication_month: z.string().min(2).max(2).regex(monthString).optional(),
-    authors: z.array(monographPublicationManifestationAuthorSchema).min(0).max(8).optional(),
     series: z.array(monographPublicationManifestationSeriesSchema).max(5).optional(),
     printing_information: z.array(monographPublicationManifestationPrintingInformationSchema).max(10).optional(),
     manifestation_edition: z

@@ -6,6 +6,7 @@
   "authors": [{ "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] }],
   "title": "Edited title",
   "subtitle": null,
+  "map_scale": null,
   "manifestations": [],
   "created": "2025-01-20T12:00:00.000Z",
   "created_by": "TEST_USER_1",

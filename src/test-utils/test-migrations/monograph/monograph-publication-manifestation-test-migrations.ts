@@ -11,8 +11,6 @@ export async function createMonographPublicationManifestationTable(db: Kysely<Da
     .addColumn('manifestation_type', 'varchar(50)', (col) => col.notNull())
     .addColumn('manifestation_type_other', 'varchar(100)')
     .addColumn('manifestation_edition', 'varchar(2)')
-    .addColumn('map_scale', 'varchar(50)')
-    .addColumn('authors', 'json', (col) => col.notNull())
     .addColumn('publication_year', 'varchar(4)')
     .addColumn('publication_month', 'varchar(2)')
     .addColumn('series', 'json', (col) => col.notNull())

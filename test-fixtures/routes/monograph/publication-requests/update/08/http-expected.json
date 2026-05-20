@@ -36,6 +36,7 @@
         ],
         "title": "Example title",
         "subtitle": "Example subtitle",
+        "map_scale": null,
         "manifestations": [
           {
             "id": 1,
@@ -45,11 +46,6 @@
             "manifestation_type": "PAPERBACK",
             "manifestation_type_other": null,
             "manifestation_edition": null,
-            "map_scale": null,
-            "authors": [
-              { "first_name": "Eero", "last_name": "Esimerkki", "isni": null, "roles": ["ILLUSTRATOR"] },
-              { "first_name": "Elli", "last_name": "Esimerkki", "isni": null, "roles": ["EDITOR"] }
-            ],
             "publication_year": "2024",
             "publication_month": "12",
             "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],
@@ -74,11 +70,6 @@
             "manifestation_type": "EPUB",
             "manifestation_type_other": null,
             "manifestation_edition": null,
-            "map_scale": null,
-            "authors": [
-              { "first_name": "Eero", "last_name": "Esimerkki", "isni": null, "roles": ["ILLUSTRATOR"] },
-              { "first_name": "Elli", "last_name": "Esimerkki", "isni": null, "roles": ["EDITOR"] }
-            ],
             "publication_year": "2024",
             "publication_month": "12",
             "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],

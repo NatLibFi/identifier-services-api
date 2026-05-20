@@ -1,4 +1,6 @@
 type: string
 enum:
+  - AUTHOR
+  - TRANSLATOR
   - ILLUSTRATOR
   - EDITOR

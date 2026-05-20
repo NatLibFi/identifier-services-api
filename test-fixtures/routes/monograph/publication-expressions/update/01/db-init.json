@@ -11,6 +11,7 @@
       ],
       "title": "Example title",
       "subtitle": "Example subtitle",
+      "map_scale": null,
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",

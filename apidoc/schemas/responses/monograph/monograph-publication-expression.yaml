@@ -13,10 +13,14 @@ allOf:
       authors:
         type: array
         items:
-          $ref: './monograph-expression-author.yaml'
+          $ref: './monograph-author.yaml'
       title:
         type: string
       subtitle:
+        type:
+          - string
+          - 'null'
+      map_scale:
         type:
           - string
           - 'null'

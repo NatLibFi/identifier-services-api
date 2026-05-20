@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 import {
-  monographExpressionAuthorRoleEnum,
+  monographAuthorRoleEnum,
   monographExpressionTypeEnum,
   publicationLanguageEnum,
 } from '../common-validation-enum.ts';
@@ -13,7 +13,7 @@ const monographPublicationExpressionAuthorSchema = z
     first_name: z.string().min(1).max(50),
     last_name: z.string().min(1).max(50),
     isni: z.string().min(16).max(16).nullable(),
-    roles: z.array(z.enum(monographExpressionAuthorRoleEnum)).min(1).max(4),
+    roles: z.array(z.enum(monographAuthorRoleEnum)).min(1).max(4),
   })
   .strict();
 
@@ -25,6 +25,7 @@ export const createMonographPublicationExpressionSchema = z
     authors: z.array(monographPublicationExpressionAuthorSchema).min(1).max(8),
     title: z.string().min(1).max(200),
     subtitle: z.string().max(200).optional().nullable(),
+    map_scale: z.string().max(50).optional().nullable(),
     manifestations: z.array(createMonographPublicationManifestationSchema).min(1).max(10),
   })
   .strict();
@@ -36,6 +37,7 @@ export const updateMonographPublicationExpressionSchema = z
     authors: z.array(monographPublicationExpressionAuthorSchema).min(1).max(8).optional(),
     title: z.string().min(1).max(200).optional(),
     subtitle: z.string().max(200).optional().nullable(),
+    map_scale: z.string().max(50).optional().nullable(),
   })
   .strict();
 

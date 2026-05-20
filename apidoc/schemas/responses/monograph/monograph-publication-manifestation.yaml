@@ -21,14 +21,6 @@ allOf:
         type:
           - string
           - 'null'
-      map_scale:
-        type:
-          - string
-          - 'null'
-      authors:
-        type: array
-        items:
-          $ref: './monograph-manifestation-author.yaml'
       publication_year:
         type:
           - string
