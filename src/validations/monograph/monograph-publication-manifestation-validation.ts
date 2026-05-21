@@ -43,7 +43,8 @@ export const createMonographPublicationManifestationSchema = z
       .string()
       .max(2)
       .regex(/^([0-9]{1}$|^[1-9]{1}[0-9]{1})?$/)
-      .optional(),
+      .optional()
+      .nullable(),
   })
   .strict()
   .superRefine((data, ctx) => {
@@ -100,7 +101,8 @@ export const updateMonographPublicationManifestationSchema = z
       .string()
       .max(2)
       .regex(/^([0-9]{1}$|^[1-9]{1}[0-9]{1})?$/)
-      .optional(),
+      .optional()
+      .nullable(),
   })
   .strict()
   .superRefine((data, ctx) => {

@@ -46,7 +46,7 @@ export async function getExpressionsManifestations(expressionIds: number[]) {
     )
     // TODO: left join for ISMN identifier
     .selectAll('monograph_publication_manifestation')
-    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .select(['isbn_identifier.identifier as isbn_identifier', 'isbn_identifier.modified as isbn_identifier_assigned'])
     .where('monograph_publication_expression_id', 'in', expressionIds)
     .execute();
 

@@ -1,6 +1,7 @@
 {
   "id": 1,
   "identifier": null,
+  "identifier_assigned": null,
   "monograph_publication_expression_id": 1,
   "monograph_publication_request_id": 1,
   "manifestation_type": "PAPERBACK",

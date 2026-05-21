@@ -2,7 +2,9 @@ import type { MonographPublicationManifestationSelect } from '../../db/types/mon
 
 export interface MonographPublicationManifestationAdminRead extends MonographPublicationManifestationSelect {
   isbn_identifier: string | null;
+  isbn_identifier_assigned: Date | null;
   ismn_identifier?: string | null; // TODO: make not optional
+  ismn_identifier_assigned?: Date | null;
 }
 
 export interface ValidatedMonographPublicationManifestationAdminRead extends Omit<
@@ -10,6 +12,7 @@ export interface ValidatedMonographPublicationManifestationAdminRead extends Omi
   'isbn_identifier'
 > {
   identifier: string | null;
+  identifier_assigned: Date | null;
 }
 
 export function asMonographPublicationManifestationAdminRead(
@@ -28,7 +31,9 @@ export function asMonographPublicationManifestationAdminRead(
     series,
     cancelled,
     isbn_identifier,
+    isbn_identifier_assigned,
     ismn_identifier,
+    ismn_identifier_assigned,
     created,
     created_by,
     modified,
@@ -42,11 +47,14 @@ export function asMonographPublicationManifestationAdminRead(
   }
 
   let definedIdentifier: string | null = null;
+  let identifierAssigned: Date | null = null;
 
   if (isbn_identifier) {
     definedIdentifier = isbn_identifier;
+    identifierAssigned = isbn_identifier_assigned;
   } else if (ismn_identifier) {
     definedIdentifier = ismn_identifier;
+    identifierAssigned = ismn_identifier_assigned ?? null;
   }
 
   return {
@@ -62,6 +70,7 @@ export function asMonographPublicationManifestationAdminRead(
     series,
     cancelled,
     identifier: definedIdentifier,
+    identifier_assigned: identifierAssigned,
     created,
     created_by,
     modified,

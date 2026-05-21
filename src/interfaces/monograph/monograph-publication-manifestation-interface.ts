@@ -38,7 +38,7 @@ export async function readMonographPublicationManifestation(id: number) {
     )
     // TODO: left join for ISMN identifier
     .selectAll('monograph_publication_manifestation')
-    .select(['isbn_identifier.identifier as isbn_identifier'])
+    .select(['isbn_identifier.identifier as isbn_identifier', 'isbn_identifier.modified as isbn_identifier_assigned'])
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
 

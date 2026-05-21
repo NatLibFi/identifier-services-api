@@ -63,5 +63,13 @@ allOf:
                 - 'null'
       cancelled:
         type: boolean
+      identifier:
+        type:
+          - string
+          - 'null'
+      identifier_assigned:
+        type:
+          - string
+          - 'null'
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

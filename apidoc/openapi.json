@@ -2353,6 +2353,18 @@
               },
               "cancelled": {
                 "type": "boolean"
+              },
+              "identifier": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "identifier_assigned": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               }
             }
           },
