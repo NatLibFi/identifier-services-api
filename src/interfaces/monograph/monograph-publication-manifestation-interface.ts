@@ -20,11 +20,15 @@ import {
 import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
-import type { UpdateMonographPublicationManifestation } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
+import type {
+  AddMonographPublicationManifestation,
+  UpdateMonographPublicationManifestation,
+} from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
 import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
+import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
 
 export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();
@@ -145,6 +149,55 @@ export async function updateMonographPublicationManifestation(
   });
 
   return readMonographPublicationManifestation(id);
+}
+
+export async function addMonographPublicationManifestation(
+  createDoc: AddMonographPublicationManifestation,
+  user: RequestUser,
+) {
+  const {
+    monograph_publication_expression_id,
+    manifestation_type,
+    manifestation_type_other,
+    manifestation_edition,
+    publication_month,
+    publication_year,
+    series,
+    printing_information,
+  } = createDoc;
+
+  const db = getKysely();
+
+  // Sanity check
+  if (!monograph_publication_expression_id) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Cannot create manifestation without adding it to expression');
+  }
+
+  // Validate expression through using interface read - implicitly manages returning 404 in case entity does not exist
+  await readMonographPublicationExpression(monograph_publication_expression_id);
+
+  const printingInformation = printing_information ?? [];
+  const seriesInformation = series ?? [];
+
+  const dbDoc = {
+    monograph_publication_expression_id,
+    monograph_publication_request_id: null,
+    cancelled: false,
+    manifestation_type,
+    manifestation_type_other: manifestation_type_other ?? null,
+    manifestation_edition: manifestation_edition ?? null,
+    publication_month,
+    publication_year,
+    series: JSON.stringify(seriesInformation),
+    printing_information: JSON.stringify(printingInformation),
+    created: getCurrentTime(),
+    created_by: user.id,
+    modified: getCurrentTime(),
+    modified_by: user.id,
+  };
+
+  const result = await db.insertInto('monograph_publication_manifestation').values(dbDoc).executeTakeFirstOrThrow();
+  return { id: Number(result.insertId) };
 }
 
 export async function assignManifestationIdentifier(id: number, user: RequestUser) {

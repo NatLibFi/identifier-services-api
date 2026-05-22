@@ -3,6 +3,19 @@ import HttpStatus from 'http-status';
 
 import * as monographPublicationManifestationInterface from '../../interfaces/monograph/monograph-publication-manifestation-interface.ts';
 
+export async function addMonographPublicationManifestation(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublicationManifestationInterface.addMonographPublicationManifestation(
+      req.body,
+      req.user,
+    );
+
+    return res.status(HttpStatus.CREATED).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function updateMonographPublicationManifestation(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await monographPublicationManifestationInterface.updateMonographPublicationManifestation(

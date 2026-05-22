@@ -75,7 +75,7 @@ export const createMonographPublicationManifestationSchema = z
       ctx.addIssue({
         path: ['publication_year'],
         code: 'custom',
-        message: 'Cannot request ISBN or ISMN for already published item',
+        message: 'Cannot add manifestationthat has already been published',
       });
     }
 
@@ -83,10 +83,33 @@ export const createMonographPublicationManifestationSchema = z
       ctx.addIssue({
         path: ['publication_month'],
         code: 'custom',
-        message: 'Cannot request ISBN or ISMN for already published item',
+        message: 'Cannot add manifestationthat has already been published',
       });
     }
   });
+
+export const addMonographPublicationManifestationSchema = createMonographPublicationManifestationSchema.superRefine(
+  (data, ctx) => {
+    // Add constraint for monograph_publication_expression_id
+    if (!data.monograph_publication_expression_id) {
+      ctx.addIssue({
+        path: ['monograph_publication_expression_id'],
+        code: 'custom',
+        message: 'Defining monograph_publication_expression_id is mandatory',
+      });
+    }
+
+    // Add constraint for monograph_publication_request_id -> manifestations added using add-endpoint should not be connected to a form
+    if (data.monograph_publication_request_id) {
+      ctx.addIssue({
+        path: ['monograph_publication_request_id'],
+        code: 'custom',
+        message:
+          'Defining monograph_publication_request_id is forbidden when adding new manifestation to existing expression',
+      });
+    }
+  },
+);
 
 export const updateMonographPublicationManifestationSchema = z
   .object({
@@ -127,3 +150,4 @@ export const updateMonographPublicationManifestationSchema = z
 
 export type CreateMonographPublicationManifestation = z.infer<typeof createMonographPublicationManifestationSchema>;
 export type UpdateMonographPublicationManifestation = z.infer<typeof updateMonographPublicationManifestationSchema>;
+export type AddMonographPublicationManifestation = z.infer<typeof addMonographPublicationManifestationSchema>;

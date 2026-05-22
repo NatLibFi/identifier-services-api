@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not add manifestation",
+  "url": "/v2/monograph/publication-manifestations",
+  "method": "POST",
+  "expectedStatus": 401
+}

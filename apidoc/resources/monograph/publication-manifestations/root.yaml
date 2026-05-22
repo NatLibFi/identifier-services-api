@@ -1,0 +1,40 @@
+post:
+  operationId: addMonographPublicationManifestation
+  summary: Add new manifestation to an existing expression
+  security:
+    - openId:
+        - admin
+        - publisher
+  description: Adds a new manifestation to an existing expression
+  tags:
+    - monograph
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '../../../schemas/requests/monograph/monograph-publication-manifestation/monograph-publication-manifestation-create-base.yaml'
+            - type: object
+              required:
+                - monograph_publication_expression_id
+              properties:
+                monograph_publication_expression_id:
+                  type: number
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'
