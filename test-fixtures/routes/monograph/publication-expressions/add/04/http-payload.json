@@ -1,0 +1,20 @@
+{
+  "monograph_publication_id": 123,
+  "expression_type": "BOOK",
+  "expression_language": "FIN",
+  "authors": [{ "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] }],
+  "title": "Example title 2",
+  "subtitle": null,
+  "map_scale": null,
+  "manifestations": [
+    {
+      "manifestation_type": "PAPERBACK",
+      "manifestation_type_other": null,
+      "manifestation_edition": null,
+      "publication_year": "2026",
+      "publication_month": "12",
+      "series": [],
+      "printing_information": []
+    }
+  ]
+}

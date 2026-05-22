@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may add new expression to existing monograph publication",
+  "url": "/v2/monograph/publication-expressions",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

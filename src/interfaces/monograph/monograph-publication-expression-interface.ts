@@ -12,12 +12,16 @@ import { ApiError } from '../../utils/api-error.ts';
 import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
-import type { UpdateMonographPublicationExpression } from '../../validations/monograph/monograph-publication-expression-validation.ts';
+import type {
+  AddMonographPublicationExpression,
+  UpdateMonographPublicationExpression,
+} from '../../validations/monograph/monograph-publication-expression-validation.ts';
 import type {
   MonographPublicationExpressionSelect,
   MonographPublicationExpressionUpdate,
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
 import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
 
 export async function readMonographPublicationExpression(id: number) {
   const db = getKysely();
@@ -110,4 +114,77 @@ export async function updateMonographPublicationExpression(
   });
 
   return readMonographPublicationExpression(id);
+}
+
+export async function addMonographPublicationExpression(
+  createDoc: AddMonographPublicationExpression,
+  user: RequestUser,
+) {
+  const {
+    monograph_publication_id,
+    expression_type,
+    expression_language,
+    authors,
+    title,
+    subtitle,
+    map_scale,
+    manifestations,
+  } = createDoc;
+
+  const db = getKysely();
+
+  // Sanity check
+  if (!monograph_publication_id) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Cannot create expression without adding it to publication');
+  }
+
+  // Validate publication through read - implicitly manages returning 404 in case entity does not exist
+  await readMonographPublication(monograph_publication_id);
+
+  // TODO: evaluate whether any constraints are required
+
+  const dbDoc = {
+    monograph_publication_id,
+    expression_type,
+    expression_language,
+    authors: JSON.stringify(authors),
+    title,
+    subtitle,
+    map_scale,
+    created: getCurrentTime(),
+    created_by: user.id,
+    modified: getCurrentTime(),
+    modified_by: user.id,
+  };
+
+  // Create within transaction and add manifestations
+  return await db.transaction().execute(async (trx) => {
+    const expressionResult = await trx
+      .insertInto('monograph_publication_expression')
+      .values(dbDoc)
+      .executeTakeFirstOrThrow();
+
+    const expressionResultId = Number(expressionResult.insertId);
+
+    await Promise.all(
+      manifestations.map(async (m) => {
+        const dbManifestation = {
+          ...m,
+          monograph_publication_expression_id: expressionResultId,
+          monograph_publication_request_id: null,
+          series: JSON.stringify(m.series),
+          printing_information: JSON.stringify(m.printing_information),
+          cancelled: false,
+          created: getCurrentTime(),
+          created_by: user.id,
+          modified: getCurrentTime(),
+          modified_by: user.id,
+        };
+
+        await trx.insertInto('monograph_publication_manifestation').values(dbManifestation).executeTakeFirstOrThrow();
+      }),
+    );
+
+    return { id: expressionResultId };
+  });
 }

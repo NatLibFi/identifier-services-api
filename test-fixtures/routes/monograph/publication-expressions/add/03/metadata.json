@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not add new expression to existing monograph publication if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publication-expressions",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

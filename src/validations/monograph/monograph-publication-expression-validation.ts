@@ -19,7 +19,6 @@ const monographPublicationExpressionAuthorSchema = z
 
 export const createMonographPublicationExpressionSchema = z
   .object({
-    monograph_publication_id: z.number().optional(), // Used when adding new expression to existing publication. Should not be defined when creating a new request.
     expression_type: z.enum(monographExpressionTypeEnum),
     expression_language: z.enum(publicationLanguageEnum),
     authors: z.array(monographPublicationExpressionAuthorSchema).min(1).max(8),
@@ -29,6 +28,15 @@ export const createMonographPublicationExpressionSchema = z
     manifestations: z.array(createMonographPublicationManifestationSchema).min(1).max(10),
   })
   .strict();
+
+export const addMonographPublicationExpressionSchema = z.intersection(
+  createMonographPublicationExpressionSchema,
+  z
+    .object({
+      monograph_publication_id: z.number(),
+    })
+    .strict(),
+);
 
 export const updateMonographPublicationExpressionSchema = z
   .object({
@@ -42,4 +50,5 @@ export const updateMonographPublicationExpressionSchema = z
   .strict();
 
 export type CreateMonographPublicationExpression = z.infer<typeof createMonographPublicationExpressionSchema>;
+export type AddMonographPublicationExpression = z.infer<typeof addMonographPublicationExpressionSchema>;
 export type UpdateMonographPublicationExpression = z.infer<typeof updateMonographPublicationExpressionSchema>;

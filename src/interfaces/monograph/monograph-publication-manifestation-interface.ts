@@ -176,9 +176,6 @@ export async function addMonographPublicationManifestation(
   // Validate expression through using interface read - implicitly manages returning 404 in case entity does not exist
   await readMonographPublicationExpression(monograph_publication_expression_id);
 
-  const printingInformation = printing_information ?? [];
-  const seriesInformation = series ?? [];
-
   const dbDoc = {
     monograph_publication_expression_id,
     monograph_publication_request_id: null,
@@ -188,8 +185,8 @@ export async function addMonographPublicationManifestation(
     manifestation_edition: manifestation_edition ?? null,
     publication_month,
     publication_year,
-    series: JSON.stringify(seriesInformation),
-    printing_information: JSON.stringify(printingInformation),
+    series: JSON.stringify(series),
+    printing_information: JSON.stringify(printing_information),
     created: getCurrentTime(),
     created_by: user.id,
     modified: getCurrentTime(),

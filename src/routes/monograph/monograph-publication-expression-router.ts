@@ -3,10 +3,19 @@ import { Router } from 'express';
 import * as monographPublicationExpressionController from '../../controllers/monograph/monograph-publication-expression-controller.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
-import { updateMonographPublicationExpressionSchema } from '../../validations/monograph/monograph-publication-expression-validation.ts';
+import {
+  addMonographPublicationExpressionSchema,
+  updateMonographPublicationExpressionSchema,
+} from '../../validations/monograph/monograph-publication-expression-validation.ts';
 
 // Note: adminOnly needs to be applied at main router level
 const monographPublicationExpressionRouter = Router();
+
+monographPublicationExpressionRouter.post(
+  '/',
+  validateRequestBody(addMonographPublicationExpressionSchema),
+  monographPublicationExpressionController.addMonographPublicationExpression,
+);
 
 monographPublicationExpressionRouter.patch(
   '/:id',

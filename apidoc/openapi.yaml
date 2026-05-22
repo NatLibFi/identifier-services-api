@@ -40,9 +40,13 @@ paths:
   /v2/monograph/publications/search:
     $ref: './resources/monograph/publications/search.yaml'
 
+  /v2/monograph/publication-expressions:
+    $ref: './resources/monograph/publication-expressions/root.yaml'
   /v2/monograph/publication-expressions/{id}:
     $ref: './resources/monograph/publication-expressions/id.yaml'
 
+  /v2/monograph/publication-manifestations:
+    $ref: './resources/monograph/publication-manifestations/root.yaml'
   /v2/monograph/publication-manifestations/{id}:
     $ref: './resources/monograph/publication-manifestations/id.yaml'
   /v2/monograph/publication-manifestations/{id}/assign-identifier:

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not add new expression to monograph publication which does not exist",
+  "url": "/v2/monograph/publication-expressions",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 404
+}

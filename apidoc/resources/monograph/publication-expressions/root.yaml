@@ -1,26 +1,26 @@
 post:
-  operationId: addMonographPublicationManifestation
-  summary: Add new manifestation to an existing expression
+  operationId: addMonographPublicationExpression
+  summary: Add new expression to an existing publication
   security:
     - openId:
         - admin
         - publisher
-  description: Adds a new manifestation to an existing expression
+  description: Adds a new expression to an existing expression
   tags:
     - monograph
-    - monograph-publication-manifestation
+    - monograph-publication-expression
   requestBody:
     required: true
     content:
       application/json:
         schema:
           allOf:
-            - $ref: '../../../schemas/requests/monograph/monograph-publication-manifestation/monograph-publication-manifestation-create-base.yaml'
+            - $ref: '../../../schemas/requests/monograph/monograph-publication-expression/monograph-publication-expression-create-base.yaml'
             - type: object
               required:
-                - monograph_publication_expression_id
+                - monograph_publication_id
               properties:
-                monograph_publication_expression_id:
+                monograph_publication_id:
                   type: number
   responses:
     '201':

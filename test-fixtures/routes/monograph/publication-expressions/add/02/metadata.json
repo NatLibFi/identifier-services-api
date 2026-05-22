@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not add new expression to existing monograph publication",
+  "url": "/v2/monograph/publication-expressions",
+  "method": "POST",
+  "expectedStatus": 401
+}

@@ -2,6 +2,6 @@
   "type": "about:blank",
   "status": 422,
   "title": "Validation error",
-  "detail": "[monograph_publication_request_id] Defining monograph_publication_request_id is forbidden when adding new manifestation to existing expression",
+  "detail": "Unrecognized key: \"monograph_publication_request_id\"",
   "instance": "/v2/monograph/publication-manifestations"
 }
