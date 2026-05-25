@@ -923,7 +923,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/created"
+                  "$ref": "#/components/schemas/monograph-publication-expression"
                 }
               }
             }

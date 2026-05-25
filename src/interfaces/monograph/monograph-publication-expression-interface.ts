@@ -53,7 +53,6 @@ export async function updateMonographPublicationExpression(
     processedUpdateDoc.authors = JSON.stringify(updateDoc.authors);
   }
 
-  // TODO: disallow updates such as expression_type or expression_language after manifestation have had identifiers assigned
   const disallowedChangesAfterIdentifier = ['expression_type', 'expression_language'];
   const keyRequiringNoIdentifier = Object.keys(updateDoc).find((k) => disallowedChangesAfterIdentifier.includes(k));
 
@@ -72,9 +71,11 @@ export async function updateMonographPublicationExpression(
   const publicationRequestId = manifestations?.find(
     (m) => m.monograph_publication_request_id,
   )?.monograph_publication_request_id;
+
   const publicationRequest = publicationRequestId
     ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
     : undefined;
+
   const updatePublicationRequest = publicationRequest?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
 
   // Remove undefined values to have full control over update
@@ -141,7 +142,7 @@ export async function addMonographPublicationExpression(
   // Validate publication through read - implicitly manages returning 404 in case entity does not exist
   await readMonographPublication(monograph_publication_id);
 
-  // TODO: evaluate whether any constraints are required
+  // Currently no constraints are placed: it is possible to create another expression with similar type/language combination with matching title
 
   const dbDoc = {
     monograph_publication_id,
@@ -158,7 +159,7 @@ export async function addMonographPublicationExpression(
   };
 
   // Create within transaction and add manifestations
-  return await db.transaction().execute(async (trx) => {
+  const resultId = await db.transaction().execute(async (trx) => {
     const expressionResult = await trx
       .insertInto('monograph_publication_expression')
       .values(dbDoc)
@@ -185,6 +186,8 @@ export async function addMonographPublicationExpression(
       }),
     );
 
-    return { id: expressionResultId };
+    return expressionResultId;
   });
+
+  return readMonographPublicationExpression(resultId);
 }
