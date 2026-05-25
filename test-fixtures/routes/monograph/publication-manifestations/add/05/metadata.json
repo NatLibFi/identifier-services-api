@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may not add manifestation that already has been published",
+  "description": "[admin] may not link manifestation to monograph publication request",
   "url": "/v2/monograph/publication-manifestations",
   "method": "POST",
   "role": "admin",

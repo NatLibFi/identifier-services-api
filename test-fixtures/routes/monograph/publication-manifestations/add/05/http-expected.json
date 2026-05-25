@@ -2,6 +2,6 @@
   "type": "about:blank",
   "status": 422,
   "title": "Validation error",
-  "detail": "[publication_year] Cannot add manifestationthat has already been published",
+  "detail": "Unrecognized key: \"monograph_publication_request_id\"",
   "instance": "/v2/monograph/publication-manifestations"
 }

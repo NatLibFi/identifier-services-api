@@ -1,7 +1,7 @@
 {
   "type": "about:blank",
-  "status": 422,
-  "title": "Validation error",
-  "detail": "Unrecognized key: \"monograph_publication_request_id\"",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot create manifestation that contains exactly equal information as some existing manifestation",
   "instance": "/v2/monograph/publication-manifestations"
 }

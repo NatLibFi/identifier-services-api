@@ -1,7 +1,7 @@
 {
-  "description": "[admin] may not link manifestation to monograph publication request",
+  "description": "[admin] may not add manifestation that is not different from already defined manifestations",
   "url": "/v2/monograph/publication-manifestations",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 422
+  "expectedStatus": 409
 }

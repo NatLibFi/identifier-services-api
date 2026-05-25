@@ -138,23 +138,6 @@
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "TEST_USER_1"
-    },
-    {
-      "id": 3,
-      "monograph_publication_expression_id": 1,
-      "monograph_publication_request_id": null,
-      "manifestation_type": "OTHER",
-      "manifestation_type_other": "Ohjelmistobinääri",
-      "manifestation_edition": "1",
-      "publication_year": "2026",
-      "publication_month": "04",
-      "series": [],
-      "printing_information": [],
-      "cancelled": false,
-      "created": "2026-01-20T12:00:00.000Z",
-      "created_by": "admin",
-      "modified": "2026-01-20T12:00:00.000Z",
-      "modified_by": "admin"
     }
   ],
   "isbn_identifier": [

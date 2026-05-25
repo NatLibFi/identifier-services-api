@@ -174,7 +174,41 @@ export async function addMonographPublicationManifestation(
   }
 
   // Validate expression through using interface read - implicitly manages returning 404 in case entity does not exist
-  await readMonographPublicationExpression(monograph_publication_expression_id);
+  const expression = await readMonographPublicationExpression(monograph_publication_expression_id);
+
+  // TODO tests
+  // Cast all falsy values to null for comparison to be consistent
+  const castManifestationTypeOther = !manifestation_type_other ? null : manifestation_type_other;
+  const castManifestationEdition = !manifestation_edition ? null : manifestation_edition;
+
+  const matchingManifestation = expression.manifestations.find((m) => {
+    const mCastManifestationTypeOther = !m.manifestation_type_other ? null : m.manifestation_type_other;
+    const mCastManifestationEdition = !m.manifestation_edition ? null : m.manifestation_edition;
+
+    const matchingType = m.manifestation_type === manifestation_type;
+    const matchingTypeOther = mCastManifestationTypeOther === castManifestationTypeOther;
+    const matchingEdition = mCastManifestationEdition === castManifestationEdition;
+    const matchingPublicationYear = m.publication_year === publication_year;
+    const matchingPublicationMonth = m.publication_month === publication_month;
+
+    const conditions = [
+      matchingType,
+      matchingTypeOther,
+      matchingEdition,
+      matchingPublicationYear,
+      matchingPublicationMonth,
+    ];
+
+    return conditions.every((c) => c);
+  });
+
+  if (matchingManifestation) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot create manifestation that contains exactly equal information as some existing manifestation',
+    );
+  }
 
   const dbDoc = {
     monograph_publication_expression_id,
@@ -193,8 +227,14 @@ export async function addMonographPublicationManifestation(
     modified_by: user.id,
   };
 
-  const result = await db.insertInto('monograph_publication_manifestation').values(dbDoc).executeTakeFirstOrThrow();
-  return { id: Number(result.insertId) };
+  // Insert to db
+  const { insertId } = await db
+    .insertInto('monograph_publication_manifestation')
+    .values(dbDoc)
+    .executeTakeFirstOrThrow();
+
+  // Respond with result
+  return readMonographPublicationManifestation(Number(insertId));
 }
 
 export async function assignManifestationIdentifier(id: number, user: RequestUser) {

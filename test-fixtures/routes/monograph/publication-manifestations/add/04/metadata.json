@@ -1,7 +1,7 @@
 {
-  "description": "[admin] may add manifestation to existing monograph publication expression (all information defined)",
+  "description": "[admin] may not add manifestation that already has been published",
   "url": "/v2/monograph/publication-manifestations",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 201
+  "expectedStatus": 422
 }
