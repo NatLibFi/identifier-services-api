@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not delete manifestation if user-publisher-publication association is not defined",
+  "url": "/v2/monograph/publication-manifestations/2",
+  "method": "DELETE",
+  "role": "publisher",
+  "expectedStatus": 403
+}

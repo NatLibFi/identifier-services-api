@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete manifestation if it has identifier assigned to it",
+  "url": "/v2/monograph/publication-manifestations/2",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

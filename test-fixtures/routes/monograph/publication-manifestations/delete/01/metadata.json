@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may delete manifestation if preconditions are met",
+  "url": "/v2/monograph/publication-manifestations/2",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

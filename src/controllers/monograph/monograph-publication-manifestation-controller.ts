@@ -29,6 +29,15 @@ export async function updateMonographPublicationManifestation(req: Request, res:
   }
 }
 
+export async function deleteMonographPublicationManifestation(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationManifestationInterface.deleteMonographPublicationManifestation(Number(req.params['id']));
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function assignManifestationIdentifier(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await monographPublicationManifestationInterface.assignManifestationIdentifier(

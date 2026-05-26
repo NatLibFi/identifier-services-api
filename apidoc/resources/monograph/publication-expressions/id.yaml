@@ -51,10 +51,6 @@ delete:
   responses:
     '204':
       description: Resource was deleted
-      content:
-        application/json:
-          schema:
-            $ref: '../../../schemas/responses/monograph/monograph-publication-expression.yaml'
     '401':
       description: Unauthorized
     '403':

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot remove last manifestation of an expression. Please remove the expression.",
+  "instance": "/v2/monograph/publication-manifestations/1"
+}

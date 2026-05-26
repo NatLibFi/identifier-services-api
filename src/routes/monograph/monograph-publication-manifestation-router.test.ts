@@ -4,5 +4,6 @@ const routers = ['monograph', 'publication-manifestations'];
 
 runIntegrationTestSuite(routers, 'add');
 runIntegrationTestSuite(routers, 'update');
+runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'assign-identifier');
 runIntegrationTestSuite(routers, 'deassign-identifier');

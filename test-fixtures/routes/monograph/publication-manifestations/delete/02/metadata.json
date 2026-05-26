@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not delete manifestation",
+  "url": "/v2/monograph/publication-manifestations/2",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

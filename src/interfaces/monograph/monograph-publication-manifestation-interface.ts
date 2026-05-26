@@ -408,3 +408,42 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
     'Could not process linked expression expression_type.',
   );
 }
+
+export async function deleteMonographPublicationManifestation(manifestationId: number) {
+  // Constraints:
+  // - Cannot be expression's last manifestation
+  // - Cannot have identifier assigned
+
+  const db = getKysely();
+  const manifestation = await readMonographPublicationManifestation(manifestationId);
+
+  if (manifestation.identifier) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot remove manifestation that has identifier assigned to it.',
+    );
+  }
+
+  const expression = await readMonographPublicationExpression(manifestation.monograph_publication_expression_id);
+  if (expression.manifestations.length === 1) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot remove last manifestation of an expression. Please remove the expression.',
+    );
+  }
+
+  await db.transaction().execute(async (trx) => {
+    const deleteResult = await trx
+      .deleteFrom('monograph_publication_manifestation')
+      .where('id', '=', manifestationId)
+      .executeTakeFirstOrThrow();
+    const numDeleted = Number(deleteResult.numDeletedRows);
+    if (numDeleted !== 1) {
+      throw new Error('Manifestation deletion resulted into unexpected outcome. Initiating rollback.');
+    }
+  });
+
+  return;
+}

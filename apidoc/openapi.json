@@ -1028,14 +1028,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Resource was deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/monograph-publication-expression"
-                }
-              }
-            }
+            "description": "Resource was deleted"
           },
           "401": {
             "description": "Unauthorized"
@@ -1169,6 +1162,49 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMonographPublicationManifestation",
+        "summary": "Delete monograph publication manifestation.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication-manifestation"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
           },
           "401": {
             "description": "Unauthorized"

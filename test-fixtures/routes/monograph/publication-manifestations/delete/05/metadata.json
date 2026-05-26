@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete manifestation if it's last manifestation of the expression",
+  "url": "/v2/monograph/publication-manifestations/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

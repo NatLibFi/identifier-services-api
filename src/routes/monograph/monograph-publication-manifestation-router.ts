@@ -36,4 +36,10 @@ monographPublicationManifestationRouter.patch(
   monographPublicationManifestationController.updateMonographPublicationManifestation,
 );
 
+monographPublicationManifestationRouter.delete(
+  '/:id',
+  validateRequestParams(idParameterSchema, true),
+  monographPublicationManifestationController.deleteMonographPublicationManifestation,
+);
+
 export default monographPublicationManifestationRouter;
