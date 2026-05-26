@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot remove expression which contains manifestations that have ISBN or ISMN identifier assigned to it.",
+  "instance": "/v2/monograph/publication-expressions/1"
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not remove monograph publication expression",
+  "url": "/v2/monograph/publication-expressions/2",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

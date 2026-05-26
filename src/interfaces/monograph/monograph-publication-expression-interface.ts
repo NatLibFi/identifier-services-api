@@ -191,3 +191,60 @@ export async function addMonographPublicationExpression(
 
   return readMonographPublicationExpression(resultId);
 }
+
+export async function deleteMonographPublicationExpression(expressionId: number, allowLastExpressionDelete = false) {
+  // Constraints:
+  // - Cannot be last expression unless a separate flag is defined (allows utilizing interface for publication removal interface)
+  // - Any manifestation cannot have identifier assigned
+
+  const db = getKysely();
+  const expression = await readMonographPublicationExpression(expressionId);
+  const publication = await readMonographPublication(expression.monograph_publication_id);
+  const numPublicationExpression = publication.expressions.length;
+
+  if (!allowLastExpressionDelete && numPublicationExpression === 1) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot remove last expression. Use publication removal interface instead if you desire to remove the whole publication.',
+    );
+  }
+
+  const manifestationsHaveIdentifiers = expression.manifestations.filter(
+    (m) => typeof m.identifier === 'string' && m.identifier.length > 0,
+  ).length;
+
+  if (manifestationsHaveIdentifiers) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot remove expression which contains manifestations that have ISBN or ISMN identifier assigned to it.',
+    );
+  }
+
+  // Remove manifestations and expression within one transaction
+  await db.transaction().execute(async (trx) => {
+    const manifestationRemoveResult = await trx
+      .deleteFrom('monograph_publication_manifestation')
+      .where('monograph_publication_expression_id', '=', expressionId)
+      .executeTakeFirstOrThrow();
+
+    // Sanity check
+    const numDeletedManifestations = Number(manifestationRemoveResult.numDeletedRows);
+    if (numDeletedManifestations !== expression.manifestations.length) {
+      throw new Error('Removal of manifestations resulted into unexpected result. Rolling transaction back.');
+    }
+
+    const expressionRemoveResult = await trx
+      .deleteFrom('monograph_publication_expression')
+      .where('id', '=', expressionId)
+      .executeTakeFirstOrThrow();
+
+    const numDeletedExpressions = Number(expressionRemoveResult.numDeletedRows);
+    if (numDeletedExpressions !== 1) {
+      throw new Error('Removal of expression resulted into unexpected result. Rolling transaction back.');
+    }
+  });
+
+  return;
+}

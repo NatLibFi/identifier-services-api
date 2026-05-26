@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not remove last expression of publication using this interface",
+  "url": "/v2/monograph/publication-expressions/2",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

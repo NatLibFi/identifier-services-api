@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot remove last expression. Use publication removal interface instead if you desire to remove the whole publication.",
+  "instance": "/v2/monograph/publication-expressions/2"
+}

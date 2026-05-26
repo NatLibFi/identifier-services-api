@@ -24,3 +24,12 @@ export async function updateMonographPublicationExpression(req: Request, res: Re
     return next(error);
   }
 }
+
+export async function deleteMonographPublicationExpression(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationExpressionInterface.deleteMonographPublicationExpression(Number(req.params['id']));
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

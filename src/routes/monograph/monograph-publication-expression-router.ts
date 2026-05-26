@@ -24,4 +24,10 @@ monographPublicationExpressionRouter.patch(
   monographPublicationExpressionController.updateMonographPublicationExpression,
 );
 
+monographPublicationExpressionRouter.delete(
+  '/:id',
+  validateRequestParams(idParameterSchema, true),
+  monographPublicationExpressionController.deleteMonographPublicationExpression,
+);
+
 export default monographPublicationExpressionRouter;
