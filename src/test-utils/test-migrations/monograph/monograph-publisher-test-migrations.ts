@@ -13,7 +13,7 @@ export async function createMonographPublisherTable(db: Kysely<Database>): Promi
     .addColumn('zip', 'varchar(10)')
     .addColumn('city', 'varchar(50)')
     .addColumn('phone', 'varchar(30)')
-    .addColumn('email', 'varchar(100)', (col) => col.notNull())
+    .addColumn('email', 'varchar(100)')
     .addColumn('www', 'varchar(100)')
     .addColumn('lang_code', 'varchar(5)', (col) => col.notNull())
     .addColumn('contact_persons', 'json')

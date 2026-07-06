@@ -1,5 +1,6 @@
 export interface RequestUser {
   id: string;
+  name: string;
   applicationRoles?: string[];
   roles?: string[];
 }

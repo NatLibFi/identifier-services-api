@@ -447,3 +447,33 @@ export async function deleteMonographPublicationManifestation(manifestationId: n
 
   return;
 }
+
+export async function getMonographManifestationRelations(manifestationId: number) {
+  const db = getKysely();
+
+  const manifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'monograph_publication_expression',
+      'monograph_publication_expression.id',
+      'monograph_publication_manifestation.monograph_publication_expression_id',
+    )
+    .leftJoin(
+      'monograph_publication',
+      'monograph_publication.id',
+      'monograph_publication_expression.monograph_publication_id',
+    )
+    .select([
+      'monograph_publication_manifestation.id as manifestationId',
+      'monograph_publication_manifestation.monograph_publication_request_id as requestId',
+      'monograph_publication_expression.id as expressionId',
+      'monograph_publication_expression.title as expressionTitle',
+      'monograph_publication_expression.subtitle as expressionSubtitle',
+      'monograph_publication.monograph_publisher_id as publisherId',
+    ])
+    .where('monograph_publication_manifestation.id', '=', manifestationId)
+    .execute();
+
+  const validatedManifestationPublisherInfo = validateGetById(manifestation);
+  return validatedManifestationPublisherInfo;
+}

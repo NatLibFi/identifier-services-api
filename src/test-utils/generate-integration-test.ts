@@ -118,7 +118,13 @@ async function runTest(testRootPath: string) {
     // Step 2 - start application server in free port
     // https://expressjs.com/de/api.html#app.listen -> "If port is omitted or is 0, the operating system will assign an arbitrary unused port"
     const httpServer = await startApp({
+      // Please note the following are not proper production values but rather the ones used by all tests!
       applicationRoleMap: { admin: ['admin'], publisher: ['publisher'] },
+      monographPublisherConfiguration: {
+        SELF_PUBLISHER_ID: 1000,
+        STATE_PUBLISHER_ID: 2000,
+        HY_PUBLISHER_ID: 3000,
+      },
       enableProxy: false,
       environment: 'test',
       httpPort: 0,

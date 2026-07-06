@@ -23,6 +23,7 @@ import type {
 } from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
@@ -152,7 +153,7 @@ export async function createIsbnPublisherRange(
   return { id: resultId };
 }
 
-export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
+export async function readIsbnPublisherRange(isbnPublisherRangeId: number): Promise<IsbnPublisherRangeSelect> {
   const db = getKysely();
 
   const isbnPublisherRange = await db
@@ -168,6 +169,14 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
       `ISBN publisher range id ${isbnPublisherRangeId} could not be found.`,
     );
   }
+
+  return isbnPublisherRange;
+}
+
+export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
+  const db = getKysely();
+
+  const isbnPublisherRange = await readIsbnPublisherRange(isbnPublisherRangeId);
 
   const allowRangeDeletion = await canDeleteIsbnPublisherRange(isbnPublisherRange);
   if (allowRangeDeletion.result === false) {

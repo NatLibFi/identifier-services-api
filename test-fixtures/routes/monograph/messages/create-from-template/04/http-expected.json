@@ -1,0 +1,9 @@
+{
+  "monograph_publisher_id": 1000,
+  "isbn_publisher_range_id": null,
+  "ismn_publisher_range_id": null,
+  "manifestation_ids": [1, 2],
+  "recipient": "request-example@example.localhost",
+  "subject": "TESTI/TEST MESSAGE Example title approved",
+  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\n20.1.2026\n\nrequest-example@example.localhost\nFoo Publisher\nRequest street\n00001 Request city\n\nTeokselle Example title: Example subtitle eri julkaisumuodoille on myönnetty seuraavat tunnukset.\n\n978-951-95000-0-3 (pehmeäkantinen)\n978-951-95000-1-0 (EPUB)\n\nKind regards,\ntest admin"
+}

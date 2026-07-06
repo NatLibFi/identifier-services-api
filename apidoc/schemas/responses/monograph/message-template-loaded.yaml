@@ -1,0 +1,22 @@
+type: object
+properties:
+  monograph_publisher_id:
+    type: number
+  isbn_publisher_range_id:
+    type:
+      - number
+      - 'null'
+  ismn_publisher_range_id:
+    type:
+      - number
+      - 'null'
+  manifestation_ids:
+    type: array
+    items:
+      type: number
+  recipient:
+    type: string
+  subject:
+    type: string
+  body:
+    type: string

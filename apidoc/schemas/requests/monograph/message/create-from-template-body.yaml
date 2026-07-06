@@ -1,0 +1,18 @@
+type: object
+properties:
+  type:
+    $ref: '../../../enums/monograph/message-types.yaml'
+  monograph_publisher_id:
+    type: number
+  isbn_publisher_range_id:
+    type: number
+  ismn_publisher_range_id:
+    type: number
+  manifestation_ids:
+    type: array
+    items:
+      type: number
+# Note: depending on message type, defining publisher range or manifestations may be mandatory
+required:
+  - type
+  - monograph_publisher_id

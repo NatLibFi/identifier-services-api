@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create message from template for approved publication request",
+  "url": "/v2/monograph/messages/create-from-template",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

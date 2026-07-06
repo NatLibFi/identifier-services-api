@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not create message from template for approved publication request",
+  "url": "/v2/monograph/messages/create-from-template",
+  "method": "POST",
+  "expectedStatus": 401
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create message from template for sending link to download identifiers for selected ISBN publisher range",
+  "url": "/v2/monograph/messages/create-from-template",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

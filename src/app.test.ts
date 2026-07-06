@@ -7,6 +7,12 @@ describe('app.ts default export', async () => {
   test('properly starts http-server', async () => {
     const testAppOptions = {
       applicationRoleMap: {},
+      // Please note the following are not proper production values but rather the ones used by all tests!
+      monographPublisherConfiguration: {
+        SELF_PUBLISHER_ID: 1000,
+        STATE_PUBLISHER_ID: 2000,
+        HY_PUBLISHER_ID: 3000,
+      },
       environment: 'test',
       httpPort: 0,
       keycloakOptions: {

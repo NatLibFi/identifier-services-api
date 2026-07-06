@@ -1,0 +1,9 @@
+{
+  "monograph_publisher_id": 1,
+  "isbn_publisher_range_id": 1,
+  "ismn_publisher_range_id": null,
+  "manifestation_ids": [],
+  "recipient": "erkki.esimerkki@example.localhost",
+  "subject": "TESTI/TEST MESSAGE Tunnusten lataaminen",
+  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\nExample publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nHere is a link to identifiers for you: https://tunnisteportaali.kansalliskirjasto.fi/monograph/isbn-publisher-ranges/1\n\nTerveisin, test admin"
+}

@@ -67,6 +67,9 @@ paths:
   /v2/monograph/publication-requests/{id}/reprocess:
     $ref: './resources/monograph/publication-requests/reprocess.yaml'
 
+  /v2/monograph/messages/create-from-template:
+    $ref: './resources/monograph/messages/create-from-template.yaml'
+
 components:
   securitySchemes:
     openId:

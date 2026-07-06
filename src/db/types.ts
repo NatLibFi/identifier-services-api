@@ -8,6 +8,7 @@ import type { MonographPublicationExpression } from './types/monograph/types-mon
 import type { MonographPublicationManifestation } from './types/monograph/types-monograph-publication-manifestation.ts';
 import type { MonographPublicationRequest } from './types/monograph/types-monograph-publication-request.ts';
 import type { MonographPublication } from './types/monograph/types-monograph-publication.ts';
+import type { MessageTemplate } from './types/message-template.ts';
 
 export interface Database {
   isbn_range: IsbnRange;
@@ -18,4 +19,6 @@ export interface Database {
   monograph_publication_request: MonographPublicationRequest;
   monograph_publication_expression: MonographPublicationExpression;
   monograph_publication_manifestation: MonographPublicationManifestation;
+
+  message_template: MessageTemplate;
 }

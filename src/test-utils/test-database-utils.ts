@@ -18,6 +18,7 @@ import { createMonographPublicationTable } from './test-migrations/monograph/mon
 import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
 import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
 import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
+import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
 
 interface TestDatabaseConfig {
   host: string;
@@ -153,6 +154,13 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['monograph_publication_manifestation'],
       jsonColumns: ['authors', 'series', 'printing_information'],
+    },
+    message_template: {
+      table: 'message_template',
+      constructorFn: createMessageTemplateTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['message_template'],
+      jsonColumns: [],
     },
   };
 

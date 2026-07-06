@@ -21,6 +21,7 @@ export async function getMonographPublisherIsbnRanges(
     .selectFrom('isbn_publisher_range')
     .selectAll()
     .where('monograph_publisher_id', '=', monographPublisherId)
+    .orderBy('id', 'desc')
     .execute();
 }
 

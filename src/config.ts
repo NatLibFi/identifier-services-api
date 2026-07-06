@@ -59,3 +59,8 @@ export const LOG_LEVEL = readEnvironmentVariable<string>('LOG_LEVEL', { defaultV
 export const PROXY_CUSTOM_HEADER = readEnvironmentVariable<string>('PROXY_CUSTOM_HEADER', {
   defaultValue: '',
 });
+
+// Messaging
+export const MONOGRAPH_PUBLISHER_CONFIGURATION = readEnvironmentVariable('MONOGRAPH_PUBLISHER_CONFIGURATION', {
+  formatFunction: JSON.parse,
+});

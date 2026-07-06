@@ -15,6 +15,7 @@ async function run() {
     keycloakOptions: config.KEYCLOAK_OPTIONS,
     logLevel: config.LOG_LEVEL,
     proxyCustomHeader: config.PROXY_CUSTOM_HEADER,
+    monographPublisherConfiguration: config.MONOGRAPH_PUBLISHER_CONFIGURATION,
   };
 
   const server = await startApp(appOptions);

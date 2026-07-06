@@ -1,0 +1,5 @@
+import { runIntegrationTestSuite } from '../../test-utils/generate-integration-test.ts';
+
+const routers = ['monograph', 'messages'];
+
+runIntegrationTestSuite(routers, 'create-from-template');

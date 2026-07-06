@@ -14,7 +14,7 @@ import handleNotFound from './middlewares/handle-not-found.ts';
 import validateContentType from './middlewares/content-type.ts';
 
 import healthRouter from './routes/health-router.ts';
-import monographRouter from './routes/monograph/monograph-router.ts';
+import createMonographRouter from './routes/monograph/monograph-router.ts';
 import testAuthenticationRouter from './routes/test-auth-router.ts';
 
 import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
@@ -31,9 +31,16 @@ export interface KeycloakOptions {
 
 export type ApplicationRoleMap = Record<string, string[]>;
 
+export interface MonographPublisherConfiguration {
+  SELF_PUBLISHER_ID: number;
+  STATE_PUBLISHER_ID: number;
+  HY_PUBLISHER_ID: number;
+}
+
 interface AppOptions {
   applicationRoleMap: ApplicationRoleMap;
   environment: string;
+  monographPublisherConfiguration: MonographPublisherConfiguration;
   dbConfig?: PoolOptions;
   corsWhitelist?: string[];
   enableProxy?: boolean;
@@ -54,7 +61,9 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     keycloakOptions,
     logLevel,
     proxyCustomHeader,
+    monographPublisherConfiguration,
   } = options;
+
   const logger = createApplicationLogger(logLevel);
 
   const isAutomatedTest = environment === 'test';
@@ -123,6 +132,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   app.use(authenticationMiddleware, roleMapMiddleware);
 
   // Routes requiring authentication
+  const monographRouter = createMonographRouter(monographPublisherConfiguration);
   app.use('/v2/monograph', monographRouter);
 
   // Public routes

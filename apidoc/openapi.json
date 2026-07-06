@@ -1683,6 +1683,63 @@
           }
         }
       }
+    },
+    "/v2/monograph/messages/create-from-template": {
+      "post": {
+        "operationId": "createFromTemplate",
+        "summary": "Create message information by using a message template stored to database",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-messages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/create-from-template-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/message-template-loaded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "One or more associated entitites could not be found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3695,6 +3752,76 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "message-types": {
+        "type": "string",
+        "enum": [
+          "PUBLICATION_IDENTIFIER_ASSIGNED",
+          "PUBLISHER_REGISTRY_JOINED",
+          "PUBLISHER_RANGE_DOWNLOAD"
+        ]
+      },
+      "create-from-template-body": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/message-types"
+          },
+          "monograph_publisher_id": {
+            "type": "number"
+          },
+          "isbn_publisher_range_id": {
+            "type": "number"
+          },
+          "ismn_publisher_range_id": {
+            "type": "number"
+          },
+          "manifestation_ids": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "monograph_publisher_id"
+        ]
+      },
+      "message-template-loaded": {
+        "type": "object",
+        "properties": {
+          "monograph_publisher_id": {
+            "type": "number"
+          },
+          "isbn_publisher_range_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "ismn_publisher_range_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "manifestation_ids": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
           }
         }
       }

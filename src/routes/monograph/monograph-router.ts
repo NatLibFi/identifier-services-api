@@ -8,15 +8,22 @@ import monographPublicationExpressionRouter from './monograph-publication-expres
 import monographPublicationManifestationRouter from './monograph-publication-manifestation-router.ts';
 import monographPublicationRequestRouter from './monograph-publication-request-router.ts';
 
+import createMonographMessageRouter from './monograph-message-router.ts';
+
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
-const monographRouter = Router();
-monographRouter.use('/isbn-ranges', allowAdminOnly, isbnRangeRouter);
-monographRouter.use('/isbn-publisher-ranges', allowAdminOnly, isbnPublisherRangeRouter);
-monographRouter.use('/publishers', monographPublisherRouter);
-monographRouter.use('/publications', allowAdminOnly, monographPublicationRouter);
-monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
-monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);
-monographRouter.use('/publication-requests', monographPublicationRequestRouter);
+import type { MonographPublisherConfiguration } from '../../app.ts';
 
-export default monographRouter;
+export default function (monographPublisherConfiguration: MonographPublisherConfiguration) {
+  const monographRouter = Router();
+  monographRouter.use('/isbn-ranges', allowAdminOnly, isbnRangeRouter);
+  monographRouter.use('/isbn-publisher-ranges', allowAdminOnly, isbnPublisherRangeRouter);
+  monographRouter.use('/publishers', monographPublisherRouter);
+  monographRouter.use('/publications', allowAdminOnly, monographPublicationRouter);
+  monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
+  monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);
+  monographRouter.use('/publication-requests', monographPublicationRequestRouter);
+  monographRouter.use('/messages', allowAdminOnly, createMonographMessageRouter(monographPublisherConfiguration));
+
+  return monographRouter;
+}
