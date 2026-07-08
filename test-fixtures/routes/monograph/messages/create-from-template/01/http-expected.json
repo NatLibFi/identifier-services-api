@@ -1,5 +1,7 @@
 {
+  "message_type": "ISBN_ASSIGNMENT",
   "monograph_publisher_id": 1,
+  "monograph_publication_request_id": 1,
   "isbn_publisher_range_id": null,
   "ismn_publisher_range_id": null,
   "manifestation_ids": [1, 2],

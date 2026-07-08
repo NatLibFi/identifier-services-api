@@ -1,4 +1,4 @@
 {
-  "type": "PUBLISHER_REGISTRY_JOINED",
+  "message_type": "ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
   "monograph_publisher_id": 1
 }

@@ -147,3 +147,6 @@ src/middlewares/debug-middleware.ts
 
 # dev shell scripts
 *.sh
+
+# tmp files not part of repo
+tmp

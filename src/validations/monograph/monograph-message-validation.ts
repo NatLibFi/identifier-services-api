@@ -4,7 +4,7 @@ import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 export const createMonographMessageFromTemplateSchema = z
   .object({
-    type: z.enum(Object.keys(MONOGRAPH_MESSAGE_TYPES)),
+    message_type: z.enum(Object.keys(MONOGRAPH_MESSAGE_TYPES)),
     monograph_publisher_id: z.number(),
     isbn_publisher_range_id: z.number().optional(),
     ismn_publisher_range_id: z.number().optional(),
@@ -14,7 +14,9 @@ export const createMonographMessageFromTemplateSchema = z
 
 export const sendMonographMessageSchema = z
   .object({
+    message_type: z.enum(Object.keys(MONOGRAPH_MESSAGE_TYPES)),
     monograph_publisher_id: z.number(),
+    monograph_publication_request_id: z.number().optional(),
     isbn_publisher_range_id: z.number().optional(),
     ismn_publisher_range_id: z.number().optional(),
     manifestation_ids: z.array(z.number()).optional(),

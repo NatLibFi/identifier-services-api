@@ -26,6 +26,7 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
 
   let isbnPublisherRange;
   let expressionInfo;
+  let requestId;
 
   if (isbn_publisher_range_id) {
     isbnPublisherRange = await readIsbnPublisherRange(isbn_publisher_range_id);
@@ -117,10 +118,13 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
       expressionTitle: manifestation.expressionTitle,
       expressionSubtitle: manifestation.expressionSubtitle,
     };
+
+    requestId = manifestation.requestId;
   }
 
   return {
     expressionInfo,
+    requestId,
   };
 }
 
@@ -360,7 +364,20 @@ export async function constructMonographMessage(
     );
   }
 
-  if (messageType === MONOGRAPH_MESSAGE_TYPES.PUBLICATION_IDENTIFIER_ASSIGNED) {
+  const identifierAssignedMessageTypes = [
+    MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT,
+    MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT,
+  ];
+  const publisherRegistryJoinedMessageTypes = [
+    MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+    MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+  ];
+  const listDeliveryMessageTypes = [
+    MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY,
+    MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY,
+  ];
+
+  if (identifierAssignedMessageTypes.includes(messageType)) {
     result = constructIdentifierAssignedMessage(
       messageTemplate.body,
       messageTemplate.subject,
@@ -368,7 +385,7 @@ export async function constructMonographMessage(
       manifestations,
       expressionInfo,
     );
-  } else if (messageType === MONOGRAPH_MESSAGE_TYPES.PUBLISHER_REGISTRY_JOINED) {
+  } else if (publisherRegistryJoinedMessageTypes.includes(messageType)) {
     const publisherIdentifier = await getInitialPublisherIdentifier(isbnPublisherRangeId, ismnPublisherRangeId);
     if (!publisherIdentifier) {
       throw new ApiError(
@@ -383,7 +400,7 @@ export async function constructMonographMessage(
       messageTemplate.subject,
       publisherIdentifier,
     );
-  } else if (messageType === MONOGRAPH_MESSAGE_TYPES.PUBLISHER_RANGE_DOWNLOAD) {
+  } else if (listDeliveryMessageTypes.includes(messageType)) {
     result = constructIdentifierListLinkMessage(
       messageTemplate.body,
       messageTemplate.subject,

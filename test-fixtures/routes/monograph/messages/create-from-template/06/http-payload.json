@@ -1,5 +1,5 @@
 {
-  "type": "PUBLISHER_RANGE_DOWNLOAD",
+  "message_type": "ISBN_LIST_DELIVERY",
   "monograph_publisher_id": 1,
   "isbn_publisher_range_id": 1
 }

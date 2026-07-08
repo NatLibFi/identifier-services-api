@@ -1,5 +1,5 @@
 {
-  "type": "PUBLICATION_IDENTIFIER_ASSIGNED",
+  "message_type": "ISBN_ASSIGNMENT",
   "monograph_publisher_id": 1,
   "manifestation_ids": [1, 2]
 }

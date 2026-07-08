@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Tunnus myönnetty (suomi)",
-      "message_type": "PUBLICATION_IDENTIFIER_ASSIGNED",
+      "message_type": "ISBN_ASSIGNMENT",
       "lang_code": "fi-FI",
       "subject": "#TITLE# approved",
       "body": "#DATE#\n\n#EMAIL#\n#PUBLISHER#\n#ADDRESS#\n\nTeokselle #TITLE#: #SUBTITLE# eri julkaisumuodoille on myönnetty seuraavat tunnukset.\n\n#IDENTIFIERS#\n\nKind regards,\n#USER#",

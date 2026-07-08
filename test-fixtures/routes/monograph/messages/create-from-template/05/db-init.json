@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Kustantajarekisteriin liittyminen (suomi)",
-      "message_type": "PUBLISHER_REGISTRY_JOINED",
+      "message_type": "ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
       "lang_code": "fi-FI",
       "subject": "Tervetuloa kustantajarekisteriin",
       "body": "#PUBLISHER# (#EMAIL#),\n#ADDRESS#\n\nSinulle on myönnettu seuraava kustantajatunnus:\n#IDENTIFIER#\nTerveisin, #USER#",

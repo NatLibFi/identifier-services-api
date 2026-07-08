@@ -40,7 +40,7 @@ export default function createMonographMessageInterface(
 ) {
   async function createFromTemplate(createOpt: CreateMonographMessageFromTemplate, user: RequestUser) {
     const db = getKysely();
-    const { type: messageType, ...relations } = createOpt;
+    const { message_type: messageType, ...relations } = createOpt;
     const { isbn_publisher_range_id, monograph_publisher_id, manifestation_ids } = relations;
 
     // Gather information of publisher
@@ -126,14 +126,18 @@ export default function createMonographMessageInterface(
       );
     }
 
-    // Sanity check every relation
-    await sanityCheckMessageRelations(relations);
+    // Sanity check every relation: this verifies all manifestations belongs to same request and expression
+    const sanityCheckResult = await sanityCheckMessageRelations(relations);
 
     // Find last given publisher range if message type is PUBLISHER_REGISTRY_JOINED
     let isbnPublisherRangeId = isbn_publisher_range_id ?? null;
     // TODO: ISMN;
 
-    if (messageType === MONOGRAPH_MESSAGE_TYPES.PUBLISHER_REGISTRY_JOINED) {
+    const publisherRegistryJoinedMessageTypes = [
+      MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+      MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+    ];
+    if (publisherRegistryJoinedMessageTypes.includes(messageType)) {
       const publisherIsbnRanges = await getMonographPublisherIsbnRanges(monograph_publisher_id);
       isbnPublisherRangeId = publisherIsbnRanges[0]?.id ?? null;
     }
@@ -152,7 +156,9 @@ export default function createMonographMessageInterface(
     });
 
     return {
+      message_type: messageType,
       monograph_publisher_id,
+      monograph_publication_request_id: sanityCheckResult.requestId ?? null,
       isbn_publisher_range_id: isbnPublisherRangeId,
       ismn_publisher_range_id: null, // TODO: ismn
       manifestation_ids: manifestation_ids ?? [],

@@ -14,7 +14,9 @@ export interface Database {
   isbn_range: IsbnRange;
   isbn_publisher_range: IsbnPublisherRange;
   isbn_identifier: IsbnIdentifier;
+
   monograph_publisher: MonographPublisher;
+
   monograph_publication: MonographPublication;
   monograph_publication_request: MonographPublicationRequest;
   monograph_publication_expression: MonographPublicationExpression;

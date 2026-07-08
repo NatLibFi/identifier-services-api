@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Tunnusten lataaminen (suomi)",
-      "message_type": "PUBLISHER_RANGE_DOWNLOAD",
+      "message_type": "ISBN_LIST_DELIVERY",
       "lang_code": "fi-FI",
       "subject": "Tunnusten lataaminen",
       "body": "#PUBLISHER# (#EMAIL#),\n#ADDRESS#\n\nHere is a link to identifiers for you: #IDENTIFIERS#\n\nTerveisin, #USER#",
