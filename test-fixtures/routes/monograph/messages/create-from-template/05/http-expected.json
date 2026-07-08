@@ -2,10 +2,10 @@
   "message_type": "ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
   "monograph_publisher_id": 1,
   "monograph_publication_request_id": null,
-  "isbn_publisher_range_id": 2,
+  "isbn_publisher_range_id": 1,
   "ismn_publisher_range_id": null,
   "manifestation_ids": [],
   "recipient": "erkki.esimerkki@example.localhost",
   "subject": "TESTI/TEST MESSAGE Tervetuloa kustantajarekisteriin",
-  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\nExample publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nSinulle on myönnettu seuraava kustantajatunnus:\n978-951-95001\nTerveisin, test admin"
+  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\nExample publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nSinulle on myönnettu seuraava kustantajatunnus:\n978-951-95000\nTerveisin, test admin"
 }
