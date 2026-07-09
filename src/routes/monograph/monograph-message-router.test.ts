@@ -3,3 +3,4 @@ import { runIntegrationTestSuite } from '../../test-utils/generate-integration-t
 const routers = ['monograph', 'messages'];
 
 runIntegrationTestSuite(routers, 'create-from-template');
+runIntegrationTestSuite(routers, 'send');

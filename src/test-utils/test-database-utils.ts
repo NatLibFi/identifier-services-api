@@ -19,6 +19,8 @@ import { createMonographPublicationRequestTable } from './test-migrations/monogr
 import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
 import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
 import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
+import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
+import { createMonographMessagePublicationManifestationTable } from './test-migrations/monograph/monograph-message-publication-manifestation-test-migrations.ts';
 
 interface TestDatabaseConfig {
   host: string;
@@ -155,6 +157,20 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       dataEntries: dbInit['monograph_publication_manifestation'],
       jsonColumns: ['authors', 'series', 'printing_information'],
     },
+    monograph_message: {
+      table: 'monograph_message',
+      constructorFn: createMonographMessageTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_message'],
+      jsonColumns: [],
+    },
+    monograph_message_publication_manifestation: {
+      table: 'monograph_message_publication_manifestation',
+      constructorFn: createMonographMessagePublicationManifestationTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_message_publication_manifestation'],
+      jsonColumns: [],
+    },
     message_template: {
       table: 'message_template',
       constructorFn: createMessageTemplateTable,
@@ -206,7 +222,7 @@ async function initTable(db: Kysely<Database>, tableInfo: TestDatabaseTableInfo)
 // Note: fixes object attribute in place so it's not a pure function
 // This fix is required due to not being able to store Date objects within json definitions
 function fixObjectDateInfo(object: UnknownObject) {
-  const dateAttributes = ['created', 'modified'];
+  const dateAttributes = ['created', 'modified', 'sent'];
 
   dateAttributes.forEach((dateAttribute) => {
     const hasAttribute = Object.keys(object).includes(dateAttribute);

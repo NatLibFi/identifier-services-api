@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not send message",
+  "url": "/v2/monograph/messages/send",
+  "method": "POST",
+  "expectedStatus": 401
+}

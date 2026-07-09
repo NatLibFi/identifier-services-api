@@ -2,12 +2,16 @@ import type { IsbnIdentifier } from './types/monograph/types-isbn-identifier.ts'
 import type { IsbnPublisherRange } from './types/monograph/types-isbn-publisher-range.ts';
 import type { IsbnRange } from './types/monograph/types-isbn-range.ts';
 
+import type { MonographMessage } from './types/monograph/types-monograph-message.ts';
+import type { MonographMessagePublicationManifestation } from './types/monograph/types-monograph-message-publication-manifestation.ts';
+
 import type { MonographPublisher } from './types/monograph/types-monograph-publisher.ts';
 
 import type { MonographPublicationExpression } from './types/monograph/types-monograph-publication-expression.ts';
 import type { MonographPublicationManifestation } from './types/monograph/types-monograph-publication-manifestation.ts';
 import type { MonographPublicationRequest } from './types/monograph/types-monograph-publication-request.ts';
 import type { MonographPublication } from './types/monograph/types-monograph-publication.ts';
+
 import type { MessageTemplate } from './types/message-template.ts';
 
 export interface Database {
@@ -21,6 +25,9 @@ export interface Database {
   monograph_publication_request: MonographPublicationRequest;
   monograph_publication_expression: MonographPublicationExpression;
   monograph_publication_manifestation: MonographPublicationManifestation;
+
+  monograph_message: MonographMessage;
+  monograph_message_publication_manifestation: MonographMessagePublicationManifestation;
 
   message_template: MessageTemplate;
 }

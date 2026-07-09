@@ -69,6 +69,8 @@ paths:
 
   /v2/monograph/messages/create-from-template:
     $ref: './resources/monograph/messages/create-from-template.yaml'
+  /v2/monograph/messages/send:
+    $ref: './resources/monograph/messages/send.yaml'
 
 components:
   securitySchemes:

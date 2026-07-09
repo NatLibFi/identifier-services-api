@@ -19,52 +19,56 @@ import { getMonographPublisherIsbnRanges } from './monograph-publisher-interface
 
 interface MessageRelations {
   monographPublisherId: number;
-  isbnPublisherRangeId?: number;
-  ismnPublisherRangeId?: number;
+  monographPublicationRequestId?: number | null;
+  isbnPublisherRangeId?: number | null;
+  ismnPublisherRangeId?: number | null;
   manifestationIds?: number[];
 }
 
 export async function sanityCheckMessageRelations(params: MessageRelations) {
-  const { monographPublisherId, isbnPublisherRangeId, manifestationIds } = params;
+  const { monographPublisherId, monographPublicationRequestId, isbnPublisherRangeId, manifestationIds } = params;
 
   // Note: all getters return 404 in case entity is not found
   const publisher = await readMonographPublisher(monographPublisherId);
 
+  let monographPublicationRequest;
   let isbnPublisherRange;
   let ismnPublisherRange;
-  let expressionInfo;
-  let requestId;
+
+  if (monographPublicationRequestId) {
+    monographPublicationRequest = await readMonographPublicationRequest(monographPublicationRequestId);
+
+    // Verify request belongs to given publisher
+    if (monographPublicationRequest.monograph_publisher_id !== monographPublisherId) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Monograph publication request id ${monographPublicationRequestId} does not belong to monograph publisher id ${monographPublisherId}.`,
+      );
+    }
+  }
 
   if (isbnPublisherRangeId) {
     isbnPublisherRange = await readIsbnPublisherRange(isbnPublisherRangeId);
+
+    if (isbnPublisherRange.monograph_publisher_id !== publisher.id) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISBN publisher range id ${isbnPublisherRangeId} does not belong to monograph publisher id ${monographPublisherId}.`,
+      );
+    }
   } else if (ismnPublisherRange) {
     // TODO: ismn publisher range
     ismnPublisherRange = undefined;
   }
-
-  if (isbnPublisherRange && isbnPublisherRange.monograph_publisher_id !== publisher.id) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISBN publisher range id ${isbnPublisherRangeId} does not belong to monograph publisher id ${monographPublisherId}.`,
-    );
-  }
-
-  /* TODO: ismn
-  if (ismnPublisherRange && ismnPublisherRange.monograph_publisher_id !== publisher.id) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISMN publisher range id ${isbnPublisherRangeId} does not belong to monograph publisher id ${monographPublisherId}.`,
-    );
-  }
-  */
 
   if (manifestationIds && manifestationIds.length > 0) {
     const manifestationInfo = await Promise.all(
       manifestationIds.map(async (mid) => await getMonographManifestationRelations(mid)),
     );
 
+    // Verify all manifestations belong to given monograph publisher
     const invalidManifestation = manifestationInfo.find((m) => m.publisherId !== monographPublisherId);
 
     if (invalidManifestation) {
@@ -95,6 +99,15 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
         HttpStatus.CONFLICT,
         'Conflict',
         'You may only send email regarding manifestations of a single monograph publication request.',
+      );
+    }
+
+    // Validate request id matches with given request id if it was given
+    if (requestManifestationIds[0] !== monographPublicationRequestId) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Given monograph publication request id ${monographPublicationRequestId} does not match with request id found from manifestations (found id ${requestManifestationIds[0]})`,
       );
     }
 
@@ -132,18 +145,29 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
       );
     }
 
-    expressionInfo = {
-      expressionTitle: firstManifestation.expressionTitle,
-      expressionSubtitle: firstManifestation.expressionSubtitle,
-    };
+    // Validate all manifestations have identifier assigned
+    // TODO: ismn
+    const manifestationWithoutIdentifier = manifestationInfo.find((m) => !m.isbnIdentifier);
+    if (manifestationWithoutIdentifier) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Manifestation id ${manifestationWithoutIdentifier.manifestationId} does not have identifier assigned.`,
+      );
+    }
 
-    requestId = firstManifestation.requestId;
+    // Validate no manifestation is cancelled
+    const manifestationCancelled = manifestationInfo.find((m) => m.manifestationCancelled);
+    if (manifestationCancelled) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Manifestation id ${manifestationCancelled.manifestationId} has been cancelled.`,
+      );
+    }
   }
 
-  return {
-    expressionInfo,
-    requestId,
-  };
+  return;
 }
 
 export function translateManifestationType(manifestationType: string, langCode: string) {
@@ -225,7 +249,7 @@ async function constructIdentifierAssignedMessage(
   isSelfPublisher: boolean,
   manifestationIds?: number[],
 ): Promise<ConstructedMessage> {
-  // Note: assumes sanityCheckMessageRelations has been ran
+  // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
   const publisherInfo = { ...messagePublisher }; // mechanism to allow overriding publisher information for self-publishers
 
   const manifestations = manifestationIds
@@ -305,7 +329,7 @@ async function constructMonographPublisherRegisteredMessage(
   messageType: string,
   messagePublisher: PublisherMessageInfo,
 ): Promise<ConstructedMessage> {
-  // Note: assumes sanityCheckMessageRelations has been ran
+  // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
   let publisherIdentifier;
   let isbnPublisherRangeId = null;
   const ismnPublisherRangeId = null;
@@ -356,7 +380,7 @@ async function constructIdentifierListLinkMessage(
   isbnPublisherRangeId: number | null,
   ismnPublisherRangeId: number | null,
 ): Promise<ConstructedMessage> {
-  // Note: assumes sanityCheckMessageRelations has been ran
+  // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
 
   const uiUrl = 'https://tunnisteportaali.kansalliskirjasto.fi';
 

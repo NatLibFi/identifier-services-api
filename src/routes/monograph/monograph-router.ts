@@ -12,9 +12,12 @@ import createMonographMessageRouter from './monograph-message-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
-import type { MonographPublisherConfiguration } from '../../app.ts';
+import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
 
-export default function (monographPublisherConfiguration: MonographPublisherConfiguration) {
+export default function (
+  monographPublisherConfiguration: MonographPublisherConfiguration,
+  messagingConfiguration: MessagingConfiguration,
+) {
   const monographRouter = Router();
   monographRouter.use('/isbn-ranges', allowAdminOnly, isbnRangeRouter);
   monographRouter.use('/isbn-publisher-ranges', allowAdminOnly, isbnPublisherRangeRouter);
@@ -23,7 +26,11 @@ export default function (monographPublisherConfiguration: MonographPublisherConf
   monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
   monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);
   monographRouter.use('/publication-requests', monographPublicationRequestRouter);
-  monographRouter.use('/messages', allowAdminOnly, createMonographMessageRouter(monographPublisherConfiguration));
+  monographRouter.use(
+    '/messages',
+    allowAdminOnly,
+    createMonographMessageRouter(monographPublisherConfiguration, messagingConfiguration),
+  );
 
   return monographRouter;
 }

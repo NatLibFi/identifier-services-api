@@ -125,6 +125,12 @@ async function runTest(testRootPath: string) {
         STATE_PUBLISHER_ID: 2000,
         HY_PUBLISHER_ID: 3000,
       },
+      messagingConfiguration: {
+        SEND_EMAILS: false,
+        SMTP_CONFIG: {},
+        ISBN_EMAIL: '',
+        ISSN_EMAIL: '',
+      },
       enableProxy: false,
       environment: 'test',
       httpPort: 0,

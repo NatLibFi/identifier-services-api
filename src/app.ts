@@ -37,10 +37,18 @@ export interface MonographPublisherConfiguration {
   HY_PUBLISHER_ID: number;
 }
 
+export interface MessagingConfiguration {
+  SEND_EMAILS: boolean;
+  SMTP_CONFIG: Record<string, unknown>;
+  ISBN_EMAIL: string;
+  ISSN_EMAIL: string;
+}
+
 interface AppOptions {
   applicationRoleMap: ApplicationRoleMap;
   environment: string;
   monographPublisherConfiguration: MonographPublisherConfiguration;
+  messagingConfiguration: MessagingConfiguration;
   dbConfig?: PoolOptions;
   corsWhitelist?: string[];
   enableProxy?: boolean;
@@ -62,6 +70,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     logLevel,
     proxyCustomHeader,
     monographPublisherConfiguration,
+    messagingConfiguration,
   } = options;
 
   const logger = createApplicationLogger(logLevel);
@@ -132,7 +141,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   app.use(authenticationMiddleware, roleMapMiddleware);
 
   // Routes requiring authentication
-  const monographRouter = createMonographRouter(monographPublisherConfiguration);
+  const monographRouter = createMonographRouter(monographPublisherConfiguration, messagingConfiguration);
   app.use('/v2/monograph', monographRouter);
 
   // Public routes

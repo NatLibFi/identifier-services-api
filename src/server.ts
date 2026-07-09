@@ -16,6 +16,7 @@ async function run() {
     logLevel: config.LOG_LEVEL,
     proxyCustomHeader: config.PROXY_CUSTOM_HEADER,
     monographPublisherConfiguration: config.MONOGRAPH_PUBLISHER_CONFIGURATION,
+    messagingConfiguration: config.MESSAGING_CONFIGURATION,
   };
 
   const server = await startApp(appOptions);

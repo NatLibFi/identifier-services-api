@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may send valid message regarding approved monograph publication request (ISBN)",
+  "url": "/v2/monograph/messages/send",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

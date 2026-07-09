@@ -13,6 +13,12 @@ describe('app.ts default export', async () => {
         STATE_PUBLISHER_ID: 2000,
         HY_PUBLISHER_ID: 3000,
       },
+      messagingConfiguration: {
+        SEND_EMAILS: false,
+        SMTP_CONFIG: {},
+        ISBN_EMAIL: '',
+        ISSN_EMAIL: '',
+      },
       environment: 'test',
       httpPort: 0,
       keycloakOptions: {

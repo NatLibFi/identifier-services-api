@@ -1,7 +1,7 @@
 type: object
 properties:
   message_type:
-    $ref: '../../enums/monograph/message-types.yaml'
+    $ref: '../../../enums/monograph/message-types.yaml'
   monograph_publisher_id:
     type: number
   monograph_publication_request_id:
@@ -23,8 +23,18 @@ properties:
   recipient:
     type: string
   lang_code:
-    $ref: '../../enums/lang-code.yaml'
+    $ref: '../../../enums/lang-code.yaml'
   subject:
     type: string
   body:
     type: string
+required:
+  - message_type
+  - monograph_publisher_id
+  - monograph_publication_request_id
+  - isbn_publisher_range_id
+  - ismn_publisher_range_id
+  - manifestation_ids
+  - recipient
+  - subject
+  - body

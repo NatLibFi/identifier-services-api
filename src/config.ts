@@ -64,3 +64,19 @@ export const PROXY_CUSTOM_HEADER = readEnvironmentVariable<string>('PROXY_CUSTOM
 export const MONOGRAPH_PUBLISHER_CONFIGURATION = readEnvironmentVariable('MONOGRAPH_PUBLISHER_CONFIGURATION', {
   formatFunction: JSON.parse,
 });
+
+export const MESSAGING_CONFIGURATION = {
+  // Never allow emails to be sent from other than production or staging.
+  SEND_EMAILS: ['production', 'staging'].includes(NODE_ENV)
+    ? readEnvironmentVariable('SEND_EMAILS', { defaultValue: false, formatFunction: envFormatBoolean })
+    : false,
+  SMTP_CONFIG: ['production', 'staging'].includes(NODE_ENV)
+    ? readEnvironmentVariable('SMTP_CONFIG', { defaultValue: {}, formatFunction: JSON.parse })
+    : {},
+  ISBN_EMAIL: ['production', 'staging'].includes(NODE_ENV)
+    ? readEnvironmentVariable('ISBN_EMAIL', { defaultValue: '' })
+    : '',
+  ISSN_EMAIL: ['production', 'staging'].includes(NODE_ENV)
+    ? readEnvironmentVariable('ISSN_EMAIL', { defaultValue: '' })
+    : '',
+};

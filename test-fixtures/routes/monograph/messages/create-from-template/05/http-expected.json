@@ -6,6 +6,7 @@
   "ismn_publisher_range_id": null,
   "manifestation_ids": [],
   "recipient": "erkki.esimerkki@example.localhost",
-  "subject": "TESTI/TEST MESSAGE Tervetuloa kustantajarekisteriin",
-  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\nExample publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nSinulle on myönnettu seuraava kustantajatunnus:\n978-951-95000\nTerveisin, test admin"
+  "lang_code": "fi-FI",
+  "subject": "Tervetuloa kustantajarekisteriin",
+  "body": "Example publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nSinulle on myönnettu seuraava kustantajatunnus:\n978-951-95000\nTerveisin, test admin"
 }
