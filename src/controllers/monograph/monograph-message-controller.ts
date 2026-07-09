@@ -32,8 +32,18 @@ export default function createMonographMessageControllers(
     }
   }
 
+  async function readMonographMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await monographMessageInterface.readMonographMessage(Number(req.params['id']));
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   return {
     createFromTemplate,
     sendMonographMessage,
+    readMonographMessage,
   };
 }

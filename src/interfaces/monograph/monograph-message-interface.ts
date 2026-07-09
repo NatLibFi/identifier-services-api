@@ -6,8 +6,10 @@ import { ApiError } from '../../utils/api-error.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
 import { sendEmail } from '../interface-utils/email-utils.ts';
+
+import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -15,6 +17,8 @@ import type {
   CreateMonographMessageFromTemplate,
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
+
+import { asMonographMessageAdminRead, type MonographMessageInfo } from '../../dtl/monograph/monograph-message-dtl.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createMonographMessageInterface(
@@ -187,8 +191,81 @@ export default function createMonographMessageInterface(
     return messageId;
   }
 
+  async function readMonographMessage(messageId: number) {
+    const db = getKysely();
+    const messageResult = await db
+      .selectFrom('monograph_message')
+      .leftJoin('monograph_publisher', 'monograph_publisher.id', 'monograph_message.monograph_publisher_id')
+      .selectAll('monograph_message')
+      .select(['monograph_publisher.official_name as monograph_publisher_name'])
+      .where('monograph_message.id', '=', messageId)
+      .execute();
+
+    const validatedMessageResult: MonographMessageInfo = {
+      ...validateGetById(messageResult),
+      expression_title: null,
+      manifestation_info: null,
+      isbn_publisher_identifier: null,
+      ismn_publisher_identifier: null,
+    };
+
+    // Populate information for ISBN_ASSIGNMENT
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT) {
+      const messageManifestations = await db
+        .selectFrom('monograph_message_publication_manifestation')
+        .leftJoin(
+          'monograph_publication_manifestation',
+          'monograph_publication_manifestation.id',
+          'monograph_message_publication_manifestation.monograph_publication_manifestation_id',
+        )
+        .leftJoin(
+          'monograph_publication_expression',
+          'monograph_publication_expression.id',
+          'monograph_publication_manifestation.monograph_publication_expression_id',
+        )
+        .leftJoin(
+          'isbn_identifier',
+          'isbn_identifier.monograph_publication_manifestation_id',
+          'monograph_publication_manifestation.id',
+        )
+        .select(['monograph_message_publication_manifestation.id as monograph_message_publication_manifestation_id'])
+        .select([
+          'monograph_publication_manifestation.id as manifestation_id',
+          'monograph_publication_manifestation.manifestation_type as manifestation_type',
+        ])
+        .select(['monograph_publication_expression.title as expression_title'])
+        .select(['isbn_identifier.identifier as isbn_identifier'])
+        .where('monograph_message_publication_manifestation.monograph_message_id', '=', messageId)
+        .execute();
+
+      validatedMessageResult.manifestation_info = messageManifestations.map((m) => ({
+        manifestation_type: m.manifestation_type,
+        identifier: m.isbn_identifier,
+      }));
+      validatedMessageResult.expression_title = messageManifestations[0]?.expression_title || '';
+    }
+
+    // TODO: populate information for ISMN_ASSINGMENT
+
+    // Populate information for ISBN_LIST_DELIVERY
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY) {
+      const isbnRangeInfo = await db
+        .selectFrom('isbn_publisher_range')
+        .select(['isbn_publisher_range.publisher_identifier as isbn_publisher_identifier'])
+        .where('id', '=', validatedMessageResult.isbn_publisher_range_id)
+        .executeTakeFirstOrThrow();
+
+      validatedMessageResult.isbn_publisher_identifier = isbnRangeInfo.isbn_publisher_identifier;
+    }
+
+    // TODO: populate information for ISMN_LIST_DELIVERY
+
+    return asMonographMessageAdminRead(validatedMessageResult);
+  }
+
   return {
     createFromTemplate,
     sendMonographMessage,
+    readMonographMessage,
   };
 }

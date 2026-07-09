@@ -1797,6 +1797,55 @@
           }
         }
       }
+    },
+    "/v2/monograph/messages/{id}": {
+      "get": {
+        "operationId": "readMonographMessage",
+        "summary": "Read monograph message information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-messages"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-message-read"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3954,6 +4003,97 @@
           "subject",
           "body"
         ]
+      },
+      "monograph-message-read": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "message_type": {
+            "$ref": "#/components/schemas/message-types"
+          },
+          "monograph_publisher_id": {
+            "type": "number"
+          },
+          "monograph_publisher_name": {
+            "type": "string"
+          },
+          "monograph_publication_request_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "expression_title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manifestation_info": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "manifestation_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "identifier": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "isbn_publisher_range_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "isbn_publisher_identifier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ismn_publisher_range_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "ismn_publisher_identifier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sent": {
+            "type": "string"
+          },
+          "sent_by": {
+            "type": "string"
+          }
+        }
       }
     },
     "responses": {

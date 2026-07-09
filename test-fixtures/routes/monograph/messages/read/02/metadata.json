@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not read monograph message",
+  "url": "/v2/monograph/messages/1",
+  "method": "GET",
+  "expectedStatus": 401
+}

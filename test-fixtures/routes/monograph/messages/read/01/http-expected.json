@@ -1,0 +1,28 @@
+{
+  "id": 1,
+  "message_type": "ISBN_ASSIGNMENT",
+  "monograph_publisher_id": 1,
+  "monograph_publisher_name": "Example publisher",
+  "monograph_publication_request_id": 1,
+  "expression_title": "Example title",
+  "manifestation_info": [
+    {
+      "manifestation_type": "PAPERBACK",
+      "identifier": "978-951-95000-0-3"
+    },
+    {
+      "manifestation_type": "EPUB",
+      "identifier": "978-951-95000-1-0"
+    }
+  ],
+  "isbn_publisher_range_id": null,
+  "isbn_publisher_identifier": null,
+  "ismn_publisher_range_id": null,
+  "ismn_publisher_identifier": null,
+  "recipient": "erkki.esimerkki@example.localhost",
+  "lang_code": "fi-FI",
+  "subject": "TESTI/TEST MESSAGE Example title approved",
+  "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\n20.1.2026\n\nerkki.esimerkki@example.localhost\nExample publisher\nFoo street 123\n00000 Foo city\n\nTeokselle Example title: Example subtitle eri julkaisumuodoille on myönnetty seuraavat tunnukset.\n\n978-951-95000-0-3 (pehmeäkantinen)\n978-951-95000-1-0 (EPUB)\n\nKind regards,\ntest admin",
+  "sent": "2026-01-20T12:00:00.000Z",
+  "sent_by": "admin"
+}

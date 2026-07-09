@@ -1,7 +1,8 @@
 import { Router } from 'express';
 
 import createMonographMessageControllers from '../../controllers/monograph/monograph-message-controller.ts';
-import { validateRequestBody } from '../../middlewares/validation.ts';
+import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
+import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
   createMonographMessageFromTemplateSchema,
   sendMonographMessageSchema,
@@ -30,6 +31,12 @@ export default function createMonographMessageRouter(
     '/send',
     validateRequestBody(sendMonographMessageSchema),
     monographMessageControllers.sendMonographMessage,
+  );
+
+  monographMessageRouter.get(
+    '/:id',
+    validateRequestParams(idParameterSchema),
+    monographMessageControllers.readMonographMessage,
   );
 
   return monographMessageRouter;
