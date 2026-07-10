@@ -119,6 +119,13 @@ export default async function startApp(options: AppOptions): Promise<http.Server
 
   logger.info('Middlewares were initialized successfully');
 
+  // Log important parts of configuration
+  if (messagingConfiguration.SEND_EMAILS) {
+    logger.info('Sending emails is enabled');
+  } else {
+    logger.info('Sending emails is disabled');
+  }
+
   // Routes
   if (isAutomatedTest) {
     logger.warn('Enabling test authentication route');
