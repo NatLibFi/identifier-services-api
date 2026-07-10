@@ -5,6 +5,7 @@ import { validateRequestBody, validateRequestParams } from '../../middlewares/va
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
   createMonographMessageFromTemplateSchema,
+  searchMonographMessageSchema,
   sendMonographMessageSchema,
 } from '../../validations/monograph/monograph-message-validation.ts';
 
@@ -31,6 +32,12 @@ export default function createMonographMessageRouter(
     '/send',
     validateRequestBody(sendMonographMessageSchema),
     monographMessageControllers.sendMonographMessage,
+  );
+
+  monographMessageRouter.post(
+    '/search',
+    validateRequestBody(searchMonographMessageSchema),
+    monographMessageControllers.searchMonographMessage,
   );
 
   monographMessageRouter.get(

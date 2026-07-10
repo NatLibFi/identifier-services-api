@@ -1,0 +1,21 @@
+type: object
+properties:
+  totalDoc:
+    type: number
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: number
+        message_type:
+          $ref: '../../enums/monograph/message-types.yaml'
+        recipient:
+          type: string
+        subject:
+          type: string
+        sent:
+          type: string
+        sent_by:
+          type: string

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may search monograph message using ISBN identifier that is found in message body",
+  "url": "/v2/monograph/messages/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

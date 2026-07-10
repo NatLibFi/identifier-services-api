@@ -1,0 +1,16 @@
+type: object
+properties:
+  monograph_publisher_id:
+    type: number
+  monograph_publication_request_id:
+    type: number
+  search_text:
+    type: string
+  limit:
+    type: number
+  offset:
+    type: number
+required:
+  # Note: You need to define exactly one of the following properties: monograph_publisher_id, monograph_publication_request_id, or search_text
+  - limit
+  - offset

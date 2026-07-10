@@ -1,0 +1,13 @@
+{
+  "totalDoc": 1,
+  "results": [
+    {
+      "id": 1,
+      "message_type": "ISBN_ASSIGNMENT",
+      "recipient": "erkki.esimerkki@example.localhost",
+      "subject": "TESTI/TEST MESSAGE Example title approved",
+      "sent": "2026-01-20T12:00:00.000Z",
+      "sent_by": "admin"
+    }
+  ]
+}

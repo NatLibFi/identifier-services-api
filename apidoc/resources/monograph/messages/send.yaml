@@ -14,8 +14,8 @@ post:
         schema:
           $ref: '../../../schemas/requests/monograph/message/send-monograph-message-body.yaml'
   responses:
-    '200':
-      description: Ok
+    '201':
+      description: Created
       content:
         application/json:
           schema:

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] limit and offset work as expected",
+  "url": "/v2/monograph/messages/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

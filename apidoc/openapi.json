@@ -1767,8 +1767,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Ok",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -1791,6 +1791,55 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/messages/search": {
+      "post": {
+        "operationId": "searchMonographMessage",
+        "summary": "Search a message related to monograph operations",
+        "description": "You need to define exactly one of the following properties -> monograph_publisher_id, monograph_publication_request_id, or search_text",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-messages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/search-monograph-message-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-message-search-response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -4003,6 +4052,64 @@
           "subject",
           "body"
         ]
+      },
+      "search-monograph-message-body": {
+        "type": "object",
+        "properties": {
+          "monograph_publisher_id": {
+            "type": "number"
+          },
+          "monograph_publication_request_id": {
+            "type": "number"
+          },
+          "search_text": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "monograph-message-search-response": {
+        "type": "object",
+        "properties": {
+          "totalDoc": {
+            "type": "number"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "message_type": {
+                  "$ref": "#/components/schemas/message-types"
+                },
+                "recipient": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "sent": {
+                  "type": "string"
+                },
+                "sent_by": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       },
       "monograph-message-read": {
         "type": "object",

@@ -41,9 +41,19 @@ export default function createMonographMessageControllers(
     }
   }
 
+  async function searchMonographMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await monographMessageInterface.searchMonographMessages(req.body);
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   return {
     createFromTemplate,
     sendMonographMessage,
     readMonographMessage,
+    searchMonographMessage,
   };
 }

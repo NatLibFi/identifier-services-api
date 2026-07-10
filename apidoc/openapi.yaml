@@ -71,6 +71,8 @@ paths:
     $ref: './resources/monograph/messages/create-from-template.yaml'
   /v2/monograph/messages/send:
     $ref: './resources/monograph/messages/send.yaml'
+  /v2/monograph/messages/search:
+    $ref: './resources/monograph/messages/search.yaml'
   /v2/monograph/messages/{id}:
     $ref: './resources/monograph/messages/id.yaml'
 

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may search monograph message using search text regarding recipient email",
+  "url": "/v2/monograph/messages/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

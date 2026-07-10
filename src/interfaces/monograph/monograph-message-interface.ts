@@ -15,10 +15,16 @@ import type { MessagingConfiguration, MonographPublisherConfiguration } from '..
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographMessageFromTemplate,
+  SearchMonographMessage,
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
 
-import { asMonographMessageAdminRead, type MonographMessageInfo } from '../../dtl/monograph/monograph-message-dtl.ts';
+import {
+  asMonographMessageAdminRead,
+  asMonographMessageSearchResult,
+  type MonographMessageInfo,
+} from '../../dtl/monograph/monograph-message-dtl.ts';
+import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createMonographMessageInterface(
@@ -263,9 +269,46 @@ export default function createMonographMessageInterface(
     return asMonographMessageAdminRead(validatedMessageResult);
   }
 
+  async function searchMonographMessages(searchParameters: SearchMonographMessage) {
+    const db = getKysely();
+
+    const { search_text, monograph_publication_request_id, monograph_publisher_id, limit, offset } = searchParameters;
+    let query = db.selectFrom('monograph_message');
+
+    // Note: validation is expected to enforce usage of only one search method: associated entity id-based search or text-based search
+    if (search_text !== undefined) {
+      const normalizedSearch = `%${search_text.trim()}%`.toLowerCase();
+
+      // Searches from body and recipient
+      query = query.where((eb) => {
+        return eb.or([
+          eb(eb.fn('lower', ['body']), 'like', normalizedSearch),
+          eb(eb.fn('lower', ['recipient']), 'like', normalizedSearch),
+        ]);
+      });
+    } else if (monograph_publisher_id) {
+      query = query.where('monograph_publisher_id', '=', monograph_publisher_id);
+    } else if (monograph_publication_request_id) {
+      query = query.where('monograph_publication_request_id', '=', monograph_publication_request_id);
+    }
+
+    const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
+    query = query.selectAll().orderBy('id', 'desc').limit(limit).offset(offset);
+
+    // @ts-expect-error query builder does not understand typing here
+    const result: MonographMessageSelect[] = await query.execute();
+    const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+
+    return {
+      totalDoc,
+      results: result.map((message) => asMonographMessageSearchResult(message)),
+    };
+  }
+
   return {
     createFromTemplate,
     sendMonographMessage,
     readMonographMessage,
+    searchMonographMessages,
   };
 }

@@ -1,3 +1,5 @@
+import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
+
 export interface MonographMessageInfo {
   id: number;
   message_type: string;
@@ -60,6 +62,21 @@ export function asMonographMessageAdminRead(monographMessageInfo: MonographMessa
     lang_code,
     subject,
     body,
+    sent,
+    sent_by,
+  };
+}
+
+export function asMonographMessageSearchResult(
+  monographMessage: MonographMessageSelect,
+): Partial<MonographMessageSelect> {
+  const { id, message_type, recipient, subject, sent, sent_by } = monographMessage;
+
+  return {
+    id,
+    message_type,
+    recipient,
+    subject,
     sent,
     sent_by,
   };

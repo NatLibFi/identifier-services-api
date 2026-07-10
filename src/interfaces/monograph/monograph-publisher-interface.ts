@@ -180,7 +180,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   // TODO: ISMN publisher identifier search
 
   if (search_text) {
-    const normalizedSearch = `%${search_text}%`.toLowerCase();
+    const normalizedSearch = `%${search_text.trim()}%`.toLowerCase();
 
     query = query.where((eb) => {
       if (isAdmin(user)) {
