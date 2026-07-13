@@ -31,6 +31,7 @@
         }
       ],
       "cancelled": false,
+      "message_sent": false,
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",

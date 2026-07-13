@@ -13,10 +13,12 @@ export interface ValidatedMonographPublicationManifestationAdminRead extends Omi
 > {
   identifier: string | null;
   identifier_assigned: Date | null;
+  message_sent?: boolean;
 }
 
 export function asMonographPublicationManifestationAdminRead(
   manifestation: MonographPublicationManifestationAdminRead,
+  messageSent: boolean,
 ): ValidatedMonographPublicationManifestationAdminRead {
   const {
     id,
@@ -71,6 +73,7 @@ export function asMonographPublicationManifestationAdminRead(
     cancelled,
     identifier: definedIdentifier,
     identifier_assigned: identifierAssigned,
+    message_sent: messageSent,
     created,
     created_by,
     modified,

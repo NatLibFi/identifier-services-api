@@ -68,6 +68,8 @@ allOf:
           - 'null'
       request_state:
         $ref: '../../enums/monograph/request-state.yaml'
+      message_sent:
+        type: boolean
       publication:
         $ref: './monograph-publication.yaml'
   - $ref: '../common/created-metadata.yaml'

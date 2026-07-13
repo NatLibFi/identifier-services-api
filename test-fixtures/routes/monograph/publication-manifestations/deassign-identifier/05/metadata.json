@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may not deassign ISBN identifier if it is part of request containing ACCEPTED state",
+  "description": "[admin] may not deassign ISBN identifier from manifestation that has monograph_message associated with it.",
   "url": "/v2/monograph/publication-manifestations/1/deassign-identifier",
   "method": "POST",
   "role": "admin",

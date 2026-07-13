@@ -8,7 +8,6 @@ import respondWithProblemDocument from '../utils/problem-json.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function (error: Error, req: Request, res: Response, _next: NextFunction) {
-  // console.log(error);
   const logger = getApplicationLogger();
 
   if (error) {
@@ -36,6 +35,8 @@ export default function (error: Error, req: Request, res: Response, _next: NextF
       logger.debug(`ApiValidationError occurred with message: ${problemDocument.detail}`);
       return respondWithProblemDocument(req, res, problemDocument);
     }
+
+    // console.log(error);
 
     // If error was an unmanaged error, respond with controlled unknown error status and log the error message
     logger.warn(`Error was not a managed one. The message produced by the error was: ${error.message}`);

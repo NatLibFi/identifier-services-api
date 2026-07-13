@@ -2,6 +2,6 @@
   "type": "about:blank",
   "status": 409,
   "title": "Conflict",
-  "detail": "Manifestation that is part of publication request may not have its identifier deassigned unless the request is IN_PROCESS state.",
+  "detail": "A message has already been sent regarding manifestation. Refusing to deassign any identifier that has been messaged.",
   "instance": "/v2/monograph/publication-manifestations/1/deassign-identifier"
 }

@@ -18,5 +18,7 @@
       "modified_by": "admin"
     }
   ],
-  "isbn_identifier": []
+  "isbn_identifier": [],
+  "monograph_message": [],
+  "monograph_message_publication_manifestation": []
 }

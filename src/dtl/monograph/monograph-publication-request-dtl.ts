@@ -6,11 +6,13 @@ import type { MonographPublicationAdminRead } from './monograph-publication-dtl.
 
 export interface MonographPublicationRequestAdminRead extends MonographPublicationRequestSelectExtended {
   publication: MonographPublicationAdminRead;
+  message_sent: boolean;
 }
 
 export function asMonographPublicationRequestAdminRead(
   monographPublicationRequest: MonographPublicationRequestSelectExtended,
   publication: MonographPublicationAdminRead,
+  messageSent: boolean,
 ): MonographPublicationRequestAdminRead {
   const {
     id,
@@ -62,6 +64,7 @@ export function asMonographPublicationRequestAdminRead(
     publications_public,
     comments,
     request_state,
+    message_sent: messageSent,
     publication,
     created,
     created_by,

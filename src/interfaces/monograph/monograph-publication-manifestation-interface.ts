@@ -46,8 +46,14 @@ export async function readMonographPublicationManifestation(id: number) {
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
 
+  const { numMessages } = await db
+    .selectFrom('monograph_message_publication_manifestation')
+    .select(db.fn.countAll<number>().as('numMessages'))
+    .where('monograph_publication_manifestation_id', '=', id)
+    .executeTakeFirstOrThrow();
+
   const validatedManifestation = validateGetById(manifestation);
-  return asMonographPublicationManifestationAdminRead(validatedManifestation);
+  return asMonographPublicationManifestationAdminRead(validatedManifestation, numMessages > 0);
 }
 
 export async function updateMonographPublicationManifestation(
@@ -336,6 +342,21 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
   const logger = getApplicationLogger();
   const db = getKysely();
 
+  // Refuse to deassign identifier that has been already sent as message
+  const { numMessages } = await db
+    .selectFrom('monograph_message_publication_manifestation')
+    .select(db.fn.countAll<number>().as('numMessages'))
+    .where('monograph_publication_manifestation_id', '=', id)
+    .executeTakeFirstOrThrow();
+
+  if (numMessages > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'A message has already been sent regarding manifestation. Refusing to deassign any identifier that has been messaged.',
+    );
+  }
+
   const manifestation = await db
     .selectFrom('monograph_publication_manifestation')
     .leftJoin(
@@ -354,9 +375,6 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
     .select(['monograph_publication_request.request_state as request_state'])
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
-
-  // TODO: check if messages have been sent regarding the publication request
-  // TODO: evaluate if there are other constraints that need to be added
 
   // TODO: add access control mechanism for publisher user
   // TODO: evaluate appropriate constraints for publisher user

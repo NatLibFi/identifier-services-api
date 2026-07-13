@@ -63,6 +63,8 @@ allOf:
                 - 'null'
       cancelled:
         type: boolean
+      message_sent:
+        type: boolean
       identifier:
         type:
           - string

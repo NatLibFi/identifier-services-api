@@ -20,6 +20,7 @@
   "publications_public": true,
   "comments": "Example comment",
   "request_state": "NEW",
+  "message_sent": false,
   "publication": {
     "id": 1,
     "monograph_publisher_id": 1,
@@ -58,6 +59,7 @@
               }
             ],
             "cancelled": false,
+            "message_sent": false,
             "created": "2025-01-20T12:00:00.000Z",
             "created_by": "TEST_USER_1",
             "modified": "2025-01-20T12:00:00.000Z",
@@ -77,6 +79,7 @@
             "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],
             "printing_information": [],
             "cancelled": false,
+            "message_sent": false,
             "created": "2025-01-20T12:00:00.000Z",
             "created_by": "TEST_USER_1",
             "modified": "2025-01-20T12:00:00.000Z",

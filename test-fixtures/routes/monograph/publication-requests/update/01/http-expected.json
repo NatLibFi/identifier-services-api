@@ -20,6 +20,7 @@
   "publications_public": false,
   "comments": null,
   "request_state": "IN_PROCESS",
+  "message_sent": false,
   "publication": {
     "id": 1,
     "monograph_publisher_id": null,

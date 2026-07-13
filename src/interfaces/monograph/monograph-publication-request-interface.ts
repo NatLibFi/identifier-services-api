@@ -57,8 +57,18 @@ export async function readMonographPublicationRequest(id: number) {
 
   const monographPublicationRequest = validateGetById<MonographPublicationRequestSelectExtended>(dbResult);
 
+  const messageSent = await db
+    .selectFrom('monograph_message')
+    .select(db.fn.countAll<number>().as('count'))
+    .where('monograph_publication_request_id', '=', id)
+    .executeTakeFirstOrThrow();
+
   const publication = await readMonographPublication(monographPublicationRequest.monograph_publication_id);
-  const result = asMonographPublicationRequestAdminRead(monographPublicationRequest, publication);
+  const result = asMonographPublicationRequestAdminRead(
+    monographPublicationRequest,
+    publication,
+    messageSent.count > 0,
+  );
 
   return result;
 }

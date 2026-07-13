@@ -23,7 +23,7 @@
   "scripts": {
     "build": "tsc",
     "build:apidoc": "npm run lint:apidoc && redocly bundle apidoc/openapi.yaml -o apidoc/openapi.json --ext json",
-    "test": "NODE_ENV=test vitest",
+    "test": "NODE_ENV=test vitest --bail=1",
     "lint:apidoc": "redocly lint --extends recommended apidoc/openapi.yaml",
     "lint:src": "eslint -- src",
     "dev": "node --env-file-if-exists=.env.dev --watch src/server.ts",

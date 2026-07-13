@@ -22,14 +22,22 @@ export async function getPublicationExpressions(publicationId: number) {
   const manifestations = await getExpressionsManifestations(expressionIds);
 
   const validatedExpressions = expressions.map((expression) => {
-    const expressionManifestations = manifestations[expression.id] ?? [];
+    const expressionManifestations = manifestations[expression.id];
+
+    if (expressionManifestations === undefined) {
+      return asMonographPublicationExpressionAdminRead(expression, []);
+    }
+
     return asMonographPublicationExpressionAdminRead(expression, expressionManifestations);
   });
 
   return validatedExpressions;
 }
 
-export async function getExpressionsManifestations(expressionIds: number[]) {
+// Returns manifestations for given expressionIds in format where object key is expressionId and value is array of manifestations
+export async function getExpressionsManifestations(
+  expressionIds: number[],
+): Promise<Record<number, ValidatedMonographPublicationManifestationAdminRead[]>> {
   const db = getKysely();
 
   // Sanity check as otherwise 'IN' might fail within SQL
@@ -50,12 +58,21 @@ export async function getExpressionsManifestations(expressionIds: number[]) {
     .where('monograph_publication_expression_id', 'in', expressionIds)
     .execute();
 
-  // Constructing map is one pass, i.e., O(1) vs. using filter is O(n)
   // Access return value using result[expressionId] to get manifestations belonging to given expression
-  return manifestations.reduce((p: Record<number, ValidatedMonographPublicationManifestationAdminRead[]>, n) => {
-    const validatedManifestation = asMonographPublicationManifestationAdminRead(n);
-    // Here is a free learning opportunity about of modern JS/TS.
-    (p[n.monograph_publication_expression_id] ??= []).push(validatedManifestation);
-    return p;
-  }, {});
+  const result: Record<number, ValidatedMonographPublicationManifestationAdminRead[]> = {};
+
+  for (const manifestation of manifestations) {
+    const associatedMessages = await db
+      .selectFrom('monograph_message_publication_manifestation')
+      .select(db.fn.countAll<number>().as('num_messages'))
+      .where('monograph_publication_manifestation_id', '=', manifestation.id)
+      .executeTakeFirstOrThrow();
+    const hasMessage = associatedMessages.num_messages > 0;
+    const validatedManifestation = asMonographPublicationManifestationAdminRead(manifestation, hasMessage);
+
+    // Learning opportunity regarding modern JS/TS
+    (result[manifestation.monograph_publication_expression_id] ??= []).push(validatedManifestation);
+  }
+
+  return result;
 }

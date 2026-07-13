@@ -2794,6 +2794,9 @@
               "cancelled": {
                 "type": "boolean"
               },
+              "message_sent": {
+                "type": "boolean"
+              },
               "identifier": {
                 "type": [
                   "string",
@@ -3804,6 +3807,9 @@
               },
               "request_state": {
                 "$ref": "#/components/schemas/request-state"
+              },
+              "message_sent": {
+                "type": "boolean"
               },
               "publication": {
                 "$ref": "#/components/schemas/monograph-publication"
