@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not remove ISMN range",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

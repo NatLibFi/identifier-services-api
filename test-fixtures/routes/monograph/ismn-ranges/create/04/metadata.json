@@ -1,0 +1,7 @@
+{
+  "description": "[admin] disallows creation when there is conflict with existing ISMN range",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

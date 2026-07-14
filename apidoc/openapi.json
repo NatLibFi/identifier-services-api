@@ -367,6 +367,239 @@
         }
       }
     },
+    "/v2/monograph/ismn-ranges": {
+      "get": {
+        "operationId": "getIsmnRanges",
+        "summary": "Read all ISMN ranges information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "ismn"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resources could be read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ismn-ranges"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createIsmnRange",
+        "summary": "Create a new ISMN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "Creates a new ISMN range. Note new range is not allowed to overlap any existing ranges.",
+        "tags": [
+          "monograph",
+          "ismn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ismn-range-create-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/ismn-ranges/{id}": {
+      "get": {
+        "operationId": "readIsmnRange",
+        "summary": "Read ISMN range information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "ismn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ismn-range-read"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateIsmnRange",
+        "summary": "Update ISMN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "ismn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ismn-range-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteIsmnRange",
+        "summary": "Delete ISMN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "ismn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/publishers/{id}": {
       "get": {
         "operationId": "readmonographPublisher",
@@ -2129,6 +2362,142 @@
           "isbn_range_id",
           "monograph_publisher_id"
         ]
+      },
+      "ismn-range-base": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "gs1": {
+                "type": "string",
+                "example": "979"
+              },
+              "registration_group": {
+                "type": "string",
+                "example": "0"
+              },
+              "range_begin": {
+                "type": "string",
+                "example": "100"
+              },
+              "range_end": {
+                "type": "string",
+                "example": "101"
+              },
+              "active": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "ismn-ranges": {
+        "type": "array",
+        "items": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ismn-range-base"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "taken": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "free": {
+                  "type": "integer",
+                  "example": 1
+                }
+              }
+            }
+          ]
+        }
+      },
+      "ismn-range-create-body": {
+        "type": "object",
+        "properties": {
+          "gs1": {
+            "type": "string",
+            "enum": [
+              "979"
+            ]
+          },
+          "registration_group": {
+            "type": "string",
+            "enum": [
+              "0"
+            ]
+          },
+          "range_begin": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 7,
+            "example": "99000"
+          },
+          "range_end": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 7,
+            "example": "99999"
+          }
+        },
+        "required": [
+          "gs1",
+          "registration_group",
+          "range_begin",
+          "range_end"
+        ]
+      },
+      "ismn-range-read": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ismn-range-base"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "available_publisher_ranges": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ismn-range-update-body": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "range_begin": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5,
+            "example": "99000"
+          },
+          "range_end": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5,
+            "example": "99999"
+          }
+        }
       },
       "monograph-publisher-admin": {
         "allOf": [

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not remove ISMN range when it does have associated ISMN publisher ranges",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

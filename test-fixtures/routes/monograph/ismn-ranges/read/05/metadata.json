@@ -1,0 +1,7 @@
+{
+  "description": "[admin] properly evaluates available ISMN publisher ranges",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

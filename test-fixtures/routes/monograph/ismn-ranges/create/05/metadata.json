@@ -1,0 +1,7 @@
+{
+  "description": "[admin] disallows creation with improper registration group",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

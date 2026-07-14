@@ -7,20 +7,28 @@ import { expect } from 'vitest';
 
 import { createKyselySingleton, dropKyselySingleton, getKysely } from '../db/database.ts';
 
+import { createIsmnRangeTable } from './test-migrations/monograph/ismn-range-test-migrations.ts';
+import { createIsmnPublisherRangeTable } from './test-migrations/monograph/ismn-publisher-range-test-migrations.ts';
+import { createIsmnIdentifierTable } from './test-migrations/monograph/ismn-identifier-test-migrations.ts';
+
 import { createIsbnRangeTable } from './test-migrations/monograph/isbn-range-test-migrations.ts';
 import { createIsbnPublisherRangeTable } from './test-migrations/monograph/isbn-publisher-range-test-migrations.ts';
 import { createIsbnIdentifierTable } from './test-migrations/monograph/isbn-identifier-test-migrations.ts';
+
 import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
 
-import type { Database } from '../db/types.ts';
-import type { UnknownObject } from '../generic-types.ts';
 import { createMonographPublicationTable } from './test-migrations/monograph/monograph-publication-test-migrations.ts';
 import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
 import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
 import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
+
 import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
+
 import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
 import { createMonographMessagePublicationManifestationTable } from './test-migrations/monograph/monograph-message-publication-manifestation-test-migrations.ts';
+
+import type { Database } from '../db/types.ts';
+import type { UnknownObject } from '../generic-types.ts';
 
 interface TestDatabaseConfig {
   host: string;
@@ -101,19 +109,19 @@ export async function validateDbState(dbExpected: UnknownObject) {
 
 function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: string): TestDatabaseTableInfo {
   const tableInfoMap: Record<string, TestDatabaseTableInfo> = {
-    isbn_range: {
-      table: 'isbn_range',
-      constructorFn: createIsbnRangeTable,
-      // @ts-expect-error implicit expectation of having defined key for tests
-      dataEntries: dbInit['isbn_range'],
-      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
-    },
     monograph_publisher: {
       table: 'monograph_publisher',
       constructorFn: createMonographPublisherTable,
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['monograph_publisher'],
       jsonColumns: ['other_names', 'previous_names', 'contact_persons', 'classifications'],
+    },
+    isbn_range: {
+      table: 'isbn_range',
+      constructorFn: createIsbnRangeTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['isbn_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
     },
     isbn_publisher_range: {
       table: 'isbn_publisher_range',
@@ -127,6 +135,27 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       constructorFn: createIsbnIdentifierTable,
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['isbn_identifier'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    ismn_range: {
+      table: 'ismn_range',
+      constructorFn: createIsmnRangeTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['ismn_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    ismn_publisher_range: {
+      table: 'ismn_publisher_range',
+      constructorFn: createIsmnPublisherRangeTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['ismn_publisher_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    ismn_identifier: {
+      table: 'ismn_identifier',
+      constructorFn: createIsmnIdentifierTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['ismn_identifier'],
       jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
     },
     monograph_publication: {

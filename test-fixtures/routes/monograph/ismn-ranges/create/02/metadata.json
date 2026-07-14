@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create ISMN range",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "POST",
+  "expectedStatus": 401
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not read all ISMN ranges at once",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "GET",
+  "role": "publisher",
+  "expectedStatus": 403
+}

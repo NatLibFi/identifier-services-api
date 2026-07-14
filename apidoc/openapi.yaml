@@ -26,6 +26,11 @@ paths:
   /v2/monograph/isbn-publisher-ranges/{id}:
     $ref: './resources/monograph/isbn-publisher-ranges/id.yaml'
 
+  /v2/monograph/ismn-ranges:
+    $ref: './resources/monograph/ismn-ranges/root.yaml'
+  /v2/monograph/ismn-ranges/{id}:
+    $ref: './resources/monograph/ismn-ranges/id.yaml'
+
   /v2/monograph/publishers/{id}:
     $ref: './resources/monograph/publishers/id.yaml'
   /v2/monograph/publishers/search:

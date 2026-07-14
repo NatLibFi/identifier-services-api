@@ -1,0 +1,17 @@
+{
+  "ismn_range": [
+    {
+      "id": 1,
+      "gs1": "979",
+      "registration_group": "0",
+      "range_begin": "9001750",
+      "range_end": "9001750",
+      "active": true,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "ismn_publisher_range": []
+}

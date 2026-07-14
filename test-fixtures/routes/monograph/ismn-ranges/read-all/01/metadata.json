@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may read all ISMN ranges at once",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

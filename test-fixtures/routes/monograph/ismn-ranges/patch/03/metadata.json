@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not deactivate active ISMN range",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

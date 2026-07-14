@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[registration_group] Invalid input: expected \"0\"",
+  "instance": "/v2/monograph/ismn-ranges"
+}

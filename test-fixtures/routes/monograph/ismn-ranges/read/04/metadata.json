@@ -1,0 +1,7 @@
+{
+  "description": "[admin] returns 404 when ISMN range cannot be found",
+  "url": "/v2/monograph/ismn-ranges/123",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 404
+}

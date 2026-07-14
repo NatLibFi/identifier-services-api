@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create ISMN range",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

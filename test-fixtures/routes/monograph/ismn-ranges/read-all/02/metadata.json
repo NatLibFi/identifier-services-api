@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not read all ISMN ranges at once",
+  "url": "/v2/monograph/ismn-ranges",
+  "method": "GET",
+  "expectedStatus": 401
+}

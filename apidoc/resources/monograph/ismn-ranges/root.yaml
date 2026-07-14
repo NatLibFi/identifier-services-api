@@ -1,0 +1,56 @@
+get:
+  operationId: getIsmnRanges
+  summary: Read all ISMN ranges information
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - ismn
+  responses:
+    '200':
+      description: Resources could be read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/ismn-ranges.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    default:
+      $ref: '../../../responses/error.yaml'
+
+post:
+  operationId: createIsmnRange
+  summary: Create a new ISMN range
+  security:
+    - openId:
+        - admin
+  description: Creates a new ISMN range. Note new range is not allowed to overlap any existing ranges.
+  tags:
+    - monograph
+    - ismn
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/ismn-range/ismn-range-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

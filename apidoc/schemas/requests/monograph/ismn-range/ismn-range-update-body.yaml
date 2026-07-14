@@ -1,0 +1,15 @@
+type: object
+properties:
+  active:
+    type: boolean
+    example: true
+  range_begin:
+    type: string
+    minLength: 1
+    maxLength: 5
+    example: '99000'
+  range_end:
+    type: string
+    minLength: 1
+    maxLength: 5
+    example: '99999'

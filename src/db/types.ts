@@ -2,6 +2,10 @@ import type { IsbnIdentifier } from './types/monograph/types-isbn-identifier.ts'
 import type { IsbnPublisherRange } from './types/monograph/types-isbn-publisher-range.ts';
 import type { IsbnRange } from './types/monograph/types-isbn-range.ts';
 
+import type { IsmnIdentifier } from './types/monograph/types-ismn-identifier.ts';
+import type { IsmnPublisherRange } from './types/monograph/types-ismn-publisher-range.ts';
+import type { IsmnRange } from './types/monograph/types-ismn-range.ts';
+
 import type { MonographMessage } from './types/monograph/types-monograph-message.ts';
 import type { MonographMessagePublicationManifestation } from './types/monograph/types-monograph-message-publication-manifestation.ts';
 
@@ -18,6 +22,10 @@ export interface Database {
   isbn_range: IsbnRange;
   isbn_publisher_range: IsbnPublisherRange;
   isbn_identifier: IsbnIdentifier;
+
+  ismn_range: IsmnRange;
+  ismn_publisher_range: IsmnPublisherRange;
+  ismn_identifier: IsmnIdentifier;
 
   monograph_publisher: MonographPublisher;
 

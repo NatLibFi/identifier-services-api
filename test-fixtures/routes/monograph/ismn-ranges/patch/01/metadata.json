@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may deactivate active ISMN range",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}

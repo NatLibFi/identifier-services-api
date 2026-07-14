@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISMN range cannot be created due to conflict between existing ISMN ranges (ids: 1)",
+  "instance": "/v2/monograph/ismn-ranges"
+}

@@ -1,0 +1,86 @@
+get:
+  operationId: readIsmnRange
+  summary: Read ISMN range information
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - ismn
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Resource was read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/ismn-range-read.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
+patch:
+  operationId: updateIsmnRange
+  summary: Update ISMN range
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - ismn
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/ismn-range/ismn-range-update-body.yaml'
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Resource was updated
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
+delete:
+  operationId: deleteIsmnRange
+  summary: Delete ISMN range
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - ismn
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Resource was deleted
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    default:
+      $ref: '../../../responses/error.yaml'

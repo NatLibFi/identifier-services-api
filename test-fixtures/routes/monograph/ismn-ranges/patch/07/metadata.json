@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may activate active ISMN range if it has free publisher ranges",
+  "url": "/v2/monograph/ismn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}
