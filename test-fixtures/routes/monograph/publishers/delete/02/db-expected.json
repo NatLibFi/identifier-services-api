@@ -40,5 +40,9 @@
       "modified_by": "TEST_USER_1"
     }
   ],
-  "isbn_publisher_range": []
+  "isbn_publisher_range": [],
+  "ismn_publisher_range": [],
+  "monograph_message": [],
+  "monograph_publication_request": [],
+  "monograph_publication": []
 }

@@ -11,8 +11,13 @@ import {
 import { isAdmin } from '../../utils/permission-utils.ts';
 import {
   getMonographPublisherIsbnRanges,
+  getMonographPublisherIsmnRanges,
+  getMonographPublisherMessages,
+  getMonographPublisherPublicationRequests,
+  getMonographPublisherPublications,
   searchMonographPublisherWithRange,
   useIsbnPublisherIdentifierSearch,
+  useIsmnPublisherIdentifierSearch,
 } from './monograph-publisher-interface-utils.ts';
 import { ApiError } from '../../utils/api-error.ts';
 
@@ -38,6 +43,7 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
   const monographPublisherResult = validateGetById<MonographPublisherSelect>(dbResult);
 
   const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
+  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
 
   if (!useDtl) {
     return monographPublisherResult;
@@ -45,10 +51,10 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
 
   const isAdmin = hasAdminApplicationRole(user?.applicationRoles);
   if (isAdmin) {
-    return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges);
+    return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
   }
 
-  return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges);
+  return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
 }
 
 export async function deleteMonographPublisher(id: number) {
@@ -57,13 +63,49 @@ export async function deleteMonographPublisher(id: number) {
   // Read to confirm range exists - this will also take care of returning 404
   await readMonographPublisher(id);
 
-  // TODO: constraints related to associations
+  // If there are any associations deletion is not currently allowed through API
   const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
   if (isbnPublisherRanges.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `ISBN range id ${id} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
+      `Monograph publisher id ${id} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
+    );
+  }
+
+  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
+  if (ismnPublisherRanges.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${id} has ${ismnPublisherRanges.length} associated ISMN publisher ranges.`,
+    );
+  }
+
+  const monographMessages = await getMonographPublisherMessages(id);
+  if (monographMessages.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${id} has ${monographMessages.length} associated messages.`,
+    );
+  }
+
+  const monographPublicationRequests = await getMonographPublisherPublicationRequests(id);
+  if (monographPublicationRequests.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${id} has ${monographPublicationRequests.length} associated monograph publication requests.`,
+    );
+  }
+
+  const monographPublications = await getMonographPublisherPublications(id);
+  if (monographPublications.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${id} has ${monographPublications.length} associated monograph publications.`,
     );
   }
 
@@ -177,7 +219,11 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     return result;
   }
 
-  // TODO: ISMN publisher identifier search
+  // Process search that targets ISBN publisher identifier as separate block
+  if (!!search_text && useIsmnPublisherIdentifierSearch(search_text)) {
+    const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
+    return result;
+  }
 
   if (search_text) {
     const normalizedSearch = `%${search_text.trim()}%`.toLowerCase();
@@ -217,7 +263,8 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
       results: await Promise.all(
         result.map(async (p) => {
           const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
-          return asMonographPublisherAdminRead(p, isbnPublisherRanges);
+          const ismnPublisherRanges = await getMonographPublisherIsmnRanges(p.id);
+          return asMonographPublisherAdminRead(p, isbnPublisherRanges, ismnPublisherRanges);
         }),
       ),
     };
@@ -228,7 +275,8 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     results: await Promise.all(
       result.map(async (p) => {
         const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
-        return asMonographPublisherGuestRead(p, isbnPublisherRanges);
+        const ismnPublisherRanges = await getMonographPublisherIsmnRanges(p.id);
+        return asMonographPublisherGuestRead(p, isbnPublisherRanges, ismnPublisherRanges);
       }),
     ),
   };

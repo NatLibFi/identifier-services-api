@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Monograph publisher id 1 has 1 associated monograph publications.",
+  "instance": "/v2/monograph/publishers/1"
+}

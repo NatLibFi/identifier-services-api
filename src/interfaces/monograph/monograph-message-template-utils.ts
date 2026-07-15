@@ -16,6 +16,7 @@ import { validateGetById } from '../interface-utils/common-interface-utils.ts';
 
 import { MONOGRAPH_MANIFESTATION_TYPES, MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 import { getMonographPublisherIsbnRanges } from './monograph-publisher-interface-utils.ts';
+import { readIsmnPublisherRange } from './ismn-publisher-range-interface.ts';
 
 interface MessageRelations {
   monographPublisherId: number;
@@ -26,7 +27,13 @@ interface MessageRelations {
 }
 
 export async function sanityCheckMessageRelations(params: MessageRelations) {
-  const { monographPublisherId, monographPublicationRequestId, isbnPublisherRangeId, manifestationIds } = params;
+  const {
+    monographPublisherId,
+    monographPublicationRequestId,
+    isbnPublisherRangeId,
+    ismnPublisherRangeId,
+    manifestationIds,
+  } = params;
 
   // Note: all getters return 404 in case entity is not found
   const publisher = await readMonographPublisher(monographPublisherId);
@@ -58,9 +65,16 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
         `ISBN publisher range id ${isbnPublisherRangeId} does not belong to monograph publisher id ${monographPublisherId}.`,
       );
     }
-  } else if (ismnPublisherRange) {
-    // TODO: ismn publisher range
-    ismnPublisherRange = undefined;
+  } else if (ismnPublisherRangeId) {
+    ismnPublisherRange = await readIsmnPublisherRange(ismnPublisherRangeId);
+
+    if (ismnPublisherRange.monograph_publisher_id !== publisher.id) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN publisher range id ${ismnPublisherRangeId} does not belong to monograph publisher id ${monographPublisherId}.`,
+      );
+    }
   }
 
   if (manifestationIds && manifestationIds.length > 0) {
@@ -146,13 +160,22 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
     }
 
     // Validate all manifestations have identifier assigned
-    // TODO: ismn
-    const manifestationWithoutIdentifier = manifestationInfo.find((m) => !m.isbnIdentifier);
+    const manifestationWithoutIdentifier = manifestationInfo.find((m) => !m.isbnIdentifier && !m.ismnIdentifier);
     if (manifestationWithoutIdentifier) {
       throw new ApiError(
         HttpStatus.CONFLICT,
         'Conflict',
         `Manifestation id ${manifestationWithoutIdentifier.manifestationId} does not have identifier assigned.`,
+      );
+    }
+
+    // Sanity check: no both ISBN and ISMN should ever be assigned to one manifestation
+    const manifestationWithTwoIdentifiers = manifestationInfo.find((m) => m.isbnIdentifier && m.ismnIdentifier);
+    if (manifestationWithTwoIdentifiers) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Manifestation id ${manifestationWithTwoIdentifiers.manifestationId} has both ISBN and ISMN identifiers assigned. This should not happen! Please contact system administrator.`,
       );
     }
 

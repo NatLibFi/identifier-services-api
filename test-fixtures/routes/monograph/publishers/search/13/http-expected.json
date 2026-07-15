@@ -1,0 +1,27 @@
+{
+  "totalDoc": 2,
+  "results": [
+    {
+      "id": 2,
+      "official_name": "Another example publisher",
+      "other_names": [],
+      "previous_names": [],
+      "address": null,
+      "zip": null,
+      "city": null,
+      "phone": null,
+      "www": null,
+      "has_quitted": false,
+      "isbn_publisher_ranges": [
+        {
+          "publisher_identifier": "978-951-95001"
+        }
+      ],
+      "ismn_publisher_ranges": [
+        {
+          "publisher_identifier": "979-0-9001751"
+        }
+      ]
+    }
+  ]
+}

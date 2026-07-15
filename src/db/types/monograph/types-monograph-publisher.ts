@@ -45,6 +45,10 @@ export interface MonographPublisherReadAdmin extends MonographPublisherSelect {
     id: number;
     publisher_identifier: string;
   }[];
+  ismn_publisher_ranges: {
+    id: number;
+    publisher_identifier: string;
+  }[];
 }
 
 export interface MonographPublisherReadGuest extends Omit<
@@ -71,9 +75,12 @@ export interface MonographPublisherReadGuest extends Omit<
   isbn_publisher_ranges: {
     publisher_identifier: string;
   }[];
+  ismn_publisher_ranges: {
+    publisher_identifier: string;
+  }[];
 }
 
 export type MonographPublisherReadAutocomplete = Omit<
   MonographPublisherReadGuest,
-  'address' | 'zip' | 'city' | 'phone' | 'www' | 'has_quitted' | 'isbn_publisher_ranges'
+  'address' | 'zip' | 'city' | 'phone' | 'www' | 'has_quitted' | 'isbn_publisher_ranges' | 'ismn_publisher_ranges'
 >;

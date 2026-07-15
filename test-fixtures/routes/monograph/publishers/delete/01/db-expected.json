@@ -1,4 +1,8 @@
 {
   "monograph_publisher": [],
-  "isbn_publisher_range": []
+  "isbn_publisher_range": [],
+  "ismn_publisher_range": [],
+  "monograph_message": [],
+  "monograph_publication_request": [],
+  "monograph_publication": []
 }

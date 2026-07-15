@@ -476,10 +476,14 @@ export async function getMonographManifestationRelations(manifestationId: number
       'monograph_publication_expression.id',
       'monograph_publication_manifestation.monograph_publication_expression_id',
     )
-    // TODO: ismn
     .leftJoin(
       'isbn_identifier',
       'isbn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
+    .leftJoin(
+      'ismn_identifier',
+      'ismn_identifier.monograph_publication_manifestation_id',
       'monograph_publication_manifestation.id',
     )
     .leftJoin(
@@ -496,6 +500,7 @@ export async function getMonographManifestationRelations(manifestationId: number
       'monograph_publication_expression.subtitle as expressionSubtitle',
       'monograph_publication.monograph_publisher_id as publisherId',
       'isbn_identifier.identifier as isbnIdentifier',
+      'ismn_identifier.identifier as ismnIdentifier',
     ])
     .where('monograph_publication_manifestation.id', '=', manifestationId)
     .execute();
