@@ -1,6 +1,6 @@
 {
   "description": "[publisher] may not read ISBN identifier information of ISBN publisher range (TODO: define access control + DTL)",
-  "url": "/v2/monograph/isbn-publisher-ranges/get-identifiers",
+  "url": "/v2/monograph/isbn-publisher-ranges/1/get-identifiers",
   "method": "POST",
   "role": "publisher",
   "expectedStatus": 403

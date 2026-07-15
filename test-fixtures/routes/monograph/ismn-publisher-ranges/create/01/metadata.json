@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create valid ISMN publisher range",
+  "url": "/v2/monograph/ismn-publisher-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

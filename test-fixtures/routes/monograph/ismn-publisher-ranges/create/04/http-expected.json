@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISMN range id 1 does not contain publisher identifier of 979-0-9001749.",
+  "instance": "/v2/monograph/ismn-publisher-ranges"
+}

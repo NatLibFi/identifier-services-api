@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot delete ISMN publisher range",
+  "url": "/v2/monograph/ismn-publisher-ranges/1",
+  "method": "DELETE",
+  "role": "publisher",
+  "expectedStatus": 403
+}

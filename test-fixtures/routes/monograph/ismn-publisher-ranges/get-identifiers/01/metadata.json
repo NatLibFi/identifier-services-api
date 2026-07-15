@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may read ISMN identifier information of ISBN publisher range",
+  "url": "/v2/monograph/ismn-publisher-ranges/1/get-identifiers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create valid ISMN publisher range",
+  "url": "/v2/monograph/ismn-publisher-ranges",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

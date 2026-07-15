@@ -1,8 +1,7 @@
 {
-  "description": "DEPRECATED: [admin] cannot delete ISBN publisher range if any of identfiers is canceled",
+  "description": "[admin] cannot delete ISBN publisher range if any of identifiers is assigned to monograph manifestation",
   "url": "/v2/monograph/isbn-publisher-ranges/1",
   "method": "DELETE",
   "role": "admin",
-  "expectedStatus": 409,
-  "skip": true
+  "expectedStatus": 409
 }

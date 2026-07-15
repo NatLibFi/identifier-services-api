@@ -9,10 +9,10 @@ import {
   canDeleteIsbnPublisherRange,
   generateIsbnIdentifierDbEntry,
   getIsbnIdentifiers,
-  getNumberOfIdentifiers,
+  getNumberOfIsbnIdentifiers,
 } from './isbn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { rangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
+import { isbnRangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
 import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
@@ -24,6 +24,7 @@ import type {
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
+import { validateIsbnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
@@ -41,7 +42,7 @@ export async function createIsbnPublisherRange(
     );
   }
 
-  if (!rangeContainsIdentifier(isbnRange, publisher_identifier)) {
+  if (!isbnRangeContainsIdentifier(isbnRange, publisher_identifier)) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
@@ -195,7 +196,7 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
       .executeTakeFirstOrThrow();
 
     // Verify removal of identifiers succeeded
-    const expectedIdentifierDeleteCount = getNumberOfIdentifiers(isbnPublisherRange);
+    const expectedIdentifierDeleteCount = getNumberOfIsbnIdentifiers(isbnPublisherRange);
 
     if (Number(isbnIdentifierResult.numDeletedRows) !== expectedIdentifierDeleteCount) {
       throw new Error(
@@ -289,6 +290,7 @@ export async function getIsbnPublisherRangeIdentifiers(
     return result.map((r) => {
       // Re-validate just in case
       const auditResult = ISBN.audit(r.identifier);
+      validateIsbnIdentifier(r.identifier);
 
       if (auditResult.validIsbn === false) {
         throw new Error(`External audit has flagged ISBN ${r.identifier} as invalid.`);
@@ -320,6 +322,7 @@ export async function getIsbnPublisherRangeIdentifiers(
   const identifierResult = result.reduce((acc, { identifier, monograph_publication_manifestation_id }) => {
     // Re-validate just in case
     const auditResult = ISBN.audit(identifier);
+    validateIsbnIdentifier(identifier);
 
     if (auditResult.validIsbn === false) {
       throw new Error(`External audit has flagged ISBN ${identifier} as invalid.`);

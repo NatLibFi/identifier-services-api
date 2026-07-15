@@ -5,15 +5,17 @@ import { getKysely } from '../../db/database.ts';
 import { getCurrentTime, validateGetById } from './common-interface-utils.ts';
 
 import { MONOGRAPH_EXPRESSION_TYPES, MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
+import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
+import { ISBN_VALID_GS1, ISBN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/isbn-constants.ts';
 
 import type { Database } from '../../db/types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { MonographPublicationExpressionSelect } from '../../db/types/monograph/types-monograph-publication-expression.ts';
 
-export function calculateIsbn13CheckDigit(identifierWithoutDashes: string) {
+export function calculateIsbnIsmnCheckDigit(identifierWithoutDashes: string) {
   const containsTwelveDigits = identifierWithoutDashes.match(/^\d{12}$/);
   if (!containsTwelveDigits) {
-    throw new Error('ISBN-13 check digit may be only calculated for input that contains exactly 12 digits');
+    throw new Error('ISBN/ISMN check digit may be only calculated for input that contains exactly 12 digits');
   }
 
   // Converted to JavaScript from original ID registry PHP implementation.
@@ -249,4 +251,196 @@ export async function getExpressionIdentifierType(expressionId: number) {
   }
 
   throw new Error(`Unsupported monograph identifier type observed for expression id ${expressionId}`);
+}
+
+// Custom ISMN validation function. Will throw error when given identifier is not valid ISMN.
+// TODO: tests
+export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
+  if (ismnIdentifierWithDashes.length !== 17) {
+    throw new Error(
+      `ISMN identifier must be exactly 17 characters long with dashes in place. ${ismnIdentifierWithDashes} has ${ismnIdentifierWithDashes.length} characters and thus is not valid.`,
+    );
+  }
+
+  const [gs1, registration_group, publisher_element, item_element, check_digit, ...rest] =
+    ismnIdentifierWithDashes.split('-');
+
+  if (gs1 !== ISMN_VALID_GS1['979']) {
+    throw new Error(`GS1 ${gs1} is not valid for ISMN identifier`);
+  }
+
+  if (registration_group !== ISMN_VALID_REGISTRATION_GROUPS['0']) {
+    throw new Error(`Registrant group ${registration_group} is not valid for ISMN identifier`);
+  }
+
+  if (!publisher_element) {
+    throw new Error("Publisher element is not defined and it's a required element in ISMN identifier");
+  }
+
+  if (publisher_element.length < 3) {
+    throw new Error(`Publisher element ${publisher_element} is too short for ISMN identifier (minimum length: 3)`);
+  }
+
+  if (publisher_element.length > 7) {
+    throw new Error(`Publisher element ${publisher_element} is too long for ISMN identifier (maximum length: 7)`);
+  }
+
+  if (!/^[0-9]{3,7}$/.test(publisher_element)) {
+    throw new Error(
+      `Publisher element ${publisher_element} cannot contain other characters than numbers in ISMN identifier`,
+    );
+  }
+
+  if (!item_element) {
+    throw new Error("Item element is not defined and it's a required element in ISMN identifier");
+  }
+
+  if (item_element.length < 1) {
+    throw new Error(`Item element ${item_element} is too short for ISMN identifier (minimum length: 1)`);
+  }
+
+  if (item_element.length > 5) {
+    throw new Error(`Item element ${item_element} is too long for ISMN identifier (maximum length: 5)`);
+  }
+
+  const identifierWithoutCheckDigit = `${gs1}${registration_group}${publisher_element}${item_element}`;
+  if (identifierWithoutCheckDigit.length !== 12) {
+    throw new Error(
+      `ISMN identifier without dashes and check digit must be exactly 12 characters long. ${identifierWithoutCheckDigit} has length of ${identifierWithoutCheckDigit.length}`,
+    );
+  }
+
+  if (!/^[0-9]{12}$/.test(identifierWithoutCheckDigit)) {
+    throw new Error(
+      `ISMN identifier without dashes may only contain numbers. String ${identifierWithoutCheckDigit} did not satisfy the requirement.`,
+    );
+  }
+
+  if (!check_digit) {
+    throw new Error("Item check digit is not defined and it's a required element in ISMN identifier");
+  }
+
+  if (rest.length !== 0) {
+    throw new Error(
+      `Given string ${ismnIdentifierWithDashes} contains elements that are undefined for ISMN identifier (${JSON.stringify(rest)}).`,
+    );
+  }
+
+  if (!/^[0-9]{1}$/.test(check_digit) || isNaN(Number(check_digit))) {
+    throw new Error(`Item check digit ${check_digit} must be a number`);
+  }
+
+  const weightedSum = identifierWithoutCheckDigit.split('').reduce((acc, char, i) => {
+    if (i % 2 === 0) {
+      acc += Number(char) * 1;
+    } else {
+      acc += Number(char) * 3;
+    }
+    return acc;
+  }, 0);
+
+  // Process split per description in ISMN manual
+  const total = weightedSum + Number(check_digit);
+  if (total % 10 !== 0) {
+    throw new Error(`Item check digit ${check_digit} does not satisfy the condition determined for it`);
+  }
+}
+
+// Custom ISBN validation function. Will throw error when given identifier is not valid ISBN.
+// TODO: tests
+export function validateIsbnIdentifier(isbnIdentifierWithDashes: string): void {
+  if (isbnIdentifierWithDashes.length !== 17) {
+    throw new Error(
+      `ISBN identifier must be exactly 17 characters long with dashes in place. ${isbnIdentifierWithDashes} has ${isbnIdentifierWithDashes.length} characters and thus is not valid.`,
+    );
+  }
+
+  const [gs1, registration_group, publisher_element, item_element, check_digit, ...rest] =
+    isbnIdentifierWithDashes.split('-');
+
+  if (!gs1 || !Object.values(ISBN_VALID_GS1).includes(gs1)) {
+    throw new Error(`GS1 ${gs1} is not valid for Finnish ISBN identifier`);
+  }
+
+  if (!registration_group || !Object.values(ISBN_VALID_REGISTRATION_GROUPS).includes(registration_group)) {
+    throw new Error(`Registration group ${registration_group} is not valid for Finnish ISBN identifier`);
+  }
+
+  if (!publisher_element) {
+    throw new Error("Publisher element is not defined and it's a required element in ISBN identifier");
+  }
+
+  if (publisher_element.length < 1) {
+    throw new Error(`Publisher element ${publisher_element} is too short for ISBN identifier (minimum length: 1)`);
+  }
+
+  if (publisher_element.length > 5) {
+    throw new Error(
+      `Publisher element ${publisher_element} is too long for Finnish ISBN identifier (maximum length: 5)`,
+    );
+  }
+
+  if (!/^[0-9]{1,5}$/.test(publisher_element)) {
+    throw new Error(
+      `Publisher element ${publisher_element} cannot contain other characters than numbers in ISBN identifier`,
+    );
+  }
+
+  if (!item_element) {
+    throw new Error("Item element is not defined and it's a required element in ISBN identifier");
+  }
+
+  if (item_element.length < 1) {
+    throw new Error(`Item element ${item_element} is too short for ISBN identifier (minimum length: 1)`);
+  }
+
+  if (item_element.length > 5) {
+    throw new Error(`Item element ${item_element} is too long for ISBN identifier (maximum length: 5)`);
+  }
+
+  const identifierWithoutCheckDigit = `${gs1}${registration_group}${publisher_element}${item_element}`;
+  if (identifierWithoutCheckDigit.length !== 12) {
+    throw new Error(
+      `ISBN identifier without dashes and check digit must be exactly 12 characters long. ${identifierWithoutCheckDigit} has length of ${identifierWithoutCheckDigit.length}`,
+    );
+  }
+
+  if (!/^[0-9]{12}$/.test(identifierWithoutCheckDigit)) {
+    throw new Error(
+      `ISBN identifier without dashes may only contain numbers. String ${identifierWithoutCheckDigit} did not satisfy the requirement.`,
+    );
+  }
+
+  if (!check_digit) {
+    throw new Error("Item check digit is not defined and it's a required element in ISBN identifier");
+  }
+
+  if (rest.length !== 0) {
+    throw new Error(
+      `Given string ${isbnIdentifierWithDashes} contains elements that are undefined for ISBN identifier (${JSON.stringify(rest)}).`,
+    );
+  }
+
+  if (!/^[0-9]{1}$/.test(check_digit) || isNaN(Number(check_digit))) {
+    throw new Error(`Item check digit ${check_digit} must be a number`);
+  }
+
+  const weightedSum = identifierWithoutCheckDigit.split('').reduce((acc, char, i) => {
+    if (i % 2 === 0) {
+      acc += Number(char) * 1;
+    } else {
+      acc += Number(char) * 3;
+    }
+    return acc;
+  }, 0);
+
+  // Process split per description in ISBN manual
+  const sumRemainder = weightedSum % 10;
+  const confirmedCheckDigit = sumRemainder === 0 ? 0 : 10 - sumRemainder;
+
+  if (confirmedCheckDigit !== Number(check_digit)) {
+    throw new Error(
+      `Item check digit ${check_digit} does not satisfy the condition determined for it in ISBN manual (expected ${confirmedCheckDigit})`,
+    );
+  }
 }

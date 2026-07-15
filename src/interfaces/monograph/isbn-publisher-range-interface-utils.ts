@@ -1,10 +1,10 @@
 import ISBN from 'isbn3';
 
 import { SYSTEM_USER, ISBN_IDENTIFIER_LENGTH } from '../../constants.ts';
-import { calculateIsbn13CheckDigit } from '../interface-utils/monograph-identifier-utils.ts';
+import { calculateIsbnIsmnCheckDigit, validateIsbnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
 import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
-import { getPublisherIdentifierParts } from '../interface-utils/range-interface-utils.ts';
+import { getIsbnPublisherIdentifierParts } from '../interface-utils/range-interface-utils.ts';
 
 import type { IsbnIdentifierInsert } from '../../db/types/monograph/types-isbn-identifier.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
@@ -12,7 +12,7 @@ import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-is
 export function getIsbnIdentifiers(publisherIdentifier: string) {
   const isbnIdentifiers = [];
 
-  const { gs1, registrationGroup, registrant } = getPublisherIdentifierParts(publisherIdentifier);
+  const { gs1, registrationGroup, registrant } = getIsbnPublisherIdentifierParts(publisherIdentifier);
 
   const checkDigitLength = 1; // For readability
   const publicationIdentifierLength =
@@ -26,11 +26,12 @@ export function getIsbnIdentifiers(publisherIdentifier: string) {
     const paddedItemNumber = `${i}`.padStart(publicationIdentifierLength, '0');
     const baseIdentifier = `${gs1}-${registrationGroup}-${registrant}-${paddedItemNumber}`;
     const baseIdentifierNoDashes = baseIdentifier.replaceAll('-', '');
-    const checkdigit = calculateIsbn13CheckDigit(baseIdentifierNoDashes);
+    const checkdigit = calculateIsbnIsmnCheckDigit(baseIdentifierNoDashes);
 
     const isbnIdentifier = `${baseIdentifier}-${checkdigit}`;
 
-    // Additional validation is done using external tool - overhead is considered worth it here
+    // Additional validation is done using custom function and external tool - overhead is considered worth it here
+    validateIsbnIdentifier(isbnIdentifier);
     const auditResult = ISBN.audit(isbnIdentifier);
 
     if (auditResult.validIsbn === false) {
@@ -83,14 +84,11 @@ export function generateIsbnIdentifierDbEntry(
   };
 }
 
-export function getNumberOfIdentifiers(isbnPublisherRange: IsbnPublisherRangeSelect) {
-  const [gs1, registrationGroup, registrant] = isbnPublisherRange.publisher_identifier.split('-');
+export function getNumberOfIsbnIdentifiers(isbnPublisherRange: IsbnPublisherRangeSelect) {
+  const { registrant } = getIsbnPublisherIdentifierParts(isbnPublisherRange.publisher_identifier);
 
-  // Sanity checks
-  if (!gs1 || !registrationGroup || !registrant) {
-    throw new Error(`Invalid publisher identifier observed in ISBN publisher range id ${isbnPublisherRange.id}`);
-  }
-
+  // DO NOT ALTER THIS UNLESS YOU ARE FULLY SURE WHAT YOU ARE DOING
+  // Map represents number of ISBN identifiers for given length of registrant in ISBN publisher identifier
   const registrantIdentifierCountMap: Record<number, number> = {
     1: 100000,
     2: 10000,
