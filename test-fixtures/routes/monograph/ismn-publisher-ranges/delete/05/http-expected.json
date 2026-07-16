@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISMN publisher range id 1 cannot be deleted due to an constraint: has associated messages",
+  "instance": "/v2/monograph/ismn-publisher-ranges/1"
+}

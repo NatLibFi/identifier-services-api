@@ -168,5 +168,20 @@
       "modified_by": "SYSTEM"
     }
   ],
-  "monograph_message": []
+  "monograph_message": [
+    {
+      "id": 1,
+      "message_type": "ISBN_LIST_DELIVERY",
+      "monograph_publisher_id": 1,
+      "monograph_publication_request_id": null,
+      "isbn_publisher_range_id": null,
+      "ismn_publisher_range_id": 1,
+      "recipient": "erkki.esimerkki@example.localhost",
+      "lang_code": "fi-FI",
+      "subject": "TESTI/TEST MESSAGE Example title approved",
+      "body": "Tämä viesti on testijärjestelmästä / This message is from test system.",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    }
+  ]
 }

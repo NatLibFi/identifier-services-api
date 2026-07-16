@@ -64,8 +64,18 @@ export async function canDeleteIsbnPublisherRange(isbnPublisherRange: IsbnPublis
     return { result: false, reason: 'has assigned identifiers' };
   }
 
-  // TODO: figure out way to verify no ISBN identifiers has not been made public or used as well as add any other required logic
-  // E.g., if identifier range is associated with message or download action it has been made public in verified manner
+  // Check if any message is directly associated with the ISBN publisher range
+  // If a message is associated with the publisher range, it means a identifiers have been made public
+  const { numMessages } = await db
+    .selectFrom('monograph_message')
+    .select(db.fn.countAll<number>().as('numMessages'))
+    .where('isbn_publisher_range_id', '=', isbnPublisherRange.id)
+    .executeTakeFirstOrThrow();
+
+  if (numMessages !== 0) {
+    return { result: false, reason: 'has associated messages' };
+  }
+
   return { result: true };
 }
 

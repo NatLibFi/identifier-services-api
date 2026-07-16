@@ -1,8 +1,7 @@
 {
-  "description": "TODO: [admin] cannot delete ISBN publisher range if it is associated with monograph message",
+  "description": "[admin] cannot delete ISBN publisher range if it is associated with monograph message",
   "url": "/v2/monograph/isbn-publisher-ranges/1",
   "method": "DELETE",
   "role": "admin",
-  "expectedStatus": 409,
-  "skip": true
+  "expectedStatus": 409
 }
