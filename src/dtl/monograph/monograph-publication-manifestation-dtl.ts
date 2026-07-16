@@ -3,17 +3,12 @@ import type { MonographPublicationManifestationSelect } from '../../db/types/mon
 export interface MonographPublicationManifestationAdminRead extends MonographPublicationManifestationSelect {
   isbn_identifier: string | null;
   isbn_identifier_assigned: Date | null;
-  ismn_identifier?: string | null; // TODO: make not optional
-  ismn_identifier_assigned?: Date | null;
+  ismn_identifier: string | null;
+  ismn_identifier_assigned: Date | null;
 }
 
-export interface ValidatedMonographPublicationManifestationAdminRead extends Omit<
-  MonographPublicationManifestationSelect,
-  'isbn_identifier'
-> {
-  identifier: string | null;
-  identifier_assigned: Date | null;
-  message_sent?: boolean;
+export interface ValidatedMonographPublicationManifestationAdminRead extends MonographPublicationManifestationAdminRead {
+  message_sent: boolean;
 }
 
 export function asMonographPublicationManifestationAdminRead(
@@ -48,17 +43,6 @@ export function asMonographPublicationManifestationAdminRead(
     );
   }
 
-  let definedIdentifier: string | null = null;
-  let identifierAssigned: Date | null = null;
-
-  if (isbn_identifier) {
-    definedIdentifier = isbn_identifier;
-    identifierAssigned = isbn_identifier_assigned;
-  } else if (ismn_identifier) {
-    definedIdentifier = ismn_identifier;
-    identifierAssigned = ismn_identifier_assigned ?? null;
-  }
-
   return {
     id,
     monograph_publication_expression_id,
@@ -71,8 +55,10 @@ export function asMonographPublicationManifestationAdminRead(
     printing_information,
     series,
     cancelled,
-    identifier: definedIdentifier,
-    identifier_assigned: identifierAssigned,
+    isbn_identifier,
+    isbn_identifier_assigned,
+    ismn_identifier,
+    ismn_identifier_assigned,
     message_sent: messageSent,
     created,
     created_by,

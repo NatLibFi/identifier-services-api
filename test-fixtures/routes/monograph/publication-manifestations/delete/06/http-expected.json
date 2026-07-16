@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot remove manifestation that has identifier assigned to it.",
+  "instance": "/v2/monograph/publication-manifestations/2"
+}

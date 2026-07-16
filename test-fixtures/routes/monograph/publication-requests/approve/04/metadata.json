@@ -1,5 +1,5 @@
 {
-  "description": "[admin] approval assigns identifier only for non-cancelled publications",
+  "description": "[admin] approval assigns ISBN identifier only for non-cancelled publications when expression type requires ISBN",
   "url": "/v2/monograph/publication-requests/1/approve",
   "method": "POST",
   "role": "admin",

@@ -24,7 +24,12 @@ import {
   getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
 
-import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from '../interface-utils/monograph-identifier-utils.ts';
+import {
+  assignIsbnIdentifier,
+  assignIsmnIdentifier,
+  getAssignableIsbnIdentifiers,
+  getAssignableIsmnIdentifiers,
+} from '../interface-utils/monograph-identifier-utils.ts';
 
 import {
   MONOGRAPH_EXPRESSION_TYPES,
@@ -273,7 +278,9 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
     //   2. Are not cancelled
     //   3. Do not yet have identifier assigned to them
     const unprocessedRequestManifestationIds = n.manifestations
-      .filter((m) => m.monograph_publication_request_id === id && !m.cancelled && !m.identifier)
+      .filter(
+        (m) => m.monograph_publication_request_id === id && !m.cancelled && !m.isbn_identifier && !m.ismn_identifier,
+      )
       .map(({ id }) => id);
 
     if (p[identifierType]) {
@@ -288,6 +295,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
   try {
     await db.transaction().execute(async (trx) => {
       const manifestationsRequiringIsbn = manifestationIds[MONOGRAPH_IDENTIFIERS.ISBN];
+      const manifestationsRequiringIsmn = manifestationIds[MONOGRAPH_IDENTIFIERS.ISMN];
 
       // Assign ISBN for all manifestations requiring one that are not cancelled
       if (manifestationsRequiringIsbn) {
@@ -305,14 +313,28 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
         );
       }
 
+      // Assign ISMN for all manifestations requiring one that are not cancelled
+      if (manifestationsRequiringIsmn) {
+        const ismnIdentifiers = await getAssignableIsmnIdentifiers(publisherId, manifestationsRequiringIsmn.length);
+
+        await Promise.all(
+          manifestationsRequiringIsmn.map(async (manifestationId, idx) => {
+            const identifierString = ismnIdentifiers[idx];
+            if (!identifierString) {
+              throw new Error('Unexpected error during allocating identifier: identifier string does not exist');
+            }
+
+            await assignIsmnIdentifier(manifestationId, identifierString, trx, user);
+          }),
+        );
+      }
+
       await changeMonographPublicationRequestState(
         validMonographPublicationRequest.id,
         MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED,
         trx,
         user,
       );
-
-      // TODO: assign ISMN identifiers
     });
   } catch (error) {
     const hasDetails = error instanceof Error;
@@ -320,7 +342,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
       throw new ApiError(
         HttpStatus.INTERNAL_SERVER_ERROR,
         'Internal server error',
-        'Unknown error occurred during identifier assignation.',
+        'Unknown error occurred during monograph publication request approval.',
       );
     }
 
@@ -337,7 +359,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
-      'Unknown error occurred during identifier assignation.',
+      'Unknown error occurred during monograph publication request approval.',
     );
   }
 
@@ -378,12 +400,20 @@ export async function rejectMonographPublicationRequest(id: number, user: Reques
       );
     }
 
+    if (error.cause === 'Request has messages') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publication request has had messages sent regarding it already.',
+      );
+    }
+
     // Catch-all in case some cause is added to function but forgotten to add here
     logger.warn(`Underlying cause for error: ${error.cause}`);
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
-      'Unknown error occurred during identifier assignation.',
+      'Unknown error occurred during monograph publication request reprocess rejection.',
     );
   }
 
@@ -416,12 +446,20 @@ export async function reprocessMonographPublicationRequest(id: number, user: Req
       throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal server error', 'Unknown error has occurred.');
     }
 
+    if (error.cause === 'Request has messages') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publication request has had messages sent regarding it already.',
+      );
+    }
+
     // Catch-all in case some cause is added to function but forgotten to add here
     logger.warn(`Underlying cause for error: ${error.cause}`);
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
-      'Unknown error occurred during identifier assignation.',
+      'Unknown error occurred during monograph publication request reprocess assignation.',
     );
   }
 

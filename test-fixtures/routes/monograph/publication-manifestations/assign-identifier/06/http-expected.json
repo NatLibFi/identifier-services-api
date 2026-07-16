@@ -2,6 +2,6 @@
   "type": "about:blank",
   "status": 409,
   "title": "Conflict",
-  "detail": "Manifestation has already identifier assigned to it.",
+  "detail": "Manifestation has already ISBN identifier assigned to it.",
   "instance": "/v2/monograph/publication-manifestations/1/assign-identifier"
 }

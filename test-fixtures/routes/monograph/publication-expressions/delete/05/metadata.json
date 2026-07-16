@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may not remove expression which manifestations have identifiers assigned",
+  "description": "[admin] may not remove expression which manifestations have ISBN identifier assigned",
   "url": "/v2/monograph/publication-expressions/1",
   "method": "DELETE",
   "role": "admin",

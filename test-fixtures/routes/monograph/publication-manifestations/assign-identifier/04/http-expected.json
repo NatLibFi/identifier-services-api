@@ -1,7 +1,7 @@
 {
   "type": "about:blank",
-  "status": 422,
-  "title": "Unprocessable entity",
-  "detail": "Could not process linked expression expression_type.",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publisher does not have enough available identifiers.",
   "instance": "/v2/monograph/publication-manifestations/1/assign-identifier"
 }

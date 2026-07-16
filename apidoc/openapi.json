@@ -3310,13 +3310,25 @@
               "message_sent": {
                 "type": "boolean"
               },
-              "identifier": {
+              "isbn_identifier": {
                 "type": [
                   "string",
                   "null"
                 ]
               },
-              "identifier_assigned": {
+              "isbn_identifier_assigned": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ismn_identifier": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ismn_identifier_assigned": {
                 "type": [
                   "string",
                   "null"

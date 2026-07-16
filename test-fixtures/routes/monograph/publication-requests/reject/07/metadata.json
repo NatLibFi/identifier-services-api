@@ -1,8 +1,7 @@
 {
-  "description": "TODO:[admin] may not reject request which already has sent message.",
-  "url": "/v2/monograph/publication-requests/1/reprocess",
+  "description": "[admin] may not reject request which already has sent message (note: db state is distrupted regarding identifiers, this should not ever happen but is defined as safety-net).",
+  "url": "/v2/monograph/publication-requests/1/reject",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 409,
-  "skip": true
+  "expectedStatus": 409
 }

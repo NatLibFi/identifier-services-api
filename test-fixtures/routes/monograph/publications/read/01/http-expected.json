@@ -18,8 +18,10 @@
       "manifestations": [
         {
           "id": 1,
-          "identifier": "978-951-95000-0-3",
-          "identifier_assigned": "2025-01-20T12:00:00.000Z",
+          "isbn_identifier": "978-951-95000-0-3",
+          "isbn_identifier_assigned": "2025-01-20T12:00:00.000Z",
+          "ismn_identifier": null,
+          "ismn_identifier_assigned": null,
           "monograph_publication_expression_id": 1,
           "monograph_publication_request_id": 1,
           "manifestation_type": "PAPERBACK",
@@ -44,8 +46,10 @@
         },
         {
           "id": 2,
-          "identifier": "978-951-95000-1-0",
-          "identifier_assigned": "2025-01-20T12:00:00.000Z",
+          "isbn_identifier": "978-951-95000-1-0",
+          "isbn_identifier_assigned": "2025-01-20T12:00:00.000Z",
+          "ismn_identifier": null,
+          "ismn_identifier_assigned": null,
           "monograph_publication_expression_id": 1,
           "monograph_publication_request_id": 1,
           "manifestation_type": "EPUB",

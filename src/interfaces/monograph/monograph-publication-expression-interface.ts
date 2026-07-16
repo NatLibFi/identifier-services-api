@@ -57,7 +57,9 @@ export async function updateMonographPublicationExpression(
   const keyRequiringNoIdentifier = Object.keys(updateDoc).find((k) => disallowedChangesAfterIdentifier.includes(k));
 
   const { [id]: manifestations } = await getExpressionsManifestations([id]);
-  const manifestationHasIdentifier = manifestations?.find((m) => m.identifier !== null && m.identifier.length > 0);
+  const manifestationHasIdentifier = manifestations?.find(
+    (m) => m.isbn_identifier !== null || m.ismn_identifier !== null,
+  );
 
   if (manifestationHasIdentifier && keyRequiringNoIdentifier) {
     throw new ApiError(
@@ -211,7 +213,7 @@ export async function deleteMonographPublicationExpression(expressionId: number,
   }
 
   const manifestationsHaveIdentifiers = expression.manifestations.filter(
-    (m) => typeof m.identifier === 'string' && m.identifier.length > 0,
+    (m) => m.isbn_identifier !== null || m.ismn_identifier !== null,
   ).length;
 
   if (manifestationsHaveIdentifiers) {

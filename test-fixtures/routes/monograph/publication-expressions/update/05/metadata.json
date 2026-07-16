@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may not update expression_type information after manifestation has identifier",
+  "description": "[admin] may not update expression language information after manifestation has ISBN identifier",
   "url": "/v2/monograph/publication-expressions/1",
   "method": "PATCH",
   "role": "admin",

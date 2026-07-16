@@ -1,0 +1,12 @@
+{
+  "message_type": "ISMN_ASSIGNMENT",
+  "monograph_publisher_id": 1,
+  "monograph_publication_request_id": 1,
+  "isbn_publisher_range_id": null,
+  "ismn_publisher_range_id": null,
+  "manifestation_ids": [1, 2],
+  "recipient": "erkki.esimerkki@example.localhost",
+  "lang_code": "fi-FI",
+  "subject": "Example title approved",
+  "body": "20.1.2026\n\nerkki.esimerkki@example.localhost\nExample publisher\nFoo street 123\n00000 Foo city\n\nTeokselle Example title: Example subtitle eri julkaisumuodoille on myönnetty seuraavat tunnukset.\n\n979-0-9001750-0-7 (pehmeäkantinen)\n979-0-9001750-1-4 (EPUB)\n\nKind regards,\ntest admin"
+}

@@ -1,8 +1,7 @@
 {
-  "description": "TODO:[admin] may not reprocess request which already has sent message.",
+  "description": "[admin] may not reprocess request which already has sent message (monograph_message table association only on purpose).",
   "url": "/v2/monograph/publication-requests/1/reprocess",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 409,
-  "skip": true
+  "expectedStatus": 409
 }

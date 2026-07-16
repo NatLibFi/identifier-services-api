@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not assign ISMN identifier to manifestation if it already has ISMN identifier",
+  "url": "/v2/monograph/publication-manifestations/1/assign-identifier",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

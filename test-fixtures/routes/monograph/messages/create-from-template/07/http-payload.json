@@ -1,0 +1,5 @@
+{
+  "message_type": "ISMN_ASSIGNMENT",
+  "monograph_publisher_id": 1,
+  "manifestation_ids": [1, 2]
+}

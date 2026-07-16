@@ -1,0 +1,28 @@
+{
+  "id": 1,
+  "isbn_identifier": null,
+  "isbn_identifier_assigned": null,
+  "ismn_identifier": "979-0-9001750-0-7",
+  "ismn_identifier_assigned": "2026-01-20T12:00:00.000Z",
+  "monograph_publication_expression_id": 1,
+  "monograph_publication_request_id": 1,
+  "manifestation_type": "PAPERBACK",
+  "manifestation_type_other": null,
+  "manifestation_edition": null,
+  "publication_year": "2024",
+  "publication_month": "12",
+  "series": [{ "name": "Example series", "issn": "1234-4321", "volume": "1" }],
+  "printing_information": [
+    {
+      "printing_house": "Example Print Oy",
+      "printing_house_city": "Foobarila",
+      "copies": "800"
+    }
+  ],
+  "cancelled": false,
+  "message_sent": false,
+  "created": "2025-01-20T12:00:00.000Z",
+  "created_by": "TEST_USER_1",
+  "modified": "2025-01-20T12:00:00.000Z",
+  "modified_by": "TEST_USER_1"
+}

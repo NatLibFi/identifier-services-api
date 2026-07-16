@@ -187,5 +187,8 @@
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     }
-  ]
+  ],
+  "ismn_identifier": [],
+  "monograph_message": [],
+  "monograph_message_publication_manifestation": []
 }

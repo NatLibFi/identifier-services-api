@@ -134,9 +134,124 @@ export async function assignIsbnIdentifier(
   return;
 }
 
+export async function assignIsmnIdentifier(
+  manifestationId: number,
+  identifierString: string,
+  trx: Transaction<Database>,
+  user: RequestUser,
+) {
+  const db = getKysely();
+  const ismnIdentifier = await db
+    .selectFrom('ismn_identifier')
+    .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
+    .selectAll('ismn_identifier')
+    .select('ismn_publisher_range.monograph_publisher_id as monograph_publisher_id')
+    .where('ismn_identifier.identifier', '=', identifierString)
+    .executeTakeFirstOrThrow();
+
+  // Sanity check: monograph publisher id must exist for identifier
+  if (!ismnIdentifier.monograph_publisher_id) {
+    throw new Error(
+      `Monograph publisher was not defined for ISMN identifier ${identifierString} (id ${ismnIdentifier.id})`,
+      { cause: 'ISMN does not belong to given publisher' },
+    );
+  }
+
+  // Sanity check identifier publisher range belongs to manifestation expression publication
+  const manifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'monograph_publication_expression',
+      'monograph_publication_expression.id',
+      'monograph_publication_manifestation.monograph_publication_expression_id',
+    )
+    .leftJoin(
+      'monograph_publication',
+      'monograph_publication.id',
+      'monograph_publication_expression.monograph_publication_id',
+    )
+    .select(['monograph_publication_manifestation.id', 'monograph_publication_manifestation.cancelled'])
+    .select('monograph_publication.monograph_publisher_id as monograph_publisher_id')
+    .select('monograph_publication_expression.expression_type as expression_type')
+    .where('monograph_publication_manifestation.id', '=', manifestationId)
+    .executeTakeFirstOrThrow();
+
+  // Sanity check: monograph publisher id must exist for manifestation
+  if (!manifestation.monograph_publisher_id) {
+    throw new Error(`Monograph publisher was not defined for manifestation id ${manifestationId}`, {
+      cause: 'Manifestation is missing publisher definition',
+    });
+  }
+
+  // Sanity check: monograph_publisher_id is same for manifestation and ISMN identifier
+  if (manifestation.monograph_publisher_id !== ismnIdentifier.monograph_publisher_id) {
+    throw new Error(
+      `Cannot allocate manifestation id ${manifestationId} ISMN identifier id ${identifierString} because it does not belong the monograph publisher that the manifestation belongs to`,
+      { cause: 'Mismatching publisher between ISMN identifier and manifestation' },
+    );
+  }
+
+  // Sanity check: cannot assign identifier that has already been assigned
+  if (ismnIdentifier.monograph_publication_manifestation_id !== null) {
+    throw new Error(
+      `Cannot allocate manifestation id ${manifestationId} ISMN identifier ${identifierString} because the identifier has been used by manifestation id ${ismnIdentifier.monograph_publication_manifestation_id}`,
+      { cause: 'ISMN already assigned' },
+    );
+  }
+
+  // Important note for future implementations: ISMN identifier assignment check is skipped because expression type check should exist in both ISMN and ISMN assignation functions
+  // In case this type of mechanism is not implemented, it will be possible to assign both ISBN and ISMN for same manifestation. This should not ever happen, so please take care when re-implementing.
+
+  // Sanity check: cannot assign ISMN identifier for manifestation that is associated with expression having type of SHEET_MUSIC
+  // Verification is however made as include check because this emphasizes on type of data integrity that we wish for
+  const allowedExpressionTypes = [MONOGRAPH_EXPRESSION_TYPES.SHEET_MUSIC];
+
+  if (!manifestation.expression_type || !allowedExpressionTypes.includes(manifestation.expression_type)) {
+    throw new Error(
+      `Cannot allocate manifestation id ${manifestationId} ISMN identifier ${identifierString} because the expression manifestation is attached to has invalid type for ISMN (${manifestation.expression_type})`,
+      { cause: 'Expression type disallows ISMN for manifestation' },
+    );
+  }
+
+  // Assign identifier and verify result
+  const assignResult = await trx
+    .updateTable('ismn_identifier')
+    .set({
+      monograph_publication_manifestation_id: manifestationId,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .where('id', '=', ismnIdentifier.id)
+    .executeTakeFirstOrThrow();
+
+  if (Number(assignResult.numUpdatedRows) !== 1) {
+    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+  }
+
+  return;
+}
+
 export async function deassignIsbnIdentifier(manifestationId: number, trx: Transaction<Database>, user: RequestUser) {
   const assignResult = await trx
     .updateTable('isbn_identifier')
+    .set({
+      monograph_publication_manifestation_id: null,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .where('monograph_publication_manifestation_id', '=', manifestationId)
+    .executeTakeFirstOrThrow();
+
+  if (Number(assignResult.numUpdatedRows) !== 1) {
+    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+  }
+
+  return;
+}
+
+export async function deassignIsmnIdentifier(manifestationId: number, trx: Transaction<Database>, user: RequestUser) {
+  const assignResult = await trx
+    .updateTable('ismn_identifier')
     .set({
       monograph_publication_manifestation_id: null,
       modified: getCurrentTime(),
@@ -174,6 +289,30 @@ export async function getAssignableIsbnIdentifiers(monographPublisherId: number,
   }
 
   return isbnIdentifiers.map(({ identifier }) => identifier);
+}
+
+export async function getAssignableIsmnIdentifiers(monographPublisherId: number, numberOfIdentifiers: number) {
+  const db = getKysely();
+  const ismnIdentifiers = await db
+    .selectFrom('ismn_identifier')
+    .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
+    .selectAll('ismn_identifier')
+    .select('ismn_publisher_range.monograph_publisher_id as monograph_publisher_id')
+    .where('monograph_publisher_id', '=', monographPublisherId)
+    .where('ismn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .orderBy('ismn_identifier.ismn_publisher_range_id', 'asc')
+    .orderBy('ismn_identifier.identifier', 'asc')
+    .limit(numberOfIdentifiers)
+    .execute();
+
+  if (ismnIdentifiers.length < numberOfIdentifiers) {
+    throw new Error(
+      `Could not provide as many ISMN identifiers that were asked. Only ${ismnIdentifiers.length} are available for the publisher to assign currently.`,
+      { cause: 'Inadequate number of identifiers' },
+    );
+  }
+
+  return ismnIdentifiers.map(({ identifier }) => identifier);
 }
 
 export async function getAssignableIsbnIdentifier(manifestationId: number) {
@@ -222,6 +361,54 @@ export async function getAssignableIsbnIdentifier(manifestationId: number) {
   }
 
   return isbnIdentifier.identifier;
+}
+
+export async function getAssignableIsmnIdentifier(manifestationId: number) {
+  const db = getKysely();
+  const manifestation = await db
+    .selectFrom('monograph_publication_manifestation')
+    .leftJoin(
+      'monograph_publication_expression',
+      'monograph_publication_expression.id',
+      'monograph_publication_manifestation.monograph_publication_expression_id',
+    )
+    .leftJoin(
+      'monograph_publication',
+      'monograph_publication.id',
+      'monograph_publication_expression.monograph_publication_id',
+    )
+    .select(['monograph_publication_manifestation.id', 'monograph_publication_manifestation.cancelled'])
+    .select('monograph_publication.monograph_publisher_id as monograph_publisher_id')
+    .where('monograph_publication_manifestation.id', '=', manifestationId)
+    .executeTakeFirstOrThrow();
+
+  // Sanity check: monograph publisher id must exist for manifestation
+  if (!manifestation.monograph_publisher_id) {
+    throw new Error(`Monograph publisher was not defined for manifestation id ${manifestationId}`, {
+      cause: 'No publisher defined',
+    });
+  }
+
+  const [ismnIdentifier] = await db
+    .selectFrom('ismn_identifier')
+    .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
+    .select(['ismn_identifier.id', 'ismn_identifier.ismn_publisher_range_id', 'ismn_identifier.identifier'])
+    .select('ismn_publisher_range.monograph_publisher_id as monograph_publisher_id')
+    .where('monograph_publisher_id', '=', manifestation.monograph_publisher_id)
+    .where('ismn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .orderBy('ismn_identifier.ismn_publisher_range_id', 'asc')
+    .orderBy('ismn_identifier.identifier', 'asc')
+    .limit(1)
+    .execute();
+
+  if (!ismnIdentifier) {
+    throw new Error(
+      'Could not provide ISMN identifier for manifestation as no ISMN identifiers are available for the given publisher to assign currently.',
+      { cause: 'Inadequate number of identifiers' },
+    );
+  }
+
+  return ismnIdentifier.identifier;
 }
 
 export async function getExpressionIdentifierType(expressionId: number) {

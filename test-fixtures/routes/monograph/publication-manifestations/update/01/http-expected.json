@@ -1,7 +1,9 @@
 {
   "id": 1,
-  "identifier": null,
-  "identifier_assigned": null,
+  "isbn_identifier": null,
+  "isbn_identifier_assigned": null,
+  "ismn_identifier": null,
+  "ismn_identifier_assigned": null,
   "monograph_publication_expression_id": 1,
   "monograph_publication_request_id": null,
   "manifestation_type": "OTHER",

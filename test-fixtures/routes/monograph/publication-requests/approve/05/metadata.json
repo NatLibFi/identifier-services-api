@@ -1,5 +1,5 @@
 {
-  "description": "[admin] approving only changes request state if manifestations already have identifiers",
+  "description": "[admin] approving only changes request state if manifestations already have ISBN identifiers",
   "url": "/v2/monograph/publication-requests/1/approve",
   "method": "POST",
   "role": "admin",

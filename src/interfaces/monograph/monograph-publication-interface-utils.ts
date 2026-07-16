@@ -52,9 +52,14 @@ export async function getExpressionsManifestations(
       'isbn_identifier.monograph_publication_manifestation_id',
       'monograph_publication_manifestation.id',
     )
-    // TODO: left join for ISMN identifier
+    .leftJoin(
+      'ismn_identifier',
+      'ismn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
     .selectAll('monograph_publication_manifestation')
     .select(['isbn_identifier.identifier as isbn_identifier', 'isbn_identifier.modified as isbn_identifier_assigned'])
+    .select(['ismn_identifier.identifier as ismn_identifier', 'ismn_identifier.modified as ismn_identifier_assigned'])
     .where('monograph_publication_expression_id', 'in', expressionIds)
     .execute();
 

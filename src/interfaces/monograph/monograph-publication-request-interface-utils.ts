@@ -392,12 +392,11 @@ export async function changePublicationRequestPublisher(
 
   // Confirm any associated manifestations do not have identifier associated yet.
   const publication = await readMonographPublication(publicationRequest.monograph_publication_id);
-  const hasIdentifier = publication.expressions.some((expression) => {
-    const manifestationHasIdentifier = expression.manifestations.some(
-      (manifestation) => manifestation.identifier !== null && manifestation.identifier.length > 0,
-    );
-    return manifestationHasIdentifier;
-  });
+  const hasIdentifier = publication.expressions.some((expression) =>
+    expression.manifestations.some(
+      (manifestation) => manifestation.isbn_identifier !== null || manifestation.ismn_identifier !== null,
+    ),
+  );
 
   if (hasIdentifier) {
     throw new ApiError(
@@ -504,14 +503,20 @@ export async function changeMonographPublicationRequestState(
       'isbn_identifier.monograph_publication_manifestation_id',
       'monograph_publication_manifestation.id',
     )
-    // TODO: left join for ISMN identifier
+    .leftJoin(
+      'ismn_identifier',
+      'ismn_identifier.monograph_publication_manifestation_id',
+      'monograph_publication_manifestation.id',
+    )
     .select(['monograph_publication_manifestation.id', 'monograph_publication_manifestation.cancelled'])
     .select(['isbn_identifier.identifier as isbn_identifier'])
+    .select(['ismn_identifier.identifier as ismn_identifier'])
     .where('monograph_publication_request_id', '=', monographPublicationRequestId)
     .execute();
 
-  // TODO: add ISMN constraint
-  const unprocessedManifestations = requestManifestations.filter((m) => !m.cancelled && !m.isbn_identifier);
+  const unprocessedManifestations = requestManifestations.filter(
+    (m) => !m.cancelled && !m.isbn_identifier && !m.ismn_identifier,
+  );
 
   if (newState === MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED && unprocessedManifestations.length > 0) {
     throw new Error(
@@ -520,12 +525,46 @@ export async function changeMonographPublicationRequestState(
   }
 
   // In case changing to rejected state, verify no associated manifestation has identifier
-  // TODO: add ISMN constraint
-  const manifestationsWithIdentifier = requestManifestations.filter((m) => Boolean(m.isbn_identifier));
+  const manifestationsWithIdentifier = requestManifestations.filter(
+    (m) => Boolean(m.isbn_identifier) || Boolean(m.ismn_identifier),
+  );
+
   if (newState === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED && manifestationsWithIdentifier.length > 0) {
     throw new Error(
       `Cannot mark request as REJECTED since there are ${manifestationsWithIdentifier.length} manifestations associated with request that have identifiers`,
       { cause: 'Manifestation has identifier' },
+    );
+  }
+
+  // Disallow changing state to other than ACCEPTED if messages have been sent
+  let relatedMessageSentNumber = 0;
+
+  const { numRequestMessages } = await trx
+    .selectFrom('monograph_message')
+    .select(trx.fn.countAll<number>().as('numRequestMessages'))
+    .where('monograph_publication_request_id', '=', monographPublicationRequestId)
+    .executeTakeFirstOrThrow();
+
+  relatedMessageSentNumber += numRequestMessages;
+
+  const manifestationsWithIdentifierIds = manifestationsWithIdentifier.map((m) => m.id);
+
+  // Avoidin SQL where 'in' verb would be followed by empty array
+  // https://github.com/kysely-org/kysely/issues/709
+  if (manifestationsWithIdentifierIds.length > 0) {
+    const { numManifestationMessages } = await trx
+      .selectFrom('monograph_message_publication_manifestation')
+      .select(trx.fn.countAll<number>().as('numManifestationMessages'))
+      .where('monograph_publication_manifestation_id', 'in', manifestationsWithIdentifierIds)
+      .executeTakeFirstOrThrow();
+
+    relatedMessageSentNumber += numManifestationMessages;
+  }
+
+  if (relatedMessageSentNumber > 0 && newState !== 'ACCEPTED') {
+    throw new Error(
+      `Cannot mark request anything other than ACCEPTED since messages have been sent regarding the request`,
+      { cause: 'Request has messages' },
     );
   }
 

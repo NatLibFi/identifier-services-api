@@ -15,7 +15,10 @@ import {
 import { validateGetById } from '../interface-utils/common-interface-utils.ts';
 
 import { MONOGRAPH_MANIFESTATION_TYPES, MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
-import { getMonographPublisherIsbnRanges } from './monograph-publisher-interface-utils.ts';
+import {
+  getMonographPublisherIsbnRanges,
+  getMonographPublisherIsmnRanges,
+} from './monograph-publisher-interface-utils.ts';
 import { readIsmnPublisherRange } from './ismn-publisher-range-interface.ts';
 
 interface MessageRelations {
@@ -275,6 +278,15 @@ async function constructIdentifierAssignedMessage(
   // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
   const publisherInfo = { ...messagePublisher }; // mechanism to allow overriding publisher information for self-publishers
 
+  const isIsbnAssignment = messageType === MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT;
+  const isIsmnAssignment = messageType === MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT;
+
+  if ((isIsbnAssignment && isIsmnAssignment) || (!isIsbnAssignment && !isIsmnAssignment)) {
+    throw new Error(
+      `Encountered invalid combination of parameters: isIsbnAssignment ${isIsbnAssignment}, isIsmnAssignment ${isIsmnAssignment}`,
+    );
+  }
+
   const manifestations = manifestationIds
     ? await Promise.all(manifestationIds.map(async (mid: number) => readMonographPublicationManifestation(mid)))
     : [];
@@ -294,11 +306,17 @@ async function constructIdentifierAssignedMessage(
 
   // All manifestations need to contain identifier
   // Note this function relies on assumption that guards relating to entity relations (e.g., confirming manifestations belong to same expression and publicatio request) have already been satisfied by sanityCheckMessageRelations
-  const manifestationWithoutIdentifier = manifestations.find((m) => m.identifier === null);
+  const manifestationWithoutIdentifier = manifestations.find((m) => {
+    if (isIsbnAssignment) {
+      return m.isbn_identifier === null;
+    }
+
+    return m.ismn_identifier === null;
+  });
 
   if (manifestationWithoutIdentifier) {
     throw new Error(
-      `Manifestation id ${manifestationWithoutIdentifier.id} does not have identifier assigned. Refusing to add to message.`,
+      `Manifestation id ${manifestationWithoutIdentifier.id} does not have proper identifier assigned. Refusing to add to message.`,
     );
   }
 
@@ -330,9 +348,17 @@ async function constructIdentifierAssignedMessage(
   subject = subject.replace('#TITLE#', expression.title);
 
   // Process body placeholders
-  const manifestationIdentifierStr = manifestations
-    .map((m) => `${m.identifier} (${translateManifestationType(m.manifestation_type, publisherInfo.langCode)})`)
-    .join('\n');
+  let manifestationIdentifierStr;
+
+  if (isIsbnAssignment) {
+    manifestationIdentifierStr = manifestations
+      .map((m) => `${m.isbn_identifier} (${translateManifestationType(m.manifestation_type, publisherInfo.langCode)})`)
+      .join('\n');
+  } else {
+    manifestationIdentifierStr = manifestations
+      .map((m) => `${m.ismn_identifier} (${translateManifestationType(m.manifestation_type, publisherInfo.langCode)})`)
+      .join('\n');
+  }
 
   body = body.replace('#TITLE#', expression.title);
   body = body.replace('#SUBTITLE#', expression.subtitle || '');
@@ -355,7 +381,7 @@ async function constructMonographPublisherRegisteredMessage(
   // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
   let publisherIdentifier;
   let isbnPublisherRangeId = null;
-  const ismnPublisherRangeId = null;
+  let ismnPublisherRangeId = null;
 
   const messageTemplate = await getMessageTemplate(messageType, messagePublisher.langCode);
 
@@ -370,15 +396,26 @@ async function constructMonographPublisherRegisteredMessage(
     const cat5PublisherRange = cat5PublisherRanges[0];
     if (cat5PublisherRanges.length !== 1 || !cat5PublisherRange) {
       throw new Error(
-        `Publisher needs to have exactly one category 5 publisher range for constructing registration confirmation message`,
+        `Publisher needs to have exactly one category 5 ISBN publisher range for constructing registration confirmation message`,
       );
     }
 
     publisherIdentifier = cat5PublisherRange.publisher_identifier;
     isbnPublisherRangeId = cat5PublisherRange.id;
   } else if (messageType === MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION) {
-    // TODO: ismn
-    throw new Error('ISMN is not yet supported in this function');
+    const ismnPublisherRange = await getMonographPublisherIsmnRanges(messagePublisher.id);
+
+    // Validate publisher has only one range and that it's of category seven (contains 10 ISMN identifiers)
+    const cat7PublisherRanges = ismnPublisherRange.filter((v) => v.publisher_identifier.length === 13);
+    const cat7PublisherRange = cat7PublisherRanges[0];
+    if (cat7PublisherRanges.length !== 1 || !cat7PublisherRange) {
+      throw new Error(
+        `Publisher needs to have exactly one category 7 ISMN publisher range for constructing registration confirmation message`,
+      );
+    }
+
+    publisherIdentifier = cat7PublisherRange.publisher_identifier;
+    ismnPublisherRangeId = cat7PublisherRange.id;
   } else {
     throw new Error(
       'You entered a code branch that should be impossible to enter to. Here is an identification code you can pass to system administration: MONO-MSG-1',

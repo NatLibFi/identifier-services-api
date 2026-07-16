@@ -1,0 +1,7 @@
+{
+  "description": "[admin] approval assigns ISMN identifier only for non-cancelled publications when expression type requires ISMN",
+  "url": "/v2/monograph/publication-requests/1/approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 204
+}

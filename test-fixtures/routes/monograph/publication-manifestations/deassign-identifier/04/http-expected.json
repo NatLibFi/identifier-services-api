@@ -2,6 +2,6 @@
   "type": "about:blank",
   "status": 409,
   "title": "Conflict",
-  "detail": "Manifestation does not have ISBN identifier assigned to it.",
+  "detail": "Manifestation does not have ISBN or ISMN identifier assigned to it.",
   "instance": "/v2/monograph/publication-manifestations/1/deassign-identifier"
 }

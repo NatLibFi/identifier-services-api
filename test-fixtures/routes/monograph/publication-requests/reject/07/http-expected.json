@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publication request has had messages sent regarding it already.",
+  "instance": "/v2/monograph/publication-requests/1/reject"
+}
