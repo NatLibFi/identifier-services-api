@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create message from template when publisher has joined publisher registry (ISMN, uses information from latest assigned publisher identifier)",
+  "url": "/v2/monograph/messages/create-from-template",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

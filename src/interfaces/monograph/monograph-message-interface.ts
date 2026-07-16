@@ -251,7 +251,41 @@ export default function createMonographMessageInterface(
       validatedMessageResult.expression_title = messageManifestations[0]?.expression_title || '';
     }
 
-    // TODO: populate information for ISMN_ASSINGMENT
+    // Populate information for ISMN_ASSIGNMENT
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT) {
+      const messageManifestations = await db
+        .selectFrom('monograph_message_publication_manifestation')
+        .leftJoin(
+          'monograph_publication_manifestation',
+          'monograph_publication_manifestation.id',
+          'monograph_message_publication_manifestation.monograph_publication_manifestation_id',
+        )
+        .leftJoin(
+          'monograph_publication_expression',
+          'monograph_publication_expression.id',
+          'monograph_publication_manifestation.monograph_publication_expression_id',
+        )
+        .leftJoin(
+          'ismn_identifier',
+          'ismn_identifier.monograph_publication_manifestation_id',
+          'monograph_publication_manifestation.id',
+        )
+        .select(['monograph_message_publication_manifestation.id as monograph_message_publication_manifestation_id'])
+        .select([
+          'monograph_publication_manifestation.id as manifestation_id',
+          'monograph_publication_manifestation.manifestation_type as manifestation_type',
+        ])
+        .select(['monograph_publication_expression.title as expression_title'])
+        .select(['ismn_identifier.identifier as ismn_identifier'])
+        .where('monograph_message_publication_manifestation.monograph_message_id', '=', messageId)
+        .execute();
+
+      validatedMessageResult.manifestation_info = messageManifestations.map((m) => ({
+        manifestation_type: m.manifestation_type,
+        identifier: m.ismn_identifier,
+      }));
+      validatedMessageResult.expression_title = messageManifestations[0]?.expression_title || '';
+    }
 
     // Populate information for ISBN_LIST_DELIVERY
     if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY) {
@@ -264,7 +298,16 @@ export default function createMonographMessageInterface(
       validatedMessageResult.isbn_publisher_identifier = isbnRangeInfo.isbn_publisher_identifier;
     }
 
-    // TODO: populate information for ISMN_LIST_DELIVERY
+    // Populate information for ISBN_LIST_DELIVERY
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY) {
+      const ismnRangeInfo = await db
+        .selectFrom('ismn_publisher_range')
+        .select(['ismn_publisher_range.publisher_identifier as ismn_publisher_identifier'])
+        .where('id', '=', validatedMessageResult.ismn_publisher_range_id)
+        .executeTakeFirstOrThrow();
+
+      validatedMessageResult.ismn_publisher_identifier = ismnRangeInfo.ismn_publisher_identifier;
+    }
 
     return asMonographMessageAdminRead(validatedMessageResult);
   }

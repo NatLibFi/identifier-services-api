@@ -1,0 +1,12 @@
+{
+  "message_type": "ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
+  "monograph_publisher_id": 1,
+  "monograph_publication_request_id": null,
+  "isbn_publisher_range_id": null,
+  "ismn_publisher_range_id": 1,
+  "manifestation_ids": [],
+  "recipient": "erkki.esimerkki@example.localhost",
+  "lang_code": "fi-FI",
+  "subject": "Tervetuloa kustantajarekisteriin",
+  "body": "Example publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nSinulle on myönnettu seuraava kustantajatunnus:\n979-0-9001750\nTerveisin, test admin"
+}

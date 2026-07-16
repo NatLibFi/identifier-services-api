@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create message from template for approved monograph publication request (ISMN self-publishing, information taken from request)",
+  "url": "/v2/monograph/messages/create-from-template",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}
