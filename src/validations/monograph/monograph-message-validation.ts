@@ -27,6 +27,12 @@ export const sendMonographMessageSchema = z
   })
   .strict();
 
+export const resendMonographMessageSchema = z
+  .object({
+    recipient: z.email(),
+  })
+  .strict();
+
 export const searchMonographMessageSchema = z
   .object({
     monograph_publisher_id: z.number().optional(),
@@ -66,4 +72,5 @@ export const searchMonographMessageSchema = z
 
 export type CreateMonographMessageFromTemplate = z.infer<typeof createMonographMessageFromTemplateSchema>;
 export type SendMonographMessage = z.infer<typeof sendMonographMessageSchema>;
+export type ResendMonographMessage = z.infer<typeof resendMonographMessageSchema>;
 export type SearchMonographMessage = z.infer<typeof searchMonographMessageSchema>;

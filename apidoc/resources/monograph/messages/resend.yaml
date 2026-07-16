@@ -1,0 +1,36 @@
+post:
+  operationId: resendMonographMessage
+  summary: Resend a message regarding monograph operations to different email address.
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+    - monograph-messages
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/message/resend-monograph-message-body.yaml'
+  responses:
+    '201':
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: One or more associated entitites could not be found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may resend message which creates new message entry (along with new associations to publication manifestations)",
+  "url": "/v2/monograph/messages/1/resend",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

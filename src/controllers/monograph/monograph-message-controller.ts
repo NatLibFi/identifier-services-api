@@ -32,6 +32,19 @@ export default function createMonographMessageControllers(
     }
   }
 
+  async function resendMonographMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await monographMessageInterface.resendMonographMessage(
+        Number(req.params['id']),
+        req.body,
+        req.user,
+      );
+      return res.status(HttpStatus.CREATED).json({ id: result });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async function readMonographMessage(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await monographMessageInterface.readMonographMessage(Number(req.params['id']));
@@ -53,6 +66,7 @@ export default function createMonographMessageControllers(
   return {
     createFromTemplate,
     sendMonographMessage,
+    resendMonographMessage,
     readMonographMessage,
     searchMonographMessage,
   };

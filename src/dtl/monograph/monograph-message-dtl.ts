@@ -3,7 +3,7 @@ import type { MonographMessageSelect } from '../../db/types/monograph/types-mono
 export interface MonographMessageInfo {
   id: number;
   message_type: string;
-  monograph_publisher_id: number | null; // Always defined
+  monograph_publisher_id: number; // Always defined
   monograph_publisher_name: string | null; // Always defined
   monograph_publication_request_id: number | null; // For ISBN_ASSIGNMENT and ISMN_ASSIGNMENT
   expression_title: string | null; // For ISBN_ASSIGNMENT and ISMN_ASSIGNMENT

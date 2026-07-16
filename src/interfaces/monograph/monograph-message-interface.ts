@@ -15,6 +15,7 @@ import type { MessagingConfiguration, MonographPublisherConfiguration } from '..
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographMessageFromTemplate,
+  ResendMonographMessage,
   SearchMonographMessage,
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
@@ -136,12 +137,17 @@ export default function createMonographMessageInterface(
     });
 
     // Prefix both subject and body if sending message from other than production environment
+    // In case the prefix already is there, do not add it (this may occur when resending messages from other than production instance)
     let finalSubject = subject;
     let finalBody = body;
 
     const isProd = process.env['NODE_ENV'] === 'production';
-    if (!isProd) {
+
+    if (!isProd && !finalSubject.startsWith('TESTI/TEST MESSAGE ')) {
       finalSubject = `TESTI/TEST MESSAGE ${subject}`;
+    }
+
+    if (!isProd && !finalBody.startsWith('Tämä viesti on testijärjestelmästä / This message is from test system.')) {
       finalBody = `Tämä viesti on testijärjestelmästä / This message is from test system.\n\n${body}`;
     }
 
@@ -195,6 +201,40 @@ export default function createMonographMessageInterface(
     });
 
     return messageId;
+  }
+
+  async function resendMonographMessage(messageId: number, opts: ResendMonographMessage, user: RequestUser) {
+    const { recipient } = opts;
+
+    const db = getKysely();
+
+    const originalMessage = await readMonographMessage(messageId); // Manages 404 if needed
+
+    // Construct new message from original changing only the recipient
+    const newMessage: SendMonographMessage = {
+      message_type: originalMessage.message_type,
+      monograph_publisher_id: originalMessage.monograph_publisher_id,
+      monograph_publication_request_id: originalMessage.monograph_publication_request_id,
+      isbn_publisher_range_id: originalMessage.isbn_publisher_range_id,
+      ismn_publisher_range_id: originalMessage.ismn_publisher_range_id,
+      manifestation_ids: [],
+      recipient,
+      body: originalMessage.body,
+      subject: originalMessage.subject,
+      lang_code: originalMessage.lang_code,
+    };
+
+    // Find original message manifestation ids
+    const manifestations = await db
+      .selectFrom('monograph_message_publication_manifestation')
+      .select('monograph_publication_manifestation_id')
+      .where('monograph_message_id', '=', messageId)
+      .execute();
+
+    newMessage.manifestation_ids = manifestations.map((m) => m.monograph_publication_manifestation_id);
+
+    // Use send function so that all sanity checks are conducted normally
+    return sendMonographMessage(newMessage, user);
   }
 
   async function readMonographMessage(messageId: number) {
@@ -351,6 +391,7 @@ export default function createMonographMessageInterface(
   return {
     createFromTemplate,
     sendMonographMessage,
+    resendMonographMessage,
     readMonographMessage,
     searchMonographMessages,
   };

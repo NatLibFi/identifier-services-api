@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not resend message",
+  "url": "/v2/monograph/messages/1/resend",
+  "method": "POST",
+  "expectedStatus": 401
+}

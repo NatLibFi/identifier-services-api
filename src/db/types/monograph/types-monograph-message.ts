@@ -3,7 +3,7 @@ import type { Generated, Updateable, Insertable, Selectable } from 'kysely';
 export interface MonographMessage {
   id: Generated<number>;
   message_type: string;
-  monograph_publisher_id: number | null; // Always required
+  monograph_publisher_id: number; // Always required
   monograph_publication_request_id: number | null; // Required with ISBN_ASSINGMENT / ISMN_ASSIGNMENT message type
   isbn_publisher_range_id: number | null; // Required with ISBN_LIST_DELIVERY
   ismn_publisher_range_id: number | null; // Required with ISMN_LIST_DELIVERY
