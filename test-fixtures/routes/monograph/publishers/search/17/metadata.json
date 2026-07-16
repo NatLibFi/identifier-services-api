@@ -1,0 +1,7 @@
+{
+  "description": "[admin] filtering using identifier_type of ISMN works",
+  "url": "/v2/monograph/publishers/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -3080,6 +3080,11 @@
               "ISMN"
             ]
           },
+          "category": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 7
+          },
           "limit": {
             "type": "number",
             "minimum": 1,

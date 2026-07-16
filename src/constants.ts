@@ -182,3 +182,21 @@ export const MONOGRAPH_MESSAGE_TYPES = {
   ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION: 'ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
   UNKNOWN: 'UNKNOWN',
 };
+
+// Note: considers Finnish ISBN publisher identifiers (e.g., 978-951-0 is category 1 publisher identifier and this category has always length of 9)
+export const ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number> = {
+  '1': 9,
+  '2': 10,
+  '3': 11,
+  '4': 12,
+  '5': 13,
+};
+
+// Note: considers ISMN publisher identifiers (e.g., 979-0-100 is category 3 ISMN publisher identifier and this category has always length of 9)
+export const ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number> = {
+  '3': 9,
+  '4': 10,
+  '5': 11,
+  '6': 12,
+  '7': 13,
+};

@@ -55,25 +55,11 @@ export async function updateMonographPublication(
 }
 
 export async function searchMonographPublication(searchParameters: SearchMonographPublicationHttp) {
-  const {
-    search_text,
-    monograph_publisher_id,
-    // TODO user,
-    limit,
-    offset,
-  } = searchParameters;
+  // TODO: functionality and access control for publisher user
+  const { search_text, monograph_publisher_id, limit, offset } = searchParameters;
 
   const db = getKysely();
-
-  // TODO: logic for publisher user to always have constraint of publication monograph_publisher_id
-
   let query = db.selectFrom('monograph_publication').select('monograph_publication.id');
-
-  // TODO: ISBN identifier search
-  // TODO: ISMN identifier search
-  // if (search_text && search_text.match(finnishIsbnPublisherStringStart)) {
-  //   return {totalDoc: 0, results: []};
-  // }
 
   if (search_text) {
     const normalizedSearch = `%${search_text}%`.toLowerCase();

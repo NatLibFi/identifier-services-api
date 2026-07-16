@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may search monograph message using monograph_publisher_id",
+  "description": "[admin] may search monograph message using monograph_publication_request_id",
   "url": "/v2/monograph/messages/search",
   "method": "POST",
   "role": "admin",

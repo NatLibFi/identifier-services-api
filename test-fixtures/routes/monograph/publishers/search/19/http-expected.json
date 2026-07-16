@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 403,
+  "title": "Forbidden",
+  "detail": "Identifier type and category filtering is only available for administrator users.",
+  "instance": "/v2/monograph/publishers/search"
+}

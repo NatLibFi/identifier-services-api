@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] filtering using identifier_type of ISBN does not work",
+  "url": "/v2/monograph/publishers/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

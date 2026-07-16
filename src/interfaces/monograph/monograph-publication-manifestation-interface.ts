@@ -455,8 +455,6 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
     );
   }
 
-  // TODO: ISMN deassignment process
-
   throw new ApiError(
     HttpStatus.UNPROCESSABLE_ENTITY,
     'Unprocessable entity',

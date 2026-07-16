@@ -5,11 +5,21 @@ properties:
     maxLength: 100
   has_quitted:
     type: boolean
+  # Note for identifier_type: available only for admin users
   identifier_type:
     type: string
     enum:
       - ISBN
       - ISMN
+  # Notes for category:
+  # - available only for admin users
+  # - requires identifier_type to be defined
+  # - for identifier_type ISBN valid category values are 0 < x < 6
+  # - for identifier_type ISMN valid category values are 2 < x < 8
+  category:
+    type: number
+    minimum: 1
+    maximum: 7
   limit:
     type: number
     minimum: 1

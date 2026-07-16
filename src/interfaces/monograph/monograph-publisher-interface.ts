@@ -36,6 +36,12 @@ import type {
   SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
+import {
+  ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  MONOGRAPH_IDENTIFIERS,
+} from '../../constants.ts';
+import { sql } from 'kysely';
 
 export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
   const db = getKysely();
@@ -199,13 +205,21 @@ export async function updateMonographPublisher(
 }
 
 export async function searchMonographPublisher(searchParameters: SearchMonographPublisherHttp, user: RequestUser) {
-  const {
-    search_text,
-    has_quitted,
-    // TODO identifier_type,
-    limit,
-    offset,
-  } = searchParameters;
+  const { search_text, has_quitted, identifier_type, category, limit, offset } = searchParameters;
+
+  const publisherIdentifierLength =
+    identifier_type === MONOGRAPH_IDENTIFIERS.ISBN
+      ? ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[`${category}`]
+      : ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[`${category}`];
+
+  // As of now certain filters are available only for administrator users
+  if (!isAdmin(user) && (identifier_type || category)) {
+    throw new ApiError(
+      HttpStatus.FORBIDDEN,
+      'Forbidden',
+      `Identifier type and category filtering is only available for administrator users.`,
+    );
+  }
 
   const db = getKysely();
 
@@ -214,13 +228,13 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   let query = db.selectFrom('monograph_publisher');
 
   // Process search that targets ISBN publisher identifier as separate block
-  if (!!search_text && useIsbnPublisherIdentifierSearch(search_text)) {
+  if (search_text && useIsbnPublisherIdentifierSearch(search_text)) {
     const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
     return result;
   }
 
   // Process search that targets ISBN publisher identifier as separate block
-  if (!!search_text && useIsmnPublisherIdentifierSearch(search_text)) {
+  if (search_text && useIsmnPublisherIdentifierSearch(search_text)) {
     const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
     return result;
   }
@@ -250,8 +264,55 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     query = query.where('has_quitted', '=', has_quitted);
   }
 
-  const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
-  query = query.selectAll().orderBy('id', 'desc').limit(limit).offset(offset);
+  // Publisher identifier type filtering
+  if (identifier_type === MONOGRAPH_IDENTIFIERS.ISBN && !publisherIdentifierLength) {
+    query = query.where((eb) =>
+      eb.exists(
+        eb
+          .selectFrom('isbn_publisher_range')
+          .select('isbn_publisher_range.id')
+          .whereRef('isbn_publisher_range.monograph_publisher_id', '=', 'monograph_publisher.id'),
+      ),
+    );
+  }
+
+  if (identifier_type === MONOGRAPH_IDENTIFIERS.ISBN && publisherIdentifierLength) {
+    query = query.where((eb) =>
+      eb.exists(
+        eb
+          .selectFrom('isbn_publisher_range')
+          .select('isbn_publisher_range.id')
+          .whereRef('isbn_publisher_range.monograph_publisher_id', '=', 'monograph_publisher.id')
+          .where(sql<number>`length(isbn_publisher_range.publisher_identifier)`, '=', publisherIdentifierLength),
+      ),
+    );
+  }
+
+  if (identifier_type === MONOGRAPH_IDENTIFIERS.ISMN && !publisherIdentifierLength) {
+    query = query.where((eb) =>
+      eb.exists(
+        eb
+          .selectFrom('ismn_publisher_range')
+          .select('ismn_publisher_range.id')
+          .whereRef('ismn_publisher_range.monograph_publisher_id', '=', 'monograph_publisher.id'),
+      ),
+    );
+  }
+
+  if (identifier_type === MONOGRAPH_IDENTIFIERS.ISMN && publisherIdentifierLength) {
+    query = query.where((eb) =>
+      eb.exists(
+        eb
+          .selectFrom('ismn_publisher_range')
+          .select('ismn_publisher_range.id')
+          .whereRef('ismn_publisher_range.monograph_publisher_id', '=', 'monograph_publisher.id')
+          .where(sql<number>`length(ismn_publisher_range.publisher_identifier)`, '=', publisherIdentifierLength),
+      ),
+    );
+  }
+
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('totalDoc'));
+  query = query.selectAll('monograph_publisher').orderBy('id', 'desc').limit(limit).offset(offset);
 
   // @ts-expect-error query builder does not understand typing here
   const result: MonographPublisherSelect[] = await query.execute();
