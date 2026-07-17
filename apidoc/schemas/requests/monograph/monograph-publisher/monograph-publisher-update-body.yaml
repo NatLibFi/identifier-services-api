@@ -51,16 +51,7 @@ properties:
   contact_persons:
     type: array
     maxItems: 10
-    items:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        email:
-          type: string
-          maxLength: 100
+    $ref: '../../../enums/contact-person.yaml'
   additional_info:
     type:
       - string

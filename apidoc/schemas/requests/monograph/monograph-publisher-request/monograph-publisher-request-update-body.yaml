@@ -1,0 +1,66 @@
+type: object
+properties:
+  official_name:
+    type: string
+    maximum: 100
+  other_names:
+    type: array
+    items:
+      type: string
+      maximum: 50
+  contact_persons:
+    type: array
+    items:
+      $ref: '../../../enums/contact-person.yaml'
+    maximum: 100
+  address:
+    type: string
+    maximum: 50
+  zip:
+    type: string
+    maximum: 10
+  city:
+    type: string
+    maximum: 50
+  phone:
+    type: string
+    maximum: 30
+  email:
+    type: string
+    maximum: 100
+  www:
+    type: string
+    maximum: 100
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  frequency_current:
+    type: string
+    maximum: 50
+  frequency_next:
+    type: string
+    maximum: 50
+  affiliate_of:
+    type: string
+    maximum: 50
+  affiliates:
+    type: string
+    maximum: 200
+  distributor_of:
+    type: string
+    maximum: 200
+  distributors:
+    type: string
+    maximum: 50
+  classifications:
+    type: array
+    maxItems: 5
+    items:
+      type: string
+      description: Valid numeric code of classification is required
+      maximum: 6
+  classification_other:
+    type: string
+    maximum: 50
+  additional_info:
+    type: string
+    maximum: 2000

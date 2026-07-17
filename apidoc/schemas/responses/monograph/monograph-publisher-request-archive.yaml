@@ -1,0 +1,3 @@
+allOf:
+  - $ref: './monograph-publisher-request.yaml'
+  - $ref: '../common/created-metadata.yaml'

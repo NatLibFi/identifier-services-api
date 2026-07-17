@@ -1,0 +1,10 @@
+allOf:
+  - type: object
+    properties:
+      additional_info:
+        type:
+          - string
+          - 'null'
+  - $ref: './monograph-publisher-request.yaml'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

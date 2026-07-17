@@ -55,7 +55,38 @@ export const createMonographPublisherRequestSchemaV2 = z
     distributors: z.string().max(50).nullable().optional(),
     classifications: z.array(z.enum(MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES)).max(6).optional(),
     classification_other: z.string().max(50).nullable().optional(),
-    turnstile_token: z.string().nullable().optional(),
+    turnstile_token: z.string().optional(),
+  })
+  .strict();
+
+export const updateMonographPublisherRequestSchema = z
+  .object({
+    official_name: z.string().min(1).max(100).optional(),
+    other_names: z.array(z.string().min(1).max(50)).max(8).optional(),
+    contact_persons: z
+      .array(
+        z.object({
+          name: z.string().min(1).max(100),
+          email: z.email().nullable(),
+        }),
+      )
+      .optional(),
+    address: z.string().min(1).max(50).nullable().optional(),
+    zip: z.string().min(1).max(10).nullable().optional(),
+    city: z.string().min(1).max(50).nullable().optional(),
+    phone: z.string().min(1).max(30).nullable().optional(),
+    email: z.email().min(1).max(100).nullable().optional(),
+    www: z.string().max(100).nullable().optional(),
+    lang_code: z.enum(langCodeEnum).optional(),
+    frequency_current: z.string().max(50).nullable().optional(),
+    frequency_next: z.string().max(50).nullable().optional(),
+    affiliate_of: z.string().max(50).nullable().optional(),
+    affiliates: z.string().max(200).nullable().optional(),
+    distributor_of: z.string().max(200).nullable().optional(),
+    distributors: z.string().max(50).nullable().optional(),
+    classifications: z.array(z.enum(MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES)).max(6).optional(),
+    classification_other: z.string().max(50).nullable().optional(),
+    additional_info: z.string().max(2000).nullable().optional(),
   })
   .strict();
 
@@ -67,3 +98,4 @@ export const createMonographPublisherRequestSchema = z.discriminatedUnion('versi
 
 export type CreateMonographPublisherRequestV1Http = z.infer<typeof createMonographPublisherRequestSchemaV1>;
 export type CreateMonographPublisherRequestV2Http = z.infer<typeof createMonographPublisherRequestSchemaV2>;
+export type UpdateMonographPublisherRequestHttp = z.infer<typeof updateMonographPublisherRequestSchema>;

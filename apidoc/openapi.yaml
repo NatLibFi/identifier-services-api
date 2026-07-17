@@ -45,8 +45,8 @@ paths:
 
   /v2/monograph/publishers-requests:
     $ref: './resources/monograph/publisher-requests/root.yaml'
-  # /v2/monograph/publishers-requests{id}:
-  # $ref: './resources/monograph/publisher-requests/id.yaml'
+  /v2/monograph/publishers-requests/{id}:
+    $ref: './resources/monograph/publisher-requests/id.yaml'
   # /v2/monograph/publishers-requests/query:
   # $ref: "./resources/monograph/publisher-requests/query.yaml"
 

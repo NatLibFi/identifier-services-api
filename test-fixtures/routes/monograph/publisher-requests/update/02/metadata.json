@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not update monograph publisher request information",
+  "url": "/v2/monograph/publisher-requests/1",
+  "method": "PATCH",
+  "expectedStatus": 401
+}

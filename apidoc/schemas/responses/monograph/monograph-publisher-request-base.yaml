@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    type: number
+  official_name:
+    type: string
+  other_names:
+    type: array
+    items:
+      type: string
+  contact_persons:
+    type: array
+    items:
+      $ref: '../../../enums/contact-person.yaml'
+  address:
+    type: string
+  zip:
+    type: string
+  city:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  www:
+    type: string
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  frequency_current:
+    type: string
+  frequency_next:
+    type: string
+  affiliate_of:
+    type: string
+  affiliates:
+    type: string
+  distributor_of:
+    type: string
+  distributors:
+    type: string
+  classifications:
+    type: array
+    items:
+      type: string
+      description: String is a numeric classification code
+  classification_other:
+    type: string

@@ -997,14 +997,7 @@
         },
         "responses": {
           "201": {
-            "description": "Resource was created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/created"
-                }
-              }
-            }
+            "description": "Resource was created"
           },
           "401": {
             "description": "Unauthorized"
@@ -1017,6 +1010,108 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/publishers-requests/{id}": {
+      "get": {
+        "operationId": "readMonographPublisherRequest",
+        "summary": "Read monograph publisher request information.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publisher-request"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publisher-request"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateMonographPublisherRequest",
+        "summary": "Update monograph publisher request information.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publisher-request"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-publisher-request-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -3014,6 +3109,20 @@
           "en-GB"
         ]
       },
+      "contact-person": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "monograph-publisher-update-body": {
         "type": "object",
         "properties": {
@@ -3085,20 +3194,7 @@
           "contact_persons": {
             "type": "array",
             "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100
-                },
-                "email": {
-                  "type": "string",
-                  "maxLength": 100
-                }
-              }
-            }
+            "$ref": "#/components/schemas/contact-person"
           },
           "additional_info": {
             "type": [
@@ -3352,20 +3448,6 @@
           "langCode"
         ]
       },
-      "contact-person": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
       "monograph-publisher-request-create-v2": {
         "type": "object",
         "properties": {
@@ -3466,6 +3548,121 @@
           "email",
           "lang_code"
         ]
+      },
+      "monograph-publisher-request": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "additional_info": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/monograph-publisher-request"
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "monograph-publisher-request-update-body": {
+        "type": "object",
+        "properties": {
+          "official_name": {
+            "type": "string",
+            "maximum": 100
+          },
+          "other_names": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maximum": 50
+            }
+          },
+          "contact_persons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/contact-person"
+            },
+            "maximum": 100
+          },
+          "address": {
+            "type": "string",
+            "maximum": 50
+          },
+          "zip": {
+            "type": "string",
+            "maximum": 10
+          },
+          "city": {
+            "type": "string",
+            "maximum": 50
+          },
+          "phone": {
+            "type": "string",
+            "maximum": 30
+          },
+          "email": {
+            "type": "string",
+            "maximum": 100
+          },
+          "www": {
+            "type": "string",
+            "maximum": 100
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "frequency_current": {
+            "type": "string",
+            "maximum": 50
+          },
+          "frequency_next": {
+            "type": "string",
+            "maximum": 50
+          },
+          "affiliate_of": {
+            "type": "string",
+            "maximum": 50
+          },
+          "affiliates": {
+            "type": "string",
+            "maximum": 200
+          },
+          "distributor_of": {
+            "type": "string",
+            "maximum": 200
+          },
+          "distributors": {
+            "type": "string",
+            "maximum": 50
+          },
+          "classifications": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "description": "Valid numeric code of classification is required",
+              "maximum": 6
+            }
+          },
+          "classification_other": {
+            "type": "string",
+            "maximum": 50
+          },
+          "additional_info": {
+            "type": "string",
+            "maximum": 2000
+          }
+        }
       },
       "expression-type": {
         "type": "string",
