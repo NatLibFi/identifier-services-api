@@ -1,0 +1,57 @@
+{
+  "monograph_publisher_request": [
+    {
+      "id": 1,
+      "official_name": "XYZ Publisher Request",
+      "other_names": [],
+      "address": "XYZ 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "98765432",
+      "email": "baz.baz@example.com",
+      "www": null,
+      "lang_code": "en-GB",
+      "contact_persons": [{ "name": "Baz Baz", "email": null }],
+      "frequency_current": null,
+      "frequency_next": null,
+      "affiliate_of": null,
+      "affiliates": null,
+      "distributor_of": null,
+      "distributors": null,
+      "classifications": [],
+      "classification_other": null,
+      "additional_info": null,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publisher_request_archive": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "monograph_publisher_request_id": 1,
+      "official_name": "XYZ Publisher Request",
+      "other_names": [],
+      "address": "XYZ 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "98765432",
+      "email": "baz.baz@example.com",
+      "www": null,
+      "lang_code": "en-GB",
+      "contact_persons": [{ "name": "Baz Baz", "email": null }],
+      "frequency_current": null,
+      "frequency_next": null,
+      "affiliate_of": null,
+      "affiliates": null,
+      "distributor_of": null,
+      "distributors": null,
+      "classifications": [],
+      "classification_other": null,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin"
+    }
+  ]
+}

@@ -16,6 +16,8 @@ import { createIsbnPublisherRangeTable } from './test-migrations/monograph/isbn-
 import { createIsbnIdentifierTable } from './test-migrations/monograph/isbn-identifier-test-migrations.ts';
 
 import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
+import { createMonographPublisherRequestTable } from './test-migrations/monograph/monograph-publisher-request-test-migrations.ts';
+import { createMonographPublisherRequestArchiveTable } from './test-migrations/monograph/monograph-publisher-request-archive-test-migrations.ts';
 
 import { createMonographPublicationTable } from './test-migrations/monograph/monograph-publication-test-migrations.ts';
 import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
@@ -115,6 +117,20 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['monograph_publisher'],
       jsonColumns: ['other_names', 'previous_names', 'contact_persons', 'classifications'],
+    },
+    monograph_publisher_request: {
+      table: 'monograph_publisher_request',
+      constructorFn: createMonographPublisherRequestTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publisher_request'],
+      jsonColumns: ['other_names', 'contact_persons', 'classifications'],
+    },
+    monograph_publisher_request_archive: {
+      table: 'monograph_publisher_request_archive',
+      constructorFn: createMonographPublisherRequestArchiveTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_publisher_request_archive'],
+      jsonColumns: ['other_names', 'contact_persons', 'classifications'],
     },
     isbn_range: {
       table: 'isbn_range',

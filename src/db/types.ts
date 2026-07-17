@@ -10,6 +10,8 @@ import type { MonographMessage } from './types/monograph/types-monograph-message
 import type { MonographMessagePublicationManifestation } from './types/monograph/types-monograph-message-publication-manifestation.ts';
 
 import type { MonographPublisher } from './types/monograph/types-monograph-publisher.ts';
+import type { MonographPublisherRequest } from './types/monograph/types-monograph-publisher-request.ts';
+import type { MonographPublisherRequestArchive } from './types/monograph/types-monograph-publisher-request-archive.ts';
 
 import type { MonographPublicationExpression } from './types/monograph/types-monograph-publication-expression.ts';
 import type { MonographPublicationManifestation } from './types/monograph/types-monograph-publication-manifestation.ts';
@@ -28,6 +30,8 @@ export interface Database {
   ismn_identifier: IsmnIdentifier;
 
   monograph_publisher: MonographPublisher;
+  monograph_publisher_request: MonographPublisherRequest;
+  monograph_publisher_request_archive: MonographPublisherRequestArchive;
 
   monograph_publication: MonographPublication;
   monograph_publication_request: MonographPublicationRequest;

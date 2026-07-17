@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may create monograph publisher request information using v1 form schema",
+  "url": "/v2/monograph/publisher-requests",
+  "method": "POST",
+  "expectedStatus": 201
+}

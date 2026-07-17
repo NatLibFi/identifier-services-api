@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create monograph publisher request information using minimal v1 information",
+  "url": "/v2/monograph/publisher-requests",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

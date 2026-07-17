@@ -1,0 +1,28 @@
+-- Monograph publisher request v2.0.0-alpha.1
+CREATE TABLE monograph_publisher_request (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  official_name VARCHAR(100) NOT NULL,
+  other_names JSON NOT NULL,
+  address VARCHAR(100),
+  zip VARCHAR(10),
+  city VARCHAR(50),
+  phone VARCHAR(30),
+  email VARCHAR(100),
+  www VARCHAR(100),
+  lang_code VARCHAR(5) NOT NULL,
+  contact_persons JSON NOT NULL,
+  additional_info VARCHAR(2000),
+  frequency_current VARCHAR(50),
+  frequency_next VARCHAR(50),
+  affiliate_of VARCHAR(50),
+  affiliates VARCHAR(200),
+  distributor_of VARCHAR(200),
+  distributors VARCHAR(50),
+  classifications JSON NOT NULL,
+  classification_other VARCHAR(50),
+  created DATETIME NOT NULL,
+  created_by VARCHAR(36) NOT NULL,
+  modified DATETIME NOT NULL,
+  modified_by VARCHAR(36) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

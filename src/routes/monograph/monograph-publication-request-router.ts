@@ -10,51 +10,51 @@ import {
   updateMonographPublicationRequestSchema,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 
-const monographPublicationRouter = Router();
+const monographPublicationRequestRouter = Router();
 
-monographPublicationRouter.post(
+monographPublicationRequestRouter.post(
   '/',
   // TODO: middleware for turnstile
   validateRequestBody(createMonographPublicationRequestSchema),
   monographPublicationRequestController.createMonographPublicationRequest,
 );
 
-monographPublicationRouter.post(
+monographPublicationRequestRouter.post(
   '/search',
   allowAdminOnly,
   validateRequestBody(searchMonographPublicationRequestSchema),
   monographPublicationRequestController.searchMonographPublicationRequest,
 );
 
-monographPublicationRouter.post(
+monographPublicationRequestRouter.post(
   '/:id/approve',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublicationRequestController.approveMonographPublicationRequest,
 );
 
-monographPublicationRouter.post(
+monographPublicationRequestRouter.post(
   '/:id/reject',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublicationRequestController.rejectMonographPublicationRequest,
 );
 
-monographPublicationRouter.post(
+monographPublicationRequestRouter.post(
   '/:id/reprocess',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublicationRequestController.reprocessMonographPublicationRequest,
 );
 
-monographPublicationRouter.get(
+monographPublicationRequestRouter.get(
   '/:id',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
   monographPublicationRequestController.readMonographPublicationRequest,
 );
 
-monographPublicationRouter.patch(
+monographPublicationRequestRouter.patch(
   '/:id',
   allowAdminOnly,
   validateRequestParams(idParameterSchema),
@@ -62,4 +62,4 @@ monographPublicationRouter.patch(
   monographPublicationRequestController.updateMonographPublicationRequest,
 );
 
-export default monographPublicationRouter;
+export default monographPublicationRequestRouter;

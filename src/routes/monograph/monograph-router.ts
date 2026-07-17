@@ -7,6 +7,8 @@ import ismnRangeRouter from './ismn-range-router.ts';
 import ismnPublisherRangeRouter from './ismn-publisher-range-router.ts';
 
 import monographPublisherRouter from './monograph-publisher-router.ts';
+import monographPublisherRequestRouter from './monograph-publisher-request-router.ts';
+
 import monographPublicationRouter from './monograph-publication-router.ts';
 import monographPublicationExpressionRouter from './monograph-publication-expression-router.ts';
 import monographPublicationManifestationRouter from './monograph-publication-manifestation-router.ts';
@@ -30,6 +32,8 @@ export default function (
   monographRouter.use('/ismn-publisher-ranges', allowAdminOnly, ismnPublisherRangeRouter);
 
   monographRouter.use('/publishers', monographPublisherRouter);
+  monographRouter.use('/publisher-requests', monographPublisherRequestRouter);
+
   monographRouter.use('/publications', allowAdminOnly, monographPublicationRouter);
   monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
   monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);

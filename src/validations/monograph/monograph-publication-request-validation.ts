@@ -19,6 +19,7 @@ import { getCurrentTime } from '../../interfaces/interface-utils/common-interfac
 
 import { createMonographPublicationExpressionSchema } from './monograph-publication-expression-validation.ts';
 
+// Note that V1 schema uses camelCase for compatibility, V2 and onwards uses always snake_case
 export const createMonographPublicationRequestV1Schema = z
   .object({
     version: z.literal(1), // This schema must explicitly define use of v1
