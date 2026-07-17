@@ -1,0 +1,7 @@
+{
+  "description": "[admin] limit and offset works",
+  "url": "/v2/monograph/publisher-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

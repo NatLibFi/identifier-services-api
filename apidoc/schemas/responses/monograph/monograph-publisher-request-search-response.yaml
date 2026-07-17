@@ -1,0 +1,18 @@
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: number
+    official_name:
+      type: string
+    email:
+      type:
+        - string
+        - 'null'
+    additional_info:
+      type:
+        - string
+        - 'null'
+    created:
+      type: string

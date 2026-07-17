@@ -9,12 +9,17 @@ import {
   removeUndefinedProperties,
   validateGetById,
 } from '../interface-utils/common-interface-utils.ts';
-import { asMonographPublisherRequestAdminRead } from '../../dtl/monograph/monograph-publisher-request-dtl.ts';
+
+import {
+  asMonographPublisherRequestAdminRead,
+  asMonographPublisherRequestSearchResult,
+} from '../../dtl/monograph/monograph-publisher-request-dtl.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographPublisherRequestV1Http,
   CreateMonographPublisherRequestV2Http,
+  SearchMonographPublisherRequestHttp,
   UpdateMonographPublisherRequestHttp,
 } from '../../validations/monograph/monograph-publisher-request-validation.ts';
 import type {
@@ -135,4 +140,35 @@ export async function updateMonographPublisherRequest(
   });
 
   return;
+}
+
+export async function searchMonographPublisherRequest(searchParameters: SearchMonographPublisherRequestHttp) {
+  const { search_text, limit, offset } = searchParameters;
+
+  const db = getKysely();
+
+  let query = db.selectFrom('monograph_publisher_request').selectAll();
+
+  if (search_text) {
+    const normalizedSearch = `%${search_text}%`.toLowerCase();
+
+    query = query.where((eb) =>
+      eb.or([
+        eb(eb.fn('lower', ['monograph_publisher_request.official_name']), 'like', normalizedSearch),
+        eb(eb.fn('lower', ['monograph_publisher_request.email']), 'like', normalizedSearch),
+        eb(eb.fn('lower', ['monograph_publisher_request.additional_info']), 'like', normalizedSearch),
+      ]),
+    );
+  }
+
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll<number>().as('totalDoc'));
+  query = query.orderBy('id', 'desc').limit(limit).offset(offset);
+
+  const result = await query.execute();
+  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+
+  return {
+    totalDoc,
+    results: result.map(asMonographPublisherRequestSearchResult),
+  };
 }

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may seach monograph publisher request",
+  "url": "/v2/monograph/publisher-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

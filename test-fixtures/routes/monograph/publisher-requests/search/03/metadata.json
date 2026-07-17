@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not seach monograph publisher request",
+  "url": "/v2/monograph/publisher-requests/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

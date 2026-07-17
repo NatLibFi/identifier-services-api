@@ -28,6 +28,14 @@ export interface MonographPublisherRequestReadAdmin {
   modified_by: string;
 }
 
+export interface MonographPublisherRequestSearchResult {
+  id: number;
+  official_name: string;
+  email: string | null;
+  additional_info: string | null;
+  created: Date;
+}
+
 export function asMonographPublisherRequestAdminRead(
   monographPublisherRequest: MonographPublisherRequestSelect,
 ): MonographPublisherRequestReadAdmin {
@@ -83,5 +91,19 @@ export function asMonographPublisherRequestAdminRead(
     created_by,
     modified,
     modified_by,
+  };
+}
+
+export function asMonographPublisherRequestSearchResult(
+  monographPublisherRequest: MonographPublisherRequestSelect,
+): MonographPublisherRequestSearchResult {
+  const { id, official_name, email, additional_info, created } = monographPublisherRequest;
+
+  return {
+    id,
+    official_name,
+    email,
+    additional_info,
+    created,
   };
 }

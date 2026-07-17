@@ -33,3 +33,12 @@ export async function updateMonographPublisherRequest(req: Request, res: Respons
     return next(error);
   }
 }
+
+export async function searchMonographPublisherRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherRequestInterface.searchMonographPublisherRequest(req.body);
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

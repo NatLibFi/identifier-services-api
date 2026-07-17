@@ -90,6 +90,14 @@ export const updateMonographPublisherRequestSchema = z
   })
   .strict();
 
+export const searchMonographPublisherRequestSchema = z
+  .object({
+    search_text: z.string().max(100).optional(),
+    limit: z.number().min(1).max(50),
+    offset: z.number().min(0).max(100000),
+  })
+  .strict();
+
 // Use discriminated union on "version" attribute to validate request against the desired version
 export const createMonographPublisherRequestSchema = z.discriminatedUnion('version', [
   createMonographPublisherRequestSchemaV1,
@@ -99,3 +107,4 @@ export const createMonographPublisherRequestSchema = z.discriminatedUnion('versi
 export type CreateMonographPublisherRequestV1Http = z.infer<typeof createMonographPublisherRequestSchemaV1>;
 export type CreateMonographPublisherRequestV2Http = z.infer<typeof createMonographPublisherRequestSchemaV2>;
 export type UpdateMonographPublisherRequestHttp = z.infer<typeof updateMonographPublisherRequestSchema>;
+export type SearchMonographPublisherRequestHttp = z.infer<typeof searchMonographPublisherRequestSchema>;
