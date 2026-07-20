@@ -1,11 +1,49 @@
 import { SYSTEM_USER, ISMN_IDENTIFIER_LENGTH } from '../../constants.ts';
+import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
+
 import { calculateIsbnIsmnCheckDigit, validateIsmnIdentifier } from './monograph-identifier-utils.ts';
 import { getCurrentTime } from '../shared-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
-import { getIsmnPublisherIdentifierParts } from './range-interface-utils.ts';
 
 import type { IsmnIdentifierInsert } from '../../db/types/monograph/types-ismn-identifier.ts';
 import type { IsmnPublisherRangeSelect } from '../../db/types/monograph/types-ismn-publisher-range.ts';
+import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
+
+export function getIsmnPublisherIdentifierParts(ismnPublisherIdentifier: string) {
+  const [gs1, registrationGroup, registrant, ...rest] = ismnPublisherIdentifier.split('-');
+  const gs1IsValid = !!gs1 && Object.values(ISMN_VALID_GS1).includes(gs1);
+  const registrationGroupIsValid =
+    !!registrationGroup && Object.values(ISMN_VALID_REGISTRATION_GROUPS).includes(registrationGroup);
+  const registrantNumber = Number(registrant);
+
+  if (!gs1IsValid) {
+    throw new Error(`Invalid gs1 value prevents providing publisher identifier parts: ${gs1}`);
+  }
+
+  if (!registrationGroupIsValid) {
+    throw new Error(
+      `Invalid registration group value prevents providing publisher identifier parts: ${registrationGroup}`,
+    );
+  }
+
+  if (!registrant) {
+    throw new Error(`Invalid registrant value prevents providing publisher identifier parts: ${registrant}`);
+  }
+
+  if (isNaN(registrantNumber)) {
+    throw new Error(
+      `Invalid registrant number value prevents providing publisher identifier parts: ${registrantNumber}`,
+    );
+  }
+
+  if (rest.length !== 0) {
+    throw new Error(
+      `Invalid registrant number value prevents providing publisher identifier parts: ${registrantNumber}`,
+    );
+  }
+
+  return { gs1, registrationGroup, registrant };
+}
 
 export function getIsmnIdentifiers(publisherIdentifier: string) {
   const ismnIdentifiers = [];
@@ -35,6 +73,32 @@ export function getIsmnIdentifiers(publisherIdentifier: string) {
   }
 
   return ismnIdentifiers;
+}
+
+export function ismnPublisherRangeContainsIdentifier(range: IsmnRangeSelect, publisherIdentifier: string) {
+  const { gs1, registrationGroup, registrant } = getIsmnPublisherIdentifierParts(publisherIdentifier);
+
+  // Validate against only range specific information as other validation was made by the helper
+  const gs1Matches = gs1 === range.gs1;
+  const registrationGroupMatches = registrationGroup === range.registration_group;
+  const registrantNumber = Number(registrant);
+
+  if (!gs1Matches || !registrationGroupMatches) {
+    return false;
+  }
+
+  const rangeBeginNumber = Number(range.range_begin);
+  const rangeEndNumber = Number(range.range_end);
+
+  if (registrantNumber < rangeBeginNumber) {
+    return false;
+  }
+
+  if (registrantNumber > rangeEndNumber) {
+    return false;
+  }
+
+  return true;
 }
 
 export async function canDeleteIsmnPublisherRange(ismnPublisherRange: IsmnPublisherRangeSelect) {

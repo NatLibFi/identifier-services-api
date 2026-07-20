@@ -9,9 +9,9 @@ import {
   generateIsmnIdentifierDbEntry,
   getIsmnIdentifiers,
   getNumberOfIsmnIdentifiers,
+  ismnPublisherRangeContainsIdentifier,
 } from './ismn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { ismnRangeContainsIdentifier } from './range-interface-utils.ts';
 import { getAvailableIsmnPublisherRanges } from './ismn-range-interface-utils.ts';
 
 import { asIsmnIdentifierAdminRead } from '../../dtl/monograph/ismn-identifier-dtl.ts';
@@ -41,7 +41,7 @@ export async function createIsmnPublisherRange(
     );
   }
 
-  if (!ismnRangeContainsIdentifier(ismnRange, publisher_identifier)) {
+  if (!ismnPublisherRangeContainsIdentifier(ismnRange, publisher_identifier)) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',

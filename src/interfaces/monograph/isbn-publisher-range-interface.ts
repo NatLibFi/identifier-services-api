@@ -10,9 +10,9 @@ import {
   generateIsbnIdentifierDbEntry,
   getIsbnIdentifiers,
   getNumberOfIsbnIdentifiers,
+  isbnPublisherRangeContainsIdentifier,
 } from './isbn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { isbnRangeContainsIdentifier } from './range-interface-utils.ts';
 import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
@@ -42,7 +42,7 @@ export async function createIsbnPublisherRange(
     );
   }
 
-  if (!isbnRangeContainsIdentifier(isbnRange, publisher_identifier)) {
+  if (!isbnPublisherRangeContainsIdentifier(isbnRange, publisher_identifier)) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
