@@ -6,8 +6,8 @@ import { ApiError } from '../../utils/api-error.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
-import { sendEmail } from '../interface-utils/email-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import { sendEmail } from '../email-utils.ts';
 
 import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 

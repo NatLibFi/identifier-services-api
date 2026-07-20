@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { monographManifestationTypeEnum } from '../common-validation-enum.ts';
 import { issnLikeString, monthString, yearString } from '../common-validation-regex.ts';
 import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL, MONOGRAPH_MANIFESTATION_TYPES_PRINT } from '../../constants.ts';
-import { getCurrentTime } from '../../interfaces/interface-utils/common-interface-utils.ts';
+import { getCurrentTime } from '../../interfaces/shared-interface-utils.ts';
 
 const monographPublicationManifestationSeriesSchema = z
   .object({

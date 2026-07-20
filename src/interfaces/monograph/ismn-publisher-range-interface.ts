@@ -2,7 +2,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 
 import {
   canDeleteIsmnPublisherRange,
@@ -11,7 +11,7 @@ import {
   getNumberOfIsmnIdentifiers,
 } from './ismn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { ismnRangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
+import { ismnRangeContainsIdentifier } from './range-interface-utils.ts';
 import { getAvailableIsmnPublisherRanges } from './ismn-range-interface-utils.ts';
 
 import { asIsmnIdentifierAdminRead } from '../../dtl/monograph/ismn-identifier-dtl.ts';
@@ -23,7 +23,7 @@ import type {
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsmnPublisherRangeSelect } from '../../db/types/monograph/types-ismn-publisher-range.ts';
-import { validateIsmnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
+import { validateIsmnIdentifier } from './monograph-identifier-utils.ts';
 
 export async function createIsmnPublisherRange(
   ismnPublisherRanceCreateDoc: CreateIsmnPublisherRangeHttp,

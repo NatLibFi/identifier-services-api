@@ -7,7 +7,7 @@ import {
   getAvailableIsbnPublisherRanges,
   getIsbnRangeConflict,
 } from './isbn-range-interface-utils.ts';
-import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 import { asIsbnRangeAdminRead, type IsbnRangeRead } from '../../dtl/monograph/isbn-range-dtl.ts';
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';

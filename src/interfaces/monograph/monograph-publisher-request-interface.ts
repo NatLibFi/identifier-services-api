@@ -4,11 +4,7 @@ import {
 } from './monograph-publisher-request-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import {
-  getCurrentTime,
-  removeUndefinedProperties,
-  validateGetById,
-} from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
 
 import {
   asMonographPublisherRequestAdminRead,

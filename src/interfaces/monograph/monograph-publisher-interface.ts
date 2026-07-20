@@ -7,7 +7,7 @@ import {
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
-} from '../interface-utils/common-interface-utils.ts';
+} from '../shared-interface-utils.ts';
 import { isAdmin } from '../../utils/permission-utils.ts';
 import {
   getMonographPublisherIsbnRanges,

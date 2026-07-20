@@ -1,11 +1,7 @@
 import HttpStatus from 'http-status';
 
 import { getKysely } from '../../db/database.ts';
-import {
-  getCurrentTime,
-  removeUndefinedProperties,
-  validateGetById,
-} from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
 import { getExpressionsManifestations } from './monograph-publication-interface-utils.ts';
 
 import { ApiError } from '../../utils/api-error.ts';

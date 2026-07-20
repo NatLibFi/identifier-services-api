@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime } from '../shared-interface-utils.ts';
 
 import { readMonographPublication } from './monograph-publication-interface.ts';
 

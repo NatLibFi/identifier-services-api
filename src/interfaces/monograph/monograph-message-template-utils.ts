@@ -12,7 +12,7 @@ import {
   readMonographPublicationManifestation,
 } from './monograph-publication-manifestation-interface.ts';
 
-import { validateGetById } from '../interface-utils/common-interface-utils.ts';
+import { validateGetById } from '../shared-interface-utils.ts';
 
 import { MONOGRAPH_MANIFESTATION_TYPES, MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 import {

@@ -1,5 +1,5 @@
 import { getKysely } from '../../db/database.ts';
-import { assignIsbnIdentifier, getAssignableIsbnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
+import { assignIsbnIdentifier, getAssignableIsbnIdentifier } from './monograph-identifier-utils.ts';
 
 import type { RequestUser } from '../../generic-types.ts';
 

@@ -15,7 +15,7 @@ import {
   MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
   MONOGRAPH_MANIFESTATION_TYPES_PRINT,
 } from '../../constants.ts';
-import { getCurrentTime } from '../../interfaces/interface-utils/common-interface-utils.ts';
+import { getCurrentTime } from '../../interfaces/shared-interface-utils.ts';
 
 import { createMonographPublicationExpressionSchema } from './monograph-publication-expression-validation.ts';
 

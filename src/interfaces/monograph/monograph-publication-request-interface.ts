@@ -4,11 +4,7 @@ import { getKysely } from '../../db/database.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 import { ApiError } from '../../utils/api-error.ts';
 
-import {
-  getCurrentTime,
-  removeUndefinedProperties,
-  validateGetById,
-} from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
 
 import {
   asMonographPublicationRequestAdminRead,
@@ -29,7 +25,7 @@ import {
   assignIsmnIdentifier,
   getAssignableIsbnIdentifiers,
   getAssignableIsmnIdentifiers,
-} from '../interface-utils/monograph-identifier-utils.ts';
+} from './monograph-identifier-utils.ts';
 
 import {
   MONOGRAPH_EXPRESSION_TYPES,

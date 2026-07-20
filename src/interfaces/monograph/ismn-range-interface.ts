@@ -7,7 +7,7 @@ import {
   getAvailableIsmnPublisherRanges,
   getIsmnRangeConflict,
 } from './ismn-range-interface-utils.ts';
-import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 import { asIsmnRangeAdminRead, type IsmnRangeRead } from '../../dtl/monograph/ismn-range-dtl.ts';
 
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';

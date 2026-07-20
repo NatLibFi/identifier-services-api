@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status';
 
-import { ApiError } from '../../utils/api-error.ts';
+import { ApiError } from '../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
 import { sql } from 'kysely';

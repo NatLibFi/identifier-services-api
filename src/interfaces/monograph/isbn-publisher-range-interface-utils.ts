@@ -1,10 +1,10 @@
 import ISBN from 'isbn3';
 
 import { SYSTEM_USER, ISBN_IDENTIFIER_LENGTH } from '../../constants.ts';
-import { calculateIsbnIsmnCheckDigit, validateIsbnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { calculateIsbnIsmnCheckDigit, validateIsbnIdentifier } from './monograph-identifier-utils.ts';
+import { getCurrentTime } from '../shared-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
-import { getIsbnPublisherIdentifierParts } from '../interface-utils/range-interface-utils.ts';
+import { getIsbnPublisherIdentifierParts } from './range-interface-utils.ts';
 
 import type { IsbnIdentifierInsert } from '../../db/types/monograph/types-isbn-identifier.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';

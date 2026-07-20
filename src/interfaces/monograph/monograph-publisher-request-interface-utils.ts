@@ -1,4 +1,4 @@
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime } from '../shared-interface-utils.ts';
 import { APPLICATION_USER_UI_PUBLIC } from '../../constants.ts';
 
 import type { Insertable } from 'kysely';

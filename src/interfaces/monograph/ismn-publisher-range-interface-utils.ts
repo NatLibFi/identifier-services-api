@@ -1,8 +1,8 @@
 import { SYSTEM_USER, ISMN_IDENTIFIER_LENGTH } from '../../constants.ts';
-import { calculateIsbnIsmnCheckDigit, validateIsmnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
-import { getCurrentTime } from '../interface-utils/common-interface-utils.ts';
+import { calculateIsbnIsmnCheckDigit, validateIsmnIdentifier } from './monograph-identifier-utils.ts';
+import { getCurrentTime } from '../shared-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
-import { getIsmnPublisherIdentifierParts } from '../interface-utils/range-interface-utils.ts';
+import { getIsmnPublisherIdentifierParts } from './range-interface-utils.ts';
 
 import type { IsmnIdentifierInsert } from '../../db/types/monograph/types-ismn-identifier.ts';
 import type { IsmnPublisherRangeSelect } from '../../db/types/monograph/types-ismn-publisher-range.ts';

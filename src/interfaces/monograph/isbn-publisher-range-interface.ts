@@ -3,7 +3,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 
 import {
   canDeleteIsbnPublisherRange,
@@ -12,7 +12,7 @@ import {
   getNumberOfIsbnIdentifiers,
 } from './isbn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { isbnRangeContainsIdentifier } from '../interface-utils/range-interface-utils.ts';
+import { isbnRangeContainsIdentifier } from './range-interface-utils.ts';
 import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
@@ -24,7 +24,7 @@ import type {
 import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
-import { validateIsbnIdentifier } from '../interface-utils/monograph-identifier-utils.ts';
+import { validateIsbnIdentifier } from './monograph-identifier-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,

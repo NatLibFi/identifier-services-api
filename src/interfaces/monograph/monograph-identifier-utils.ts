@@ -2,7 +2,7 @@ import type { Transaction } from 'kysely';
 
 import { getKysely } from '../../db/database.ts';
 
-import { getCurrentTime, validateGetById } from './common-interface-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 
 import { MONOGRAPH_EXPRESSION_TYPES, MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';

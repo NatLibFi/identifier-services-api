@@ -5,11 +5,7 @@ import { ApiError } from '../../utils/api-error.ts';
 import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 import { getApplicationLogger } from '../../utils/logging.ts';
-import {
-  getCurrentTime,
-  removeUndefinedProperties,
-  validateGetById,
-} from '../interface-utils/common-interface-utils.ts';
+import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
 import {
   assignIsbnIdentifier,
   assignIsmnIdentifier,
@@ -18,7 +14,7 @@ import {
   getAssignableIsbnIdentifier,
   getAssignableIsmnIdentifier,
   getExpressionIdentifierType,
-} from '../interface-utils/monograph-identifier-utils.ts';
+} from './monograph-identifier-utils.ts';
 
 import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 
