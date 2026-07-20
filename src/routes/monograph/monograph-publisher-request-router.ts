@@ -28,6 +28,20 @@ monographPublisherRequestRouter.post(
   monographPublisherRequestController.searchMonographPublisherRequest,
 );
 
+monographPublisherRequestRouter.post(
+  '/:id/approve',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublisherRequestController.approveMonographPublisherRequest,
+);
+
+monographPublisherRequestRouter.delete(
+  '/:id',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublisherRequestController.deleteMonographPublisherRequest,
+);
+
 monographPublisherRequestRouter.get(
   '/:id',
   allowAdminOnly,

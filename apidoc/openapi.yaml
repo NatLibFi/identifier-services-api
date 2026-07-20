@@ -47,7 +47,9 @@ paths:
     $ref: './resources/monograph/publisher-requests/root.yaml'
   /v2/monograph/publishers-requests/{id}:
     $ref: './resources/monograph/publisher-requests/id.yaml'
-  /v2/monograph/publishers-requests/query:
+  /v2/monograph/publishers-requests/{id}/approve:
+    $ref: './resources/monograph/publisher-requests/approve.yaml'
+  /v2/monograph/publishers-requests/search:
     $ref: './resources/monograph/publisher-requests/search.yaml'
 
   /v2/monograph/publications/{id}:

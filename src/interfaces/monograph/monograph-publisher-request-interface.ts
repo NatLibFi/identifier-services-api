@@ -15,7 +15,6 @@ import {
   asMonographPublisherRequestSearchResult,
 } from '../../dtl/monograph/monograph-publisher-request-dtl.ts';
 
-import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographPublisherRequestV1Http,
   CreateMonographPublisherRequestV2Http,
@@ -26,6 +25,8 @@ import type {
   MonographPublisherRequestSelect,
   MonographPublisherRequestUpdate,
 } from '../../db/types/monograph/types-monograph-publisher-request.ts';
+import type { MonographPublisherInsert } from '../../db/types/monograph/types-monograph-publisher.ts';
+import type { RequestUser } from '../../generic-types.ts';
 
 export async function createMonographPublisherRequest(
   createDoc: CreateMonographPublisherRequestV1Http | CreateMonographPublisherRequestV2Http,
@@ -74,7 +75,7 @@ export async function updateMonographPublisherRequest(
 ) {
   const db = getKysely();
 
-  // Read to confirm monograph publisher exists - this will also take care of returning 404
+  // Read to confirm monograph publisher request exists - this will also take care of returning 404
   await readMonographPublisherRequest(monographPublisherRequestId);
 
   // Update
@@ -171,4 +172,115 @@ export async function searchMonographPublisherRequest(searchParameters: SearchMo
     totalDoc,
     results: result.map(asMonographPublisherRequestSearchResult),
   };
+}
+
+export async function approveMonographPublisherRequest(monographPublisherRequestId: number, user: RequestUser) {
+  const db = getKysely();
+
+  // Read to confirm monograph publisher request exists - this will also take care of returning 404
+  const monographPublisherRequest = await readMonographPublisherRequest(monographPublisherRequestId);
+
+  // Construct publisher registry entry
+  const monographPublisherRegistryEntry: MonographPublisherInsert = {
+    official_name: monographPublisherRequest.official_name,
+    other_names: JSON.stringify(monographPublisherRequest.other_names),
+    previous_names: JSON.stringify([]),
+    address: monographPublisherRequest.address,
+    zip: monographPublisherRequest.zip,
+    city: monographPublisherRequest.city,
+    phone: monographPublisherRequest.phone,
+    email: monographPublisherRequest.email,
+    www: monographPublisherRequest.www,
+    lang_code: monographPublisherRequest.lang_code,
+    contact_persons: JSON.stringify(monographPublisherRequest.contact_persons),
+    additional_info: monographPublisherRequest.additional_info,
+    year_quitted: null,
+    has_quitted: false,
+    frequency_current: monographPublisherRequest.frequency_current,
+    frequency_next: monographPublisherRequest.frequency_next,
+    affiliate_of: monographPublisherRequest.affiliate_of,
+    affiliates: monographPublisherRequest.affiliates,
+    distributor_of: monographPublisherRequest.distributor_of,
+    distributors: monographPublisherRequest.distributors,
+    classifications: JSON.stringify(monographPublisherRequest.classifications),
+    classification_other: monographPublisherRequest.classification_other,
+    promote_sorting: false,
+    created: getCurrentTime(),
+    created_by: user.id,
+    modified: getCurrentTime(),
+    modified_by: user.id,
+  };
+
+  // Update within transaction to simulatenously update archive entry association
+  const resultId = await db.transaction().execute(async (trx) => {
+    // 1. Insert entry to monograph_publisher table
+    const { insertId } = await trx
+      .insertInto('monograph_publisher')
+      .values(monographPublisherRegistryEntry)
+      .executeTakeFirstOrThrow();
+
+    const publisherId = Number(insertId);
+
+    // 2. Change archive entry association
+    const archiveEntryUpdate = await trx
+      .updateTable('monograph_publisher_request_archive')
+      .set({
+        monograph_publisher_request_id: null,
+        monograph_publisher_id: publisherId,
+      })
+      .where('monograph_publisher_request_id', '=', monographPublisherRequestId)
+      .executeTakeFirstOrThrow();
+
+    if (Number(archiveEntryUpdate.numChangedRows) !== 1) {
+      throw new Error('Update unexpectedly changed more than one row');
+    }
+
+    // 3. Remove entry from request table
+    const requestDelete = await trx
+      .deleteFrom('monograph_publisher_request')
+      .where('id', '=', monographPublisherRequestId)
+      .executeTakeFirstOrThrow();
+
+    if (Number(requestDelete.numDeletedRows) !== 1) {
+      throw new Error('Update unexpectedly changed more than one row');
+    }
+
+    return publisherId;
+  });
+
+  return { monograph_publisher_id: resultId };
+}
+
+export async function deleteMonographPublisherRequest(monographPublisherRequestId: number) {
+  const db = getKysely();
+
+  // Utilize read to confirm monograph publisher request exists - this will also take care of returning 404
+  await readMonographPublisherRequest(monographPublisherRequestId);
+
+  // Delete within transaction to simulatenously remove archive entry
+  await db.transaction().execute(async (trx) => {
+    // 1. Remove archive entry
+    const archiveEntryUpdate = await trx
+      .deleteFrom('monograph_publisher_request_archive')
+      .where('monograph_publisher_request_id', '=', monographPublisherRequestId)
+      .executeTakeFirstOrThrow();
+
+    if (Number(archiveEntryUpdate.numDeletedRows) !== 1) {
+      throw new Error('Update unexpectedly changed more than one row');
+    }
+
+    // 2. Remove entry from request table
+    const requestDelete = await trx
+      .deleteFrom('monograph_publisher_request')
+      .where('id', '=', monographPublisherRequestId)
+      .executeTakeFirstOrThrow();
+
+    if (Number(requestDelete.numDeletedRows) !== 1) {
+      throw new Error('Update unexpectedly changed more than one row');
+    }
+
+    return;
+  });
+
+  return;
 }

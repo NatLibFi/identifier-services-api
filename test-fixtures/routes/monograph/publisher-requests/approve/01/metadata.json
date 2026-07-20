@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may approve monograph publisher request",
+  "url": "/v2/monograph/publisher-requests/1/approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -1,0 +1,4 @@
+type: object
+properties:
+  monograph_publisher_id:
+    type: number

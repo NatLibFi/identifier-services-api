@@ -42,3 +42,24 @@ export async function searchMonographPublisherRequest(req: Request, res: Respons
     return next(error);
   }
 }
+
+export async function approveMonographPublisherRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherRequestInterface.approveMonographPublisherRequest(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function deleteMonographPublisherRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublisherRequestInterface.deleteMonographPublisherRequest(Number(req.params['id']));
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

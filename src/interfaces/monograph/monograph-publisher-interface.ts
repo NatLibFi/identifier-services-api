@@ -69,7 +69,7 @@ export async function deleteMonographPublisher(id: number) {
   // Read to confirm range exists - this will also take care of returning 404
   await readMonographPublisher(id);
 
-  // If there are any associations deletion is not currently allowed through API
+  // If there are any associations (other than archive entry) deletion is not currently allowed through API
   const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
   if (isbnPublisherRanges.length !== 0) {
     throw new ApiError(
@@ -115,6 +115,7 @@ export async function deleteMonographPublisher(id: number) {
     );
   }
 
+  // TODO: add transaction and archive entry removal
   await db.deleteFrom('monograph_publisher').where('id', '=', id).executeTakeFirstOrThrow();
 
   return;

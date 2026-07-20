@@ -1,0 +1,62 @@
+{
+  "monograph_publisher": [
+    {
+      "id": 1,
+      "official_name": "XYZ Publisher Request",
+      "other_names": ["XYZ PR"],
+      "previous_names": [],
+      "address": "XYZ 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "98765432",
+      "email": "baz.baz@example.com",
+      "www": "http://xyz.example.com",
+      "lang_code": "en-GB",
+      "contact_persons": [{ "name": "Baz Baz", "email": null }],
+      "frequency_current": "1",
+      "frequency_next": "1",
+      "affiliate_of": "Baz Baz Example Oy",
+      "affiliates": "Baz Baz Example North",
+      "distributor_of": "Baz Baz Example Oy",
+      "distributors": "Distributor A",
+      "classifications": ["100"],
+      "classification_other": "Examples",
+      "additional_info": null,
+      "has_quitted": false,
+      "year_quitted": null,
+      "promote_sorting": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publisher_request": [],
+  "monograph_publisher_request_archive": [
+    {
+      "id": 1,
+      "monograph_publisher_id": 1,
+      "monograph_publisher_request_id": null,
+      "official_name": "XYZ Publisher Request",
+      "other_names": ["XYZ PR"],
+      "address": "XYZ 123",
+      "zip": "00000",
+      "city": "Foobarila",
+      "phone": "98765432",
+      "email": "baz.baz@example.com",
+      "www": "http://xyz.example.com",
+      "lang_code": "en-GB",
+      "contact_persons": [{ "name": "Baz Baz", "email": null }],
+      "frequency_current": "1",
+      "frequency_next": "1",
+      "affiliate_of": "Baz Baz Example Oy",
+      "affiliates": "Baz Baz Example North",
+      "distributor_of": "Baz Baz Example Oy",
+      "distributors": "Distributor A",
+      "classifications": ["100"],
+      "classification_other": "Examples",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1"
+    }
+  ]
+}

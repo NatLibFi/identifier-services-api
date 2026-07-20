@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not delete monograph publisher request",
+  "url": "/v2/monograph/publisher-requests/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}
