@@ -1,14 +1,22 @@
 import HttpStatus from 'http-status';
+import { sql } from 'kysely';
 
+import {
+  ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  MONOGRAPH_IDENTIFIERS,
+} from '../../constants.ts';
+
+import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { hasAdminApplicationRole } from '../../middlewares/auth.ts';
+import { isAdmin } from '../../utils/permission-utils.ts';
+
 import {
   constructJsonContainsSearch,
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
 } from '../shared-interface-utils.ts';
-import { isAdmin } from '../../utils/permission-utils.ts';
 import {
   getMonographPublisherIsbnRanges,
   getMonographPublisherIsmnRanges,
@@ -19,7 +27,6 @@ import {
   useIsbnPublisherIdentifierSearch,
   useIsmnPublisherIdentifierSearch,
 } from './monograph-publisher-interface-utils.ts';
-import { ApiError } from '../../utils/api-error.ts';
 
 import {
   asMonographPublisherAdminRead,
@@ -36,12 +43,6 @@ import type {
   SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
-import {
-  ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
-  ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
-  MONOGRAPH_IDENTIFIERS,
-} from '../../constants.ts';
-import { sql } from 'kysely';
 
 export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
   const db = getKysely();
@@ -51,72 +52,97 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
   const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
   const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
 
-  if (!useDtl) {
+  // Disallow skipping DTL for other than admin users
+  if (isAdmin(user) && !useDtl) {
     return monographPublisherResult;
   }
 
-  const isAdmin = hasAdminApplicationRole(user?.applicationRoles);
-  if (isAdmin) {
+  if (isAdmin(user)) {
     return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
   }
 
   return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
 }
 
-export async function deleteMonographPublisher(id: number) {
+export async function deleteMonographPublisher(monographPublisherId: number) {
   const db = getKysely();
 
   // Read to confirm range exists - this will also take care of returning 404
-  await readMonographPublisher(id);
+  await readMonographPublisher(monographPublisherId);
 
   // If there are any associations (other than archive entry) deletion is not currently allowed through API
-  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
+  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(monographPublisherId);
   if (isbnPublisherRanges.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Monograph publisher id ${id} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
+      `Monograph publisher id ${monographPublisherId} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
     );
   }
 
-  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
+  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(monographPublisherId);
   if (ismnPublisherRanges.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Monograph publisher id ${id} has ${ismnPublisherRanges.length} associated ISMN publisher ranges.`,
+      `Monograph publisher id ${monographPublisherId} has ${ismnPublisherRanges.length} associated ISMN publisher ranges.`,
     );
   }
 
-  const monographMessages = await getMonographPublisherMessages(id);
+  const monographMessages = await getMonographPublisherMessages(monographPublisherId);
   if (monographMessages.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Monograph publisher id ${id} has ${monographMessages.length} associated messages.`,
+      `Monograph publisher id ${monographPublisherId} has ${monographMessages.length} associated messages.`,
     );
   }
 
-  const monographPublicationRequests = await getMonographPublisherPublicationRequests(id);
+  const monographPublicationRequests = await getMonographPublisherPublicationRequests(monographPublisherId);
   if (monographPublicationRequests.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Monograph publisher id ${id} has ${monographPublicationRequests.length} associated monograph publication requests.`,
+      `Monograph publisher id ${monographPublisherId} has ${monographPublicationRequests.length} associated monograph publication requests.`,
     );
   }
 
-  const monographPublications = await getMonographPublisherPublications(id);
+  const monographPublications = await getMonographPublisherPublications(monographPublisherId);
   if (monographPublications.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Monograph publisher id ${id} has ${monographPublications.length} associated monograph publications.`,
+      `Monograph publisher id ${monographPublisherId} has ${monographPublications.length} associated monograph publications.`,
     );
   }
 
-  // TODO: add transaction and archive entry removal
-  await db.deleteFrom('monograph_publisher').where('id', '=', id).executeTakeFirstOrThrow();
+  // Delete within transaction to simulatenously remove archive entry
+  await db.transaction().execute(async (trx) => {
+    // 1. Remove archive entry
+    const archiveEntryDelete = await trx
+      .deleteFrom('monograph_publisher_request_archive')
+      .where('monograph_publisher_id', '=', monographPublisherId)
+      .where('monograph_publisher_request_id', 'is', null)
+      .executeTakeFirstOrThrow();
+
+    if (Number(archiveEntryDelete.numDeletedRows) !== 1) {
+      throw new Error(
+        'Removal unexpectedly affected more or less than exactly one row in monograph_publisher_request_archive table',
+      );
+    }
+
+    // 2. Remove entry from monograph publisher table
+    const publisherDelete = await trx
+      .deleteFrom('monograph_publisher')
+      .where('id', '=', monographPublisherId)
+      .executeTakeFirstOrThrow();
+
+    if (Number(publisherDelete.numDeletedRows) !== 1) {
+      throw new Error('Removal unexpectedly affected more or less than exactly one row in monograph_publisher table');
+    }
+
+    return;
+  });
 
   return;
 }
@@ -223,8 +249,6 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   }
 
   const db = getKysely();
-
-  // TODO: evaluate if need for category filter
 
   let query = db.selectFrom('monograph_publisher');
 

@@ -6,15 +6,10 @@ import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../
 
 import { getApplicationLogger } from '../../utils/logging.ts';
 import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
-import {
-  assignIsbnIdentifier,
-  assignIsmnIdentifier,
-  deassignIsbnIdentifier,
-  deassignIsmnIdentifier,
-  getAssignableIsbnIdentifier,
-  getAssignableIsmnIdentifier,
-  getExpressionIdentifierType,
-} from './monograph-identifier-utils.ts';
+import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
+import { assignIsbnIdentifier, deassignIsbnIdentifier, getAssignableIsbnIdentifier } from './isbn-identifier-utils.ts';
+import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
+import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
 
 import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 
@@ -27,7 +22,6 @@ import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
-import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
 
 export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();
@@ -130,6 +124,7 @@ export async function updateMonographPublicationManifestation(
   const request = validatedOrigManifestation.monograph_publication_request_id
     ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
     : undefined;
+
   const requestStateNeedsUpdate = request?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
 
   await db.transaction().execute(async (trx) => {
@@ -193,7 +188,6 @@ export async function addMonographPublicationManifestation(
   // Validate expression through using interface read - implicitly manages returning 404 in case entity does not exist
   const expression = await readMonographPublicationExpression(monograph_publication_expression_id);
 
-  // TODO tests
   // Cast all falsy values to null for comparison to be consistent
   const castManifestationTypeOther = !manifestation_type_other ? null : manifestation_type_other;
   const castManifestationEdition = !manifestation_edition ? null : manifestation_edition;
@@ -284,8 +278,7 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
 
   const validManifestation = validateGetById(manifestation);
 
-  // TODO: add access control mechanism for publisher user
-  // TODO: evaluate appropriate constraints for publisher user
+  // TODO: publisher role access control
 
   if (validManifestation.isbn_identifier) {
     throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Manifestation has already ISBN identifier assigned to it.');
@@ -410,8 +403,7 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
 
-  // TODO: add access control mechanism for publisher user
-  // TODO: evaluate appropriate constraints for publisher user
+  // TODO: publisher role access control
 
   const validManifestation = validateGetById(manifestation);
 
@@ -462,6 +454,7 @@ export async function deleteMonographPublicationManifestation(manifestationId: n
   // Constraints:
   // - Cannot be expression's last manifestation
   // - Cannot have identifier assigned
+  // - Cannot have message sent
 
   const db = getKysely();
   const manifestation = await readMonographPublicationManifestation(manifestationId);
@@ -471,6 +464,14 @@ export async function deleteMonographPublicationManifestation(manifestationId: n
       HttpStatus.CONFLICT,
       'Conflict',
       'Cannot remove manifestation that has identifier assigned to it.',
+    );
+  }
+
+  if (manifestation.message_sent) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Cannot remove manifestation that has had message sent regarding it.',
     );
   }
 
@@ -488,7 +489,9 @@ export async function deleteMonographPublicationManifestation(manifestationId: n
       .deleteFrom('monograph_publication_manifestation')
       .where('id', '=', manifestationId)
       .executeTakeFirstOrThrow();
+
     const numDeleted = Number(deleteResult.numDeletedRows);
+
     if (numDeleted !== 1) {
       throw new Error('Manifestation deletion resulted into unexpected outcome. Initiating rollback.');
     }

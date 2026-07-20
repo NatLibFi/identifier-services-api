@@ -34,15 +34,16 @@ export async function getPublicationExpressions(publicationId: number) {
   return validatedExpressions;
 }
 
-// Returns manifestations for given expressionIds in format where object key is expressionId and value is array of manifestations
+// Note: returns manifestations for given expressionIds in format where object key is expressionId and value is array of manifestations
+// E.g. for expression id 91 the object has key -> {"91": [{"id": 1, "manifestation_type": ...}]}
 export async function getExpressionsManifestations(
   expressionIds: number[],
-): Promise<Record<number, ValidatedMonographPublicationManifestationAdminRead[]>> {
+): Promise<Record<string, ValidatedMonographPublicationManifestationAdminRead[]>> {
   const db = getKysely();
 
   // Sanity check as otherwise 'IN' might fail within SQL
   if (expressionIds.length === 0) {
-    return [];
+    return {};
   }
 
   const manifestations = await db
@@ -64,7 +65,7 @@ export async function getExpressionsManifestations(
     .execute();
 
   // Access return value using result[expressionId] to get manifestations belonging to given expression
-  const result: Record<number, ValidatedMonographPublicationManifestationAdminRead[]> = {};
+  const result: Record<string, ValidatedMonographPublicationManifestationAdminRead[]> = {};
 
   for (const manifestation of manifestations) {
     const associatedMessages = await db
@@ -76,7 +77,7 @@ export async function getExpressionsManifestations(
     const validatedManifestation = asMonographPublicationManifestationAdminRead(manifestation, hasMessage);
 
     // Learning opportunity regarding modern JS/TS
-    (result[manifestation.monograph_publication_expression_id] ??= []).push(validatedManifestation);
+    (result[`${manifestation.monograph_publication_expression_id}`] ??= []).push(validatedManifestation);
   }
 
   return result;

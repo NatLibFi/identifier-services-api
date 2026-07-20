@@ -7,10 +7,10 @@ import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts
 import { getIsmnRangeConflict } from './ismn-range-interface-utils.ts';
 import { createIsmnRangeTable } from '../../test-utils/test-migrations/monograph/ismn-range-test-migrations.ts';
 
+import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../test-utils/test-constants.ts';
 
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
-import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
 describe('getIsmnRangeConflicts', async () => {
   let mysql2Connection: Connection;

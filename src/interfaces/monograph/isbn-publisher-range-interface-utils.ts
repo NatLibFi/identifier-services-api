@@ -3,7 +3,8 @@ import ISBN from 'isbn3';
 import { SYSTEM_USER, ISBN_IDENTIFIER_LENGTH } from '../../constants.ts';
 import { ISBN_VALID_GS1, ISBN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/isbn-constants.ts';
 
-import { calculateIsbnIsmnCheckDigit, validateIsbnIdentifier } from './monograph-identifier-utils.ts';
+import { calculateIsbnIsmnCheckDigit } from './monograph-identifier-utils.ts';
+import { validateIsbnIdentifier } from './isbn-identifier-utils.ts';
 import { getCurrentTime } from '../shared-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
 

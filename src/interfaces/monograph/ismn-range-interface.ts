@@ -1,7 +1,10 @@
 import HttpStatus from 'http-status';
 
+import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
+
 import {
   getAllIsmnPublisherRanges,
   getAvailableIsmnPublisherRanges,
@@ -12,9 +15,7 @@ import { asIsmnRangeAdminRead, type IsmnRangeRead } from '../../dtl/monograph/is
 
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
 import type { CreateIsmnRangeHttp, UpdateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
-import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
 export async function getIsmnRanges() {
   const db = getKysely();
@@ -29,7 +30,6 @@ export async function getIsmnRanges() {
         .where('ismn_range_id', '=', r.id)
         .executeTakeFirstOrThrow();
 
-      // DTL confirms base attributes which are then extended
       return {
         ...asIsmnRangeAdminRead(r),
         free: total - taken,
@@ -39,10 +39,7 @@ export async function getIsmnRanges() {
   );
 }
 
-export async function createIsmnRange(
-  ismnRangeCreateDoc: CreateIsmnRangeHttp,
-  user: RequestUser,
-): Promise<CreatedResponse> {
+export async function createIsmnRange(ismnRangeCreateDoc: CreateIsmnRangeHttp, user: RequestUser) {
   const conflictingIsmnRanges = await getIsmnRangeConflict(ismnRangeCreateDoc);
 
   if (conflictingIsmnRanges.length > 0) {

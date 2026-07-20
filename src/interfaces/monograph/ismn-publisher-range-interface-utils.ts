@@ -1,7 +1,8 @@
 import { SYSTEM_USER, ISMN_IDENTIFIER_LENGTH } from '../../constants.ts';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
-import { calculateIsbnIsmnCheckDigit, validateIsmnIdentifier } from './monograph-identifier-utils.ts';
+import { calculateIsbnIsmnCheckDigit } from './monograph-identifier-utils.ts';
+import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
 import { getCurrentTime } from '../shared-interface-utils.ts';
 import { getKysely } from '../../db/database.ts';
 
@@ -66,7 +67,7 @@ export function getIsmnIdentifiers(publisherIdentifier: string) {
 
     const ismnIdentifier = `${baseIdentifier}-${checkdigit}`;
 
-    // Additional validation is done just in case using external tool - overhead is considered worth it here
+    // Additional validation is done just in case - overhead is considered worth it here
     validateIsmnIdentifier(ismnIdentifier);
 
     ismnIdentifiers.push(ismnIdentifier);
@@ -78,7 +79,6 @@ export function getIsmnIdentifiers(publisherIdentifier: string) {
 export function ismnPublisherRangeContainsIdentifier(range: IsmnRangeSelect, publisherIdentifier: string) {
   const { gs1, registrationGroup, registrant } = getIsmnPublisherIdentifierParts(publisherIdentifier);
 
-  // Validate against only range specific information as other validation was made by the helper
   const gs1Matches = gs1 === range.gs1;
   const registrationGroupMatches = registrationGroup === range.registration_group;
   const registrantNumber = Number(registrant);

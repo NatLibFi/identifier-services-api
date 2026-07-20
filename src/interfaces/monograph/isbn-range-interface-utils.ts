@@ -8,11 +8,6 @@ import { testRangeOverlap } from './monograph-range-utils.ts';
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 
-/**
- * Find potential conflicts with currently defined ISBN ranges. Conflict occurs if:
- *- Two ranges have equal gs1 and registration_group AND
- *- Ranges have any kind of overlap. Note that overlap is evaluated not only based on range category but also between separate categories (e.g., 1 does overlap 10000-19999)
- */
 export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHttp) {
   const db = getKysely();
   const currentIsbnRanges = await db.selectFrom('isbn_range').selectAll().execute();

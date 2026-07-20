@@ -2,6 +2,8 @@ import HttpStatus from 'http-status';
 
 import { constructMonographMessage, sanityCheckMessageRelations } from './monograph-message-template-utils.ts';
 
+import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 
@@ -9,7 +11,11 @@ import { getKysely } from '../../db/database.ts';
 import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 import { sendEmail } from '../email-utils.ts';
 
-import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
+import {
+  asMonographMessageAdminRead,
+  asMonographMessageSearchResult,
+  type MonographMessageInfo,
+} from '../../dtl/monograph/monograph-message-dtl.ts';
 
 import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -19,12 +25,6 @@ import type {
   SearchMonographMessage,
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
-
-import {
-  asMonographMessageAdminRead,
-  asMonographMessageSearchResult,
-  type MonographMessageInfo,
-} from '../../dtl/monograph/monograph-message-dtl.ts';
 import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
@@ -126,8 +126,8 @@ export default function createMonographMessageInterface(
       lang_code,
     } = message;
 
-    // Do not trust user input even though it should stay the same between loading message template and sending a message
-    // Always validate relations before operation
+    // Do not trust user input even though associations should stay the same between loading message template and sending a message
+    // Always validate relations before the actual DB operation
     await sanityCheckMessageRelations({
       monographPublisherId: monograph_publisher_id,
       monographPublicationRequestId: monograph_publication_request_id,
@@ -154,7 +154,7 @@ export default function createMonographMessageInterface(
     // Save to db within transaction
     const db = getKysely();
     const messageId = await db.transaction().execute(async (trx) => {
-      // Save message
+      // 1. Save message
       const messageSaveResult = await trx
         .insertInto('monograph_message')
         .values({
@@ -172,7 +172,7 @@ export default function createMonographMessageInterface(
         })
         .executeTakeFirstOrThrow();
 
-      // Save manifestation associations if there are any
+      // 2. Save manifestation associations if there are any
       await Promise.all(
         manifestation_ids.map(async (manifestationId) => {
           await trx
@@ -185,7 +185,7 @@ export default function createMonographMessageInterface(
         }),
       );
 
-      // Finally send the message using SMTP.
+      // 3. Finally send the message using SMTP.
       // This is done within the same transaction to guarantee state between db/email provider will match.
       if (messagingConfiguration.SEND_EMAILS) {
         await sendEmail({

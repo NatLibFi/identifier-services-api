@@ -259,10 +259,13 @@ export async function deleteMonographPublisherRequest(monographPublisherRequestI
     const archiveEntryUpdate = await trx
       .deleteFrom('monograph_publisher_request_archive')
       .where('monograph_publisher_request_id', '=', monographPublisherRequestId)
+      .where('monograph_publisher_id', 'is', null)
       .executeTakeFirstOrThrow();
 
     if (Number(archiveEntryUpdate.numDeletedRows) !== 1) {
-      throw new Error('Update unexpectedly changed more than one row');
+      throw new Error(
+        'Removal unexpectedly affected more or less than exactly one row in monograph_publisher_request_archive table',
+      );
     }
 
     // 2. Remove entry from request table
@@ -272,7 +275,9 @@ export async function deleteMonographPublisherRequest(monographPublisherRequestI
       .executeTakeFirstOrThrow();
 
     if (Number(requestDelete.numDeletedRows) !== 1) {
-      throw new Error('Update unexpectedly changed more than one row');
+      throw new Error(
+        'Removal unexpectedly affected more or less than exactly one row in monograph_publisher_request table',
+      );
     }
 
     return;

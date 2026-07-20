@@ -12,7 +12,6 @@ import { asIsbnRangeAdminRead, type IsbnRangeRead } from '../../dtl/monograph/is
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp, UpdateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
-import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 
 export async function getIsbnRanges() {
@@ -28,7 +27,6 @@ export async function getIsbnRanges() {
         .where('isbn_range_id', '=', r.id)
         .executeTakeFirstOrThrow();
 
-      // DTL confirms base attributes which are then extended
       return {
         ...asIsbnRangeAdminRead(r),
         free: total - taken,
@@ -38,10 +36,7 @@ export async function getIsbnRanges() {
   );
 }
 
-export async function createIsbnRange(
-  isbnRangeCreateDoc: CreateIsbnRangeHttp,
-  user: RequestUser,
-): Promise<CreatedResponse> {
+export async function createIsbnRange(isbnRangeCreateDoc: CreateIsbnRangeHttp, user: RequestUser) {
   const conflictingIsbnRanges = await getIsbnRangeConflict(isbnRangeCreateDoc);
 
   if (conflictingIsbnRanges.length > 0) {

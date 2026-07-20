@@ -5,6 +5,7 @@ export const APPLICATION_ROLES = {
 };
 
 export const APPLICATION_USER_UI_PUBLIC = 'UI-PUBLIC';
+export const APPLICATION_UI_URL = 'https://tunnisteportaali.kansalliskirjasto.fi';
 
 export const LANG_CODES = {
   'fi-FI': 'fi-FI',

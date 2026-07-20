@@ -14,7 +14,13 @@ import {
 
 import { validateGetById } from '../shared-interface-utils.ts';
 
-import { MONOGRAPH_MANIFESTATION_TYPES, MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
+import {
+  APPLICATION_UI_URL,
+  ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
+  MONOGRAPH_MANIFESTATION_TYPES,
+  MONOGRAPH_MESSAGE_TYPES,
+} from '../../constants.ts';
 import {
   getMonographPublisherIsbnRanges,
   getMonographPublisherIsmnRanges,
@@ -392,7 +398,10 @@ async function constructMonographPublisherRegisteredMessage(
     const isbnPublisherRange = await getMonographPublisherIsbnRanges(messagePublisher.id);
 
     // Validate publisher has only one range and that it's of category five
-    const cat5PublisherRanges = isbnPublisherRange.filter((v) => v.publisher_identifier.length === 13);
+    const cat5PublisherRanges = isbnPublisherRange.filter(
+      (v) => v.publisher_identifier.length === ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH['5'],
+    );
+
     const cat5PublisherRange = cat5PublisherRanges[0];
     if (cat5PublisherRanges.length !== 1 || !cat5PublisherRange) {
       throw new Error(
@@ -406,7 +415,10 @@ async function constructMonographPublisherRegisteredMessage(
     const ismnPublisherRange = await getMonographPublisherIsmnRanges(messagePublisher.id);
 
     // Validate publisher has only one range and that it's of category seven (contains 10 ISMN identifiers)
-    const cat7PublisherRanges = ismnPublisherRange.filter((v) => v.publisher_identifier.length === 13);
+    const cat7PublisherRanges = ismnPublisherRange.filter(
+      (v) => v.publisher_identifier.length === ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH['7'],
+    );
+
     const cat7PublisherRange = cat7PublisherRanges[0];
     if (cat7PublisherRanges.length !== 1 || !cat7PublisherRange) {
       throw new Error(
@@ -442,8 +454,6 @@ async function constructIdentifierListLinkMessage(
 ): Promise<ConstructedMessage> {
   // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
 
-  const uiUrl = 'https://tunnisteportaali.kansalliskirjasto.fi';
-
   const messageTemplate = await getMessageTemplate(messageType, messagePublisher.langCode);
   let body = messageTemplate.body;
   const subject = messageTemplate.subject;
@@ -459,9 +469,15 @@ async function constructIdentifierListLinkMessage(
   }
 
   if (isbnPublisherRangeId) {
-    body = body.replace('#IDENTIFIERS#', `${uiUrl}/monograph/isbn-publisher-ranges/${isbnPublisherRangeId}`);
+    body = body.replace(
+      '#IDENTIFIERS#',
+      `${APPLICATION_UI_URL}/monograph/isbn-publisher-ranges/${isbnPublisherRangeId}`,
+    );
   } else if (ismnPublisherRangeId) {
-    body = body.replace('#IDENTIFIERS#', `${uiUrl}/monograph/ismn-publisher-ranges/${ismnPublisherRangeId}`);
+    body = body.replace(
+      '#IDENTIFIERS#',
+      `${APPLICATION_UI_URL}/monograph/ismn-publisher-ranges/${ismnPublisherRangeId}`,
+    );
   }
 
   return {
@@ -543,14 +559,15 @@ export async function constructMonographMessage(
     MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
     MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
   ];
-  const listDeliveryMessageTypes = [
-    MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY,
-    MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY,
-  ];
 
   if (publisherRegistryJoinedMessageTypes.includes(messageType)) {
     return constructMonographPublisherRegisteredMessage(messageType, messagePublisher);
   }
+
+  const listDeliveryMessageTypes = [
+    MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY,
+    MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY,
+  ];
 
   if (listDeliveryMessageTypes.includes(messageType)) {
     return constructIdentifierListLinkMessage(

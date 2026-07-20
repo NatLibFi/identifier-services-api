@@ -20,12 +20,8 @@ import {
   getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
 
-import {
-  assignIsbnIdentifier,
-  assignIsmnIdentifier,
-  getAssignableIsbnIdentifiers,
-  getAssignableIsmnIdentifiers,
-} from './monograph-identifier-utils.ts';
+import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from './isbn-identifier-utils.ts';
+import { assignIsmnIdentifier, getAssignableIsmnIdentifiers } from './ismn-identifier-utils.ts';
 
 import {
   MONOGRAPH_EXPRESSION_TYPES,
@@ -43,7 +39,6 @@ import type {
   UpdateMonographPublicationRequestHttp,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import type { CreatedResponse } from '../interface-common-types.ts';
 
 export async function readMonographPublicationRequest(id: number) {
   const db = getKysely();
@@ -135,7 +130,7 @@ export async function updateMonographPublicationRequest(
 export async function createMonographPublicationRequest(
   monographPublicationRequestCreateDoc: CreateMonographPublicationRequestV1Http,
   user: RequestUser,
-): Promise<CreatedResponse> {
+) {
   const publication = getDbPublicationEntry(monographPublicationRequestCreateDoc, user);
 
   const db = getKysely();
@@ -263,7 +258,7 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
 
   const publication = await readMonographPublication(validMonographPublicationRequest.monograph_publication_id);
 
-  const manifestationIds = publication.expressions.reduce((p: Record<string, number[]>, n) => {
+  const manifestationsRequiringIdentifier = publication.expressions.reduce((p: Record<string, number[]>, n) => {
     const identifierType =
       n.expression_type === MONOGRAPH_EXPRESSION_TYPES.SHEET_MUSIC
         ? MONOGRAPH_IDENTIFIERS.ISMN
@@ -290,8 +285,8 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
 
   try {
     await db.transaction().execute(async (trx) => {
-      const manifestationsRequiringIsbn = manifestationIds[MONOGRAPH_IDENTIFIERS.ISBN];
-      const manifestationsRequiringIsmn = manifestationIds[MONOGRAPH_IDENTIFIERS.ISMN];
+      const manifestationsRequiringIsbn = manifestationsRequiringIdentifier[MONOGRAPH_IDENTIFIERS.ISBN];
+      const manifestationsRequiringIsmn = manifestationsRequiringIdentifier[MONOGRAPH_IDENTIFIERS.ISMN];
 
       // Assign ISBN for all manifestations requiring one that are not cancelled
       if (manifestationsRequiringIsbn) {

@@ -8,11 +8,6 @@ import { testRangeOverlap } from './monograph-range-utils.ts';
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
 
-/**
- * Find potential conflicts with currently defined ISMN ranges. Conflict occurs if:
- *- Two ranges have equal gs1 and registration_group AND
- *- Ranges have any kind of overlap. Note that overlap is evaluated not only based on range category but also between separate categories (e.g., 1 does overlap 10000-19999)
- */
 export async function getIsmnRangeConflict(ismnRangeCreateDoc: CreateIsmnRangeHttp) {
   const db = getKysely();
   const currentIsmnRanges = await db.selectFrom('ismn_range').selectAll().execute();

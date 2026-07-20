@@ -1,9 +1,8 @@
 import HttpStatus from 'http-status';
 
+import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
 import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
-
-import type { MonographPublicationSelect } from '../../db/types/monograph/types-monograph-publication.ts';
 
 import { asMonographPublicationAdminRead } from '../../dtl/monograph/monograph-publication-dtl.ts';
 import { getPublicationExpressions } from './monograph-publication-interface-utils.ts';
@@ -12,8 +11,8 @@ import type {
   SearchMonographPublicationHttp,
   UpdateMonographPublicationHttp,
 } from '../../validations/monograph/monograph-publication-validation.ts';
+import type { MonographPublicationSelect } from '../../db/types/monograph/types-monograph-publication.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import { ApiError } from '../../utils/api-error.ts';
 
 export async function readMonographPublication(id: number) {
   const db = getKysely();
@@ -55,7 +54,7 @@ export async function updateMonographPublication(
 }
 
 export async function searchMonographPublication(searchParameters: SearchMonographPublicationHttp) {
-  // TODO: functionality and access control for publisher user
+  // TODO: publisher role access control
   const { search_text, monograph_publisher_id, limit, offset } = searchParameters;
 
   const db = getKysely();
@@ -92,6 +91,8 @@ export async function searchMonographPublication(searchParameters: SearchMonogra
   };
 }
 
+// Work-in-progress. Do not use in production yet!
+// Note: intended to be used only with publications associated with publication requests (i.e., only for admin user use, not for publisher users)
 export async function mergeMonographPublication(baseId: number, incomingId: number, user: RequestUser) {
   const db = getKysely();
 
@@ -111,6 +112,15 @@ export async function mergeMonographPublication(baseId: number, incomingId: numb
     .select(['id', 'monograph_publisher_id', 'monograph_publication_id'])
     .where('monograph_publication_id', '=', incomingId)
     .execute();
+
+  const doesNotConsiderRequests = basePublicationRequests.length === 0 || incomingPublicationRequests.length === 0;
+  if (doesNotConsiderRequests) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Publication merge functionality is currently reserved for only publications associated with monograph publication requests.',
+    );
+  }
 
   const allRequests = basePublicationRequests.concat(incomingPublicationRequests);
   const publisherNotDefined = allRequests.find((r) => r.monograph_publisher_id === null);

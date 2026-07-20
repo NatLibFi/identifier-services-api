@@ -1,9 +1,9 @@
 import HttpStatus from 'http-status';
+import { sql } from 'kysely';
 
 import { ApiError } from '../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
-import { sql } from 'kysely';
 import type { ExpressionBuilder, ReferenceExpression } from 'kysely';
 
 export function validateGetById<T>(dbResult: T[]): T {

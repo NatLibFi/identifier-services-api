@@ -16,20 +16,19 @@ import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
+import { validateIsbnIdentifier } from './isbn-identifier-utils.ts';
 
 import type {
   CreateIsbnPublisherRangeHttp,
   GetIsbnPublisherRangeIdentifiersHttp,
 } from '../../validations/monograph/isbn-publisher-range-validation.ts';
-import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
-import { validateIsbnIdentifier } from './monograph-identifier-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
   user: RequestUser,
-): Promise<CreatedResponse> {
+) {
   const { publisher_identifier, monograph_publisher_id, isbn_range_id } = isbnPublisherRanceCreateDoc;
   const db = getKysely();
 
@@ -84,7 +83,7 @@ export async function createIsbnPublisherRange(
     );
   }
 
-  // Sanity check
+  // Sanity check: publisher identifier does not exist in DB yet
   const existingIsbnPublisherRange = await db
     .selectFrom('isbn_publisher_range')
     .selectAll()
@@ -224,8 +223,6 @@ export async function getIsbnPublisherRangeIdentifiers(
   const { download, limit, offset, assigned_only, unassigned_only } = filter;
   const db = getKysely();
 
-  // TODO: evaluate access control
-
   // Verify publisher range exists
   const isbnPublisherRange = await db
     .selectFrom('isbn_publisher_range')
@@ -341,6 +338,5 @@ export async function getIsbnPublisherRangeIdentifiers(
     return `${identifierInfo}\r\n`;
   }, '');
 
-  // TODO: evaluate if downloads table is required
   return `${headerText}${identifierResult}`;
 }

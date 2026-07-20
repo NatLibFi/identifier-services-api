@@ -7,6 +7,9 @@ import { getExpressionsManifestations } from './monograph-publication-interface-
 import { ApiError } from '../../utils/api-error.ts';
 import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
+import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
+
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   AddMonographPublicationExpression,
@@ -16,8 +19,6 @@ import type {
   MonographPublicationExpressionSelect,
   MonographPublicationExpressionUpdate,
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
-import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
-import { readMonographPublication } from './monograph-publication-interface.ts';
 
 export async function readMonographPublicationExpression(id: number) {
   const db = getKysely();
@@ -57,6 +58,7 @@ export async function updateMonographPublicationExpression(
     (m) => m.isbn_identifier !== null || m.ismn_identifier !== null,
   );
 
+  // Updating certain attributes is prohibited after an identifier has been assigned to associated manifestation
   if (manifestationHasIdentifier && keyRequiringNoIdentifier) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -132,7 +134,6 @@ export async function addMonographPublicationExpression(
 
   const db = getKysely();
 
-  // Sanity check
   if (!monograph_publication_id) {
     throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Cannot create expression without adding it to publication');
   }
@@ -140,7 +141,8 @@ export async function addMonographPublicationExpression(
   // Validate publication through read - implicitly manages returning 404 in case entity does not exist
   await readMonographPublication(monograph_publication_id);
 
-  // Currently no constraints are placed: it is possible to create another expression with similar type/language combination with matching title
+  // Note: Currently no constraints are placed regarding creation of exactly identical expressions.
+  // I.e., it is possible to create another expression with similar type/language combination with matching title
 
   const dbDoc = {
     monograph_publication_id,
@@ -208,11 +210,11 @@ export async function deleteMonographPublicationExpression(expressionId: number,
     );
   }
 
-  const manifestationsHaveIdentifiers = expression.manifestations.filter(
+  const someManifestationHasIdentifier = expression.manifestations.find(
     (m) => m.isbn_identifier !== null || m.ismn_identifier !== null,
-  ).length;
+  );
 
-  if (manifestationsHaveIdentifiers) {
+  if (someManifestationHasIdentifier) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',

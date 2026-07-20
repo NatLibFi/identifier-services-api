@@ -13,6 +13,7 @@ import {
 } from './ismn-publisher-range-interface-utils.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { getAvailableIsmnPublisherRanges } from './ismn-range-interface-utils.ts';
+import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
 
 import { asIsmnIdentifierAdminRead } from '../../dtl/monograph/ismn-identifier-dtl.ts';
 
@@ -20,15 +21,13 @@ import type {
   CreateIsmnPublisherRangeHttp,
   GetIsmnPublisherRangeIdentifiersHttp,
 } from '../../validations/monograph/ismn-publisher-range-validation.ts';
-import type { CreatedResponse } from '../interface-common-types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsmnPublisherRangeSelect } from '../../db/types/monograph/types-ismn-publisher-range.ts';
-import { validateIsmnIdentifier } from './monograph-identifier-utils.ts';
 
 export async function createIsmnPublisherRange(
   ismnPublisherRanceCreateDoc: CreateIsmnPublisherRangeHttp,
   user: RequestUser,
-): Promise<CreatedResponse> {
+) {
   const { publisher_identifier, monograph_publisher_id, ismn_range_id } = ismnPublisherRanceCreateDoc;
   const db = getKysely();
 
@@ -83,7 +82,7 @@ export async function createIsmnPublisherRange(
     );
   }
 
-  // Sanity check
+  // Sanity check ISMN publisher identifier is not found from DB
   const existingIsmnPublisherRange = await db
     .selectFrom('ismn_publisher_range')
     .selectAll()
@@ -223,8 +222,6 @@ export async function getIsmnPublisherRangeIdentifiers(
   const { download, limit, offset, assigned_only, unassigned_only } = filter;
   const db = getKysely();
 
-  // TODO: evaluate access control
-
   // Verify publisher range exists
   const ismnPublisherRange = await db
     .selectFrom('ismn_publisher_range')
@@ -321,6 +318,5 @@ export async function getIsmnPublisherRangeIdentifiers(
     return `${identifierInfo}\r\n`;
   }, '');
 
-  // TODO: evaluate if downloads table is required
   return `${headerText}${identifierResult}`;
 }
