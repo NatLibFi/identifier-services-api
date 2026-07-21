@@ -46,7 +46,7 @@
     "@natlibfi/melinda-rest-api-client": "^6.0.3",
     "@natlibfi/passport-natlibfi-keycloak": "^3.0.11",
     "@natlibfi/sru-client": "^7.0.1",
-    "body-parser": "^2.2.2",
+    "body-parser": "^2.3.0",
     "celebrate": "^15.0.3",
     "cors": "^2.8.6",
     "excel4node": "^1.8.2",
