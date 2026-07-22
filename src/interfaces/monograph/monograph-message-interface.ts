@@ -26,6 +26,7 @@ import type {
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
 import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
+import { isProduction } from '../../utils/generic-utils.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createMonographMessageInterface(
@@ -141,13 +142,14 @@ export default function createMonographMessageInterface(
     let finalSubject = subject;
     let finalBody = body;
 
-    const isProd = process.env['NODE_ENV'] === 'production';
-
-    if (!isProd && !finalSubject.startsWith('TESTI/TEST MESSAGE ')) {
+    if (!isProduction() && !finalSubject.startsWith('TESTI/TEST MESSAGE ')) {
       finalSubject = `TESTI/TEST MESSAGE ${subject}`;
     }
 
-    if (!isProd && !finalBody.startsWith('Tämä viesti on testijärjestelmästä / This message is from test system.')) {
+    if (
+      !isProduction() &&
+      !finalBody.startsWith('Tämä viesti on testijärjestelmästä / This message is from test system.')
+    ) {
       finalBody = `Tämä viesti on testijärjestelmästä / This message is from test system.\n\n${body}`;
     }
 

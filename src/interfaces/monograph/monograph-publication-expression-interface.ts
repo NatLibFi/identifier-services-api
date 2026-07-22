@@ -1,16 +1,27 @@
 import HttpStatus from 'http-status';
+import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
 
 import { getKysely } from '../../db/database.ts';
 import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
 import { getExpressionsManifestations } from './monograph-publication-interface-utils.ts';
+import generateMarcRecord from '../marc-record-interface.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import {
+  MARC_RECORD_FILTER,
+  MARC_RECORD_FORMAT,
+  MONOGRAPH_AUTHOR_ROLES,
+  MONOGRAPH_EXPRESSION_TYPES,
+  MONOGRAPH_MANIFESTATION_TYPES,
+  MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
+  MONOGRAPH_MANIFESTATION_TYPES_PRINT,
+  MONOGRAPH_PUBLICATION_REQUEST_STATES,
+} from '../../constants.ts';
 
 import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
 import { readMonographPublication } from './monograph-publication-interface.ts';
 
-import type { RequestUser } from '../../generic-types.ts';
+import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type {
   AddMonographPublicationExpression,
   UpdateMonographPublicationExpression,
@@ -19,6 +30,8 @@ import type {
   MonographPublicationExpressionSelect,
   MonographPublicationExpressionUpdate,
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
+import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
+import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
 
 export async function readMonographPublicationExpression(id: number) {
   const db = getKysely();
@@ -247,4 +260,163 @@ export async function deleteMonographPublicationExpression(expressionId: number,
   });
 
   return;
+}
+
+// TODO: integration tests
+export async function createMonographPublicationExpressionMarc(
+  expressionId: number,
+  opts: GetMarcRecordHttp,
+): Promise<UnknownObject[] | string> {
+  const { record_format, record_filter } = opts;
+
+  const db = getKysely();
+  const expression = await readMonographPublicationExpression(expressionId);
+
+  // For publisher information: prioritize using publisher request, but fall back to publisher registry information if request is not found
+  const [publisherInformation] = await db
+    .selectFrom('monograph_publication')
+    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'monograph_publication.monograph_publisher_id')
+    .selectAll('monograph_publisher')
+    .where('monograph_publication.id', '=', expression.monograph_publication_id)
+    .execute();
+
+  const [publicationRequest] = await db
+    .selectFrom('monograph_publication_request')
+    .selectAll('monograph_publication_request')
+    .where('monograph_publication_request.monograph_publication_id', '=', expression.monograph_publication_id)
+    .execute();
+
+  let publisherName = null;
+  let publisherPlace = null;
+
+  if (publicationRequest) {
+    publisherName = publicationRequest.official_name;
+    publisherPlace =
+      expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.DISSERTATION
+        ? publicationRequest.locality
+        : publicationRequest.city;
+  } else if (publisherInformation) {
+    publisherName = publisherInformation.official_name;
+    publisherPlace = publisherInformation.city;
+  }
+
+  const marcRecords: UnknownObject[] = [];
+
+  const mainAuthor = expression.authors.find((a) => a.roles.includes(MONOGRAPH_AUTHOR_ROLES.AUTHOR));
+  const contributors = mainAuthor
+    ? expression.authors.filter((a) => a.first_name === mainAuthor.first_name && a.last_name === mainAuthor.last_name)
+    : expression.authors;
+
+  // This will gather all ISBNs for same manifestation type to an array and place manifestation type as object key
+  // i.e., {"PDF": ["978-951-1..."]}
+  const isbnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
+    if (n.isbn_identifier) {
+      (p[`${n.manifestation_type}`] ??= []).push(n.isbn_identifier);
+    }
+    return p;
+  }, {});
+
+  // This will gather all ISBNs for same manifestation type to an array and place manifestation type as object key
+  // i.e., {"PDF": ["978-951-1..."]}
+  const ismnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
+    if (n.ismn_identifier) {
+      (p[`${n.manifestation_type}`] ??= []).push(n.ismn_identifier);
+    }
+    return p;
+  }, {});
+
+  const publicationInfoBase: CreateMarcRecordInformation = {
+    isElectronical: false, // placeholder to satisfy typing - will be overwritten appropriately
+    isMonograph: true,
+    isSerial: false,
+    isSheetMusic: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.SHEET_MUSIC,
+    isDissertation: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.DISSERTATION,
+    isMap: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.MAP,
+    isAudiobook: false, // just a default for now as this cannot be true when isElectronical is false
+    title: expression.title,
+    subtitle: expression.subtitle,
+    isbnIdentifiers,
+    ismnIdentifiers,
+    language: expression.expression_language,
+    publisherName,
+    publisherPlace,
+    mapScale: expression.map_scale,
+    mainAuthor,
+    contributors,
+  };
+
+  const printManifestations = expression.manifestations.filter((m) =>
+    Object.keys(MONOGRAPH_MANIFESTATION_TYPES_PRINT).includes(m.manifestation_type),
+  );
+
+  const electronicalManifestations = expression.manifestations.filter((m) =>
+    Object.keys(MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL).includes(m.manifestation_type),
+  );
+
+  if (printManifestations.length > 0 && record_filter !== MARC_RECORD_FILTER.ELECTRONICAL_ONLY) {
+    const printRecordInformation: CreateMarcRecordInformation = {
+      ...publicationInfoBase,
+      isElectronical: false,
+      publicationYear: printManifestations[0]?.publication_year || undefined, // Use information from first manifestation for request
+      publicationMonth: printManifestations[0]?.publication_month || undefined, // Use information from first manifestation for request
+      printerName: printManifestations[0]?.printing_information[0]?.printing_house,
+      printerPlace: printManifestations[0]?.printing_information[0]?.printing_house_city,
+      edition: printManifestations[0]?.manifestation_edition,
+      monographSeries: printManifestations[0]?.series,
+    };
+
+    const printRecord = generateMarcRecord(printRecordInformation);
+    marcRecords.push(printRecord);
+  }
+
+  if (electronicalManifestations.length > 0 && record_filter !== MARC_RECORD_FILTER.PRINT_ONLY) {
+    const audiobookTypes = [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM, MONOGRAPH_MANIFESTATION_TYPES.MP3];
+    const isBook = expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.BOOK;
+    const isAudiobook = isBook && expression.manifestations.some((m) => audiobookTypes.includes(m.manifestation_type));
+
+    const electronicalRecordInformation: CreateMarcRecordInformation = {
+      ...publicationInfoBase,
+      isElectronical: true,
+      isAudiobook,
+      publicationYear: electronicalManifestations[0]?.publication_year || undefined, // Use information from first manifestation for request
+      publicationMonth: electronicalManifestations[0]?.publication_month || undefined, // Use information from first manifestation for request
+      printerName: electronicalManifestations[0]?.printing_information[0]?.printing_house,
+      printerPlace: electronicalManifestations[0]?.printing_information[0]?.printing_house_city,
+      edition: electronicalManifestations[0]?.manifestation_edition,
+      monographSeries: electronicalManifestations[0]?.series,
+    };
+
+    const electronicalRecord = generateMarcRecord(electronicalRecordInformation);
+    marcRecords.push(electronicalRecord);
+  }
+
+  if (record_format === MARC_RECORD_FORMAT.MARC_RECORD_JS) {
+    return marcRecords;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const serializableRecords = marcRecords.map((r: any) =>
+    MarcRecordSerializers.Json.from(JSON.stringify(r.toObject())),
+  );
+
+  if (record_format === 'text') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.Text.to(r));
+  }
+
+  if (record_format === 'iso2709') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.ISO2709.to(r)).join('');
+  }
+
+  if (record_format === 'json') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.Json.to(r));
+  }
+
+  throw new ApiError(
+    HttpStatus.UNPROCESSABLE_ENTITY,
+    'Unprocessable entity',
+    `Could not serialize marc records to format ${record_format}.`,
+  );
 }

@@ -1,3 +1,10 @@
+export const ENV = {
+  PRODUCTION: 'PRODUCTION',
+  STAGING: 'STAGING',
+  DEVELOPMENT: 'DEVELOPMENT',
+  TEST: 'TEST',
+};
+
 export const APPLICATION_ROLES = {
   ADMIN: 'admin',
   GUEST: 'guest',
@@ -200,4 +207,16 @@ export const ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number
   '5': 11,
   '6': 12,
   '7': 13,
+};
+
+export const MARC_RECORD_FORMAT = {
+  MARC_RECORD_JS: 'MARC_RECORD_JS', // Note: only for internal interface usage
+  JSON: 'JSON',
+  TEXT: 'TEXT',
+  ISO2709: 'ISO2709',
+};
+
+export const MARC_RECORD_FILTER = {
+  PRINT_ONLY: 'PRINT_ONLY',
+  ELECTRONICAL_ONLY: 'ELECTRONICAL_ONLY',
 };

@@ -202,7 +202,7 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
   return;
 }
 
-export function translateManifestationType(manifestationType: string, langCode: string) {
+export function translateManifestationType(manifestationType: string, langCode: string): string {
   const translations = {
     'fi-FI': {
       [MONOGRAPH_MANIFESTATION_TYPES.PAPERBACK]: 'pehmeäkantinen',

@@ -1,0 +1,33 @@
+post:
+  operationId: sendToMelinda
+  summary: Send metadata records to Melinda
+  security:
+    - openId:
+        - admin
+  tags:
+    - metadata
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/melinda/send-to-melinda-body.yaml'
+  responses:
+    '200':
+      description: Records were created and passed to Melinda API. Note that this does not indicate Melinda API has not encountered errors.
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/responses/melinda/melinda-save-result.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Entitites to create records from were not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../responses/error.yaml'

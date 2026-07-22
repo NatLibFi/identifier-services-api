@@ -11,6 +11,7 @@ import type { ApplicationRoleMap, KeycloakOptions } from './app.ts';
 
 // COMMON
 export const NODE_ENV = readEnvironmentVariable<string>('NODE_ENV');
+
 export const HTTP_PORT = readEnvironmentVariable<number>('HTTP_PORT', {
   formatFunction: envFormatNumeric,
 });
@@ -79,4 +80,11 @@ export const MESSAGING_CONFIGURATION = {
   ISSN_EMAIL: ['production', 'staging'].includes(NODE_ENV)
     ? readEnvironmentVariable('ISSN_EMAIL', { defaultValue: '' })
     : '',
+};
+
+// Metadata delivery to Melinda
+export const MELINDA_CONFIGURATION = {
+  MELINDA_API_URL: readEnvironmentVariable('MELINDA_API_URL', { defaultValue: '' }),
+  MELINDA_API_USER: readEnvironmentVariable('MELINDA_API_USER', { defaultValue: '' }),
+  MELINDA_API_PASSWORD: readEnvironmentVariable('MELINDA_API_PASSWORD', { defaultValue: '' }),
 };

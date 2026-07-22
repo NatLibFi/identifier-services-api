@@ -17,6 +17,7 @@ async function run() {
     proxyCustomHeader: config.PROXY_CUSTOM_HEADER,
     monographPublisherConfiguration: config.MONOGRAPH_PUBLISHER_CONFIGURATION,
     messagingConfiguration: config.MESSAGING_CONFIGURATION,
+    melindaConfiguration: config.MELINDA_CONFIGURATION,
   };
 
   const server = await startApp(appOptions);

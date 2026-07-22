@@ -131,8 +131,12 @@ async function runTest(testRootPath: string) {
         ISBN_EMAIL: '',
         ISSN_EMAIL: '',
       },
+      melindaConfiguration: {
+        MELINDA_API_URL: '',
+        MELINDA_API_USER: '',
+        MELINDA_API_PASSWORD: '',
+      },
       enableProxy: false,
-      environment: 'test',
       httpPort: 0,
       keycloakOptions: {
         localUsers: 'file://test-fixtures/integration-test-users.json',

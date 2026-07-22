@@ -7,6 +7,7 @@ import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import {
   APPLICATION_USER_UI_PUBLIC,
+  MONOGRAPH_EXPRESSION_TYPES,
   MONOGRAPH_MANIFESTATION_TYPES,
   MONOGRAPH_PUBLICATION_REQUEST_STATES,
 } from '../../constants.ts';
@@ -24,6 +25,7 @@ import type { RequestUser } from '../../generic-types.ts';
 import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
 import type { Transaction } from 'kysely';
 import type { Database } from '../../db/types.ts';
+import type { MonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
 
 export function getMonographAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
   if (!firstName || !lastName || !roles || roles.length === 0) {
@@ -583,4 +585,15 @@ export async function changeMonographPublicationRequestState(
   }
 
   return;
+}
+
+export function isAudiobook(expression: MonographPublicationExpressionAdminRead): boolean {
+  if (expression.expression_type !== MONOGRAPH_EXPRESSION_TYPES.BOOK) {
+    return false;
+  }
+
+  const audiobookManifestationTypes = [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM, MONOGRAPH_MANIFESTATION_TYPES.MP3];
+  return expression.manifestations.some((manifestation) =>
+    audiobookManifestationTypes.includes(manifestation.manifestation_type),
+  );
 }

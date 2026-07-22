@@ -1,0 +1,4 @@
+type: string
+enum:
+  - PRINT_ONLY
+  - ELECTRONICAL_ONLY

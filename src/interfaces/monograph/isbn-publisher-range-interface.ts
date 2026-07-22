@@ -12,7 +12,7 @@ import {
   getNumberOfIsbnIdentifiers,
   isbnPublisherRangeContainsIdentifier,
 } from './isbn-publisher-range-interface-utils.ts';
-import { generateRangeArray } from '../../utils/generic-utils.ts';
+import { generateRangeArray, isProduction } from '../../utils/generic-utils.ts';
 import { getAvailableIsbnPublisherRanges } from './isbn-range-interface-utils.ts';
 
 import { asIsbnIdentifierAdminRead } from '../../dtl/monograph/isbn-identifier-dtl.ts';
@@ -309,7 +309,7 @@ export async function getIsbnPublisherRangeIdentifiers(
   headerText += `Following identifiers have been assigned to publisher ${publisher_name}\r\n\r\n`;
 
   // Add test header for test environment
-  if (process.env['NODE_ENV'] !== 'production') {
+  if (!isProduction()) {
     headerText +=
       'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n';
     headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\r\n';

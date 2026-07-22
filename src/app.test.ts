@@ -19,6 +19,11 @@ describe('app.ts default export', async () => {
         ISBN_EMAIL: '',
         ISSN_EMAIL: '',
       },
+      melindaConfiguration: {
+        MELINDA_API_URL: '',
+        MELINDA_API_USER: '',
+        MELINDA_API_PASSWORD: '',
+      },
       environment: 'test',
       httpPort: 0,
       keycloakOptions: {

@@ -1,0 +1,8 @@
+type: object
+properties:
+  record_format:
+    $ref: '../../../enums/marc-record-formats.yaml'
+  record_filter:
+    $ref: '../../../enums/marc-record-filters.yaml'
+required:
+  - record_format

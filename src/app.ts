@@ -15,10 +15,13 @@ import validateContentType from './middlewares/content-type.ts';
 
 import healthRouter from './routes/health-router.ts';
 import createMonographRouter from './routes/monograph/monograph-router.ts';
+import createMelindaRouter from './routes/melinda-router.ts';
 import testAuthenticationRouter from './routes/test-auth-router.ts';
 
+import { allowAdminOnly } from './middlewares/auth.ts';
 import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
 import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
+import { isAutomatedTest } from './utils/generic-utils.ts';
 import packageJson from '../package.json' with { type: 'json' };
 
 export interface KeycloakOptions {
@@ -44,11 +47,17 @@ export interface MessagingConfiguration {
   ISSN_EMAIL: string;
 }
 
+export interface MelindaConfiguration {
+  MELINDA_API_URL: string;
+  MELINDA_API_USER: string;
+  MELINDA_API_PASSWORD: string;
+}
+
 interface AppOptions {
   applicationRoleMap: ApplicationRoleMap;
-  environment: string;
   monographPublisherConfiguration: MonographPublisherConfiguration;
   messagingConfiguration: MessagingConfiguration;
+  melindaConfiguration: MelindaConfiguration;
   dbConfig?: PoolOptions;
   corsWhitelist?: string[];
   enableProxy?: boolean;
@@ -64,18 +73,16 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     corsWhitelist,
     dbConfig,
     enableProxy,
-    environment,
     httpPort,
     keycloakOptions,
     logLevel,
     proxyCustomHeader,
     monographPublisherConfiguration,
     messagingConfiguration,
+    melindaConfiguration,
   } = options;
 
   const logger = createApplicationLogger(logLevel);
-
-  const isAutomatedTest = environment === 'test';
 
   logger.info('Start initializing Express server');
   const app = express();
@@ -86,10 +93,10 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   }
 
   // Middlewares init
-  const corsOrigin = isAutomatedTest ? false : corsWhitelist;
+  const corsOrigin = isAutomatedTest() ? false : corsWhitelist;
   const { localUsers, ...keycloakOpts } = keycloakOptions || {};
 
-  if (localUsers && !isAutomatedTest) {
+  if (localUsers && !isAutomatedTest()) {
     throw new Error('refusing to use local users in environment that is not an automated test');
   }
 
@@ -127,12 +134,12 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   }
 
   // Routes
-  if (isAutomatedTest) {
+  if (isAutomatedTest()) {
     logger.warn('Enabling test authentication route');
     app.use('/test-auth', passportMiddlewares.credentials, testAuthenticationRouter);
   }
 
-  if (!isAutomatedTest) {
+  if (!isAutomatedTest()) {
     logger.info('Testing database connection');
 
     if (!dbConfig) {
@@ -149,7 +156,10 @@ export default async function startApp(options: AppOptions): Promise<http.Server
 
   // Routes requiring authentication
   const monographRouter = createMonographRouter(monographPublisherConfiguration, messagingConfiguration);
+  const melindaRouter = createMelindaRouter(melindaConfiguration);
+
   app.use('/v2/monograph', monographRouter);
+  app.use('/v2/melinda', allowAdminOnly, melindaRouter);
 
   // Public routes
   app.use('/v2', healthRouter);
