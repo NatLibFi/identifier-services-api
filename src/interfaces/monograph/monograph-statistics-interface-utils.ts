@@ -5,10 +5,12 @@ import {
   ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
   ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
   MONOGRAPH_EXPRESSION_TYPES,
+  MONOGRAPH_IDENTIFIERS,
 } from '../../constants.ts';
 import type { MonographPublisherConfiguration } from '../../app.ts';
 import { getIsbnRanges } from './isbn-range-interface.ts';
 import { getIsmnRanges } from './ismn-range-interface.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
 
 interface MonthlyStatistics {
   year: number;
@@ -42,21 +44,14 @@ export function formatStatisticsToWorkbook(statisticsName: string, data: Record<
 
 export async function getMonthlyMonographStatistics(
   monographPublisherConfiguration: MonographPublisherConfiguration,
-  begin?: string,
-  end?: string,
+  begin: Date,
+  endExclusive: Date,
 ): Promise<Record<string, string>[]> {
-  const statisticsBegin = begin ? new Date(begin) : new Date('1970-01-01');
-  const statisticsEnd = end ? new Date(end) : new Date();
+  const startMonth = begin.getMonth() + 1;
+  const startYear = begin.getFullYear();
 
-  // End is always exclusive to avoid timestamp problems
-  statisticsEnd.setHours(0, 0, 0, 0);
-  statisticsEnd.setDate(statisticsEnd.getDate() + 1);
-
-  const startMonth = statisticsBegin.getMonth() + 1;
-  const startYear = statisticsBegin.getFullYear();
-
-  const endMonth = statisticsEnd.getMonth() + 1;
-  const endYear = statisticsEnd.getFullYear();
+  const endMonth = endExclusive.getMonth() + 1;
+  const endYear = endExclusive.getFullYear();
 
   const years = [...Array(endYear - startYear + 1).keys()].map((v) => v + startYear);
 
@@ -86,101 +81,88 @@ export async function getMonthlyMonographStatistics(
   // 2. Retrieve statistics
 
   // Sent messages count
-  const sentMessages: MonthlyStatistics[] = await getNumSendMessages(statisticsBegin, statisticsEnd);
+  const sentMessages: MonthlyStatistics[] = await getNumSendMessages(begin, endExclusive);
   rows.push(formatResultSet('Lähetetyt viestit', sentMessages, headers));
 
   // Created ISBN publisher ranges count
   const createdIsbnPublisherRanges: MonthlyStatistics[] = await getCreatedIsbnPublisherIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
   );
   rows.push(formatResultSet('Uudet ISBN-kustantajatunnukset', createdIsbnPublisherRanges, headers));
 
   // Created ISMN publisher ranges count
   const createdIsmnPublisherRanges: MonthlyStatistics[] = await getCreatedIsmnPublisherIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
   );
   rows.push(formatResultSet('Uudet ISMN-kustantajatunnukset', createdIsmnPublisherRanges, headers));
 
   // Created publisher requests
   const createdPublisherRequests: MonthlyStatistics[] = await getCreatedMonographPublisherRequestCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
   );
   rows.push(formatResultSet('Kustantajarekisterin liittymislomakkeet', createdPublisherRequests, headers));
 
   // Publication requests (ISMN)
   const createdPublicationRequestsIsmn: MonthlyStatistics[] = await getCreatedMonographPublicationRequestCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     true,
   );
   rows.push(formatResultSet('ISMN hakulomakkeet', createdPublicationRequestsIsmn, headers));
 
   // Publication requests (ISBN)
   const createdPublicationRequestsIsbn: MonthlyStatistics[] = await getCreatedMonographPublicationRequestCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     false,
   );
   rows.push(formatResultSet('ISBN hakulomakkeet', createdPublicationRequestsIsbn, headers));
 
   // Assigned ISBN identifier (self-publishing)
   const authorPublisherAssignedIsbn: MonthlyStatistics[] = await getAssignedIsbnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     monographPublisherConfiguration.SELF_PUBLISHER_ID,
   );
   rows.push(formatResultSet('Myönnetyt ISBN-tunnukset (omakustanteet)', authorPublisherAssignedIsbn, headers));
 
   // Assigned ISBN identifier (state publisher)
   const statePublisherAssignedIsbn: MonthlyStatistics[] = await getAssignedIsbnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     monographPublisherConfiguration.STATE_PUBLISHER_ID,
   );
   rows.push(formatResultSet('Myönnetyt ISBN-tunnukset (valtio)', statePublisherAssignedIsbn, headers));
 
   // Assigned ISBN identifier (HY publisher)
   const helsinkiUniPublisherAssignedIsbn: MonthlyStatistics[] = await getAssignedIsbnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     monographPublisherConfiguration.HY_PUBLISHER_ID,
   );
   rows.push(formatResultSet('Myönnetyt ISBN-tunnukset (yliopisto)', helsinkiUniPublisherAssignedIsbn, headers));
 
   // Assigned ISBN identifier (small publishers)
-  const cat5AssignedIsbn: MonthlyStatistics[] = await getAssignedIsbnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
-    null,
-    true,
-  );
+  const cat5AssignedIsbn: MonthlyStatistics[] = await getAssignedIsbnIdentifierCount(begin, endExclusive, null, true);
   rows.push(formatResultSet('Myönnetyt ISBN-tunnukset (5-merkkiset)', cat5AssignedIsbn, headers));
 
   // Assigned ISMN identifier (self-publishing)
   const authorPublisherAssignedIsmn: MonthlyStatistics[] = await getAssignedIsmnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
+    begin,
+    endExclusive,
     monographPublisherConfiguration.SELF_PUBLISHER_ID,
   );
   rows.push(formatResultSet('Myönnetyt ISMN-tunnukset (omakustanteet)', authorPublisherAssignedIsmn, headers));
 
   // Assigned ISBN identifier (small publishers)
-  const cat7AssignedIsmn: MonthlyStatistics[] = await getAssignedIsmnIdentifierCount(
-    statisticsBegin,
-    statisticsEnd,
-    null,
-    true,
-  );
+  const cat7AssignedIsmn: MonthlyStatistics[] = await getAssignedIsmnIdentifierCount(begin, endExclusive, null, true);
   rows.push(formatResultSet('Myönnetyt ISMN-tunnukset (7-merkkiset)', cat7AssignedIsmn, headers));
 
   // Count of publishers modified
-  const modifiedPublishers: MonthlyStatistics[] = await getModifiedMonographPublisherCount(
-    statisticsBegin,
-    statisticsEnd,
-  );
+  const modifiedPublishers: MonthlyStatistics[] = await getModifiedMonographPublisherCount(begin, endExclusive);
   rows.push(formatResultSet('Kustantajatietojen muokkaukset', modifiedPublishers, headers));
 
   return rows;
@@ -474,4 +456,101 @@ export async function getIsmnRangeProgress(): Promise<Record<string, string>[]> 
     vapaana: String(ismnRange.free),
     käytetty: String(ismnRange.taken),
   }));
+}
+
+export async function getSelfPublisherPublicationStatistics(
+  monographPublisherConfiguration: MonographPublisherConfiguration,
+  begin: Date,
+  endExclusive: Date,
+  identifierType: 'ISBN' | 'ISMN',
+) {
+  const db = getKysely();
+
+  // In future it's worth checking if optimization is required for this query
+  // For now, let API process do filtering instead of DB query regarding identifier type
+  const authorPublisherPublicationRequests = await db
+    .selectFrom('monograph_publication_request')
+    .selectAll()
+    .where(
+      'monograph_publication_request.monograph_publisher_id',
+      '=',
+      monographPublisherConfiguration.SELF_PUBLISHER_ID,
+    )
+    .where('created', '>=', begin)
+    .where('created', '<', endExclusive)
+    .execute();
+
+  const publications = await Promise.all(
+    authorPublisherPublicationRequests.map(async (pr) => await readMonographPublication(pr.monograph_publication_id)),
+  );
+
+  const filteredPublications = publications.filter((publication) => {
+    const hasIsbn = publication.expressions.some((expression) =>
+      expression.manifestations.some((manifestation) => manifestation.isbn_identifier),
+    );
+    const hasIsmn = publication.expressions.some((expression) =>
+      expression.manifestations.some((manifestation) => manifestation.ismn_identifier),
+    );
+
+    if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
+      return hasIsbn;
+    }
+
+    // Implicit else if for ISMN that relies on type checking
+    return hasIsmn;
+  });
+
+  // The end of this function is a bit cryptic so here is a human-readable description of it:
+  // - For each relevant publication associated with publication request:
+  //   -> Iterate over all expressions
+  //     -> Iterate over all manifestations for each expression
+  //       -> Construct an entry regarding given identifier
+  //
+  // In end of iterative loops flatten the resulting 2d array. This will result to one-dimensional array at the end which is compatible with XLSX/CSV workbook constructor.
+  return filteredPublications
+    .map((publication) => {
+      const publicationRequest = authorPublisherPublicationRequests.find(
+        (pr) => pr.monograph_publication_id === publication.id,
+      );
+      if (!publicationRequest) {
+        throw new Error('Unexpected error occurred. Custom error code: STATISTICS-01.');
+      }
+
+      return publication.expressions
+        .map((expression) =>
+          expression.manifestations.map((manifestation) => ({
+            Registrant_Status_Code: manifestation.cancelled ? 'I' : 'A',
+            Registrant_Prefix_Type: 'A',
+            [`Registrant_Prefix_Or_${identifierType}`]:
+              identifierType === MONOGRAPH_IDENTIFIERS.ISBN
+                ? manifestation.isbn_identifier || ''
+                : manifestation.ismn_identifier || '',
+            Registrant_Name: publicationRequest.official_name,
+            ISO_Country_Code: 'FI',
+            Address_Line_1: publicationRequest.address || '',
+            Address_Line_2:
+              publicationRequest.zip && publicationRequest.city
+                ? `${publicationRequest.zip} ${publicationRequest.city}`
+                : '',
+            Address_Line_3: '',
+            Address_Line_4: '',
+            Admin_Contact_Name: publicationRequest.contact_person || '',
+            Admin_Phone: publicationRequest.phone || '',
+            Admin_Fax: '',
+            Admin_Email: publicationRequest.email || '',
+            Alternate_Contact_Type: '',
+            Alternate_Contact_Name: '',
+            Alternate_Phone: '',
+            Alternate_Fax: '',
+            Alternate_Email: '',
+            SAN: '',
+            GLN: '',
+            Website_URL: '',
+            Registrant_ID: '',
+            ISNI: '',
+          })),
+        )
+        .flat();
+    })
+    .flat();
 }

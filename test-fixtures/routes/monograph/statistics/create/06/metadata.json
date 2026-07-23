@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create PUBLICATIONS_ISBN statistics with CSV format",
+  "url": "/v2/monograph/statistics",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

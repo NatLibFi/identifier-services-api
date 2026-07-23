@@ -20,7 +20,7 @@ export const LANG_CODES = {
   'en-GB': 'en-GB',
 };
 
-export const MONOGRAPH_IDENTIFIERS = {
+export const MONOGRAPH_IDENTIFIERS: { ISBN: 'ISBN'; ISMN: 'ISMN' } = {
   ISBN: 'ISBN',
   ISMN: 'ISMN',
 };
