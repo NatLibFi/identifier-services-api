@@ -9,6 +9,7 @@ import {
   getIsbnRangeProgress,
   getIsmnRangeProgress,
   getMonthlyMonographStatistics,
+  getPublisherIdentifierStatistics,
   getSelfPublisherPublicationStatistics,
 } from './monograph-statistics-interface-utils.ts';
 
@@ -61,6 +62,20 @@ export default function createMonographStatisticsInterface(
       );
     } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLISHERS_ISMN_INITIAL) {
       data = await getInitialPublisherIdentifierStatistics(
+        monographPublisherConfiguration,
+        statisticsBegin,
+        statisticsEnd,
+        MONOGRAPH_IDENTIFIERS.ISMN,
+      );
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLISHERS_ISBN) {
+      data = await getPublisherIdentifierStatistics(
+        monographPublisherConfiguration,
+        statisticsBegin,
+        statisticsEnd,
+        MONOGRAPH_IDENTIFIERS.ISBN,
+      );
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLISHERS_ISMN) {
+      data = await getPublisherIdentifierStatistics(
         monographPublisherConfiguration,
         statisticsBegin,
         statisticsEnd,

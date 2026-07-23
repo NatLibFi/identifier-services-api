@@ -1,0 +1,5 @@
+Registrant_Status_Code,Registrant_Prefix_Type,Registrant_Prefix_Or_ISBN,Registrant_Name,ISO_Country_Code,Address_Line_1,Address_Line_2,Address_Line_3,Address_Line_4,Admin_Contact_Name,Admin_Phone,Admin_Fax,Admin_Email,Alternate_Contact_Type,Alternate_Contact_Name,Alternate_Phone,Alternate_Fax,Alternate_Email,SAN,GLN,Website_URL,Registrant_ID,ISNI
+A,P,978-951-95002,Another publisher,FI,,,,,,,,,,,,,,,,,,
+A,P,978-951-95001,Example publisher,FI,Foo street 123,00000 Foo city,,,Erkki Esimerkki,123456789,,example@example.localhost,,,,,,,,http://example.localhost,,
+I,P,978-951-95001,Example previousname #1,FI,Foo street 123,00000 Foo city,,,Erkki Esimerkki,123456789,,example@example.localhost,,,,,,,,http://example.localhost,,
+I,P,978-951-95001,Example previousname #2,FI,Foo street 123,00000 Foo city,,,Erkki Esimerkki,123456789,,example@example.localhost,,,,,,,,http://example.localhost,,

@@ -1,17 +1,21 @@
 import { Workbook } from 'exceljs';
 import { sql } from 'kysely';
+
 import { getKysely } from '../../db/database.ts';
+
 import {
   ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
   ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
   MONOGRAPH_EXPRESSION_TYPES,
   MONOGRAPH_IDENTIFIERS,
 } from '../../constants.ts';
-import type { MonographPublisherConfiguration } from '../../app.ts';
+
 import { getIsbnRanges } from './isbn-range-interface.ts';
 import { getIsmnRanges } from './ismn-range-interface.ts';
 import { readMonographPublication } from './monograph-publication-interface.ts';
-import type { MonographPublisherSelect } from '../../db/types/monograph/types-monograph-publisher.ts';
+
+import type { MonographPublisherConfiguration } from '../../app.ts';
+import type { MonographPublisherContactPerson } from '../../db/types/monograph/types-monograph-publisher.ts';
 
 interface MonthlyStatistics {
   year: number;
@@ -43,6 +47,7 @@ export function formatStatisticsToWorkbook(statisticsName: string, data: Record<
   return workbook;
 }
 
+// TODO: integration test data
 export async function getMonthlyMonographStatistics(
   monographPublisherConfiguration: MonographPublisherConfiguration,
   begin: Date,
@@ -582,6 +587,7 @@ export async function getInitialPublisherIdentifierStatistics(
       )
       .where('IPR.created', '>=', begin)
       .where('IPR.created', '<', endExclusive)
+      .orderBy('P.official_name')
       .execute();
 
     publisherInfo = isbnPublisherInfo.map((p) =>
@@ -608,6 +614,7 @@ export async function getInitialPublisherIdentifierStatistics(
       )
       .where('IPR.created', '>=', begin)
       .where('IPR.created', '<', endExclusive)
+      .orderBy('P.official_name')
       .execute();
 
     publisherInfo = ismnPublisherInfo.map((p) =>
@@ -623,16 +630,178 @@ export async function getInitialPublisherIdentifierStatistics(
   return publisherInfo;
 }
 
+export async function getPublisherIdentifierStatistics(
+  monographPublisherConfiguration: MonographPublisherConfiguration,
+  begin: Date,
+  endExclusive: Date,
+  identifierType: 'ISBN' | 'ISMN',
+) {
+  const db = getKysely();
+  let publisherInfo: Record<string, string>[] = [];
+
+  // Again a bit difficult portion of code:
+  // 1. Find all publisher ranges created between given time period
+  // 2. Join publisher information to result set
+  // 3. For each range write a set of entries
+  //   -> Each set of entries contains main entry from official name AND
+  //   -> An entry per each name defined in previous_name array
+  // 4. Flatten result set
+
+  if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
+    const isbnPublisherRangeInfo = await db
+      .selectFrom('isbn_publisher_range as IPR')
+      .leftJoin('monograph_publisher as P', 'P.id', 'IPR.monograph_publisher_id')
+      .select([
+        'P.id as publisherId',
+        'P.official_name as publisherName',
+        'P.previous_names as publisherPreviousNames',
+        'P.address as publisherAddress',
+        'P.zip as publisherZip',
+        'P.city as publisherCity',
+        'P.phone as publisherPhone',
+        'P.email as publisherEmail',
+        'P.www as publisherWww',
+        'P.contact_persons as publisherContacts',
+        'P.has_quitted as publisherHasQuitted',
+      ])
+      .select(['IPR.publisher_identifier as isbn_publisher_identifier'])
+      .where('IPR.created', '>=', begin)
+      .where('IPR.created', '<', endExclusive)
+      .orderBy('P.official_name')
+      .execute();
+
+    publisherInfo = isbnPublisherRangeInfo
+      .map((pr) => {
+        const publisherToFormat = {
+          id: pr.publisherId,
+          official_name: pr.publisherName,
+          address: pr.publisherAddress,
+          zip: pr.publisherZip,
+          city: pr.publisherCity,
+          phone: pr.publisherPhone,
+          email: pr.publisherEmail,
+          www: pr.publisherWww,
+          contact_persons: pr.publisherContacts,
+          has_quitted: pr.publisherHasQuitted,
+        };
+
+        if (!publisherToFormat.id || !publisherToFormat.official_name || !pr.publisherPreviousNames) {
+          throw new Error('Unexpected data error on formatting publisher');
+        }
+
+        const mainEntry = formatPublisherData(
+          monographPublisherConfiguration,
+          MONOGRAPH_IDENTIFIERS.ISBN,
+          // @ts-expect-error TS does not understand sanity check for id and official_name
+          publisherToFormat,
+          pr.isbn_publisher_identifier,
+        );
+
+        const previousNameEntries = pr.publisherPreviousNames.map((previousName) =>
+          formatPublisherData(
+            monographPublisherConfiguration,
+            MONOGRAPH_IDENTIFIERS.ISBN,
+            // @ts-expect-error TS does not understand sanity check for id and official_name
+            publisherToFormat,
+            pr.isbn_publisher_identifier,
+            previousName,
+          ),
+        );
+
+        return [mainEntry].concat(previousNameEntries).flat();
+      })
+      .flat();
+  } else if (identifierType === MONOGRAPH_IDENTIFIERS.ISMN) {
+    const ismnPublisherRangeInfo = await db
+      .selectFrom('ismn_publisher_range as IPR')
+      .leftJoin('monograph_publisher as P', 'P.id', 'IPR.monograph_publisher_id')
+      .select([
+        'P.id as publisherId',
+        'P.official_name as publisherName',
+        'P.previous_names as publisherPreviousNames',
+        'P.address as publisherAddress',
+        'P.zip as publisherZip',
+        'P.city as publisherCity',
+        'P.phone as publisherPhone',
+        'P.email as publisherEmail',
+        'P.www as publisherWww',
+        'P.contact_persons as publisherContacts',
+        'P.has_quitted as publisherHasQuitted',
+      ])
+      .select(['IPR.publisher_identifier as ismn_publisher_identifier'])
+      .where('IPR.created', '>=', begin)
+      .where('IPR.created', '<', endExclusive)
+      .orderBy('P.official_name')
+      .execute();
+
+    publisherInfo = ismnPublisherRangeInfo
+      .map((pr) => {
+        const publisherToFormat = {
+          id: pr.publisherId,
+          official_name: pr.publisherName,
+          address: pr.publisherAddress,
+          zip: pr.publisherZip,
+          city: pr.publisherCity,
+          phone: pr.publisherPhone,
+          email: pr.publisherEmail,
+          www: pr.publisherWww,
+          contact_persons: pr.publisherContacts,
+          has_quitted: pr.publisherHasQuitted,
+        };
+
+        if (!publisherToFormat.id || !publisherToFormat.official_name || !pr.publisherPreviousNames) {
+          throw new Error('Unexpected data error on formatting publisher');
+        }
+
+        const mainEntry = formatPublisherData(
+          monographPublisherConfiguration,
+          MONOGRAPH_IDENTIFIERS.ISMN,
+          // @ts-expect-error TS does not understand sanity check for id and official_name
+          publisherToFormat,
+          pr.ismn_publisher_identifier,
+        );
+
+        const previousNameEntries = pr.publisherPreviousNames.map((previousName) =>
+          formatPublisherData(
+            monographPublisherConfiguration,
+            MONOGRAPH_IDENTIFIERS.ISMN,
+            // @ts-expect-error TS does not understand sanity check for id and official_name
+            publisherToFormat,
+            pr.ismn_publisher_identifier,
+            previousName,
+          ),
+        );
+
+        return [mainEntry].concat(previousNameEntries).flat();
+      })
+      .flat();
+  }
+
+  return publisherInfo;
+}
+
+interface PublisherInformation {
+  id: number;
+  official_name: string;
+  address: string | null;
+  zip: string | null;
+  city: string | null;
+  phone: string | null;
+  email: string | null;
+  www: string | null;
+  contact_persons: MonographPublisherContactPerson[];
+  has_quitted: boolean;
+}
+
 export function formatPublisherData(
   monographPublisherConfiguration: MonographPublisherConfiguration,
   identifierType: 'ISBN' | 'ISMN',
-  publisher: MonographPublisherSelect,
+  publisher: PublisherInformation,
   publisherIdentifier: string,
-  isOtherName?: boolean,
   overwriteName?: string,
 ): Record<string, string> {
   return {
-    Registrant_Status_Code: publisher.has_quitted || isOtherName ? 'I' : 'A',
+    Registrant_Status_Code: publisher.has_quitted || overwriteName ? 'I' : 'A',
     Registrant_Prefix_Type: publisher.id === monographPublisherConfiguration.SELF_PUBLISHER_ID ? 'T' : 'P',
     [`Registrant_Prefix_Or_${identifierType}`]: publisherIdentifier,
     Registrant_Name: overwriteName ? overwriteName : publisher.official_name,

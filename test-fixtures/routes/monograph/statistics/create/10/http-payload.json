@@ -1,0 +1,6 @@
+{
+  "statistics_type": "PUBLISHERS_ISBN",
+  "output_format": "CSV",
+  "begin": "2025-01-01",
+  "end": "2025-01-31"
+}
