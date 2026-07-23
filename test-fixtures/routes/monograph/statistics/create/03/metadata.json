@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create statistics",
+  "url": "/v2/monograph/statistics",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

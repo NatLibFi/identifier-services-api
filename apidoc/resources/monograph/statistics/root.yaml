@@ -1,0 +1,38 @@
+post:
+  operationId: createMonographStatistics
+  summary: Create statistics CSV/XLSX regarding monographs
+  security:
+    - openId:
+        - admin
+  description: Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.
+  tags:
+    - monograph
+    - statistics
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/statistics/monograph-statistics-create-body.yaml'
+  responses:
+    '200':
+      description: Statistics CSV/XLSX file was created successfully
+      content:
+        text/csv:
+          schema:
+            type: string
+            format: binary
+        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+          schema:
+            type: string
+            format: binary
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

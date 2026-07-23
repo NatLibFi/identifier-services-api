@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not create statistics",
+  "url": "/v2/monograph/statistics",
+  "method": "POST",
+  "expectedStatus": 401
+}

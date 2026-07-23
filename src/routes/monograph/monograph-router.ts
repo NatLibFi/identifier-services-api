@@ -15,6 +15,7 @@ import monographPublicationManifestationRouter from './monograph-publication-man
 import monographPublicationRequestRouter from './monograph-publication-request-router.ts';
 
 import createMonographMessageRouter from './monograph-message-router.ts';
+import createMonographStatisticsRouter from './monograph-statistics-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
@@ -38,11 +39,14 @@ export default function (
   monographRouter.use('/publication-expressions', allowAdminOnly, monographPublicationExpressionRouter);
   monographRouter.use('/publication-manifestations', allowAdminOnly, monographPublicationManifestationRouter);
   monographRouter.use('/publication-requests', monographPublicationRequestRouter);
+
   monographRouter.use(
     '/messages',
     allowAdminOnly,
     createMonographMessageRouter(monographPublisherConfiguration, messagingConfiguration),
   );
+
+  monographRouter.use('/statistics', allowAdminOnly, createMonographStatisticsRouter(monographPublisherConfiguration));
 
   return monographRouter;
 }

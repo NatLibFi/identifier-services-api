@@ -39,6 +39,7 @@
     "@natlibfi/passport-natlibfi-keycloak": "^3.0.4",
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
+    "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "express-winston": "^4.2.0",
     "helmet": "^8.1.0",

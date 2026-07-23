@@ -80,7 +80,7 @@ export async function sendTestHttpRequest(
 }
 
 export async function validateHttpResponse(testDefinition: TestDefinition, response: Response) {
-  const { metadata, httpExpected, httpExpectedTxt } = testDefinition;
+  const { metadata, httpExpected, httpExpectedTxt, httpExpectedCsv } = testDefinition;
   const { expectedStatus } = metadata;
 
   // Status needs to always be defined and match expectations
@@ -103,7 +103,10 @@ export async function validateHttpResponse(testDefinition: TestDefinition, respo
     return;
   }
 
-  // TODO: csv for statistics
+  if (httpExpectedCsv) {
+    expect(responseBody).toStrictEqual(httpExpectedCsv);
+    return;
+  }
 
   // Finally it will be tested that there is nothing within response body (as body was not expected)
   const responseBodyIsEmpty = Object.keys(responseBody).length === 0;

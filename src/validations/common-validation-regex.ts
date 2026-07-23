@@ -8,3 +8,5 @@ export const finnishIsmnPublisherString = /^979-0-\d{3,7}$/;
 export const ismnPublisherIdentifierLikeString = /^979-0-\d/;
 
 export const issnLikeString = /^[0-9]{4}-[0-9]{3}[0-9X]{1}$/;
+
+export const dateString = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;

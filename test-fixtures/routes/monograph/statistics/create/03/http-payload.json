@@ -1,0 +1,6 @@
+{
+  "statistics_type": "MONTHLY",
+  "output_format": "CSV",
+  "begin": "2025-01-01",
+  "end": "2025-01-30"
+}

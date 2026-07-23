@@ -101,6 +101,9 @@ paths:
     $ref: './resources/monograph/messages/id.yaml'
   /v2/monograph/messages/{id}/resend:
     $ref: './resources/monograph/messages/resend.yaml'
+
+  /v2/monograph/statistics:
+    $ref: './resources/monograph/statistics/root.yaml'
 components:
   securitySchemes:
     openId:

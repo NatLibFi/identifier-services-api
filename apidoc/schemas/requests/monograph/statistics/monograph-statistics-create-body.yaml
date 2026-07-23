@@ -1,0 +1,28 @@
+type: object
+properties:
+  statistics_type:
+    type: string
+    enum:
+      - MONTHLY
+      - PROGRESS_ISBN
+      - PROGRESS_ISMN
+      - PUBLISHERS_ISBN
+      - PUBLISHERS_ISMN
+      - PUBLISHERS_ISBN_UNIQUE
+      - PUBLISHERS_ISMN_UNIQUE
+      - PUBLICATIONS_ISBN
+      - PUBLICATIONS_ISMN
+  output_format:
+    type: string
+    enum:
+      - CSV
+      - XLSX
+  begin:
+    type: string
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+  end:
+    type: string
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+required:
+  - statistics_type
+  - output_format
