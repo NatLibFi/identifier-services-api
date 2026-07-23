@@ -5,6 +5,7 @@ import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_STATISTIC_TYPE } from '../../constants
 import { ApiError } from '../../utils/api-error.ts';
 import {
   formatStatisticsToWorkbook,
+  getInitialPublisherIdentifierStatistics,
   getIsbnRangeProgress,
   getIsmnRangeProgress,
   getMonthlyMonographStatistics,
@@ -21,7 +22,8 @@ export default function createMonographStatisticsInterface(
   async function createMonographStatistics(statisticsOpts: CreateMonographStatisticsHttp) {
     const { statistics_type, begin, end } = statisticsOpts;
 
-    // End is always exclusive to avoid timestamp problems
+    // Note: ISBN/ISMN range progress does not utilize begin/end parameters and always return the current state
+    // Also "end" is always made exclusive to avoid timestamp problems and allow utilizing '<' condition
     const statisticsBegin = begin ? new Date(begin) : new Date('1970-01-01');
     const statisticsEnd = end ? new Date(end) : new Date();
 
@@ -45,6 +47,20 @@ export default function createMonographStatisticsInterface(
       );
     } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLICATIONS_ISMN) {
       data = await getSelfPublisherPublicationStatistics(
+        monographPublisherConfiguration,
+        statisticsBegin,
+        statisticsEnd,
+        MONOGRAPH_IDENTIFIERS.ISMN,
+      );
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLISHERS_ISBN_INITIAL) {
+      data = await getInitialPublisherIdentifierStatistics(
+        monographPublisherConfiguration,
+        statisticsBegin,
+        statisticsEnd,
+        MONOGRAPH_IDENTIFIERS.ISBN,
+      );
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PUBLISHERS_ISMN_INITIAL) {
+      data = await getInitialPublisherIdentifierStatistics(
         monographPublisherConfiguration,
         statisticsBegin,
         statisticsEnd,

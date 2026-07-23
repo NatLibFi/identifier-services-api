@@ -11,6 +11,7 @@ import type { MonographPublisherConfiguration } from '../../app.ts';
 import { getIsbnRanges } from './isbn-range-interface.ts';
 import { getIsmnRanges } from './ismn-range-interface.ts';
 import { readMonographPublication } from './monograph-publication-interface.ts';
+import type { MonographPublisherSelect } from '../../db/types/monograph/types-monograph-publisher.ts';
 
 interface MonthlyStatistics {
   year: number;
@@ -553,4 +554,107 @@ export async function getSelfPublisherPublicationStatistics(
         .flat();
     })
     .flat();
+}
+
+// i.e., publishers whose first publisher identifier of given type has been created during given time period
+export async function getInitialPublisherIdentifierStatistics(
+  monographPublisherConfiguration: MonographPublisherConfiguration,
+  begin: Date,
+  endExclusive: Date,
+  identifierType: 'ISBN' | 'ISMN',
+) {
+  const db = getKysely();
+  let publisherInfo: Record<string, string>[] = [];
+
+  if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
+    const isbnPublisherInfo = await db
+      .selectFrom('monograph_publisher as P')
+      .innerJoin('isbn_publisher_range as IPR', 'IPR.monograph_publisher_id', 'P.id')
+      .selectAll('P')
+      .select(['IPR.publisher_identifier as first_isbn_publisher_identifier'])
+      .where(
+        'IPR.id',
+        'in',
+        db
+          .selectFrom('isbn_publisher_range')
+          .select((eb) => eb.fn.min('id').as('minId'))
+          .groupBy('monograph_publisher_id'),
+      )
+      .where('IPR.created', '>=', begin)
+      .where('IPR.created', '<', endExclusive)
+      .execute();
+
+    publisherInfo = isbnPublisherInfo.map((p) =>
+      formatPublisherData(
+        monographPublisherConfiguration,
+        MONOGRAPH_IDENTIFIERS.ISBN,
+        p,
+        p.first_isbn_publisher_identifier,
+      ),
+    );
+  } else if (identifierType === MONOGRAPH_IDENTIFIERS.ISMN) {
+    const ismnPublisherInfo = await db
+      .selectFrom('monograph_publisher as P')
+      .innerJoin('ismn_publisher_range as IPR', 'IPR.monograph_publisher_id', 'P.id')
+      .selectAll('P')
+      .select(['IPR.publisher_identifier as first_ismn_publisher_identifier'])
+      .where(
+        'IPR.id',
+        'in',
+        db
+          .selectFrom('ismn_publisher_range')
+          .select((eb) => eb.fn.min('id').as('minId'))
+          .groupBy('monograph_publisher_id'),
+      )
+      .where('IPR.created', '>=', begin)
+      .where('IPR.created', '<', endExclusive)
+      .execute();
+
+    publisherInfo = ismnPublisherInfo.map((p) =>
+      formatPublisherData(
+        monographPublisherConfiguration,
+        MONOGRAPH_IDENTIFIERS.ISMN,
+        p,
+        p.first_ismn_publisher_identifier,
+      ),
+    );
+  }
+
+  return publisherInfo;
+}
+
+export function formatPublisherData(
+  monographPublisherConfiguration: MonographPublisherConfiguration,
+  identifierType: 'ISBN' | 'ISMN',
+  publisher: MonographPublisherSelect,
+  publisherIdentifier: string,
+  isOtherName?: boolean,
+  overwriteName?: string,
+): Record<string, string> {
+  return {
+    Registrant_Status_Code: publisher.has_quitted || isOtherName ? 'I' : 'A',
+    Registrant_Prefix_Type: publisher.id === monographPublisherConfiguration.SELF_PUBLISHER_ID ? 'T' : 'P',
+    [`Registrant_Prefix_Or_${identifierType}`]: publisherIdentifier,
+    Registrant_Name: overwriteName ? overwriteName : publisher.official_name,
+    ISO_Country_Code: 'FI',
+    Address_Line_1: publisher.address || '',
+    Address_Line_2: publisher.zip && publisher.city ? `${publisher.zip} ${publisher.city}` : '',
+    Address_Line_3: '',
+    Address_Line_4: '',
+    // @ts-expect-error TS does not understand array length check
+    Admin_Contact_Name: publisher.contact_persons.length > 0 ? publisher.contact_persons[0].name : '',
+    Admin_Phone: publisher.phone || '',
+    Admin_Fax: '',
+    Admin_Email: publisher.email || '',
+    Alternate_Contact_Type: '',
+    Alternate_Contact_Name: '',
+    Alternate_Phone: '',
+    Alternate_Fax: '',
+    Alternate_Email: '',
+    SAN: '',
+    GLN: '',
+    Website_URL: publisher.www || '',
+    Registrant_ID: '',
+    ISNI: '',
+  };
 }
