@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create PROGRESS_ISMN statistics with CSV format (empty data)",
+  "url": "/v2/monograph/statistics",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

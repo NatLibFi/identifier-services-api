@@ -3,7 +3,12 @@ import HttpStatus from 'http-status';
 import { MONOGRAPH_STATISTIC_TYPE } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
-import { formatStatisticsToWorkbook, getMonthlyMonographStatistics } from './monograph-statistics-interface-utils.ts';
+import {
+  formatStatisticsToWorkbook,
+  getIsbnRangeProgress,
+  getIsmnRangeProgress,
+  getMonthlyMonographStatistics,
+} from './monograph-statistics-interface-utils.ts';
 
 import type { MonographPublisherConfiguration } from '../../app.ts';
 import type { CreateMonographStatisticsHttp } from '../../validations/monograph/monograph-statistics-validation.ts';
@@ -15,16 +20,23 @@ export default function createMonographStatisticsInterface(
   async function createMonographStatistics(statisticsOpts: CreateMonographStatisticsHttp) {
     const { statistics_type, begin, end } = statisticsOpts;
 
+    let data: Record<string, string>[] = [];
+
     if (statistics_type === MONOGRAPH_STATISTIC_TYPE.MONTHLY) {
-      const data = await getMonthlyMonographStatistics(monographPublisherConfiguration, begin, end);
-      return formatStatisticsToWorkbook(MONOGRAPH_STATISTIC_TYPE.MONTHLY, data);
+      data = await getMonthlyMonographStatistics(monographPublisherConfiguration, begin, end);
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PROGRESS_ISBN) {
+      data = await getIsbnRangeProgress();
+    } else if (statistics_type === MONOGRAPH_STATISTIC_TYPE.PROGRESS_ISMN) {
+      data = await getIsmnRangeProgress();
+    } else {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `Statistics type of ${statistics_type} is not yet supported`,
+      );
     }
 
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `Statistics type of ${statistics_type} is not yet supported`,
-    );
+    return formatStatisticsToWorkbook(statistics_type, data);
   }
 
   return {

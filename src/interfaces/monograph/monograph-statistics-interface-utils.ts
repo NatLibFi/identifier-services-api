@@ -7,6 +7,8 @@ import {
   MONOGRAPH_EXPRESSION_TYPES,
 } from '../../constants.ts';
 import type { MonographPublisherConfiguration } from '../../app.ts';
+import { getIsbnRanges } from './isbn-range-interface.ts';
+import { getIsmnRanges } from './ismn-range-interface.ts';
 
 interface MonthlyStatistics {
   year: number;
@@ -449,4 +451,27 @@ export async function getCreatedMonographPublicationRequestCount(
     .orderBy(sql`YEAR(created)`)
     .orderBy(sql`MONTH(created)`)
     .execute();
+}
+
+export async function getIsbnRangeProgress(): Promise<Record<string, string>[]> {
+  const isbnRanges = await getIsbnRanges();
+  return isbnRanges.map((isbnRange) => ({
+    etuliite: isbnRange.gs1,
+    kieliryhmä: isbnRange.registration_group,
+    alku: isbnRange.range_begin,
+    loppu: isbnRange.range_end,
+    vapaana: String(isbnRange.free),
+    käytetty: String(isbnRange.taken),
+  }));
+}
+
+export async function getIsmnRangeProgress(): Promise<Record<string, string>[]> {
+  const ismnRanges = await getIsmnRanges();
+  return ismnRanges.map((ismnRange) => ({
+    etuliite: `${ismnRange.gs1}-${ismnRange.registration_group}`,
+    alku: ismnRange.range_begin,
+    loppu: ismnRange.range_end,
+    vapaana: String(ismnRange.free),
+    käytetty: String(ismnRange.taken),
+  }));
 }
