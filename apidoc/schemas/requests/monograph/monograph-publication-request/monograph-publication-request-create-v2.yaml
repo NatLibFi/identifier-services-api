@@ -76,3 +76,5 @@ properties:
     type: array
     items:
       $ref: '../monograph-publication-expression/monograph-publication-expression-create-base.yaml'
+  turnstile_token:
+    type: string

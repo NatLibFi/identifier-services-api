@@ -86,6 +86,7 @@ export const createMonographPublicationRequestV1Schema = z
     comments: z.string().max(2000).optional(),
     fileformat: z.array(z.enum(monographManifestationTypeElectronicalEnum)).max(4).optional(),
     fileformatOther: z.string().max(100).optional(),
+    turnstileToken: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     // Locality validation for dissertations
@@ -249,6 +250,7 @@ export const createMonographPublicationRequestV2Schema = z
     version: z.literal(2), // This schema must explicitly define use of v2
     request: monographPublicationRequestBaseSchema,
     expressions: z.array(createMonographPublicationExpressionSchema).min(1).max(5),
+    turnstile_token: z.string().optional(),
   })
   .strict()
   .superRefine((data, ctx) => {

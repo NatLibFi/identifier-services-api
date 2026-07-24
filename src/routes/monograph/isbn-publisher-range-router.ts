@@ -7,17 +7,20 @@ import {
   createIsbnPublisherRangeSchema,
   getIsbnPublisherRangeIdentifiersSchema,
 } from '../../validations/monograph/isbn-publisher-range-validation.ts';
+import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 const isbnPublisherRangeRouter = Router();
 
 isbnPublisherRangeRouter.post(
   '/',
+  allowAdminOnly,
   validateRequestBody(createIsbnPublisherRangeSchema),
   isbnPublisherRangeControllers.createIsbnRange,
 );
 
 isbnPublisherRangeRouter.delete(
   '/:id',
+  allowAdminOnly,
   validateRequestParams(idParameterSchema, true),
   isbnPublisherRangeControllers.deleteIsbnRange,
 );

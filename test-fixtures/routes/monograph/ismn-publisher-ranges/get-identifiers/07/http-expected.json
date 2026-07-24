@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISMN identifier 979-0-9001750-0-7 has been marked as used. Downloading publisher identifiers that contain used identifiers is disallowed.",
+  "instance": "/v2/monograph/ismn-publisher-ranges/1/get-identifiers"
+}

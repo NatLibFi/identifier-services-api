@@ -61,7 +61,7 @@ properties:
   classification_other:
     type: string
     maximum: 50
-  turnstileToken:
+  turnstile_token:
     type: string
 required:
   - official_name

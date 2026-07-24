@@ -10,14 +10,16 @@ export const createIsmnPublisherRangeSchema = z
   })
   .strict();
 
-export const getIsmnPublisherRangeIdentifiersSchema = z.object({
-  download: z.boolean().optional(),
-  unassigned_only: z.boolean().optional(),
-  assigned_only: z.boolean().optional(),
-  limit: z.number().optional(),
-  offset: z.number().optional(),
-  // TODO: turnstile_token
-});
+export const getIsmnPublisherRangeIdentifiersSchema = z
+  .object({
+    download: z.boolean().optional(),
+    unassigned_only: z.boolean().optional(),
+    assigned_only: z.boolean().optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    turnstile_token: z.string().optional(),
+  })
+  .strict();
 
 export type CreateIsmnPublisherRangeHttp = z.infer<typeof createIsmnPublisherRangeSchema>;
 export type GetIsmnPublisherRangeIdentifiersHttp = z.infer<typeof getIsmnPublisherRangeIdentifiersSchema>;

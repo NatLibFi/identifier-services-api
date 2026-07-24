@@ -24,6 +24,11 @@ describe('app.ts default export', async () => {
         MELINDA_API_USER: '',
         MELINDA_API_PASSWORD: '',
       },
+      turnstileConfiguration: {
+        TURNSTILE_URL: 'http://localhost',
+        TURNSTILE_SECRET_KEY: '',
+        DISABLE_TURNSTILE: true,
+      },
       environment: 'test',
       httpPort: 0,
       keycloakOptions: {

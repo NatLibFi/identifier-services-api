@@ -3912,7 +3912,7 @@
             "type": "string",
             "maximum": 50
           },
-          "turnstileToken": {
+          "turnstile_token": {
             "type": "string"
           }
         },
@@ -5007,6 +5007,9 @@
           "comments": {
             "type": "string",
             "maximum": 2000
+          },
+          "turnstileToken": {
+            "type": "string"
           }
         },
         "required": [
@@ -5140,6 +5143,9 @@
             "items": {
               "$ref": "#/components/schemas/monograph-publication-expression-create-base"
             }
+          },
+          "turnstile_token": {
+            "type": "string"
           }
         }
       },

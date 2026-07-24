@@ -26,6 +26,7 @@ export async function getIsbnPublisherRangeIdentifiers(req: Request, res: Respon
     const result = await isbnPublisherRangeInterface.getIsbnPublisherRangeIdentifiers(
       Number(req.params['id']),
       req.body,
+      req.user,
     );
 
     if (req.body.download) {

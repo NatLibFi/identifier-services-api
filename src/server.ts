@@ -18,6 +18,7 @@ async function run() {
     monographPublisherConfiguration: config.MONOGRAPH_PUBLISHER_CONFIGURATION,
     messagingConfiguration: config.MESSAGING_CONFIGURATION,
     melindaConfiguration: config.MELINDA_CONFIGURATION,
+    turnstileConfiguration: config.TURNSTILE_CONFIGURATION,
   };
 
   const server = await startApp(appOptions);

@@ -23,6 +23,7 @@ import { createApplicationLogger, createExpressLogger } from './utils/logging.ts
 import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
 import { isAutomatedTest } from './utils/generic-utils.ts';
 import packageJson from '../package.json' with { type: 'json' };
+import { initializeTurnstileMiddleware } from './middlewares/turnstile.ts';
 
 export interface KeycloakOptions {
   algorithms?: string[];
@@ -47,6 +48,12 @@ export interface MessagingConfiguration {
   ISSN_EMAIL: string;
 }
 
+export interface TurnstileConfiguration {
+  TURNSTILE_URL: string;
+  TURNSTILE_SECRET_KEY: string;
+  DISABLE_TURNSTILE: boolean;
+}
+
 export interface MelindaConfiguration {
   MELINDA_API_URL: string;
   MELINDA_API_USER: string;
@@ -58,6 +65,7 @@ interface AppOptions {
   monographPublisherConfiguration: MonographPublisherConfiguration;
   messagingConfiguration: MessagingConfiguration;
   melindaConfiguration: MelindaConfiguration;
+  turnstileConfiguration: TurnstileConfiguration;
   dbConfig?: PoolOptions;
   corsWhitelist?: string[];
   enableProxy?: boolean;
@@ -80,6 +88,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     monographPublisherConfiguration,
     messagingConfiguration,
     melindaConfiguration,
+    turnstileConfiguration,
   } = options;
 
   const logger = createApplicationLogger(logLevel);
@@ -93,6 +102,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   }
 
   // Middlewares init
+  const turnstileMiddleware = initializeTurnstileMiddleware(turnstileConfiguration);
   const corsOrigin = isAutomatedTest() ? false : corsWhitelist;
   const { localUsers, ...keycloakOpts } = keycloakOptions || {};
 
@@ -155,7 +165,11 @@ export default async function startApp(options: AppOptions): Promise<http.Server
   app.use(authenticationMiddleware, roleMapMiddleware);
 
   // Routes requiring authentication
-  const monographRouter = createMonographRouter(monographPublisherConfiguration, messagingConfiguration);
+  const monographRouter = createMonographRouter(
+    monographPublisherConfiguration,
+    messagingConfiguration,
+    turnstileMiddleware.validateTurnstile,
+  );
   const melindaRouter = createMelindaRouter(melindaConfiguration);
 
   app.use('/v2/monograph', monographRouter);

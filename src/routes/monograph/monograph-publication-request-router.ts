@@ -10,56 +10,60 @@ import {
   updateMonographPublicationRequestSchema,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
 
-const monographPublicationRequestRouter = Router();
+import type { MiddlewareFunction } from '../../generic-types.ts';
 
-monographPublicationRequestRouter.post(
-  '/',
-  // TODO: middleware for turnstile
-  validateRequestBody(createMonographPublicationRequestSchema),
-  monographPublicationRequestController.createMonographPublicationRequest,
-);
+export default function createMonographPublisherRequestRouter(turnstileMiddleware: MiddlewareFunction) {
+  const monographPublicationRequestRouter = Router();
 
-monographPublicationRequestRouter.post(
-  '/search',
-  allowAdminOnly,
-  validateRequestBody(searchMonographPublicationRequestSchema),
-  monographPublicationRequestController.searchMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.post(
+    '/',
+    turnstileMiddleware,
+    validateRequestBody(createMonographPublicationRequestSchema),
+    monographPublicationRequestController.createMonographPublicationRequest,
+  );
 
-monographPublicationRequestRouter.post(
-  '/:id/approve',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublicationRequestController.approveMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.post(
+    '/search',
+    allowAdminOnly,
+    validateRequestBody(searchMonographPublicationRequestSchema),
+    monographPublicationRequestController.searchMonographPublicationRequest,
+  );
 
-monographPublicationRequestRouter.post(
-  '/:id/reject',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublicationRequestController.rejectMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.post(
+    '/:id/approve',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublicationRequestController.approveMonographPublicationRequest,
+  );
 
-monographPublicationRequestRouter.post(
-  '/:id/reprocess',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublicationRequestController.reprocessMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.post(
+    '/:id/reject',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublicationRequestController.rejectMonographPublicationRequest,
+  );
 
-monographPublicationRequestRouter.get(
-  '/:id',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublicationRequestController.readMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.post(
+    '/:id/reprocess',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublicationRequestController.reprocessMonographPublicationRequest,
+  );
 
-monographPublicationRequestRouter.patch(
-  '/:id',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  validateRequestBody(updateMonographPublicationRequestSchema),
-  monographPublicationRequestController.updateMonographPublicationRequest,
-);
+  monographPublicationRequestRouter.get(
+    '/:id',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublicationRequestController.readMonographPublicationRequest,
+  );
 
-export default monographPublicationRequestRouter;
+  monographPublicationRequestRouter.patch(
+    '/:id',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    validateRequestBody(updateMonographPublicationRequestSchema),
+    monographPublicationRequestController.updateMonographPublicationRequest,
+  );
+
+  return monographPublicationRequestRouter;
+}

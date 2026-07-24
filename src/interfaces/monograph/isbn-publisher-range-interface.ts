@@ -24,6 +24,7 @@ import type {
 } from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
+import { isAdmin, isGuest } from '../../utils/permission-utils.ts';
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
@@ -219,9 +220,28 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
 export async function getIsbnPublisherRangeIdentifiers(
   isbnPublisherRangeId: number,
   filter: GetIsbnPublisherRangeIdentifiersHttp,
+  user: RequestUser,
 ) {
   const { download, limit, offset, assigned_only, unassigned_only } = filter;
   const db = getKysely();
+
+  // For guests, only download option is available
+  if (!download && isGuest(user)) {
+    throw new ApiError(
+      HttpStatus.UNAUTHORIZED,
+      'Unauthorized',
+      'The requested operation is not permitted for unauthorized users.',
+    );
+  }
+
+  // For all non-admins, only download option is available
+  if (!download && !isAdmin(user)) {
+    throw new ApiError(
+      HttpStatus.FORBIDDEN,
+      'Forbidden',
+      'You do not have permission to perform the requested operation.',
+    );
+  }
 
   // Verify publisher range exists
   const isbnPublisherRange = await db
@@ -329,10 +349,14 @@ export async function getIsbnPublisherRangeIdentifiers(
       throw new Error(`External audit has flagged ISBN ${identifier} as non-Finnish.`);
     }
 
-    let identifierInfo = `${acc}${identifier}`;
+    const identifierInfo = `${acc}${identifier}`;
 
     if (monograph_publication_manifestation_id !== null) {
-      identifierInfo += ' KÄYTETTY/BEGAGNAD/USED';
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISBN identifier ${identifier} has been marked as used. Downloading publisher identifiers that contain used identifiers is disallowed.`,
+      );
     }
 
     return `${identifierInfo}\r\n`;

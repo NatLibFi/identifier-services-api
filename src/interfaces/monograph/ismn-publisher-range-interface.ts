@@ -16,6 +16,7 @@ import { getAvailableIsmnPublisherRanges } from './ismn-range-interface-utils.ts
 import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
 
 import { asIsmnIdentifierAdminRead } from '../../dtl/monograph/ismn-identifier-dtl.ts';
+import { isAdmin, isGuest } from '../../utils/permission-utils.ts';
 
 import type {
   CreateIsmnPublisherRangeHttp,
@@ -218,9 +219,28 @@ export async function deleteIsmnPublisherRange(ismnPublisherRangeId: number) {
 export async function getIsmnPublisherRangeIdentifiers(
   ismnPublisherRangeId: number,
   filter: GetIsmnPublisherRangeIdentifiersHttp,
+  user: RequestUser,
 ) {
   const { download, limit, offset, assigned_only, unassigned_only } = filter;
   const db = getKysely();
+
+  // For guests, only download option is available
+  if (!download && isGuest(user)) {
+    throw new ApiError(
+      HttpStatus.UNAUTHORIZED,
+      'Unauthorized',
+      'The requested operation is not permitted for unauthorized users.',
+    );
+  }
+
+  // For all non-admins, only download option is available
+  if (!download && !isAdmin(user)) {
+    throw new ApiError(
+      HttpStatus.FORBIDDEN,
+      'Forbidden',
+      'You do not have permission to perform the requested operation.',
+    );
+  }
 
   // Verify publisher range exists
   const ismnPublisherRange = await db
@@ -309,10 +329,14 @@ export async function getIsmnPublisherRangeIdentifiers(
     // Re-validate just in case
     validateIsmnIdentifier(identifier);
 
-    let identifierInfo = `${acc}${identifier}`;
+    const identifierInfo = `${acc}${identifier}`;
 
     if (monograph_publication_manifestation_id !== null) {
-      identifierInfo += ' KÄYTETTY/BEGAGNAD/USED';
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN identifier ${identifier} has been marked as used. Downloading publisher identifiers that contain used identifiers is disallowed.`,
+      );
     }
 
     return `${identifierInfo}\r\n`;

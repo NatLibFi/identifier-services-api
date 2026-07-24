@@ -136,6 +136,11 @@ async function runTest(testRootPath: string) {
         MELINDA_API_USER: '',
         MELINDA_API_PASSWORD: '',
       },
+      turnstileConfiguration: {
+        TURNSTILE_URL: 'http://localhost',
+        TURNSTILE_SECRET_KEY: '',
+        DISABLE_TURNSTILE: true,
+      },
       enableProxy: false,
       httpPort: 0,
       keycloakOptions: {

@@ -88,3 +88,16 @@ export const MELINDA_CONFIGURATION = {
   MELINDA_API_USER: readEnvironmentVariable('MELINDA_API_USER', { defaultValue: '' }),
   MELINDA_API_PASSWORD: readEnvironmentVariable('MELINDA_API_PASSWORD', { defaultValue: '' }),
 };
+
+// Turnstile
+export const TURNSTILE_CONFIGURATION = {
+  // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#siteverify-api-overview
+  TURNSTILE_URL: readEnvironmentVariable('TURNSTILE_URL', {
+    defaultValue: 'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+  }),
+  TURNSTILE_SECRET_KEY: readEnvironmentVariable('TURNSTILE_SECRET_KEY', { defaultValue: '' }),
+  DISABLE_TURNSTILE: readEnvironmentVariable('DISABLE_TURNSTILE', {
+    defaultValue: false,
+    formatFunction: envFormatBoolean,
+  }),
+};

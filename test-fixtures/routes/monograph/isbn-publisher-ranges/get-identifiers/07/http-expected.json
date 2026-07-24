@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISBN identifier 978-951-95000-0-3 has been marked as used. Downloading publisher identifiers that contain used identifiers is disallowed.",
+  "instance": "/v2/monograph/isbn-publisher-ranges/1/get-identifiers"
+}

@@ -155,6 +155,8 @@ properties:
   comments:
     type: string
     maximum: 2000
+  turnstileToken:
+    type: string
 required:
   - version
   - officialName

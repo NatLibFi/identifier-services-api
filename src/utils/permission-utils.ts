@@ -1,6 +1,11 @@
 import type { ApplicationRoleMap } from '../app.ts';
 import { APPLICATION_ROLES } from '../constants.ts';
 
+interface RequestUser {
+  id: null | string;
+  applicationRoles: string[];
+}
+
 export function getApplicationRoles(userKeycloakRoles: string[], applicationRolemap: ApplicationRoleMap) {
   const userApplicationRoles: string[] = [];
 
@@ -21,24 +26,22 @@ export function getApplicationRoles(userKeycloakRoles: string[], applicationRole
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isAdmin(user: Record<string, any> | undefined): boolean {
-  if (!user || !hasRequiredProperties(user)) {
-    return false;
-  }
-
-  const userApplicationRoles = user['applicationRoles'] || [];
-  const hasAdminRole = userApplicationRoles.includes(APPLICATION_ROLES.ADMIN);
+  const { applicationRoles } = getRequestUser(user);
+  const hasAdminRole = applicationRoles.length > 0 && applicationRoles.includes(APPLICATION_ROLES.ADMIN);
   return hasAdminRole;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isPublisher(user: Record<string, any> | undefined) {
-  if (!user || !hasRequiredProperties(user)) {
-    return false;
-  }
-
-  const userApplicationRoles = user['applicationRoles'] || [];
-  const hasPublisherRole = userApplicationRoles.includes(APPLICATION_ROLES.PUBLISHER);
+  const { applicationRoles } = getRequestUser(user);
+  const hasPublisherRole = applicationRoles.length > 0 && applicationRoles.includes(APPLICATION_ROLES.PUBLISHER);
   return hasPublisherRole;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isGuest(user: Record<string, any> | undefined) {
+  const { applicationRoles } = getRequestUser(user);
+  return applicationRoles.length === 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,10 +50,13 @@ export function isPublisherOrAdmin(user: Record<string, any> | undefined) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function hasRequiredProperties(user: Record<string, any> | undefined) {
+export function getRequestUser(user: Record<string, any> | undefined): RequestUser {
+  const guestUser: RequestUser = { id: null, applicationRoles: [] };
+
   const userInfoExists = user && typeof user === 'object';
+
   if (!userInfoExists) {
-    return false;
+    return guestUser;
   }
 
   const requiredProperties = ['id', 'applicationRoles'];
@@ -58,11 +64,27 @@ export function hasRequiredProperties(user: Record<string, any> | undefined) {
   const userHasRequiredProperties = requiredProperties.every((property) => userProperties.includes(property));
 
   if (!userHasRequiredProperties) {
-    return false;
+    return guestUser;
+  }
+
+  const userApplicationRoles = user['applicationRoles'];
+  const userRolesAreValid =
+    userApplicationRoles &&
+    Array.isArray(userApplicationRoles) &&
+    userApplicationRoles.every((role) => typeof role === 'string' && role.length > 0);
+
+  if (!userRolesAreValid) {
+    return guestUser;
   }
 
   const userId = user['id'];
   const userIdIsValid = typeof userId === 'string' && userId.length > 0 && userId.length < 37;
+  if (!userIdIsValid) {
+    return guestUser;
+  }
 
-  return userIdIsValid;
+  return {
+    id: userId,
+    applicationRoles: userApplicationRoles,
+  };
 }

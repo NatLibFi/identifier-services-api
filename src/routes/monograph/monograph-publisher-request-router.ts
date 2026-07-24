@@ -12,49 +12,53 @@ import {
 } from '../../validations/monograph/monograph-publisher-request-validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
 
-const monographPublisherRequestRouter = Router();
+import type { MiddlewareFunction } from '../../generic-types.ts';
 
-monographPublisherRequestRouter.post(
-  '/',
-  // TODO: middleware for turnstile
-  validateRequestBody(createMonographPublisherRequestSchema),
-  monographPublisherRequestController.createMonographPublisherRequest,
-);
+export default function createMonographPublisherRequestRouter(turnstileMiddleware: MiddlewareFunction) {
+  const monographPublisherRequestRouter = Router();
 
-monographPublisherRequestRouter.post(
-  '/search',
-  allowAdminOnly,
-  validateRequestBody(searchMonographPublisherRequestSchema),
-  monographPublisherRequestController.searchMonographPublisherRequest,
-);
+  monographPublisherRequestRouter.post(
+    '/',
+    turnstileMiddleware,
+    validateRequestBody(createMonographPublisherRequestSchema),
+    monographPublisherRequestController.createMonographPublisherRequest,
+  );
 
-monographPublisherRequestRouter.post(
-  '/:id/approve',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublisherRequestController.approveMonographPublisherRequest,
-);
+  monographPublisherRequestRouter.post(
+    '/search',
+    allowAdminOnly,
+    validateRequestBody(searchMonographPublisherRequestSchema),
+    monographPublisherRequestController.searchMonographPublisherRequest,
+  );
 
-monographPublisherRequestRouter.delete(
-  '/:id',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublisherRequestController.deleteMonographPublisherRequest,
-);
+  monographPublisherRequestRouter.post(
+    '/:id/approve',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublisherRequestController.approveMonographPublisherRequest,
+  );
 
-monographPublisherRequestRouter.get(
-  '/:id',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  monographPublisherRequestController.readMonographPublisherRequest,
-);
+  monographPublisherRequestRouter.delete(
+    '/:id',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublisherRequestController.deleteMonographPublisherRequest,
+  );
 
-monographPublisherRequestRouter.patch(
-  '/:id',
-  allowAdminOnly,
-  validateRequestParams(idParameterSchema),
-  validateRequestBody(updateMonographPublisherRequestSchema),
-  monographPublisherRequestController.updateMonographPublisherRequest,
-);
+  monographPublisherRequestRouter.get(
+    '/:id',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublisherRequestController.readMonographPublisherRequest,
+  );
 
-export default monographPublisherRequestRouter;
+  monographPublisherRequestRouter.patch(
+    '/:id',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    validateRequestBody(updateMonographPublisherRequestSchema),
+    monographPublisherRequestController.updateMonographPublisherRequest,
+  );
+
+  return monographPublisherRequestRouter;
+}
