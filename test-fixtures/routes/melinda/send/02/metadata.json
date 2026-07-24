@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not send MARC21 record to Melinda (TODO: mocks)",
+  "url": "/v2/melinda",
+  "method": "POST",
+  "expectedStatus": 401
+}

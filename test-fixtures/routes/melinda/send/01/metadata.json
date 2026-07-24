@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may send MARC21 record to Melinda (TODO: mocks)",
+  "url": "/v2/melinda",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -278,8 +278,6 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
 
   const validManifestation = validateGetById(manifestation);
 
-  // TODO: publisher role access control
-
   if (validManifestation.isbn_identifier) {
     throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Manifestation has already ISBN identifier assigned to it.');
   }
@@ -402,8 +400,6 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
     .select(['monograph_publication_request.request_state as request_state'])
     .where('monograph_publication_manifestation.id', '=', id)
     .execute();
-
-  // TODO: publisher role access control
 
   const validManifestation = validateGetById(manifestation);
 

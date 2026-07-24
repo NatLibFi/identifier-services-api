@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not create MARC21 record out of monograph publication expression information",
+  "url": "/v2/monograph/publication-expressions/1/marc",
+  "method": "POST",
+  "expectedStatus": 401
+}

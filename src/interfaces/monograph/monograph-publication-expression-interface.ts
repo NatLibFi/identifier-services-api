@@ -399,19 +399,14 @@ export async function createMonographPublicationExpressionMarc(
     MarcRecordSerializers.Json.from(JSON.stringify(r.toObject())),
   );
 
-  if (record_format === 'text') {
+  if (record_format === MARC_RECORD_FORMAT.TEXT) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return serializableRecords.map((r: any) => MarcRecordSerializers.Text.to(r));
+    return serializableRecords.map((r: any) => MarcRecordSerializers.Text.to(r)).join('\n\n');
   }
 
-  if (record_format === 'iso2709') {
+  if (record_format === MARC_RECORD_FORMAT.ISO2709) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return serializableRecords.map((r: any) => MarcRecordSerializers.ISO2709.to(r)).join('');
-  }
-
-  if (record_format === 'json') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return serializableRecords.map((r: any) => MarcRecordSerializers.Json.to(r));
   }
 
   throw new ApiError(

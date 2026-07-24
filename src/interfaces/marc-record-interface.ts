@@ -80,9 +80,14 @@ export default function generateMarcRecord(publicationInfo: CreateMarcRecordInfo
 
   marcRecord.leader = generateLeader(publicationInfo);
 
-  const fieldGenerators = [
-    generate007,
-    generate008,
+  // Add control fields
+  const f007s = generate007(publicationInfo);
+  f007s.forEach((f007) => marcRecord.insertField(f007));
+
+  const f008 = generate008(publicationInfo);
+  marcRecord.insertField(f008);
+
+  const datafieldGenerators = [
     generate020,
     generate022,
     generate024,
@@ -118,8 +123,8 @@ export default function generateMarcRecord(publicationInfo: CreateMarcRecordInfo
     generateLOW,
   ];
 
-  // Generate fields and append them to the record
-  fieldGenerators.forEach((g) => marcRecord.appendField(g(publicationInfo)));
+  // Generate datafields and append them to the record
+  datafieldGenerators.forEach((g) => marcRecord.appendFields(g(publicationInfo)));
 
   return marcRecord;
 }
@@ -161,7 +166,7 @@ export function generate007(publicationInfo: CreateMarcRecordInformation): Contr
   return result;
 }
 
-export function generate008(publicationInfo: CreateMarcRecordInformation): string {
+export function generate008(publicationInfo: CreateMarcRecordInformation): ControlField {
   const {
     isElectronical,
     isMonograph,
@@ -177,87 +182,87 @@ export function generate008(publicationInfo: CreateMarcRecordInformation): strin
   const date = new Date();
 
   // 0-5
-  let field = `${date.getFullYear().toString().slice(-2)}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
+  let value = `${date.getFullYear().toString().slice(-2)}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
 
   // 6
   if (isMonograph) {
-    field += 's';
+    value += 's';
   } else if (isSerial) {
-    field += 'c';
+    value += 'c';
   } else {
-    field += '|';
+    value += '|';
   }
 
   // 7-10
-  field += publicationYear ? publicationYear : '||||';
+  value += publicationYear ? publicationYear : '||||';
 
   // 11-14
   if (isMonograph) {
-    field += '    ';
+    value += '    ';
   } else if (isSerial) {
-    field += '9999';
+    value += '9999';
   } else {
-    field += '||||';
+    value += '||||';
   }
 
   // 15-17
-  field += 'fi ';
+  value += 'fi ';
 
   if (isSheetMusic) {
     // 18-23 for sheet music
-    field += isElectronical ? '||| |o' : '||| | ';
+    value += isElectronical ? '||| |o' : '||| | ';
 
     // 24-34 for sheet music
-    field += '|||||||||||';
+    value += '|||||||||||';
   }
 
   if (isMonograph && !isSheetMusic) {
     // 18-23 for other monographs than sheet music
-    field += isElectronical ? '|||| o' : '||||  ';
+    value += isElectronical ? '|||| o' : '||||  ';
 
     // 24-27 for other monographs than sheet music
-    field += isDissertation ? 'm   ' : '    ';
+    value += isDissertation ? 'm   ' : '    ';
 
     // 24-34 for other monographs than sheet music
-    field += ' |0| 0|';
+    value += ' |0| 0|';
   }
 
   if (isSerial) {
     // 18 for serial
-    field += serialFrequency ? serialFrequency : ' ';
+    value += serialFrequency ? serialFrequency : ' ';
 
     // 19-20 for serial
-    field += '| ';
+    value += '| ';
 
     // 21 for serial
     if (!serialPublicationType) {
       throw new Error('Serial publication requires to have publication type defined');
     }
 
-    field += getSerialPublicationTypeInfo(serialPublicationType);
+    value += getSerialPublicationTypeInfo(serialPublicationType);
 
     // 22 for serial
-    field += '|';
+    value += '|';
 
     // 23 for serial
-    field += isElectronical ? 'o' : ' ';
+    value += isElectronical ? 'o' : ' ';
 
     // 24-34 for serial
-    field += '     0|||b0';
+    value += '     0|||b0';
   }
 
   // 35-37
-  field += language ? language.toLowerCase() : '|||';
+  value += language ? language.toLowerCase() : '|||';
 
   // 38-39
-  field += '| ';
+  value += '| ';
 
   // Confirm field length
-  if (field.length !== 40) {
+  if (value.length !== 40) {
     throw new Error('Field 008 generator produced field with invalid length');
   }
 
-  return field;
+  return { tag: '008', value };
 
   function getSerialPublicationTypeInfo(serialPublicationType: string | undefined) {
     const publicationTypeMap: string[] = [
@@ -443,9 +448,9 @@ export function generate100(publicationInfo: CreateMarcRecordInformation): DataF
 }
 
 export function generate222(publicationInfo: CreateMarcRecordInformation): DataField[] {
-  const { isElectronical, title, serialAnotherMedium } = publicationInfo;
+  const { isSerial, isElectronical, title, serialAnotherMedium } = publicationInfo;
 
-  if (!title) {
+  if (!title || !isSerial) {
     return [];
   }
 
@@ -490,7 +495,7 @@ export function generate245(publicationInfo: CreateMarcRecordInformation): DataF
 
   return [
     {
-      tag: '100',
+      tag: '245',
       ind1,
       ind2: '0',
       subfields,

@@ -247,12 +247,12 @@ export function translateManifestationType(manifestationType: string, langCode: 
     throw new Error('Language code for translating email type could not be found');
   }
 
-  // @ts-expect-error TODO typing
+  // @ts-expect-error translation tables are missing typing
   if (!Object.keys(translations[langCode]).includes(manifestationType)) {
     throw new Error('Identifier type translating email type could not be found');
   }
 
-  // @ts-expect-error TODO typing
+  // @ts-expect-error translation tables are missing typing
   return translations[langCode][manifestationType];
 }
 

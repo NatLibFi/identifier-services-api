@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create MARC21 record out of monograph publication expression information (note: uses unix line endings)",
+  "url": "/v2/monograph/publication-expressions/1/marc",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

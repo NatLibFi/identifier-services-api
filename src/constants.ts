@@ -211,7 +211,6 @@ export const ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number
 
 export const MARC_RECORD_FORMAT = {
   MARC_RECORD_JS: 'MARC_RECORD_JS', // Note: only for internal interface usage
-  JSON: 'JSON',
   TEXT: 'TEXT',
   ISO2709: 'ISO2709',
 };

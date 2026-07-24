@@ -47,7 +47,6 @@ export function formatStatisticsToWorkbook(statisticsName: string, data: Record<
   return workbook;
 }
 
-// TODO: integration test data
 export async function getMonthlyMonographStatistics(
   monographPublisherConfiguration: MonographPublisherConfiguration,
   begin: Date,

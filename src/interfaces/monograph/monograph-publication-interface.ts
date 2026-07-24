@@ -54,7 +54,6 @@ export async function updateMonographPublication(
 }
 
 export async function searchMonographPublication(searchParameters: SearchMonographPublicationHttp) {
-  // TODO: publisher role access control
   const { search_text, monograph_publisher_id, limit, offset } = searchParameters;
 
   const db = getKysely();
