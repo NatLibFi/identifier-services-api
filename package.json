@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "private": true,
-  "version": "2.0.0-alpha.93",
+  "version": "2.0.0-alpha.94",
   "type": "module",
   "engines": {
     "node": ">=24"
