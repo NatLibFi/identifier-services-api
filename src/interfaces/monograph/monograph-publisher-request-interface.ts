@@ -158,14 +158,14 @@ export async function searchMonographPublisherRequest(searchParameters: SearchMo
     );
   }
 
-  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll<number>().as('totalDoc'));
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll<number>().as('total_doc'));
   query = query.orderBy('id', 'desc').limit(limit).offset(offset);
 
   const result = await query.execute();
-  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+  const { total_doc } = await countQuery.executeTakeFirstOrThrow();
 
   return {
-    totalDoc,
+    total_doc,
     results: result.map(asMonographPublisherRequestSearchResult),
   };
 }

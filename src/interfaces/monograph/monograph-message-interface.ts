@@ -377,15 +377,15 @@ export default function createMonographMessageInterface(
       query = query.where('monograph_publication_request_id', '=', monograph_publication_request_id);
     }
 
-    const countQuery = query.select((eb) => eb.fn.countAll().as('totalDoc'));
+    const countQuery = query.select((eb) => eb.fn.countAll().as('total_doc'));
     query = query.selectAll().orderBy('id', 'desc').limit(limit).offset(offset);
 
     // @ts-expect-error query builder does not understand typing here
     const result: MonographMessageSelect[] = await query.execute();
-    const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+    const { total_doc } = await countQuery.executeTakeFirstOrThrow();
 
     return {
-      totalDoc,
+      total_doc,
       results: result.map((message) => asMonographMessageSearchResult(message)),
     };
   }

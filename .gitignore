@@ -150,3 +150,6 @@ src/middlewares/debug-middleware.ts
 
 # tmp files not part of repo
 tmp
+
+# omit dev sql for now
+dev-sql

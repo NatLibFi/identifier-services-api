@@ -925,7 +925,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "totalDoc": {
+                    "total_doc": {
                       "type": "number"
                     },
                     "results": {
@@ -1528,7 +1528,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "totalDoc": {
+                    "total_doc": {
                       "type": "number"
                     },
                     "results": {
@@ -5609,7 +5609,7 @@
       "monograph-message-search-response": {
         "type": "object",
         "properties": {
-          "totalDoc": {
+          "total_doc": {
             "type": "number"
           },
           "results": {

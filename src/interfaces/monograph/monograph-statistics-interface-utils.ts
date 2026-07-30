@@ -1,4 +1,4 @@
-import { Workbook } from 'exceljs';
+import ExcelJS from 'exceljs';
 import { sql } from 'kysely';
 
 import { getKysely } from '../../db/database.ts';
@@ -23,8 +23,8 @@ interface MonthlyStatistics {
   count: number;
 }
 
-export function formatStatisticsToWorkbook(statisticsName: string, data: Record<string, string>[]): Workbook {
-  const workbook = new Workbook();
+export function formatStatisticsToWorkbook(statisticsName: string, data: Record<string, string>[]) {
+  const workbook = new ExcelJS.Workbook();
   workbook.creator = 'National Library of Finland';
 
   const sheet = workbook.addWorksheet(statisticsName);

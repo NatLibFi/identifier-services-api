@@ -336,16 +336,16 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     );
   }
 
-  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('totalDoc'));
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('total_doc'));
   query = query.selectAll('monograph_publisher').orderBy('id', 'desc').limit(limit).offset(offset);
 
   // @ts-expect-error query builder does not understand typing here
   const result: MonographPublisherSelect[] = await query.execute();
-  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+  const { total_doc } = await countQuery.executeTakeFirstOrThrow();
 
   if (isAdmin(user)) {
     return {
-      totalDoc,
+      total_doc,
       results: await Promise.all(
         result.map(async (p) => {
           const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
@@ -357,7 +357,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
   }
 
   return {
-    totalDoc,
+    total_doc,
     results: await Promise.all(
       result.map(async (p) => {
         const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);

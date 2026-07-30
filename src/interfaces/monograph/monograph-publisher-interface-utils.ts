@@ -97,7 +97,7 @@ export async function searchMonographPublisherWithRange(
   const db = getKysely();
 
   // Currently decided on processing with API server instead of introducing multiple DB queries
-  // If problems do occur split the query to two: one retrieving distinct result set and other count for totalDoc
+  // If problems do occur split the query to two: one retrieving distinct result set and other count for total_doc
 
   // Process ISMN search
   if (useIsmnPublisherIdentifierSearch(searchString)) {
@@ -111,9 +111,9 @@ export async function searchMonographPublisherWithRange(
       .limit(limit)
       .execute();
 
-    const { totalDoc } = await db
+    const { total_doc } = await db
       .selectFrom('ismn_publisher_range')
-      .select((eb) => eb.fn.count<number>('monograph_publisher_id').distinct().as('totalDoc'))
+      .select((eb) => eb.fn.count<number>('monograph_publisher_id').distinct().as('total_doc'))
       .where('publisher_identifier', 'like', `${searchString}%`)
       .orderBy('monograph_publisher_id')
       .executeTakeFirstOrThrow();
@@ -124,7 +124,7 @@ export async function searchMonographPublisherWithRange(
     );
 
     return {
-      totalDoc,
+      total_doc,
       results,
     };
   }
@@ -140,9 +140,9 @@ export async function searchMonographPublisherWithRange(
     .limit(limit)
     .execute();
 
-  const { totalDoc } = await db
+  const { total_doc } = await db
     .selectFrom('isbn_publisher_range')
-    .select((eb) => eb.fn.count<number>('monograph_publisher_id').distinct().as('totalDoc'))
+    .select((eb) => eb.fn.count<number>('monograph_publisher_id').distinct().as('total_doc'))
     .where('publisher_identifier', 'like', `${searchString}%`)
     .orderBy('monograph_publisher_id')
     .executeTakeFirstOrThrow();
@@ -153,7 +153,7 @@ export async function searchMonographPublisherWithRange(
   );
 
   return {
-    totalDoc,
+    total_doc,
     results,
   };
 }

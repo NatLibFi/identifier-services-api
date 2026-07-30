@@ -20,7 +20,7 @@ post:
           schema:
             type: object
             properties:
-              totalDoc:
+              total_doc:
                 type: number
               results:
                 type: array

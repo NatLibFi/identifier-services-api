@@ -13,7 +13,7 @@ export const updateMonographPublisherSchema = z
     zip: z.string().max(10).nullable().optional(),
     city: z.string().max(50).nullable().optional(),
     phone: z.string().max(30).nullable().optional(),
-    email: z.email().max(100).optional(),
+    email: z.email().max(100).nullable().optional(),
     www: z.string().max(100).nullable().optional(),
     lang_code: z.enum(langCodeEnum).optional(),
     contact_persons: z.array(contactPersonSchema).max(10).optional(),

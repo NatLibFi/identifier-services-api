@@ -8,7 +8,6 @@ import createMonographStatisticsInterface from '../../interfaces/monograph/monog
 
 import type { MonographPublisherConfiguration } from '../../app.ts';
 import type { CreateMonographStatisticsHttp } from '../../validations/monograph/monograph-statistics-validation.ts';
-import type { Workbook } from 'exceljs';
 
 export default function createMonographStatisticsControllers(
   monographPublisherConfiguration: MonographPublisherConfiguration,
@@ -19,7 +18,7 @@ export default function createMonographStatisticsControllers(
     try {
       const { statistics_type, output_format }: CreateMonographStatisticsHttp = req.body;
 
-      const result: Workbook = await monographStatisticsInterface.createMonographStatistics(req.body);
+      const result = await monographStatisticsInterface.createMonographStatistics(req.body);
 
       if (output_format === STATISTICS_FORMAT.CSV) {
         res.setHeader('Content-Type', 'text/csv');

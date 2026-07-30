@@ -71,14 +71,14 @@ export async function searchMonographPublication(searchParameters: SearchMonogra
     query = query.where('monograph_publisher_id', '=', monograph_publisher_id);
   }
 
-  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('totalDoc'));
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('total_doc'));
   query = query.orderBy('id', 'desc').limit(limit).offset(offset);
 
   const result = await query.execute();
-  const { totalDoc } = await countQuery.executeTakeFirstOrThrow();
+  const { total_doc } = await countQuery.executeTakeFirstOrThrow();
 
   return {
-    totalDoc,
+    total_doc,
     results: await Promise.all(
       result.map(async ({ id }) => {
         // Might have overhead, but limit is capped in validation
