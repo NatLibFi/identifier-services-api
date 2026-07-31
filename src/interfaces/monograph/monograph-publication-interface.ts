@@ -84,7 +84,18 @@ export async function searchMonographPublication(searchParameters: SearchMonogra
         // Might have overhead, but limit is capped in validation
         // This may be improved after it's known what attributes are required for each view using this endpoint
         const publication = await readMonographPublication(id);
-        return publication;
+
+        // Enrich information with knowledge about publication requests
+        const publicationRequestId = await db
+          .selectFrom('monograph_publication_request')
+          .select('id')
+          .where('monograph_publication_id', '=', id)
+          .executeTakeFirst();
+
+        return {
+          ...publication, // Uses normal DTL
+          monograph_publication_request_id: publicationRequestId?.id ?? null,
+        };
       }),
     ),
   };

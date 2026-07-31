@@ -1,0 +1,7 @@
+{
+  "description": "[admin] correctly injects monograph_publication_request_id to search results",
+  "url": "/v2/monograph/publications/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

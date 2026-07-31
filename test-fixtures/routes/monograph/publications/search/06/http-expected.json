@@ -4,7 +4,7 @@
     {
       "id": 1,
       "monograph_publisher_id": 1,
-      "monograph_publication_request_id": null,
+      "monograph_publication_request_id": 1,
       "primary_title": "Example title",
       "expressions": [
         {

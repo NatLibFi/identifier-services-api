@@ -1,4 +1,4 @@
--- Monograph publication request v2.0.0-alpha.3
+-- Monograph publication request v2.0.0-alpha.4
 CREATE TABLE monograph_publication_request (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publisher_id INT UNSIGNED,
@@ -25,6 +25,7 @@ CREATE TABLE monograph_publication_request (
   modified DATETIME NOT NULL,
   modified_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE (monograph_publication_id),
   FOREIGN KEY (monograph_publisher_id) REFERENCES monograph_publisher(id),
   FOREIGN KEY (monograph_publication_id) REFERENCES monograph_publication(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;
