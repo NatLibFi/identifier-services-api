@@ -12,6 +12,15 @@ export async function readMonographPublisher(req: Request, res: Response, next: 
   }
 }
 
+export async function readMonographPublisherArchiveEntry(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherInterface.readMonographPublisherArchiveEntry(Number(req.params['id']));
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function deleteMonographPublisher(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await monographPublisherInterface.deleteMonographPublisher(Number(req.params['id']));

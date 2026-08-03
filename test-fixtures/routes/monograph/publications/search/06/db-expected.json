@@ -26,7 +26,8 @@
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "TEST_USER_1"
     }
-  ],  "monograph_publication": [
+  ],
+  "monograph_publication": [
     {
       "id": 1,
       "monograph_publisher_id": 1,

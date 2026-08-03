@@ -25,6 +25,13 @@ monographPublisherRouter.post(
 );
 
 monographPublisherRouter.get(
+  '/:id/archive',
+  allowAdminOnly, // note: archives are not public and interface relies on this to be controlled at router level!
+  validateRequestParams(idParameterSchema),
+  monographPublisherControllers.readMonographPublisherArchiveEntry,
+);
+
+monographPublisherRouter.get(
   '/:id',
   validateRequestParams(idParameterSchema),
   monographPublisherControllers.readMonographPublisher,

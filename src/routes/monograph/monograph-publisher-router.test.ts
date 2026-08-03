@@ -7,5 +7,7 @@ runIntegrationTestSuite(routers, 'read');
 runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'update');
 
+runIntegrationTestSuite(routers, 'archive');
+
 runIntegrationTestSuite(routers, 'search');
 runIntegrationTestSuite(routers, 'autocomplete');

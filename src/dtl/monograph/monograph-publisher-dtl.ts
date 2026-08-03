@@ -6,6 +6,7 @@ import type {
   MonographPublisherReadGuest,
   MonographPublisherSelect,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
+import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 import type { UnknownObject } from '../../generic-types.ts';
 
 export function asMonographPublisherAdminRead(
@@ -112,5 +113,61 @@ export function asMonographPublisherAutocompleteRead(
     official_name,
     other_names,
     previous_names,
+  };
+}
+
+export function asMonographPublisherArchiveEntry(
+  monographPublisherArchiveEntry: MonographPublisherRequestArchiveSelect,
+): MonographPublisherRequestArchiveSelect {
+  const {
+    id,
+    monograph_publisher_id,
+    monograph_publisher_request_id,
+    official_name,
+    address,
+    zip,
+    city,
+    phone,
+    email,
+    www,
+    lang_code,
+    contact_persons,
+    frequency_current,
+    frequency_next,
+    other_names,
+    affiliate_of,
+    affiliates,
+    distributor_of,
+    distributors,
+    classifications,
+    classification_other,
+    created,
+    created_by,
+  } = monographPublisherArchiveEntry;
+
+  return {
+    id,
+    monograph_publisher_id,
+    monograph_publisher_request_id,
+    official_name,
+    address,
+    zip,
+    city,
+    phone,
+    email,
+    www,
+    lang_code,
+    contact_persons,
+    frequency_current,
+    frequency_next,
+    other_names,
+    affiliate_of,
+    affiliates,
+    distributor_of,
+    distributors,
+    classifications,
+    classification_other,
+    created,
+    created_by,
   };
 }

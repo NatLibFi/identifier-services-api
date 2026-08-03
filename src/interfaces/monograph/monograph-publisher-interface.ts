@@ -30,6 +30,7 @@ import {
 
 import {
   asMonographPublisherAdminRead,
+  asMonographPublisherArchiveEntry,
   asMonographPublisherAutocompleteRead,
   asMonographPublisherGuestRead,
 } from '../../dtl/monograph/monograph-publisher-dtl.ts';
@@ -43,6 +44,7 @@ import type {
   SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
+import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 
 export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
   const db = getKysely();
@@ -394,4 +396,16 @@ export async function monographPublisherAutocomplete(search_text: string) {
   const result: MonographPublisherSelect[] = await query.execute();
 
   return result.map(asMonographPublisherAutocompleteRead);
+}
+
+export async function readMonographPublisherArchiveEntry(id: number) {
+  const db = getKysely();
+  const dbResult = await db
+    .selectFrom('monograph_publisher_request_archive')
+    .selectAll()
+    .where('monograph_publisher_id', '=', id)
+    .execute();
+  const monographPublisherArchiveResult = validateGetById<MonographPublisherRequestArchiveSelect>(dbResult);
+
+  return asMonographPublisherArchiveEntry(monographPublisherArchiveResult);
 }

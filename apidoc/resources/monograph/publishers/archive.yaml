@@ -1,0 +1,29 @@
+get:
+  operationId: getArchivedMonographPublisherRequest
+  summary: Retrieves archived monograph publisher request related to the given publisher.
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph-publisher
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/monograph-publisher-request-archive.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'

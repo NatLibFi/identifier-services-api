@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not read monograph publisher archive information",
+  "url": "/v2/monograph/publishers/1/archive",
+  "method": "GET",
+  "expectedStatus": 401
+}
