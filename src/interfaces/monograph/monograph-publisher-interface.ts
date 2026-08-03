@@ -252,14 +252,17 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
 
   let query = db.selectFrom('monograph_publisher');
 
+  const onlyIsbn = identifier_type && identifier_type === MONOGRAPH_IDENTIFIERS.ISBN;
+  const onlyIsmn = identifier_type && identifier_type === MONOGRAPH_IDENTIFIERS.ISMN;
+
   // Process search that targets ISBN publisher identifier as separate block
-  if (search_text && useIsbnPublisherIdentifierSearch(search_text)) {
+  if (search_text && useIsbnPublisherIdentifierSearch(search_text) && !onlyIsmn) {
     const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
     return result;
   }
 
   // Process search that targets ISBN publisher identifier as separate block
-  if (search_text && useIsmnPublisherIdentifierSearch(search_text)) {
+  if (search_text && useIsmnPublisherIdentifierSearch(search_text) && !onlyIsbn) {
     const result = await searchMonographPublisherWithRange(search_text, limit, offset, user);
     return result;
   }
