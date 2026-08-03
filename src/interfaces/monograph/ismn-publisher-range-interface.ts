@@ -313,16 +313,16 @@ export async function getIsmnPublisherRangeIdentifiers(
   // Process downloading as text file
 
   // Old API's formatting for text files
-  let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${publisher_name}\r\n`;
-  headerText += `Följande identifikatorer har tilldelats åt förlaget ${publisher_name}\r\n`;
-  headerText += `Following identifiers have been assigned to publisher ${publisher_name}\r\n\r\n`;
+  let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${publisher_name}\n`;
+  headerText += `Följande identifikatorer har tilldelats åt förlaget ${publisher_name}\n`;
+  headerText += `Following identifiers have been assigned to publisher ${publisher_name}\n\n`;
 
   // Add test header for test environment
   if (!isProduction()) {
     headerText +=
-      'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\r\n';
-    headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\r\n';
-    headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\r\n\r\n';
+      'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\n';
+    headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\n';
+    headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\n\n';
   }
 
   const identifierResult = result.reduce((acc, { identifier, monograph_publication_manifestation_id }) => {
@@ -339,7 +339,7 @@ export async function getIsmnPublisherRangeIdentifiers(
       );
     }
 
-    return `${identifierInfo}\r\n`;
+    return `${identifierInfo}\n`;
   }, '');
 
   return `${headerText}${identifierResult}`;

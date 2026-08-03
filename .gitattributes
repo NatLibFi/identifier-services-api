@@ -1,2 +1,3 @@
 # Always use LF
+*.txt text
 text eol=lf
