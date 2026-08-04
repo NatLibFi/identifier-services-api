@@ -45,7 +45,7 @@ export const searchMonographMessageSchema = z
   .superRefine((data, ctx) => {
     const hasPublisherId = Boolean(data.monograph_publisher_id);
     const hasPublicationId = Boolean(data.monograph_publication_request_id);
-    const hasSearchText = Boolean(data.search_text);
+    const hasSearchText = typeof data.search_text === 'string';
 
     const searchTypesAsked = [hasPublisherId, hasPublicationId, hasSearchText];
     const tooManySearchTypes = searchTypesAsked.filter((searchType) => searchType === true).length > 1;
