@@ -230,7 +230,7 @@ export async function updateMonographPublisher(
   });
 
   // Use consistent return value between processing. This will be one additional read as overhead, but currently it's acceptable.
-  return;
+  return readMonographPublisher(id, user);
 }
 
 export async function searchMonographPublisher(searchParameters: SearchMonographPublisherHttp, user: RequestUser) {

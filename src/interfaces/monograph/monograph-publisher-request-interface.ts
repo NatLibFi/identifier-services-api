@@ -136,7 +136,7 @@ export async function updateMonographPublisherRequest(
     }
   });
 
-  return;
+  return readMonographPublisherRequest(monographPublisherRequestId);
 }
 
 export async function searchMonographPublisherRequest(searchParameters: SearchMonographPublisherRequestHttp) {

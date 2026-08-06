@@ -833,8 +833,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Resource was updated"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publisher-admin"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -1202,8 +1209,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Resource was updated"
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-publisher-request"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
