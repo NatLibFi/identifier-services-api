@@ -31,6 +31,7 @@ const monographPublicationManifestationPrintingInformationSchema = z
 
 export const createMonographPublicationManifestationSchema = z
   .object({
+    monograph_publication_request_id: z.number().nullable().optional(), // Note: mandatory for admin users
     manifestation_type: z.enum(monographManifestationTypeEnum),
     manifestation_type_other: z.string().max(100).optional().nullable(),
     publication_year: z.string().min(4).max(4).regex(yearString),

@@ -1,9 +1,15 @@
 type: object
 required:
+  # Note: monograph_publication_request_id is mandatory for admin users
   - manifestation_type
   - publication_year
   - publication_month
 properties:
+  monograph_publication_request_id:
+    description: Mandatory when admin adds manifestation to publication linked to publication request
+    type:
+      - number
+      - 'null'
   manifestation_type:
     $ref: '../../../enums/monograph/manifestation-type.yaml'
   manifestation_type_other:

@@ -5,7 +5,7 @@
   "ismn_identifier": null,
   "ismn_identifier_assigned": null,
   "monograph_publication_expression_id": 1,
-  "monograph_publication_request_id": null,
+  "monograph_publication_request_id": 1,
   "manifestation_type": "PDF",
   "manifestation_type_other": null,
   "manifestation_edition": null,

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not add manifestation to monograph publication request that does not match with expression",
+  "url": "/v2/monograph/publication-manifestations",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

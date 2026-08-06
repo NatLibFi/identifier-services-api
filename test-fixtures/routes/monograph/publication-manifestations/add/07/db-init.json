@@ -40,34 +40,7 @@
       "modified_by": "TEST_USER_1"
     }
   ],
-  "monograph_publication_request": [
-    {
-      "id": 1,
-      "monograph_publisher_id": 1,
-      "monograph_publication_id": 1,
-      "official_name": "Foo Publisher",
-      "publisher_identifier_str": null,
-      "locality": null,
-      "address": "Foo street",
-      "zip": "00000",
-      "city": "Foo city",
-      "phone": "123456789",
-      "email": "example@example.localhost",
-      "lang_code": "fi-FI",
-      "contact_person": "Foo Person",
-      "published_before": true,
-      "publishing_activity": "CONTINUOUS",
-      "publishing_activity_amount": "0",
-      "publications_intra": false,
-      "publications_public": true,
-      "comments": "Example comment",
-      "request_state": "ACCEPTED",
-      "created": "2025-01-20T12:00:00.000Z",
-      "created_by": "TEST_USER_1",
-      "modified": "2025-01-20T12:00:00.000Z",
-      "modified_by": "TEST_USER_1"
-    }
-  ],
+  "monograph_publication_request": [],
   "monograph_publication": [
     {
       "id": 1,
@@ -96,27 +69,13 @@
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "TEST_USER_1"
-    },
-    {
-      "id": 2,
-      "monograph_publication_id": 1,
-      "expression_type": "BOOK",
-      "expression_language": "FIN",
-      "authors": [{ "first_name": "Erkki", "last_name": "Esimerkki", "isni": null, "roles": ["AUTHOR"] }],
-      "title": "Example title 2",
-      "subtitle": null,
-      "map_scale": null,
-      "created": "2026-01-20T12:00:00.000Z",
-      "created_by": "admin",
-      "modified": "2026-01-20T12:00:00.000Z",
-      "modified_by": "admin"
     }
   ],
   "monograph_publication_manifestation": [
     {
       "id": 1,
       "monograph_publication_expression_id": 1,
-      "monograph_publication_request_id": 1,
+      "monograph_publication_request_id": null,
       "manifestation_type": "PAPERBACK",
       "manifestation_type_other": null,
       "manifestation_edition": null,
@@ -139,7 +98,7 @@
     {
       "id": 2,
       "monograph_publication_expression_id": 1,
-      "monograph_publication_request_id": 1,
+      "monograph_publication_request_id": null,
       "manifestation_type": "EPUB",
       "manifestation_type_other": null,
       "manifestation_edition": null,
@@ -152,23 +111,6 @@
       "created_by": "TEST_USER_1",
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "TEST_USER_1"
-    },
-    {
-      "id": 3,
-      "monograph_publication_expression_id": 2,
-      "monograph_publication_request_id": 1,
-      "manifestation_type": "PAPERBACK",
-      "manifestation_type_other": null,
-      "manifestation_edition": null,
-      "publication_year": "2026",
-      "publication_month": "12",
-      "series": [],
-      "printing_information": [],
-      "cancelled": false,
-      "created": "2026-01-20T12:00:00.000Z",
-      "created_by": "admin",
-      "modified": "2026-01-20T12:00:00.000Z",
-      "modified_by": "admin"
     }
   ],
   "isbn_identifier": [

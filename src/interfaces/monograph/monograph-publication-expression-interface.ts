@@ -20,6 +20,7 @@ import {
 
 import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
 import { readMonographPublication } from './monograph-publication-interface.ts';
+import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
 
 import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type {
@@ -182,10 +183,13 @@ export async function addMonographPublicationExpression(
 
     await Promise.all(
       manifestations.map(async (m) => {
+        // Validate case where admin adds expression to existing request
+        await validateAddManifestationRequest(user, monograph_publication_id, m.monograph_publication_request_id);
+
         const dbManifestation = {
           ...m,
           monograph_publication_expression_id: expressionResultId,
-          monograph_publication_request_id: null,
+          monograph_publication_request_id: m.monograph_publication_request_id ?? null,
           series: JSON.stringify(m.series),
           printing_information: JSON.stringify(m.printing_information),
           cancelled: false,

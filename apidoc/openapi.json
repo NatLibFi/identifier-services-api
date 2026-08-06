@@ -4548,6 +4548,13 @@
           "publication_month"
         ],
         "properties": {
+          "monograph_publication_request_id": {
+            "description": "Mandatory when admin adds manifestation to publication linked to publication request",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
           "manifestation_type": {
             "$ref": "#/components/schemas/manifestation-type"
           },

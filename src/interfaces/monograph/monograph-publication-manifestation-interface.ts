@@ -10,6 +10,7 @@ import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { assignIsbnIdentifier, deassignIsbnIdentifier, getAssignableIsbnIdentifier } from './isbn-identifier-utils.ts';
 import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
 import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
+import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
 
 import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 
@@ -168,6 +169,7 @@ export async function addMonographPublicationManifestation(
   user: RequestUser,
 ) {
   const {
+    monograph_publication_request_id,
     monograph_publication_expression_id,
     manifestation_type,
     manifestation_type_other,
@@ -187,6 +189,9 @@ export async function addMonographPublicationManifestation(
 
   // Validate expression through using interface read - implicitly manages returning 404 in case entity does not exist
   const expression = await readMonographPublicationExpression(monograph_publication_expression_id);
+
+  // Validate operation from perspective of administrator adding new manifestation to existing request
+  await validateAddManifestationRequest(user, expression.monograph_publication_id, monograph_publication_request_id);
 
   // Cast all falsy values to null for comparison to be consistent
   const castManifestationTypeOther = !manifestation_type_other ? null : manifestation_type_other;
@@ -223,7 +228,7 @@ export async function addMonographPublicationManifestation(
 
   const dbDoc = {
     monograph_publication_expression_id,
-    monograph_publication_request_id: null,
+    monograph_publication_request_id: monograph_publication_request_id ?? null,
     cancelled: false,
     manifestation_type,
     manifestation_type_other: manifestation_type_other ?? null,

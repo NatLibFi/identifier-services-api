@@ -3,5 +3,5 @@
   "status": 409,
   "title": "Conflict",
   "detail": "Administrators cannot add manifestation that is not related to a monograph publication request.",
-  "instance": "/v2/monograph/publication-manifestations"
+  "instance": "/v2/monograph/publication-expressions"
 }

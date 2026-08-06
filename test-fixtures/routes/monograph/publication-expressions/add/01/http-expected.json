@@ -11,7 +11,7 @@
     {
       "id": 3,
       "monograph_publication_expression_id": 2,
-      "monograph_publication_request_id": null,
+      "monograph_publication_request_id": 1,
       "isbn_identifier": null,
       "isbn_identifier_assigned": null,
       "ismn_identifier": null,

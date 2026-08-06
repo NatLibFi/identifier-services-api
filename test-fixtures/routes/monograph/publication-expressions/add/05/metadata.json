@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not add new expression without manifest association to publication request",
+  "url": "/v2/monograph/publication-expressions",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}
