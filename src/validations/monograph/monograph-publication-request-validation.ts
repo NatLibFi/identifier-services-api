@@ -222,13 +222,13 @@ export const updateMonographPublicationRequestSchema = z
     address: z.string().max(50).optional().nullable(), // Contact information is optional for Admin UI purposes
     zip: z
       .string()
-      .regex(/^[0-9]{5}$/)
+      .regex(/^[0-9]{0,5}$/)
       .optional()
       .nullable(),
     city: z.string().max(50).optional().nullable(),
     phone: z
       .string()
-      .regex(/^[0-9+-\s]{4,30}$/)
+      .regex(/^[0-9+-\s]{0,30}$/)
       .optional()
       .nullable(),
     email: z.email().optional().nullable(),
