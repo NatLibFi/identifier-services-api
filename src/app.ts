@@ -19,11 +19,13 @@ import createMelindaRouter from './routes/melinda-router.ts';
 import testAuthenticationRouter from './routes/test-auth-router.ts';
 
 import { allowAdminOnly } from './middlewares/auth.ts';
-import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
-import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
-import { isAutomatedTest } from './utils/generic-utils.ts';
-import packageJson from '../package.json' with { type: 'json' };
 import { initializeTurnstileMiddleware } from './middlewares/turnstile.ts';
+
+import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
+import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
+import { isAutomatedTest } from './utils/generic-utils.ts';
+
+import packageJson from '../package.json' with { type: 'json' };
 
 export interface KeycloakOptions {
   algorithms?: string[];

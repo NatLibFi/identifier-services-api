@@ -4653,8 +4653,17 @@
                   "maximum": 50
                 },
                 "last_name": {
-                  "type": "string",
+                  "type": [
+                    "string",
+                    "null"
+                  ],
                   "maximum": 50
+                },
+                "isni": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "roles": {
                   "type": "array",
@@ -4707,8 +4716,17 @@
                   "maximum": 50
                 },
                 "last_name": {
-                  "type": "string",
+                  "type": [
+                    "string",
+                    "null"
+                  ],
                   "maximum": 50
+                },
+                "isni": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "roles": {
                   "type": "array",
@@ -5203,7 +5221,10 @@
                 "$ref": "#/components/schemas/publishing-activity"
               },
               "publishing_activity_amount": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "comments": {
                 "maximum": 2000,

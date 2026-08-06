@@ -193,7 +193,9 @@ const monographPublicationRequestBaseSchema = z
     publishing_activity_amount: z
       .string()
       .max(5)
-      .regex(/^([0-9-]+)?$/),
+      .regex(/^([0-9-]+)?$/)
+      .nullable()
+      .optional(),
     comments: z.string().max(2000).optional().nullable(),
   })
   .strict()

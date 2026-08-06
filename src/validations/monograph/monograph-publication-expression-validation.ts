@@ -11,7 +11,7 @@ import { createMonographPublicationManifestationSchema } from './monograph-publi
 const monographPublicationExpressionAuthorSchema = z
   .object({
     first_name: z.string().min(1).max(50),
-    last_name: z.string().min(1).max(50),
+    last_name: z.string().min(1).max(50).nullable(),
     isni: z.string().min(16).max(16).nullable(),
     roles: z.array(z.enum(monographAuthorRoleEnum)).min(1).max(4),
   })
