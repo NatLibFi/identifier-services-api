@@ -5,8 +5,8 @@ import * as monographPublisherRequestInterface from '../../interfaces/monograph/
 
 export async function createMonographPublisherRequest(req: Request, res: Response, next: NextFunction) {
   try {
-    await monographPublisherRequestInterface.createMonographPublisherRequest(req.body, req.user);
-    return res.status(HttpStatus.CREATED).end();
+    const resultId = await monographPublisherRequestInterface.createMonographPublisherRequest(req.body, req.user);
+    return res.status(HttpStatus.CREATED).json({ id: resultId });
   } catch (error) {
     return next(error);
   }

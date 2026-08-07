@@ -1111,7 +1111,14 @@
         },
         "responses": {
           "201": {
-            "description": "Resource was created"
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"

@@ -27,11 +27,11 @@ import type { RequestUser } from '../../generic-types.ts';
 export async function createMonographPublisherRequest(
   createDoc: CreateMonographPublisherRequestV1Http | CreateMonographPublisherRequestV2Http,
   user: RequestUser,
-): Promise<void> {
+): Promise<number> {
   const publisherRequest = getDbPublisherRequestEntry(createDoc, user);
   const db = getKysely();
 
-  await db.transaction().execute(async (trx) => {
+  const entryId = await db.transaction().execute(async (trx) => {
     // 1. Create publisher request
     const publisherRequestResult = await trx
       .insertInto('monograph_publisher_request')
@@ -49,7 +49,7 @@ export async function createMonographPublisherRequest(
     return publisherRequestId;
   });
 
-  return;
+  return entryId;
 }
 
 export async function readMonographPublisherRequest(monographPublisherRequestId: number) {
