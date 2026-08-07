@@ -52,5 +52,3 @@ allOf:
             publisher_identifier:
               type: string
               example: '979-0-100'
-  - $ref: '../common/created-metadata.yaml'
-  - $ref: '../common/modified-metadata.yaml'

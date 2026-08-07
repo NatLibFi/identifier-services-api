@@ -382,6 +382,41 @@
       }
     },
     "/v2/monograph/isbn-publisher-ranges/{id}": {
+      "get": {
+        "operationId": "readIsbnPublisherRangePublicInfo",
+        "summary": "Read ISBN publisher range public information (used for Public UI identifier download page)",
+        "security": [],
+        "tags": [
+          "monograph",
+          "isbn-publisher-range"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher-range-read"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
       "delete": {
         "operationId": "deleteIsbnPublisherRange",
         "summary": "Delete ISBN publisher range",
@@ -394,7 +429,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-publisher-range"
         ],
         "parameters": [
           {
@@ -712,6 +747,41 @@
       }
     },
     "/v2/monograph/ismn-publisher-ranges/{id}": {
+      "get": {
+        "operationId": "readIsmnPublisherRangePublicInfo",
+        "summary": "Read ISMN publisher range public information (used for Public UI identifier download page)",
+        "security": [],
+        "tags": [
+          "monograph",
+          "ismn-publisher-range"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher-range-read"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
       "delete": {
         "operationId": "deleteIsmnPublisherRange",
         "summary": "Delete ISMN publisher range",
@@ -724,7 +794,7 @@
         ],
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-publisher-range"
         ],
         "parameters": [
           {
@@ -3138,6 +3208,17 @@
           "monograph_publisher_id"
         ]
       },
+      "publisher-range-read": {
+        "type": "object",
+        "properties": {
+          "publisher_name": {
+            "type": "string"
+          },
+          "publisher_identifier": {
+            "type": "string"
+          }
+        }
+      },
       "ismn-range-base": {
         "allOf": [
           {
@@ -3558,12 +3639,6 @@
                 }
               }
             }
-          },
-          {
-            "$ref": "#/components/schemas/created-metadata"
-          },
-          {
-            "$ref": "#/components/schemas/modified-metadata"
           }
         ]
       },

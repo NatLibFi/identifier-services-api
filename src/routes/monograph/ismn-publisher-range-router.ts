@@ -18,6 +18,12 @@ ismnPublisherRangeRouter.post(
   ismnPublisherRangeControllers.createIsmnRange,
 );
 
+ismnPublisherRangeRouter.get(
+  '/:id',
+  validateRequestParams(idParameterSchema, true),
+  ismnPublisherRangeControllers.readIsmnPublisherRangePublicInfo,
+);
+
 ismnPublisherRangeRouter.delete(
   '/:id',
   allowAdminOnly,

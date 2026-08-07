@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may read public information of ISMN publisher range",
+  "url": "/v2/monograph/ismn-publisher-ranges/1",
+  "method": "GET",
+  "expectedStatus": 200
+}

@@ -1,3 +1,26 @@
+get:
+  operationId: readIsmnPublisherRangePublicInfo
+  summary: Read ISMN publisher range public information (used for Public UI identifier download page)
+  security: []
+  tags:
+    - monograph
+    - ismn-publisher-range
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Resource was read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/publisher-range-read.yaml'
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
 delete:
   operationId: deleteIsmnPublisherRange
   summary: Delete ISMN publisher range
@@ -6,7 +29,7 @@ delete:
         - admin
   tags:
     - monograph
-    - ismn
+    - ismn-publisher-range
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

@@ -23,7 +23,10 @@ import type {
   GetIsbnPublisherRangeIdentifiersHttp,
 } from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
-import type { IsbnPublisherRangeSelect } from '../../db/types/monograph/types-isbn-publisher-range.ts';
+import type {
+  IsbnPublisherRangePublicInfo,
+  IsbnPublisherRangeSelect,
+} from '../../db/types/monograph/types-isbn-publisher-range.ts';
 import { isAdmin, isGuest } from '../../utils/permission-utils.ts';
 
 export async function createIsbnPublisherRange(
@@ -172,6 +175,45 @@ export async function readIsbnPublisherRange(isbnPublisherRangeId: number): Prom
   }
 
   return isbnPublisherRange;
+}
+
+export async function readIsbnPublisherRangePublicInfo(
+  isbnPublisherRangeId: number,
+): Promise<IsbnPublisherRangePublicInfo> {
+  const db = getKysely();
+
+  const result = await db
+    .selectFrom('isbn_publisher_range')
+    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'isbn_publisher_range.monograph_publisher_id')
+    .select([
+      'isbn_publisher_range.publisher_identifier as publisher_identifier',
+      'monograph_publisher.official_name as publisher_name',
+    ])
+    .where('isbn_publisher_range.id', '=', isbnPublisherRangeId)
+    .execute();
+
+  const [responseEntry] = result;
+  if (result.length !== 1 || !responseEntry) {
+    throw new ApiError(
+      HttpStatus.NOT_FOUND,
+      'Not found',
+      `ISBN publisher range id ${isbnPublisherRangeId} could not be found.`,
+    );
+  }
+
+  const { publisher_identifier, publisher_name } = responseEntry;
+  if (!publisher_identifier || !publisher_name) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `ISBN publisher range id ${isbnPublisherRangeId} information was not available.`,
+    );
+  }
+
+  return {
+    publisher_identifier,
+    publisher_name,
+  };
 }
 
 export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {

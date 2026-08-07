@@ -12,6 +12,15 @@ export async function createIsbnRange(req: Request, res: Response, next: NextFun
   }
 }
 
+export async function readIsbnPublisherRangePublicInfo(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await isbnPublisherRangeInterface.readIsbnPublisherRangePublicInfo(Number(req.params['id']));
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function deleteIsbnRange(req: Request, res: Response, next: NextFunction) {
   try {
     await isbnPublisherRangeInterface.deleteIsbnPublisherRange(Number(req.params['id']));

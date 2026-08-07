@@ -1,0 +1,6 @@
+type: object
+properties:
+  publisher_name:
+    type: string
+  publisher_identifier:
+    type: string

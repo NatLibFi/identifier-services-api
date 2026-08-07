@@ -11,6 +11,11 @@ export interface IsbnPublisherRange {
   modified_by: string;
 }
 
+export interface IsbnPublisherRangePublicInfo {
+  publisher_name: string;
+  publisher_identifier: string;
+}
+
 export type IsbnPublisherRangeInsert = Insertable<IsbnPublisherRange>;
 export type IsbnPublisherRangeUpdate = Updateable<IsbnPublisherRange>;
 export type IsbnPublisherRangeSelect = Selectable<IsbnPublisherRange>;

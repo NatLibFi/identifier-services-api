@@ -1,3 +1,26 @@
+get:
+  operationId: readIsbnPublisherRangePublicInfo
+  summary: Read ISBN publisher range public information (used for Public UI identifier download page)
+  security: []
+  tags:
+    - monograph
+    - isbn-publisher-range
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Resource was read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/publisher-range-read.yaml'
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
 delete:
   operationId: deleteIsbnPublisherRange
   summary: Delete ISBN publisher range
@@ -6,7 +29,7 @@ delete:
         - admin
   tags:
     - monograph
-    - isbn
+    - isbn-publisher-range
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

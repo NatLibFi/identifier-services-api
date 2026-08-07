@@ -18,6 +18,12 @@ isbnPublisherRangeRouter.post(
   isbnPublisherRangeControllers.createIsbnRange,
 );
 
+isbnPublisherRangeRouter.get(
+  '/:id',
+  validateRequestParams(idParameterSchema, true),
+  isbnPublisherRangeControllers.readIsbnPublisherRangePublicInfo,
+);
+
 isbnPublisherRangeRouter.delete(
   '/:id',
   allowAdminOnly,
