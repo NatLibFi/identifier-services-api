@@ -32,16 +32,16 @@
   "classifications": ["800", "820"],
   "classification_other": null,
   "promote_sorting": false,
-  "isbn_publisher_ranges": [],
-  "ismn_publisher_ranges": [
+  "isbn_publisher_ranges": [
     {
       "id": 1,
-      "publisher_identifier": "979-0-9001750",
+      "publisher_identifier": "978-951-95000",
       "identifier_total": 10,
-      "identifier_used": 0,
-      "identifier_free": 10
+      "identifier_used": 4,
+      "identifier_free": 6
     }
   ],
+  "ismn_publisher_ranges": [],
   "created": "2025-01-20T12:00:00.000Z",
   "created_by": "TEST_USER_1",
   "modified": "2025-01-20T12:00:00.000Z",

@@ -31,7 +31,10 @@
   "isbn_publisher_ranges": [
     {
       "id": 1,
-      "publisher_identifier": "978-951-95000"
+      "publisher_identifier": "978-951-95000",
+      "identifier_total": 10,
+      "identifier_used": 0,
+      "identifier_free": 10
     }
   ],
   "ismn_publisher_ranges": [],

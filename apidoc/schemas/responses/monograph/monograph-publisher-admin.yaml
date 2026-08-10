@@ -103,6 +103,21 @@ allOf:
             publisher_identifier:
               type: string
               example: '978-951-0'
+            identifier_total:
+              description: available for category 5 ISBN publisher ranges
+              type:
+                - number
+                - 'null'
+            identifier_used:
+              description: available for category 5 ISBN publisher ranges
+              type:
+                - number
+                - 'null'
+            identifier_free:
+              description: available for category 5 ISBN publisher ranges
+              type:
+                - number
+                - 'null'
       ismn_publisher_identifiers:
         type: array
         items:
@@ -114,5 +129,20 @@ allOf:
             publisher_identifier:
               type: string
               example: '979-0-100'
+            identifier_total:
+              description: available for category 7 ISMN publisher ranges
+              type:
+                - number
+                - 'null'
+            identifier_used:
+              description: available for category 7 ISMN publisher ranges
+              type:
+                - number
+                - 'null'
+            identifier_free:
+              description: available for category 7 ISMN publisher ranges
+              type:
+                - number
+                - 'null'
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

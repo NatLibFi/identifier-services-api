@@ -19,7 +19,9 @@ import {
 } from '../shared-interface-utils.ts';
 import {
   getMonographPublisherIsbnRanges,
+  getMonographPublisherIsbnRangesLite,
   getMonographPublisherIsmnRanges,
+  getMonographPublisherIsmnRangesLite,
   getMonographPublisherMessages,
   getMonographPublisherPublicationRequests,
   getMonographPublisherPublications,
@@ -46,13 +48,13 @@ import type {
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 
-export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true) {
+// useAdminLite -> reserved for searching using publisher identifier as this relies on using read for found entries
+// Utility of not having dynamic attributes associated with DB schema models (e.g., publisher identifier and total/free/used)
+// has cost of requiring these type complex optimizations within some functionalities
+export async function readMonographPublisher(id: number, user?: RequestUser, useDtl = true, useAdminLite = false) {
   const db = getKysely();
   const dbResult = await db.selectFrom('monograph_publisher').selectAll().where('id', '=', id).execute();
   const monographPublisherResult = validateGetById<MonographPublisherSelect>(dbResult);
-
-  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
-  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
 
   // Disallow skipping DTL for other than admin users
   if (isAdmin(user) && !useDtl) {
@@ -60,8 +62,19 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
   }
 
   if (isAdmin(user)) {
+    const isbnPublisherRanges = useAdminLite
+      ? await getMonographPublisherIsbnRangesLite(id)
+      : await getMonographPublisherIsbnRanges(id);
+
+    const ismnPublisherRanges = useAdminLite
+      ? await getMonographPublisherIsmnRangesLite(id)
+      : await getMonographPublisherIsmnRanges(id);
+
     return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
   }
+
+  const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(id);
+  const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(id);
 
   return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
 }
@@ -73,7 +86,7 @@ export async function deleteMonographPublisher(monographPublisherId: number) {
   await readMonographPublisher(monographPublisherId);
 
   // If there are any associations (other than archive entry) deletion is not currently allowed through API
-  const isbnPublisherRanges = await getMonographPublisherIsbnRanges(monographPublisherId);
+  const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(monographPublisherId);
   if (isbnPublisherRanges.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -82,7 +95,7 @@ export async function deleteMonographPublisher(monographPublisherId: number) {
     );
   }
 
-  const ismnPublisherRanges = await getMonographPublisherIsmnRanges(monographPublisherId);
+  const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(monographPublisherId);
   if (ismnPublisherRanges.length !== 0) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -353,8 +366,8 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
       total_doc,
       results: await Promise.all(
         result.map(async (p) => {
-          const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
-          const ismnPublisherRanges = await getMonographPublisherIsmnRanges(p.id);
+          const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(p.id);
+          const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(p.id);
           return asMonographPublisherAdminRead(p, isbnPublisherRanges, ismnPublisherRanges);
         }),
       ),
@@ -365,8 +378,8 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     total_doc,
     results: await Promise.all(
       result.map(async (p) => {
-        const isbnPublisherRanges = await getMonographPublisherIsbnRanges(p.id);
-        const ismnPublisherRanges = await getMonographPublisherIsmnRanges(p.id);
+        const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(p.id);
+        const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(p.id);
         return asMonographPublisherGuestRead(p, isbnPublisherRanges, ismnPublisherRanges);
       }),
     ),

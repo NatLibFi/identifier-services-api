@@ -22,8 +22,8 @@ import {
   MONOGRAPH_MESSAGE_TYPES,
 } from '../../constants.ts';
 import {
-  getMonographPublisherIsbnRanges,
-  getMonographPublisherIsmnRanges,
+  getMonographPublisherIsbnRangesLite,
+  getMonographPublisherIsmnRangesLite,
 } from './monograph-publisher-interface-utils.ts';
 import { readIsmnPublisherRange } from './ismn-publisher-range-interface.ts';
 
@@ -395,7 +395,7 @@ async function constructMonographPublisherRegisteredMessage(
   const subject = messageTemplate.subject;
 
   if (messageType === MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION) {
-    const isbnPublisherRange = await getMonographPublisherIsbnRanges(messagePublisher.id);
+    const isbnPublisherRange = await getMonographPublisherIsbnRangesLite(messagePublisher.id);
 
     // Validate publisher has only one range and that it's of category five
     const cat5PublisherRanges = isbnPublisherRange.filter(
@@ -412,7 +412,7 @@ async function constructMonographPublisherRegisteredMessage(
     publisherIdentifier = cat5PublisherRange.publisher_identifier;
     isbnPublisherRangeId = cat5PublisherRange.id;
   } else if (messageType === MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION) {
-    const ismnPublisherRange = await getMonographPublisherIsmnRanges(messagePublisher.id);
+    const ismnPublisherRange = await getMonographPublisherIsmnRangesLite(messagePublisher.id);
 
     // Validate publisher has only one range and that it's of category seven (contains 10 ISMN identifiers)
     const cat7PublisherRanges = ismnPublisherRange.filter(

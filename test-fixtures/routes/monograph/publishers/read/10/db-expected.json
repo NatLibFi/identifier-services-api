@@ -1,0 +1,1059 @@
+{
+  "monograph_publisher": [
+    {
+      "id": 1,
+      "official_name": "Example publisher",
+      "other_names": ["Example othername #1", "Example othername #2"],
+      "previous_names": ["Example previousname #1", "Example previousname #2"],
+      "address": "Foo street 123",
+      "zip": "00000",
+      "city": "Foo city",
+      "phone": "123456789",
+      "email": "example@example.localhost",
+      "www": "http://example.localhost",
+      "lang_code": "fi-FI",
+      "contact_persons": [
+        {
+          "name": "Erkki Esimerkki",
+          "email": "erkki.esimerkki@example.localhost"
+        },
+        {
+          "name": "Elli Esimerkki",
+          "email": "elli.esimerkki@example.localhost"
+        }
+      ],
+      "additional_info": "Example of additional information",
+      "year_quitted": null,
+      "has_quitted": false,
+      "frequency_current": "100",
+      "frequency_next": "100",
+      "affiliate_of": "Example of affiliateOf",
+      "affiliates": "Example of affiliate",
+      "distributor_of": "Example of distributorOf",
+      "distributors": "Example of distributor",
+      "classifications": ["800", "820"],
+      "classification_other": null,
+      "promote_sorting": false,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "isbn_publisher_range": [],
+  "isbn_identifier": [],
+  "ismn_publisher_range": [
+    {
+      "id": 1,
+      "publisher_identifier": "979-0-700100",
+      "monograph_publisher_id": 1,
+      "ismn_range_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "ismn_identifier": [
+    {
+      "id": 1,
+      "identifier": "979-0-700100-00-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 2,
+      "identifier": "979-0-700100-01-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 3,
+      "identifier": "979-0-700100-02-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 4,
+      "identifier": "979-0-700100-03-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 5,
+      "identifier": "979-0-700100-04-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 6,
+      "identifier": "979-0-700100-05-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 7,
+      "identifier": "979-0-700100-06-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 8,
+      "identifier": "979-0-700100-07-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 9,
+      "identifier": "979-0-700100-08-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 10,
+      "identifier": "979-0-700100-09-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 11,
+      "identifier": "979-0-700100-10-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 12,
+      "identifier": "979-0-700100-11-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 13,
+      "identifier": "979-0-700100-12-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 14,
+      "identifier": "979-0-700100-13-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 15,
+      "identifier": "979-0-700100-14-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 16,
+      "identifier": "979-0-700100-15-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 17,
+      "identifier": "979-0-700100-16-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 18,
+      "identifier": "979-0-700100-17-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 19,
+      "identifier": "979-0-700100-18-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 20,
+      "identifier": "979-0-700100-19-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 21,
+      "identifier": "979-0-700100-20-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 22,
+      "identifier": "979-0-700100-21-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 23,
+      "identifier": "979-0-700100-22-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 24,
+      "identifier": "979-0-700100-23-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 25,
+      "identifier": "979-0-700100-24-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 26,
+      "identifier": "979-0-700100-25-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 27,
+      "identifier": "979-0-700100-26-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 28,
+      "identifier": "979-0-700100-27-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 29,
+      "identifier": "979-0-700100-28-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 30,
+      "identifier": "979-0-700100-29-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 31,
+      "identifier": "979-0-700100-30-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 32,
+      "identifier": "979-0-700100-31-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 33,
+      "identifier": "979-0-700100-32-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 34,
+      "identifier": "979-0-700100-33-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 35,
+      "identifier": "979-0-700100-34-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 36,
+      "identifier": "979-0-700100-35-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 37,
+      "identifier": "979-0-700100-36-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 38,
+      "identifier": "979-0-700100-37-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 39,
+      "identifier": "979-0-700100-38-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 40,
+      "identifier": "979-0-700100-39-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 41,
+      "identifier": "979-0-700100-40-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 42,
+      "identifier": "979-0-700100-41-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 43,
+      "identifier": "979-0-700100-42-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 44,
+      "identifier": "979-0-700100-43-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 45,
+      "identifier": "979-0-700100-44-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 46,
+      "identifier": "979-0-700100-45-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 47,
+      "identifier": "979-0-700100-46-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 48,
+      "identifier": "979-0-700100-47-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 49,
+      "identifier": "979-0-700100-48-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 50,
+      "identifier": "979-0-700100-49-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 51,
+      "identifier": "979-0-700100-50-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 52,
+      "identifier": "979-0-700100-51-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 53,
+      "identifier": "979-0-700100-52-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 54,
+      "identifier": "979-0-700100-53-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 55,
+      "identifier": "979-0-700100-54-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 56,
+      "identifier": "979-0-700100-55-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 57,
+      "identifier": "979-0-700100-56-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 58,
+      "identifier": "979-0-700100-57-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 59,
+      "identifier": "979-0-700100-58-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 60,
+      "identifier": "979-0-700100-59-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 61,
+      "identifier": "979-0-700100-60-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 62,
+      "identifier": "979-0-700100-61-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 63,
+      "identifier": "979-0-700100-62-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 64,
+      "identifier": "979-0-700100-63-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 65,
+      "identifier": "979-0-700100-64-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 66,
+      "identifier": "979-0-700100-65-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 67,
+      "identifier": "979-0-700100-66-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 68,
+      "identifier": "979-0-700100-67-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 69,
+      "identifier": "979-0-700100-68-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 70,
+      "identifier": "979-0-700100-69-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 71,
+      "identifier": "979-0-700100-70-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 72,
+      "identifier": "979-0-700100-71-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 73,
+      "identifier": "979-0-700100-72-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 74,
+      "identifier": "979-0-700100-73-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 75,
+      "identifier": "979-0-700100-74-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 76,
+      "identifier": "979-0-700100-75-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 77,
+      "identifier": "979-0-700100-76-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 78,
+      "identifier": "979-0-700100-77-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 79,
+      "identifier": "979-0-700100-78-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 80,
+      "identifier": "979-0-700100-79-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 81,
+      "identifier": "979-0-700100-80-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 82,
+      "identifier": "979-0-700100-81-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 83,
+      "identifier": "979-0-700100-82-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 84,
+      "identifier": "979-0-700100-83-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 85,
+      "identifier": "979-0-700100-84-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 86,
+      "identifier": "979-0-700100-85-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 87,
+      "identifier": "979-0-700100-86-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 88,
+      "identifier": "979-0-700100-87-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 89,
+      "identifier": "979-0-700100-88-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 90,
+      "identifier": "979-0-700100-89-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 91,
+      "identifier": "979-0-700100-90-2",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 92,
+      "identifier": "979-0-700100-91-9",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 93,
+      "identifier": "979-0-700100-92-6",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 94,
+      "identifier": "979-0-700100-93-3",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 95,
+      "identifier": "979-0-700100-94-0",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 96,
+      "identifier": "979-0-700100-95-7",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 97,
+      "identifier": "979-0-700100-96-4",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 98,
+      "identifier": "979-0-700100-97-1",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 99,
+      "identifier": "979-0-700100-98-8",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 100,
+      "identifier": "979-0-700100-99-5",
+      "ismn_publisher_range_id": 1,
+      "monograph_publication_manifestation_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    }
+  ]
+}
