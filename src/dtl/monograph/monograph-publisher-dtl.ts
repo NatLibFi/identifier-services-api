@@ -57,6 +57,7 @@ export function asMonographPublisherAdminRead(
     const isbnPublisherRangeBase: {
       id: number;
       publisher_identifier: string;
+      created?: Date;
       identifier_total?: number | null;
       identifier_used?: number | null;
       identifier_free?: number | null;
@@ -65,6 +66,8 @@ export function asMonographPublisherAdminRead(
       publisher_identifier: isbnPublisherRange.publisher_identifier,
     };
     if ('identifier_total' in isbnPublisherRange) {
+      // Quick and dirty method for including created metadata only for relevant admin reads
+      isbnPublisherRangeBase.created = isbnPublisherRange.created;
       isbnPublisherRangeBase.identifier_total = isbnPublisherRange.identifier_total;
     }
 
@@ -85,34 +88,37 @@ export function asMonographPublisherAdminRead(
     return isbnPublisherRangeBase;
   });
 
-  const ismnPublisherRangeInformation = ismnPublisherRanges.map((isbnPublisherRange) => {
+  const ismnPublisherRangeInformation = ismnPublisherRanges.map((ismnPublisherRange) => {
     const ismnPublisherRangeBase: {
       id: number;
       publisher_identifier: string;
+      created?: Date;
       identifier_total?: number | null;
       identifier_used?: number | null;
       identifier_free?: number | null;
     } = {
-      id: isbnPublisherRange.id,
-      publisher_identifier: isbnPublisherRange.publisher_identifier,
+      id: ismnPublisherRange.id,
+      publisher_identifier: ismnPublisherRange.publisher_identifier,
     };
 
-    if ('identifier_total' in isbnPublisherRange) {
-      ismnPublisherRangeBase.identifier_total = isbnPublisherRange.identifier_total;
+    if ('identifier_total' in ismnPublisherRange) {
+      // Quick and dirty method for including created metadata only for relevant admin reads
+      ismnPublisherRangeBase.created = ismnPublisherRange.created;
+      ismnPublisherRangeBase.identifier_total = ismnPublisherRange.identifier_total;
     }
 
     // Note: identifier totals are made available only for category 7 ISMN publisher ranges
     // This is due to category 3-6 ISMN publisher ranges being controlled by publishers outside of this system
     // We have no way of having up-to-date information regarding usage of these identifiers currently
     const fillIdentifierUsage =
-      isbnPublisherRange.publisher_identifier.length === ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[7];
+      ismnPublisherRange.publisher_identifier.length === ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[7];
 
-    if ('identifier_used' in isbnPublisherRange) {
-      ismnPublisherRangeBase.identifier_used = fillIdentifierUsage ? isbnPublisherRange.identifier_used : null;
+    if ('identifier_used' in ismnPublisherRange) {
+      ismnPublisherRangeBase.identifier_used = fillIdentifierUsage ? ismnPublisherRange.identifier_used : null;
     }
 
-    if ('identifier_free' in isbnPublisherRange) {
-      ismnPublisherRangeBase.identifier_free = fillIdentifierUsage ? isbnPublisherRange.identifier_free : null;
+    if ('identifier_free' in ismnPublisherRange) {
+      ismnPublisherRangeBase.identifier_free = fillIdentifierUsage ? ismnPublisherRange.identifier_free : null;
     }
 
     return ismnPublisherRangeBase;

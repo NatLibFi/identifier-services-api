@@ -3524,6 +3524,9 @@
                       "type": "number",
                       "example": 1
                     },
+                    "created": {
+                      "type": "string"
+                    },
                     "publisher_identifier": {
                       "type": "string",
                       "example": "978-951-0"
@@ -3560,6 +3563,9 @@
                     "id": {
                       "type": "number",
                       "example": 1
+                    },
+                    "created": {
+                      "type": "string"
                     },
                     "publisher_identifier": {
                       "type": "string",
