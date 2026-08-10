@@ -266,7 +266,7 @@ export async function deleteMonographPublicationExpression(expressionId: number,
   return;
 }
 
-// TODO: integration tests
+// Important note: record is not generated from cancelled manifestations and identifiers assigned to cancelled manifestations are not taken into account
 export async function createMonographPublicationExpressionMarc(
   expressionId: number,
   opts: GetMarcRecordHttp,
@@ -314,7 +314,7 @@ export async function createMonographPublicationExpressionMarc(
   // This will gather all ISBNs for same manifestation type to an array and place manifestation type as object key
   // i.e., {"PDF": ["978-951-1..."]}
   const isbnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
-    if (n.isbn_identifier) {
+    if (n.isbn_identifier && !n.cancelled) {
       (p[`${n.manifestation_type}`] ??= []).push(n.isbn_identifier);
     }
     return p;
@@ -323,7 +323,7 @@ export async function createMonographPublicationExpressionMarc(
   // This will gather all ISBNs for same manifestation type to an array and place manifestation type as object key
   // i.e., {"PDF": ["978-951-1..."]}
   const ismnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
-    if (n.ismn_identifier) {
+    if (n.ismn_identifier && !n.cancelled) {
       (p[`${n.manifestation_type}`] ??= []).push(n.ismn_identifier);
     }
     return p;
@@ -349,15 +349,16 @@ export async function createMonographPublicationExpressionMarc(
     contributors,
   };
 
-  const printManifestations = expression.manifestations.filter((m) =>
-    Object.keys(MONOGRAPH_MANIFESTATION_TYPES_PRINT).includes(m.manifestation_type),
+  const printManifestations = expression.manifestations.filter(
+    (m) => Object.keys(MONOGRAPH_MANIFESTATION_TYPES_PRINT).includes(m.manifestation_type) && !m.cancelled,
   );
 
-  const electronicalManifestations = expression.manifestations.filter((m) =>
-    Object.keys(MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL).includes(m.manifestation_type),
+  const electronicalManifestations = expression.manifestations.filter(
+    (m) => Object.keys(MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL).includes(m.manifestation_type) && !m.cancelled,
   );
 
   if (printManifestations.length > 0 && record_filter !== MARC_RECORD_FILTER.ELECTRONICAL_ONLY) {
+    // For print only one MARC record is generated
     const printRecordInformation: CreateMarcRecordInformation = {
       ...publicationInfoBase,
       isElectronical: false,
@@ -373,25 +374,30 @@ export async function createMonographPublicationExpressionMarc(
     marcRecords.push(printRecord);
   }
 
-  if (electronicalManifestations.length > 0 && record_filter !== MARC_RECORD_FILTER.PRINT_ONLY) {
+  if (record_filter !== MARC_RECORD_FILTER.PRINT_ONLY) {
+    // For electronical one MARC record for each manifestation is generated
     const audiobookTypes = [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM, MONOGRAPH_MANIFESTATION_TYPES.MP3];
-    const isBook = expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.BOOK;
-    const isAudiobook = isBook && expression.manifestations.some((m) => audiobookTypes.includes(m.manifestation_type));
 
-    const electronicalRecordInformation: CreateMarcRecordInformation = {
-      ...publicationInfoBase,
-      isElectronical: true,
-      isAudiobook,
-      publicationYear: electronicalManifestations[0]?.publication_year || undefined, // Use information from first manifestation for request
-      publicationMonth: electronicalManifestations[0]?.publication_month || undefined, // Use information from first manifestation for request
-      printerName: electronicalManifestations[0]?.printing_information[0]?.printing_house,
-      printerPlace: electronicalManifestations[0]?.printing_information[0]?.printing_house_city,
-      edition: electronicalManifestations[0]?.manifestation_edition,
-      monographSeries: electronicalManifestations[0]?.series,
-    };
+    electronicalManifestations.forEach((electronicalManifestation) => {
+      const isAudiobook = audiobookTypes.includes(electronicalManifestation.manifestation_type);
 
-    const electronicalRecord = generateMarcRecord(electronicalRecordInformation);
-    marcRecords.push(electronicalRecord);
+      const electronicalRecordInformation: CreateMarcRecordInformation = {
+        ...publicationInfoBase,
+        manifestationType: electronicalManifestation.manifestation_type,
+        isElectronical: true,
+        isAudiobook,
+        isMp3: electronicalManifestation.manifestation_type === MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL.MP3,
+        publicationYear: electronicalManifestations[0]?.publication_year || undefined, // Use information from first manifestation for request
+        publicationMonth: electronicalManifestations[0]?.publication_month || undefined, // Use information from first manifestation for request
+        printerName: electronicalManifestations[0]?.printing_information[0]?.printing_house,
+        printerPlace: electronicalManifestations[0]?.printing_information[0]?.printing_house_city,
+        edition: electronicalManifestations[0]?.manifestation_edition,
+        monographSeries: electronicalManifestations[0]?.series,
+      };
+
+      const electronicalRecord = generateMarcRecord(electronicalRecordInformation);
+      marcRecords.push(electronicalRecord);
+    });
   }
 
   if (record_format === MARC_RECORD_FORMAT.MARC_RECORD_JS) {

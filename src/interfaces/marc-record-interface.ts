@@ -3,7 +3,7 @@ import { MarcRecord } from '@natlibfi/marc-record';
 
 import { translateManifestationType } from './monograph/monograph-message-template-utils.ts';
 
-import { MONOGRAPH_MANIFESTATION_TYPES, MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL } from '../constants.ts';
+import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL } from '../constants.ts';
 
 import type { MonographAuthor } from '../db/types/monograph/types-monograph-author.ts';
 import type { MonographSeriesInformation } from '../db/types/monograph/types-monograph-publication-manifestation.ts';
@@ -13,11 +13,13 @@ import { isProduction } from '../utils/generic-utils.ts';
 export interface CreateMarcRecordInformation {
   isElectronical: boolean;
   isMonograph: boolean;
+  manifestationType?: string; // Used for electronical records
   isSerial: boolean;
   isSheetMusic: boolean;
   isDissertation: boolean;
   isMap: boolean;
   isAudiobook: boolean;
+  isMp3?: boolean;
   title: string;
   subtitle?: string | null;
   isbnIdentifiers?: Record<string, string[]>; // {"PDF": ["978-951-1..."]}
@@ -291,7 +293,7 @@ export function generate008(publicationInfo: CreateMarcRecordInformation): Contr
 }
 
 export function generate020(publicationInfo: CreateMarcRecordInformation): DataField[] {
-  const { isElectronical, isbnIdentifiers } = publicationInfo;
+  const { isElectronical, isbnIdentifiers, manifestationType: recordManifestationType } = publicationInfo;
 
   if (!isbnIdentifiers) {
     return [];
@@ -312,6 +314,13 @@ export function generate020(publicationInfo: CreateMarcRecordInformation): DataF
 
       if (!isElectronical && isElectronicalManifestationType) {
         return null; // Note: these will be stripped by filter
+      }
+
+      const isNotMatchingElectronicalManifestationType =
+        isElectronical && recordManifestationType !== manifestationType;
+
+      if (isElectronical && isNotMatchingElectronicalManifestationType) {
+        return null;
       }
 
       const translatedManifestationType = translateManifestationType(manifestationType, 'fi-FI');
@@ -726,9 +735,7 @@ export function generate341(publicationInfo: CreateMarcRecordInformation): DataF
 }
 
 export function generate347(publicationInfo: CreateMarcRecordInformation): DataField[] {
-  const { isbnIdentifiers = {}, ismnIdentifiers = {} } = publicationInfo;
-  const manifestationTypes = Object.keys(isbnIdentifiers).concat(Object.keys(ismnIdentifiers));
-  const isMp3 = manifestationTypes.some((t) => t === MONOGRAPH_MANIFESTATION_TYPES.MP3);
+  const { isMp3 } = publicationInfo;
 
   if (!isMp3) {
     return [];

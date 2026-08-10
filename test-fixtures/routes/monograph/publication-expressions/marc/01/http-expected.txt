@@ -19,6 +19,7 @@ LDR    00000nam a22000008i 4500
 594    ‡aEI VASTAANOTETTU‡5FENNI
 700 1  ‡aEsimerkki, Erkki.
 776 08 ‡iVerkkoaineisto:‡z978-951-95000-1-0
+776 08 ‡iVerkkoaineisto:‡z978-951-95000-2-7
 LOW    ‡aFIKKA
 
 LDR    00000nam a22000008i 4500
@@ -36,6 +37,32 @@ LDR    00000nam a22000008i 4500
 337    ‡atietokonekäyttöinen‡bc‡2rdamedia
 338    ‡averkkoaineisto‡bcr‡2rdacarrier
 341    ‡atextual‡2sapdv
+490 0  ‡aExample series,‡x1234-4321 ;‡v1
+500    ‡aTUNNISTEREKISTERIN TESTITIETUE.
+500    ‡aEnnakkotieto / Kansalliskirjasto.
+594    ‡aEnnakkotieto / Kansalliskirjasto‡5FENNI
+594    ‡aEI VASTAANOTETTU‡5FENNI
+700 1  ‡aEsimerkki, Erkki.
+776 08 ‡iPainettu:‡z978-951-95000-0-3
+LOW    ‡aFIKKA
+
+LDR    00000nam a22000008i 4500
+007    cr||| ||||||||
+007    sr|uunnnnnuneu
+008    260120s2024    fi |||| o     |0| 0|swe| 
+020    ‡a978-951-95000-2-7‡qMP3
+040    ‡aFI-NL‡bfin‡erda
+041 0  ‡aswe
+042    ‡afinb
+100 1  ‡aEsimerkki, Erkki
+245 10 ‡aExample title :‡bExample subtitle.
+263    ‡a202412
+264 1  ‡aFoo city‡bFoo Publisher, ‡c2024.
+336    ‡apuhe‡bspw‡2rdacontent
+337    ‡atietokonekäyttöinen‡bc‡2rdamedia
+338    ‡averkkoaineisto‡bcr‡2rdacarrier
+341    ‡aauditory‡2sapdv
+347    ‡aäänitiedosto‡bMP3
 490 0  ‡aExample series,‡x1234-4321 ;‡v1
 500    ‡aTUNNISTEREKISTERIN TESTITIETUE.
 500    ‡aEnnakkotieto / Kansalliskirjasto.
