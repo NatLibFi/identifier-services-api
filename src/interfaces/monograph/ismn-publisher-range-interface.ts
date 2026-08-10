@@ -27,11 +27,21 @@ import type {
   IsmnPublisherRangePublicInfo,
   IsmnPublisherRangeSelect,
 } from '../../db/types/monograph/types-ismn-publisher-range.ts';
+import { ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH } from '../../constants.ts';
+
+interface IsmnPublisherRangeCreateResult {
+  id: number;
+  publisher_identifier: string;
+  identifier_total: number;
+  identifier_used: number | null;
+  identifier_free: number | null;
+  created: Date;
+}
 
 export async function createIsmnPublisherRange(
   ismnPublisherRanceCreateDoc: CreateIsmnPublisherRangeHttp,
   user: RequestUser,
-) {
+): Promise<IsmnPublisherRangeCreateResult> {
   const { publisher_identifier, monograph_publisher_id, ismn_range_id } = ismnPublisherRanceCreateDoc;
   const db = getKysely();
 
@@ -104,7 +114,7 @@ export async function createIsmnPublisherRange(
   const associatedIsmnIdentifiers = getIsmnIdentifiers(publisher_identifier);
 
   // Processed within transaction to create ISMN identifiers associated with the ISMN publisher range in batches of 1k
-  const resultId = await db.transaction().execute(async (trx) => {
+  const result: IsmnPublisherRangeCreateResult = await db.transaction().execute(async (trx) => {
     // When last ISMN publisher range is assigned, deactivate range
     if (isLastAvailable) {
       await trx
@@ -118,17 +128,19 @@ export async function createIsmnPublisherRange(
         .executeTakeFirstOrThrow();
     }
 
+    const ismnPublisherRangeData = {
+      publisher_identifier,
+      monograph_publisher_id,
+      ismn_range_id,
+      created: getCurrentTime(),
+      created_by: user.id,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
     const result = await trx
       .insertInto('ismn_publisher_range')
-      .values({
-        publisher_identifier,
-        monograph_publisher_id,
-        ismn_range_id,
-        created: getCurrentTime(),
-        created_by: user.id,
-        modified: getCurrentTime(),
-        modified_by: user.id,
-      })
+      .values(ismnPublisherRangeData)
       .executeTakeFirstOrThrow();
 
     const publisherRangeId = Number(result.insertId);
@@ -150,10 +162,23 @@ export async function createIsmnPublisherRange(
       }),
     );
 
-    return publisherRangeId;
+    return {
+      id: publisherRangeId,
+      publisher_identifier: ismnPublisherRangeData.publisher_identifier,
+      identifier_total: associatedIsmnIdentifiers.length,
+      identifier_used: 0,
+      identifier_free: associatedIsmnIdentifiers.length,
+      created: ismnPublisherRangeData.created,
+    };
   });
 
-  return { id: resultId };
+  // Remove used and free from non category 7 ismn publisher ranges
+  if (publisher_identifier.length !== ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[7]) {
+    result.identifier_used = null;
+    result.identifier_free = null;
+  }
+
+  return result;
 }
 
 export async function readIsmnPublisherRange(ismnPublisherRangeId: number): Promise<IsmnPublisherRangeSelect> {

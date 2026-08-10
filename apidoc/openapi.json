@@ -358,7 +358,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/created"
+                  "$ref": "#/components/schemas/publisher-range-create-result-body"
                 }
               }
             }
@@ -723,7 +723,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/created"
+                  "$ref": "#/components/schemas/publisher-range-create-result-body"
                 }
               }
             }
@@ -3207,6 +3207,35 @@
           "isbn_range_id",
           "monograph_publisher_id"
         ]
+      },
+      "publisher-range-create-result-body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "publisher_identifier": {
+            "type": "string"
+          },
+          "identifier_total": {
+            "type": "number"
+          },
+          "identifier_used": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "identifier_free": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "created": {
+            "type": "string"
+          }
+        }
       },
       "publisher-range-read": {
         "type": "object",

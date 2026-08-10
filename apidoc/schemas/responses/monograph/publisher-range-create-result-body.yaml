@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: number
+  publisher_identifier:
+    type: string
+  identifier_total:
+    type: number
+  identifier_used:
+    type:
+      - number
+      - 'null'
+  identifier_free:
+    type:
+      - number
+      - 'null'
+  created:
+    type: string

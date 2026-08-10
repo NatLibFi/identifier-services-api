@@ -28,11 +28,21 @@ import type {
   IsbnPublisherRangeSelect,
 } from '../../db/types/monograph/types-isbn-publisher-range.ts';
 import { isAdmin, isGuest } from '../../utils/permission-utils.ts';
+import { ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH } from '../../constants.ts';
+
+interface IsbnPublisherRangeCreateResult {
+  id: number;
+  publisher_identifier: string;
+  identifier_total: number;
+  identifier_used: number | null;
+  identifier_free: number | null;
+  created: Date;
+}
 
 export async function createIsbnPublisherRange(
   isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
   user: RequestUser,
-) {
+): Promise<IsbnPublisherRangeCreateResult> {
   const { publisher_identifier, monograph_publisher_id, isbn_range_id } = isbnPublisherRanceCreateDoc;
   const db = getKysely();
 
@@ -105,7 +115,7 @@ export async function createIsbnPublisherRange(
   const associatedIsbnIdentifiers = getIsbnIdentifiers(publisher_identifier);
 
   // Processed within transaction to create ISBN identifiers associated with the ISBN publisher range in batches of 1k
-  const resultId = await db.transaction().execute(async (trx) => {
+  const result: IsbnPublisherRangeCreateResult = await db.transaction().execute(async (trx) => {
     // When last ISBN publisher range is assigned, deactivate range
     if (isLastAvailable) {
       await trx
@@ -119,17 +129,19 @@ export async function createIsbnPublisherRange(
         .executeTakeFirstOrThrow();
     }
 
+    const isbnPublisherRangeData = {
+      publisher_identifier,
+      monograph_publisher_id,
+      isbn_range_id,
+      created: getCurrentTime(),
+      created_by: user.id,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
     const result = await trx
       .insertInto('isbn_publisher_range')
-      .values({
-        publisher_identifier,
-        monograph_publisher_id,
-        isbn_range_id,
-        created: getCurrentTime(),
-        created_by: user.id,
-        modified: getCurrentTime(),
-        modified_by: user.id,
-      })
+      .values(isbnPublisherRangeData)
       .executeTakeFirstOrThrow();
 
     const publisherRangeId = Number(result.insertId);
@@ -151,10 +163,23 @@ export async function createIsbnPublisherRange(
       }),
     );
 
-    return publisherRangeId;
+    return {
+      id: publisherRangeId,
+      publisher_identifier: isbnPublisherRangeData.publisher_identifier,
+      identifier_total: associatedIsbnIdentifiers.length,
+      identifier_used: 0,
+      identifier_free: associatedIsbnIdentifiers.length,
+      created: isbnPublisherRangeData.created,
+    };
   });
 
-  return { id: resultId };
+  // Remove used and free from non category 5 isbn publisher ranges
+  if (publisher_identifier.length !== ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[5]) {
+    result.identifier_used = null;
+    result.identifier_free = null;
+  }
+
+  return result;
 }
 
 export async function readIsbnPublisherRange(isbnPublisherRangeId: number): Promise<IsbnPublisherRangeSelect> {
