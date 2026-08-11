@@ -30,7 +30,7 @@ export default function createMonographStatisticsControllers(
       if (output_format === STATISTICS_FORMAT.XLSX) {
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', `attachment; filename="tunnisteportaali-${statistics_type}.xlsx"`);
-        await result.csv.write(res);
+        await result.xlsx.write(res);
         return res.status(HttpStatus.OK).end();
       }
 
