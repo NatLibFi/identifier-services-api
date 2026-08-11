@@ -1,6 +1,8 @@
 import ExcelJS from 'exceljs';
+import HttpStatus from 'http-status';
 import { sql } from 'kysely';
 
+import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
 
 import {
@@ -32,7 +34,11 @@ export function formatStatisticsToWorkbook(statisticsName: string, data: Record<
   const [firstRow] = data;
 
   if (!firstRow) {
-    throw new Error('Could not format statistics data as it did not include any row information');
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Could not format empty statistics data',
+    );
   }
 
   // Add headers from object keys
