@@ -11,7 +11,7 @@ properties:
   contact_persons:
     type: array
     items:
-      $ref: '../../../enums/contact-person.yaml'
+      $ref: '../../../common/contact-person.yaml'
   address:
     type: string
   zip:

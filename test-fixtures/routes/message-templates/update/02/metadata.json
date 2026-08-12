@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not update message template",
+  "url": "/v2/message-templates/1",
+  "method": "PATCH",
+  "expectedStatus": 401
+}

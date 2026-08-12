@@ -16,6 +16,7 @@ import validateContentType from './middlewares/content-type.ts';
 import healthRouter from './routes/health-router.ts';
 import createMonographRouter from './routes/monograph/monograph-router.ts';
 import createMelindaRouter from './routes/melinda-router.ts';
+import createMessageTemplateRouter from './routes/message-template-router.ts';
 import testAuthenticationRouter from './routes/test-auth-router.ts';
 
 import { allowAdminOnly } from './middlewares/auth.ts';
@@ -173,9 +174,11 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     turnstileMiddleware.validateTurnstile,
   );
   const melindaRouter = createMelindaRouter(melindaConfiguration);
+  const messageTemplateRouter = createMessageTemplateRouter();
 
   app.use('/v2/monograph', monographRouter);
   app.use('/v2/melinda', allowAdminOnly, melindaRouter);
+  app.use('/v2/message-templates', allowAdminOnly, messageTemplateRouter);
 
   // Public routes
   app.use('/v2', healthRouter);

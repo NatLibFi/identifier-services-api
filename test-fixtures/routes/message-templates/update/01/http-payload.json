@@ -1,0 +1,4 @@
+{
+  "subject": "Muokattu #TITLE# approved",
+  "body": "Muokattu #DATE#\n\n#EMAIL#\n#PUBLISHER#\n#ADDRESS#\n\nTeokselle #TITLE#: #SUBTITLE# eri julkaisumuodoille on myönnetty seuraavat tunnukset.\n\n#IDENTIFIERS#\n\nKind regards,\n#USER#"
+}

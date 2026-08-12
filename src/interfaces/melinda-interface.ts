@@ -7,10 +7,11 @@ import { MARC_RECORD_FORMAT } from '../constants.ts';
 
 import { createMonographPublicationExpressionMarc } from './monograph/monograph-publication-expression-interface.ts';
 
+import { isAutomatedTest } from '../utils/generic-utils.ts';
+
 import type { MelindaConfiguration } from '../app.ts';
 import type { UnknownObject } from '../generic-types.ts';
 import type { SendToMelindaHttp } from '../validations/melinda-validation.ts';
-import { isAutomatedTest } from '../utils/generic-utils.ts';
 
 interface MelindaSaveResult {
   success_info?: UnknownObject;

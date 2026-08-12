@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may update message template",
+  "url": "/v2/message-templates/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}

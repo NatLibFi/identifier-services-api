@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not update message template",
+  "url": "/v2/message-templates/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

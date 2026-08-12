@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may retrieve message template for approved monograph publication request (ISBN)",
+  "url": "/v2/message-templates?message_type=ISBN_ASSIGNMENT&lang_code=fi-FI",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

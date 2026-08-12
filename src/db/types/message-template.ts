@@ -3,8 +3,8 @@ import type { Generated, Selectable } from 'kysely';
 export interface MessageTemplate {
   id: Generated<number>;
   name: string;
-  lang_code: string;
   message_type: string;
+  lang_code: string;
   subject: string;
   body: string;
   created: Date;

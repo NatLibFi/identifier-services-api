@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "There exists too many message templates with given query (IDs 1, 2).",
+  "instance": "/v2/message-templates"
+}

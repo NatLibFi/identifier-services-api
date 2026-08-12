@@ -51,7 +51,7 @@ properties:
   contact_persons:
     type: array
     maxItems: 10
-    $ref: '../../../enums/contact-person.yaml'
+    $ref: '../../../common/contact-person.yaml'
   additional_info:
     type:
       - string

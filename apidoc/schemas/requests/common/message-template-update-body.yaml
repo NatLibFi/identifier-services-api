@@ -1,0 +1,6 @@
+type: object
+properties:
+  subject:
+    type: string
+  body:
+    type: string

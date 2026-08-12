@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import createMelindaControllers from '../controllers/monograph-melinda-controller.ts';
+import createMelindaControllers from '../controllers/melinda-controller.ts';
 
 import { validateRequestBody } from '../middlewares/validation.ts';
 import { sendToMelindaSchema } from '../validations/melinda-validation.ts';

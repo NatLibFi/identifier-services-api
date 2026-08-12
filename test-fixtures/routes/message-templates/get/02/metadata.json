@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot retrieve message template",
+  "url": "/v2/message-templates?message_type=ISBN_ASSIGNMENT&lang_code=fi-FI",
+  "method": "GET",
+  "expectedStatus": 401
+}

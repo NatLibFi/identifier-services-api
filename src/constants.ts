@@ -188,7 +188,6 @@ export const MONOGRAPH_MESSAGE_TYPES = {
   ISMN_ASSIGNMENT: 'ISMN_ASSIGNMENT',
   ISMN_LIST_DELIVERY: 'ISMN_LIST_DELIVERY',
   ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION: 'ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
-  UNKNOWN: 'UNKNOWN',
 };
 
 // Note: considers Finnish ISBN publisher identifiers (e.g., 978-951-0 is category 1 publisher identifier and this category has always length of 9)

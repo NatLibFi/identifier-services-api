@@ -1,0 +1,39 @@
+get:
+  operationId: readMessageTemplate
+  summary: Read message template information for given operation and language
+  security:
+    - openId:
+        - admin
+  tags:
+    - message-templates
+  parameters:
+    - $ref: '../../parameters/path/id.yaml'
+    - name: message_type
+      in: query
+      required: true
+      description: Type of message to load template for
+      schema:
+        $ref: '../../schemas/enums/message-type.yaml'
+    - name: lang_code
+      in: query
+      required: true
+      description: Language to load template for
+      schema:
+        $ref: '../../schemas/enums/lang-code.yaml'
+  responses:
+    '200':
+      description: Resource was read
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/responses/common/message-template-read.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../responses/error.yaml'
