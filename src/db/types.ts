@@ -20,7 +20,21 @@ import type { MonographPublication } from './types/monograph/types-monograph-pub
 
 import type { MessageTemplate } from './types/message-template.ts';
 
+import type { IssnRange } from './types/serial/types-issn-range.ts';
+import type { IssnIdentifier } from './types/serial/types-isnn-identifier.ts';
+
+import type { SerialPublisher } from './types/serial/types-serial-publisher.ts';
+
+import type { SerialPublication } from './types/serial/types-serial-publication.ts';
+import type { SerialPublicationArchive } from './types/serial/types-serial-publication-archive.ts';
+
+import type { SerialPublicationRequest } from './types/serial/types-serial-publication-request.ts';
+import type { SerialPublicationRequestArchive } from './types/serial/types-serial-publication-request-archive.ts';
+
+import type { SerialMessage } from './types/serial/types-serial-message.ts';
+
 export interface Database {
+  // Monograph
   isbn_range: IsbnRange;
   isbn_publisher_range: IsbnPublisherRange;
   isbn_identifier: IsbnIdentifier;
@@ -42,4 +56,18 @@ export interface Database {
   monograph_message_publication_manifestation: MonographMessagePublicationManifestation;
 
   message_template: MessageTemplate;
+
+  // Serial
+  issn_range: IssnRange;
+  issn_identifier: IssnIdentifier;
+
+  serial_publisher: SerialPublisher;
+
+  serial_publication: SerialPublication;
+  serial_publication_archive: SerialPublicationArchive;
+
+  serial_publication_request: SerialPublicationRequest;
+  serial_publication_request_archive: SerialPublicationRequestArchive;
+
+  serial_message: SerialMessage;
 }

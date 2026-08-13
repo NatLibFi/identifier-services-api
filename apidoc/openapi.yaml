@@ -9,8 +9,8 @@ info:
 tags:
   - name: monograph
     description: Monograph publication and related identifier management
-  - name: isbn
-    description: ISBN identifier management
+  - name: serial
+    description: Serial publication and related identifier management
 
 paths:
   /v2/health:
@@ -18,6 +18,8 @@ paths:
 
   /v2/melinda:
     $ref: './resources/melinda/root.yaml'
+
+  # Monograph
 
   /v2/monograph/isbn-ranges:
     $ref: './resources/monograph/isbn-ranges/root.yaml'
@@ -106,6 +108,13 @@ paths:
 
   /v2/monograph/statistics:
     $ref: './resources/monograph/statistics/root.yaml'
+
+  # Serial
+
+  # /v2/monograph/issn-ranges:
+  # $ref: './resources/monograph/issn-ranges/root.yaml'
+  # /v2/monograph/issn-ranges/{id}:
+  # $ref: './resources/monograph/issn-ranges/id.yaml'
 components:
   securitySchemes:
     openId:

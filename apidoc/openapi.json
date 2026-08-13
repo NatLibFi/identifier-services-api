@@ -14,8 +14,8 @@
       "description": "Monograph publication and related identifier management"
     },
     {
-      "name": "isbn",
-      "description": "ISBN identifier management"
+      "name": "serial",
+      "description": "Serial publication and related identifier management"
     }
   ],
   "paths": {

@@ -29,6 +29,18 @@ import { createMessageTemplateTable } from './test-migrations/monograph/message-
 import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
 import { createMonographMessagePublicationManifestationTable } from './test-migrations/monograph/monograph-message-publication-manifestation-test-migrations.ts';
 
+import { createIssnRangeTable } from './test-migrations/serial/issn-range-test-migrations.ts';
+import { createIssnIdentifierTable } from './test-migrations/serial/issn-identifier-test-migrations.ts';
+
+import { createSerialPublisherTable } from './test-migrations/serial/serial-publisher-test-migrations.ts';
+import { createSerialPublicationTable } from './test-migrations/serial/serial-publication-test-migrations.ts';
+import { createSerialPublicationArchiveTable } from './test-migrations/serial/serial-publication-archive-test-migrations.ts';
+
+import { createSerialPublicationRequestTable } from './test-migrations/serial/serial-publication-request-test-migrations.ts';
+import { createSerialPublicationRequestArchiveTable } from './test-migrations/serial/serial-publication-request-archive-migrations.ts';
+
+import { createSerialMessageTable } from './test-migrations/serial/serial-message-test-migrations.ts';
+
 import type { Database } from '../db/types.ts';
 import type { UnknownObject } from '../generic-types.ts';
 
@@ -222,6 +234,63 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['message_template'],
       jsonColumns: [],
+    },
+    // SERIAL
+    issn_range: {
+      table: 'issn_range',
+      constructorFn: createIssnRangeTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['issn_range'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    issn_identifier: {
+      table: 'issn_identifier',
+      constructorFn: createIssnIdentifierTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['issn_identifier'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_publisher: {
+      table: 'serial_publisher',
+      constructorFn: createSerialPublisherTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_publisher'],
+      jsonColumns: ['contact_persons'], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_publication: {
+      table: 'serial_publication',
+      constructorFn: createSerialPublicationTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_publication'],
+      jsonColumns: ['previous', 'main_series', 'subseries', 'another_medium'], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_publication_archive: {
+      table: 'serial_publication_archive',
+      constructorFn: createSerialPublicationArchiveTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_publication_archive'],
+      jsonColumns: ['previous', 'main_series', 'subseries', 'another_medium'], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_publication_request: {
+      table: 'serial_publication_request',
+      constructorFn: createSerialPublicationRequestTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_publication_request'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_publication_request_archive: {
+      table: 'serial_publication_request_archive',
+      constructorFn: createSerialPublicationRequestArchiveTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_publication_request_archive'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    serial_message: {
+      table: 'serial_message',
+      constructorFn: createSerialMessageTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['serial_message'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
     },
   };
 
