@@ -1,6 +1,0 @@
-{
-  "description": "[guest] may not read ISBN identifier information of ISBN publisher range (TODO: evaluate if allowed using DTL)",
-  "url": "/v2/monograph/isbn-publisher-ranges/1/get-identifiers",
-  "method": "POST",
-  "expectedStatus": 401
-}

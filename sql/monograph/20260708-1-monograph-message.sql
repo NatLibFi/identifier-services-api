@@ -1,10 +1,9 @@
--- monograph_message v2.0.0-alpha.3
+-- monograph_message v2.0.0-alpha.4
 CREATE TABLE monograph_message (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   monograph_publisher_id INT UNSIGNED,
   monograph_publication_request_id INT UNSIGNED,
-  isbn_publisher_range_id INT UNSIGNED,
-  ismn_publisher_range_id INT UNSIGNED,
+  monograph_identifier_batch_id INT UNSIGNED,
   message_type VARCHAR(50) NOT NULL,
   lang_code VARCHAR(5) NOT NULL,
   recipient VARCHAR(100) NOT NULL,

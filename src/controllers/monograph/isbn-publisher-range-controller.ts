@@ -29,22 +29,3 @@ export async function deleteIsbnRange(req: Request, res: Response, next: NextFun
     return next(error);
   }
 }
-
-export async function getIsbnPublisherRangeIdentifiers(req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await isbnPublisherRangeInterface.getIsbnPublisherRangeIdentifiers(
-      Number(req.params['id']),
-      req.body,
-      req.user,
-    );
-
-    if (req.body.download) {
-      const fileName = `isbn-publisher-range-${req.params['id']}-identifiers.txt`;
-      return res.attachment(fileName).send(result);
-    }
-
-    return res.status(HttpStatus.OK).json(result);
-  } catch (error) {
-    return next(error);
-  }
-}

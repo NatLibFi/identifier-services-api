@@ -122,7 +122,12 @@ export async function canDeleteIsbnPublisherRange(isbnPublisherRange: IsbnPublis
     .selectFrom('isbn_identifier')
     .select(db.fn.countAll<number>().as('count'))
     .where('isbn_publisher_range_id', '=', isbnPublisherRange.id)
-    .where('monograph_publication_manifestation_id', 'is not', null)
+    .where((eb) =>
+      eb.or([
+        eb('monograph_publication_manifestation_id', 'is not', null),
+        eb('monograph_identifier_batch_id', 'is not', null),
+      ]),
+    )
     .executeTakeFirstOrThrow();
 
   if (identifierUsedCount !== 0) {
@@ -152,6 +157,7 @@ export function generateIsbnIdentifierDbEntry(
     identifier: isbnIdentifier,
     isbn_publisher_range_id: isbnPublisherRangeId,
     monograph_publication_manifestation_id: null,
+    monograph_identifier_batch_id: null,
     created: getCurrentTime(),
     created_by: SYSTEM_USER,
     modified: getCurrentTime(),

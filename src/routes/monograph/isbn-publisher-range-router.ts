@@ -3,10 +3,7 @@ import { Router } from 'express';
 import * as isbnPublisherRangeControllers from '../../controllers/monograph/isbn-publisher-range-controller.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
-import {
-  createIsbnPublisherRangeSchema,
-  getIsbnPublisherRangeIdentifiersSchema,
-} from '../../validations/monograph/isbn-publisher-range-validation.ts';
+import { createIsbnPublisherRangeSchema } from '../../validations/monograph/isbn-publisher-range-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 const isbnPublisherRangeRouter = Router();
@@ -29,13 +26,6 @@ isbnPublisherRangeRouter.delete(
   allowAdminOnly,
   validateRequestParams(idParameterSchema, true),
   isbnPublisherRangeControllers.deleteIsbnRange,
-);
-
-isbnPublisherRangeRouter.post(
-  '/:id/get-identifiers',
-  validateRequestParams(idParameterSchema, true),
-  validateRequestBody(getIsbnPublisherRangeIdentifiersSchema),
-  isbnPublisherRangeControllers.getIsbnPublisherRangeIdentifiers,
 );
 
 export default isbnPublisherRangeRouter;

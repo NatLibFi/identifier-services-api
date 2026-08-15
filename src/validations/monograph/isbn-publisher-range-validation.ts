@@ -10,16 +10,4 @@ export const createIsbnPublisherRangeSchema = z
   })
   .strict();
 
-export const getIsbnPublisherRangeIdentifiersSchema = z
-  .object({
-    download: z.boolean().optional(),
-    unassigned_only: z.boolean().optional(),
-    assigned_only: z.boolean().optional(),
-    limit: z.number().optional(),
-    offset: z.number().optional(),
-    turnstile_token: z.string().optional(),
-  })
-  .strict();
-
 export type CreateIsbnPublisherRangeHttp = z.infer<typeof createIsbnPublisherRangeSchema>;
-export type GetIsbnPublisherRangeIdentifiersHttp = z.infer<typeof getIsbnPublisherRangeIdentifiersSchema>;

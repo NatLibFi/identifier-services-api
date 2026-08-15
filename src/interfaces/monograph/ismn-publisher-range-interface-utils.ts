@@ -110,7 +110,12 @@ export async function canDeleteIsmnPublisherRange(ismnPublisherRange: IsmnPublis
     .selectFrom('ismn_identifier')
     .select(db.fn.countAll<number>().as('count'))
     .where('ismn_publisher_range_id', '=', ismnPublisherRange.id)
-    .where('monograph_publication_manifestation_id', 'is not', null)
+    .where((eb) =>
+      eb.or([
+        eb('monograph_publication_manifestation_id', 'is not', null),
+        eb('monograph_identifier_batch_id', 'is not', null),
+      ]),
+    )
     .executeTakeFirstOrThrow();
 
   if (identifierUsedCount !== 0) {
@@ -140,6 +145,7 @@ export function generateIsmnIdentifierDbEntry(
     identifier: ismnIdentifier,
     ismn_publisher_range_id: ismnPublisherRangeId,
     monograph_publication_manifestation_id: null,
+    monograph_identifier_batch_id: null,
     created: getCurrentTime(),
     created_by: SYSTEM_USER,
     modified: getCurrentTime(),

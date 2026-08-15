@@ -65,7 +65,12 @@ export async function getMonographPublisherIsbnRanges(
         .selectFrom('isbn_identifier as ii')
         .select(eb.fn.countAll<number>().as('identifier_used'))
         .whereRef('ii.isbn_publisher_range_id', '=', 'ipr.id')
-        .where('ii.monograph_publication_manifestation_id', 'is not', null)
+        .where((eb) =>
+          eb.or([
+            eb('ii.monograph_publication_manifestation_id', 'is not', null),
+            eb('ii.monograph_identifier_batch_id', 'is not', null), // Just for verification, category 5 ISBN publisher ranges should not EVER have batches
+          ]),
+        )
         .as('identifier_used'),
     ])
     .where('monograph_publisher_id', '=', monographPublisherId)
@@ -118,7 +123,12 @@ export async function getMonographPublisherIsmnRanges(
         .selectFrom('ismn_identifier as ii')
         .select(eb.fn.countAll<number>().as('identifier_used'))
         .whereRef('ii.ismn_publisher_range_id', '=', 'ipr.id')
-        .where('ii.monograph_publication_manifestation_id', 'is not', null)
+        .where((eb) =>
+          eb.or([
+            eb('ii.monograph_publication_manifestation_id', 'is not', null),
+            eb('ii.monograph_identifier_batch_id', 'is not', null), // Just for verification, category 7 ISMN publisher ranges should not EVER have batches
+          ]),
+        )
         .as('identifier_used'),
     ])
     .where('monograph_publisher_id', '=', monographPublisherId)

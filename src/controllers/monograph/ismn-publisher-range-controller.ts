@@ -29,22 +29,3 @@ export async function deleteIsmnRange(req: Request, res: Response, next: NextFun
     return next(error);
   }
 }
-
-export async function getIsmnPublisherRangeIdentifiers(req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await ismnPublisherRangeInterface.getIsmnPublisherRangeIdentifiers(
-      Number(req.params['id']),
-      req.body,
-      req.user,
-    );
-
-    if (req.body.download) {
-      const fileName = `ismn-publisher-range-${req.params['id']}-identifiers.txt`;
-      return res.attachment(fileName).send(result);
-    }
-
-    return res.status(HttpStatus.OK).json(result);
-  } catch (error) {
-    return next(error);
-  }
-}

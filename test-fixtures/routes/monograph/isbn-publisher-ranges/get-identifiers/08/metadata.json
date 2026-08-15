@@ -1,6 +1,0 @@
-{
-  "description": "[guest] text download works (note: DOS line endings are used in http-expected.txt)",
-  "url": "/v2/monograph/isbn-publisher-ranges/1/get-identifiers",
-  "method": "POST",
-  "expectedStatus": 200
-}

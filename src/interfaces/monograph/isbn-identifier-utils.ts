@@ -18,6 +18,7 @@ export async function getAssignableIsbnIdentifiers(monographPublisherId: number,
     .select('isbn_publisher_range.monograph_publisher_id as monograph_publisher_id')
     .where('monograph_publisher_id', '=', monographPublisherId)
     .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
     .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc')
     .orderBy('isbn_identifier.identifier', 'asc')
     .limit(numberOfIdentifiers)
@@ -66,6 +67,7 @@ export async function getAssignableIsbnIdentifier(manifestationId: number) {
     .select('isbn_publisher_range.monograph_publisher_id as monograph_publisher_id')
     .where('monograph_publisher_id', '=', manifestation.monograph_publisher_id)
     .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
     .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc')
     .orderBy('isbn_identifier.identifier', 'asc')
     .limit(1)
@@ -94,6 +96,8 @@ export async function assignIsbnIdentifier(
     .selectAll('isbn_identifier')
     .select('isbn_publisher_range.monograph_publisher_id as monograph_publisher_id')
     .where('isbn_identifier.identifier', '=', identifierString)
+    .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
     .executeTakeFirstOrThrow();
 
   // Sanity check: monograph publisher id must exist for identifier
