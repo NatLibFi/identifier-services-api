@@ -6,8 +6,7 @@ export const createMonographMessageFromTemplateSchema = z
   .object({
     message_type: z.enum(Object.keys(MONOGRAPH_MESSAGE_TYPES)),
     monograph_publisher_id: z.number(),
-    isbn_publisher_range_id: z.number().optional(),
-    ismn_publisher_range_id: z.number().optional(),
+    monograph_identifier_batch_id: z.number().optional(),
     manifestation_ids: z.array(z.number()).optional(),
   })
   .strict();
@@ -17,6 +16,7 @@ export const sendMonographMessageSchema = z
     message_type: z.enum(Object.keys(MONOGRAPH_MESSAGE_TYPES)),
     monograph_publisher_id: z.number(),
     monograph_publication_request_id: z.number().nullable(),
+    monograph_identifier_batch_id: z.number().nullable(),
     isbn_publisher_range_id: z.number().nullable(),
     ismn_publisher_range_id: z.number().nullable(),
     manifestation_ids: z.array(z.number()),

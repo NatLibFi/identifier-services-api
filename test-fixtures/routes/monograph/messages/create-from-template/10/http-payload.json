@@ -1,5 +1,5 @@
 {
   "message_type": "ISMN_LIST_DELIVERY",
   "monograph_publisher_id": 1,
-  "ismn_publisher_range_id": 1
+  "monograph_identifier_batch_id": 1
 }

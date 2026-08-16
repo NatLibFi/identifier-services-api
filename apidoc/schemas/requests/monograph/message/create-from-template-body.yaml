@@ -4,15 +4,15 @@ properties:
     $ref: '../../../enums/monograph/message-types.yaml'
   monograph_publisher_id:
     type: number
-  isbn_publisher_range_id:
-    type: number
-  ismn_publisher_range_id:
-    type: number
+  monograph_identifier_batch_id:
+    type:
+      - number
+      - 'null'
   manifestation_ids:
     type: array
     items:
       type: number
-# Note: depending on message type, defining publisher range or manifestations may be mandatory
+# Note: depending on message type, defining manifestations, publisher range or batch may be mandatory
 required:
   - message_type
   - monograph_publisher_id

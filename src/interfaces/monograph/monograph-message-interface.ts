@@ -36,13 +36,7 @@ export default function createMonographMessageInterface(
   async function createFromTemplate(createOpt: CreateMonographMessageFromTemplate, user: RequestUser) {
     const logger = getApplicationLogger();
 
-    const {
-      message_type,
-      isbn_publisher_range_id,
-      ismn_publisher_range_id,
-      monograph_publisher_id,
-      manifestation_ids,
-    } = createOpt;
+    const { message_type, monograph_identifier_batch_id, monograph_publisher_id, manifestation_ids } = createOpt;
 
     // Craft message based on given information now that it has been established all relations are valid
     let result;
@@ -52,8 +46,7 @@ export default function createMonographMessageInterface(
         messageType: message_type,
         monographPublisherId: monograph_publisher_id,
         isSelfPublisher: monographPublisherConfiguration.SELF_PUBLISHER_ID === monograph_publisher_id,
-        isbnPublisherRangeId: isbn_publisher_range_id || null,
-        ismnPublisherRangeId: ismn_publisher_range_id || null,
+        monographIdentifierBatchId: monograph_identifier_batch_id || null,
         manifestationIds: manifestation_ids,
       });
     } catch (error) {
@@ -81,10 +74,12 @@ export default function createMonographMessageInterface(
     // - verifies all manifestations have identifiers and belong to same request and expression
     // - verifies given publisher ranges belong to given publisher
     await sanityCheckMessageRelations({
+      messageType: message_type,
       monographPublisherId: monograph_publisher_id,
       monographPublicationRequestId: result.monograph_publication_request_id,
       isbnPublisherRangeId: result.isbn_publisher_range_id,
       ismnPublisherRangeId: result.ismn_publisher_range_id,
+      monographIdentifierBatchId: result.monograph_identifier_batch_id,
       manifestationIds: manifestation_ids,
     });
 
@@ -105,6 +100,7 @@ export default function createMonographMessageInterface(
       monograph_publication_request_id: result.monograph_publication_request_id,
       isbn_publisher_range_id: result.isbn_publisher_range_id,
       ismn_publisher_range_id: result.ismn_publisher_range_id,
+      monograph_identifier_batch_id: result.monograph_identifier_batch_id,
       manifestation_ids: manifestation_ids ?? [],
       recipient: result.messagePublisher.recipient,
       subject: result.subject,
@@ -120,6 +116,7 @@ export default function createMonographMessageInterface(
       monograph_publication_request_id,
       isbn_publisher_range_id,
       ismn_publisher_range_id,
+      monograph_identifier_batch_id,
       manifestation_ids,
       body,
       recipient,
@@ -130,10 +127,12 @@ export default function createMonographMessageInterface(
     // Do not trust user input even though associations should stay the same between loading message template and sending a message
     // Always validate relations before the actual DB operation
     await sanityCheckMessageRelations({
+      messageType: message_type,
       monographPublisherId: monograph_publisher_id,
       monographPublicationRequestId: monograph_publication_request_id,
       isbnPublisherRangeId: isbn_publisher_range_id,
       ismnPublisherRangeId: ismn_publisher_range_id,
+      monographIdentifierBatchId: monograph_identifier_batch_id,
       manifestationIds: manifestation_ids,
     });
 
@@ -219,6 +218,7 @@ export default function createMonographMessageInterface(
       monograph_publication_request_id: originalMessage.monograph_publication_request_id,
       isbn_publisher_range_id: originalMessage.isbn_publisher_range_id,
       ismn_publisher_range_id: originalMessage.ismn_publisher_range_id,
+      monograph_identifier_batch_id: originalMessage.monograph_identifier_batch_id,
       manifestation_ids: [],
       recipient,
       body: originalMessage.body,

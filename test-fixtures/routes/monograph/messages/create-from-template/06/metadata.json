@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may create message from template for sending link to download identifiers for selected ISBN publisher range",
+  "description": "[admin] may create message from template for sending link to download identifiers for selected monograph batch (ISBN)",
   "url": "/v2/monograph/messages/create-from-template",
   "method": "POST",
   "role": "admin",

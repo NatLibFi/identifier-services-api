@@ -21,53 +21,257 @@ import {
   MONOGRAPH_MANIFESTATION_TYPES,
   MONOGRAPH_MESSAGE_TYPES,
 } from '../../constants.ts';
+
 import {
   getMonographPublisherIsbnRangesLite,
   getMonographPublisherIsmnRangesLite,
 } from './monograph-publisher-interface-utils.ts';
+
 import { readIsmnPublisherRange } from './ismn-publisher-range-interface.ts';
 
+import type { MonographIdentifierBatchSelect } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
+import { readMonographIdentifierBatch } from './monograph-identifier-batch-interface.ts';
+
 interface MessageRelations {
+  messageType: string;
   monographPublisherId: number;
   monographPublicationRequestId?: number | null;
   isbnPublisherRangeId?: number | null;
   ismnPublisherRangeId?: number | null;
+  monographIdentifierBatchId?: number | null;
   manifestationIds?: number[];
 }
 
-export async function sanityCheckMessageRelations(params: MessageRelations) {
+async function checkIdentifierAssignmentRelations(relations: MessageRelations) {
   const {
     monographPublisherId,
     monographPublicationRequestId,
     isbnPublisherRangeId,
     ismnPublisherRangeId,
+    monographIdentifierBatchId,
     manifestationIds,
-  } = params;
+  } = relations;
 
-  // Note: all getters return 404 in case entity is not found
-  const publisher = await readMonographPublisher(monographPublisherId);
-
-  let monographPublicationRequest;
-  let isbnPublisherRange;
-  let ismnPublisherRange;
-
-  if (monographPublicationRequestId) {
-    monographPublicationRequest = await readMonographPublicationRequest(monographPublicationRequestId);
-
-    // Verify request belongs to given publisher
-    if (monographPublicationRequest.monograph_publisher_id !== monographPublisherId) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Monograph publication request id ${monographPublicationRequestId} does not belong to monograph publisher id ${monographPublisherId}.`,
-      );
-    }
+  if (isbnPublisherRangeId || ismnPublisherRangeId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining isbnPublisherRangeId and ismnPublisherRangeId is forbidden for message type of ISBN_ASSIGNMENT/ISMN_ASSIGNMENT',
+    );
   }
 
-  if (isbnPublisherRangeId) {
-    isbnPublisherRange = await readIsbnPublisherRange(isbnPublisherRangeId);
+  if (monographIdentifierBatchId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographIdentifierBatchId is forbidden for message type of ISBN_ASSIGNMENT/ISMN_ASSIGNMENT',
+    );
+  }
 
-    if (isbnPublisherRange.monograph_publisher_id !== publisher.id) {
+  if (!monographPublisherId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographPublisherId is mandatory for message type of ISBN_ASSIGNMENT/ISMN_ASSIGNMENT',
+    );
+  }
+
+  if (!monographPublicationRequestId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographPublicationRequestId is mandatory for message type of ISBN_ASSIGNMENT/ISMN_ASSIGNMENT',
+    );
+  }
+
+  if (!manifestationIds || manifestationIds.length === 0) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining manifestationIds with length of at least 1 is mandatory for message type of ISBN_ASSIGNMENT/ISMN_ASSIGNMENT',
+    );
+  }
+
+  const monographPublicationRequest = await readMonographPublicationRequest(monographPublicationRequestId);
+
+  // Verify request belongs to given publisher
+  if (monographPublicationRequest.monograph_publisher_id !== monographPublisherId) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publication request id ${monographPublicationRequestId} does not belong to monograph publisher id ${monographPublisherId}.`,
+    );
+  }
+
+  const manifestationInfo = await Promise.all(
+    manifestationIds.map(async (mid) => await getMonographManifestationRelations(mid)),
+  );
+
+  // Verify all manifestations belong to given monograph publisher
+  const invalidManifestation = manifestationInfo.find((m) => m.publisherId !== monographPublisherId);
+
+  if (invalidManifestation) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Manifestation id ${invalidManifestation.manifestationId} does not belong to monograph publisher id ${monographPublisherId}.`,
+    );
+  }
+
+  // Disallow sending messages regarding manifestations that do not belong to any request and require they belong to same request
+  const nonRequestManifestations = manifestationInfo.filter((m) => m.requestId === null);
+  const requestManifestationIds = manifestationInfo
+    .map((m) => m.requestId)
+    .filter((m) => m !== null)
+    .reduce((p: number[], n: number) => (p.includes(n) ? p : p.concat(n)), []);
+
+  if (nonRequestManifestations.length > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'There are manifestations that do not belong to any monograph publication request.',
+    );
+  }
+
+  if (requestManifestationIds.length !== 1) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'You may only send email regarding manifestations of a single monograph publication request.',
+    );
+  }
+
+  // Validate request id matches with given request id if it was given
+  if (requestManifestationIds[0] !== monographPublicationRequestId) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Given monograph publication request id ${monographPublicationRequestId} does not match with request id found from manifestations (found id ${requestManifestationIds[0]})`,
+    );
+  }
+
+  // Validate all manifestations belong expression
+  const manifestationWithoutExpression = manifestationInfo.find((m) => m.expressionId === null);
+  if (manifestationWithoutExpression) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Manifestation ${manifestationWithoutExpression.manifestationId} does not belong to any expression. This shoult not ever have happened.`,
+    );
+  }
+
+  // Validate all manifestations belong to exactly same expression
+  // Note: filtering is just for typing purposes. Not having null expressionId is already confirmed separately.
+  const uniqExpressionIds = manifestationInfo
+    .map((m) => m.expressionId)
+    .filter((m) => m !== null)
+    .reduce((p: number[], n: number) => (p.includes(n) ? p : p.concat(n)), []);
+
+  if (uniqExpressionIds.length !== 1) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Selected manifestations need to belong to exactly one expression for purposes of sending a message.`,
+    );
+  }
+
+  const [firstManifestation] = manifestationInfo;
+  if (!firstManifestation) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `No expression information could be derived from manifestations.`,
+    );
+  }
+
+  // Validate all manifestations have identifier assigned
+  const manifestationWithoutIdentifier = manifestationInfo.find((m) => !m.isbnIdentifier && !m.ismnIdentifier);
+  if (manifestationWithoutIdentifier) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Manifestation id ${manifestationWithoutIdentifier.manifestationId} does not have identifier assigned.`,
+    );
+  }
+
+  // Sanity check: no both ISBN and ISMN should ever be assigned to one manifestation
+  const manifestationWithTwoIdentifiers = manifestationInfo.find((m) => m.isbnIdentifier && m.ismnIdentifier);
+  if (manifestationWithTwoIdentifiers) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Manifestation id ${manifestationWithTwoIdentifiers.manifestationId} has both ISBN and ISMN identifiers assigned. This should not happen! Please contact system administrator.`,
+    );
+  }
+
+  // Validate no manifestation is cancelled
+  const manifestationCancelled = manifestationInfo.find((m) => m.manifestationCancelled);
+  if (manifestationCancelled) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Manifestation id ${manifestationCancelled.manifestationId} has been cancelled.`,
+    );
+  }
+
+  return;
+}
+
+async function checkPublisherJoinRelations(relations: MessageRelations) {
+  const {
+    monographPublisherId,
+    monographPublicationRequestId,
+    isbnPublisherRangeId,
+    ismnPublisherRangeId,
+    monographIdentifierBatchId,
+    manifestationIds,
+  } = relations;
+
+  if (monographPublicationRequestId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographPublicationRequestId is forbidden for message type of ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION/ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
+    );
+  }
+
+  if (monographIdentifierBatchId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographIdentifierBatchId is forbidden for message type of ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION/ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
+    );
+  }
+
+  if (manifestationIds) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining manifestationIds is forbidden for message type of ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION/ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
+    );
+  }
+
+  if (!isbnPublisherRangeId && !ismnPublisherRangeId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining either isbnPublisherRangeId or ismnPublisherRangeId is required for message type of ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION/ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
+    );
+  }
+
+  if (!monographPublisherId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining either monographPublisherId is required for message type of ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION/ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION',
+    );
+  }
+
+  // Verify publisher range belongs to said publisher
+  if (isbnPublisherRangeId) {
+    const isbnPublisherRange = await readIsbnPublisherRange(isbnPublisherRangeId);
+
+    if (isbnPublisherRange.monograph_publisher_id !== monographPublisherId) {
       throw new ApiError(
         HttpStatus.CONFLICT,
         'Conflict',
@@ -75,9 +279,9 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
       );
     }
   } else if (ismnPublisherRangeId) {
-    ismnPublisherRange = await readIsmnPublisherRange(ismnPublisherRangeId);
+    const ismnPublisherRange = await readIsmnPublisherRange(ismnPublisherRangeId);
 
-    if (ismnPublisherRange.monograph_publisher_id !== publisher.id) {
+    if (ismnPublisherRange.monograph_publisher_id !== monographPublisherId) {
       throw new ApiError(
         HttpStatus.CONFLICT,
         'Conflict',
@@ -86,117 +290,94 @@ export async function sanityCheckMessageRelations(params: MessageRelations) {
     }
   }
 
-  if (manifestationIds && manifestationIds.length > 0) {
-    const manifestationInfo = await Promise.all(
-      manifestationIds.map(async (mid) => await getMonographManifestationRelations(mid)),
+  return;
+}
+
+async function checkIdentifierBatchRelations(relations: MessageRelations) {
+  const {
+    monographPublisherId,
+    monographPublicationRequestId,
+    isbnPublisherRangeId,
+    ismnPublisherRangeId,
+    monographIdentifierBatchId,
+    manifestationIds,
+  } = relations;
+
+  if (monographPublicationRequestId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographPublicationRequestId is forbidden for message type of ISBN_LIST_DELIVERY/ISMN_LIST_DELIVERY',
     );
+  }
 
-    // Verify all manifestations belong to given monograph publisher
-    const invalidManifestation = manifestationInfo.find((m) => m.publisherId !== monographPublisherId);
+  if (isbnPublisherRangeId || ismnPublisherRangeId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining isbnPublisherRangeId or ismnPublisherRangeId is forbidden for message type of ISBN_LIST_DELIVERY/ISMN_LIST_DELIVERY',
+    );
+  }
 
-    if (invalidManifestation) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Manifestation id ${invalidManifestation.manifestationId} does not belong to monograph publisher id ${monographPublisherId}.`,
-      );
-    }
+  if (manifestationIds) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining manifestationIds is forbidden for message type of ISBN_LIST_DELIVERY/ISMN_LIST_DELIVERY',
+    );
+  }
 
-    // Disallow sending messages regarding manifestations that do not belong to any request and require they belong to same request
-    const nonRequestManifestations = manifestationInfo.filter((m) => m.requestId === null);
-    const requestManifestationIds = manifestationInfo
-      .map((m) => m.requestId)
-      .filter((m) => m !== null)
-      .reduce((p: number[], n: number) => (p.includes(n) ? p : p.concat(n)), []);
+  if (!monographIdentifierBatchId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      'Defining monographIdentifierBatchId is required for message type of ISBN_LIST_DELIVERY/ISMN_LIST_DELIVERY',
+    );
+  }
 
-    if (nonRequestManifestations.length > 0) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        'There are manifestations that do not belong to any monograph publication request.',
-      );
-    }
+  const identifierBatch: MonographIdentifierBatchSelect =
+    // TODO: batch interface
+    await readMonographIdentifierBatch(monographIdentifierBatchId);
 
-    if (requestManifestationIds.length !== 1) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        'You may only send email regarding manifestations of a single monograph publication request.',
-      );
-    }
+  if (identifierBatch.monograph_publisher_id !== monographPublisherId) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `Monograph identifier batch id ${monographIdentifierBatchId} does not belong to monograph publisher ${monographPublisherId}`,
+    );
+  }
 
-    // Validate request id matches with given request id if it was given
-    if (requestManifestationIds[0] !== monographPublicationRequestId) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Given monograph publication request id ${monographPublicationRequestId} does not match with request id found from manifestations (found id ${requestManifestationIds[0]})`,
-      );
-    }
+  return;
+}
 
-    // Validate all manifestations belong expression
-    const manifestationWithoutExpression = manifestationInfo.find((m) => m.expressionId === null);
-    if (manifestationWithoutExpression) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Manifestation ${manifestationWithoutExpression.manifestationId} does not belong to any expression. This shoult not ever have happened.`,
-      );
-    }
+export async function sanityCheckMessageRelations(relations: MessageRelations) {
+  const { messageType, monographPublisherId } = relations;
 
-    // Validate all manifestations belong to exactly same expression
-    // Note: filtering is just for typing purposes. Not having null expressionId is already confirmed separately.
-    const uniqExpressionIds = manifestationInfo
-      .map((m) => m.expressionId)
-      .filter((m) => m !== null)
-      .reduce((p: number[], n: number) => (p.includes(n) ? p : p.concat(n)), []);
+  // Publisher is mandatory in all messaging. This verifies that the publisher exists in registry.
+  await readMonographPublisher(monographPublisherId);
 
-    if (uniqExpressionIds.length !== 1) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Selected manifestations need to belong to exactly one expression for purposes of sending a message.`,
-      );
-    }
-
-    const [firstManifestation] = manifestationInfo;
-    if (!firstManifestation) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `No expression information could be derived from manifestations.`,
-      );
-    }
-
-    // Validate all manifestations have identifier assigned
-    const manifestationWithoutIdentifier = manifestationInfo.find((m) => !m.isbnIdentifier && !m.ismnIdentifier);
-    if (manifestationWithoutIdentifier) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Manifestation id ${manifestationWithoutIdentifier.manifestationId} does not have identifier assigned.`,
-      );
-    }
-
-    // Sanity check: no both ISBN and ISMN should ever be assigned to one manifestation
-    const manifestationWithTwoIdentifiers = manifestationInfo.find((m) => m.isbnIdentifier && m.ismnIdentifier);
-    if (manifestationWithTwoIdentifiers) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Manifestation id ${manifestationWithTwoIdentifiers.manifestationId} has both ISBN and ISMN identifiers assigned. This should not happen! Please contact system administrator.`,
-      );
-    }
-
-    // Validate no manifestation is cancelled
-    const manifestationCancelled = manifestationInfo.find((m) => m.manifestationCancelled);
-    if (manifestationCancelled) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `Manifestation id ${manifestationCancelled.manifestationId} has been cancelled.`,
-      );
-    }
+  // Make a sanity check of relations that differs based on message type
+  switch (messageType) {
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT:
+      await checkIdentifierAssignmentRelations(relations);
+      break;
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT:
+      await checkIdentifierAssignmentRelations(relations);
+      break;
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
+      await checkPublisherJoinRelations(relations);
+      break;
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
+      await checkPublisherJoinRelations(relations);
+      break;
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY:
+      await checkIdentifierBatchRelations(relations);
+      break;
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY:
+      await checkIdentifierBatchRelations(relations);
+      break;
+    default:
+      throw new Error(`Message type of "${messageType}" is not supported`);
   }
 
   return;
@@ -271,6 +452,7 @@ interface ConstructedMessage {
   monograph_publication_request_id: number | null;
   isbn_publisher_range_id: number | null;
   ismn_publisher_range_id: number | null;
+  monograph_identifier_batch_id: number | null;
   subject: string;
   body: string;
 }
@@ -375,6 +557,7 @@ async function constructIdentifierAssignedMessage(
     monograph_publication_request_id: firstManifestation.monograph_publication_request_id,
     isbn_publisher_range_id: null,
     ismn_publisher_range_id: null,
+    monograph_identifier_batch_id: null,
     body,
     subject,
   };
@@ -441,6 +624,7 @@ async function constructMonographPublisherRegisteredMessage(
     monograph_publication_request_id: null,
     isbn_publisher_range_id: isbnPublisherRangeId,
     ismn_publisher_range_id: ismnPublisherRangeId,
+    monograph_identifier_batch_id: null,
     body,
     subject,
   };
@@ -449,8 +633,7 @@ async function constructMonographPublisherRegisteredMessage(
 async function constructIdentifierListLinkMessage(
   messageType: string,
   messagePublisher: PublisherMessageInfo,
-  isbnPublisherRangeId: number | null,
-  ismnPublisherRangeId: number | null,
+  monographIdentifierBatchId: number | null,
 ): Promise<ConstructedMessage> {
   // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
 
@@ -458,33 +641,17 @@ async function constructIdentifierListLinkMessage(
   let body = messageTemplate.body;
   const subject = messageTemplate.subject;
 
-  if (!isbnPublisherRangeId && !ismnPublisherRangeId) {
-    throw new Error('Could not construct identifier link as no publisher range id was provided for constructor');
-  }
-
-  if (isbnPublisherRangeId && ismnPublisherRangeId) {
-    throw new Error(
-      'Could not construct identifier link as both types of publisher range id was provided for constructor (ISBN and ISMN)',
-    );
-  }
-
-  if (isbnPublisherRangeId) {
-    body = body.replace(
-      '#IDENTIFIERS#',
-      `${APPLICATION_UI_URL}/monograph/isbn-publisher-ranges/${isbnPublisherRangeId}`,
-    );
-  } else if (ismnPublisherRangeId) {
-    body = body.replace(
-      '#IDENTIFIERS#',
-      `${APPLICATION_UI_URL}/monograph/ismn-publisher-ranges/${ismnPublisherRangeId}`,
-    );
-  }
+  body = body.replace(
+    '#IDENTIFIERS#',
+    `${APPLICATION_UI_URL}/monograph/identifier-batches/${monographIdentifierBatchId}`,
+  );
 
   return {
     messagePublisher,
     monograph_publication_request_id: null,
-    isbn_publisher_range_id: isbnPublisherRangeId,
-    ismn_publisher_range_id: ismnPublisherRangeId,
+    isbn_publisher_range_id: null,
+    ismn_publisher_range_id: null,
+    monograph_identifier_batch_id: monographIdentifierBatchId,
     body,
     subject,
   };
@@ -495,22 +662,15 @@ interface ConstructMonographMessageParams {
   messageType: string;
   monographPublisherId: number;
   isSelfPublisher: boolean;
-  isbnPublisherRangeId: number | null;
-  ismnPublisherRangeId: number | null;
+  monographIdentifierBatchId: number | null;
   manifestationIds?: number[];
 }
 
 export async function constructMonographMessage(
   constructMonographMessageParams: ConstructMonographMessageParams,
 ): Promise<ConstructedMessage> {
-  const {
-    messageType,
-    monographPublisherId,
-    isSelfPublisher,
-    isbnPublisherRangeId,
-    ismnPublisherRangeId,
-    manifestationIds,
-  } = constructMonographMessageParams;
+  const { messageType, monographPublisherId, isSelfPublisher, monographIdentifierBatchId, manifestationIds } =
+    constructMonographMessageParams;
 
   const db = getKysely();
 
@@ -544,46 +704,23 @@ export async function constructMonographMessage(
     : validatedPublisher.email;
   messagePublisher.recipient = preferredPublisherContact ? preferredPublisherContact : '';
 
-  const identifierAssignedMessageTypes = [
-    MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT,
-    MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT,
-  ];
-
-  if (identifierAssignedMessageTypes.includes(messageType)) {
-    // Note exception on loading message template within the constructor
-    // This is due to langCode being determined by request form instead of publisher for self-published books
-    return constructIdentifierAssignedMessage(messageType, messagePublisher, isSelfPublisher, manifestationIds);
+  switch (messageType) {
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT:
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT:
+      return constructIdentifierAssignedMessage(messageType, messagePublisher, isSelfPublisher, manifestationIds);
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
+      return constructMonographPublisherRegisteredMessage(messageType, messagePublisher);
+    case MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY:
+    case MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY:
+      return constructIdentifierListLinkMessage(messageType, messagePublisher, monographIdentifierBatchId);
+    default:
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `Unsupported message type: ${messageType}.`,
+      );
   }
-
-  const publisherRegistryJoinedMessageTypes = [
-    MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
-    MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
-  ];
-
-  if (publisherRegistryJoinedMessageTypes.includes(messageType)) {
-    return constructMonographPublisherRegisteredMessage(messageType, messagePublisher);
-  }
-
-  const listDeliveryMessageTypes = [
-    MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY,
-    MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY,
-  ];
-
-  if (listDeliveryMessageTypes.includes(messageType)) {
-    return constructIdentifierListLinkMessage(
-      messageType,
-      messagePublisher,
-      isbnPublisherRangeId,
-      ismnPublisherRangeId,
-    );
-  }
-
-  // Throw error explicitly on unsupported message type
-  throw new ApiError(
-    HttpStatus.UNPROCESSABLE_ENTITY,
-    'Unprocessable entity',
-    `Unsupported message type: ${messageType}.`,
-  );
 }
 
 async function getMessageTemplate(messageType: string, langCode: string) {

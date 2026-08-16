@@ -173,6 +173,7 @@
       "monograph_publication_request_id": 1,
       "isbn_publisher_range_id": null,
       "ismn_publisher_range_id": null,
+      "monograph_identifier_batch_id": null,
       "recipient": "erkki.esimerkki@example.localhost",
       "lang_code": "fi-FI",
       "subject": "TESTI/TEST MESSAGE Example title approved",

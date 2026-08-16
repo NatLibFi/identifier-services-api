@@ -5,8 +5,9 @@ export interface MonographMessage {
   message_type: string;
   monograph_publisher_id: number; // Always required
   monograph_publication_request_id: number | null; // Required with ISBN_ASSINGMENT / ISMN_ASSIGNMENT message type
-  isbn_publisher_range_id: number | null; // Required with ISBN_LIST_DELIVERY
-  ismn_publisher_range_id: number | null; // Required with ISMN_LIST_DELIVERY
+  isbn_publisher_range_id: number | null; // Required with ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+  ismn_publisher_range_id: number | null; // Required with ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+  monograph_identifier_batch_id: number | null; // Required with ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
   lang_code: string;
   recipient: string;
   subject: string;

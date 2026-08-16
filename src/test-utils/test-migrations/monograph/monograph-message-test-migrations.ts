@@ -14,6 +14,7 @@ export async function createMonographMessageTable(db: Kysely<Database>): Promise
     .addColumn('monograph_publication_request_id', 'integer')
     .addColumn('isbn_publisher_range_id', 'integer')
     .addColumn('ismn_publisher_range_id', 'integer')
+    .addColumn('monograph_identifier_batch_id', 'integer')
     .addColumn('sent', 'datetime', (col) => col.notNull())
     .addColumn('sent_by', 'varchar(36)', (col) => col.notNull())
     .execute();

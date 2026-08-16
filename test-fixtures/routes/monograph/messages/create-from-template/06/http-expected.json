@@ -2,11 +2,12 @@
   "message_type": "ISBN_LIST_DELIVERY",
   "monograph_publisher_id": 1,
   "monograph_publication_request_id": null,
-  "isbn_publisher_range_id": 1,
+  "isbn_publisher_range_id": null,
   "ismn_publisher_range_id": null,
+  "monograph_identifier_batch_id": 1,
   "manifestation_ids": [],
   "recipient": "erkki.esimerkki@example.localhost",
   "lang_code": "fi-FI",
   "subject": "Tunnusten lataaminen",
-  "body": "Example publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nHere is a link to identifiers for you: https://tunnisteportaali.kansalliskirjasto.fi/monograph/isbn-publisher-ranges/1\n\nTerveisin, test admin"
+  "body": "Example publisher (erkki.esimerkki@example.localhost),\nFoo street 123\n00000 Foo city\n\nHere is a link to identifiers for you: https://tunnisteportaali.kansalliskirjasto.fi/monograph/identifier-batches/1\n\nTerveisin, test admin"
 }

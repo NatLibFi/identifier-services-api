@@ -67,6 +67,16 @@
       "modified_by": "TEST_USER_1"
     }
   ],
+  "monograph_identifier_batch": [
+    {
+      "id": 1,
+      "monograph_publisher_id": 1,
+      "isbn_publisher_range_id": null,
+      "ismn_publisher_range_id": 1,
+      "created": "2025-01-20 10:00:00",
+      "created_by": "TEST_USER_1"
+    }
+  ],
   "monograph_message": [],
   "monograph_message_publication_manifestation": []
 }

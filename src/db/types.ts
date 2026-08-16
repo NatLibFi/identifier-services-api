@@ -6,6 +6,9 @@ import type { IsmnIdentifier } from './types/monograph/types-ismn-identifier.ts'
 import type { IsmnPublisherRange } from './types/monograph/types-ismn-publisher-range.ts';
 import type { IsmnRange } from './types/monograph/types-ismn-range.ts';
 
+import type { MonographIdentifierBatch } from './types/monograph/types-monograph-identifier-batch.ts';
+import type { MonographIdentifierBatchDownload } from './types/monograph/types-monograph-identifier-batch-download.ts';
+
 import type { MonographMessage } from './types/monograph/types-monograph-message.ts';
 import type { MonographMessagePublicationManifestation } from './types/monograph/types-monograph-message-publication-manifestation.ts';
 
@@ -42,6 +45,9 @@ export interface Database {
   ismn_range: IsmnRange;
   ismn_publisher_range: IsmnPublisherRange;
   ismn_identifier: IsmnIdentifier;
+
+  monograph_identifier_batch: MonographIdentifierBatch;
+  monograph_identifier_batch_download: MonographIdentifierBatchDownload;
 
   monograph_publisher: MonographPublisher;
   monograph_publisher_request: MonographPublisherRequest;

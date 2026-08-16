@@ -114,9 +114,7 @@ export function isbnPublisherRangeContainsIdentifier(range: IsbnRangeSelect, pub
 }
 
 export async function canDeleteIsbnPublisherRange(isbnPublisherRange: IsbnPublisherRangeSelect) {
-  // API v1 had tests regarding associated identifiers and batches -> the new schema does not support these checks
-
-  // Test if any identifier associated with ISBN publisher range is assigned to manifestation
+  // Test if any identifier associated with ISBN publisher range is assigned to manifestation or batch
   const db = getKysely();
   const { count: identifierUsedCount } = await db
     .selectFrom('isbn_identifier')

@@ -55,6 +55,7 @@
     }
   ],
   "isbn_publisher_range": [],
+  "monograph_identifier_batch": [],
   "isbn_identifier": [],
   "monograph_message": []
 }

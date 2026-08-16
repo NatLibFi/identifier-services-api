@@ -102,9 +102,7 @@ export function ismnPublisherRangeContainsIdentifier(range: IsmnRangeSelect, pub
 }
 
 export async function canDeleteIsmnPublisherRange(ismnPublisherRange: IsmnPublisherRangeSelect) {
-  // API v1 had tests regarding associated identifiers and batches -> the new schema does not support these checks
-
-  // Test if any identifier associated with ISMN publisher range is assigned to manifestation
+  // Test if any identifier associated with ISMN publisher range is assigned to manifestation or a batch
   const db = getKysely();
   const { count: identifierUsedCount } = await db
     .selectFrom('ismn_identifier')

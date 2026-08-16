@@ -12,6 +12,10 @@ properties:
     type:
       - number
       - 'null'
+  monograph_identifier_batch_id:
+    type:
+      - number
+      - 'null'
   expression_title:
     type:
       - string

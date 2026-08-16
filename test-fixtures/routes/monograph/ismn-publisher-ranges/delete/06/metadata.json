@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete ISMN publisher range if it is associated with message",
+  "url": "/v2/monograph/ismn-publisher-ranges/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}
