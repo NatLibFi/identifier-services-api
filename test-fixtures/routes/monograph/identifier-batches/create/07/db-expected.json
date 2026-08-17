@@ -1,0 +1,127 @@
+{
+  "monograph_identifier_batch": [],
+  "ismn_publisher_range": [
+    {
+      "id": 100,
+      "publisher_identifier": "979-0-700100",
+      "monograph_publisher_id": 200,
+      "ismn_range_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "ismn_identifier": [
+    {
+      "id": 1,
+      "identifier": "979-0-700100-00-1",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 2,
+      "identifier": "979-0-700100-01-8",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 3,
+      "identifier": "979-0-700100-02-5",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 4,
+      "identifier": "979-0-700100-03-2",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 5,
+      "identifier": "979-0-700100-04-9",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 6,
+      "identifier": "979-0-700100-05-6",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 7,
+      "identifier": "979-0-700100-06-3",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 8,
+      "identifier": "979-0-700100-07-0",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 9,
+      "identifier": "979-0-700100-08-7",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    },
+    {
+      "id": 10,
+      "identifier": "979-0-700100-09-4",
+      "ismn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    }
+  ]
+}

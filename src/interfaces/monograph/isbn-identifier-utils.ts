@@ -34,6 +34,30 @@ export async function getAssignableIsbnIdentifiers(monographPublisherId: number,
   return isbnIdentifiers.map(({ identifier }) => identifier);
 }
 
+export async function getBatchIsbnIdentifiers(isbnPublisherRangeId: number, numberOfIdentifiers: number) {
+  const db = getKysely();
+  const isbnIdentifiers = await db
+    .selectFrom('isbn_identifier')
+    .leftJoin('isbn_publisher_range', 'isbn_publisher_range.id', 'isbn_identifier.isbn_publisher_range_id')
+    .selectAll('isbn_identifier')
+    .select('isbn_publisher_range.id as isbn_publisher_range_id')
+    .where('isbn_publisher_range_id', '=', isbnPublisherRangeId)
+    .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
+    .orderBy('isbn_identifier.identifier', 'asc')
+    .limit(numberOfIdentifiers)
+    .execute();
+
+  if (isbnIdentifiers.length < numberOfIdentifiers) {
+    throw new Error(
+      `Could not provide as many ISBN identifiers that were asked. Only ${isbnIdentifiers.length} are available for the publisher to assign currently.`,
+      { cause: 'Inadequate number of identifiers' },
+    );
+  }
+
+  return isbnIdentifiers.map(({ id }) => id);
+}
+
 export async function getAssignableIsbnIdentifier(manifestationId: number) {
   const db = getKysely();
   const manifestation = await db

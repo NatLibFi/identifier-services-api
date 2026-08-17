@@ -1,0 +1,23 @@
+delete:
+  operationId: deleteMonographIdentifierBatch
+  summary: Delete monograph identifier batch and deassign associated identifiers
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Resource was deleted
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    default:
+      $ref: '../../../responses/error.yaml'

@@ -11,3 +11,7 @@ export interface MonographIdentifierBatch {
 
 export type MonographIdentifierBatchInsert = Insertable<MonographIdentifierBatch>;
 export type MonographIdentifierBatchSelect = Selectable<MonographIdentifierBatch>;
+
+export interface MonographIdentifierBatchSelectExtended extends MonographIdentifierBatchSelect {
+  identifier_count: number;
+}

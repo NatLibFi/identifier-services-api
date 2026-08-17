@@ -1,0 +1,31 @@
+post:
+  operationId: createMonographIdentifierBatch
+  summary: Create a new identifier batch for ISBN or ISMN publisher range
+  security:
+    - openId:
+        - admin
+  tags:
+    - monograph
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/monograph/monograph-identifier-batch/monograph-identifier-batch-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/monograph/monograph-identifier-batch.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

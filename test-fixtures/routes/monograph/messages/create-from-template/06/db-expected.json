@@ -101,6 +101,7 @@
     }
   ],
   "ismn_publisher_range": [],
+  "isbn_identifier": [],
   "monograph_message": [],
   "monograph_message_publication_manifestation": []
 }

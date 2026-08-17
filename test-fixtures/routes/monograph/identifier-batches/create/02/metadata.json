@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create batch for ISBN publisher range",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "expectedStatus": 401
+}

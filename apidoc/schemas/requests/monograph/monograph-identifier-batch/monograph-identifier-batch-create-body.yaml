@@ -1,0 +1,13 @@
+type: object
+properties:
+  isbn_publisher_range_id:
+    description: ISBN publisher range to create batch for (either isbn_publisher_range_id or ismn_publisher_range_id is required)
+    type: number
+  ismn_publisher_range_id:
+    description: ISMN publisher range to create batch for (either isbn_publisher_range_id or ismn_publisher_range_id is required)
+    type: number
+  identifier_count:
+    type: number
+required:
+  # either isbn_publisher_range_id or ismn_publisher_range_id is required
+  - identifier_count

@@ -171,3 +171,8 @@ export function getNumberOfIsmnIdentifiers(ismnPublisherRange: IsmnPublisherRang
 
   return result;
 }
+
+export function getIsmnPublisherRangeCategory(ismnPublisherIdentifier: string): number {
+  const { registrant } = getIsmnPublisherIdentifierParts(ismnPublisherIdentifier);
+  return registrant.length;
+}

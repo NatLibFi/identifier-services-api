@@ -4,7 +4,7 @@ import { sql } from 'kysely';
 import { ApiError } from '../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
-import type { ExpressionBuilder, ReferenceExpression } from 'kysely';
+import type { DeleteResult, ExpressionBuilder, ReferenceExpression, UpdateResult } from 'kysely';
 
 export function validateGetById<T>(dbResult: T[]): T {
   if (dbResult.length === 0 || dbResult[0] === undefined) {
@@ -20,6 +20,30 @@ export function validateGetById<T>(dbResult: T[]): T {
   }
 
   return dbResult[0];
+}
+
+export function validateRowsUpdated(updateResult: UpdateResult, expectedChangedRows: number) {
+  if (updateResult.numUpdatedRows !== BigInt(expectedChangedRows)) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Expected operation to change ${expectedChangedRows} rows, but operation changed ${Number(updateResult.numUpdatedRows)} rows instead.`,
+    );
+  }
+
+  return;
+}
+
+export function validateRowsDeleted(deleteResult: DeleteResult, expectedDeletedRows: number) {
+  if (deleteResult.numDeletedRows !== BigInt(expectedDeletedRows)) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Expected operation to delete ${expectedDeletedRows} rows, but operation changed ${Number(deleteResult.numDeletedRows)} rows instead.`,
+    );
+  }
+
+  return;
 }
 
 export function getCurrentTime() {

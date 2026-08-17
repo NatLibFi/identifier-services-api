@@ -191,6 +191,7 @@ export const MONOGRAPH_MESSAGE_TYPES = {
 };
 
 // Note: considers Finnish ISBN publisher identifiers (e.g., 978-951-0 is category 1 publisher identifier and this category has always length of 9)
+// TODO: refactor to use getIsbnPublisherRangeCategory instead
 export const ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number> = {
   '1': 9,
   '2': 10,
@@ -200,6 +201,7 @@ export const ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number
 };
 
 // Note: considers ISMN publisher identifiers (e.g., 979-0-100 is category 3 ISMN publisher identifier and this category has always length of 9)
+// TODO: refactor to use getIsmnPublisherRangeCategory instead
 export const ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH: Record<string, number> = {
   '3': 9,
   '4': 10,

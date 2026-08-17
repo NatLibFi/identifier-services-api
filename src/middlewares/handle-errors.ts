@@ -37,8 +37,6 @@ export default function (error: Error, req: Request, res: Response, _next: NextF
       return respondWithProblemDocument(req, res, problemDocument);
     }
 
-    // console.log(error);
-
     // If error was an unmanaged error, respond with controlled unknown error status and log the error message
     logger.warn(`Error was not a managed one. The message produced by the error was: ${error.message}`);
 

@@ -183,3 +183,8 @@ export function getNumberOfIsbnIdentifiers(isbnPublisherRange: IsbnPublisherRang
 
   return result;
 }
+
+export function getIsbnPublisherRangeCategory(isbnPublisherIdentifier: string): number {
+  const { registrant } = getIsbnPublisherIdentifierParts(isbnPublisherIdentifier);
+  return registrant.length;
+}

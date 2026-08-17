@@ -34,6 +34,30 @@ export async function getAssignableIsmnIdentifiers(monographPublisherId: number,
   return ismnIdentifiers.map(({ identifier }) => identifier);
 }
 
+export async function getBatchIsmnIdentifiers(ismnPublisherRangeId: number, numberOfIdentifiers: number) {
+  const db = getKysely();
+  const ismnIdentifiers = await db
+    .selectFrom('ismn_identifier')
+    .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
+    .selectAll('ismn_identifier')
+    .select('ismn_publisher_range.id as ismn_publisher_range_id')
+    .where('ismn_publisher_range_id', '=', ismnPublisherRangeId)
+    .where('ismn_identifier.monograph_publication_manifestation_id', 'is', null)
+    .where('ismn_identifier.monograph_identifier_batch_id', 'is', null)
+    .orderBy('ismn_identifier.identifier', 'asc')
+    .limit(numberOfIdentifiers)
+    .execute();
+
+  if (ismnIdentifiers.length < numberOfIdentifiers) {
+    throw new Error(
+      `Could not provide as many ISMN identifiers that were asked. Only ${ismnIdentifiers.length} are available for the publisher to assign currently.`,
+      { cause: 'Inadequate number of identifiers' },
+    );
+  }
+
+  return ismnIdentifiers.map(({ id }) => id);
+}
+
 export async function getAssignableIsmnIdentifier(manifestationId: number) {
   const db = getKysely();
   const manifestation = await db

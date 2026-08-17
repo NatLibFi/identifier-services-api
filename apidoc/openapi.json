@@ -823,6 +823,100 @@
         }
       }
     },
+    "/v2/monograph/identifier-batches": {
+      "post": {
+        "operationId": "createMonographIdentifierBatch",
+        "summary": "Create a new identifier batch for ISBN or ISMN publisher range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/monograph-identifier-batch-create-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-identifier-batch"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/identifier-batches/{id}": {
+      "delete": {
+        "operationId": "deleteMonographIdentifierBatch",
+        "summary": "Delete monograph identifier batch and deassign associated identifiers",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/publishers/{id}": {
       "get": {
         "operationId": "readmonographPublisher",
@@ -3401,6 +3495,58 @@
           "publisher_identifier",
           "ismn_range_id",
           "monograph_publisher_id"
+        ]
+      },
+      "monograph-identifier-batch-create-body": {
+        "type": "object",
+        "properties": {
+          "isbn_publisher_range_id": {
+            "description": "ISBN publisher range to create batch for (either isbn_publisher_range_id or ismn_publisher_range_id is required)",
+            "type": "number"
+          },
+          "ismn_publisher_range_id": {
+            "description": "ISMN publisher range to create batch for (either isbn_publisher_range_id or ismn_publisher_range_id is required)",
+            "type": "number"
+          },
+          "identifier_count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "identifier_count"
+        ]
+      },
+      "monograph-identifier-batch": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "monograph_publisher_id": {
+                "type": "number"
+              },
+              "isbn_publisher_range_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "ismn_publisher_range_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "identifier_count": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          }
         ]
       },
       "monograph-publisher-admin": {

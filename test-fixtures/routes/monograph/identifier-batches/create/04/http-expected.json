@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "1000 ISBN identifiers cannot be provided from ISBN publisher range id 100 (978-951-8900).",
+  "instance": "/v2/monograph/identifier-batches"
+}
