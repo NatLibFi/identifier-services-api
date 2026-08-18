@@ -26,6 +26,7 @@ import type {
 } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreateMonographIdentifierBatchHttp } from '../../validations/monograph/monograph-identifier-batch-validation.ts';
+import { MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
 
 export async function readMonographIdentifierBatch(batchId: number) {
   const db = getKysely();
@@ -39,6 +40,54 @@ export async function readMonographIdentifierBatch(batchId: number) {
   const identifierCount = await getBatchIdentifierCount(result);
 
   return asMonographIdentifierBatchAdminRead(result, identifierCount);
+}
+
+// Note: this is exposed for GET monograph/identifier-batches/:id
+// The use case for normal read is to provide internal interface and use case for providing information for UI needs different information
+export async function readPublicMonographIdentifierBatch(batchId: number) {
+  const db = getKysely();
+  const identifierBatch = await db
+    .selectFrom('monograph_identifier_batch as mib')
+    .leftJoin('monograph_publisher as mp', 'mp.id', 'mib.monograph_publisher_id')
+    .selectAll('mib')
+    .select(['mp.official_name as monograph_publisher_name'])
+    .where('mib.id', '=', batchId)
+    .execute();
+
+  const result = validateGetById(identifierBatch);
+  const identifierCount = await getBatchIdentifierCount(result);
+
+  let identifierType: string;
+
+  if (result.isbn_publisher_range_id && !result.ismn_publisher_range_id) {
+    identifierType = MONOGRAPH_IDENTIFIERS.ISBN;
+  } else if (!result.isbn_publisher_range_id && result.ismn_publisher_range_id) {
+    identifierType = MONOGRAPH_IDENTIFIERS.ISMN;
+  } else {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown problem occurred with data. Please contact customer service.',
+    );
+  }
+
+  // Always require publisher name to be defined
+  if (!result.monograph_publisher_name) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown problem occurred with data. Please contact customer service.',
+    );
+  }
+
+  const batchPublicInfo = {
+    id: batchId,
+    monograph_publisher_name: result.monograph_publisher_name,
+    identifier_type: identifierType,
+    identifier_count: identifierCount,
+  };
+
+  return batchPublicInfo;
 }
 
 export async function createMonographIdentifierBatch(

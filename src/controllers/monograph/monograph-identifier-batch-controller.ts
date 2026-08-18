@@ -12,6 +12,15 @@ export async function createMonographIdentifierBatch(req: Request, res: Response
   }
 }
 
+export async function readPublicMonographIdentifierBatch(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographIdentifierBatchInterface.readPublicMonographIdentifierBatch(Number(req.params['id']));
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function deleteMonographIdentifierBatch(req: Request, res: Response, next: NextFunction) {
   try {
     await monographIdentifierBatchInterface.deleteMonographIdentifierBatch(Number(req.params['id']), req.user);

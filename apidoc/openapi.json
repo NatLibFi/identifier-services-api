@@ -877,6 +877,46 @@
       }
     },
     "/v2/monograph/identifier-batches/{id}": {
+      "get": {
+        "operationId": "readMonographIdentifierBatch",
+        "summary": "Read monograph identifier batch information that is public",
+        "security": [],
+        "tags": [
+          "monograph"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/monograph-identifier-batch-public"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
       "delete": {
         "operationId": "deleteMonographIdentifierBatch",
         "summary": "Delete monograph identifier batch and deassign associated identifiers",
@@ -3608,6 +3648,23 @@
             "$ref": "#/components/schemas/created-metadata"
           }
         ]
+      },
+      "monograph-identifier-batch-public": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "monograph_publisher_name": {
+            "type": "string"
+          },
+          "identifier_type": {
+            "type": "string"
+          },
+          "identifier_count": {
+            "type": "number"
+          }
+        }
       },
       "monograph-publisher-admin": {
         "allOf": [

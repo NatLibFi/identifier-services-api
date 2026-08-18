@@ -23,6 +23,12 @@ export default function createMonographIdentifierBatchRouter(turnstileMiddleware
     monographIdentifierBatchControllers.createMonographIdentifierBatch,
   );
 
+  monographIdentifierBatchRouter.get(
+    '/:id',
+    validateRequestParams(idParameterSchema),
+    monographIdentifierBatchControllers.readPublicMonographIdentifierBatch,
+  );
+
   monographIdentifierBatchRouter.delete(
     '/:id',
     allowAdminOnly,
