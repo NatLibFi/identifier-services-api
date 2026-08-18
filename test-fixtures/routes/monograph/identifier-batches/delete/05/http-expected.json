@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "Identifier batch has been downloaded by an user and thus cannot be deleted.",
+  "instance": "/v2/monograph/identifier-batches/1"
+}

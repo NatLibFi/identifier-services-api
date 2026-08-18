@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: number
+  monograph_publisher_name:
+    type: string
+  identifier_type:
+    type: string
+  identifier_count:
+    type: number

@@ -102,15 +102,18 @@ export function ismnPublisherRangeContainsIdentifier(range: IsmnRangeSelect, pub
 }
 
 export async function canDeleteIsmnPublisherRange(ismnPublisherRange: IsmnPublisherRangeSelect) {
-  // API v1 had tests regarding associated identifiers and batches -> the new schema does not support these checks
-
-  // Test if any identifier associated with ISMN publisher range is assigned to manifestation
+  // Test if any identifier associated with ISMN publisher range is assigned to manifestation or a batch
   const db = getKysely();
   const { count: identifierUsedCount } = await db
     .selectFrom('ismn_identifier')
     .select(db.fn.countAll<number>().as('count'))
     .where('ismn_publisher_range_id', '=', ismnPublisherRange.id)
-    .where('monograph_publication_manifestation_id', 'is not', null)
+    .where((eb) =>
+      eb.or([
+        eb('monograph_publication_manifestation_id', 'is not', null),
+        eb('monograph_identifier_batch_id', 'is not', null),
+      ]),
+    )
     .executeTakeFirstOrThrow();
 
   if (identifierUsedCount !== 0) {
@@ -140,6 +143,7 @@ export function generateIsmnIdentifierDbEntry(
     identifier: ismnIdentifier,
     ismn_publisher_range_id: ismnPublisherRangeId,
     monograph_publication_manifestation_id: null,
+    monograph_identifier_batch_id: null,
     created: getCurrentTime(),
     created_by: SYSTEM_USER,
     modified: getCurrentTime(),
@@ -166,4 +170,9 @@ export function getNumberOfIsmnIdentifiers(ismnPublisherRange: IsmnPublisherRang
   }
 
   return result;
+}
+
+export function getIsmnPublisherRangeCategory(ismnPublisherIdentifier: string): number {
+  const { registrant } = getIsmnPublisherIdentifierParts(ismnPublisherIdentifier);
+  return registrant.length;
 }

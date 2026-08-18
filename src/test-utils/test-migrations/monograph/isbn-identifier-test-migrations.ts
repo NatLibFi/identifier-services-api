@@ -8,6 +8,7 @@ export async function createIsbnIdentifierTable(db: Kysely<Database>): Promise<v
     .addColumn('identifier', 'varchar(20)', (col) => col.notNull())
     .addColumn('isbn_publisher_range_id', 'integer', (col) => col.notNull())
     .addColumn('monograph_publication_manifestation_id', 'integer')
+    .addColumn('monograph_identifier_batch_id', 'integer')
     .addColumn('created', 'datetime', (col) => col.notNull())
     .addColumn('created_by', 'varchar(36)')
     .addColumn('modified', 'datetime', (col) => col.notNull())

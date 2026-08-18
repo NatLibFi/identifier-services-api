@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may read public batch information",
+  "url": "/v2/monograph/identifier-batches/1",
+  "method": "GET",
+  "role": "publisher",
+  "expectedStatus": 200
+}

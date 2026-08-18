@@ -1,0 +1,7 @@
+{
+  "description": "[admin] Removing ISMN identifiers works when preconditions are met",
+  "url": "/v2/monograph/identifier-batches/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

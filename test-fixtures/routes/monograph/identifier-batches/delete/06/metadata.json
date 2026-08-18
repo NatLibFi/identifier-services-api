@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete batch for which associated publisher has assigned ISBN identifier to a publication",
+  "url": "/v2/monograph/identifier-batches/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 422
+}

@@ -2,7 +2,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import { getCurrentTime } from '../shared-interface-utils.ts';
 
 import {
   canDeleteIsmnPublisherRange,
@@ -11,17 +11,10 @@ import {
   getNumberOfIsmnIdentifiers,
   ismnPublisherRangeContainsIdentifier,
 } from './ismn-publisher-range-interface-utils.ts';
-import { generateRangeArray, isProduction } from '../../utils/generic-utils.ts';
+import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { getAvailableIsmnPublisherRanges } from './ismn-range-interface-utils.ts';
-import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
 
-import { asIsmnIdentifierAdminRead } from '../../dtl/monograph/ismn-identifier-dtl.ts';
-import { isAdmin, isGuest } from '../../utils/permission-utils.ts';
-
-import type {
-  CreateIsmnPublisherRangeHttp,
-  GetIsmnPublisherRangeIdentifiersHttp,
-} from '../../validations/monograph/ismn-publisher-range-validation.ts';
+import type { CreateIsmnPublisherRangeHttp } from '../../validations/monograph/ismn-publisher-range-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   IsmnPublisherRangePublicInfo,
@@ -281,133 +274,4 @@ export async function deleteIsmnPublisherRange(ismnPublisherRangeId: number) {
   });
 
   return;
-}
-
-export async function getIsmnPublisherRangeIdentifiers(
-  ismnPublisherRangeId: number,
-  filter: GetIsmnPublisherRangeIdentifiersHttp,
-  user: RequestUser,
-) {
-  const { download, limit, offset, assigned_only, unassigned_only } = filter;
-  const db = getKysely();
-
-  // For guests, only download option is available
-  if (!download && isGuest(user)) {
-    throw new ApiError(
-      HttpStatus.UNAUTHORIZED,
-      'Unauthorized',
-      'The requested operation is not permitted for unauthorized users.',
-    );
-  }
-
-  // For all non-admins, only download option is available
-  if (!download && !isAdmin(user)) {
-    throw new ApiError(
-      HttpStatus.FORBIDDEN,
-      'Forbidden',
-      'You do not have permission to perform the requested operation.',
-    );
-  }
-
-  // Verify publisher range exists
-  const ismnPublisherRange = await db
-    .selectFrom('ismn_publisher_range')
-    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'ismn_publisher_range.monograph_publisher_id')
-    .select('ismn_publisher_range.id')
-    .select('monograph_publisher.official_name as publisher_name')
-    .where('ismn_publisher_range.id', '=', ismnPublisherRangeId)
-    .execute();
-
-  const validatedIsmnPublisherRange = validateGetById(ismnPublisherRange);
-  const { publisher_name } = validatedIsmnPublisherRange;
-
-  // Having association and official_name is mandatory, but sanity check that it really does exist
-  if (!publisher_name) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Given ISMN range does not seem to have associated publisher name. Please contact system administration and ask reviewing ISMN range id ${ismnPublisherRangeId}`,
-    );
-  }
-
-  let query = db.selectFrom('ismn_identifier').selectAll().where('ismn_publisher_range_id', '=', ismnPublisherRangeId);
-
-  if (unassigned_only && assigned_only) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      'Cannot process unassigned_only and assigned_only simultaneously',
-    );
-  }
-
-  if (download && (unassigned_only || assigned_only || limit || offset)) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      'Cannot process unassigned_only, assigned_only, limit or offset together with download',
-    );
-  }
-
-  if (!download && unassigned_only) {
-    query = query.where('monograph_publication_manifestation_id', 'is', null);
-  }
-
-  // Note: done like this to avoid case where assigned only filter would be applied when attribute is undefined
-  if (!download && assigned_only) {
-    query = query.where('monograph_publication_manifestation_id', 'is not', null);
-  }
-
-  query = query.orderBy('id', 'asc');
-
-  if (!download && limit) {
-    query = query.limit(limit);
-  }
-
-  if (!download && offset) {
-    query = query.offset(offset);
-  }
-
-  const result = await query.execute();
-
-  if (!download) {
-    return result.map((r) => {
-      // Re-validate just in case
-      validateIsmnIdentifier(r.identifier);
-      return asIsmnIdentifierAdminRead(r);
-    });
-  }
-
-  // Process downloading as text file
-
-  // Old API's formatting for text files
-  let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${publisher_name}\n`;
-  headerText += `Följande identifikatorer har tilldelats åt förlaget ${publisher_name}\n`;
-  headerText += `Following identifiers have been assigned to publisher ${publisher_name}\n\n`;
-
-  // Add test header for test environment
-  if (!isProduction()) {
-    headerText +=
-      'SEURAAVAT TUNNUKSET ON TUOTETTU TESTIJÄRJESTELMÄSTÄ JA NIITÄ EI MISSÄÄN NIMESSÄ PIDÄ OIKEASTI KÄYTTÄÄ!\n';
-    headerText += 'FÖLJANDE IDENTIFIKATORER ÄR FRÅN TEST SYSTEMET. ANVÄND DEM INTE!\n';
-    headerText += 'FOLLOWING IDENTIFIERS HAVE BEEN PRODUCED IN TEST SYSTEM. DO NOT USE THEM!\n\n';
-  }
-
-  const identifierResult = result.reduce((acc, { identifier, monograph_publication_manifestation_id }) => {
-    // Re-validate just in case
-    validateIsmnIdentifier(identifier);
-
-    const identifierInfo = `${acc}${identifier}`;
-
-    if (monograph_publication_manifestation_id !== null) {
-      throw new ApiError(
-        HttpStatus.CONFLICT,
-        'Conflict',
-        `ISMN identifier ${identifier} has been marked as used. Downloading publisher identifiers that contain used identifiers is disallowed.`,
-      );
-    }
-
-    return `${identifierInfo}\n`;
-  }, '');
-
-  return `${headerText}${identifierResult}`;
 }

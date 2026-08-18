@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot create batch for ISBN publisher range",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "1000 ISMN identifiers cannot be provided from ISMN publisher range id 100 (979-0-700100).",
+  "instance": "/v2/monograph/identifier-batches"
+}

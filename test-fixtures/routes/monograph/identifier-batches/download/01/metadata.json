@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may download batch",
+  "url": "/v2/monograph/identifier-batches/1/download",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -5,6 +5,7 @@ export interface IsmnIdentifier {
   identifier: string;
   ismn_publisher_range_id: number;
   monograph_publication_manifestation_id: number | null;
+  monograph_identifier_batch_id: number | null;
   created: Date;
   created_by: string;
   modified: Date;

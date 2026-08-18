@@ -1,0 +1,7 @@
+{
+  "description": "[admin] properly avoids using ISBN identifier assigned to another batch",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

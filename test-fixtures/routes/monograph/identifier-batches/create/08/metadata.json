@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot ISMN create batch for category 7 ISMN publisher range",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

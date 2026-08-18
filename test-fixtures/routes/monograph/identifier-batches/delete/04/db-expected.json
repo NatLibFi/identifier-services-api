@@ -1,0 +1,57 @@
+{
+  "monograph_identifier_batch_download": [],
+  "monograph_message": [
+    {
+      "id": 1,
+      "message_type": "ISBN_LIST_DELIVERY",
+      "monograph_publisher_id": 1,
+      "monograph_publication_request_id": null,
+      "isbn_publisher_range_id": null,
+      "ismn_publisher_range_id": null,
+      "monograph_identifier_batch_id": 1,
+      "recipient": "erkki.esimerkki@example.localhost",
+      "lang_code": "fi-FI",
+      "subject": "TESTI/TEST MESSAGE Example list",
+      "body": "Here is a list",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    }
+  ],
+  "monograph_identifier_batch": [
+    {
+      "id": 1,
+      "monograph_publisher_id": 200,
+      "isbn_publisher_range_id": 100,
+      "ismn_publisher_range_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM"
+    }
+  ],
+  "isbn_publisher_range": [
+    {
+      "id": 100,
+      "publisher_identifier": "978-951-8900",
+      "monograph_publisher_id": 200,
+      "isbn_range_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "ismn_publisher_range": [],
+  "isbn_identifier": [
+    {
+      "id": 1,
+      "identifier": "978-951-8900-00-2",
+      "isbn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    }
+  ],
+  "ismn_identifier": []
+}

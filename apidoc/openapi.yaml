@@ -41,6 +41,13 @@ paths:
   /v2/monograph/ismn-publisher-ranges/{id}:
     $ref: './resources/monograph/ismn-publisher-ranges/id.yaml'
 
+  /v2/monograph/identifier-batches:
+    $ref: './resources/monograph/identifier-batches/root.yaml'
+  /v2/monograph/identifier-batches/{id}:
+    $ref: './resources/monograph/identifier-batches/id.yaml'
+  /v2/monograph/identifier-batches/{id}/download:
+    $ref: './resources/monograph/identifier-batches/download.yaml'
+
   /v2/monograph/publishers/{id}:
     $ref: './resources/monograph/publishers/id.yaml'
   /v2/monograph/publishers/{id}/archive:

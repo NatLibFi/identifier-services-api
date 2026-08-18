@@ -24,6 +24,9 @@ import { createMonographPublicationRequestTable } from './test-migrations/monogr
 import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
 import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
 
+import { createMonographIdentifierBatchTable } from './test-migrations/monograph/monograph-identifier-batch.ts';
+import { createMonographIdentifierBatchDownloadTable } from './test-migrations/monograph/monograph-identifier-batch-download.ts';
+
 import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
 
 import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
@@ -184,6 +187,20 @@ function getTableInfo(dbInit: Record<string, TestDatabaseTableInit[]>, table: st
       constructorFn: createIsmnIdentifierTable,
       // @ts-expect-error implicit expectation of having defined key for tests
       dataEntries: dbInit['ismn_identifier'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    monograph_identifier_batch: {
+      table: 'monograph_identifier_batch',
+      constructorFn: createMonographIdentifierBatchTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_identifier_batch'],
+      jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
+    },
+    monograph_identifier_batch_download: {
+      table: 'monograph_identifier_batch_download',
+      constructorFn: createMonographIdentifierBatchDownloadTable,
+      // @ts-expect-error implicit expectation of having defined key for tests
+      dataEntries: dbInit['monograph_identifier_batch_download'],
       jsonColumns: [], // For inserts JSON.stringify must be called manually. This is a quick hack for doing so for entries in db-init.json
     },
     monograph_publication: {

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create batch for ISBN publisher range when pre-conditions are met (category 1-4, has available identifiers)",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

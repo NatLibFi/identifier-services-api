@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot create ISBN batch when there are not enough identifiers",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

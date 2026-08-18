@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Identifier batch contains identifier entries that are managed within the identifier services system.",
+  "instance": "/v2/monograph/identifier-batches/1/download"
+}

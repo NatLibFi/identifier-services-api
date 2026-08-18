@@ -71,109 +71,116 @@ async function runTest(testRootPath: string) {
   validateTestDefinition(testDefinition);
 
   // Destructure for readability
+  const testPathParts = testRootPath.split('/');
+  const testNumber = testPathParts[testPathParts.length - 1];
+
   const { metadata, dbExpected, dbInit } = testDefinition;
 
   // Generate test defitinion. Note skip and only directives are defined here based on given metadata.
-  test.skipIf(Boolean(metadata.skip))(`${metadata.description}`, { only: Boolean(metadata.only) }, async () => {
-    // Step 0 - initialize mock date so that all db entries are created in pre-defined datetime
-    const CLOCK = Sinon.useFakeTimers({
-      now: TEST_CREATION_DATE.toJSDate(),
-      shouldAdvanceTime: false,
-      toFake: ['Date'],
-    });
+  test.skipIf(Boolean(metadata.skip))(
+    `${testNumber} ${metadata.description}`,
+    { only: Boolean(metadata.only) },
+    async () => {
+      // Step 0 - initialize mock date so that all db entries are created in pre-defined datetime
+      const CLOCK = Sinon.useFakeTimers({
+        now: TEST_CREATION_DATE.toJSDate(),
+        shouldAdvanceTime: false,
+        toFake: ['Date'],
+      });
 
-    // Step 1 - initialize db if initialized date was given
-    // @ts-expect-error vitest injection
-    const dbConfig = inject('dbConfig');
-    let database: string | undefined;
+      // Step 1 - initialize db if initialized date was given
+      // @ts-expect-error vitest injection
+      const dbConfig = inject('dbConfig');
+      let database: string | undefined;
 
-    if (dbInit) {
-      // It seems mysql may throw error on too many connections
-      // This will fail test in a way that CLOCK.restore() will not be called
-      // And result into an Sinon error which will hide the underlying reason
-      // This try-catch block is here only for handling the case so that proper
-      // error message is thrown and may be debugged
-      try {
-        database = await initializeTestDb(dbConfig, dbInit);
-      } catch (error) {
-        CLOCK.restore();
-        throw error;
+      if (dbInit) {
+        // It seems mysql may throw error on too many connections
+        // This will fail test in a way that CLOCK.restore() will not be called
+        // And result into an Sinon error which will hide the underlying reason
+        // This try-catch block is here only for handling the case so that proper
+        // error message is thrown and may be debugged
+        try {
+          database = await initializeTestDb(dbConfig, dbInit);
+        } catch (error) {
+          CLOCK.restore();
+          throw error;
+        }
       }
-    }
 
-    // Make sure that db is dropped in case test fails
-    onTestFailed(async () => {
+      // Make sure that db is dropped in case test fails
+      onTestFailed(async () => {
+        if (database) {
+          await dropTestDatabase(dbConfig, database);
+        }
+
+        if (CLOCK) {
+          CLOCK.restore();
+        }
+      });
+
+      // DB initialization is completed. Step forward in time to expected modified date where HTTP calls are processed.
+      CLOCK.setSystemTime(TEST_MODIFICATION_DATE.toJSDate());
+
+      // Step 2 - start application server in free port
+      // https://expressjs.com/de/api.html#app.listen -> "If port is omitted or is 0, the operating system will assign an arbitrary unused port"
+      const httpServer = await startApp({
+        // Please note the following are not proper production values but rather the ones used by all tests!
+        applicationRoleMap: { admin: ['admin'], publisher: ['publisher'] },
+        monographPublisherConfiguration: {
+          SELF_PUBLISHER_ID: 1000,
+          STATE_PUBLISHER_ID: 2000,
+          HY_PUBLISHER_ID: 3000,
+        },
+        messagingConfiguration: {
+          SEND_EMAILS: false,
+          SMTP_CONFIG: {},
+          ISBN_EMAIL: '',
+          ISSN_EMAIL: '',
+        },
+        melindaConfiguration: {
+          MELINDA_API_URL: '',
+          MELINDA_API_USER: '',
+          MELINDA_API_PASSWORD: '',
+        },
+        turnstileConfiguration: {
+          TURNSTILE_URL: 'http://localhost',
+          TURNSTILE_SECRET_KEY: '',
+          DISABLE_TURNSTILE: true,
+        },
+        enableProxy: false,
+        httpPort: 0,
+        keycloakOptions: {
+          localUsers: 'file://test-fixtures/integration-test-users.json',
+        },
+        logLevel: 'silent',
+      });
+
+      // @ts-expect-error port property exists per docs
+      const serverPort = httpServer.address()?.port;
+
+      // Step 3 - send http request with appropriate access token if role is defined
+      const accessToken = await getAccessToken(metadata.role, serverPort);
+      const response = await sendTestHttpRequest(testDefinition, accessToken, serverPort);
+
+      await httpServer.close();
+
+      // Step 4 - validate response to http request
+      await validateHttpResponse(testDefinition, response);
+
+      // Step 5 - validate application database state after processing the http call if DB expectations were defined
+      if (dbExpected) {
+        await validateDbState(dbExpected);
+      }
+
+      // Drop db if it was initialized as this would otherwise be done only in case test fails
       if (database) {
-        await dropTestDatabase(dbConfig, database);
+        await dropTestDatabase(dbConfig, database); // Note: also drops Kysely singleton
       }
 
-      if (CLOCK) {
-        CLOCK.restore();
-      }
-    });
-
-    // DB initialization is completed. Step forward in time to expected modified date where HTTP calls are processed.
-    CLOCK.setSystemTime(TEST_MODIFICATION_DATE.toJSDate());
-
-    // Step 2 - start application server in free port
-    // https://expressjs.com/de/api.html#app.listen -> "If port is omitted or is 0, the operating system will assign an arbitrary unused port"
-    const httpServer = await startApp({
-      // Please note the following are not proper production values but rather the ones used by all tests!
-      applicationRoleMap: { admin: ['admin'], publisher: ['publisher'] },
-      monographPublisherConfiguration: {
-        SELF_PUBLISHER_ID: 1000,
-        STATE_PUBLISHER_ID: 2000,
-        HY_PUBLISHER_ID: 3000,
-      },
-      messagingConfiguration: {
-        SEND_EMAILS: false,
-        SMTP_CONFIG: {},
-        ISBN_EMAIL: '',
-        ISSN_EMAIL: '',
-      },
-      melindaConfiguration: {
-        MELINDA_API_URL: '',
-        MELINDA_API_USER: '',
-        MELINDA_API_PASSWORD: '',
-      },
-      turnstileConfiguration: {
-        TURNSTILE_URL: 'http://localhost',
-        TURNSTILE_SECRET_KEY: '',
-        DISABLE_TURNSTILE: true,
-      },
-      enableProxy: false,
-      httpPort: 0,
-      keycloakOptions: {
-        localUsers: 'file://test-fixtures/integration-test-users.json',
-      },
-      logLevel: 'silent',
-    });
-
-    // @ts-expect-error port property exists per docs
-    const serverPort = httpServer.address()?.port;
-
-    // Step 3 - send http request with appropriate access token if role is defined
-    const accessToken = await getAccessToken(metadata.role, serverPort);
-    const response = await sendTestHttpRequest(testDefinition, accessToken, serverPort);
-
-    await httpServer.close();
-
-    // Step 4 - validate response to http request
-    await validateHttpResponse(testDefinition, response);
-
-    // Step 5 - validate application database state after processing the http call if DB expectations were defined
-    if (dbExpected) {
-      await validateDbState(dbExpected);
-    }
-
-    // Drop db if it was initialized as this would otherwise be done only in case test fails
-    if (database) {
-      await dropTestDatabase(dbConfig, database); // Note: also drops Kysely singleton
-    }
-
-    // Reset clock
-    CLOCK.restore();
-  });
+      // Reset clock
+      CLOCK.restore();
+    },
+  );
 }
 
 function readTestContents(testRootPath: string): TestDefinition {

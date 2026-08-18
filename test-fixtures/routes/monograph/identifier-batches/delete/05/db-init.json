@@ -1,0 +1,48 @@
+{
+  "monograph_identifier_batch_download": [
+    {
+      "id": 1,
+      "sha256sum": "foo",
+      "monograph_identifier_batch_id": 1,
+      "created": "2025-01-20T12:00:00.000Z"
+    }
+  ],
+  "monograph_message": [],
+  "monograph_identifier_batch": [
+    {
+      "id": 1,
+      "monograph_publisher_id": 200,
+      "isbn_publisher_range_id": 100,
+      "ismn_publisher_range_id": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM"
+    }
+  ],
+  "isbn_publisher_range": [
+    {
+      "id": 100,
+      "publisher_identifier": "978-951-8900",
+      "monograph_publisher_id": 200,
+      "isbn_range_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "ismn_publisher_range": [],
+  "isbn_identifier": [
+    {
+      "id": 1,
+      "identifier": "978-951-8900-00-2",
+      "isbn_publisher_range_id": 100,
+      "monograph_publication_manifestation_id": null,
+      "monograph_identifier_batch_id": 1,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "SYSTEM",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "SYSTEM"
+    }
+  ],
+  "ismn_identifier": []
+}

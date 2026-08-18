@@ -6,4 +6,3 @@ runIntegrationTestSuite(routers, 'create');
 runIntegrationTestSuite(routers, 'delete');
 
 runIntegrationTestSuite(routers, 'read-public');
-runIntegrationTestSuite(routers, 'get-identifiers');

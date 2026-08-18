@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "Identifier batch identifiers has already assigned by publisher and thus cannot be deleted.",
+  "instance": "/v2/monograph/identifier-batches/1"
+}

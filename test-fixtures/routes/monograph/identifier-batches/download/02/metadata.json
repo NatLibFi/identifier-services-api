@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may download batch",
+  "url": "/v2/monograph/identifier-batches/1/download",
+  "method": "POST",
+  "expectedStatus": 200
+}

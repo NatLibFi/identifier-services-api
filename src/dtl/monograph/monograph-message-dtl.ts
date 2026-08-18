@@ -13,10 +13,11 @@ export interface MonographMessageInfo {
         identifier: string | null;
       }[]
     | null;
-  isbn_publisher_range_id: number | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
-  isbn_publisher_identifier: string | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
-  ismn_publisher_range_id: number | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
-  ismn_publisher_identifier: string | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
+  monograph_identifier_batch_id: number | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
+  isbn_publisher_range_id: number | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+  isbn_publisher_identifier: string | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+  ismn_publisher_range_id: number | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+  ismn_publisher_identifier: string | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
   recipient: string;
   lang_code: string;
   subject: string;
@@ -32,6 +33,7 @@ export function asMonographMessageAdminRead(monographMessageInfo: MonographMessa
     monograph_publisher_id,
     monograph_publisher_name,
     monograph_publication_request_id,
+    monograph_identifier_batch_id,
     expression_title,
     manifestation_info,
     isbn_publisher_range_id,
@@ -52,6 +54,7 @@ export function asMonographMessageAdminRead(monographMessageInfo: MonographMessa
     monograph_publisher_id,
     monograph_publisher_name,
     monograph_publication_request_id,
+    monograph_identifier_batch_id,
     expression_title,
     manifestation_info,
     isbn_publisher_range_id,

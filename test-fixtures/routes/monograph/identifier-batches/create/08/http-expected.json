@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "Cannot generate batch for category 7 ISMN publisher range (only available for category 6 and above).",
+  "instance": "/v2/monograph/identifier-batches"
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot ISBN create batch for category 5 ISBN publisher range",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

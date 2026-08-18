@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create batch for ISMN publisher range when pre-conditions are met (category 3-6, has available identifiers)",
+  "url": "/v2/monograph/identifier-batches",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

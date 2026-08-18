@@ -16,6 +16,10 @@ properties:
     type:
       - number
       - 'null'
+  monograph_identifier_batch_id:
+    type:
+      - number
+      - 'null'
   manifestation_ids:
     type: array
     items:
