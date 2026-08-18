@@ -4,3 +4,4 @@ const routers = ['monograph', 'identifier-batches'];
 
 runIntegrationTestSuite(routers, 'create');
 runIntegrationTestSuite(routers, 'delete');
+runIntegrationTestSuite(routers, 'download');

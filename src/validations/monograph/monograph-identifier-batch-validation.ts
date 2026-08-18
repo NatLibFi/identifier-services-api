@@ -16,4 +16,10 @@ export const createMonographIdentifierBatchSchema = z
     }
   });
 
+export const downloadMonographIdentifierBatchSchema = z
+  .object({
+    turnstile_token: z.string().optional(),
+  })
+  .strict();
+
 export type CreateMonographIdentifierBatchHttp = z.infer<typeof createMonographIdentifierBatchSchema>;

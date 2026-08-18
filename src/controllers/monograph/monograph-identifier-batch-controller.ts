@@ -20,3 +20,14 @@ export async function deleteMonographIdentifierBatch(req: Request, res: Response
     return next(error);
   }
 }
+
+export async function downloadBatchIdentifiers(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographIdentifierBatchInterface.downloadMonographIdentifierBatch(Number(req.params['id']));
+
+    const fileName = `monograph-identifier-batch-${req.params['id']}-identifiers.txt`;
+    return res.attachment(fileName).send(result);
+  } catch (error) {
+    return next(error);
+  }
+}

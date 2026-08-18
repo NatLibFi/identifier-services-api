@@ -18,6 +18,8 @@ import type {
   MonographIdentifierBatchSelect,
 } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import type { IsbnIdentifierSelect } from '../../db/types/monograph/types-isbn-identifier.ts';
+import type { IsmnIdentifierSelect } from '../../db/types/monograph/types-ismn-identifier.ts';
 
 export async function createIsbnIdentifierBatch(
   isbnPublisherRangeId: number,
@@ -331,4 +333,32 @@ export async function getBatchIdentifierCount(identifierBatch: MonographIdentifi
   }
 
   return identifierCount;
+}
+
+export async function getIdentifierBatchIdentifiers(
+  identifierBatch: MonographIdentifierBatchSelectExtended,
+): Promise<IsbnIdentifierSelect[] | IsmnIdentifierSelect[]> {
+  const db = getKysely();
+
+  let identifiers: IsbnIdentifierSelect[] | IsmnIdentifierSelect[] = [];
+
+  if (identifierBatch.isbn_publisher_range_id && !identifierBatch.ismn_publisher_range_id) {
+    identifiers = await db
+      .selectFrom('isbn_identifier')
+      .selectAll()
+      .where('monograph_identifier_batch_id', '=', identifierBatch.id)
+      .where('isbn_publisher_range_id', '=', identifierBatch.isbn_publisher_range_id)
+      .execute();
+  } else if (identifierBatch.ismn_publisher_range_id && !identifierBatch.isbn_publisher_range_id) {
+    identifiers = await db
+      .selectFrom('ismn_identifier')
+      .selectAll()
+      .where('monograph_identifier_batch_id', '=', identifierBatch.id)
+      .where('ismn_publisher_range_id', '=', identifierBatch.ismn_publisher_range_id)
+      .execute();
+  } else {
+    throw new Error(`Cannot provide identifiers for batch id ${identifierBatch.id}`);
+  }
+
+  return identifiers;
 }

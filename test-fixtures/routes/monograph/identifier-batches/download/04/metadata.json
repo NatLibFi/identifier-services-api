@@ -1,0 +1,7 @@
+{
+  "description": "[admin] download is disallowed if any identifier contains association with publication (indicating publisher controlled identifier within the system)",
+  "url": "/v2/monograph/identifier-batches/1/download",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

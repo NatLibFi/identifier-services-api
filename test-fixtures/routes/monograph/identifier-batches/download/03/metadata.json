@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may download batch",
+  "url": "/v2/monograph/identifier-batches/1/download",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 200
+}

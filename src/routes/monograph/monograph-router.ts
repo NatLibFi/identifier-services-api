@@ -15,7 +15,7 @@ import monographPublicationManifestationRouter from './monograph-publication-man
 
 import createMonographPublicationRequestRouter from './monograph-publication-request-router.ts';
 
-import monographIdentifierBatchRouter from './monograph-identifier-batch-router.ts';
+import createMonographIdentifierBatchRouter from './monograph-identifier-batch-router.ts';
 
 import createMonographMessageRouter from './monograph-message-router.ts';
 import createMonographStatisticsRouter from './monograph-statistics-router.ts';
@@ -37,7 +37,7 @@ export default function createMonographRouter(
   monographRouter.use('/ismn-ranges', allowAdminOnly, ismnRangeRouter);
   monographRouter.use('/ismn-publisher-ranges', ismnPublisherRangeRouter);
 
-  monographRouter.use('/identifier-batches', allowAdminOnly, monographIdentifierBatchRouter);
+  monographRouter.use('/identifier-batches', createMonographIdentifierBatchRouter(turnstileMiddleware));
 
   monographRouter.use('/publishers', monographPublisherRouter);
   monographRouter.use('/publisher-requests', createMonographPublisherRequestRouter(turnstileMiddleware));
