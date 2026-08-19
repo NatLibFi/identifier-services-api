@@ -44,7 +44,7 @@
     "@natlibfi/marc-record-serializers": "^11.0.1",
     "@natlibfi/melinda-backend-commons": "^3.0.4",
     "@natlibfi/melinda-rest-api-client": "^6.0.3",
-    "@natlibfi/passport-natlibfi-keycloak": "^3.0.11",
+    "@natlibfi/passport-natlibfi-keycloak": "^3.0.12",
     "@natlibfi/sru-client": "^7.0.1",
     "body-parser": "^2.2.2",
     "celebrate": "^15.0.3",
@@ -55,7 +55,7 @@
     "http-status": "^2.1.0",
     "luxon": "^3.6.1",
     "mysql2": "^3.16.2",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^9.0.5",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
