@@ -1,25 +1,14 @@
-# NatLibFi/KB maintenance strategy v2
+# NatLibFi/KB maintenance strategy
 
 version: 2
 updates:
+  # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "06:30"
+      timezone: "Europe/Helsinki"
     target-branch: "test"
-    pull-request-branch-name:
-      separator: "-"
-
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    versioning-strategy: increase-if-necessary
-    target-branch: "test"
-    groups:
-      major-updates:
-        update-types: ["major"]
-      minor-updates:
-        update-types: ["minor", "patch"]
     pull-request-branch-name:
       separator: "-"
