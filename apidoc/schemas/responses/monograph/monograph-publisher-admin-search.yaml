@@ -1,0 +1,14 @@
+allOf:
+  - $ref: './monograph-publisher-admin-base.yaml'
+  - type: object
+    properties:
+      isbn_publisher_identifiers:
+        type: array
+        items:
+          $ref: './monograph-publisher-range-lite.yaml'
+      ismn_publisher_identifiers:
+        type: array
+        items:
+          $ref: './monograph-publisher-range-lite.yaml'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

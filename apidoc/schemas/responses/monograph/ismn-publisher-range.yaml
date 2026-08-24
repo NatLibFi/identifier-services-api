@@ -1,0 +1,14 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      ismn_range_id:
+        type: number
+      monograph_publisher_id:
+        type: number
+      publisher_identifier:
+        type: string
+        example: '978-951-0'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

@@ -243,7 +243,7 @@ async function checkPublisherJoinRelations(relations: MessageRelations) {
     );
   }
 
-  if (manifestationIds) {
+  if (manifestationIds && manifestationIds.length > 0) {
     throw new ApiError(
       HttpStatus.UNPROCESSABLE_ENTITY,
       'Unprocessable entity',
@@ -319,7 +319,7 @@ async function checkIdentifierBatchRelations(relations: MessageRelations) {
     );
   }
 
-  if (manifestationIds) {
+  if (manifestationIds && manifestationIds.length > 0) {
     throw new ApiError(
       HttpStatus.UNPROCESSABLE_ENTITY,
       'Unprocessable entity',

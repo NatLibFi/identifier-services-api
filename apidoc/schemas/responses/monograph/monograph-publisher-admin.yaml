@@ -1,152 +1,40 @@
 allOf:
+  - $ref: './monograph-publisher-admin-base.yaml'
   - type: object
     properties:
-      id:
-        type: integer
-        example: 1
-      official_name:
-        type: string
-      other_names:
-        type: array
-        items:
-          type: string
-      previous_names:
-        type: array
-        items:
-          type: string
-      address:
-        type:
-          - string
-          - 'null'
-      zip:
-        type:
-          - string
-          - 'null'
-      city:
-        type:
-          - string
-          - 'null'
-      phone:
-        type:
-          - string
-          - 'null'
-      email:
-        type: string
-      www:
-        type:
-          - string
-          - 'null'
-      lang_code:
-        type: string
-      contact_persons:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-      additional_info:
-        type:
-          - string
-          - 'null'
-      year_quitted:
-        type:
-          - number
-          - 'null'
-        minimum: 1900
-      has_quitted:
-        type: boolean
-      frequency_current:
-        type:
-          - string
-          - 'null'
-      frequency_next:
-        type:
-          - string
-          - 'null'
-      affiliate_of:
-        type:
-          - string
-          - 'null'
-      affiliates:
-        type:
-          - string
-          - 'null'
-      distributor_of:
-        type:
-          - string
-          - 'null'
-      distributors:
-        type:
-          - string
-          - 'null'
-      classicications:
-        type: array
-        items:
-          type: string
-      classification_other:
-        type:
-          - string
-          - 'null'
-      promote_sorting:
-        type: boolean
       isbn_publisher_identifiers:
         type: array
         items:
-          type: object
-          properties:
-            id:
-              type: number
-              example: 1
-            created:
-              type: string
-            publisher_identifier:
-              type: string
-              example: '978-951-0'
-            identifier_total:
-              description: available for category 5 ISBN publisher ranges
-              type:
-                - number
-                - 'null'
-            identifier_used:
-              description: available for category 5 ISBN publisher ranges
-              type:
-                - number
-                - 'null'
-            identifier_free:
-              description: available for category 5 ISBN publisher ranges
-              type:
-                - number
-                - 'null'
+          allOf:
+            - $ref: './isbn-publisher-range.yaml'
+            - type: object
+              properties:
+                identifier_total:
+                  type: number
+                identifier_used:
+                  type: number
+                identifier_free:
+                  type: number
+                monograph_identifier_batches:
+                  type: array
+                  items:
+                    $ref: './monograph-identifier-batch.yaml'
       ismn_publisher_identifiers:
         type: array
         items:
-          type: object
-          properties:
-            id:
-              type: number
-              example: 1
-            created:
-              type: string
-            publisher_identifier:
-              type: string
-              example: '979-0-100'
-            identifier_total:
-              description: available for category 7 ISMN publisher ranges
-              type:
-                - number
-                - 'null'
-            identifier_used:
-              description: available for category 7 ISMN publisher ranges
-              type:
-                - number
-                - 'null'
-            identifier_free:
-              description: available for category 7 ISMN publisher ranges
-              type:
-                - number
-                - 'null'
+          allOf:
+            - $ref: './ismn-publisher-range.yaml'
+            - type: object
+              properties:
+                identifier_total:
+                  type: number
+                identifier_used:
+                  type: number
+                identifier_free:
+                  type: number
+                monograph_identifier_batches:
+                  type: array
+                  items:
+                    $ref: './monograph-identifier-batch.yaml'
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

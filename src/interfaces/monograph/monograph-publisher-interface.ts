@@ -32,6 +32,7 @@ import {
 
 import {
   asMonographPublisherAdminRead,
+  asMonographPublisherAdminSearchRead,
   asMonographPublisherArchiveEntry,
   asMonographPublisherAutocompleteRead,
   asMonographPublisherGuestRead,
@@ -61,14 +62,14 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
     return monographPublisherResult;
   }
 
-  if (isAdmin(user)) {
-    const isbnPublisherRanges = useAdminLite
-      ? await getMonographPublisherIsbnRangesLite(id)
-      : await getMonographPublisherIsbnRanges(id);
+  if (isAdmin(user) && useAdminLite) {
+    const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(id);
+    const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(id);
 
-    const ismnPublisherRanges = useAdminLite
-      ? await getMonographPublisherIsmnRangesLite(id)
-      : await getMonographPublisherIsmnRanges(id);
+    return asMonographPublisherAdminSearchRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
+  } else if (isAdmin(user)) {
+    const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
+    const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
 
     return asMonographPublisherAdminRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
   }
@@ -368,7 +369,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
         result.map(async (p) => {
           const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(p.id);
           const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(p.id);
-          return asMonographPublisherAdminRead(p, isbnPublisherRanges, ismnPublisherRanges);
+          return asMonographPublisherAdminSearchRead(p, isbnPublisherRanges, ismnPublisherRanges);
         }),
       ),
     };

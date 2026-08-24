@@ -1,4 +1,8 @@
 import type { Generated, Updateable, JSONColumnType, Insertable, Selectable } from 'kysely';
+import type {
+  IsbnPublisherRangeSelectExtended,
+  IsmnPublisherRangeSelectExtended,
+} from '../../../interfaces/monograph/monograph-publisher-interface-utils.ts';
 
 export interface MonographPublisherContactPerson {
   name: string;
@@ -41,6 +45,11 @@ export type MonographPublisherUpdate = Updateable<MonographPublisher>;
 export type MonographPublisherSelect = Selectable<MonographPublisher>;
 
 export interface MonographPublisherReadAdmin extends MonographPublisherSelect {
+  isbn_publisher_ranges: IsbnPublisherRangeSelectExtended[];
+  ismn_publisher_ranges: IsmnPublisherRangeSelectExtended[];
+}
+
+export interface MonographPublisherReadAdminSearch extends MonographPublisherSelect {
   isbn_publisher_ranges: {
     id: number;
     publisher_identifier: string;

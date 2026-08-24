@@ -10,6 +10,7 @@ import { getApplicationLogger } from '../../utils/logging.ts';
 import { getKysely } from '../../db/database.ts';
 import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 import { sendEmail } from '../email-utils.ts';
+import { isProduction } from '../../utils/generic-utils.ts';
 
 import {
   asMonographMessageAdminRead,
@@ -26,7 +27,6 @@ import type {
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
 import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
-import { isProduction } from '../../utils/generic-utils.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createMonographMessageInterface(
@@ -329,8 +329,8 @@ export default function createMonographMessageInterface(
       validatedMessageResult.expression_title = messageManifestations[0]?.expression_title || '';
     }
 
-    // Populate information for ISBN_LIST_DELIVERY
-    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISBN_LIST_DELIVERY) {
+    // Populate information for ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION) {
       const isbnRangeInfo = await db
         .selectFrom('isbn_publisher_range')
         .select(['isbn_publisher_range.publisher_identifier as isbn_publisher_identifier'])
@@ -340,8 +340,8 @@ export default function createMonographMessageInterface(
       validatedMessageResult.isbn_publisher_identifier = isbnRangeInfo.isbn_publisher_identifier;
     }
 
-    // Populate information for ISBN_LIST_DELIVERY
-    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISMN_LIST_DELIVERY) {
+    // Populate information for ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+    if (validatedMessageResult.message_type === MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION) {
       const ismnRangeInfo = await db
         .selectFrom('ismn_publisher_range')
         .select(['ismn_publisher_range.publisher_identifier as ismn_publisher_identifier'])

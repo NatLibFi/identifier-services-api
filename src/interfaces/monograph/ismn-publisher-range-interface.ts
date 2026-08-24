@@ -20,7 +20,7 @@ import type {
   IsmnPublisherRangePublicInfo,
   IsmnPublisherRangeSelect,
 } from '../../db/types/monograph/types-ismn-publisher-range.ts';
-import { ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH } from '../../constants.ts';
+import type { MonographIdentifierBatchSelectExtended } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 
 interface IsmnPublisherRangeCreateResult {
   id: number;
@@ -28,6 +28,7 @@ interface IsmnPublisherRangeCreateResult {
   identifier_total: number;
   identifier_used: number | null;
   identifier_free: number | null;
+  monograph_identifier_batches: MonographIdentifierBatchSelectExtended[];
   created: Date;
 }
 
@@ -161,15 +162,10 @@ export async function createIsmnPublisherRange(
       identifier_total: associatedIsmnIdentifiers.length,
       identifier_used: 0,
       identifier_free: associatedIsmnIdentifiers.length,
+      monograph_identifier_batches: [],
       created: ismnPublisherRangeData.created,
     };
   });
-
-  // Remove used and free from non category 7 ismn publisher ranges
-  if (publisher_identifier.length !== ISMN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[7]) {
-    result.identifier_used = null;
-    result.identifier_free = null;
-  }
 
   return result;
 }

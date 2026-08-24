@@ -36,11 +36,17 @@
   "ismn_publisher_ranges": [
     {
       "id": 1,
+      "monograph_publisher_id": 1,
+      "ismn_range_id": 1,
       "publisher_identifier": "979-0-9001750",
       "identifier_total": 10,
       "identifier_used": 0,
       "identifier_free": 10,
-      "created": "2025-01-20T12:00:00.000Z"
+      "monograph_identifier_batches": [],
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "admin"
     }
   ],
   "created": "2025-01-20T12:00:00.000Z",

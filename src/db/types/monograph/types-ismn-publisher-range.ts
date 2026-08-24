@@ -19,3 +19,8 @@ export interface IsmnPublisherRangePublicInfo {
 export type IsmnPublisherRangeInsert = Insertable<IsmnPublisherRange>;
 export type IsmnPublisherRangeUpdate = Updateable<IsmnPublisherRange>;
 export type IsmnPublisherRangeSelect = Selectable<IsmnPublisherRange>;
+
+export interface IsmnPublisherRangeSelectLite {
+  id: number;
+  publisher_identifier: string;
+}

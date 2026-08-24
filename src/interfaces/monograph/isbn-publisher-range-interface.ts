@@ -20,7 +20,7 @@ import type {
   IsbnPublisherRangePublicInfo,
   IsbnPublisherRangeSelect,
 } from '../../db/types/monograph/types-isbn-publisher-range.ts';
-import { ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH } from '../../constants.ts';
+import type { MonographIdentifierBatchSelectExtended } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 
 interface IsbnPublisherRangeCreateResult {
   id: number;
@@ -28,6 +28,7 @@ interface IsbnPublisherRangeCreateResult {
   identifier_total: number;
   identifier_used: number | null;
   identifier_free: number | null;
+  monograph_identifier_batches: MonographIdentifierBatchSelectExtended[];
   created: Date;
 }
 
@@ -161,15 +162,10 @@ export async function createIsbnPublisherRange(
       identifier_total: associatedIsbnIdentifiers.length,
       identifier_used: 0,
       identifier_free: associatedIsbnIdentifiers.length,
+      monograph_identifier_batches: [],
       created: isbnPublisherRangeData.created,
     };
   });
-
-  // Remove used and free from non category 5 isbn publisher ranges
-  if (publisher_identifier.length !== ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH[5]) {
-    result.identifier_used = null;
-    result.identifier_free = null;
-  }
 
   return result;
 }

@@ -1,5 +1,5 @@
 {
-  "description": "[admin] details of publisher identifier are not included for non category 7 ISMN publisher range",
+  "description": "[admin] ISMN identifier batch information is properly included",
   "url": "/v2/monograph/publishers/1",
   "method": "GET",
   "role": "admin",

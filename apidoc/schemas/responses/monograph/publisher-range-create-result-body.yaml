@@ -14,5 +14,10 @@ properties:
     type:
       - number
       - 'null'
+  monograph_identifier_batches:
+    description: batches associated with publisher range (note that this is empty always directly after create)
+    type: array
+    items:
+      $ref: './monograph-identifier-batch.yaml'
   created:
     type: string

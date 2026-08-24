@@ -1255,7 +1255,7 @@
                       "items": {
                         "oneOf": [
                           {
-                            "$ref": "#/components/schemas/monograph-publisher-admin"
+                            "$ref": "#/components/schemas/monograph-publisher-admin-search"
                           },
                           {
                             "$ref": "#/components/schemas/monograph-publisher-guest"
@@ -3402,6 +3402,39 @@
           "monograph_publisher_id"
         ]
       },
+      "monograph-identifier-batch": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "monograph_publisher_id": {
+                "type": "number"
+              },
+              "isbn_publisher_range_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "ismn_publisher_range_id": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "identifier_count": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          }
+        ]
+      },
       "publisher-range-create-result-body": {
         "type": "object",
         "properties": {
@@ -3425,6 +3458,13 @@
               "number",
               "null"
             ]
+          },
+          "monograph_identifier_batches": {
+            "description": "batches associated with publisher range (note that this is empty always directly after create)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/monograph-identifier-batch"
+            }
           },
           "created": {
             "type": "string"
@@ -3616,39 +3656,6 @@
           "identifier_count"
         ]
       },
-      "monograph-identifier-batch": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number"
-              },
-              "monograph_publisher_id": {
-                "type": "number"
-              },
-              "isbn_publisher_range_id": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "ismn_publisher_range_id": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "identifier_count": {
-                "type": "number"
-              }
-            }
-          },
-          {
-            "$ref": "#/components/schemas/created-metadata"
-          }
-        ]
-      },
       "monograph-identifier-batch-public": {
         "type": "object",
         "properties": {
@@ -3666,7 +3673,7 @@
           }
         }
       },
-      "monograph-publisher-admin": {
+      "monograph-publisher-admin-base": {
         "allOf": [
           {
             "type": "object",
@@ -3806,85 +3813,139 @@
               },
               "promote_sorting": {
                 "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "isbn-publisher-range": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
               },
+              "isbn_range_id": {
+                "type": "number"
+              },
+              "monograph_publisher_id": {
+                "type": "number"
+              },
+              "publisher_identifier": {
+                "type": "string",
+                "example": "978-951-0"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "ismn-publisher-range": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "ismn_range_id": {
+                "type": "number"
+              },
+              "monograph_publisher_id": {
+                "type": "number"
+              },
+              "publisher_identifier": {
+                "type": "string",
+                "example": "978-951-0"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "monograph-publisher-admin": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/monograph-publisher-admin-base"
+          },
+          {
+            "type": "object",
+            "properties": {
               "isbn_publisher_identifiers": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/isbn-publisher-range"
                     },
-                    "created": {
-                      "type": "string"
-                    },
-                    "publisher_identifier": {
-                      "type": "string",
-                      "example": "978-951-0"
-                    },
-                    "identifier_total": {
-                      "description": "available for category 5 ISBN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    },
-                    "identifier_used": {
-                      "description": "available for category 5 ISBN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    },
-                    "identifier_free": {
-                      "description": "available for category 5 ISBN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
+                    {
+                      "type": "object",
+                      "properties": {
+                        "identifier_total": {
+                          "type": "number"
+                        },
+                        "identifier_used": {
+                          "type": "number"
+                        },
+                        "identifier_free": {
+                          "type": "number"
+                        },
+                        "monograph_identifier_batches": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/monograph-identifier-batch"
+                          }
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               },
               "ismn_publisher_identifiers": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ismn-publisher-range"
                     },
-                    "created": {
-                      "type": "string"
-                    },
-                    "publisher_identifier": {
-                      "type": "string",
-                      "example": "979-0-100"
-                    },
-                    "identifier_total": {
-                      "description": "available for category 7 ISMN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    },
-                    "identifier_used": {
-                      "description": "available for category 7 ISMN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    },
-                    "identifier_free": {
-                      "description": "available for category 7 ISMN publisher ranges",
-                      "type": [
-                        "number",
-                        "null"
-                      ]
+                    {
+                      "type": "object",
+                      "properties": {
+                        "identifier_total": {
+                          "type": "number"
+                        },
+                        "identifier_used": {
+                          "type": "number"
+                        },
+                        "identifier_free": {
+                          "type": "number"
+                        },
+                        "monograph_identifier_batches": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/monograph-identifier-batch"
+                          }
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -4227,6 +4288,47 @@
         "required": [
           "limit",
           "offset"
+        ]
+      },
+      "monograph-publisher-range-lite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "publisher_identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "monograph-publisher-admin-search": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/monograph-publisher-admin-base"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "isbn_publisher_identifiers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-publisher-range-lite"
+                }
+              },
+              "ismn_publisher_identifiers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/monograph-publisher-range-lite"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
         ]
       },
       "monograph-publisher-autocomplete-body": {
@@ -6039,6 +6141,12 @@
             ]
           },
           "ismn_publisher_range_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "monograph_identifier_batch_id": {
             "type": [
               "number",
               "null"

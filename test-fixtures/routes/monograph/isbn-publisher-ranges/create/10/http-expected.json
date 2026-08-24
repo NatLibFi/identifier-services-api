@@ -2,7 +2,8 @@
   "id": 1,
   "publisher_identifier": "978-951-8900",
   "identifier_total": 100,
-  "identifier_used": null,
-  "identifier_free": null,
+  "identifier_used": 0,
+  "identifier_free": 100,
+  "monograph_identifier_batches": [],
   "created": "2026-01-20T12:00:00.000Z"
 }

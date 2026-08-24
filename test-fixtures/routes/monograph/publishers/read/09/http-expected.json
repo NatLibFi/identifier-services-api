@@ -35,11 +35,27 @@
   "isbn_publisher_ranges": [
     {
       "id": 1,
+      "isbn_range_id": 1,
+      "monograph_publisher_id": 1,
       "publisher_identifier": "978-951-8900",
       "identifier_total": 100,
-      "identifier_used": null,
-      "identifier_free": null,
-      "created": "2025-01-20T12:00:00.000Z"
+      "identifier_used": 100,
+      "identifier_free": 0,
+      "monograph_identifier_batches": [
+        {
+          "id": 1,
+          "monograph_publisher_id": 1,
+          "isbn_publisher_range_id": 1,
+          "ismn_publisher_range_id": null,
+          "identifier_count": 100,
+          "created": "2025-01-20T12:00:00.000Z",
+          "created_by": "SYSTEM"
+        }
+      ],
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
     }
   ],
   "ismn_publisher_ranges": [],
