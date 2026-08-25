@@ -36,5 +36,7 @@ allOf:
                   type: array
                   items:
                     $ref: './monograph-identifier-batch.yaml'
+      join_msg_sent:
+        type: boolean
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

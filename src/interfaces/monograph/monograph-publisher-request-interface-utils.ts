@@ -1,5 +1,5 @@
 import { getCurrentTime } from '../shared-interface-utils.ts';
-import { APPLICATION_USER_UI_PUBLIC } from '../../constants.ts';
+import { APPLICATION_USER_UI_PUBLIC, MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 import type { Insertable } from 'kysely';
 import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
@@ -9,6 +9,7 @@ import type {
   CreateMonographPublisherRequestV2Http,
 } from '../../validations/monograph/monograph-publisher-request-validation.ts';
 import type { MonographPublisherRequestArchiveInsert } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
+import { getKysely } from '../../db/database.ts';
 
 export function getDbPublisherRequestEntry(
   createDoc: CreateMonographPublisherRequestV1Http | CreateMonographPublisherRequestV2Http,
@@ -156,4 +157,22 @@ export function getDbPublisherRequestEntryV2(
     modified: getCurrentTime(),
     modified_by: user?.id ?? APPLICATION_USER_UI_PUBLIC,
   };
+}
+
+export async function getJoinMsgSent(publisherId: number) {
+  const db = await getKysely();
+  const joinConfirmationMessageTypes = [
+    MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+    MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION,
+  ];
+
+  const result = await db
+    .selectFrom('monograph_message')
+    .select('id')
+    .where('message_type', 'in', joinConfirmationMessageTypes)
+    .where('monograph_publisher_id', '=', publisherId)
+    .limit(1)
+    .executeTakeFirst();
+
+  return result !== undefined;
 }

@@ -1,5 +1,5 @@
 {
-  "description": "[admin] ISMN information identifier_used is calculated correctly",
+  "description": "[admin] ISMN information identifier_used is calculated correctly and ISMN join msg is evaluated properly",
   "url": "/v2/monograph/publishers/1",
   "method": "GET",
   "role": "admin",

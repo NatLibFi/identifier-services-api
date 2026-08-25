@@ -166,5 +166,22 @@
       "modified": "2025-01-20T12:00:00.000Z",
       "modified_by": "SYSTEM"
     }
+  ],
+  "monograph_message": [
+    {
+      "id": 1,
+      "message_type": "ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
+      "monograph_publisher_id": 1,
+      "monograph_publication_request_id": null,
+      "isbn_publisher_range_id": 1,
+      "ismn_publisher_range_id": null,
+      "monograph_identifier_batch_id": null,
+      "recipient": "erkki.esimerkki@example.localhost",
+      "lang_code": "fi-FI",
+      "subject": "TESTI/TEST MESSAGE Welcome to ISMN registry",
+      "body": "Tämä viesti on testijärjestelmästä / This message is from test system.",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    }
   ]
 }

@@ -3947,6 +3947,9 @@
                     }
                   ]
                 }
+              },
+              "join_msg_sent": {
+                "type": "boolean"
               }
             }
           },
