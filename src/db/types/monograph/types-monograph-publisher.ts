@@ -47,7 +47,8 @@ export type MonographPublisherSelect = Selectable<MonographPublisher>;
 export interface MonographPublisherReadAdmin extends MonographPublisherSelect {
   isbn_publisher_ranges: IsbnPublisherRangeSelectExtended[];
   ismn_publisher_ranges: IsmnPublisherRangeSelectExtended[];
-  join_msg_sent: boolean;
+  isbn_join_msg_sent: boolean;
+  ismn_join_msg_sent: boolean;
 }
 
 export interface MonographPublisherReadAdminSearch extends MonographPublisherSelect {

@@ -3948,7 +3948,10 @@
                   ]
                 }
               },
-              "join_msg_sent": {
+              "isbn_join_msg_sent": {
+                "type": "boolean"
+              },
+              "ismn_join_msg_sent": {
                 "type": "boolean"
               }
             }

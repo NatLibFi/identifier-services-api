@@ -25,6 +25,7 @@ import {
   getMonographPublisherMessages,
   getMonographPublisherPublicationRequests,
   getMonographPublisherPublications,
+  getJoinMsgSent,
   searchMonographPublisherWithRange,
   useIsbnPublisherIdentifierSearch,
   useIsmnPublisherIdentifierSearch,
@@ -48,7 +49,6 @@ import type {
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
-import { getJoinMsgSent } from './monograph-publisher-request-interface-utils.ts';
 
 // useAdminLite -> reserved for searching using publisher identifier as this relies on using read for found entries
 // Utility of not having dynamic attributes associated with DB schema models (e.g., publisher identifier and total/free/used)

@@ -10,6 +10,7 @@ import {
 import { readMonographPublisher } from './monograph-publisher-interface.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
+import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 import type {
   IsbnPublisherRangeSelect,
@@ -338,5 +339,30 @@ export async function searchMonographPublisherWithRange(
   return {
     total_doc,
     results,
+  };
+}
+
+export async function getJoinMsgSent(publisherId: number) {
+  const db = await getKysely();
+
+  const isbnResult = await db
+    .selectFrom('monograph_message')
+    .select('id')
+    .where('message_type', '=', MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION)
+    .where('monograph_publisher_id', '=', publisherId)
+    .limit(1)
+    .executeTakeFirst();
+
+  const ismnResult = await db
+    .selectFrom('monograph_message')
+    .select('id')
+    .where('message_type', '=', MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION)
+    .where('monograph_publisher_id', '=', publisherId)
+    .limit(1)
+    .executeTakeFirst();
+
+  return {
+    isbnJoinMsgSent: isbnResult !== undefined,
+    ismnJoinMsgSent: ismnResult !== undefined,
   };
 }

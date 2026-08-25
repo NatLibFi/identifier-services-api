@@ -18,7 +18,10 @@ export function asMonographPublisherAdminRead(
   monographPublisher: MonographPublisherSelect | UnknownObject,
   isbnPublisherRanges: IsbnPublisherRangeSelectExtended[],
   ismnPublisherRanges: IsmnPublisherRangeSelectExtended[],
-  joinMsgSent: boolean,
+  joinMsgSent: {
+    isbnJoinMsgSent: boolean;
+    ismnJoinMsgSent: boolean;
+  },
 ): MonographPublisherReadAdmin {
   const {
     id,
@@ -78,7 +81,8 @@ export function asMonographPublisherAdminRead(
     promote_sorting,
     isbn_publisher_ranges: isbnPublisherRanges,
     ismn_publisher_ranges: ismnPublisherRanges,
-    join_msg_sent: joinMsgSent,
+    isbn_join_msg_sent: joinMsgSent.isbnJoinMsgSent,
+    ismn_join_msg_sent: joinMsgSent.ismnJoinMsgSent,
     created,
     created_by,
     modified,
