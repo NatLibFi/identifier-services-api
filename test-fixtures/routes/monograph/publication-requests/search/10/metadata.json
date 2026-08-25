@@ -1,5 +1,5 @@
 {
-  "description": "[admin] Searches using contact_person",
+  "description": "[admin] search finds entry based on match in expression title",
   "url": "/v2/monograph/publication-requests/search",
   "method": "POST",
   "role": "admin",

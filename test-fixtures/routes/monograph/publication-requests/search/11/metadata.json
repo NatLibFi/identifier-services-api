@@ -1,5 +1,5 @@
 {
-  "description": "[admin] Searches using contact_person",
+  "description": "[admin] Request state filter works (negative test)",
   "url": "/v2/monograph/publication-requests/search",
   "method": "POST",
   "role": "admin",

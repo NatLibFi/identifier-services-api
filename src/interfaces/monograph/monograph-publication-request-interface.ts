@@ -211,6 +211,13 @@ export async function searchMonographPublicationRequest(searchParameters: Search
         eb(eb.fn('lower', ['monograph_publication_request.email']), 'like', normalizedSearch),
         eb(eb.fn('lower', ['monograph_publication_request.contact_person']), 'like', normalizedSearch),
         eb(eb.fn('lower', ['monograph_publication.primary_title']), 'like', normalizedSearch),
+        eb.exists(
+          eb
+            .selectFrom('monograph_publication_expression')
+            .select('monograph_publication_expression.id')
+            .whereRef('monograph_publication_expression.monograph_publication_id', '=', 'monograph_publication.id')
+            .where((eb2) => eb2(eb2.fn('lower', ['monograph_publication_expression.title']), 'like', normalizedSearch)),
+        ),
       ]),
     );
   }

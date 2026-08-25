@@ -1,8 +1,7 @@
 {
-  "description": "TODO: [admin] Searches using email",
+  "description": "[admin] Searches using email",
   "url": "/v2/monograph/publication-requests/search",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 200,
-  "skip": true
+  "expectedStatus": 200
 }
