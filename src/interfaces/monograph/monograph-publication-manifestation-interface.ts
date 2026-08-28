@@ -5,7 +5,12 @@ import { ApiError } from '../../utils/api-error.ts';
 import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
 
 import { getApplicationLogger } from '../../utils/logging.ts';
-import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
+import {
+  getCurrentTime,
+  removeUndefinedProperties,
+  validateGetById,
+  validateRowsUpdatedExact,
+} from '../shared-interface-utils.ts';
 import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { assignIsbnIdentifier, deassignIsbnIdentifier, getAssignableIsbnIdentifier } from './isbn-identifier-utils.ts';
 import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
@@ -23,6 +28,7 @@ import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
+import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
 
 export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();
@@ -121,13 +127,6 @@ export async function updateMonographPublicationManifestation(
   // Remove undefined values to have full control over update
   const definedUpdateDoc = removeUndefinedProperties(processedUpdateDoc);
 
-  // Check whether request is associated and requires automatic state update from NEW to IN_PROCESS
-  const request = validatedOrigManifestation.monograph_publication_request_id
-    ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
-    : undefined;
-
-  const requestStateNeedsUpdate = request?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
-
   await db.transaction().execute(async (trx) => {
     const updateResult = await trx
       .updateTable('monograph_publication_manifestation')
@@ -139,25 +138,11 @@ export async function updateMonographPublicationManifestation(
       .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
-    if (Number(updateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-    }
+    validateRowsUpdatedExact(updateResult, 1);
 
-    // Update associated request if necessary
-    if (requestStateNeedsUpdate) {
-      const requestUpdateResult = await trx
-        .updateTable('monograph_publication_request')
-        .set({
-          request_state: MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
-          modified: getCurrentTime(),
-          modified_by: user.id,
-        })
-        .where('id', '=', validatedOrigManifestation.monograph_publication_request_id)
-        .executeTakeFirstOrThrow();
-
-      if (Number(requestUpdateResult.numUpdatedRows) !== 1) {
-        throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-      }
+    // Update associated request state if necessary
+    if (validatedOrigManifestation.monograph_publication_request_id) {
+      await changeStatusNewToProcessed(validatedOrigManifestation.monograph_publication_request_id, user, trx);
     }
   });
 

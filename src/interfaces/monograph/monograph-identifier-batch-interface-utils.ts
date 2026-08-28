@@ -5,7 +5,7 @@ import { getKysely } from '../../db/database.ts';
 
 import { readIsbnPublisherRange } from './isbn-publisher-range-interface.ts';
 
-import { getCurrentTime, validateRowsDeleted, validateRowsUpdated } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateRowsDeleted, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 import { getBatchIsbnIdentifiers } from './isbn-identifier-utils.ts';
 import { getBatchIsmnIdentifiers } from './ismn-identifier-utils.ts';
 
@@ -282,7 +282,7 @@ export async function deleteIdentifierBatch(
       }
 
       // Final verification against the original batch read
-      validateRowsUpdated(identifierUpdateResult, identifierBatch.identifier_count);
+      validateRowsUpdatedExact(identifierUpdateResult, identifierBatch.identifier_count);
     }
 
     // Finally remove the batch itself

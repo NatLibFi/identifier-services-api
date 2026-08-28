@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateRowsUpdatedExact, validateRowsUpdatedMax } from '../shared-interface-utils.ts';
 
 import { readMonographPublication } from './monograph-publication-interface.ts';
 
@@ -458,9 +458,7 @@ export async function changePublicationRequestPublisher(
       .where('id', '=', publicationRequest.id)
       .executeTakeFirstOrThrow();
 
-    if (Number(updateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-    }
+    validateRowsUpdatedExact(updateResult, 1);
 
     // Change publisher for the publication
     const publicationUpdateResult = await trx
@@ -473,9 +471,10 @@ export async function changePublicationRequestPublisher(
       .where('id', '=', publicationRequest.monograph_publication_id)
       .executeTakeFirstOrThrow();
 
-    if (Number(publicationUpdateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-    }
+    validateRowsUpdatedExact(publicationUpdateResult, 1);
+
+    // Make sure request state changes from new
+    await changeStatusNewToProcessed(publicationRequest.id, user, trx);
   });
 
   return;
@@ -596,4 +595,25 @@ export function isAudiobook(expression: MonographPublicationExpressionAdminRead)
   return expression.manifestations.some((manifestation) =>
     audiobookManifestationTypes.includes(manifestation.manifestation_type),
   );
+}
+
+export async function changeStatusNewToProcessed(
+  monographPublicationRequestId: number,
+  user: RequestUser,
+  trx: Transaction<Database>,
+): Promise<void> {
+  const updateResult = await trx
+    .updateTable('monograph_publication_request')
+    .set({
+      request_state: MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    })
+    .where('id', '=', monographPublicationRequestId)
+    .where('request_state', '=', MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW)
+    .executeTakeFirstOrThrow();
+
+  validateRowsUpdatedMax(updateResult, 1);
+
+  return;
 }

@@ -2,10 +2,13 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateGetById, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 
 import { asMonographPublicationAdminRead } from '../../dtl/monograph/monograph-publication-dtl.ts';
-import { getPublicationExpressions } from './monograph-publication-interface-utils.ts';
+import {
+  getAssociatedPublicationRequestId,
+  getPublicationExpressions,
+} from './monograph-publication-interface-utils.ts';
 
 import type {
   SearchMonographPublicationHttp,
@@ -13,6 +16,7 @@ import type {
 } from '../../validations/monograph/monograph-publication-validation.ts';
 import type { MonographPublicationSelect } from '../../db/types/monograph/types-monograph-publication.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
 
 export async function readMonographPublication(id: number) {
   const db = getKysely();
@@ -45,8 +49,12 @@ export async function updateMonographPublication(
       .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
-    if (Number(updateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
+    validateRowsUpdatedExact(updateResult, 1);
+
+    // Change associated request state if need be
+    const publicationRequestId = await getAssociatedPublicationRequestId(id);
+    if (publicationRequestId) {
+      await changeStatusNewToProcessed(publicationRequestId, user, trx);
     }
   });
 

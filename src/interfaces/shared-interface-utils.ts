@@ -22,12 +22,26 @@ export function validateGetById<T>(dbResult: T[]): T {
   return dbResult[0];
 }
 
-export function validateRowsUpdated(updateResult: UpdateResult, expectedChangedRows: number) {
-  if (updateResult.numUpdatedRows !== BigInt(expectedChangedRows)) {
+// Validates that number of rows that were updated is exactly as given in parameter.
+export function validateRowsUpdatedExact(updateResult: UpdateResult, expectedChangedRows: number) {
+  if (Number(updateResult.numUpdatedRows) !== expectedChangedRows) {
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
       `Expected operation to change ${expectedChangedRows} rows, but operation changed ${Number(updateResult.numUpdatedRows)} rows instead.`,
+    );
+  }
+
+  return;
+}
+
+// Validates that number of rows that were updated is at most as given in parameter. Updates updating less than max number of rows are also accepted.
+export function validateRowsUpdatedMax(updateResult: UpdateResult, expectedMaxChangedRows: number) {
+  if (Number(updateResult.numUpdatedRows) > expectedMaxChangedRows) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Expected operation to change ${expectedMaxChangedRows} rows at maximum, but operation changed ${Number(updateResult.numUpdatedRows)} rows instead.`,
     );
   }
 

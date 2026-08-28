@@ -82,3 +82,24 @@ export async function getExpressionsManifestations(
 
   return result;
 }
+
+export async function getAssociatedPublicationRequestId(monographPublicationId: number): Promise<number | null> {
+  const db = getKysely();
+  const result = await db
+    .selectFrom('monograph_publication_request')
+    .select('id')
+    .where('monograph_publication_id', '=', monographPublicationId)
+    .execute();
+
+  if (result.length === 0) {
+    return null;
+  }
+
+  if (result.length === 1 && result[0]) {
+    return result[0].id;
+  }
+
+  throw new Error(
+    `Publication had more than one associated publication request (ids: ${result.map((v) => v.id).join(', ')})`,
+  );
+}

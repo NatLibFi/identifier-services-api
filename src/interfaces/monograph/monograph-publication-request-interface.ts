@@ -4,7 +4,12 @@ import { getKysely } from '../../db/database.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 import { ApiError } from '../../utils/api-error.ts';
 
-import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
+import {
+  getCurrentTime,
+  removeUndefinedProperties,
+  validateGetById,
+  validateRowsUpdatedExact,
+} from '../shared-interface-utils.ts';
 
 import {
   asMonographPublicationRequestAdminRead,
@@ -15,6 +20,7 @@ import { readMonographPublication } from './monograph-publication-interface.ts';
 import {
   changeMonographPublicationRequestState,
   changePublicationRequestPublisher,
+  changeStatusNewToProcessed,
   getDbPublicationEntry,
   getDbPublicationExpressionEntry,
   getDbPublicationRequestEntry,
@@ -101,13 +107,6 @@ export async function updateMonographPublicationRequest(
   }
 
   // Process update to other attributes than monograph publisher association
-
-  // If request has state of NEW, first update operation will automatically transfer state to IN_PROCESS
-  if (validatedDbResult.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW) {
-    // @ts-expect-error API validation does not know of request_state type on purpose
-    definedUpdateDoc.request_state = MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS;
-  }
-
   await db.transaction().execute(async (trx) => {
     const updateResult = await trx
       .updateTable('monograph_publication_request')
@@ -119,9 +118,10 @@ export async function updateMonographPublicationRequest(
       .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
-    if (Number(updateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-    }
+    validateRowsUpdatedExact(updateResult, 1);
+
+    // Make sure state transfers from new if need be
+    await changeStatusNewToProcessed(id, user, trx);
   });
 
   return readMonographPublicationRequest(id);

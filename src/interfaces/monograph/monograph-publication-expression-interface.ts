@@ -2,7 +2,12 @@ import HttpStatus from 'http-status';
 import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, removeUndefinedProperties, validateGetById } from '../shared-interface-utils.ts';
+import {
+  getCurrentTime,
+  removeUndefinedProperties,
+  validateGetById,
+  validateRowsUpdatedExact,
+} from '../shared-interface-utils.ts';
 import { getExpressionsManifestations } from './monograph-publication-interface-utils.ts';
 import generateMarcRecord from '../marc-record-interface.ts';
 
@@ -15,7 +20,6 @@ import {
   MONOGRAPH_MANIFESTATION_TYPES,
   MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
   MONOGRAPH_MANIFESTATION_TYPES_PRINT,
-  MONOGRAPH_PUBLICATION_REQUEST_STATES,
 } from '../../constants.ts';
 
 import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
@@ -33,6 +37,7 @@ import type {
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
 import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
 import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
+import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
 
 export async function readMonographPublicationExpression(id: number) {
   const db = getKysely();
@@ -86,12 +91,6 @@ export async function updateMonographPublicationExpression(
     (m) => m.monograph_publication_request_id,
   )?.monograph_publication_request_id;
 
-  const publicationRequest = publicationRequestId
-    ? await db.selectFrom('monograph_publication_request').select('request_state').executeTakeFirstOrThrow()
-    : undefined;
-
-  const updatePublicationRequest = publicationRequest?.request_state === MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW;
-
   // Remove undefined values to have full control over update
   const definedUpdateDoc = removeUndefinedProperties(processedUpdateDoc);
 
@@ -106,25 +105,11 @@ export async function updateMonographPublicationExpression(
       .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
-    if (Number(updateResult.numUpdatedRows) !== 1) {
-      throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-    }
+    validateRowsUpdatedExact(updateResult, 1);
 
     // Update associated request if necessary
-    if (publicationRequestId && updatePublicationRequest) {
-      const requestUpdateResult = await trx
-        .updateTable('monograph_publication_request')
-        .set({
-          request_state: MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
-          modified: getCurrentTime(),
-          modified_by: user.id,
-        })
-        .where('id', '=', publicationRequestId)
-        .executeTakeFirstOrThrow();
-
-      if (Number(requestUpdateResult.numUpdatedRows) !== 1) {
-        throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-      }
+    if (publicationRequestId) {
+      await changeStatusNewToProcessed(publicationRequestId, user, trx);
     }
   });
 
