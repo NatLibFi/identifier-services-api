@@ -22,14 +22,12 @@ export async function createSerialPublicationArchiveTable(db: Kysely<Database>):
     .addColumn('url', 'varchar(100)')
     .addColumn('previous', 'json', (col) => col.notNull())
     .addColumn('main_series', 'json', (col) => col.notNull())
-    .addColumn('sub_series', 'json', (col) => col.notNull())
+    .addColumn('subseries', 'json', (col) => col.notNull())
     .addColumn('another_medium', 'json', (col) => col.notNull())
     .addColumn('additional_info', 'varchar(2000)')
     .addColumn('created', 'datetime', (col) => col.notNull())
     .addColumn('created_by', 'varchar(36)')
     .execute();
-}
 
-export async function dropSerialPublicationArchiveTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_publication_archive').execute();
+  return;
 }

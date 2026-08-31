@@ -20,8 +20,6 @@ export async function createSerialPublicationRequestTable(db: Kysely<Database>):
     .addColumn('modified', 'datetime', (col) => col.notNull())
     .addColumn('modified_by', 'varchar(36)', (col) => col.notNull())
     .execute();
-}
 
-export async function dropSerialPublicationRequestTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_publication_request').execute();
+  return;
 }

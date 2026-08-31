@@ -14,8 +14,6 @@ export async function createIssnRangeTable(db: Kysely<Database>): Promise<void> 
     .addColumn('modified', 'datetime', (col) => col.notNull())
     .addColumn('modified_by', 'varchar(36)')
     .execute();
-}
 
-export async function dropIssnRangeTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('issn_range').execute();
+  return;
 }

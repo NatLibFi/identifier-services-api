@@ -19,8 +19,6 @@ export async function createSerialPublisherTable(db: Kysely<Database>): Promise<
     .addColumn('modified', 'datetime', (col) => col.notNull())
     .addColumn('modified_by', 'varchar(36)')
     .execute();
-}
 
-export async function dropSerialPublisherTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_publisher').execute();
+  return;
 }

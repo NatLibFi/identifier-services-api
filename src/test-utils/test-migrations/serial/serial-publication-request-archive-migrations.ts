@@ -5,7 +5,7 @@ export async function createSerialPublicationRequestArchiveTable(db: Kysely<Data
   await db.schema
     .createTable('serial_publication_request_archive')
     .addColumn('id', 'integer', (col) => col.primaryKey().notNull().autoIncrement())
-    .addColumn('serial_publisher_request_id', 'integer', (col) => col.notNull())
+    .addColumn('serial_publication_request_id', 'integer', (col) => col.notNull())
     .addColumn('publisher_name', 'varchar(100)', (col) => col.notNull())
     .addColumn('contact_person', 'varchar(100)')
     .addColumn('email', 'varchar(100)')
@@ -17,8 +17,6 @@ export async function createSerialPublicationRequestArchiveTable(db: Kysely<Data
     .addColumn('created', 'datetime', (col) => col.notNull())
     .addColumn('created_by', 'varchar(36)', (col) => col.notNull())
     .execute();
-}
 
-export async function dropSerialPublicationRequestArchiveTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_publication_request_archive').execute();
+  return;
 }

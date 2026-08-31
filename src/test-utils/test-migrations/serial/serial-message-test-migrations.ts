@@ -15,8 +15,6 @@ export async function createSerialMessageTable(db: Kysely<Database>): Promise<vo
     .addColumn('sent', 'datetime', (col) => col.notNull())
     .addColumn('sent_by', 'varchar(36)', (col) => col.notNull())
     .execute();
-}
 
-export async function dropSerialMessageTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_message').execute();
+  return;
 }

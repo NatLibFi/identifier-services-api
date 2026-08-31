@@ -6,6 +6,7 @@ export async function createSerialPublicationTable(db: Kysely<Database>): Promis
     .createTable('serial_publication')
     .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
     .addColumn('serial_publication_request_id', 'integer', (col) => col.notNull())
+    .addColumn('serial_publisher_id', 'integer')
     .addColumn('title', 'varchar(200)', (col) => col.notNull())
     .addColumn('subtitle', 'varchar(200)')
     .addColumn('place_of_publication', 'varchar(100)')
@@ -22,7 +23,7 @@ export async function createSerialPublicationTable(db: Kysely<Database>): Promis
     .addColumn('url', 'varchar(100)')
     .addColumn('previous', 'json', (col) => col.notNull())
     .addColumn('main_series', 'json', (col) => col.notNull())
-    .addColumn('sub_series', 'json', (col) => col.notNull())
+    .addColumn('subseries', 'json', (col) => col.notNull())
     .addColumn('another_medium', 'json', (col) => col.notNull())
     .addColumn('additional_info', 'varchar(2000)')
     .addColumn('status', 'varchar(24)', (col) => col.notNull())
@@ -31,8 +32,6 @@ export async function createSerialPublicationTable(db: Kysely<Database>): Promis
     .addColumn('modified', 'datetime', (col) => col.notNull())
     .addColumn('modified_by', 'varchar(36)')
     .execute();
-}
 
-export async function dropSerialPublicationTable(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable('serial_publication').execute();
+  return;
 }
