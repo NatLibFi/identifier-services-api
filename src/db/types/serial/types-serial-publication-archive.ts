@@ -10,9 +10,9 @@ export interface SerialPublicationArchive {
   printer: string | null;
   issued_from_year: string | null;
   issued_from_number: string | null;
-  frequence: string;
+  frequency: string;
   frequency_other: string | null;
-  language: string;
+  language: string | null;
   publication_type: string;
   publication_type_other: string | null;
   medium: string;
@@ -22,10 +22,9 @@ export interface SerialPublicationArchive {
   main_series: JSONColumnType<SerialPublicationAssociatedSeries[]>;
   subseries: JSONColumnType<SerialPublicationAssociatedSeries[]>;
   another_medium: JSONColumnType<SerialPublicationAssociatedSeries[]>;
+  additional_info: string | null;
   created: Date;
   created_by: string;
-  modified: Date;
-  modified_by: string;
 }
 
 export type SerialPublicationArchiveInsert = Insertable<SerialPublicationArchive>;

@@ -13,8 +13,6 @@ export interface SerialPublicationRequestArchive {
   lang_code: string;
   created: Date;
   created_by: string;
-  modified: Date;
-  modified_by: string;
 }
 
 export type SerialPublicationRequestArchiveInsert = Insertable<SerialPublicationRequestArchive>;

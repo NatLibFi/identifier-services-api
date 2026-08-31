@@ -5,7 +5,6 @@ export interface IssnIdentifier {
   issn_range_id: number;
   serial_publication_id: number | null;
   identifier: string;
-  frozen: boolean;
   created: Date;
   created_by: string;
   modified: Date;

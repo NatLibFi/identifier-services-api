@@ -5,8 +5,6 @@ export interface SerialMessage {
   message_type: string;
   serial_publisher_id: number;
   serial_publication_request_id: number | null;
-  isbn_publisher_range_id: number | null;
-  ismn_publisher_range_id: number | null;
   lang_code: string;
   recipient: string;
   subject: string;

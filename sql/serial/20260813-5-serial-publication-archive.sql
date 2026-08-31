@@ -1,4 +1,4 @@
--- serial publication archive v2.0.0-alpha.1
+-- serial publication archive v2.0.0-alpha.2
 CREATE TABLE serial_publication_archive (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   serial_publication_id INT UNSIGNED NOT NULL,
@@ -24,5 +24,5 @@ CREATE TABLE serial_publication_archive (
   created DATETIME NOT NULL,
   created_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (serial_publisher_id) REFERENCES serial_publisher(id),
+  FOREIGN KEY (serial_publication_id) REFERENCES serial_publication(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

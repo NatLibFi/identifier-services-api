@@ -1,7 +1,8 @@
--- serial publication v2.0.0-alpha.1
+-- serial publication v2.0.0-alpha.4
 CREATE TABLE serial_publication (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   serial_publication_request_id INT UNSIGNED NOT NULL,
+  serial_publisher_id INT UNSIGNED,
   title VARCHAR(200) NOT NULL,
   subtitle VARCHAR(200),
   place_of_publication VARCHAR(100),
@@ -10,7 +11,7 @@ CREATE TABLE serial_publication (
   issued_from_number VARCHAR(100),
   frequency CHAR(1) NOT NULL,
   frequency_other VARCHAR(50),
-  `language` VARCHAR(50) NOT NULL,
+  `language` VARCHAR(50),
   publication_type VARCHAR(25) NOT NULL,
   publication_type_other VARCHAR(50),
   medium VARCHAR(7) NOT NULL,
@@ -28,4 +29,5 @@ CREATE TABLE serial_publication (
   modified_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (serial_publisher_id) REFERENCES serial_publisher(id),
+  FOREIGN KEY (serial_publication_request_id) REFERENCES serial_publication_request(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

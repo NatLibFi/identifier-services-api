@@ -12,15 +12,16 @@ export interface SerialPublicationPreviousSeries extends SerialPublicationAssoci
 export interface SerialPublication {
   id: Generated<number>;
   serial_publication_request_id: number;
+  serial_publisher_id: number | null;
   title: string;
   subtitle: string | null;
   place_of_publication: string | null;
   printer: string | null;
   issued_from_year: string | null;
   issued_from_number: string | null;
-  frequence: string;
+  frequency: string;
   frequency_other: string | null;
-  language: string;
+  language: string | null;
   publication_type: string;
   publication_type_other: string | null;
   medium: string;
@@ -30,6 +31,7 @@ export interface SerialPublication {
   main_series: JSONColumnType<SerialPublicationAssociatedSeries[]>;
   subseries: JSONColumnType<SerialPublicationAssociatedSeries[]>;
   another_medium: JSONColumnType<SerialPublicationAssociatedSeries[]>;
+  additional_info: string | null;
   status: string;
   created: Date;
   created_by: string;

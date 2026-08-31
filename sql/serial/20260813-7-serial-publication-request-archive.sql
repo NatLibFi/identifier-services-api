@@ -13,5 +13,5 @@ CREATE TABLE serial_publication_request_archive (
   created DATETIME NOT NULL,
   created_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (serial_publication_request_id) REFERENCES serial_publication_request(id),
+  FOREIGN KEY (serial_publication_request_id) REFERENCES serial_publication_request(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

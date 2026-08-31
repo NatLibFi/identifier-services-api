@@ -3,6 +3,7 @@ import type { Generated, Updateable, Insertable, Selectable } from 'kysely';
 export interface SerialPublicationRequest {
   id: Generated<number>;
   serial_publisher_id: number | null;
+  status: string;
   publisher_name: string;
   contact_person: string | null;
   email: string | null;
