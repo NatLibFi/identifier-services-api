@@ -54,7 +54,7 @@
     "html-to-text": "^9.0.4",
     "http-status": "^2.1.0",
     "luxon": "^3.6.1",
-    "mysql2": "^3.16.2",
+    "mysql2": "^3.22.0",
     "nodemailer": "^9.0.5",
     "sequelize": "^6.37.7"
   },
