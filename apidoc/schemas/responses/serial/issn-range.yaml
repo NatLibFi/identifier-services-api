@@ -1,0 +1,18 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      block:
+        type: string
+        example: '1797'
+      range_begin:
+        type: string
+        example: '000'
+      range_end:
+        type: string
+        example: '999'
+      active:
+        type: boolean
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

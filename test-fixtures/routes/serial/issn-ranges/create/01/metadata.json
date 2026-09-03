@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can create ISSN range",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

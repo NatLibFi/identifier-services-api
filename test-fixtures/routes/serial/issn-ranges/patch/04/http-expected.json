@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISSN range id 1 has already active=true",
+  "instance": "/v2/serial/issn-ranges/1"
+}

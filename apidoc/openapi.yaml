@@ -118,10 +118,10 @@ paths:
 
   # Serial
 
-  # /v2/monograph/issn-ranges:
-  # $ref: './resources/monograph/issn-ranges/root.yaml'
-  # /v2/monograph/issn-ranges/{id}:
-  # $ref: './resources/monograph/issn-ranges/id.yaml'
+  /v2/monograph/issn-ranges:
+    $ref: './resources/serial/issn-ranges/root.yaml'
+  /v2/monograph/issn-ranges/{id}:
+    $ref: './resources/serial/issn-ranges/id.yaml'
 components:
   securitySchemes:
     openId:

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot delete ISSN range",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

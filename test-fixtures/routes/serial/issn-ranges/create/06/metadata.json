@@ -1,0 +1,7 @@
+{
+  "description": "[admin] block must only contain numbers",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

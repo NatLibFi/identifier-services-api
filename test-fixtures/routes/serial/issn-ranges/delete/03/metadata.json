@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot delete ISSN range",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "DELETE",
+  "role": "publisher",
+  "expectedStatus": 403
+}

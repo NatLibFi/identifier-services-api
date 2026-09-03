@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
-// import { allowAdminOnly } from '../../middlewares/auth.ts';
+import issnRangeRouter from './issn-range-router.ts';
+
+import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 // import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
 // import type { MiddlewareFunction } from '../../generic-types.ts';
@@ -8,6 +10,9 @@ import { Router } from 'express';
 export default function createSerialRouter() {
   // messagingConfiguration: MessagingConfiguration,
   // turnstileMiddleware: MiddlewareFunction,
-  const monographRouter = Router();
-  return monographRouter;
+  const serialRouter = Router();
+
+  serialRouter.use('/issn-ranges', allowAdminOnly, issnRangeRouter);
+
+  return serialRouter;
 }

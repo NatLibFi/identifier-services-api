@@ -1,0 +1,7 @@
+{
+  "description": "[admin] range_begin cannot be greater than range_end",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can activate ISSN range with available identifiers (deactivates current active range)",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 204
+}

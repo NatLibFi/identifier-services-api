@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot read all ISSN range information",
+  "url": "/v2/serial/issn-ranges",
+  "method": "GET",
+  "expectedStatus": 401
+}

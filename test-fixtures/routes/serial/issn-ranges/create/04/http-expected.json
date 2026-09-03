@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISSN range cannot be created due to conflict between existing ISSN ranges (ids: 1)",
+  "instance": "/v2/serial/issn-ranges"
+}

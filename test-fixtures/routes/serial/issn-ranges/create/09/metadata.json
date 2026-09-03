@@ -1,0 +1,7 @@
+{
+  "description": "[admin] range_begin cannot be longer than three digits",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

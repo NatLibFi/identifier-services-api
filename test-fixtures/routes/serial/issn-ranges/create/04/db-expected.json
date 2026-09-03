@@ -1,0 +1,117 @@
+{
+  "issn_range": [
+    {
+      "id": 1,
+      "block": "1797",
+      "range_begin": "000",
+      "range_end": "009",
+      "active": true,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "issn_identifier": [
+    {
+      "id": 1,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0008",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 2,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0016",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 3,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0024",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 4,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0032",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 5,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0040",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 6,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0059",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 7,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0067",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 8,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0075",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 9,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0083",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    },
+    {
+      "id": 10,
+      "issn_range_id": 1,
+      "serial_publication_id": null,
+      "identifier": "1797-0091",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ]
+}

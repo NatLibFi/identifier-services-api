@@ -4,7 +4,7 @@ import { sql } from 'kysely';
 import { ApiError } from '../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
-import type { DeleteResult, ExpressionBuilder, ReferenceExpression, UpdateResult } from 'kysely';
+import type { DeleteResult, ExpressionBuilder, InsertResult, ReferenceExpression, UpdateResult } from 'kysely';
 
 export function validateGetById<T>(dbResult: T[]): T {
   if (dbResult.length === 0 || dbResult[0] === undefined) {
@@ -54,6 +54,18 @@ export function validateRowsDeleted(deleteResult: DeleteResult, expectedDeletedR
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
       `Expected operation to delete ${expectedDeletedRows} rows, but operation changed ${Number(deleteResult.numDeletedRows)} rows instead.`,
+    );
+  }
+
+  return;
+}
+
+export function validateRowsInserted(insertResult: InsertResult, expectedInsertedRows: number) {
+  if (insertResult.numInsertedOrUpdatedRows !== BigInt(expectedInsertedRows)) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Expected operation to insert ${expectedInsertedRows} rows, but operation inserted ${Number(insertResult.numInsertedOrUpdatedRows)} rows instead.`,
     );
   }
 

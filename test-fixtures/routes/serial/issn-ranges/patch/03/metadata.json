@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot activate ISSN range with available identifiers",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

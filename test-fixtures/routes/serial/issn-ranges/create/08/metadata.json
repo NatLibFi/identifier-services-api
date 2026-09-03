@@ -1,0 +1,7 @@
+{
+  "description": "[admin] block cannot be longer than four digits",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[range_begin] Too small: expected string to have >=3 characters",
+  "instance": "/v2/serial/issn-ranges"
+}

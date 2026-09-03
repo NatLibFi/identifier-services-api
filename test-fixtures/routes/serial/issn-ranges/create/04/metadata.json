@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot create ISSN range when it would result into conflict with existing range",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

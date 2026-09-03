@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can delete ISSN range which does not have identifiers associated with a publication",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

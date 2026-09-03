@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISSN range id 1 has 8 associated ISSN identifiers assigned to publications.",
+  "instance": "/v2/serial/issn-ranges/1"
+}

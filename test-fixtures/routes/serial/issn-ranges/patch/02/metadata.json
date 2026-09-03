@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot activate ISSN range with available identifiers",
+  "url": "/v2/serial/issn-ranges/2",
+  "method": "PATCH",
+  "expectedStatus": 401
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create ISSN range",
+  "url": "/v2/serial/issn-ranges",
+  "method": "POST",
+  "expectedStatus": 401
+}

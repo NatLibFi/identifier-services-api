@@ -1,0 +1,56 @@
+get:
+  operationId: getIssnRanges
+  summary: Read all ISSN ranges information
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+    - issn
+  responses:
+    '200':
+      description: Resources could be read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/issn-ranges.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    default:
+      $ref: '../../../responses/error.yaml'
+
+post:
+  operationId: createIssnRange
+  summary: Create a new ISSN range
+  security:
+    - openId:
+        - admin
+  description: Creates a new ISSN range. Note new range is not allowed to overlap any existing ranges.
+  tags:
+    - serial
+    - issn
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/serial/issn-range/issn-range-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot activate already active ISSN range",
+  "url": "/v2/serial/issn-ranges/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

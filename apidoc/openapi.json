@@ -3132,6 +3132,192 @@
           }
         }
       }
+    },
+    "/v2/monograph/issn-ranges": {
+      "get": {
+        "operationId": "getIssnRanges",
+        "summary": "Read all ISSN ranges information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial",
+          "issn"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resources could be read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/issn-ranges"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createIssnRange",
+        "summary": "Create a new ISSN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "Creates a new ISSN range. Note new range is not allowed to overlap any existing ranges.",
+        "tags": [
+          "serial",
+          "issn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/issn-range-create-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/monograph/issn-ranges/{id}": {
+      "patch": {
+        "operationId": "updateIssnRange",
+        "summary": "Update ISSN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial",
+          "issn"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/issn-range-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteIssnRange",
+        "summary": "Delete ISSN range",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial",
+          "issn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6445,6 +6631,81 @@
           "statistics_type",
           "output_format"
         ]
+      },
+      "issn-range": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "block": {
+                "type": "string",
+                "example": "1797"
+              },
+              "range_begin": {
+                "type": "string",
+                "example": "000"
+              },
+              "range_end": {
+                "type": "string",
+                "example": "999"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "issn-ranges": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/issn-range"
+        }
+      },
+      "issn-range-create-body": {
+        "type": "object",
+        "properties": {
+          "block": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 4,
+            "example": "1797"
+          },
+          "range_begin": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3,
+            "example": "000"
+          },
+          "range_end": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3,
+            "example": "999"
+          }
+        },
+        "required": [
+          "block",
+          "range_begin",
+          "range_end"
+        ]
+      },
+      "issn-range-update-body": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          }
+        }
       }
     },
     "responses": {

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "block": "1797",
+    "range_begin": "000",
+    "range_end": "009",
+    "active": true,
+    "total": 10,
+    "taken": 8,
+    "free": 2,
+    "created": "2025-01-20T12:00:00.000Z",
+    "created_by": "TEST_USER_1",
+    "modified": "2025-01-20T12:00:00.000Z",
+    "modified_by": "TEST_USER_1"
+  },
+  {
+    "id": 2,
+    "block": "2489",
+    "range_begin": "210",
+    "range_end": "219",
+    "active": false,
+    "total": 10,
+    "taken": 0,
+    "free": 10,
+    "created": "2025-01-20T12:00:00.000Z",
+    "created_by": "TEST_USER_1",
+    "modified": "2025-01-20T12:00:00.000Z",
+    "modified_by": "TEST_USER_1"
+  }
+]
