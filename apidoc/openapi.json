@@ -6654,6 +6654,15 @@
               },
               "active": {
                 "type": "boolean"
+              },
+              "taken": {
+                "type": "number"
+              },
+              "total": {
+                "type": "number"
+              },
+              "free": {
+                "type": "number"
               }
             }
           },

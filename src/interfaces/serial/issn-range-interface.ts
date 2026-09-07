@@ -123,9 +123,7 @@ export async function deleteIssnRange(id: number) {
   }
 
   await db.transaction().execute(async (trx) => {
-    const rangeRemoveResult = await trx.deleteFrom('issn_range').where('id', '=', id).executeTakeFirstOrThrow();
-    validateRowsDeleted(rangeRemoveResult, 1);
-
+    // Remove associated identifiers
     const identifierRemoveResult = await trx
       .deleteFrom('issn_identifier')
       .where('serial_publication_id', 'is', null)
@@ -133,6 +131,10 @@ export async function deleteIssnRange(id: number) {
       .executeTakeFirstOrThrow();
 
     validateRowsDeleted(identifierRemoveResult, numIssnIdentifiers);
+
+    // Remove range
+    const rangeRemoveResult = await trx.deleteFrom('issn_range').where('id', '=', id).executeTakeFirstOrThrow();
+    validateRowsDeleted(rangeRemoveResult, 1);
   });
 
   return;

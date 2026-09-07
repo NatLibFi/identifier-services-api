@@ -14,5 +14,11 @@ allOf:
         example: '999'
       active:
         type: boolean
+      taken:
+        type: number
+      total:
+        type: number
+      free:
+        type: number
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'
