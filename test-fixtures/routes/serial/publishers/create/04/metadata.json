@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create serial publisher with minimal information",
+  "url": "/v2/serial/publishers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

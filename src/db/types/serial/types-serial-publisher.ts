@@ -2,7 +2,7 @@ import type { Generated, Updateable, JSONColumnType, Insertable, Selectable } fr
 
 export interface SerialPublisherContactPerson {
   name: string;
-  email: string;
+  email: string | null;
 }
 
 export interface SerialPublisher {

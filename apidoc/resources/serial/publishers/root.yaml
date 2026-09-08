@@ -1,0 +1,30 @@
+post:
+  operationId: createSerialPublisherRequest
+  summary: Create a new serial publisher request
+  security: []
+  tags:
+    - serial
+    - serial-publisher-request
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/serial/serial-publisher/serial-publisher-update-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/common/created.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

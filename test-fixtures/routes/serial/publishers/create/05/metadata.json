@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot create entries with duplicate name",
+  "url": "/v2/serial/publishers",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

@@ -1,0 +1,8 @@
+type: object
+properties:
+  total_doc:
+    type: number
+  results:
+    type: array
+    items:
+      $ref: './serial-publisher.yaml'

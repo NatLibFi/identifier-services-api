@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publisher with name \"EXAMPLE serial publisher   \" already exists.",
+  "instance": "/v2/serial/publishers"
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not update serial publisher information",
+  "url": "/v2/serial/publishers/1",
+  "method": "PATCH",
+  "expectedStatus": 401
+}

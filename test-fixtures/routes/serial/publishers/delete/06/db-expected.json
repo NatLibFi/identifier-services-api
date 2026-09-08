@@ -1,0 +1,41 @@
+{
+  "serial_publisher": [
+    {
+      "id": 1,
+      "official_name": "Example serial publisher",
+      "contact_persons": [
+        {
+          "name": "Erkki Esimerkki",
+          "email": "erkki.esimerkki@example.localhost"
+        }
+      ],
+      "lang_code": "fi-FI",
+      "email_common": "example@example.localhost",
+      "phone": "123456789",
+      "address": "Foo street 123",
+      "zip": "00000",
+      "city": "Foo city",
+      "additional_info": "Example of additional info",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "serial_publication": [],
+  "serial_publication_request": [],
+  "serial_message": [
+    {
+      "id": 1,
+      "message_type": "ISSN_LIST_DELIVERY",
+      "serial_publisher_id": 1,
+      "serial_publication_request_id": null,
+      "lang_code": "fi-FI",
+      "recipient": "erkki.esimerkki@example.localhost",
+      "subject": "Example subject",
+      "body": "Example msg body",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    }
+  ]
+}

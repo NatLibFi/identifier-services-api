@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may update serial publisher information",
+  "url": "/v2/serial/publishers/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 200
+}

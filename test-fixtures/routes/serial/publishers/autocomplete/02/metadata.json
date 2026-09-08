@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not autocomplete publisher information",
+  "url": "/v2/serial/publishers/autocomplete",
+  "method": "POST",
+  "expectedStatus": 401
+}

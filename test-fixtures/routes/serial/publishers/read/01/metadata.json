@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may read serial publisher information",
+  "url": "/v2/serial/publishers/1",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

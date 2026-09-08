@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not create serial publisher",
+  "url": "/v2/serial/publishers",
+  "method": "POST",
+  "expectedStatus": 401
+}

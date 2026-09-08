@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not delete serial publisher",
+  "url": "/v2/serial/publishers/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

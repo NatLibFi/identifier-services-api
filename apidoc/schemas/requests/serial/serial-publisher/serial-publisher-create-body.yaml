@@ -1,0 +1,43 @@
+type: object
+required:
+  - official_name
+  - contact_persons
+  - lang_code
+properties:
+  official_name:
+    type: string
+  contact_persons:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+  email_common:
+    type:
+      - string
+      - 'null'
+  phone:
+    type:
+      - string
+      - 'null'
+  address:
+    type:
+      - string
+      - 'null'
+  zip:
+    type:
+      - string
+      - 'null'
+  city:
+    type:
+      - string
+      - 'null'
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  additional_info:
+    type:
+      - string
+      - 'null'

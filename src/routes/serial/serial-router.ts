@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 import issnRangeRouter from './issn-range-router.ts';
 
+import serialPublisherRouter from './serial-publisher-router.ts';
+
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 // import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
@@ -13,6 +15,7 @@ export default function createSerialRouter() {
   const serialRouter = Router();
 
   serialRouter.use('/issn-ranges', allowAdminOnly, issnRangeRouter);
+  serialRouter.use('/publishers', allowAdminOnly, serialPublisherRouter);
 
   return serialRouter;
 }

@@ -1,0 +1,21 @@
+{
+  "total_doc": 1,
+  "results": [
+    {
+      "id": 2,
+      "official_name": "Another one",
+      "contact_persons": [],
+      "lang_code": "fi-FI",
+      "email_common": null,
+      "phone": null,
+      "address": null,
+      "zip": null,
+      "city": null,
+      "additional_info": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ]
+}

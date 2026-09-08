@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not delete serial publisher if it has any associated serial messages",
+  "url": "/v2/serial/publishers/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not search serial publisher information",
+  "url": "/v2/serial/publishers/search",
+  "method": "POST",
+  "expectedStatus": 401
+}

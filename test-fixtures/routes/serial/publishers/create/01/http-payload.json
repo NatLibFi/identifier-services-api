@@ -1,0 +1,16 @@
+{
+  "official_name": "Example serial publisher",
+  "contact_persons": [
+    {
+      "name": "Erkki Esimerkki",
+      "email": "erkki.esimerkki@example.localhost"
+    }
+  ],
+  "lang_code": "fi-FI",
+  "email_common": "example@example.localhost",
+  "phone": "123456789",
+  "address": "Foo street 123",
+  "zip": "00000",
+  "city": "Foo city",
+  "additional_info": "Example of additional info"
+}

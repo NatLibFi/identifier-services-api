@@ -3133,7 +3133,7 @@
         }
       }
     },
-    "/v2/monograph/issn-ranges": {
+    "/v2/serial/issn-ranges": {
       "get": {
         "operationId": "getIssnRanges",
         "summary": "Read all ISSN ranges information",
@@ -3224,7 +3224,7 @@
         }
       }
     },
-    "/v2/monograph/issn-ranges/{id}": {
+    "/v2/serial/issn-ranges/{id}": {
       "patch": {
         "operationId": "updateIssnRange",
         "summary": "Update ISSN range",
@@ -3291,6 +3291,194 @@
         "tags": [
           "serial",
           "issn"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/publishers": {
+      "post": {
+        "operationId": "createSerialPublisherRequest",
+        "summary": "Create a new serial publisher request",
+        "security": [],
+        "tags": [
+          "serial",
+          "serial-publisher-request"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/serial-publisher-update-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/publishers/{id}": {
+      "get": {
+        "operationId": "readSerialPublisher",
+        "summary": "Read serial publisher information.",
+        "security": [],
+        "tags": [
+          "serial"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serial-publisher"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSerialPublisher",
+        "summary": "Update serial publisher",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/serial-publisher-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serial-publisher"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSerialPublisher",
+        "summary": "Delete serial publisher",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
         ],
         "parameters": [
           {
@@ -6715,6 +6903,141 @@
             "type": "boolean"
           }
         }
+      },
+      "serial-publisher-update-body": {
+        "type": "object",
+        "properties": {
+          "official_name": {
+            "type": "string"
+          },
+          "contact_persons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "email_common": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "zip": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "additional_info": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "serial-publisher": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "official_name": {
+                "type": "string"
+              },
+              "contact_persons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "email_common": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lang_code": {
+                "$ref": "#/components/schemas/lang-code"
+              },
+              "additional_info": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
       }
     },
     "responses": {

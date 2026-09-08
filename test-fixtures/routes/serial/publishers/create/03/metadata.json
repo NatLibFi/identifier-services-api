@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create serial publisher",
+  "url": "/v2/serial/publishers",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

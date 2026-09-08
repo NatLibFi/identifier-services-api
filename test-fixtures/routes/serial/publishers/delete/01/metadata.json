@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may delete serial publisher if pre-conditions pass",
+  "url": "/v2/serial/publishers/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

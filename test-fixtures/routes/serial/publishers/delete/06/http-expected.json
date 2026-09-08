@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Cannot remove serial publisher id 1 because it is associated with 1 messages.",
+  "instance": "/v2/serial/publishers/1"
+}
