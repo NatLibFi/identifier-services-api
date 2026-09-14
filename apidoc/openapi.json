@@ -3321,12 +3321,11 @@
     },
     "/v2/serial/publishers": {
       "post": {
-        "operationId": "createSerialPublisherRequest",
-        "summary": "Create a new serial publisher request",
+        "operationId": "createSerialPublisher",
+        "summary": "Create a new serial publisher",
         "security": [],
         "tags": [
-          "serial",
-          "serial-publisher-request"
+          "serial"
         ],
         "requestBody": {
           "required": true,
@@ -3500,6 +3499,60 @@
           },
           "409": {
             "description": "Conflict"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/publication-requests": {
+      "post": {
+        "operationId": "createSerialpublicationRequest",
+        "summary": "Create a new serial publication request",
+        "security": [],
+        "tags": [
+          "serial"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/serial-publication-request-create-body-v1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/serial-publication-request-create-body-v2"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -7037,6 +7090,500 @@
           {
             "$ref": "#/components/schemas/modified-metadata"
           }
+        ]
+      },
+      "serial-publication-frequency": {
+        "type": "string",
+        "enum": [
+          "a",
+          "f",
+          "q",
+          "b",
+          "m",
+          "w",
+          "d",
+          "k",
+          "#",
+          "z"
+        ]
+      },
+      "serial-publication-type": {
+        "type": "string",
+        "enum": [
+          "JOURNAL",
+          "NEWSLETTER",
+          "STAFF_MAGAZINE",
+          "MEMBERSHIP_BASED_MAGAZINE",
+          "CARTOON",
+          "NEWSPAPER",
+          "FREE_PAPER",
+          "MONOGRAPHY_SERIES",
+          "OTHER_SERIAL"
+        ]
+      },
+      "serial-publication-medium": {
+        "type": "string",
+        "enum": [
+          "PAPERBACK",
+          "HARDBACK",
+          "SPIRAL_BINDING",
+          "OTHER_PRINT"
+        ]
+      },
+      "serial-publication-request-create-body-v1": {
+        "type": "object",
+        "properties": {
+          "form": {
+            "type": "object",
+            "properties": {
+              "publisher": {
+                "type": "string",
+                "maximum": 100
+              },
+              "contactPerson": {
+                "type": "string",
+                "maximum": 100
+              },
+              "email": {
+                "type": "string",
+                "maximum": 100
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 30
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 10
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "langCode": {
+                "$ref": "#/components/schemas/lang-code"
+              }
+            },
+            "required": [
+              "publisher",
+              "contactPerson",
+              "email",
+              "langCode"
+            ]
+          },
+          "publications": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "maximum": 200
+                },
+                "subtitle": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 200
+                },
+                "placeOfPublication": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "printer": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "issuedFromYear": {
+                  "$ref": "#/components/schemas/year-string"
+                },
+                "issuedFromNumber": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "frequency": {
+                  "$ref": "#/components/schemas/serial-publication-frequency"
+                },
+                "frequencyOther": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "language": {
+                  "$ref": "#/components/schemas/item-language"
+                },
+                "publicationType": {
+                  "$ref": "#/components/schemas/serial-publication-type"
+                },
+                "publicationTypeOther": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "medium": {
+                  "$ref": "#/components/schemas/serial-publication-medium"
+                },
+                "mediumOther": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "url": {
+                  "type": "string",
+                  "maximum": 100
+                },
+                "previous": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "type": "string",
+                        "maximum": 100
+                      }
+                    },
+                    "issn": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "$ref": "#/components/schemas/issn-identifier"
+                      }
+                    },
+                    "lastIssue": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "type": "string",
+                        "maximum": 50
+                      }
+                    }
+                  }
+                },
+                "mainSeries": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "type": "string",
+                        "maximum": 100
+                      }
+                    },
+                    "issn": {
+                      "$ref": "#/components/schemas/issn-identifier"
+                    }
+                  }
+                },
+                "subseries": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "type": "string",
+                        "maximum": 100
+                      }
+                    },
+                    "issn": {
+                      "$ref": "#/components/schemas/issn-identifier"
+                    }
+                  }
+                },
+                "anotherMedium": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "items": {
+                        "type": "string",
+                        "maximum": 100
+                      }
+                    },
+                    "issn": {
+                      "$ref": "#/components/schemas/issn-identifier"
+                    }
+                  }
+                },
+                "additionalInfo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 2000
+                }
+              },
+              "required": [
+                "title"
+              ]
+            }
+          },
+          "turnstileToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "form",
+          "publications"
+        ]
+      },
+      "serial-publication-request-create-body-v2": {
+        "type": "object",
+        "properties": {
+          "form": {
+            "type": "object",
+            "properties": {
+              "publisher": {
+                "type": "string",
+                "maximum": 100
+              },
+              "contact_person": {
+                "type": "string",
+                "maximum": 100
+              },
+              "email": {
+                "type": "string",
+                "maximum": 100
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 30
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 10
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maximum": 50
+              },
+              "lang_code": {
+                "$ref": "#/components/schemas/lang-code"
+              }
+            },
+            "required": [
+              "publisher",
+              "contact_person",
+              "email",
+              "lang_code"
+            ]
+          },
+          "publications": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "maximum": 200
+                },
+                "subtitle": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 200
+                },
+                "place_of_publication": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "printer": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "issued_from_year": {
+                  "$ref": "#/components/schemas/year-string"
+                },
+                "issued_from_number": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 100
+                },
+                "frequency": {
+                  "$ref": "#/components/schemas/serial-publication-frequency"
+                },
+                "frequency_other": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "language": {
+                  "$ref": "#/components/schemas/item-language"
+                },
+                "publication_type": {
+                  "$ref": "#/components/schemas/serial-publication-type"
+                },
+                "publication_type_other": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "medium": {
+                  "$ref": "#/components/schemas/serial-publication-medium"
+                },
+                "medium_other": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 50
+                },
+                "url": {
+                  "type": "string",
+                  "maximum": 100
+                },
+                "previous": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maximum": 100
+                      },
+                      "issn": {
+                        "$ref": "#/components/schemas/issn-identifier"
+                      },
+                      "last_issue": {
+                        "type": "string",
+                        "maximum": 50
+                      }
+                    }
+                  }
+                },
+                "main_series": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maximum": 100
+                      },
+                      "issn": {
+                        "$ref": "#/components/schemas/issn-identifier"
+                      }
+                    }
+                  }
+                },
+                "subseries": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maximum": 100
+                      },
+                      "issn": {
+                        "$ref": "#/components/schemas/issn-identifier"
+                      }
+                    }
+                  }
+                },
+                "another_medium": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maximum": 100
+                      },
+                      "issn": {
+                        "$ref": "#/components/schemas/issn-identifier"
+                      }
+                    }
+                  }
+                },
+                "additional_info": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maximum": 2000
+                }
+              },
+              "required": [
+                "title"
+              ]
+            }
+          },
+          "turnstile_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "form",
+          "publications"
         ]
       }
     },

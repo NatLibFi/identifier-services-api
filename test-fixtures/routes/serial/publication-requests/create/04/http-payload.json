@@ -1,0 +1,69 @@
+{
+  "version": 2,
+  "form": {
+    "publisher": "Foo Publisher",
+    "contact_person": "Foo Bar",
+    "email": "example@example.com",
+    "phone": "123456789",
+    "address": "Foo Street 1",
+    "zip": "00000",
+    "city": "Foobarila",
+    "lang_code": "fi-FI"
+  },
+  "publications": [
+    {
+      "title": "Foo title",
+      "subtitle": "Foo subtitle",
+      "place_of_publication": "Foobarila",
+      "printer": "Foo printer",
+      "issued_from_year": "1990",
+      "issued_from_number": "1",
+      "frequency": "z",
+      "frequency_other": "Epäsäännöllinen",
+      "language": "FIN",
+      "publication_type": "MONOGRAPHY_SERIES",
+      "publication_type_other": "just a value",
+      "medium": "PRINTED",
+      "medium_other": "just a value",
+      "previous": [
+        {
+          "title": "FooFooFoo",
+          "issn": "1797-0011",
+          "last_issue": "40/1980"
+        }
+      ],
+      "main_series": [
+        {
+          "title": "Foo Series",
+          "issn": "1797-0024"
+        }
+      ],
+      "subseries": [
+        {
+          "title": "SubFoo",
+          "issn": "1797-0032"
+        }
+      ],
+      "another_medium": [
+        {
+          "title": "InterwebsFoo",
+          "issn": "1797-0040"
+        }
+      ],
+      "additional_info": "Example info"
+    },
+    {
+      "title": "Bar Baz title",
+      "place_of_publication": "Foobarila",
+      "printer": "Foo printer",
+      "issued_from_year": "1999",
+      "issued_from_number": "10",
+      "frequency": "z",
+      "frequency_other": "Epäsäännöllinen",
+      "language": "FIN",
+      "publication_type": "MONOGRAPHY_SERIES",
+      "medium": "ONLINE",
+      "url": "http://example.com"
+    }
+  ]
+}

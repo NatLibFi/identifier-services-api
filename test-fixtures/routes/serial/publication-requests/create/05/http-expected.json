@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Validation error",
+  "detail": "[publications] Too small: expected array to have >=1 items",
+  "instance": "/v2/serial/publication-requests"
+}

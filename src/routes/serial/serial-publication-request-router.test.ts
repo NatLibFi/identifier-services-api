@@ -1,0 +1,5 @@
+import { runIntegrationTestSuite } from '../../test-utils/generate-integration-test.ts';
+
+const routers = ['serial', 'publication-requests'];
+
+runIntegrationTestSuite(routers, 'create');

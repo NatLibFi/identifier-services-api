@@ -1,0 +1,7 @@
+{
+  "description": "[admin] properly handles partials on JSON fields (v1 schema)",
+  "url": "/v2/serial/publication-requests",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

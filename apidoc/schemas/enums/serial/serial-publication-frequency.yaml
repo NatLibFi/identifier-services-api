@@ -1,0 +1,12 @@
+type: string
+enum:
+  - a
+  - f
+  - q
+  - b
+  - m
+  - w
+  - d
+  - k
+  - '#'
+  - z

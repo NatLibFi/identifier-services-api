@@ -178,7 +178,7 @@ export default async function startApp(options: AppOptions): Promise<http.Server
     turnstileMiddleware.validateTurnstile,
   );
 
-  const serialRouter = createSerialRouter();
+  const serialRouter = createSerialRouter(messagingConfiguration, turnstileMiddleware.validateTurnstile);
 
   const melindaRouter = createMelindaRouter(melindaConfiguration);
   const messageTemplateRouter = createMessageTemplateRouter();

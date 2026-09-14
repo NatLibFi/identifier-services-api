@@ -6,16 +6,20 @@ import serialPublisherRouter from './serial-publisher-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
-// import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
-// import type { MiddlewareFunction } from '../../generic-types.ts';
+import type { MiddlewareFunction } from '../../generic-types.ts';
+import type { MessagingConfiguration } from '../../app.ts';
+import createSerialPublicationRequestRouter from './serial-publication-request-router.ts';
 
-export default function createSerialRouter() {
-  // messagingConfiguration: MessagingConfiguration,
-  // turnstileMiddleware: MiddlewareFunction,
+export default function createSerialRouter(
+  _messagingConfiguration: MessagingConfiguration,
+  turnstileMiddleware: MiddlewareFunction,
+) {
   const serialRouter = Router();
 
   serialRouter.use('/issn-ranges', allowAdminOnly, issnRangeRouter);
   serialRouter.use('/publishers', allowAdminOnly, serialPublisherRouter);
+
+  serialRouter.use('/publication-requests', createSerialPublicationRequestRouter(turnstileMiddleware));
 
   return serialRouter;
 }

@@ -1,0 +1,164 @@
+type: object
+properties:
+  form:
+    type: object
+    properties:
+      publisher:
+        type: string
+        maximum: 100
+      contactPerson:
+        type: string
+        maximum: 100
+      email:
+        type: string
+        maximum: 100
+      phone:
+        type:
+          - string
+          - 'null'
+        maximum: 30
+      address:
+        type:
+          - string
+          - 'null'
+        maximum: 50
+      zip:
+        type:
+          - string
+          - 'null'
+        maximum: 10
+      city:
+        type:
+          - string
+          - 'null'
+        maximum: 50
+      langCode:
+        $ref: '../../../enums/lang-code.yaml'
+    required:
+      - publisher
+      - contactPerson
+      - email
+      - langCode
+  publications:
+    type: array
+    minItems: 1
+    maxItems: 4
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+          maximum: 200
+        subtitle:
+          type:
+            - string
+            - 'null'
+          maximum: 200
+        placeOfPublication:
+          type:
+            - string
+            - 'null'
+          maximum: 100
+        printer:
+          type:
+            - string
+            - 'null'
+          maximum: 100
+        issuedFromYear:
+          $ref: '../../../patterns/year-string.yaml'
+        issuedFromNumber:
+          type:
+            - string
+            - 'null'
+          maximum: 100
+        frequency:
+          $ref: '../../../enums/serial/serial-publication-frequency.yaml'
+        frequencyOther:
+          type:
+            - string
+            - 'null'
+          maximum: 50
+        language:
+          $ref: '../../../enums/item-language.yaml'
+        publicationType:
+          $ref: '../../../enums/serial/serial-publication-type.yaml'
+        publicationTypeOther:
+          type:
+            - string
+            - 'null'
+          maximum: 50
+        medium:
+          $ref: '../../../enums/serial/serial-publication-medium.yaml'
+        mediumOther:
+          type:
+            - string
+            - 'null'
+          maximum: 50
+        url:
+          type: string
+          maximum: 100
+        previous:
+          type: object
+          properties:
+            title:
+              type: array
+              maxItems: 5
+              items:
+                type: string
+                maximum: 100
+            issn:
+              type: array
+              maxItems: 5
+              items:
+                $ref: '../../../patterns/issn-identifier.yaml'
+            lastIssue:
+              type: array
+              maxItems: 5
+              items:
+                type: string
+                maximum: 50
+        mainSeries:
+          type: object
+          properties:
+            title:
+              type: array
+              maxItems: 5
+              items:
+                type: string
+                maximum: 100
+            issn:
+              $ref: '../../../patterns/issn-identifier.yaml'
+        subseries:
+          type: object
+          properties:
+            title:
+              type: array
+              maxItems: 5
+              items:
+                type: string
+                maximum: 100
+            issn:
+              $ref: '../../../patterns/issn-identifier.yaml'
+        anotherMedium:
+          type: object
+          properties:
+            title:
+              type: array
+              maxItems: 5
+              items:
+                type: string
+                maximum: 100
+            issn:
+              $ref: '../../../patterns/issn-identifier.yaml'
+        additionalInfo:
+          type:
+            - string
+            - 'null'
+          maximum: 2000
+      required:
+        - title
+  turnstileToken:
+    type: string
+required:
+  - form
+  - publications

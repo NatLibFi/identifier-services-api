@@ -1,7 +1,7 @@
 import type { Generated, Updateable, Insertable, Selectable, JSONColumnType } from 'kysely';
 
 export interface SerialPublicationAssociatedSeries {
-  title: string;
+  title: string | null;
   issn: string | null;
 }
 

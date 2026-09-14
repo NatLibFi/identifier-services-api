@@ -1,0 +1,6 @@
+{
+  "description": "[guest] can create serial publication request (v1 schema)",
+  "url": "/v2/serial/publication-requests",
+  "method": "POST",
+  "expectedStatus": 201
+}
