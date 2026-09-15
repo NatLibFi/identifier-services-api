@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication request id 1 is associated with publication ids 1 that have ISSN identifier assigned.",
+  "instance": "/v2/serial/publication-requests/1"
+}

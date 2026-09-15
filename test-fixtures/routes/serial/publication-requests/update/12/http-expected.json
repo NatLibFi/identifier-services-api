@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication request id 1 has 1 associated messages and thus request cannot be reset to NOT_NOTIFIED or NOT_HANDLED.",
+  "instance": "/v2/serial/publication-requests/1"
+}

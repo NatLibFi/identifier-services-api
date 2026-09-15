@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot read serial publication request",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "GET",
+  "expectedStatus": 401
+}

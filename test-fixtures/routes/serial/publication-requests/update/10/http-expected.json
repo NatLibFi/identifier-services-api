@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication request id 1 is already in completed state. Publisher can no longer be edited for the request.",
+  "instance": "/v2/serial/publication-requests/1"
+}

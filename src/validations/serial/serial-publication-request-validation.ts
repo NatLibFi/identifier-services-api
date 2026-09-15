@@ -1,11 +1,11 @@
 import * as z from 'zod';
 
-import { contactPersonSchema } from '../common-validation.ts';
 import {
   langCodeEnum,
   publicationLanguageEnum,
   serialFrequencyEnum,
   serialMediumEnum,
+  serialPublicationRequestStatusEnum,
   serialPublicationTypeEnum,
 } from '../common-validation-enum.ts';
 import { issnLikeString, yearString } from '../common-validation-regex.ts';
@@ -81,7 +81,7 @@ export const createSerialPublicationRequestV2Schema = z
   .object({
     version: z.literal(2), // This schema must explicitly define use of v2
     form: z.object({
-      publisher: z.string().max(100),
+      publisher_name: z.string().max(100),
       contact_person: z.string().max(100),
       email: z.email().max(100),
       phone: z.string().max(30).nullable().optional(),
@@ -157,14 +157,16 @@ export const createSerialPublicationRequestV2Schema = z
   .strict();
 
 export const updateSerialPublicationRequestSchema = z.object({
-  publisher: z.string().max(100).optional(),
-  contact_persons: z.array(contactPersonSchema).max(10).optional(),
-  email_common: z.email().max(100).nullable().optional(),
+  publisher_name: z.string().max(100).optional(),
+  contact_person: z.string().max(100).optional(),
+  email: z.email().max(100).nullable().optional(),
   phone: z.string().max(30).nullable().optional(),
   address: z.string().max(50).nullable().optional(),
   zip: z.string().max(10).nullable().optional(),
   city: z.string().max(50).nullable().optional(),
-  langCode: z.enum(langCodeEnum),
+  lang_code: z.enum(langCodeEnum).optional(),
+  status: z.enum(serialPublicationRequestStatusEnum).optional(), // Note: business logic constraints exist
+  serial_publisher_id: z.number().min(1).max(Number.MAX_SAFE_INTEGER).nullable().optional(), // Note: business logic constraints exist
 });
 
 // Use discriminated union on "version" attribute to validate request against the desired version

@@ -11,6 +11,8 @@ import {
   PUBLICATION_LANGUAGE,
   SERIAL_PUBLICATION_FREQUENCY,
   SERIAL_PUBLICATION_MEDIUM,
+  SERIAL_PUBLICATION_REQUEST_STATUS,
+  SERIAL_PUBLICATION_STATUS,
   SERIAL_PUBLICATION_TYPE,
 } from '../constants.ts';
 
@@ -34,3 +36,6 @@ export const publicationLanguageEnum = Object.values(PUBLICATION_LANGUAGE);
 export const serialFrequencyEnum = Object.values(SERIAL_PUBLICATION_FREQUENCY);
 export const serialMediumEnum = Object.values(SERIAL_PUBLICATION_MEDIUM);
 export const serialPublicationTypeEnum = Object.values(SERIAL_PUBLICATION_TYPE);
+export const serialPublicationStatusEnum = Object.values(SERIAL_PUBLICATION_STATUS);
+
+export const serialPublicationRequestStatusEnum = Object.values(SERIAL_PUBLICATION_REQUEST_STATUS);

@@ -1,3 +1,12 @@
+import HttpStatus from 'http-status';
+
+import { getKysely } from '../../db/database.ts';
+import { ApiError } from '../../utils/api-error.ts';
+
+import type { IssnIdentifierSelect } from '../../db/types/serial/types-isnn-identifier.ts';
+import type { Database } from '../../db/types.ts';
+import type { Transaction } from 'kysely';
+
 // Old API code
 export function calculateCheckDigitIssn(issnWithoutCheckDigit: string): string {
   // Remove dash if there is one
@@ -22,4 +31,34 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit: string): string {
   }
 
   return checkDigit === 10 ? 'X' : checkDigit.toString();
+}
+
+export async function getSerialPublicationIssnIdentifier(
+  serialPublicationId: number,
+  trx?: Transaction<Database>,
+): Promise<IssnIdentifierSelect | null> {
+  // Use transaction if provided
+  const db = trx ? trx : getKysely();
+
+  const dbResult = await db
+    .selectFrom('issn_identifier')
+    .selectAll()
+    .where('serial_publication_id', '=', serialPublicationId)
+    .execute();
+
+  const issnIdentifier = dbResult[0];
+
+  if (dbResult.length === 0 || !issnIdentifier) {
+    return null;
+  }
+
+  if (dbResult.length > 1) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Serial publication id ${serialPublicationId} is associated with ${dbResult.length} ISSN identifiers. This should not happen. Please notify system administrators.`,
+    );
+  }
+
+  return issnIdentifier;
 }

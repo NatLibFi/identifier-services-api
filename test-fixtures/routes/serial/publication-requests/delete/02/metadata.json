@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot delete serial publication request",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "DELETE",
+  "expectedStatus": 401
+}

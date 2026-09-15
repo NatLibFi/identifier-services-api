@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot set status=REJECTED when some associated publication has ISSN identifier",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

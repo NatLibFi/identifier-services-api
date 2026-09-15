@@ -3,3 +3,6 @@ import { runIntegrationTestSuite } from '../../test-utils/generate-integration-t
 const routers = ['serial', 'publication-requests'];
 
 runIntegrationTestSuite(routers, 'create');
+runIntegrationTestSuite(routers, 'read');
+runIntegrationTestSuite(routers, 'update');
+runIntegrationTestSuite(routers, 'delete');

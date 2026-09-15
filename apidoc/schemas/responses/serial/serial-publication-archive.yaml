@@ -1,0 +1,74 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      serial_publication_id:
+        type: number
+      title:
+        type: string
+      subtitle:
+        type:
+          - string
+          - 'null'
+      place_of_publication:
+        type:
+          - string
+          - 'null'
+      printer:
+        type:
+          - string
+          - 'null'
+      issued_from_year:
+        type:
+          - string
+          - 'null'
+      issued_from_number:
+        type:
+          - string
+          - 'null'
+      frequency:
+        $ref: '../../enums/serial/serial-publication-frequency.yaml'
+      frequency_other:
+        type:
+          - string
+          - 'null'
+      language:
+        $ref: '../../enums/item-language.yaml'
+      publication_type:
+        $ref: '../../enums/serial/serial-publication-type.yaml'
+      publication_type_other:
+        type:
+          - string
+          - 'null'
+      medium:
+        $ref: '../../enums/serial/serial-publication-medium.yaml'
+      medium_other:
+        type:
+          - string
+          - 'null'
+      url:
+        type:
+          - string
+          - 'null'
+      previous:
+        type: array
+        items:
+          $ref: './serial-publication-previous-series.yaml'
+      main_series:
+        type: array
+        items:
+          $ref: './serial-publication-associated-series.yaml'
+      subseries:
+        type: array
+        items:
+          $ref: './serial-publication-associated-series.yaml'
+      another_medium:
+        type: array
+        items:
+          $ref: './serial-publication-associated-series.yaml'
+      additional_info:
+        type:
+          - string
+          - 'null'
+  - $ref: '../common/created-metadata.yaml'

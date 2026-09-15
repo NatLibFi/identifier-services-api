@@ -1,0 +1,41 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      serial_publisher_id:
+        type:
+          - number
+          - 'null'
+      status:
+        $ref: '../../enums/serial/serial-publication-request-status.yaml'
+      publisher_name:
+        type: string
+      contact_person:
+        type:
+          - string
+          - 'null'
+      email:
+        type:
+          - string
+          - 'null'
+      phone:
+        type:
+          - string
+          - 'null'
+      address:
+        type:
+          - string
+          - 'null'
+      zip:
+        type:
+          - string
+          - 'null'
+      city:
+        type:
+          - string
+          - 'null'
+      lang_code:
+        $ref: '../../enums/lang-code.yaml'
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

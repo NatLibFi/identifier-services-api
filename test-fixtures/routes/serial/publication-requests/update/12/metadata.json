@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot set status=NOT_NOTIFIED when associated messages exist",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

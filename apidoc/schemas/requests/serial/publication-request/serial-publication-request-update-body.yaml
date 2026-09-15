@@ -1,0 +1,41 @@
+type: object
+properties:
+  publisher:
+    type: string
+    maximum: 100
+  contact_person:
+    type: string
+    maximum: 100
+  email:
+    type: string
+    maximum: 100
+  phone:
+    type:
+      - string
+      - 'null'
+    maximum: 30
+  address:
+    type:
+      - string
+      - 'null'
+    maximum: 50
+  zip:
+    type:
+      - string
+      - 'null'
+    maximum: 10
+  city:
+    type:
+      - string
+      - 'null'
+    maximum: 50
+  lang_code:
+    $ref: '../../../enums/lang-code.yaml'
+  serial_publisher_id:
+    description: if used, must be sole attribute provided
+    type:
+      - number
+      - 'null'
+  status:
+    description: if used, must be sole attribute provided
+    $ref: '../../../enums/serial/serial-publication-request-status.yaml'

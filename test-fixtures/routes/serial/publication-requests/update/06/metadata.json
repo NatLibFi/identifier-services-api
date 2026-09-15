@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot change publisher together with other attributes",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 422
+}

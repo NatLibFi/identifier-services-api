@@ -1,0 +1,36 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      serial_publication_request_id:
+        type: number
+      publisher_name:
+        type: string
+      contact_person:
+        type:
+          - string
+          - 'null'
+      email:
+        type:
+          - string
+          - 'null'
+      phone:
+        type:
+          - string
+          - 'null'
+      address:
+        type:
+          - string
+          - 'null'
+      zip:
+        type:
+          - string
+          - 'null'
+      city:
+        type:
+          - string
+          - 'null'
+      lang_code:
+        $ref: '../../enums/lang-code.yaml'
+  - $ref: '../common/created-metadata.yaml'

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "form": {
-    "publisher": "Foo Publisher",
+    "publisher_name": "Foo Publisher",
     "contact_person": "Foo Bar",
     "email": "example@example.com",
     "phone": "123456789",

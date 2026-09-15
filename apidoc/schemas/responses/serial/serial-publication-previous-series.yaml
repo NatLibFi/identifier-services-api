@@ -1,0 +1,14 @@
+type: object
+properties:
+  title:
+    type:
+      - string
+      - 'null'
+  issn:
+    type:
+      - string
+      - 'null'
+  last_issue:
+    type:
+      - string
+      - 'null'

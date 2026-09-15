@@ -1,0 +1,15 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      issn_range_id:
+        type: number
+      serial_publication_id:
+        type:
+          - number
+          - 'null'
+      identifier:
+        type: string
+  - $ref: '../common/created-metadata.yaml'
+  - $ref: '../common/modified-metadata.yaml'

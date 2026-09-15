@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 422,
+  "title": "Unprocessable entity",
+  "detail": "Serial publication request publisher may only be changed independently from other attributes.",
+  "instance": "/v2/serial/publication-requests/1"
+}

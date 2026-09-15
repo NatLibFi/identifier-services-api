@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot change serial publication request publisher when it's status is COMPLETED",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

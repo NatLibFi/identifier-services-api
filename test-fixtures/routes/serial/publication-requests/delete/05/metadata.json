@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete serial publication request if it is associated with a message",
+  "url": "/v2/serial/publication-requests/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

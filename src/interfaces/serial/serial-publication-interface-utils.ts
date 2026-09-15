@@ -1,8 +1,20 @@
-import type { SerialPublicationArchiveInsert } from '../../db/types/serial/types-serial-publication-archive.ts';
-import type { SerialPublicationInsert } from '../../db/types/serial/types-serial-publication.ts';
+import HttpStatus from 'http-status';
+
+import { getKysely } from '../../db/database.ts';
+import { ApiError } from '../../utils/api-error.ts';
 import { getCurrentTime } from '../shared-interface-utils.ts';
 
-export function getSerialPublicationArchiveEntry(
+import { asSerialPublicationArchiveAdminRead } from '../../dtl/serial/serial-publication-archive-dtl.ts';
+
+import type { SerialPublicationInsert } from '../../db/types/serial/types-serial-publication.ts';
+import type {
+  SerialPublicationArchiveInsert,
+  SerialPublicationArchiveSelect,
+} from '../../db/types/serial/types-serial-publication-archive.ts';
+import type { Database } from '../../db/types.ts';
+import type { Transaction } from 'kysely';
+
+export function getNewSerialPublicationArchiveEntryDbEntry(
   p: SerialPublicationInsert,
   publicationId: number,
 ): SerialPublicationArchiveInsert {
@@ -30,4 +42,34 @@ export function getSerialPublicationArchiveEntry(
     created: getCurrentTime(),
     created_by: p.created_by,
   };
+}
+
+export async function getSerialPublicationArchiveEntry(
+  serialPublicationId: number,
+  trx?: Transaction<Database>,
+): Promise<SerialPublicationArchiveSelect | null> {
+  // Use transaction if provided
+  const db = trx ? trx : getKysely();
+
+  const dbResult = await db
+    .selectFrom('serial_publication_archive')
+    .selectAll()
+    .where('serial_publication_id', '=', serialPublicationId)
+    .execute();
+
+  const archiveEntry = dbResult[0];
+
+  if (dbResult.length === 0 || !archiveEntry) {
+    return null;
+  }
+
+  if (dbResult.length > 1) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Serial publication id ${serialPublicationId} is associated with ${dbResult.length} archive entries. This should not happen. Please notify system administrators.`,
+    );
+  }
+
+  return asSerialPublicationArchiveAdminRead(archiveEntry);
 }

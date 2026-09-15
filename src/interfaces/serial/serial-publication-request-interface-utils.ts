@@ -1,9 +1,21 @@
+import HttpStatus from 'http-status';
+
 import {
   APPLICATION_USER_UI_PUBLIC,
-  SERIAL_PUBLICATION_REQUEST_STATUSES,
+  SERIAL_PUBLICATION_REQUEST_STATUS,
   SERIAL_PUBLICATION_STATUS,
 } from '../../constants.ts';
-import { getCurrentTime } from '../shared-interface-utils.ts';
+
+import { ApiError } from '../../utils/api-error.ts';
+import { getKysely } from '../../db/database.ts';
+import { getCurrentTime, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
+
+import { readSerialPublication } from './serial-publication-interface.ts';
+import { readSerialPublisher } from './serial-publisher-interface.ts';
+import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
+
+import { asSerialPublicationRequestArchiveAdminRead } from '../../dtl/serial/serial-publication-request-archive-dtl.ts';
+import { asSerialMessageAdminRead } from '../../dtl/serial/serial-message-dtl.ts';
 
 import type { SerialPublicationRequestInsert } from '../../db/types/serial/types-serial-publication-request.ts';
 import type {
@@ -16,7 +28,13 @@ import type {
   CreateSerialPublicationRequestV1Http,
   CreateSerialPublicationRequestV2Http,
 } from '../../validations/serial/serial-publication-request-validation.ts';
-import type { SerialPublicationRequestArchiveInsert } from '../../db/types/serial/types-serial-publication-request-archive.ts';
+import type {
+  SerialPublicationRequestArchiveInsert,
+  SerialPublicationRequestArchiveSelect,
+} from '../../db/types/serial/types-serial-publication-request-archive.ts';
+import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
+import type { SerialMessageSelect } from '../../db/types/serial/types-serial-message.ts';
+import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
 type SerialPublicationInsertWithoutRequest = Omit<SerialPublicationInsert, 'serial_publication_request_id'>;
 
@@ -87,7 +105,7 @@ export function getSerialPublicationRequestDbV1(
 ): SerialPublicationRequestDbCreate {
   const request: SerialPublicationRequestInsert = {
     serial_publisher_id: null,
-    status: SERIAL_PUBLICATION_REQUEST_STATUSES.NOT_HANDLED,
+    status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED,
     publisher_name: httpCreateDoc.form.publisher,
     contact_person: httpCreateDoc.form.contactPerson,
     email: httpCreateDoc.form.email,
@@ -146,8 +164,8 @@ export function getSerialPublicationRequestDbV2(
 ): SerialPublicationRequestDbCreate {
   const request: SerialPublicationRequestInsert = {
     serial_publisher_id: null,
-    status: SERIAL_PUBLICATION_REQUEST_STATUSES.NOT_HANDLED,
-    publisher_name: httpCreateDoc.form.publisher,
+    status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED,
+    publisher_name: httpCreateDoc.form.publisher_name,
     contact_person: httpCreateDoc.form.contact_person,
     email: httpCreateDoc.form.email,
     phone: httpCreateDoc.form.phone,
@@ -192,7 +210,7 @@ export function getSerialPublicationRequestDbV2(
   return { request, publications };
 }
 
-export function getArchiveEntry(
+export function getNewSerialPublicationRequestArchiveDbEntry(
   r: SerialPublicationRequestInsert,
   requestId: number,
 ): SerialPublicationRequestArchiveInsert {
@@ -209,4 +227,189 @@ export function getArchiveEntry(
     created: getCurrentTime(),
     created_by: r.created_by,
   };
+}
+
+export async function getSerialRequestPublications(
+  serialPublicationRequestId: number,
+): Promise<SerialPublicationAdminRead[]> {
+  const db = getKysely();
+  const publicationIds = await db
+    .selectFrom('serial_publication')
+    .select('id')
+    .where('serial_publication_request_id', '=', serialPublicationRequestId)
+    .execute();
+
+  return await Promise.all(
+    publicationIds.map(async ({ id: publicationId }) => await readSerialPublication(publicationId)),
+  );
+}
+
+export async function getSerialPublicationRequestArchiveEntry(
+  serialPublicationRequestId: number,
+): Promise<SerialPublicationRequestArchiveSelect | null> {
+  const db = getKysely();
+
+  const dbResult = await db
+    .selectFrom('serial_publication_request_archive')
+    .selectAll()
+    .where('serial_publication_request_id', '=', serialPublicationRequestId)
+    .execute();
+
+  const archiveEntry = dbResult[0];
+
+  if (dbResult.length === 0 || !archiveEntry) {
+    return null;
+  }
+
+  if (dbResult.length > 1) {
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      `Serial publication request id ${serialPublicationRequestId} is associated with ${dbResult.length} archive entries. This should not happen. Please notify system administrators.`,
+    );
+  }
+
+  return asSerialPublicationRequestArchiveAdminRead(archiveEntry);
+}
+
+export async function getSerialPublicationRequestMessages(
+  serialPublicationRequestId: number,
+): Promise<SerialMessageSelect[]> {
+  const db = getKysely();
+
+  const dbResult = await db
+    .selectFrom('serial_message')
+    .selectAll()
+    .where('serial_publication_request_id', '=', serialPublicationRequestId)
+    .execute();
+
+  return dbResult.map(asSerialMessageAdminRead);
+}
+
+export async function changeSerialPublicationRequestPublisher(
+  r: SerialPublicationRequestAdminRead,
+  newPublisherId: number | null,
+  user: RequestUser,
+) {
+  if (newPublisherId !== null) {
+    // Verify publisher exists in db by utilizing serial publisher interface
+    await readSerialPublisher(newPublisherId);
+  }
+
+  // Disallow changing publisher after a message has been sent
+  const associatedMessages = await getSerialPublicationRequestMessages(r.id);
+
+  if (associatedMessages.length > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${r.id} is associated with ${associatedMessages.length} messages. Publisher can no longer be edited for the request.`,
+    );
+  }
+
+  // Disallow changing publisher for completed request
+  if (r.status === SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${r.id} is already in completed state. Publisher can no longer be edited for the request.`,
+    );
+  }
+
+  // Change publisher for the form and all associated publications within transaction
+  const db = getKysely();
+
+  await db.transaction().execute(async (trx) => {
+    // Update associated publications
+    const publicationUpdateResult = await trx
+      .updateTable('serial_publication')
+      .set({ serial_publisher_id: newPublisherId, modified: getCurrentTime(), modified_by: user.id })
+      .where('serial_publication_request_id', '=', r.id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(publicationUpdateResult, r.publications.length);
+
+    // Update request
+    const requestUpdateResult = await trx
+      .updateTable('serial_publication_request')
+      .set({ serial_publisher_id: newPublisherId, modified: getCurrentTime(), modified_by: user.id })
+      .where('id', '=', r.id)
+      .executeTakeFirstOrThrow();
+    validateRowsUpdatedExact(requestUpdateResult, 1);
+  });
+
+  // Return using lite read interface similar to other updates
+  return readSerialPublicationRequest(r.id, true);
+}
+
+export async function changeSerialPublicationRequestStatus(
+  r: SerialPublicationRequestAdminRead,
+  newStatus: string,
+  user: RequestUser,
+) {
+  // Block rejecting request if any associated publications has ISSN identifier assigned
+  const rejecting = newStatus === SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED;
+
+  // Verify no ISSN association exists and status is in sync
+  const publicationsWithIssn = r.publications
+    .filter((p) => Boolean(p.issn_identifier) || p.status !== SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED)
+    .map((p) => p.id);
+
+  if (rejecting && publicationsWithIssn.length > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${r.id} publication ids ${publicationsWithIssn.join(', ')} have ISSN assigned already and thus request cannot be rejected.`,
+    );
+  }
+
+  const notMessagedStatuses = [
+    SERIAL_PUBLICATION_REQUEST_STATUS.NOT_NOTIFIED,
+    SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED,
+  ];
+
+  if (notMessagedStatuses.includes(newStatus)) {
+    const associatedMessages = await getSerialPublicationRequestMessages(r.id);
+    if (associatedMessages.length > 0) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Serial publication request id ${r.id} has ${associatedMessages.length} associated messages and thus request cannot be reset to NOT_NOTIFIED or NOT_HANDLED.`,
+      );
+    }
+  }
+
+  const db = getKysely();
+  await db.transaction().execute(async (trx) => {
+    // Note: since precondition of having NO_ISSN_GRANTED status has been verified for all associated publications,
+    // status change for them is not needed here. Update here is leftover and serves as a sanity check.
+    if (rejecting) {
+      const publicationDbUpdate = {
+        status: SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      };
+
+      const publicationUpdateResult = await trx
+        .updateTable('serial_publication')
+        .set(publicationDbUpdate)
+        .where('serial_publication_request_id', '=', r.id)
+        .where('status', '!=', SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED)
+        .executeTakeFirstOrThrow();
+
+      // Sanity check: no rows should be updateable
+      validateRowsUpdatedExact(publicationUpdateResult, 0);
+    }
+
+    const requestDbUpdate = { status: newStatus, modified: getCurrentTime(), modified_by: user.id };
+    const requestUpdateResult = await trx
+      .updateTable('serial_publication_request')
+      .set(requestDbUpdate)
+      .where('id', '=', r.id)
+      .executeTakeFirstOrThrow();
+    validateRowsUpdatedExact(requestUpdateResult, 1);
+  });
+
+  // Return using lite read interface similar to other updates
+  return readSerialPublicationRequest(r.id, true);
 }

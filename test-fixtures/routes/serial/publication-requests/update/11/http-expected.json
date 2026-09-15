@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication request id 1 publication ids 1 have ISSN assigned already and thus request cannot be rejected.",
+  "instance": "/v2/serial/publication-requests/1"
+}
