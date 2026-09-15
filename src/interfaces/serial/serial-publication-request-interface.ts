@@ -15,6 +15,7 @@ import {
 import {
   asSerialPublicationRequestAdminRead,
   asSerialPublicationRequestAdminReadLite,
+  asSerialPublicationRequestSearchResult,
   type SerialPublicationRequestAdminRead,
 } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
@@ -33,6 +34,7 @@ import {
 
 import type {
   CreateSerialPublicationRequestHttp,
+  SearchSerialPublicationRequestHttp,
   UpdateSerialPublicationRequestHttp,
 } from '../../validations/serial/serial-publication-request-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -277,4 +279,62 @@ export async function deleteSerialPublicationRequest(id: number) {
   });
 
   return;
+}
+
+export async function searchSerialPublicationRequest(searchParameters: SearchSerialPublicationRequestHttp) {
+  const { search_text, status, serial_publisher_id, limit, offset } = searchParameters;
+
+  const db = getKysely();
+  let query = db.selectFrom('serial_publication_request');
+
+  if (search_text) {
+    const normalizedSearch = `%${search_text.trim()}%`.toLowerCase();
+
+    query = query.where((eb) =>
+      eb.or([
+        eb(eb.fn('lower', ['publisher_name']), 'like', normalizedSearch),
+        eb(eb.fn('lower', ['email']), 'like', normalizedSearch),
+      ]),
+    );
+  }
+
+  if (status) {
+    query = query.where('status', '=', status);
+  }
+
+  if (serial_publisher_id) {
+    query = query.where('serial_publisher_id', '=', serial_publisher_id);
+  }
+
+  const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('total_doc'));
+  const { total_doc } = await countQuery.executeTakeFirstOrThrow();
+
+  query = query.selectAll('serial_publication_request').orderBy('id', 'desc').limit(limit).offset(offset);
+
+  // @ts-expect-error query builder does not understand typing here
+  const result: SerialPublisherSelect[] = await query.execute();
+
+  return {
+    total_doc,
+    results: await Promise.all(
+      result.map(async (p) => {
+        const publications = await getSerialRequestPublications(p.id);
+
+        const publicationInfo = publications.reduce(
+          (p, n) => {
+            p.total += 1;
+
+            if (n.issn_identifier) {
+              p.with_issn += 1;
+            }
+
+            return p;
+          },
+          { total: 0, with_issn: 0 },
+        );
+
+        return asSerialPublicationRequestSearchResult(p, publicationInfo.total, publicationInfo.with_issn);
+      }),
+    ),
+  };
 }

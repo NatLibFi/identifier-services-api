@@ -1,6 +1,6 @@
 post:
-  operationId: searchSerialPublisher
-  summary: Search a serial publishers
+  operationId: searchSerialPublicationRequest
+  summary: Search serial publication requests
   security:
     - openId:
         - admin
@@ -11,7 +11,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../../schemas/requests/serial/serial-publisher/serial-publisher-search-body.yaml'
+          $ref: '../../../schemas/requests/serial/serial-publication-request/serial-publication-request-search-body.yaml'
   responses:
     '200':
       description: Ok
@@ -25,7 +25,7 @@ post:
               results:
                 type: array
                 items:
-                  $ref: '../../../schemas/responses/serial/serial-publisher-search.yaml'
+                  $ref: '../../../schemas/responses/serial/serial-publication-request-search-result.yaml'
     '401':
       description: Unauthorized
     '403':

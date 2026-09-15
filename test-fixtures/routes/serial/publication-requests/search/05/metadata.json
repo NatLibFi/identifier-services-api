@@ -1,0 +1,7 @@
+{
+  "description": "[admin] serial publisher filter, offset and limit works",
+  "url": "/v2/serial/publication-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

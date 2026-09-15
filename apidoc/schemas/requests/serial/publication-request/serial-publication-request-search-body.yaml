@@ -1,0 +1,20 @@
+type: object
+properties:
+  search_text:
+    type: string
+    maxLength: 100
+  status:
+    $ref: '../../../enums/serial/serial-publication-request-status.yaml'
+  serial_publisher_id:
+    type: number
+  limit:
+    type: number
+    minimum: 1
+    maximum: 50
+  offset:
+    type: number
+    minimum: 0
+    maximum: 100000
+required:
+  - limit
+  - offset

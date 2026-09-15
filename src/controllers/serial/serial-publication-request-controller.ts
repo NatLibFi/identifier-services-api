@@ -43,3 +43,12 @@ export async function deleteSerialPublicationRequest(req: Request, res: Response
     return next(error);
   }
 }
+
+export async function searchSerialPublicationRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationRequestInterface.searchSerialPublicationRequest(req.body);
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

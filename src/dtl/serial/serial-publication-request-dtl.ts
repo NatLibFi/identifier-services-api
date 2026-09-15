@@ -7,6 +7,16 @@ export interface SerialPublicationRequestAdminRead extends SerialPublicationRequ
   publications: SerialPublicationAdminRead[];
 }
 
+export interface SerialPublicationRequestSearchResult {
+  id: number;
+  status: string;
+  publisher_name: string;
+  email: string | null;
+  publication_count: number;
+  publication_count_issn: number;
+  created: Date;
+}
+
 export function asSerialPublicationRequestAdminRead(
   request: SerialPublicationRequestSelect,
   archive_entry: SerialPublicationRequestArchiveSelect | null,
@@ -89,5 +99,23 @@ export function asSerialPublicationRequestAdminReadLite(
     created_by,
     modified,
     modified_by,
+  };
+}
+
+export function asSerialPublicationRequestSearchResult(
+  request: SerialPublicationRequestSelect,
+  publicationCount: number,
+  publicationCountIssn: number,
+): SerialPublicationRequestSearchResult {
+  const { id, status, publisher_name, email, created } = request;
+
+  return {
+    id,
+    status,
+    publisher_name,
+    email,
+    publication_count: publicationCount,
+    publication_count_issn: publicationCountIssn,
+    created,
   };
 }

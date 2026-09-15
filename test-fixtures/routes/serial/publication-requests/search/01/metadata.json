@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can search serial publication request",
+  "url": "/v2/serial/publication-requests/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

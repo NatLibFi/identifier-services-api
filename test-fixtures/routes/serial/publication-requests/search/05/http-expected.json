@@ -1,0 +1,14 @@
+{
+  "total_doc": 2,
+  "results": [
+    {
+      "id": 1,
+      "status": "NOT_HANDLED",
+      "publisher_name": "Foo Publisher",
+      "email": "example@example.com",
+      "publication_count": 1,
+      "publication_count_issn": 0,
+      "created": "2025-01-20T12:00:00.000Z"
+    }
+  ]
+}

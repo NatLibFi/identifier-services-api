@@ -1,0 +1,18 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      status:
+        $ref: '../../enums/serial/serial-publication-request-status.yaml'
+      publisher_name:
+        type: string
+      email:
+        type:
+          - string
+          - 'null'
+      publication_count:
+        type: number
+      publication_count_issn:
+        type: number
+  - $ref: '../common/created-metadata.yaml'

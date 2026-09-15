@@ -4,6 +4,7 @@ import * as serialPublicationRequestControllers from '../../controllers/serial/s
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import {
   createSerialPublicationRequestSchema,
+  searchSerialPublicationRequestSchema,
   updateSerialPublicationRequestSchema,
 } from '../../validations/serial/serial-publication-request-validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
@@ -19,6 +20,13 @@ export default function createSerialPublicationRequestRouter(turnstileMiddleware
     turnstileMiddleware,
     validateRequestBody(createSerialPublicationRequestSchema),
     serialPublicationRequestControllers.createSerialPublicationRequest,
+  );
+
+  serialPublicationRequestRouter.post(
+    '/search',
+    allowAdminOnly,
+    validateRequestBody(searchSerialPublicationRequestSchema),
+    serialPublicationRequestControllers.searchSerialPublicationRequest,
   );
 
   serialPublicationRequestRouter.get(

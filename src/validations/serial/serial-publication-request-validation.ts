@@ -175,9 +175,19 @@ export const createSerialPublicationRequestSchema = z.discriminatedUnion('versio
   createSerialPublicationRequestV2Schema,
 ]);
 
+export const searchSerialPublicationRequestSchema = z.object({
+  search_text: z.string().max(100).optional(),
+  status: z.enum(serialPublicationRequestStatusEnum).optional().nullable(),
+  serial_publisher_id: z.number().min(1).max(Number.MAX_SAFE_INTEGER).optional(),
+  limit: z.number().min(1).max(50),
+  offset: z.number().min(0).max(100000),
+});
+
 export type CreateSerialPublicationRequestHttp = z.infer<typeof createSerialPublicationRequestSchema>;
 
 export type CreateSerialPublicationRequestV1Http = z.infer<typeof createSerialPublicationRequestV1Schema>;
 export type CreateSerialPublicationRequestV2Http = z.infer<typeof createSerialPublicationRequestV2Schema>;
 
 export type UpdateSerialPublicationRequestHttp = z.infer<typeof updateSerialPublicationRequestSchema>;
+
+export type SearchSerialPublicationRequestHttp = z.infer<typeof searchSerialPublicationRequestSchema>;
