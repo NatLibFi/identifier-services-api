@@ -116,7 +116,6 @@ export const createSerialPublicationRequestV2Schema = z
               }),
             )
             .max(5)
-            .nullable()
             .optional(),
           main_series: z
             .array(
@@ -126,7 +125,6 @@ export const createSerialPublicationRequestV2Schema = z
               }),
             )
             .max(5)
-            .nullable()
             .optional(),
           subseries: z
             .array(
@@ -136,7 +134,6 @@ export const createSerialPublicationRequestV2Schema = z
               }),
             )
             .max(5)
-            .nullable()
             .optional(),
           another_medium: z
             .array(
@@ -146,7 +143,6 @@ export const createSerialPublicationRequestV2Schema = z
               }),
             )
             .max(5)
-            .nullable()
             .optional(),
           additional_info: z.string().max(2000).nullable().optional(),
         }),
@@ -158,13 +154,14 @@ export const createSerialPublicationRequestV2Schema = z
 
 export const updateSerialPublicationRequestSchema = z.object({
   publisher_name: z.string().max(100).optional(),
-  contact_person: z.string().max(100).optional(),
+  contact_person: z.string().max(100).nullable().optional(),
   email: z.email().max(100).nullable().optional(),
   phone: z.string().max(30).nullable().optional(),
   address: z.string().max(50).nullable().optional(),
   zip: z.string().max(10).nullable().optional(),
   city: z.string().max(50).nullable().optional(),
   lang_code: z.enum(langCodeEnum).optional(),
+  additional_info: z.string().max(2000).nullable().optional(),
   status: z.enum(serialPublicationRequestStatusEnum).optional(), // Note: business logic constraints exist
   serial_publisher_id: z.number().min(1).max(Number.MAX_SAFE_INTEGER).nullable().optional(), // Note: business logic constraints exist
 });
