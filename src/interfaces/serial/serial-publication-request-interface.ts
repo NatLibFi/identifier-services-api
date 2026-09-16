@@ -111,7 +111,14 @@ export async function readSerialPublicationRequest(
   lite = false,
 ): Promise<SerialPublicationRequestSelect | SerialPublicationRequestAdminRead> {
   const db = getKysely();
-  const dbResult = await db.selectFrom('serial_publication_request').selectAll().where('id', '=', id).execute();
+  const dbResult = await db
+    .selectFrom('serial_publication_request')
+    .leftJoin('serial_publisher', 'serial_publisher.id', 'serial_publication_request.serial_publisher_id')
+    .selectAll('serial_publication_request')
+    .select(['serial_publisher.official_name as serial_publisher_name'])
+    .where('serial_publication_request.id', '=', id)
+    .execute();
+
   const serialPublicationRequestResult = validateGetById(dbResult);
 
   // For cases where associations are not required

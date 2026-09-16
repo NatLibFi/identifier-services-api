@@ -7,6 +7,10 @@ allOf:
         type:
           - number
           - 'null'
+      serial_publisher_name:
+        type:
+          - string
+          - 'null'
       status:
         $ref: '../../enums/serial/serial-publication-request-status.yaml'
       publisher_name:

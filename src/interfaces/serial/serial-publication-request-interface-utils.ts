@@ -347,7 +347,18 @@ export async function changeSerialPublicationRequestStatus(
   newStatus: string,
   user: RequestUser,
 ) {
+  // Disallow update operation on no status change
+  const statusNotChanged = newStatus === r.status;
+  if (statusNotChanged) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${r.id} status is already ${newStatus} - refusing to re-save.`,
+    );
+  }
+
   // Block rejecting request if any associated publications has ISSN identifier assigned
+  const accepting = newStatus === SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED;
   const rejecting = newStatus === SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED;
 
   // Verify no ISSN association exists and status is in sync
@@ -360,6 +371,19 @@ export async function changeSerialPublicationRequestStatus(
       HttpStatus.CONFLICT,
       'Conflict',
       `Serial publication request id ${r.id} publication ids ${publicationsWithIssn.join(', ')} have ISSN assigned already and thus request cannot be rejected.`,
+    );
+  }
+
+  // Disallow completing request when there are publications without ISSN
+  const publicationsWithoutIssn = r.publications
+    .filter((p) => !p.issn_identifier || p.status === SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED)
+    .map((p) => p.id);
+
+  if (accepting && publicationsWithoutIssn.length > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${r.id} publication ids ${publicationsWithoutIssn.join(', ')} do not have ISSN assigned and thus request cannot be completed.`,
     );
   }
 

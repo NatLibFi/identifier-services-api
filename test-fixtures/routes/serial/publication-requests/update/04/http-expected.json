@@ -1,6 +1,7 @@
 {
   "id": 1,
   "serial_publisher_id": 1,
+  "serial_publisher_name": "Example serial publisher",
   "status": "NOT_HANDLED",
   "publisher_name": "Foo Publisher",
   "contact_person": "Foo Bar",

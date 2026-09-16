@@ -2,7 +2,11 @@ import type { SerialPublicationRequestArchiveSelect } from '../../db/types/seria
 import type { SerialPublicationRequestSelect } from '../../db/types/serial/types-serial-publication-request.ts';
 import type { SerialPublicationAdminRead } from './serial-publication-dtl.ts';
 
-export interface SerialPublicationRequestAdminRead extends SerialPublicationRequestSelect {
+export interface SerialPublicationRequestSelectExtended extends SerialPublicationRequestSelect {
+  serial_publisher_name: string | null;
+}
+
+export interface SerialPublicationRequestAdminRead extends SerialPublicationRequestSelectExtended {
   archive_entry: SerialPublicationRequestArchiveSelect | null;
   publications: SerialPublicationAdminRead[];
 }
@@ -18,13 +22,14 @@ export interface SerialPublicationRequestSearchResult {
 }
 
 export function asSerialPublicationRequestAdminRead(
-  request: SerialPublicationRequestSelect,
+  request: SerialPublicationRequestSelectExtended,
   archive_entry: SerialPublicationRequestArchiveSelect | null,
   publications: SerialPublicationAdminRead[],
 ): SerialPublicationRequestAdminRead {
   const {
     id,
     serial_publisher_id,
+    serial_publisher_name,
     status,
     publisher_name,
     contact_person,
@@ -43,6 +48,7 @@ export function asSerialPublicationRequestAdminRead(
   return {
     id,
     serial_publisher_id,
+    serial_publisher_name,
     status,
     publisher_name,
     contact_person,
@@ -63,11 +69,12 @@ export function asSerialPublicationRequestAdminRead(
 
 // Used for HTTP update since archive entry and publications do not change when updating serial publication request
 export function asSerialPublicationRequestAdminReadLite(
-  request: SerialPublicationRequestSelect,
-): SerialPublicationRequestSelect {
+  request: SerialPublicationRequestSelectExtended,
+): SerialPublicationRequestSelectExtended {
   const {
     id,
     serial_publisher_id,
+    serial_publisher_name,
     status,
     publisher_name,
     contact_person,
@@ -86,6 +93,7 @@ export function asSerialPublicationRequestAdminReadLite(
   return {
     id,
     serial_publisher_id,
+    serial_publisher_name,
     status,
     publisher_name,
     contact_person,
