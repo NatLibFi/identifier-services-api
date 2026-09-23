@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can add new serial publication to serial publication request - request status is also appropriately changed",
+  "url": "/v2/serial/publication-requests/1/add-publication",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot update serial publication to status requiring ISSN identifier if publication has not been assigned one",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

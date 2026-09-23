@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot add new serial publication to serial publication request that has been rejected",
+  "url": "/v2/serial/publication-requests/2/add-publication",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot delete serial publication when ISSN has been assigned",
+  "url": "/v2/serial/publications/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 409
+}

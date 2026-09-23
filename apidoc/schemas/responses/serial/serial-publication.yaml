@@ -80,6 +80,6 @@ allOf:
       issn_identifier:
         $ref: './issn-identifier.yaml'
       archive_entry:
-        $ref: './serial-publication-archive-entry.yaml'
+        $ref: './serial-publication-archive.yaml'
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

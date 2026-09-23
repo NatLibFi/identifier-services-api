@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can update serial publication",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 200
+}

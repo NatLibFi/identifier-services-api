@@ -9,6 +9,7 @@ import {
   serialPublicationTypeEnum,
 } from '../common-validation-enum.ts';
 import { issnLikeString, yearString } from '../common-validation-regex.ts';
+import { createSerialPublicationSchema } from './serial-publication-validation.ts';
 
 export const createSerialPublicationRequestV1Schema = z
   .object({
@@ -90,65 +91,7 @@ export const createSerialPublicationRequestV2Schema = z
       city: z.string().max(50).nullable().optional(),
       lang_code: z.enum(langCodeEnum),
     }),
-    publications: z
-      .array(
-        z.object({
-          title: z.string().max(200),
-          subtitle: z.string().max(200).nullable().optional(),
-          place_of_publication: z.string().max(100).nullable().optional(),
-          printer: z.string().max(100).nullable().optional(),
-          issued_from_year: z.string().min(4).max(4).regex(yearString),
-          issued_from_number: z.string().max(100).nullable().optional(),
-          frequency: z.enum(serialFrequencyEnum),
-          frequency_other: z.string().max(50).nullable().optional(),
-          language: z.enum(publicationLanguageEnum),
-          publication_type: z.enum(serialPublicationTypeEnum),
-          publication_type_other: z.string().max(50).nullable().optional(),
-          medium: z.enum(serialMediumEnum),
-          medium_other: z.string().max(50).nullable().optional(),
-          url: z.string().max(100).nullable().optional(),
-          previous: z
-            .array(
-              z.object({
-                title: z.string().max(100),
-                issn: z.string().regex(issnLikeString).optional().nullable(),
-                lastIssue: z.string().max(50).optional().nullable(),
-              }),
-            )
-            .max(5)
-            .optional(),
-          main_series: z
-            .array(
-              z.object({
-                title: z.string().max(100),
-                issn: z.string().regex(issnLikeString).optional().nullable(),
-              }),
-            )
-            .max(5)
-            .optional(),
-          subseries: z
-            .array(
-              z.object({
-                title: z.string().max(100),
-                issn: z.string().regex(issnLikeString).optional().nullable(),
-              }),
-            )
-            .max(5)
-            .optional(),
-          another_medium: z
-            .array(
-              z.object({
-                title: z.string().max(100),
-                issn: z.string().regex(issnLikeString).optional().nullable(),
-              }),
-            )
-            .max(5)
-            .optional(),
-          additional_info: z.string().max(2000).nullable().optional(),
-        }),
-      )
-      .min(1)
-      .max(4),
+    publications: z.array(createSerialPublicationSchema).min(1).max(4),
   })
   .strict();
 

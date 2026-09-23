@@ -1,0 +1,11 @@
+{
+  "title": "A new publication",
+  "place_of_publication": "Foobarila",
+  "printer": "Foo printer",
+  "issued_from_year": "2099",
+  "issued_from_number": "1",
+  "frequency": "#",
+  "language": "FIN",
+  "publication_type": "OTHER_SERIAL",
+  "medium": "PRINTED"
+}

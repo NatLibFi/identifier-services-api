@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may search using ISSN identifier",
+  "url": "/v2/serial/publications/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

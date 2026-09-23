@@ -39,7 +39,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../../schemas/requests/serial/serial-publication-request/serial-publication-request-update-body.yaml'
+          $ref: '../../../schemas/requests/serial/publication-request/serial-publication-request-update-body.yaml'
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

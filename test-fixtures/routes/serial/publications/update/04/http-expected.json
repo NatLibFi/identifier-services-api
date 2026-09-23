@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Medium cannot be changed after ISSN has been assigned to publication.",
+  "instance": "/v2/serial/publications/1"
+}

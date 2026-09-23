@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication request id 2 has already been rejected. New publications cannot be added.",
+  "instance": "/v2/serial/publication-requests/2/add-publication"
+}

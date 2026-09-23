@@ -1,0 +1,103 @@
+type: object
+properties:
+  title:
+    type: string
+    maximum: 200
+  subtitle:
+    type:
+      - string
+      - 'null'
+    maximum: 200
+  place_of_publication:
+    type:
+      - string
+      - 'null'
+    maximum: 100
+  printer:
+    type:
+      - string
+      - 'null'
+    maximum: 100
+  issued_from_year:
+    $ref: '../../../patterns/year-string.yaml'
+  issued_from_number:
+    type:
+      - string
+      - 'null'
+    maximum: 100
+  frequency:
+    $ref: '../../../enums/serial/serial-publication-frequency.yaml'
+  frequency_other:
+    type:
+      - string
+      - 'null'
+    maximum: 50
+  language:
+    $ref: '../../../enums/item-language.yaml'
+  publication_type:
+    $ref: '../../../enums/serial/serial-publication-type.yaml'
+  publication_type_other:
+    type:
+      - string
+      - 'null'
+    maximum: 50
+  medium:
+    $ref: '../../../enums/serial/serial-publication-medium.yaml'
+  medium_other:
+    type:
+      - string
+      - 'null'
+    maximum: 50
+  url:
+    type: string
+    maximum: 100
+  previous:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+          maximum: 100
+        issn:
+          $ref: '../../../patterns/issn-identifier-pattern.yaml'
+        last_issue:
+          type: string
+          maximum: 50
+  main_series:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+          maximum: 100
+        issn:
+          $ref: '../../../patterns/issn-identifier-pattern.yaml'
+  subseries:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+          maximum: 100
+        issn:
+          $ref: '../../../patterns/issn-identifier-pattern.yaml'
+  another_medium:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+          maximum: 100
+        issn:
+          $ref: '../../../patterns/issn-identifier-pattern.yaml'
+  additional_info:
+    type:
+      - string
+      - 'null'
+    maximum: 2000
+required:
+  - title

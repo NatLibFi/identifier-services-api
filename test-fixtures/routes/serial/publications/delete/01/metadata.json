@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can delete serial publication that does not have ISSN",
+  "url": "/v2/serial/publications/1",
+  "method": "DELETE",
+  "role": "admin",
+  "expectedStatus": 204
+}

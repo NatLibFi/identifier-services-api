@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot search serial publications",
+  "url": "/v2/serial/publications/search",
+  "method": "POST",
+  "expectedStatus": 401
+}

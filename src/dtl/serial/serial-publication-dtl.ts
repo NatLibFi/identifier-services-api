@@ -2,6 +2,16 @@ import type { IssnIdentifierSelect } from '../../db/types/serial/types-isnn-iden
 import type { SerialPublicationArchiveSelect } from '../../db/types/serial/types-serial-publication-archive.ts';
 import type { SerialPublicationSelect } from '../../db/types/serial/types-serial-publication.ts';
 
+export interface SerialPublicationSearchResult {
+  id: number;
+  issn: string | null;
+  title: string;
+  language: string | null;
+  medium: string;
+  status: string;
+  created: Date;
+}
+
 export interface SerialPublicationAdminRead extends SerialPublicationSelect {
   issn_identifier: IssnIdentifierSelect | null;
   archive_entry: SerialPublicationArchiveSelect | null;
@@ -72,5 +82,19 @@ export function asSerialPublicationAdminRead(
     created_by,
     modified,
     modified_by,
+  };
+}
+
+export function asSerialPublicationSearchResult(p: SerialPublicationSearchResult): SerialPublicationSearchResult {
+  const { id, issn, title, language, medium, status, created } = p;
+
+  return {
+    id,
+    issn,
+    title,
+    language,
+    medium,
+    status,
+    created,
   };
 }

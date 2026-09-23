@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can search using serial publisher id (also limit and offset work)",
+  "url": "/v2/serial/publications/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

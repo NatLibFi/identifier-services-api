@@ -52,3 +52,16 @@ export async function searchSerialPublicationRequest(req: Request, res: Response
     return next(error);
   }
 }
+
+export async function addSerialPublication(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationRequestInterface.addSerialPublication(
+      Number(req.params['id']),
+      req.body,
+      req.user,
+    );
+    return res.status(HttpStatus.CREATED).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

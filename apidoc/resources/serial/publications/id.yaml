@@ -1,0 +1,59 @@
+patch:
+  operationId: updateSerialPublication
+  summary: Update serial publication
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/serial/serial-publication/serial-publication-update-body.yaml'
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Resource was updated
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/serial-publication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
+delete:
+  operationId: deleteSerialPublication
+  summary: Delete serial publication
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Resource was deleted
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    default:
+      $ref: '../../../responses/error.yaml'

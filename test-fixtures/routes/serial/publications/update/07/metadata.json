@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot update status simultaneously with other attributes",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 422
+}

@@ -11,6 +11,7 @@ import { idParameterSchema } from '../../validations/common-validation.ts';
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 import type { MiddlewareFunction } from '../../generic-types.ts';
+import { createSerialPublicationSchema } from '../../validations/serial/serial-publication-validation.ts';
 
 export default function createSerialPublicationRequestRouter(turnstileMiddleware: MiddlewareFunction) {
   const serialPublicationRequestRouter = Router();
@@ -20,13 +21,6 @@ export default function createSerialPublicationRequestRouter(turnstileMiddleware
     turnstileMiddleware,
     validateRequestBody(createSerialPublicationRequestSchema),
     serialPublicationRequestControllers.createSerialPublicationRequest,
-  );
-
-  serialPublicationRequestRouter.post(
-    '/search',
-    allowAdminOnly,
-    validateRequestBody(searchSerialPublicationRequestSchema),
-    serialPublicationRequestControllers.searchSerialPublicationRequest,
   );
 
   serialPublicationRequestRouter.get(
@@ -48,6 +42,21 @@ export default function createSerialPublicationRequestRouter(turnstileMiddleware
     validateRequestParams(idParameterSchema, true),
     validateRequestBody(updateSerialPublicationRequestSchema),
     serialPublicationRequestControllers.updateSerialPublicationRequest,
+  );
+
+  serialPublicationRequestRouter.post(
+    '/:id/add-publication',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema, true),
+    validateRequestBody(createSerialPublicationSchema),
+    serialPublicationRequestControllers.addSerialPublication,
+  );
+
+  serialPublicationRequestRouter.post(
+    '/search',
+    allowAdminOnly,
+    validateRequestBody(searchSerialPublicationRequestSchema),
+    serialPublicationRequestControllers.searchSerialPublicationRequest,
   );
 
   return serialPublicationRequestRouter;

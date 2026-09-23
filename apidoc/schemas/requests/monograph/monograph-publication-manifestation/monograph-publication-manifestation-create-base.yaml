@@ -35,7 +35,7 @@ properties:
           maximum: 200
         issn:
           oneOf:
-            - $ref: '../../../patterns/issn-identifier.yaml'
+            - $ref: '../../../patterns/issn-identifier-pattern.yaml'
             - type: 'null'
         volume:
           maximum: 20

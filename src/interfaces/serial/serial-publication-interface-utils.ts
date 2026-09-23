@@ -2,9 +2,12 @@ import HttpStatus from 'http-status';
 
 import { getKysely } from '../../db/database.ts';
 import { ApiError } from '../../utils/api-error.ts';
-import { getCurrentTime } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 
 import { asSerialPublicationArchiveAdminRead } from '../../dtl/serial/serial-publication-archive-dtl.ts';
+
+import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+import { readSerialPublication } from './serial-publication-interface.ts';
 
 import type { SerialPublicationInsert } from '../../db/types/serial/types-serial-publication.ts';
 import type {
@@ -13,6 +16,8 @@ import type {
 } from '../../db/types/serial/types-serial-publication-archive.ts';
 import type { Database } from '../../db/types.ts';
 import type { Transaction } from 'kysely';
+import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
+import type { RequestUser } from '../../generic-types.ts';
 
 export function getNewSerialPublicationArchiveEntryDbEntry(
   p: SerialPublicationInsert,
@@ -72,4 +77,58 @@ export async function getSerialPublicationArchiveEntry(
   }
 
   return asSerialPublicationArchiveAdminRead(archiveEntry);
+}
+
+export async function changeSerialPublicationStatus(
+  p: SerialPublicationAdminRead,
+  newStatus: string,
+  user: RequestUser,
+) {
+  // Disallow update operation on no status change
+  const statusNotChanged = newStatus === p.status;
+  if (statusNotChanged) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication id ${p.id} status is already ${newStatus} - refusing to re-save.`,
+    );
+  }
+
+  // Block rejecting request if ISSN identifier has already been assigned
+  const hasIssn = Boolean(p.issn_identifier);
+  const rejecting = newStatus === SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED;
+
+  if (hasIssn && rejecting) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', `Serial publication id ${p.id} has ISSN already.`);
+  }
+
+  // Block other transitions since they require ISSN has been assigned already
+  const statusRequiringIssn = [
+    SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
+    SERIAL_PUBLICATION_STATUS.ISSN_FROZEN,
+    SERIAL_PUBLICATION_STATUS.WAITING_FOR_CONTROL_COPY,
+    SERIAL_PUBLICATION_STATUS.COMPLETED,
+  ];
+
+  if (!hasIssn && statusRequiringIssn) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication id ${p.id} does not have ISSN, but given status (${newStatus}) requires publication to have one.`,
+    );
+  }
+
+  const db = getKysely();
+  await db.transaction().execute(async (trx) => {
+    const publicationDbUpdate = { status: newStatus, modified: getCurrentTime(), modified_by: user.id };
+    const publicationUpdateResult = await trx
+      .updateTable('serial_publication')
+      .set(publicationDbUpdate)
+      .where('id', '=', p.id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(publicationUpdateResult, 1);
+  });
+
+  return readSerialPublication(p.id);
 }

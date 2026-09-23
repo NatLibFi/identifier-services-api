@@ -1,0 +1,96 @@
+{
+  "serial_publication_request": [
+    {
+      "id": 1,
+      "serial_publisher_id": null,
+      "status": "NOT_HANDLED",
+      "publisher_name": "Foo Publisher",
+      "contact_person": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "lang_code": "fi-FI",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "serial_publication_request_archive": [
+    {
+      "id": 1,
+      "serial_publication_request_id": 1,
+      "publisher_name": "Foo Publisher",
+      "contact_person": "Foo Bar",
+      "email": "example@example.com",
+      "phone": "123456789",
+      "address": "Foo Street 1",
+      "zip": "00000",
+      "city": "Foobarila",
+      "lang_code": "fi-FI",
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1"
+    }
+  ],
+  "serial_publication": [
+    {
+      "id": 2,
+      "serial_publication_request_id": 1,
+      "serial_publisher_id": null,
+      "status": "NO_ISSN_GRANTED",
+      "title": "Bar Baz title",
+      "subtitle": null,
+      "place_of_publication": "Foobarila",
+      "printer": "Foo printer",
+      "issued_from_year": "1999",
+      "issued_from_number": "10",
+      "frequency": "z",
+      "frequency_other": "Epäsäännöllinen",
+      "language": "FIN",
+      "publication_type": "MONOGRAPHY_SERIES",
+      "publication_type_other": null,
+      "medium": "ONLINE",
+      "medium_other": null,
+      "url": "http://example.com",
+      "previous": [],
+      "main_series": [],
+      "subseries": [],
+      "another_medium": [],
+      "additional_info": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1",
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
+    }
+  ],
+  "serial_publication_archive": [
+    {
+      "id": 2,
+      "serial_publication_id": 2,
+      "title": "Bar Baz title",
+      "subtitle": null,
+      "place_of_publication": "Foobarila",
+      "printer": "Foo printer",
+      "issued_from_year": "1999",
+      "issued_from_number": "10",
+      "frequency": "z",
+      "frequency_other": "Epäsäännöllinen",
+      "language": "FIN",
+      "publication_type": "MONOGRAPHY_SERIES",
+      "publication_type_other": null,
+      "medium": "ONLINE",
+      "medium_other": null,
+      "url": "http://example.com",
+      "previous": [],
+      "main_series": [],
+      "subseries": [],
+      "another_medium": [],
+      "additional_info": null,
+      "created": "2025-01-20T12:00:00.000Z",
+      "created_by": "TEST_USER_1"
+    }
+  ],
+  "issn_identifier": []
+}

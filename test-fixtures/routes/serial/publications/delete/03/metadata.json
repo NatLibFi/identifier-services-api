@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot delete serial publication",
+  "url": "/v2/serial/publications/1",
+  "method": "DELETE",
+  "role": "publisher",
+  "expectedStatus": 403
+}

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication id 1 does not have ISSN, but given status (ISSN_FROZEN) requires publication to have one.",
+  "instance": "/v2/serial/publications/1"
+}

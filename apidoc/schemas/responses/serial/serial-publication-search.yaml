@@ -1,0 +1,18 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        type: number
+      issn:
+        type:
+          - string
+          - 'null'
+      title:
+        type: string
+      language:
+        $ref: '../../enums/item-language.yaml'
+      medium:
+        $ref: '../../enums/serial/serial-publication-medium.yaml'
+      status:
+        $ref: '../../enums/serial/serial-publication-status.yaml'
+  - $ref: '../common/created-metadata.yaml'

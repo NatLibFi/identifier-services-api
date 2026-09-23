@@ -110,7 +110,7 @@ properties:
               type: array
               maxItems: 5
               items:
-                $ref: '../../../patterns/issn-identifier.yaml'
+                $ref: '../../../patterns/issn-identifier-pattern.yaml'
             lastIssue:
               type: array
               maxItems: 5
@@ -127,7 +127,7 @@ properties:
                 type: string
                 maximum: 100
             issn:
-              $ref: '../../../patterns/issn-identifier.yaml'
+              $ref: '../../../patterns/issn-identifier-pattern.yaml'
         subseries:
           type: object
           properties:
@@ -138,7 +138,7 @@ properties:
                 type: string
                 maximum: 100
             issn:
-              $ref: '../../../patterns/issn-identifier.yaml'
+              $ref: '../../../patterns/issn-identifier-pattern.yaml'
         anotherMedium:
           type: object
           properties:
@@ -149,7 +149,7 @@ properties:
                 type: string
                 maximum: 100
             issn:
-              $ref: '../../../patterns/issn-identifier.yaml'
+              $ref: '../../../patterns/issn-identifier-pattern.yaml'
         additionalInfo:
           type:
             - string

@@ -122,7 +122,7 @@ properties:
     type: string
     maximum: 200
   issn:
-    $ref: '../../../patterns/issn-identifier.yaml'
+    $ref: '../../../patterns/issn-identifier-pattern.yaml'
   volume:
     type: string
     maximum: 20

@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Serial publication id 1 is associated with issn identifier 1797-0008 and cannot be removed.",
+  "instance": "/v2/serial/publications/1"
+}

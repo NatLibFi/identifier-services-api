@@ -11,7 +11,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../../schemas/requests/serial/serial-publication-request/serial-publication-request-search-body.yaml'
+          $ref: '../../../schemas/requests/serial/publication-request/serial-publication-request-search-body.yaml'
   responses:
     '200':
       description: Ok

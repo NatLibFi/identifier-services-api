@@ -19,7 +19,11 @@ import {
   type SerialPublicationRequestAdminRead,
 } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
-import { deleteSerialPublication } from './serial-publication-interface.ts';
+import {
+  createSerialPublication,
+  deleteSerialPublication,
+  readSerialPublication,
+} from './serial-publication-interface.ts';
 import { getNewSerialPublicationArchiveEntryDbEntry } from './serial-publication-interface-utils.ts';
 
 import {
@@ -43,6 +47,9 @@ import type {
   SerialPublicationRequestSelect,
   SerialPublicationRequestUpdate,
 } from '../../db/types/serial/types-serial-publication-request.ts';
+import type { CreateSerialPublicationHttp } from '../../validations/serial/serial-publication-validation.ts';
+import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
+import { SERIAL_PUBLICATION_REQUEST_STATUS } from '../../constants.ts';
 
 export async function createSerialPublicationRequest(
   serialPublicationRequestCreateDoc: CreateSerialPublicationRequestHttp,
@@ -243,30 +250,14 @@ export async function deleteSerialPublicationRequest(id: number) {
 
   // Deletion will delete all associated publications and archive entries
   await db.transaction().execute(async (trx) => {
-    // 1. Delete publication archive entries
-    await Promise.all(
-      request.publications.map(async ({ archive_entry }) => {
-        if (archive_entry === null) {
-          return;
-        }
-
-        const publicationArchiveDeleteResult = await trx
-          .deleteFrom('serial_publication_archive')
-          .where('id', '=', archive_entry.id)
-          .executeTakeFirstOrThrow();
-
-        validateRowsDeleted(publicationArchiveDeleteResult, 1);
-      }),
-    );
-
-    // 2. Delete publications using serial publication interface
+    // 1. Delete publications and their archive entries using serial publication interface
     await Promise.all(
       request.publications.map(async ({ id: publicationId }) => {
         await deleteSerialPublication(publicationId, trx);
       }),
     );
 
-    // 3. Delete request archive entry if there is one
+    // 2. Delete request archive entry if there is one
     if (request.archive_entry) {
       const publicationRequestArchiveDeleteResult = await trx
         .deleteFrom('serial_publication_request_archive')
@@ -276,7 +267,7 @@ export async function deleteSerialPublicationRequest(id: number) {
       validateRowsDeleted(publicationRequestArchiveDeleteResult, 1);
     }
 
-    // 4. Delete request
+    // 3. Delete request
     const publicationRequestDeleteResult = await trx
       .deleteFrom('serial_publication_request')
       .where('id', '=', request.id)
@@ -344,4 +335,61 @@ export async function searchSerialPublicationRequest(searchParameters: SearchSer
       }),
     ),
   };
+}
+
+export async function addSerialPublication(
+  requestId: number,
+  publicationInformation: CreateSerialPublicationHttp,
+  user: RequestUser,
+): Promise<SerialPublicationAdminRead> {
+  const request = await readSerialPublicationRequest(requestId, true);
+
+  if (request.status === SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${requestId} has already been completed. New publications cannot be added.`,
+    );
+  }
+
+  if (request.status === SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${requestId} has already been rejected. New publications cannot be added.`,
+    );
+  }
+
+  const db = getKysely();
+
+  // Create publication, its archive entry and update request status (if need be) within a transaction
+  const publicationId = await db.transaction().execute(async (trx) => {
+    const publicationId = await createSerialPublication(
+      publicationInformation,
+      requestId,
+      request.serial_publisher_id,
+      user,
+      trx,
+    );
+
+    // Update status for request, if it was "NOT_NOTIFIED"
+    if (request.status === SERIAL_PUBLICATION_REQUEST_STATUS.NOT_NOTIFIED) {
+      const requestDbUpdate = {
+        status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      };
+
+      const requestUpdateResult = await db
+        .updateTable('serial_publication_request')
+        .set(requestDbUpdate)
+        .where('id', '=', requestId)
+        .executeTakeFirstOrThrow();
+      validateRowsUpdatedExact(requestUpdateResult, 1);
+    }
+
+    return publicationId;
+  });
+
+  return await readSerialPublication(publicationId);
 }

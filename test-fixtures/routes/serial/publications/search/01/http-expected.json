@@ -1,0 +1,14 @@
+{
+  "total_doc": 1,
+  "results": [
+    {
+      "id": 1,
+      "issn": null,
+      "status": "NO_ISSN_GRANTED",
+      "title": "Foo title",
+      "language": "FIN",
+      "medium": "PRINTED",
+      "created": "2025-01-20T12:00:00.000Z"
+    }
+  ]
+}

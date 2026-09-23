@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot update serial publication",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "publisher",
+  "expectedStatus": 403
+}

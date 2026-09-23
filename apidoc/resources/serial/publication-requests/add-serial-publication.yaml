@@ -1,0 +1,33 @@
+post:
+  operationId: addSerialPublication
+  summary: Create a new serial publication and attach it to request
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/serial/serial-publication/serial-publication-create-body.yaml'
+  responses:
+    '201':
+      description: Resource was created
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/serial-publication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable Entity
+    default:
+      $ref: '../../../responses/error.yaml'

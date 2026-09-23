@@ -128,9 +128,19 @@ paths:
   /v2/serial/publishers/{id}:
     $ref: './resources/serial/publishers/id.yaml'
 
+  /v2/serial/publications/{id}:
+    $ref: './resources/serial/publications/id.yaml'
+  /v2/serial/publications/search:
+    $ref: './resources/serial/publications/search.yaml'
+
   /v2/serial/publication-requests:
     $ref: './resources/serial/publication-requests/root.yaml'
-
+  /v2/serial/publication-requests/${id}:
+    $ref: './resources/serial/publication-requests/id.yaml'
+  /v2/serial/publication-requests/${id}/add-publication:
+    $ref: './resources/serial/publication-requests/add-serial-publication.yaml'
+  /v2/serial/publication-requests/search:
+    $ref: './resources/serial/publication-requests/search.yaml'
 components:
   securitySchemes:
     openId:

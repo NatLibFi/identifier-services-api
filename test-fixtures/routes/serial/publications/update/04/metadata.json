@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may not update medium for entry with ISSN identifier",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 409
+}

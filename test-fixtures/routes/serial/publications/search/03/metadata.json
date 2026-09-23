@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot search serial publications",
+  "url": "/v2/serial/publications/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}
