@@ -5,3 +5,6 @@ const routers = ['serial', 'publications'];
 runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'search');
 runIntegrationTestSuite(routers, 'update');
+
+runIntegrationTestSuite(routers, 'assign-issn');
+runIntegrationTestSuite(routers, 'revoke-issn');

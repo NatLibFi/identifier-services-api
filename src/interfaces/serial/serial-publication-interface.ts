@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status';
 
-import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
@@ -19,7 +19,11 @@ import {
   type SerialPublicationAdminRead,
 } from '../../dtl/serial/serial-publication-dtl.ts';
 
-import { getSerialPublicationIssnIdentifier } from './issn-identifier-utils.ts';
+import {
+  assignIssnIdentifier,
+  revokeIssnIdentifier,
+  getSerialPublicationIssnIdentifier,
+} from './issn-identifier-utils.ts';
 import {
   changeSerialPublicationStatus,
   getNewSerialPublicationArchiveEntryDbEntry,
@@ -38,6 +42,9 @@ import type {
   SerialPublicationInsert,
   SerialPublicationUpdate,
 } from '../../db/types/serial/types-serial-publication.ts';
+import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
+import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
+import type { SerialPublicationRequestUpdate } from '../../db/types/serial/types-serial-publication-request.ts';
 
 export async function readSerialPublication(id: number, trx?: Transaction<Database>) {
   // Use transaction if provided
@@ -286,6 +293,7 @@ export async function createSerialPublication(
       .insertInto('serial_publication_archive')
       .values(dbArchiveEntry)
       .executeTakeFirstOrThrow();
+
     validateRowsInserted(archiveInsertResult, 1);
 
     if (controlledTransaction) {
@@ -356,4 +364,222 @@ export async function searchSerialPublication(searchParameters: SearchSerialPubl
     total_doc,
     results: result.map((p) => asSerialPublicationSearchResult(p)),
   };
+}
+
+export async function assignSerialPublicationIssnIdentifier(
+  publicationId: number,
+  user: RequestUser,
+  trx?: Transaction<Database>,
+) {
+  // Use transaction if provided, otherwise fallback to controlled transaction
+  const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
+  const transaction = trx ? trx : controlledTransaction;
+
+  // Sanity check for typing
+  if (!transaction) {
+    throw new Error(
+      'For some reason, transaction was not defined. This should not ever happen and code branch exists purely for satisfying typing requirements.',
+    );
+  }
+
+  try {
+    // Read publication and request information
+    // Request information is required for deciding whether request status should be changed
+    const publication = await readSerialPublication(publicationId, transaction);
+
+    // Disallow assigning ISSN to publication that already has ISSN
+    if (publication.issn_identifier) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISSN identifier cannot be assigned to serial publication id ${publication.id} because it already has ISSN.`,
+      );
+    }
+
+    // Disallow assigning ISSN to publication that does not have publisher
+    if (!publication.serial_publisher_id) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISSN identifier cannot be assigned to serial publication id ${publication.id} because no publisher has been defined for it.`,
+      );
+    }
+
+    // @ts-expect-error TS does not understand conditional typing here
+    const request: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(
+      publication.serial_publication_request_id,
+      false,
+      transaction,
+    );
+
+    // Sanity checks regarding statuses
+    if (publication.status !== SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISSN identifier cannot be assigned to serial publication id ${publication.id} because of it's status (${publication.status}).`,
+      );
+    }
+
+    const unacceptedRequestStatuses = [
+      SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED,
+      SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED,
+    ];
+
+    if (unacceptedRequestStatuses.includes(request.status)) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISSN identifier cannot be assigned to serial publication id ${publication.id} because of it's request status (${request.status}).`,
+      );
+    }
+
+    // Assign identifier while taking care of ISSN range deactivation if need be
+    await assignIssnIdentifier(publication.id, user, transaction);
+
+    // Change publication state
+    const publicationDbUpdate: SerialPublicationUpdate = {
+      status: SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const publicationUpdateResult = await transaction
+      .updateTable('serial_publication')
+      .set(publicationDbUpdate)
+      .where('id', '=', publicationId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(publicationUpdateResult, 1);
+
+    // If request state requires automatical change, change it
+    const hasUnprocessedPublications =
+      request.publications.filter((p) => p.id != publicationId && !p.issn_identifier).length > 0;
+
+    if (!hasUnprocessedPublications) {
+      const requestDbUpdate: SerialPublicationRequestUpdate = {
+        status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_NOTIFIED,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      };
+
+      const publicationRequestUpdateResult = await transaction
+        .updateTable('serial_publication_request')
+        .set(requestDbUpdate)
+        .where('id', '=', request.id)
+        .executeTakeFirstOrThrow();
+
+      validateRowsUpdatedExact(publicationRequestUpdateResult, 1);
+    }
+
+    if (controlledTransaction) {
+      await controlledTransaction.commit().execute();
+    }
+
+    // Return using read interface for consistency
+    return readSerialPublication(publicationId);
+  } catch (error) {
+    // In case transaction was not provided, controlled transaction needs to be rollbacked manually
+    if (controlledTransaction) {
+      await controlledTransaction.rollback().execute();
+    }
+
+    throw error;
+  }
+}
+
+export async function revokeSerialPublicationIssnIdentifier(
+  publicationId: number,
+  user: RequestUser,
+  trx?: Transaction<Database>,
+) {
+  // Use transaction if provided, otherwise fallback to controlled transaction
+  const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
+  const transaction = trx ? trx : controlledTransaction;
+
+  // Sanity check for typing
+  if (!transaction) {
+    throw new Error(
+      'For some reason, transaction was not defined. This should not ever happen and code branch exists purely for satisfying typing requirements.',
+    );
+  }
+
+  try {
+    // Read publication and request information
+    // Request information is required for deciding whether request status should be changed
+    const publication = await readSerialPublication(publicationId, transaction);
+
+    // @ts-expect-error TS does not understand conditional typing here
+    const request: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(
+      publication.serial_publication_request_id,
+      false,
+      transaction,
+    );
+
+    // Sanity checks
+    if (!publication.issn_identifier) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Serial publication id ${publication.id} does not have ISSN identifier.`,
+      );
+    }
+
+    if (publication.status == SERIAL_PUBLICATION_STATUS.ISSN_FROZEN) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISSN identifier cannot be revoked from serial publication id ${publication.id} because of it's status (${publication.status}).`,
+      );
+    }
+
+    // Assign identifier while taking care of ISSN range deactivation if need be
+    await revokeIssnIdentifier(publication, user, transaction);
+
+    // Change publication state
+    const publicationDbUpdate: SerialPublicationUpdate = {
+      status: SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const publicationUpdateResult = await transaction
+      .updateTable('serial_publication')
+      .set(publicationDbUpdate)
+      .where('id', '=', publicationId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(publicationUpdateResult, 1);
+
+    // If request state requires automatical change, change it
+    if (request.status === SERIAL_PUBLICATION_REQUEST_STATUS.NOT_NOTIFIED) {
+      const requestDbUpdate: SerialPublicationRequestUpdate = {
+        status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      };
+
+      const publicationRequestUpdateResult = await transaction
+        .updateTable('serial_publication_request')
+        .set(requestDbUpdate)
+        .where('id', '=', request.id)
+        .executeTakeFirstOrThrow();
+
+      validateRowsUpdatedExact(publicationRequestUpdateResult, 1);
+    }
+
+    if (controlledTransaction) {
+      await controlledTransaction.commit().execute();
+    }
+  } catch (error) {
+    // In case transaction was not provided, controlled transaction needs to be rollbacked manually
+    if (controlledTransaction) {
+      await controlledTransaction.rollback().execute();
+    }
+
+    throw error;
+  }
+
+  // Return using read interface for consistency
+  return readSerialPublication(publicationId);
 }

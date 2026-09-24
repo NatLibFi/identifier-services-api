@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot revoke ISSN to serial publication",
+  "url": "/v2/serial/publications/1/revoke-issn",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

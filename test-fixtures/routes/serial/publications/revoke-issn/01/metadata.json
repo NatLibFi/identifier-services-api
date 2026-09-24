@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can revoke ISSN to serial publication when preconditions are met",
+  "url": "/v2/serial/publications/1/revoke-issn",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

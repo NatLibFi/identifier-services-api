@@ -50,6 +50,8 @@ import type {
 import type { CreateSerialPublicationHttp } from '../../validations/serial/serial-publication-validation.ts';
 import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
 import { SERIAL_PUBLICATION_REQUEST_STATUS } from '../../constants.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
 export async function createSerialPublicationRequest(
   serialPublicationRequestCreateDoc: CreateSerialPublicationRequestHttp,
@@ -116,8 +118,9 @@ export async function createSerialPublicationRequest(
 export async function readSerialPublicationRequest(
   id: number,
   lite = false,
+  trx?: Transaction<Database>,
 ): Promise<SerialPublicationRequestSelect | SerialPublicationRequestAdminRead> {
-  const db = getKysely();
+  const db = trx ? trx : getKysely();
   const dbResult = await db
     .selectFrom('serial_publication_request')
     .leftJoin('serial_publisher', 'serial_publisher.id', 'serial_publication_request.serial_publisher_id')
@@ -133,8 +136,8 @@ export async function readSerialPublicationRequest(
     return asSerialPublicationRequestAdminReadLite(serialPublicationRequestResult);
   }
 
-  const publications = await getSerialRequestPublications(id);
-  const archiveEntry = await getSerialPublicationRequestArchiveEntry(id);
+  const publications = await getSerialRequestPublications(id, trx);
+  const archiveEntry = await getSerialPublicationRequestArchiveEntry(id, trx);
 
   return asSerialPublicationRequestAdminRead(serialPublicationRequestResult, archiveEntry, publications);
 }

@@ -35,6 +35,8 @@ import type {
 import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
 import type { SerialMessageSelect } from '../../db/types/serial/types-serial-message.ts';
 import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
 type SerialPublicationInsertWithoutRequest = Omit<SerialPublicationInsert, 'serial_publication_request_id'>;
 
@@ -231,8 +233,9 @@ export function getNewSerialPublicationRequestArchiveDbEntry(
 
 export async function getSerialRequestPublications(
   serialPublicationRequestId: number,
+  trx?: Transaction<Database>,
 ): Promise<SerialPublicationAdminRead[]> {
-  const db = getKysely();
+  const db = trx ? trx : getKysely();
   const publicationIds = await db
     .selectFrom('serial_publication')
     .select('id')
@@ -246,8 +249,9 @@ export async function getSerialRequestPublications(
 
 export async function getSerialPublicationRequestArchiveEntry(
   serialPublicationRequestId: number,
+  trx?: Transaction<Database>,
 ): Promise<SerialPublicationRequestArchiveSelect | null> {
-  const db = getKysely();
+  const db = trx ? trx : getKysely();
 
   const dbResult = await db
     .selectFrom('serial_publication_request_archive')

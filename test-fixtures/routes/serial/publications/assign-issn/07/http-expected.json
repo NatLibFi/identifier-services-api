@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 500,
+  "title": "Internal server error",
+  "detail": "Found multiple active ISSN ranges. Refusing to process.",
+  "instance": "/v2/serial/publications/1/assign-issn"
+}

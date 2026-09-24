@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISSN identifier cannot be revoked from serial publication id 1 because of it's status (ISSN_FROZEN).",
+  "instance": "/v2/serial/publications/1/revoke-issn"
+}

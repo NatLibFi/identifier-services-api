@@ -34,3 +34,28 @@ export async function deleteSerialPublication(req: Request, res: Response, next:
     return next(error);
   }
 }
+
+export async function assignSerialPublicationIssnIdentifier(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationInterface.assignSerialPublicationIssnIdentifier(
+      Number(req.params['id']),
+      req.user,
+    );
+
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function revokeSerialPublicationIssnIdentifier(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationInterface.revokeSerialPublicationIssnIdentifier(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

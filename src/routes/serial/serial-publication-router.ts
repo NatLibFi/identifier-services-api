@@ -30,5 +30,17 @@ export default function createSerialPublicationRouter() {
     serialPublicationControllers.deleteSerialPublication,
   );
 
+  serialPublicationRouter.post(
+    '/:id/assign-issn',
+    validateRequestParams(idParameterSchema, true),
+    serialPublicationControllers.assignSerialPublicationIssnIdentifier,
+  );
+
+  serialPublicationRouter.post(
+    '/:id/revoke-issn',
+    validateRequestParams(idParameterSchema, true),
+    serialPublicationControllers.revokeSerialPublicationIssnIdentifier,
+  );
+
   return serialPublicationRouter;
 }

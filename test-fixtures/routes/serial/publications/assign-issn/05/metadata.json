@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot assign ISSN to serial publication when there are no active ISSN ranges",
+  "url": "/v2/serial/publications/1/assign-issn",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 404
+}

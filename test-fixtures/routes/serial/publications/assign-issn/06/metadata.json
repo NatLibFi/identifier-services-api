@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot assign ISSN to serial publication when active ISSN ranges do not contain free identifiers (database state error)",
+  "url": "/v2/serial/publications/1/assign-issn",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 404
+}

@@ -130,6 +130,10 @@ paths:
 
   /v2/serial/publications/{id}:
     $ref: './resources/serial/publications/id.yaml'
+  /v2/serial/publications/{id}/assign-issn:
+    $ref: './resources/serial/publications/assign-issn.yaml'
+  /v2/serial/publications/{id}/deassign-issn:
+    $ref: './resources/serial/publications/revoke-issn.yaml'
   /v2/serial/publications/search:
     $ref: './resources/serial/publications/search.yaml'
 

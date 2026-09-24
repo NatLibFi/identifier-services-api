@@ -1,0 +1,29 @@
+post:
+  operationId: assignSerialPublicationIssnIdentifier
+  summary: Assign ISSN to a serial publication.
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '204':
+      description: Operation was successful
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/serial-publication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '409':
+      description: Conflict
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'

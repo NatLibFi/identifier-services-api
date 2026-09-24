@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "ISSN identifier cannot be assigned to serial publication id 1 because no publisher has been defined for it.",
+  "instance": "/v2/serial/publications/1/assign-issn"
+}
