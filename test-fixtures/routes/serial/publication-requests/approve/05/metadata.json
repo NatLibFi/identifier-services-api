@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot approve serial publication request if there are not enough free ISSN identifiers available",
+  "url": "/v2/serial/publication-requests/1/approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 404
+}

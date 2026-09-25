@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can reject serial publication request when preconditions are met",
+  "url": "/v2/serial/publication-requests/1/reject",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -65,3 +65,27 @@ export async function addSerialPublication(req: Request, res: Response, next: Ne
     return next(error);
   }
 }
+
+export async function approveSerialPublicationRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationRequestInterface.approveSerialPublicationRequest(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function rejectSerialPublicationRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationRequestInterface.rejectSerialPublicationRequest(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

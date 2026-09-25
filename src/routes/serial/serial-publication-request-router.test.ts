@@ -9,3 +9,6 @@ runIntegrationTestSuite(routers, 'delete');
 
 runIntegrationTestSuite(routers, 'search');
 runIntegrationTestSuite(routers, 'add-publication');
+
+runIntegrationTestSuite(routers, 'approve');
+runIntegrationTestSuite(routers, 'reject');

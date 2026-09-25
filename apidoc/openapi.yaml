@@ -143,6 +143,10 @@ paths:
     $ref: './resources/serial/publication-requests/id.yaml'
   /v2/serial/publication-requests/${id}/add-publication:
     $ref: './resources/serial/publication-requests/add-serial-publication.yaml'
+  /v2/serial/publication-requests/${id}/approve:
+    $ref: './resources/serial/publication-requests/approve.yaml'
+  /v2/serial/publication-requests/${id}/reject:
+    $ref: './resources/serial/publication-requests/reject.yaml'
   /v2/serial/publication-requests/search:
     $ref: './resources/serial/publication-requests/search.yaml'
 components:

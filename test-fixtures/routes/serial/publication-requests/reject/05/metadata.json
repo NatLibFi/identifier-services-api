@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot reject serial publication request which has publication with ISSN assigned",
+  "url": "/v2/serial/publication-requests/1/reject",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

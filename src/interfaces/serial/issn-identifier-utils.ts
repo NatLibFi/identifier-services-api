@@ -70,6 +70,7 @@ export async function getSerialPublicationIssnIdentifier(
 
 // By default uses the current active range - if system works correctly only one range should be active
 // Note: this interface does not process serial publication or serial publication request states
+// Note: cursorOffset is used when multiple identifiers are assigned during the transaction. This allows offset to move forward so that two sequential publication assignations are not assigned same identifier.
 export async function assignIssnIdentifier(publicationId: number, user: RequestUser, trx?: Transaction<Database>) {
   // Use transaction if provided, otherwise fallback to controlled transaction
   const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
@@ -86,6 +87,7 @@ export async function assignIssnIdentifier(publicationId: number, user: RequestU
     // Find and validate ISSN range to be used
     const issnRangeResult = await transaction.selectFrom('issn_range').selectAll().where('active', '=', true).execute();
     const validatedIssnRange = issnRangeResult[0];
+
     if (issnRangeResult.length === 0 || !validatedIssnRange) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'Not found', 'Active ISSN range entry could not be found.');
     }
@@ -110,6 +112,7 @@ export async function assignIssnIdentifier(publicationId: number, user: RequestU
 
     const validatedIssnIdentifier = nextFreeIssnIdentifier[0];
 
+    // Sanity checks - situation with active ISSN range being available, but containing no free ISSN identifiers, should not ever happen
     if (nextFreeIssnIdentifier.length === 0 || !validatedIssnIdentifier) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'Not found', 'Available free ISSN identifier entry could not be found.');
     }

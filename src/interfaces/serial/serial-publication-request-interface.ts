@@ -20,6 +20,7 @@ import {
 } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
 import {
+  assignSerialPublicationIssnIdentifier,
   createSerialPublication,
   deleteSerialPublication,
   readSerialPublication,
@@ -49,7 +50,7 @@ import type {
 } from '../../db/types/serial/types-serial-publication-request.ts';
 import type { CreateSerialPublicationHttp } from '../../validations/serial/serial-publication-validation.ts';
 import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
-import { SERIAL_PUBLICATION_REQUEST_STATUS } from '../../constants.ts';
+import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
 import type { Transaction } from 'kysely';
 import type { Database } from '../../db/types.ts';
 
@@ -395,4 +396,90 @@ export async function addSerialPublication(
   });
 
   return await readSerialPublication(publicationId);
+}
+
+export async function approveSerialPublicationRequest(id: number, user: RequestUser) {
+  // @ts-expect-error TS does not understand dynamic return type
+  const request: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(id, false);
+
+  if (request.status !== SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Only requests with status NOT_HANDLED can be approved. Serial publication request id ${id} has status of ${request.status}.`,
+    );
+  }
+
+  const db = getKysely();
+
+  await db.transaction().execute(async (trx) => {
+    const publicationsWithoutIssn = request.publications.filter((p) => !p.issn_identifier);
+
+    // Do NOT replace this loop with Promise.all(). Parallel execution
+    // may result in allocation conflicts and race conditions. Sequential processing is key to avoiding this.
+    for (const publication of publicationsWithoutIssn) {
+      await assignSerialPublicationIssnIdentifier(publication.id, user, trx);
+    }
+
+    const requestDbUpdate: SerialPublicationRequestUpdate = {
+      status: SERIAL_PUBLICATION_REQUEST_STATUS.NOT_NOTIFIED,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const requestUpdateResult = await trx
+      .updateTable('serial_publication_request')
+      .set(requestDbUpdate)
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(requestUpdateResult, 1);
+  });
+
+  return readSerialPublicationRequest(id);
+}
+
+export async function rejectSerialPublicationRequest(id: number, user: RequestUser) {
+  // @ts-expect-error TS does not understand dynamic return type
+  const request: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(id, false);
+
+  if (request.status !== SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Only requests with status NOT_HANDLED can be rejected. Serial publication request id ${id} has status of ${request.status}.`,
+    );
+  }
+
+  // Validate all publications do not have ISSN and have proper state
+  const invalidPublicationIds = request.publications
+    .filter((p) => p.issn_identifier || p.status !== SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED)
+    .map(({ id }) => id);
+
+  if (invalidPublicationIds.length > 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Request contained publications with either ISSN identifier or incompatible status (ids ${invalidPublicationIds.join(', ')}) and cannot be rejected.`,
+    );
+  }
+
+  const db = getKysely();
+  await db.transaction().execute(async (trx) => {
+    const requestDbUpdate: SerialPublicationRequestUpdate = {
+      status: SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const requestUpdateResult = await trx
+      .updateTable('serial_publication_request')
+      .set(requestDbUpdate)
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(requestUpdateResult, 1);
+  });
+
+  return readSerialPublicationRequest(id);
 }

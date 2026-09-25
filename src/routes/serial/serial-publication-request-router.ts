@@ -53,6 +53,20 @@ export default function createSerialPublicationRequestRouter(turnstileMiddleware
   );
 
   serialPublicationRequestRouter.post(
+    '/:id/approve',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema, true),
+    serialPublicationRequestControllers.approveSerialPublicationRequest,
+  );
+
+  serialPublicationRequestRouter.post(
+    '/:id/reject',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema, true),
+    serialPublicationRequestControllers.rejectSerialPublicationRequest,
+  );
+
+  serialPublicationRequestRouter.post(
     '/search',
     allowAdminOnly,
     validateRequestBody(searchSerialPublicationRequestSchema),
