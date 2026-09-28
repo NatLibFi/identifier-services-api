@@ -70,7 +70,7 @@ if (DB_CA_FILEPATH) {
     ca: fs.readFileSync(DB_CA_FILEPATH),
   };
 
-  console.log('[info] Database connection CA has been defined from a custom file');
+  logger.info('Database connection CA has been defined from a custom file');
 }
 
 // Use SQLite in-memory for automated tests
@@ -87,7 +87,7 @@ if (NODE_ENV === 'test') {
 
   sequelize = new Sequelize(DB_URI, {
     dialect: DB_DIALECT,
-    dialectOptions: DB_DIALECT_OPTIONS,
+    dialectOptions,
     define: applyEngineDefinitions ? {
       engine: 'InnoDB',
       charset: 'utf8mb3',
