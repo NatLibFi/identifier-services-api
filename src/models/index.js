@@ -55,6 +55,24 @@ if (!isValidDatabaseDialect(DB_DIALECT)) {
   throw new Error(`Dialect for ${DB_DIALECT} is not supported database dialect`);
 }
 
+// Apply CA from file if path is separately defined
+const sslOptions = DB_DIALECT_OPTIONS.ssl ? DB_DIALECT_OPTIONS.ssl : {};
+
+const dialectOptions = {
+  ...DB_DIALECT_OPTIONS,
+  ssl: sslOptions,
+};
+
+// If ca file has been passed, read it and add to dialect options
+if (DB_CA_FILEPATH) {
+  dialectOptions.ssl = {
+    ...sslOptions,
+    ca: fs.readFileSync(DB_CA_FILEPATH),
+  };
+
+  console.log('[info] Database connection CA has been defined from a custom file');
+}
+
 // Use SQLite in-memory for automated tests
 if (NODE_ENV === 'test') {
   logger.debug('using in-memory SQLite as database');
