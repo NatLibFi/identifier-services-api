@@ -163,6 +163,10 @@ export default async function startApp(options: AppOptions): Promise<http.Server
       throw new Error('Database configuration is missing. Please provide configuration to runtime environment.');
     }
 
+    if (dbConfig?.ssl && typeof dbConfig.ssl !== 'string' && dbConfig.ssl.ca) {
+      logger.info('Custom CA definition will be used for database connection');
+    }
+
     const db = createKyselySingleton(dbConfig);
     await testDatabaseConnection(db);
     logger.info('Database connection has been established successfully');

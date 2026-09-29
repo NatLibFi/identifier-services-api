@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 import {
   envFormatBoolean,
   envFormatNumeric,
@@ -8,6 +10,7 @@ import {
 } from './utils/config-utils.ts';
 
 import type { ApplicationRoleMap, KeycloakOptions } from './app.ts';
+import type { PoolOptions } from 'mysql2';
 
 // COMMON
 export const NODE_ENV = readEnvironmentVariable<string>('NODE_ENV');
@@ -17,7 +20,7 @@ export const HTTP_PORT = readEnvironmentVariable<number>('HTTP_PORT', {
 });
 
 // DB
-export const DATABASE_CONFIG = {
+export const DATABASE_CONFIG: PoolOptions = {
   host: readEnvironmentVariable<string>('DB_HOST'),
   user: readEnvironmentVariable<string>('DB_USER'),
   password: readEnvironmentVariable<string>('DB_PASSWORD'),
@@ -28,6 +31,13 @@ export const DATABASE_CONFIG = {
     rejectUnauthorized: NODE_ENV !== 'development',
   },
 };
+
+// (optional) extend DB config with CA if filepath is defined
+export const DB_CA_FILEPATH = readEnvironmentVariable<string>('DB_CA_FILEPATH', { defaultValue: '' });
+if (DB_CA_FILEPATH.length > 0) {
+  // @ts-expect-error TS disallows ca-property when defining ssl as string -> here we are using object format
+  DATABASE_CONFIG.ssl.ca = fs.readFileSync(DB_CA_FILEPATH);
+}
 
 // Security
 export const APPLICATION_ROLE_MAP = readEnvironmentVariable<ApplicationRoleMap>('APPLICATION_ROLE_MAP', {
