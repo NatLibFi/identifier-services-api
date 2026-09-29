@@ -30,7 +30,7 @@ import {Sequelize} from 'sequelize';
 
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
-import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED} from '../config';
+import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED, DB_CA_FILEPATH} from '../config';
 import {DB_TYPES} from './constants';
 import {isMysqlOrMaria, isValidDatabaseDialect} from './utils';
 
