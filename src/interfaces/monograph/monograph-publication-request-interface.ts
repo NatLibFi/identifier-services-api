@@ -490,7 +490,6 @@ export async function restoreMonographPublicationRequestToNew(id: number, user: 
       await changeMonographPublicationRequestState(id, MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW, trx, user);
     });
   } catch (error) {
-    console.log(error);
     const hasDetails = error instanceof Error;
     if (!hasDetails) {
       throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal server error', 'Unknown error has occurred.');
