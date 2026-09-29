@@ -34,7 +34,7 @@ export const DATABASE_CONFIG: PoolOptions = {
 
 // (optional) extend DB config with CA if filepath is defined
 export const DB_CA_FILEPATH = readEnvironmentVariable<string>('DB_CA_FILEPATH', { defaultValue: '' });
-if (DB_CA_FILEPATH.length > 0) {
+if (DB_CA_FILEPATH) {
   // @ts-expect-error TS disallows ca-property when defining ssl as string -> here we are using object format
   DATABASE_CONFIG.ssl.ca = fs.readFileSync(DB_CA_FILEPATH);
 }
