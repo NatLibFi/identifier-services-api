@@ -43,13 +43,14 @@ export const createMonographPublicationRequestV1Schema = z
       .optional(),
     email: z.email().optional(),
     langCode: z.enum(langCodeEnum),
-    publishedBefore: z.boolean(),
+    publishedBefore: z.boolean().optional(), // Optional for dissertations
     publicationsPublic: z.literal(true),
-    publishingActivity: z.enum(monographPublishingActivityEnum),
+    publishingActivity: z.enum(monographPublishingActivityEnum).optional(), // Optional for dissertations
     publishingActivityAmount: z
       .string()
       .max(5)
-      .regex(/^([0-9-]+)?$/),
+      .regex(/^([0-9-]+)?$/)
+      .optional(), // Optional for dissertations
     publicationType: z.enum(monographExpressionTypeEnum),
     publicationFormat: z.enum(['PRINT', 'ELECTRONICAL', 'PRINT_ELECTRONICAL']).optional(), // Deprecated and thus not in constants
     firstName1: z.string().min(1).max(50),
@@ -98,6 +99,21 @@ export const createMonographPublicationRequestV1Schema = z
         path: ['locality'],
         code: 'custom',
         message: 'Locality is required for dissertations',
+      });
+    }
+
+    const mandatoryForNonDissertations = [
+      { key: 'publishedBefore', value: data.publishedBefore },
+      { key: 'publishingActivity', value: data.publishingActivity },
+      { key: 'publishingActivityAmount', value: data.publishingActivityAmount },
+    ];
+    const [missingMandatoryForNonDissertation] = mandatoryForNonDissertations.filter((v) => !v.value);
+
+    if (!isDissertation && missingMandatoryForNonDissertation) {
+      ctx.addIssue({
+        path: [missingMandatoryForNonDissertation.key],
+        code: 'custom',
+        message: 'missing required field.',
       });
     }
 

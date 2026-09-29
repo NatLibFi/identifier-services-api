@@ -1,0 +1,7 @@
+{
+  "description": "[admin] For v1 form schema: missing optional value for dissertation results into error for other type",
+  "url": "/v2/monograph/publication-requests",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 422
+}

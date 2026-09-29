@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "officialName": "Example university",
+  "address": "Foo Street",
+  "zip": "00000",
+  "city": "Foo City",
+  "contactPerson": "Foo Person",
+  "phone": "123456789",
+  "email": "example@example.localhost",
+  "langCode": "fi-FI",
+  "publicationsPublic": true,
+  "publicationType": "DISSERTATION",
+  "publicationFormat": "PRINT",
+  "firstName1": "Foobar",
+  "lastName1": "Baz",
+  "role1": ["AUTHOR"],
+  "title": "Foo Dissertation",
+  "language": "FIN",
+  "year": "2049",
+  "month": "12",
+  "type": ["PAPERBACK"],
+  "locality": "Helsinki"
+}

@@ -1,0 +1,76 @@
+{
+  "monograph_publication_request": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "monograph_publication_id": 1,
+      "official_name": "Example university",
+      "publisher_identifier_str": null,
+      "locality": "Helsinki",
+      "address": "Foo Street",
+      "zip": "00000",
+      "city": "Foo City",
+      "phone": "123456789",
+      "email": "example@example.localhost",
+      "lang_code": "fi-FI",
+      "contact_person": "Foo Person",
+      "published_before": false,
+      "publishing_activity": null,
+      "publishing_activity_amount": null,
+      "publications_intra": false,
+      "publications_public": true,
+      "comments": null,
+      "request_state": "NEW",
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publication": [
+    {
+      "id": 1,
+      "monograph_publisher_id": null,
+      "primary_title": "Foo Dissertation",
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publication_expression": [
+    {
+      "id": 1,
+      "monograph_publication_id": 1,
+      "expression_type": "DISSERTATION",
+      "expression_language": "FIN",
+      "authors": [{ "first_name": "Foobar", "last_name": "Baz", "isni": null, "roles": ["AUTHOR"] }],
+      "title": "Foo Dissertation",
+      "subtitle": null,
+      "map_scale": null,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ],
+  "monograph_publication_manifestation": [
+    {
+      "id": 1,
+      "monograph_publication_expression_id": 1,
+      "monograph_publication_request_id": 1,
+      "manifestation_type": "PAPERBACK",
+      "manifestation_type_other": null,
+      "manifestation_edition": null,
+      "publication_year": "2049",
+      "publication_month": "12",
+      "series": [],
+      "printing_information": [],
+      "cancelled": false,
+      "created": "2026-01-20T12:00:00.000Z",
+      "created_by": "admin",
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
+    }
+  ]
+}
