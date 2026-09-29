@@ -1,0 +1,7 @@
+{
+  "description": "[admin] already rejected publication request cannot be reset to NEW",
+  "url": "/v2/monograph/publication-requests/1/restore-to-new",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}

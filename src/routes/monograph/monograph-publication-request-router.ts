@@ -50,6 +50,13 @@ export default function createMonographPublisherRequestRouter(turnstileMiddlewar
     monographPublicationRequestController.reprocessMonographPublicationRequest,
   );
 
+  monographPublicationRequestRouter.post(
+    '/:id/restore-to-new',
+    allowAdminOnly,
+    validateRequestParams(idParameterSchema),
+    monographPublicationRequestController.restoreMonographPublicationRequestToNew,
+  );
+
   monographPublicationRequestRouter.get(
     '/:id',
     allowAdminOnly,

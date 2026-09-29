@@ -486,16 +486,6 @@ export async function changeMonographPublicationRequestState(
   trx: Transaction<Database>,
   user: RequestUser,
 ) {
-  const allowedStateChanges = [
-    MONOGRAPH_PUBLICATION_REQUEST_STATES.ACCEPTED,
-    MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED,
-    MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS,
-  ];
-
-  if (!allowedStateChanges.includes(newState)) {
-    throw new Error(`Changing monograph publication request state to ${newState} is not allowed`);
-  }
-
   // In case changing to accepted state, verify no associated manifestation is unprocessed
   const requestManifestations = await trx
     .selectFrom('monograph_publication_manifestation')
@@ -525,14 +515,20 @@ export async function changeMonographPublicationRequestState(
     );
   }
 
-  // In case changing to rejected state, verify no associated manifestation has identifier
+  // In case changing to rejected or new state, verify no associated manifestation has identifier
   const manifestationsWithIdentifier = requestManifestations.filter(
     (m) => Boolean(m.isbn_identifier) || Boolean(m.ismn_identifier),
   );
 
-  if (newState === MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED && manifestationsWithIdentifier.length > 0) {
+  const disallowManifestationWithIdentifierStates = [
+    MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW,
+    MONOGRAPH_PUBLICATION_REQUEST_STATES.REJECTED,
+  ];
+  const stateDisallowsManifestationsWithIdentifiers = disallowManifestationWithIdentifierStates.includes(newState);
+
+  if (stateDisallowsManifestationsWithIdentifiers && manifestationsWithIdentifier.length > 0) {
     throw new Error(
-      `Cannot mark request as REJECTED since there are ${manifestationsWithIdentifier.length} manifestations associated with request that have identifiers`,
+      `Cannot change request to ${newState} since there are ${manifestationsWithIdentifier.length} manifestations associated with request that have identifiers`,
       { cause: 'Manifestation has identifier' },
     );
   }
@@ -563,10 +559,9 @@ export async function changeMonographPublicationRequestState(
   }
 
   if (relatedMessageSentNumber > 0 && newState !== 'ACCEPTED') {
-    throw new Error(
-      `Cannot mark request anything other than ACCEPTED since messages have been sent regarding the request`,
-      { cause: 'Request has messages' },
-    );
+    throw new Error(`Cannot change request to ${newState} since messages have been sent regarding the request`, {
+      cause: 'Request has messages',
+    });
   }
 
   const updateResult = await trx

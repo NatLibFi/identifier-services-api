@@ -10,3 +10,4 @@ runIntegrationTestSuite(routers, 'search');
 runIntegrationTestSuite(routers, 'approve');
 runIntegrationTestSuite(routers, 'reject');
 runIntegrationTestSuite(routers, 'reprocess');
+runIntegrationTestSuite(routers, 'restore-to-new');

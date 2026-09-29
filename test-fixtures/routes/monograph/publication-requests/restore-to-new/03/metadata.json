@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not restore publication request to NEW state",
+  "url": "/v2/monograph/publication-requests/1/restore-to-new",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

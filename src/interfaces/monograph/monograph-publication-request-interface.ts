@@ -463,3 +463,63 @@ export async function reprocessMonographPublicationRequest(id: number, user: Req
 
   return;
 }
+
+export async function restoreMonographPublicationRequestToNew(id: number, user: RequestUser) {
+  const logger = getApplicationLogger();
+  const db = getKysely();
+
+  const monographPublicationRequest = await db
+    .selectFrom('monograph_publication_request')
+    .selectAll()
+    .where('monograph_publication_request.id', '=', id)
+    .execute();
+
+  const validMonographPublicationRequest = validateGetById(monographPublicationRequest);
+
+  // Only requests in IN_PROCESS state may be restored to new state
+  if (validMonographPublicationRequest.request_state !== MONOGRAPH_PUBLICATION_REQUEST_STATES.IN_PROCESS) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Publication request cannot be restored to "new" when it is in ${validMonographPublicationRequest.request_state} state.`,
+    );
+  }
+
+  try {
+    await db.transaction().execute(async (trx) => {
+      await changeMonographPublicationRequestState(id, MONOGRAPH_PUBLICATION_REQUEST_STATES.NEW, trx, user);
+    });
+  } catch (error) {
+    console.log(error);
+    const hasDetails = error instanceof Error;
+    if (!hasDetails) {
+      throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal server error', 'Unknown error has occurred.');
+    }
+
+    if (error.cause === 'Request has messages') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publication request has had messages sent regarding it already.',
+      );
+    }
+
+    if (error.cause === 'Manifestation has identifier') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publisher request manifestation has identifier assigned and thus the request cannot be set to NEW.',
+      );
+    }
+
+    // Catch-all in case some cause is added to function but forgotten to add here
+    logger.warn(`Underlying cause for error: ${error.cause}`);
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Unknown error occurred during monograph publication request reprocess assignation.',
+    );
+  }
+
+  return;
+}

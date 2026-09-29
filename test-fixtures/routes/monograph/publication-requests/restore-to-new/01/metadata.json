@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may restore publication request to NEW state if pre-conditions are met",
+  "url": "/v2/monograph/publication-requests/1/restore-to-new",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 204
+}

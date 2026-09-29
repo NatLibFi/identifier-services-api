@@ -69,3 +69,15 @@ export async function reprocessMonographPublicationRequest(req: Request, res: Re
     return next(error);
   }
 }
+
+export async function restoreMonographPublicationRequestToNew(req: Request, res: Response, next: NextFunction) {
+  try {
+    await monographPublicationRequestInterface.restoreMonographPublicationRequestToNew(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.NO_CONTENT).end();
+  } catch (error) {
+    return next(error);
+  }
+}

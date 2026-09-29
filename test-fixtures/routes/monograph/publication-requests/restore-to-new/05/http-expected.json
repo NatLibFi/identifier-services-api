@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "status": 409,
+  "title": "Conflict",
+  "detail": "Publication request cannot be restored to \"new\" when it is in REJECTED state.",
+  "instance": "/v2/monograph/publication-requests/1/restore-to-new"
+}
