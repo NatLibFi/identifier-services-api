@@ -24,12 +24,13 @@
  * for the JavaScript code in this file.
  *
  */
+import fs from 'node:fs';
 
 import {Sequelize} from 'sequelize';
 
 import {createLogger} from '@natlibfi/melinda-backend-commons';
 
-import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED} from '../config';
+import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED, DB_CA_FILEPATH} from '../config';
 import {DB_TYPES} from './constants';
 import {isMysqlOrMaria, isValidDatabaseDialect} from './utils';
 
@@ -65,11 +66,29 @@ if (NODE_ENV === 'test') {
   logger.info(`using DB dialect of "${DB_DIALECT}"`);
   logger.info(`apply DB engine definitions regarding engine, charset and collate: ${applyEngineDefinitions}`);
 
+  // Initialize dialect options for ssl separately for injecting ca if need be
+  const sslOptions = DB_DIALECT_OPTIONS.ssl ? DB_DIALECT_OPTIONS.ssl : {};
+
+  const dialectOptions = {
+    ...DB_DIALECT_OPTIONS,
+    ssl: sslOptions,
+  };
+
+  // If ca file has been passed, read it and add to dialect options
+  if (DB_CA_FILEPATH) {
+    dialectOptions.ssl = {
+      ...sslOptions,
+      ca: fs.readFileSync(DB_CA_FILEPATH),
+    };
+
+    logger.info('Database connection CA has been overwritten from file');
+  }
+
   const logDbBenchmark = (_message, timeMS) => logger.debug(`SQL took ${timeMS}ms`);
 
   sequelize = new Sequelize(DB_URI, {
     dialect: DB_DIALECT,
-    dialectOptions: DB_DIALECT_OPTIONS,
+    dialectOptions,
     define: applyEngineDefinitions ? {
       engine: 'InnoDB',
       charset: 'utf8mb3',
