@@ -1,0 +1,6 @@
+type: object
+properties:
+  recipient:
+    type: string
+required:
+  - recipient

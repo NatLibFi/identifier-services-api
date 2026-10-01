@@ -16,3 +16,5 @@ export interface SerialMessage {
 export type SerialMessageInsert = Insertable<SerialMessage>;
 export type SerialMessageUpdate = Updateable<SerialMessage>;
 export type SerialMessageSelect = Selectable<SerialMessage>;
+
+export type LoadedSerialMessageTemplate = Omit<SerialMessageInsert, 'sent' | 'sent_by'>;

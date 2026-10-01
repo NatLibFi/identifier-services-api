@@ -1,0 +1,7 @@
+{
+  "description": "[admin] limit and offset works, orderby is by default id, descending",
+  "url": "/v2/serial/messages/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

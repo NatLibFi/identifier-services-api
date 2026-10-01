@@ -1,0 +1,28 @@
+post:
+  operationId: searchSerialMessage
+  summary: Search a message related to serial operations
+  description: You need to define exactly one of the following properties -> serial_publisher_id, serial_publication_request_id, or search_text
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/serial/message/search-serial-message-body.yaml'
+  responses:
+    '200':
+      description: Ok
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/serial-message-search-response.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    default:
+      $ref: '../../../responses/error.yaml'

@@ -1,0 +1,9 @@
+{
+  "message_type": "ISSN_LIST_DELIVERY",
+  "serial_publisher_id": 1,
+  "serial_publication_request_id": null,
+  "recipient": "erkki.esimerkki@example.localhost",
+  "lang_code": "fi-FI",
+  "subject": "Foo title approved",
+  "body": "20.1.2026\n\nerkki.esimerkki@example.localhost\nExample serial publisher\nFoo street 123\n00000 Foo city\n\nTeokselle Foo title on myönnetty seuraavat tunnukset.\n\nFoo title ISSN 1797-0008 (painettu)\n\nKind regards,\ntest admin"
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot send serial message",
+  "url": "/v2/serial/messages/send",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

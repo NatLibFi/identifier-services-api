@@ -283,7 +283,9 @@ export async function getSerialPublicationRequestMessages(
 
   const dbResult = await db
     .selectFrom('serial_message')
-    .selectAll()
+    .leftJoin('serial_publisher', 'serial_publisher.id', 'serial_message.serial_publisher_id')
+    .selectAll('serial_message')
+    .select(['serial_publisher.official_name as serial_publisher_name'])
     .where('serial_publication_request_id', '=', serialPublicationRequestId)
     .execute();
 

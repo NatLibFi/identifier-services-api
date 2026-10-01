@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may resend serial message",
+  "url": "/v2/serial/messages/1/resend",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

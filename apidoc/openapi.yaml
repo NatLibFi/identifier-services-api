@@ -151,6 +151,17 @@ paths:
     $ref: './resources/serial/publication-requests/reject.yaml'
   /v2/serial/publication-requests/search:
     $ref: './resources/serial/publication-requests/search.yaml'
+
+  /v2/serial/messages/create-from-template:
+    $ref: './resources/serial/messages/create-from-template.yaml'
+  /v2/serial/messages/send:
+    $ref: './resources/serial/messages/send.yaml'
+  /v2/serial/messages/search:
+    $ref: './resources/serial/messages/search.yaml'
+  /v2/serial/messages/{id}:
+    $ref: './resources/serial/messages/id.yaml'
+  /v2/serial/messages/{id}/resend:
+    $ref: './resources/serial/messages/resend.yaml'
 components:
   securitySchemes:
     openId:

@@ -1,0 +1,9 @@
+{
+  "message_type": "ISSN_ASSIGNMENT",
+  "serial_publisher_id": 1,
+  "serial_publication_request_id": 1,
+  "recipient": "example@example.com",
+  "lang_code": "fi-FI",
+  "subject": "Foo title approved",
+  "body": "20.1.2026\n\nexample@example.com\nExample serial publisher\nFoo street 123\n00000 Foo city\n\nTeokselle Foo title on myönnetty seuraavat tunnukset.\n\nFoo title ISSN 1797-0008 (painettu)\nBar Baz title ISSN 1797-0016 (verkkojulkaisu)\n\nKind regards,\ntest admin"
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot search serial messages",
+  "url": "/v2/serial/messages/search",
+  "method": "POST",
+  "expectedStatus": 401
+}

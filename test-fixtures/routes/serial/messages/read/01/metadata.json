@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may read serial message",
+  "url": "/v2/serial/messages/1",
+  "method": "GET",
+  "role": "admin",
+  "expectedStatus": 200
+}

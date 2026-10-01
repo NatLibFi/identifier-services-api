@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot create message from template",
+  "url": "/v2/serial/messages/create-from-template",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

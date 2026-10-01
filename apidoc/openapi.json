@@ -2797,6 +2797,51 @@
         }
       }
     },
+    "/v2/monograph/publication-requests/{id}/restore-to-new": {
+      "post": {
+        "operationId": "restoreMonographPublicationRequestToNew",
+        "summary": "Restores monograph publication request to new state. May only be used if the publication is IN_PROCESS state.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "monograph-publication-request"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "State restoration to new was successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/messages/create-from-template": {
       "post": {
         "operationId": "createFromTemplate",
@@ -4183,6 +4228,275 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/messages/create-from-template": {
+      "post": {
+        "operationId": "createFromTemplateSerial",
+        "summary": "Create message information by using a message template stored to database",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/create-from-serial-template-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serial-message-template-loaded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "One or more associated entitites could not be found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/messages/send": {
+      "post": {
+        "operationId": "sendSerialMessage",
+        "summary": "Send a message regarding serial operations to a publisher",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/send-serial-message-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "One or more associated entitites could not be found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/messages/search": {
+      "post": {
+        "operationId": "searchSerialMessage",
+        "summary": "Search a message related to serial operations",
+        "description": "You need to define exactly one of the following properties -> serial_publisher_id, serial_publication_request_id, or search_text",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/search-serial-message-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serial-message-search-response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/messages/{id}": {
+      "get": {
+        "operationId": "readSerialMessage",
+        "summary": "Read serial message information",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serial-message-read"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/serial/messages/{id}/resend": {
+      "post": {
+        "operationId": "resendSerialMessage",
+        "summary": "Resend a message regarding serial operations to different email address.",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "serial"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/resend-serial-message-body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/created"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "One or more associated entitites could not be found"
           },
           "409": {
             "description": "Conflict"
@@ -9114,6 +9428,210 @@
           {
             "$ref": "#/components/schemas/created-metadata"
           }
+        ]
+      },
+      "serial-message-types": {
+        "type": "string",
+        "enum": [
+          "ISSN_ASSIGNMENT",
+          "ISSN_LIST_DELIVERY"
+        ]
+      },
+      "create-from-serial-template-body": {
+        "type": "object",
+        "properties": {
+          "message_type": {
+            "$ref": "#/components/schemas/serial-message-types"
+          },
+          "serial_publisher_id": {
+            "type": "number"
+          },
+          "serial_publication_request_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "message_type",
+          "serial_publisher_id"
+        ]
+      },
+      "serial-message-template-loaded": {
+        "type": "object",
+        "properties": {
+          "message_type": {
+            "$ref": "#/components/schemas/serial-message-types"
+          },
+          "serial_publisher_id": {
+            "type": "number"
+          },
+          "serial_publication_request_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "send-serial-message-body": {
+        "type": "object",
+        "properties": {
+          "message_type": {
+            "$ref": "#/components/schemas/serial-message-types"
+          },
+          "serial_publisher_id": {
+            "type": "number"
+          },
+          "serial_publication_request_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_type",
+          "serial_publisher_id",
+          "recipient",
+          "lang_code",
+          "subject",
+          "body"
+        ]
+      },
+      "search-serial-message-body": {
+        "type": "object",
+        "properties": {
+          "serial_publisher_id": {
+            "type": "number"
+          },
+          "serial_publication_request_id": {
+            "type": "number"
+          },
+          "search_text": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "serial-message-search-response": {
+        "type": "object",
+        "properties": {
+          "total_doc": {
+            "type": "number"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "message_type": {
+                  "$ref": "#/components/schemas/serial-message-types"
+                },
+                "recipient": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "sent": {
+                  "type": "string"
+                },
+                "sent_by": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "serial-message-read": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "message_type": {
+            "$ref": "#/components/schemas/serial-message-types"
+          },
+          "serial_publisher_id": {
+            "type": "number"
+          },
+          "serial_publisher_name": {
+            "type": "string"
+          },
+          "serial_publication_request_id": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sent": {
+            "type": "string"
+          },
+          "sent_by": {
+            "type": "string"
+          }
+        }
+      },
+      "resend-serial-message-body": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipient"
         ]
       }
     },

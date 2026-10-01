@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create message from template for publisher summary list of ISSN publications",
+  "url": "/v2/serial/messages/create-from-template",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

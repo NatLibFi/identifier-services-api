@@ -1,0 +1,28 @@
+{
+  "serial_message": [
+    {
+      "id": 1,
+      "message_type": "ISSN_ASSIGNMENT",
+      "serial_publisher_id": 1,
+      "serial_publication_request_id": 1,
+      "recipient": "erkki.esimerkki@example.localhost",
+      "lang_code": "fi-FI",
+      "subject": "TESTI/TEST MESSAGE Foo title approved",
+      "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\n20.1.2025\n\nexample@example.com\nExample serial publisher\nFoo street 123\n00000 Foo city\n\nTeokselle Foo title on myönnetty seuraavat tunnukset.\n\nFoo title ISSN 1797-0008 (painettu)\nBar Baz title ISSN 1797-0016 (verkkojulkaisu)\n\nKind regards,\ntest TEST_USER_1",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    },
+    {
+      "id": 2,
+      "message_type": "ISSN_ASSIGNMENT",
+      "serial_publisher_id": 2,
+      "serial_publication_request_id": null,
+      "recipient": "maija.meikalainen@example.localhost",
+      "lang_code": "fi-FI",
+      "subject": "TESTI/TEST MESSAGE List of all your ISSN identifiers",
+      "body": "Tämä viesti on testijärjestelmästä / This message is from test system.\n\nHere is a list.",
+      "sent": "2025-01-20T12:00:00.000Z",
+      "sent_by": "TEST_USER_1"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create message from template for approved serial publication request (ISSN)",
+  "url": "/v2/serial/messages/create-from-template",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may send valid message regarding approved serial publication request (ISSN)",
+  "url": "/v2/serial/messages/send",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 201
+}

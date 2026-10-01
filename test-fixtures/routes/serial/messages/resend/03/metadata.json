@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot resend serial message",
+  "url": "/v2/serial/messages/1/resend",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

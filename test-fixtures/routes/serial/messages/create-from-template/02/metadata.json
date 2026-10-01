@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create message from template",
+  "url": "/v2/serial/messages/create-from-template",
+  "method": "POST",
+  "expectedStatus": 401
+}

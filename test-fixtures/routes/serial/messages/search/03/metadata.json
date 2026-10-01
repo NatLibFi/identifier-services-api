@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot search serial messages",
+  "url": "/v2/serial/messages/search",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

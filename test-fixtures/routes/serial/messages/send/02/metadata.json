@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot send serial message",
+  "url": "/v2/serial/messages/send",
+  "method": "POST",
+  "expectedStatus": 401
+}

@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may search serial using email in search text",
+  "url": "/v2/serial/messages/search",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}
