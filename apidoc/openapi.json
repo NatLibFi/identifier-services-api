@@ -41,6 +41,7 @@
       "post": {
         "operationId": "sendToMelinda",
         "summary": "Send metadata records to Melinda",
+        "description": "Please note that it is required to define exactly one of the following: monograph_expression_id or serial_publication_id",
         "security": [
           {
             "openId": [
@@ -4635,6 +4636,9 @@
         "type": "object",
         "properties": {
           "monograph_expression_id": {
+            "type": "number"
+          },
+          "serial_publication_id": {
             "type": "number"
           },
           "record_filter": {

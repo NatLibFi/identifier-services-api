@@ -12,6 +12,7 @@ import { isAutomatedTest } from '../utils/generic-utils.ts';
 import type { MelindaConfiguration } from '../app.ts';
 import type { UnknownObject } from '../generic-types.ts';
 import type { SendToMelindaHttp } from '../validations/melinda-validation.ts';
+import { createSerialPublicationMarc } from './serial/serial-publication-interface.ts';
 
 interface MelindaSaveResult {
   success_info?: UnknownObject;
@@ -26,7 +27,7 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
   });
 
   async function sendToMelinda(recordOpts: SendToMelindaHttp) {
-    const { monograph_expression_id, record_filter } = recordOpts;
+    const { monograph_expression_id, serial_publication_id, record_filter } = recordOpts;
 
     let records: UnknownObject[] = [];
     if (monograph_expression_id) {
@@ -35,6 +36,14 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
         record_format: MARC_RECORD_FORMAT.MARC_RECORD_JS,
         record_filter,
       });
+    }
+
+    if (serial_publication_id) {
+      // @ts-expect-error string would be returned only using MARC_RECORD_FORMAT.TEXT
+      const record: UnknownObject = await createSerialPublicationMarc(serial_publication_id, {
+        record_format: MARC_RECORD_FORMAT.MARC_RECORD_JS,
+      });
+      records = [record];
     }
 
     // Sanity check: records are defined

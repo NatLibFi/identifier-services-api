@@ -2,5 +2,7 @@ type: object
 properties:
   monograph_expression_id:
     type: number
+  serial_publication_id:
+    type: number
   record_filter:
     $ref: '../../enums/marc-record-filters.yaml'
