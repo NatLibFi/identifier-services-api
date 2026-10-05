@@ -1,0 +1,25 @@
+LDR    00000nas a22000008i 4500
+008    260120c19909999fi z| ||      0|||b0fin| 
+022 0  ‡a1797-0008‡2_a
+040    ‡aFI-NL‡bfin‡erda
+041 0  ‡afin
+042    ‡afinb
+222  0 ‡aFoo title
+245 00 ‡aFoo title :‡bFoo subtitle.
+264 1  ‡aFoobarila‡bFoo Publisher, ‡c1990-
+264 3  ‡aFoobarila :‡bFoo printer
+310    ‡aMuu
+336    ‡ateksti‡btxt‡2rdacontent
+337    ‡akäytettävissä ilman laitetta‡bn‡2rdamedia
+338    ‡anide‡bnc‡2rdacarrier
+362 0  ‡a1-
+500    ‡aTUNNISTEREKISTERIN TESTITIETUE.
+500    ‡aEnnakkotieto / Kansalliskirjasto.
+594    ‡aEnnakkotieto / Kansalliskirjasto‡5FENNI
+710 2  ‡aFoo Publisher.
+760 0  ‡tFoo Series‡x1797-0024‡9FENNI<KEEP>
+762 0  ‡tSubFoo‡x1797-0032‡9FENNI<KEEP>
+776 08 ‡iVerkkoaineisto:‡tInterwebsFoo‡x1797-0040
+780 00 ‡tFooFooFoo‡x1797-0011‡9FENNI<KEEP>
+935    ‡aISSNpre0426‡5FENNI
+LOW    ‡aFIKKA

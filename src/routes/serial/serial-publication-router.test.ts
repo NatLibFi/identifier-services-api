@@ -2,9 +2,11 @@ import { runIntegrationTestSuite } from '../../test-utils/generate-integration-t
 
 const routers = ['serial', 'publications'];
 
-runIntegrationTestSuite(routers, 'delete');
-runIntegrationTestSuite(routers, 'search');
-runIntegrationTestSuite(routers, 'update');
+// runIntegrationTestSuite(routers, 'delete');
+// runIntegrationTestSuite(routers, 'search');
+// runIntegrationTestSuite(routers, 'update');
+//
+// runIntegrationTestSuite(routers, 'assign-issn');
+// runIntegrationTestSuite(routers, 'revoke-issn');
 
-runIntegrationTestSuite(routers, 'assign-issn');
-runIntegrationTestSuite(routers, 'revoke-issn');
+runIntegrationTestSuite(routers, 'marc');

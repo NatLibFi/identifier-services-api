@@ -460,7 +460,7 @@ interface ConstructedMessage {
 async function constructIdentifierAssignedMessage(
   messageType: string,
   messagePublisher: PublisherMessageInfo,
-  isSelfPublisher: boolean,
+  prioritizeRequestInformation: boolean,
   manifestationIds?: number[],
 ): Promise<ConstructedMessage> {
   // Note: assumes sanityCheckMessageRelations will be ran to confirm associations
@@ -518,7 +518,7 @@ async function constructIdentifierAssignedMessage(
   }
 
   // Override current message publisher with request information
-  if (isSelfPublisher) {
+  if (prioritizeRequestInformation) {
     publisherInfo.officialName = publicationRequest.official_name;
     publisherInfo.address = publicationRequest.address || '';
     publisherInfo.zip = publicationRequest.zip || '';
@@ -661,7 +661,7 @@ async function constructIdentifierListLinkMessage(
 interface ConstructMonographMessageParams {
   messageType: string;
   monographPublisherId: number;
-  isSelfPublisher: boolean;
+  prioritizeRequestInformation: boolean;
   monographIdentifierBatchId: number | null;
   manifestationIds?: number[];
 }
@@ -669,8 +669,13 @@ interface ConstructMonographMessageParams {
 export async function constructMonographMessage(
   constructMonographMessageParams: ConstructMonographMessageParams,
 ): Promise<ConstructedMessage> {
-  const { messageType, monographPublisherId, isSelfPublisher, monographIdentifierBatchId, manifestationIds } =
-    constructMonographMessageParams;
+  const {
+    messageType,
+    monographPublisherId,
+    prioritizeRequestInformation,
+    monographIdentifierBatchId,
+    manifestationIds,
+  } = constructMonographMessageParams;
 
   const db = getKysely();
 
@@ -707,7 +712,12 @@ export async function constructMonographMessage(
   switch (messageType) {
     case MONOGRAPH_MESSAGE_TYPES.ISBN_ASSIGNMENT:
     case MONOGRAPH_MESSAGE_TYPES.ISMN_ASSIGNMENT:
-      return constructIdentifierAssignedMessage(messageType, messagePublisher, isSelfPublisher, manifestationIds);
+      return constructIdentifierAssignedMessage(
+        messageType,
+        messagePublisher,
+        prioritizeRequestInformation,
+        manifestationIds,
+      );
     case MONOGRAPH_MESSAGE_TYPES.ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
     case MONOGRAPH_MESSAGE_TYPES.ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION:
       return constructMonographPublisherRegisteredMessage(messageType, messagePublisher);

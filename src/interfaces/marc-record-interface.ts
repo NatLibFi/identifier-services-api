@@ -2,13 +2,17 @@ import { DateTime } from 'luxon';
 import { MarcRecord } from '@natlibfi/marc-record';
 
 import { translateManifestationType } from './monograph/monograph-message-template-utils.ts';
+import { isProduction } from '../utils/generic-utils.ts';
 
-import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL } from '../constants.ts';
+import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL, SERIAL_PUBLICATION_TYPE } from '../constants.ts';
 
 import type { MonographAuthor } from '../db/types/monograph/types-monograph-author.ts';
 import type { MonographSeriesInformation } from '../db/types/monograph/types-monograph-publication-manifestation.ts';
 import type { UnknownObject } from '../generic-types.ts';
-import { isProduction } from '../utils/generic-utils.ts';
+import type {
+  SerialPublicationAssociatedSeries,
+  SerialPublicationPreviousSeries,
+} from '../db/types/serial/types-serial-publication.ts';
 
 export interface CreateMarcRecordInformation {
   isElectronical: boolean;
@@ -40,22 +44,10 @@ export interface CreateMarcRecordInformation {
   serialFirstNumber?: string | null;
   serialFrequency?: string | null;
   serialPublicationType?: string | null;
-  serialMainSeries?: {
-    title: string;
-    issn: string | null;
-  } | null;
-  serialSubseries?: {
-    title: string;
-    issn: string | null;
-  } | null;
-  serialAnotherMedium?: {
-    title: string;
-    issn: string | null;
-  } | null;
-  serialPreviousSeries?: {
-    title: string;
-    issn: string | null;
-  } | null;
+  serialMainSeries?: SerialPublicationAssociatedSeries[];
+  serialSubseries?: SerialPublicationAssociatedSeries[];
+  serialAnotherMedium?: SerialPublicationAssociatedSeries[];
+  serialPreviousSeries?: SerialPublicationPreviousSeries[];
   serialUrl?: string | null;
   serialMedium?: string | null;
 }
@@ -268,25 +260,24 @@ export function generate008(publicationInfo: CreateMarcRecordInformation): Contr
 
   function getSerialPublicationTypeInfo(serialPublicationType: string | undefined) {
     const publicationTypeMap: string[] = [
-      // ISSN_PUBLICATION_TYPES.STAFFMAGAZINE,
-      // ISSN_PUBLICATION_TYPES.MEMBERSHIPMAGAZINE,
-      // ISSN_PUBLICATION_TYPES.NEWSLETTER,
-      // ISSN_PUBLICATION_TYPES.JOURNAL,
-      // ISSN_PUBLICATION_TYPES.FREEPAPER
+      SERIAL_PUBLICATION_TYPE.STAFFMAGAZINE,
+      SERIAL_PUBLICATION_TYPE.MEMBERSHIPMAGAZINE,
+      SERIAL_PUBLICATION_TYPE.NEWSLETTER,
+      SERIAL_PUBLICATION_TYPE.JOURNAL,
+      SERIAL_PUBLICATION_TYPE.FREEPAPER,
     ];
 
     if (!serialPublicationType || !publicationTypeMap.includes(serialPublicationType)) {
       return '|';
     }
 
-    // TODO: uncomment when ISSN constants are available
-    // if (publicationType === ISSN_PUBLICATION_TYPES.NEWSPAPER) {
-    // return 'n';
-    // }
-    //
-    // if (publicationType === ISSN_PUBLICATION_TYPES.MONOGRAPHY) {
-    // return 'm';
-    // }
+    if (serialPublicationType === SERIAL_PUBLICATION_TYPE.NEWSPAPER) {
+      return 'n';
+    }
+
+    if (serialPublicationType === SERIAL_PUBLICATION_TYPE.MONOGRAPHY) {
+      return 'm';
+    }
 
     return 'p';
   }
@@ -916,21 +907,25 @@ export function generate760(publicationInfo: CreateMarcRecordInformation): DataF
     return [];
   }
 
-  const subfields = [{ code: 't', value: serialMainSeries.title }];
+  return serialMainSeries
+    .filter((s) => Boolean(s.title))
+    .map((s) => {
+      // @ts-expect-error TS cannot derive previous filter
+      const seriesTitle: string = s.title;
+      const subfields = [{ code: 't', value: seriesTitle }];
 
-  if (serialMainSeries.issn) {
-    subfields.push({ code: 'x', value: serialMainSeries.issn });
-  }
+      if (s.issn) {
+        subfields.push({ code: 'x', value: s.issn });
+      }
 
-  subfields.push({ code: '9', value: 'FENNI<KEEP>' });
+      subfields.push({ code: '9', value: 'FENNI<KEEP>' });
 
-  return [
-    {
-      tag: '760',
-      ind1: '0',
-      subfields,
-    },
-  ];
+      return {
+        tag: '760',
+        ind1: '0',
+        subfields,
+      };
+    });
 }
 
 export function generate762(publicationInfo: CreateMarcRecordInformation): DataField[] {
@@ -940,21 +935,25 @@ export function generate762(publicationInfo: CreateMarcRecordInformation): DataF
     return [];
   }
 
-  const subfields = [{ code: 't', value: serialSubseries.title }];
+  return serialSubseries
+    .filter((s) => Boolean(s.title))
+    .map((s) => {
+      // @ts-expect-error TS cannot derive previous filter
+      const seriesTitle: string = s.title;
+      const subfields = [{ code: 't', value: seriesTitle }];
 
-  if (serialSubseries.issn) {
-    subfields.push({ code: 'x', value: serialSubseries.issn });
-  }
+      if (s.issn) {
+        subfields.push({ code: 'x', value: s.issn });
+      }
 
-  subfields.push({ code: '9', value: 'FENNI<KEEP>' });
+      subfields.push({ code: '9', value: 'FENNI<KEEP>' });
 
-  return [
-    {
-      tag: '762',
-      ind1: '0',
-      subfields,
-    },
-  ];
+      return {
+        tag: '762',
+        ind1: '0',
+        subfields,
+      };
+    });
 }
 
 export function generate776(publicationInfo: CreateMarcRecordInformation): DataField[] {
@@ -999,23 +998,28 @@ export function generate776(publicationInfo: CreateMarcRecordInformation): DataF
   if (isSerial && serialAnotherMedium) {
     const subfieldIValue = isElectronical ? 'Painettu:' : 'Verkkoaineisto:';
 
-    const subfields = [
-      { code: 'i', value: subfieldIValue },
-      { code: 't', value: serialAnotherMedium.title },
-    ];
+    return serialAnotherMedium
+      .filter((s) => Boolean(s.title))
+      .map((s) => {
+        // @ts-expect-error TS cannot derive previous filter
+        const seriesTitle: string = s.title;
 
-    if (serialAnotherMedium.issn) {
-      subfields.push({ code: 'x', value: serialAnotherMedium.issn });
-    }
+        const subfields = [
+          { code: 'i', value: subfieldIValue },
+          { code: 't', value: seriesTitle },
+        ];
 
-    return [
-      {
-        tag: '776',
-        ind1: '0',
-        ind2: '8',
-        subfields,
-      },
-    ];
+        if (s.issn) {
+          subfields.push({ code: 'x', value: s.issn });
+        }
+
+        return {
+          tag: '776',
+          ind1: '0',
+          ind2: '8',
+          subfields,
+        };
+      });
   }
 
   return [];
@@ -1028,22 +1032,26 @@ export function generate780(publicationInfo: CreateMarcRecordInformation): DataF
     return [];
   }
 
-  const subfields = [{ code: 't', value: serialPreviousSeries.title }];
+  return serialPreviousSeries
+    .filter((s) => Boolean(s.title))
+    .map((s) => {
+      // @ts-expect-error TS cannot derive previous filter
+      const seriesTitle: string = s.title;
+      const subfields = [{ code: 't', value: seriesTitle }];
 
-  if (serialPreviousSeries.issn) {
-    subfields.push({ code: 'x', value: serialPreviousSeries.issn });
-  }
+      if (s.issn) {
+        subfields.push({ code: 'x', value: s.issn });
+      }
 
-  subfields.push({ code: '9', value: 'FENNI<KEEP>' });
+      subfields.push({ code: '9', value: 'FENNI<KEEP>' });
 
-  return [
-    {
-      tag: '780',
-      ind1: '0',
-      ind2: '0',
-      subfields,
-    },
-  ];
+      return {
+        tag: '780',
+        ind1: '0',
+        ind2: '0',
+        subfields,
+      };
+    });
 }
 
 export function generate856(publicationInfo: CreateMarcRecordInformation): DataField[] {

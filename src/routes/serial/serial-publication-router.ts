@@ -7,6 +7,7 @@ import {
   updateSerialPublicationSchema,
 } from '../../validations/serial/serial-publication-validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
+import { getMarcRecordSchema } from '../../validations/marc-record-validation.ts';
 
 export default function createSerialPublicationRouter() {
   const serialPublicationRouter = Router();
@@ -40,6 +41,14 @@ export default function createSerialPublicationRouter() {
     '/:id/revoke-issn',
     validateRequestParams(idParameterSchema, true),
     serialPublicationControllers.revokeSerialPublicationIssnIdentifier,
+  );
+
+  // Note: using POST here as QUERY does not have enough support and GET does not work with request body
+  serialPublicationRouter.post(
+    '/:id/marc',
+    validateRequestParams(idParameterSchema, true),
+    validateRequestBody(getMarcRecordSchema),
+    serialPublicationControllers.createSerialPublicationMarc,
   );
 
   return serialPublicationRouter;

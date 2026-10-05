@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot create MARC21 record out of serial publication information",
+  "url": "/v2/serial/publications/1/marc",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

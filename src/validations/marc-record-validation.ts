@@ -5,7 +5,7 @@ import { MARC_RECORD_FILTER, MARC_RECORD_FORMAT } from '../constants.ts';
 export const getMarcRecordSchema = z
   .object({
     record_format: z.enum(Object.values(MARC_RECORD_FORMAT)),
-    record_filter: z.enum(Object.values(MARC_RECORD_FILTER)).optional(),
+    record_filter: z.enum(Object.values(MARC_RECORD_FILTER)).optional(), // Monograph-only supported
   })
   .strict();
 

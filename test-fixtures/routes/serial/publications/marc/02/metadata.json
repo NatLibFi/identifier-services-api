@@ -1,0 +1,6 @@
+{
+  "description": "[guest] cannot create MARC21 record out of serial publication information",
+  "url": "/v2/serial/publications/1/marc",
+  "method": "POST",
+  "expectedStatus": 401
+}

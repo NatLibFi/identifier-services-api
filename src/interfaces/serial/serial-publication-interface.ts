@@ -1,6 +1,13 @@
 import HttpStatus from 'http-status';
 
-import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
+
+import {
+  MARC_RECORD_FORMAT,
+  SERIAL_PUBLICATION_MEDIUM,
+  SERIAL_PUBLICATION_REQUEST_STATUS,
+  SERIAL_PUBLICATION_STATUS,
+} from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getKysely } from '../../db/database.ts';
@@ -18,6 +25,10 @@ import {
   asSerialPublicationSearchResult,
   type SerialPublicationAdminRead,
 } from '../../dtl/serial/serial-publication-dtl.ts';
+
+import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
+import { readSerialPublisher } from './serial-publisher-interface.ts';
+import generateMarcRecord from '../marc-record-interface.ts';
 
 import {
   assignIssnIdentifier,
@@ -37,14 +48,16 @@ import type {
   SearchSerialPublicationHttp,
   UpdateSerialPublicationHttp,
 } from '../../validations/serial/serial-publication-validation.ts';
-import type { RequestUser } from '../../generic-types.ts';
+import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type {
   SerialPublicationInsert,
   SerialPublicationUpdate,
 } from '../../db/types/serial/types-serial-publication.ts';
-import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
 import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 import type { SerialPublicationRequestUpdate } from '../../db/types/serial/types-serial-publication-request.ts';
+import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
+import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
+import type { MonographAuthor } from '../../db/types/monograph/types-monograph-author.ts';
 
 export async function readSerialPublication(id: number, trx?: Transaction<Database>) {
   // Use transaction if provided
@@ -582,4 +595,80 @@ export async function revokeSerialPublicationIssnIdentifier(
 
   // Return using read interface for consistency
   return readSerialPublication(publicationId);
+}
+
+export async function createSerialPublicationMarc(
+  serialPublicationId: number,
+  opts: GetMarcRecordHttp,
+): Promise<UnknownObject[] | string> {
+  const { record_format } = opts;
+
+  const serialPublication = await readSerialPublication(serialPublicationId);
+  const publicationRequest = await readSerialPublicationRequest(serialPublication.serial_publication_request_id, true);
+  const serialPublisher = serialPublication.serial_publisher_id
+    ? await readSerialPublisher(serialPublication.serial_publisher_id)
+    : null;
+
+  const marcRecords: UnknownObject[] = [];
+
+  const mainAuthor = null;
+  const contributors: MonographAuthor[] = [];
+
+  const publicationInfo: CreateMarcRecordInformation = {
+    isElectronical: serialPublication.medium !== SERIAL_PUBLICATION_MEDIUM.PRINTED,
+    isMonograph: false,
+    isSerial: true,
+    isSheetMusic: false,
+    isDissertation: false,
+    isMap: false,
+    isAudiobook: false,
+    title: serialPublication.title,
+    subtitle: serialPublication.subtitle,
+    issnIdentifier: serialPublication.issn_identifier?.identifier,
+    language: serialPublication.language,
+    publicationYear: serialPublication.issued_from_year,
+    publisherName: publicationRequest.publisher_name || serialPublisher?.official_name,
+    publisherPlace: serialPublication.place_of_publication,
+    printerName: serialPublication.printer,
+    printerPlace: serialPublication.place_of_publication,
+    mainAuthor,
+    contributors,
+    serialFirstNumber: serialPublication.issued_from_number,
+    serialFrequency: serialPublication.frequency,
+    serialPublicationType: serialPublication.publication_type,
+    serialMainSeries: serialPublication.main_series,
+    serialSubseries: serialPublication.subseries,
+    serialAnotherMedium: serialPublication.another_medium,
+    serialPreviousSeries: serialPublication.previous,
+    serialUrl: serialPublication.url,
+    serialMedium: serialPublication.medium,
+  };
+
+  const marcRecord = generateMarcRecord(publicationInfo);
+  marcRecords.push(marcRecord);
+
+  if (record_format === MARC_RECORD_FORMAT.MARC_RECORD_JS) {
+    return marcRecords;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const serializableRecords = marcRecords.map((r: any) =>
+    MarcRecordSerializers.Json.from(JSON.stringify(r.toObject())),
+  );
+
+  if (record_format === MARC_RECORD_FORMAT.TEXT) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.Text.to(r)).join('\n\n');
+  }
+
+  if (record_format === MARC_RECORD_FORMAT.ISO2709) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.ISO2709.to(r)).join('');
+  }
+
+  throw new ApiError(
+    HttpStatus.UNPROCESSABLE_ENTITY,
+    'Unprocessable entity',
+    `Could not serialize marc records to format ${record_format}.`,
+  );
 }

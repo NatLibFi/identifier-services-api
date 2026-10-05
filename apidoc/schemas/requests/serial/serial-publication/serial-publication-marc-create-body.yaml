@@ -1,0 +1,6 @@
+type: object
+properties:
+  record_format:
+    $ref: '../../../enums/marc-record-formats.yaml'
+required:
+  - record_format

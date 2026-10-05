@@ -41,11 +41,19 @@ export default function createMonographMessageInterface(
     // Craft message based on given information now that it has been established all relations are valid
     let result;
 
+    // For self-published entries & managed university and state entries prioritize using request-based information
+    const prioritizeRequestInformationSources = [
+      monographPublisherConfiguration.SELF_PUBLISHER_ID,
+      monographPublisherConfiguration.HY_PUBLISHER_ID,
+      monographPublisherConfiguration.STATE_PUBLISHER_ID,
+    ];
+    const prioritizeRequestInformation = prioritizeRequestInformationSources.includes(monograph_publisher_id);
+
     try {
       result = await constructMonographMessage({
         messageType: message_type,
         monographPublisherId: monograph_publisher_id,
-        isSelfPublisher: monographPublisherConfiguration.SELF_PUBLISHER_ID === monograph_publisher_id,
+        prioritizeRequestInformation,
         monographIdentifierBatchId: monograph_identifier_batch_id || null,
         manifestationIds: manifestation_ids,
       });

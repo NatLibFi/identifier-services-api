@@ -23,6 +23,7 @@ import {
 } from '../../constants.ts';
 
 import { asMonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
+import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
 import { readMonographPublication } from './monograph-publication-interface.ts';
 import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
 
@@ -37,7 +38,6 @@ import type {
 } from '../../db/types/monograph/types-monograph-publication-expression.ts';
 import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
 import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
-import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
 
 export async function readMonographPublicationExpression(id: number) {
   const db = getKysely();
