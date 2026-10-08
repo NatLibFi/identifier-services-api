@@ -1,4 +1,4 @@
-import ExcelJS, { Workbook } from 'exceljs';
+import ExcelJS, { type Workbook } from 'exceljs';
 import HttpStatus from 'http-status';
 import { sql } from 'kysely';
 
