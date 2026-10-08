@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create statistics regarding serial publications",
+  "url": "/v2/serial/statistics",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

@@ -1,0 +1,6 @@
+{
+  "description": "[guest] may not create serial statistics",
+  "url": "/v2/serial/statistics",
+  "method": "POST",
+  "expectedStatus": 401
+}

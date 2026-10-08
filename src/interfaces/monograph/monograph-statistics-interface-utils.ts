@@ -1,4 +1,4 @@
-import ExcelJS from 'exceljs';
+import ExcelJS, { Workbook } from 'exceljs';
 import HttpStatus from 'http-status';
 import { sql } from 'kysely';
 
@@ -19,16 +19,30 @@ import { readMonographPublication } from './monograph-publication-interface.ts';
 import type { MonographPublisherConfiguration } from '../../app.ts';
 import type { MonographPublisherContactPerson } from '../../db/types/monograph/types-monograph-publisher.ts';
 
-interface MonthlyStatistics {
+export interface MonthlyStatistics {
   year: number;
   month: number;
   count: number;
 }
 
-export function formatStatisticsToWorkbook(statisticsName: string, data: Record<string, string>[]) {
-  const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'National Library of Finland';
+export interface StatisticsWorksheetInfo {
+  statisticsName: string;
+  data: Record<string, string>[];
+}
 
+export function formatStatisticsToWorkbook(worksheets: StatisticsWorksheetInfo[]) {
+  const emptyWorkbook = new ExcelJS.Workbook();
+  emptyWorkbook.creator = 'National Library of Finland';
+
+  // Note: workbook is returned here so that controller may decide correct writeBuffer while writing content related headers
+  return worksheets.reduce((p, n) => addSheetToWorkbook(n.statisticsName, n.data, p), emptyWorkbook);
+}
+
+export function addSheetToWorkbook(
+  statisticsName: string,
+  data: Record<string, string>[],
+  workbook: Workbook,
+): Workbook {
   const sheet = workbook.addWorksheet(statisticsName);
 
   const [firstRow] = data;

@@ -11,6 +11,7 @@ import {
   getMonthlyMonographStatistics,
   getPublisherIdentifierStatistics,
   getSelfPublisherPublicationStatistics,
+  type StatisticsWorksheetInfo,
 } from './monograph-statistics-interface-utils.ts';
 
 import type { MonographPublisherConfiguration } from '../../app.ts';
@@ -89,7 +90,13 @@ export default function createMonographStatisticsInterface(
       );
     }
 
-    return formatStatisticsToWorkbook(statistics_type, data);
+    // All monograph statistics consider exactly one worksheet
+    const ws: StatisticsWorksheetInfo = {
+      statisticsName: statistics_type,
+      data,
+    };
+
+    return formatStatisticsToWorkbook([ws]);
   }
 
   return {

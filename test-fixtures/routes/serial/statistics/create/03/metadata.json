@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create serial statistics",
+  "url": "/v2/serial/statistics",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

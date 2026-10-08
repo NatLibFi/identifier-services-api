@@ -164,6 +164,9 @@ paths:
     $ref: './resources/serial/messages/id.yaml'
   /v2/serial/messages/{id}/resend:
     $ref: './resources/serial/messages/resend.yaml'
+
+  /v2/serial/statistics:
+    $ref: './resources/serial/statistics/root.yaml'
 components:
   securitySchemes:
     openId:

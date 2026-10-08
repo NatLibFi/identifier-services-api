@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may create ISSN range statistics with CSV format (note: automatic conversion provides first sheet only)",
+  "url": "/v2/serial/statistics",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

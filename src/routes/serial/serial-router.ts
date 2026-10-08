@@ -5,8 +5,11 @@ import issnRangeRouter from './issn-range-router.ts';
 import serialPublisherRouter from './serial-publisher-router.ts';
 
 import createSerialPublicationRequestRouter from './serial-publication-request-router.ts';
-import createSerialMessageRouter from './serial-message-router.ts';
 import createSerialPublicationRouter from './serial-publication-router.ts';
+
+import createSerialMessageRouter from './serial-message-router.ts';
+
+import createSerialStatisticsRouter from './serial-statistics-router.ts';
 
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 
@@ -26,6 +29,8 @@ export default function createSerialRouter(
   serialRouter.use('/publications', allowAdminOnly, createSerialPublicationRouter());
 
   serialRouter.use('/messages', allowAdminOnly, createSerialMessageRouter(messagingConfiguration));
+
+  serialRouter.use('/statistics', allowAdminOnly, createSerialStatisticsRouter());
 
   return serialRouter;
 }
