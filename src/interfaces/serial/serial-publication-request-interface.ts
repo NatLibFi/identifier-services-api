@@ -53,6 +53,8 @@ import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publica
 import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
 import type { Transaction } from 'kysely';
 import type { Database } from '../../db/types.ts';
+import { createSerialPublisher } from './serial-publisher-interface.ts';
+import type { CreateSerialPublisherHttp } from '../../validations/serial/serial-publisher-validation.ts';
 
 export async function createSerialPublicationRequest(
   serialPublicationRequestCreateDoc: CreateSerialPublicationRequestHttp,
@@ -384,11 +386,12 @@ export async function addSerialPublication(
         modified_by: user.id,
       };
 
-      const requestUpdateResult = await db
+      const requestUpdateResult = await trx
         .updateTable('serial_publication_request')
         .set(requestDbUpdate)
         .where('id', '=', requestId)
         .executeTakeFirstOrThrow();
+
       validateRowsUpdatedExact(requestUpdateResult, 1);
     }
 
@@ -402,12 +405,18 @@ export async function approveSerialPublicationRequest(id: number, user: RequestU
   // @ts-expect-error TS does not understand dynamic return type
   const request: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(id, false);
 
+  // Allow only not handled entries to be approved
   if (request.status !== SERIAL_PUBLICATION_REQUEST_STATUS.NOT_HANDLED) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
       `Only requests with status NOT_HANDLED can be approved. Serial publication request id ${id} has status of ${request.status}.`,
     );
+  }
+
+  // Require publisher to be defined
+  if (!request.serial_publisher_id) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Only requests with serial publisher defined can be approved.');
   }
 
   const db = getKysely();
@@ -482,4 +491,73 @@ export async function rejectSerialPublicationRequest(id: number, user: RequestUs
   });
 
   return readSerialPublicationRequest(id);
+}
+
+// TODO: tests
+export async function createSerialPublisherFromRequest(serialPublicationRequestId: number, user: RequestUser) {
+  // @ts-expect-error TS does not understand dynamic return type
+  const serialPublicationRequest: SerialPublicationRequestAdminRead = await readSerialPublicationRequest(
+    serialPublicationRequestId,
+    false,
+  );
+
+  // Block creation if:
+  //   - TODO: has already been created from the form
+  //   - publication request has publisher defined
+  if (serialPublicationRequest.serial_publisher_id !== null) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication request id ${serialPublicationRequestId} already has publisher defined - cannot create new.`,
+    );
+  }
+
+  const publisherInformation: CreateSerialPublisherHttp = {
+    official_name: serialPublicationRequest.publisher_name,
+    contact_persons: serialPublicationRequest.contact_person
+      ? [{ name: serialPublicationRequest.contact_person, email: serialPublicationRequest.email }]
+      : [],
+    email_common: serialPublicationRequest.email,
+    phone: serialPublicationRequest.phone,
+    address: serialPublicationRequest.address,
+    zip: serialPublicationRequest.zip,
+    city: serialPublicationRequest.city,
+    lang_code: serialPublicationRequest.lang_code,
+  };
+
+  const db = getKysely();
+  const result = await db.transaction().execute(async (trx) => {
+    // Create publisher
+    const publisherCreateResult = await createSerialPublisher(publisherInformation, user, trx);
+
+    // TODO: statistics entry?
+    // TODO: change serial publication request information for avoiding creating duplicates
+    // Change request and associated publication publisher
+    const requestDbUpdate: SerialPublicationRequestUpdate = {
+      serial_publisher_id: publisherCreateResult.id,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const requestUpdateResult = await trx
+      .updateTable('serial_publication_request')
+      .set(requestDbUpdate)
+      .where('id', '=', serialPublicationRequestId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(requestUpdateResult, 1);
+
+    // Update associated publications
+    const publicationUpdateResult = await trx
+      .updateTable('serial_publication')
+      .set({ serial_publisher_id: publisherCreateResult.id, modified: getCurrentTime(), modified_by: user.id })
+      .where('serial_publication_request_id', '=', serialPublicationRequestId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(publicationUpdateResult, serialPublicationRequest.publications.length);
+
+    return publisherCreateResult;
+  });
+
+  return result;
 }

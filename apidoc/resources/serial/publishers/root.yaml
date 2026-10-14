@@ -1,7 +1,9 @@
 post:
   operationId: createSerialPublisher
   summary: Create a new serial publisher
-  security: []
+  security:
+    - openId:
+        - admin
   tags:
     - serial
   requestBody:
@@ -9,7 +11,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../../schemas/requests/serial/serial-publisher/serial-publisher-update-body.yaml'
+          $ref: '../../../schemas/requests/serial/serial-publisher/serial-publisher-create-body.yaml'
   responses:
     '201':
       description: Resource was created

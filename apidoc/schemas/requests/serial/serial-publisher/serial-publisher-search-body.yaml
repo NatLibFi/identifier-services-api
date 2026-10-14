@@ -1,0 +1,16 @@
+type: object
+properties:
+  search_text:
+    type: string
+    maxLength: 100
+  limit:
+    type: number
+    minimum: 1
+    maximum: 50
+  offset:
+    type: number
+    minimum: 0
+    maximum: 100000
+required:
+  - limit
+  - offset

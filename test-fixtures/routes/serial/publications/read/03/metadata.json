@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot read serial publication information",
+  "url": "/v2/serial/publications/1",
+  "method": "GET",
+  "role": "publisher",
+  "expectedStatus": 403
+}

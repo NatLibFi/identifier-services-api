@@ -18,6 +18,12 @@ export default function createSerialPublicationRouter() {
     serialPublicationControllers.searchSerialPublication,
   );
 
+  serialPublicationRouter.get(
+    '/:id',
+    validateRequestParams(idParameterSchema, true),
+    serialPublicationControllers.readSerialPublication,
+  );
+
   serialPublicationRouter.patch(
     '/:id',
     validateRequestParams(idParameterSchema, true),

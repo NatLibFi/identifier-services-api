@@ -1,5 +1,5 @@
 {
-  "description": "[admin] may send valid message regarding approved serial publication request (ISSN)",
+  "description": "[admin] may send valid message regarding approved serial publication request (ISSN, auto-transfers request state to COMPLETED)",
   "url": "/v2/serial/messages/send",
   "method": "POST",
   "role": "admin",

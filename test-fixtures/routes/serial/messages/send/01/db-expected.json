@@ -17,7 +17,7 @@
     {
       "id": 1,
       "serial_publisher_id": 1,
-      "status": "NOT_NOTIFIED",
+      "status": "COMPLETED",
       "publisher_name": "Foo Publisher",
       "contact_person": "Foo Bar",
       "email": "example@example.com",
@@ -28,8 +28,8 @@
       "lang_code": "fi-FI",
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
-      "modified": "2025-01-20T12:00:00.000Z",
-      "modified_by": "TEST_USER_1"
+      "modified": "2026-01-20T12:00:00.000Z",
+      "modified_by": "admin"
     }
   ],
   "serial_publication_request_archive": [

@@ -83,8 +83,8 @@ export const createSerialPublicationRequestV2Schema = z
     version: z.literal(2), // This schema must explicitly define use of v2
     form: z.object({
       publisher_name: z.string().max(100),
-      contact_person: z.string().max(100),
-      email: z.email().max(100),
+      contact_person: z.string().max(100).nullable(),
+      email: z.email().max(100).nullable(),
       phone: z.string().max(30).nullable().optional(),
       address: z.string().max(50).nullable().optional(),
       zip: z.string().max(10).nullable().optional(),

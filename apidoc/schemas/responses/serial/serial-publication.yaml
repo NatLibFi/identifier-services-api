@@ -78,7 +78,9 @@ allOf:
       status:
         $ref: '../../enums/serial/serial-publication-status.yaml'
       issn_identifier:
-        $ref: './issn-identifier.yaml'
+        oneOf:
+          - $ref: './issn-identifier.yaml'
+          - type: 'null'
       archive_entry:
         $ref: './serial-publication-archive.yaml'
   - $ref: '../common/created-metadata.yaml'

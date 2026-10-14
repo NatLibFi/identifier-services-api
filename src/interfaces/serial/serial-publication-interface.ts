@@ -325,7 +325,7 @@ export async function createSerialPublication(
 }
 
 export async function searchSerialPublication(searchParameters: SearchSerialPublicationHttp) {
-  const { search_text, status, serial_publisher_id, limit, offset } = searchParameters;
+  const { search_text, status, serial_publisher_id, serial_publication_request_id, limit, offset } = searchParameters;
 
   const db = getKysely();
 
@@ -351,6 +351,10 @@ export async function searchSerialPublication(searchParameters: SearchSerialPubl
 
   if (serial_publisher_id) {
     query = query.where('serial_publication.serial_publisher_id', '=', serial_publisher_id);
+  }
+
+  if (serial_publication_request_id) {
+    query = query.where('serial_publication.serial_publication_request_id', '=', serial_publication_request_id);
   }
 
   const countQuery = query.clearSelect().select((eb) => eb.fn.countAll().as('total_doc'));

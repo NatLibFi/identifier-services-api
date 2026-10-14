@@ -352,6 +352,7 @@ export async function changeSerialPublicationRequestStatus(
   r: SerialPublicationRequestAdminRead,
   newStatus: string,
   user: RequestUser,
+  trx?: Transaction<Database>,
 ) {
   // Disallow update operation on no status change
   const statusNotChanged = newStatus === r.status;
@@ -409,8 +410,17 @@ export async function changeSerialPublicationRequestStatus(
     }
   }
 
-  const db = getKysely();
-  await db.transaction().execute(async (trx) => {
+  const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
+  const transaction = trx ? trx : controlledTransaction;
+
+  // Sanity check for typing
+  if (!transaction) {
+    throw new Error(
+      'For some reason, transaction was not defined. This should not ever happen and code branch exists purely for satisfying typing requirements.',
+    );
+  }
+
+  try {
     // Note: since precondition of having NO_ISSN_GRANTED status has been verified for all associated publications,
     // status change for them is not needed here. Update here is leftover and serves as a sanity check.
     if (rejecting) {
@@ -420,7 +430,7 @@ export async function changeSerialPublicationRequestStatus(
         modified_by: user.id,
       };
 
-      const publicationUpdateResult = await trx
+      const publicationUpdateResult = await transaction
         .updateTable('serial_publication')
         .set(publicationDbUpdate)
         .where('serial_publication_request_id', '=', r.id)
@@ -432,14 +442,26 @@ export async function changeSerialPublicationRequestStatus(
     }
 
     const requestDbUpdate = { status: newStatus, modified: getCurrentTime(), modified_by: user.id };
-    const requestUpdateResult = await trx
+    const requestUpdateResult = await transaction
       .updateTable('serial_publication_request')
       .set(requestDbUpdate)
       .where('id', '=', r.id)
       .executeTakeFirstOrThrow();
     validateRowsUpdatedExact(requestUpdateResult, 1);
-  });
 
-  // Return using lite read interface similar to other updates
-  return readSerialPublicationRequest(r.id, true);
+    if (controlledTransaction) {
+      await controlledTransaction.commit().execute();
+    }
+
+    // Return using lite read interface similar to other updates
+    // If transaction was not controlled by this function, pass it onwards
+    return readSerialPublicationRequest(r.id, true, trx);
+  } catch (error) {
+    // In case transaction was not provided, controlled transaction needs to be rollbacked manually
+    if (controlledTransaction) {
+      await controlledTransaction.rollback().execute();
+    }
+
+    throw error;
+  }
 }

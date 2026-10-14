@@ -6,6 +6,15 @@ import { ApiError } from '../../utils/api-error.ts';
 import { MARC_RECORD_FORMAT } from '../../constants.ts';
 import * as serialPublicationInterface from '../../interfaces/serial/serial-publication-interface.ts';
 
+export async function readSerialPublication(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await serialPublicationInterface.readSerialPublication(Number(req.params['id']));
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function searchSerialPublication(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await serialPublicationInterface.searchSerialPublication(req.body);

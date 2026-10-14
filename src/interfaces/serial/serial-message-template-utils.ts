@@ -102,7 +102,10 @@ async function constructIssnAssignedMessage(
   body = body.replace('#USER#', user.name);
   body = body.replace('#EMAIL#', recipient);
   body = body.replace('#PUBLISHER#', serialPublisher.official_name);
-  body = body.replace('#ADDRESS#', `${serialPublisher.address}\n${serialPublisher.zip} ${serialPublisher.city}`);
+  body = body.replace(
+    '#ADDRESS#',
+    `${serialPublisher.address || ''}\n${serialPublisher.zip || ''} ${serialPublisher.city || ''}`,
+  );
 
   return {
     serial_publisher_id: serialPublisher.id,
@@ -212,7 +215,10 @@ async function constructPublisherSummaryMessage(
   body = body.replace('#USER#', user.name);
   body = body.replace('#EMAIL#', recipient);
   body = body.replace('#PUBLISHER#', serialPublisher.official_name);
-  body = body.replace('#ADDRESS#', `${serialPublisher.address}\n${serialPublisher.zip} ${serialPublisher.city}`);
+  body = body.replace(
+    '#ADDRESS#',
+    `${serialPublisher.address || ''}\n${serialPublisher.zip || ''} ${serialPublisher.city || ''}`,
+  );
 
   return {
     serial_publisher_id: serialPublisher.id,

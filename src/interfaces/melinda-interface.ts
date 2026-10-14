@@ -40,10 +40,9 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
 
     if (serial_publication_id) {
       // @ts-expect-error string would be returned only using MARC_RECORD_FORMAT.TEXT
-      const record: UnknownObject = await createSerialPublicationMarc(serial_publication_id, {
+      records = await createSerialPublicationMarc(serial_publication_id, {
         record_format: MARC_RECORD_FORMAT.MARC_RECORD_JS,
       });
-      records = [record];
     }
 
     // Sanity check: records are defined
@@ -73,7 +72,7 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
     await Promise.all(
       records.map(async (record) => {
         try {
-          const melindaApiResponse: UnknownObject = await apiClient.create(record, { unique: 1, merge: 0 });
+          const melindaApiResponse: UnknownObject = await apiClient.create(record, { unique: 1, merge: 0, noop: 1 });
           results.push({ success_info: melindaApiResponse });
         } catch (error) {
           if (error instanceof Error) {

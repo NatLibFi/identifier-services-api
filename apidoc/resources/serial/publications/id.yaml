@@ -1,3 +1,32 @@
+get:
+  operationId: readSerialPublication
+  summary: Read serial publication information.
+  security:
+    - openId:
+        - admin
+  tags:
+    - serial
+    - serial-publication
+  parameters:
+    - $ref: '../../../parameters/path/id.yaml'
+  responses:
+    '200':
+      description: Resource was read
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/serial/serial-publication.yaml'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Resource was not found
+    '422':
+      description: Unprocessable entity
+    default:
+      $ref: '../../../responses/error.yaml'
+
 patch:
   operationId: updateSerialPublication
   summary: Update serial publication

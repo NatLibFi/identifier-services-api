@@ -16,7 +16,7 @@ export async function getIssnStatistics(begin: Date, endExclusive: Date): Promis
   }));
 
   const firstSheet: StatisticsWorksheetInfo = {
-    statisticsName: 'ISSN-lohkot',
+    statisticsName: 'ISSN-lohkot (tämänhetkinen tila)',
     data: firstSheetData,
   };
 
@@ -62,11 +62,11 @@ export async function getIssnRangeMonthlyStatistics(begin: Date, endExclusive: D
 
 // Returns array of strings representing months between begin and end in format of: `<zero-padded month>/year`
 export function getMonthlyStatColumns(begin: Date, endExclusive: Date) {
-  const startMonth = begin.getMonth() + 1;
-  const startYear = begin.getFullYear();
+  const startMonth = begin.getUTCMonth() + 1;
+  const startYear = begin.getUTCFullYear();
 
-  const endMonth = endExclusive.getMonth();
-  const endYear = endExclusive.getFullYear();
+  const endMonth = endExclusive.getUTCMonth() + 1;
+  const endYear = endExclusive.getUTCFullYear();
 
   const results: string[] = [];
 

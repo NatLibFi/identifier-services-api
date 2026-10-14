@@ -12,6 +12,9 @@ import { isProduction } from '../../utils/generic-utils.ts';
 
 import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
 
+import { changeSerialPublicationRequestStatus } from './serial-publication-request-interface-utils.ts';
+import { SERIAL_PUBLICATION_REQUEST_STATUS } from '../../constants.ts';
+
 import {
   asSerialMessageAdminRead,
   asSerialMessageSearchResult,
@@ -26,7 +29,9 @@ import type {
   SearchSerialMessage,
   SendSerialMessage,
 } from '../../validations/serial/serial-message-validation.ts';
+
 import type { LoadedSerialMessageTemplate, SerialMessageSelect } from '../../db/types/serial/types-serial-message.ts';
+import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createSerialMessageInterface(messagingConfiguration: MessagingConfiguration) {
@@ -74,8 +79,13 @@ export default function createSerialMessageInterface(messagingConfiguration: Mes
 
     // Do not trust user input even though associations should stay the same between loading message template and sending a message
     // Always validate relations before the actual DB operation
+    let serialPublicationRequest: SerialPublicationRequestAdminRead | undefined; // This value will be reused
+
     if (serial_publication_request_id) {
-      const serialPublicationRequest = await readSerialPublicationRequest(serial_publication_request_id, true);
+      // @ts-expect-error dynamic typing
+      serialPublicationRequest = await readSerialPublicationRequest(serial_publication_request_id);
+
+      // @ts-expect-error the previous line read guarantees a return value
       if (serialPublicationRequest.serial_publisher_id !== serial_publisher_id) {
         throw new ApiError(
           HttpStatus.CONFLICT,
@@ -122,7 +132,17 @@ export default function createSerialMessageInterface(messagingConfiguration: Mes
 
       validateRowsInserted(messageSaveResult, 1);
 
-      // 2. Send the message using SMTP.
+      // 2. If message considers request, change request state
+      if (serialPublicationRequest && serialPublicationRequest.status !== SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED) {
+        await changeSerialPublicationRequestStatus(
+          serialPublicationRequest,
+          SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED,
+          user,
+          trx,
+        );
+      }
+
+      // 3. Send the message using SMTP.
       // This is done within the same transaction to guarantee state between db/email provider will match.
       if (messagingConfiguration.SEND_EMAILS) {
         await sendEmail({

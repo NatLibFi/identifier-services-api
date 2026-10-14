@@ -36,7 +36,6 @@ export async function createSerialStatistics(statisticsOpts: CreateSerialStatist
   if (statistics_type === SERIAL_STATISTIC_TYPE.ISSN) {
     const data = await getIssnStatistics(statisticsBegin, statisticsEnd);
     return formatStatisticsToWorkbook(data);
-    // TODO: tests
   } else if (statistics_type === SERIAL_STATISTIC_TYPE.PUBLISHERS) {
     data = await getSerialPublisherStatistics(statisticsBegin, statisticsEnd);
   } else if (statistics_type === SERIAL_STATISTIC_TYPE.PUBLICATIONS) {

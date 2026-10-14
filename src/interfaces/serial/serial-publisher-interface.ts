@@ -29,53 +29,78 @@ import type {
   UpdateSerialPublisherHttp,
 } from '../../validations/serial/serial-publisher-validation.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
-export async function createSerialPublisher(serialPublisherCreateDoc: CreateSerialPublisherHttp, user: RequestUser) {
-  const db = getKysely();
+export async function createSerialPublisher(
+  serialPublisherCreateDoc: CreateSerialPublisherHttp,
+  user: RequestUser,
+  trx?: Transaction<Database>,
+) {
+  // Use transaction if provided, otherwise fallback to controlled transaction
+  const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
+  const transaction = trx ? trx : controlledTransaction;
 
-  // Block creating publisher with duplicate official name
-  const normalizedName = serialPublisherCreateDoc.official_name.toLowerCase().trim();
-  const { num_matching } = await db
-    .selectFrom('serial_publisher')
-    .select(db.fn.countAll<number>().as('num_matching'))
-    .where((eb) => eb(eb.fn('lower', ['official_name']), '=', normalizedName))
-    .executeTakeFirstOrThrow();
-
-  if (num_matching > 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Serial publisher with name "${serialPublisherCreateDoc.official_name}" already exists.`,
+  // Sanity check for typing
+  if (!transaction) {
+    throw new Error(
+      'For some reason, transaction was not defined. This should not ever happen and code branch exists purely for satisfying typing requirements.',
     );
   }
 
-  const { official_name, contact_persons, lang_code, email_common, phone, address, zip, city, additional_info } =
-    serialPublisherCreateDoc;
+  try {
+    // Block creating publisher with duplicate official name
+    // TODO: boolean-based control for forms
+    const normalizedName = serialPublisherCreateDoc.official_name.toLowerCase().trim();
+    const { num_matching } = await transaction
+      .selectFrom('serial_publisher')
+      .select(transaction.fn.countAll<number>().as('num_matching'))
+      .where((eb) => eb(eb.fn('lower', ['official_name']), '=', normalizedName))
+      .executeTakeFirstOrThrow();
 
-  const dbEntry: SerialPublisherInsert = {
-    official_name,
-    contact_persons: JSON.stringify(contact_persons),
-    lang_code,
-    email_common,
-    phone,
-    address,
-    zip,
-    city,
-    additional_info,
-    created: getCurrentTime(),
-    created_by: user.id,
-    modified: getCurrentTime(),
-    modified_by: user.id,
-  };
+    if (num_matching > 0) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `Serial publisher with name "${serialPublisherCreateDoc.official_name}" already exists.`,
+      );
+    }
 
-  const resultId = await db.transaction().execute(async (trx) => {
-    const insertResult = await trx.insertInto('serial_publisher').values(dbEntry).executeTakeFirstOrThrow();
+    const { official_name, contact_persons, lang_code, email_common, phone, address, zip, city, additional_info } =
+      serialPublisherCreateDoc;
 
+    const dbEntry: SerialPublisherInsert = {
+      official_name,
+      contact_persons: JSON.stringify(contact_persons),
+      lang_code,
+      email_common,
+      phone,
+      address,
+      zip,
+      city,
+      additional_info,
+      created: getCurrentTime(),
+      created_by: user.id,
+      modified: getCurrentTime(),
+      modified_by: user.id,
+    };
+
+    const insertResult = await transaction.insertInto('serial_publisher').values(dbEntry).executeTakeFirstOrThrow();
     validateRowsInserted(insertResult, 1);
-    return Number(insertResult.insertId);
-  });
 
-  return { id: resultId };
+    if (controlledTransaction) {
+      await controlledTransaction.commit().execute();
+    }
+
+    return { id: Number(insertResult.insertId) };
+  } catch (error) {
+    // In case transaction was not provided, controlled transaction needs to be rollbacked manually
+    if (controlledTransaction) {
+      await controlledTransaction.rollback().execute();
+    }
+
+    throw error;
+  }
 }
 
 export async function readSerialPublisher(id: number): Promise<SerialPublisherSelect> {
