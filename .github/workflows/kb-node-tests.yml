@@ -38,7 +38,13 @@ jobs:
       - uses: actions/checkout@v7
       - uses: mikaelvesavuori/license-compliance-action@main
         with:
-          exclude_pattern: /^@natlibfi/
+          allow_licenses: MIT;ISC;0BSD;BSD-2-Clause;BSD-3-Clause;Apache-2.0;BlueOak-1.0.0
+          exclude_pattern: /^@natlibfi/;pause;pako;nodemailer
+          # pause is dependency of passport and it contains MIT license in Readme.md for v0.0.1
+          # https://github.com/stream-utils/pause/tree/v0.0.1#license
+          # pako is transitive dependency of excel4node and its v1.0.11 license is MIT: https://github.com/nodeca/pako/blob/1.0.11/LICENSE
+          #   - current license is MIT for all files except for ZLIB (https://github.com/nodeca/pako#license)
+          # nodemailer@9.1.1 and the current version are both licensed under MIT No Attribution license: https://github.com/nodemailer/nodemailer/tree/v9.1.1#license
 
   njsscan:
     name: Njsscan check
