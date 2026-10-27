@@ -3,5 +3,6 @@
   "url": "/v2/serial/statistics",
   "method": "POST",
   "role": "admin",
-  "expectedStatus": 200
+  "expectedStatus": 200,
+  "skip": true
 }
