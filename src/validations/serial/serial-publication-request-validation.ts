@@ -75,6 +75,7 @@ export const createSerialPublicationRequestV1Schema = z
       )
       .min(1)
       .max(4),
+    turnstileToken: z.string().nullable().optional(),
   })
   .strict();
 
@@ -92,6 +93,7 @@ export const createSerialPublicationRequestV2Schema = z
       lang_code: z.enum(langCodeEnum),
     }),
     publications: z.array(createSerialPublicationSchema).min(1).max(4),
+    turnstile_token: z.string().optional(),
   })
   .strict();
 
