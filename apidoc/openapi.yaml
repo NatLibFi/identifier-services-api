@@ -52,6 +52,8 @@ paths:
     $ref: './resources/monograph/publishers/id.yaml'
   /v2/monograph/publishers/{id}/archive:
     $ref: './resources/monograph/publishers/archive.yaml'
+  /v2/monograph/publishers/{id}/cancel-approve:
+    $ref: './resources/monograph/publishers/cancel-approve.yaml'
   /v2/monograph/publishers/search:
     $ref: './resources/monograph/publishers/search.yaml'
   /v2/monograph/publishers/autocomplete:

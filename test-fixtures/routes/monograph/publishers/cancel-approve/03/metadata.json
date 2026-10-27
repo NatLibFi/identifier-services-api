@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] cannot cancel monograph publisher request approval",
+  "url": "/v2/monograph/publishers/1/cancel-approve",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

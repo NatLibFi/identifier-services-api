@@ -31,6 +31,13 @@ monographPublisherRouter.get(
   monographPublisherControllers.readMonographPublisherArchiveEntry,
 );
 
+monographPublisherRouter.post(
+  '/:id/cancel-approve',
+  allowAdminOnly,
+  validateRequestParams(idParameterSchema),
+  monographPublisherControllers.cancelApproveMonographPublisherRequest,
+);
+
 monographPublisherRouter.get(
   '/:id',
   validateRequestParams(idParameterSchema),

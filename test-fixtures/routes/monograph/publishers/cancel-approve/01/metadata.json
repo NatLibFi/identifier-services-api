@@ -1,0 +1,7 @@
+{
+  "description": "[admin] can cancel monograph publisher request approval when preconditions are met",
+  "url": "/v2/monograph/publishers/1/cancel-approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 200
+}

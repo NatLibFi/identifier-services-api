@@ -60,3 +60,15 @@ export async function monographPublisherAutocomplete(req: Request, res: Response
     return next(error);
   }
 }
+
+export async function cancelApproveMonographPublisherRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await monographPublisherInterface.cancelApproveMonographPublisherRequest(
+      Number(req.params['id']),
+      req.user,
+    );
+    return res.status(HttpStatus.OK).json(result);
+  } catch (error) {
+    return next(error);
+  }
+}

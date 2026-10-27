@@ -16,6 +16,8 @@ import {
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
+  validateRowsDeleted,
+  validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
 import {
   getMonographPublisherIsbnRanges,
@@ -41,6 +43,7 @@ import {
 
 import type { RequestUser } from '../../generic-types.ts';
 import type {
+  MonographPublisherReadAdmin,
   MonographPublisherSelect,
   MonographPublisherUpdate,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
@@ -49,6 +52,7 @@ import type {
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
 import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
+import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 
 // useAdminLite -> reserved for searching using publisher identifier as this relies on using read for found entries
 // Utility of not having dynamic attributes associated with DB schema models (e.g., publisher identifier and total/free/used)
@@ -90,54 +94,8 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
 export async function deleteMonographPublisher(monographPublisherId: number) {
   const db = getKysely();
 
-  // Read to confirm range exists - this will also take care of returning 404
-  await readMonographPublisher(monographPublisherId);
-
-  // If there are any associations (other than archive entry) deletion is not currently allowed through API
-  const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(monographPublisherId);
-  if (isbnPublisherRanges.length !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Monograph publisher id ${monographPublisherId} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
-    );
-  }
-
-  const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(monographPublisherId);
-  if (ismnPublisherRanges.length !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Monograph publisher id ${monographPublisherId} has ${ismnPublisherRanges.length} associated ISMN publisher ranges.`,
-    );
-  }
-
-  const monographMessages = await getMonographPublisherMessages(monographPublisherId);
-  if (monographMessages.length !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Monograph publisher id ${monographPublisherId} has ${monographMessages.length} associated messages.`,
-    );
-  }
-
-  const monographPublicationRequests = await getMonographPublisherPublicationRequests(monographPublisherId);
-  if (monographPublicationRequests.length !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Monograph publisher id ${monographPublisherId} has ${monographPublicationRequests.length} associated monograph publication requests.`,
-    );
-  }
-
-  const monographPublications = await getMonographPublisherPublications(monographPublisherId);
-  if (monographPublications.length !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Monograph publisher id ${monographPublisherId} has ${monographPublications.length} associated monograph publications.`,
-    );
-  }
+  // Note: throws ApiError if necessary
+  await canDeleteMonographPublisher(monographPublisherId);
 
   // Delete within transaction to simulatenously remove archive entry
   await db.transaction().execute(async (trx) => {
@@ -429,4 +387,135 @@ export async function readMonographPublisherArchiveEntry(id: number) {
   const monographPublisherArchiveResult = validateGetById<MonographPublisherRequestArchiveSelect>(dbResult);
 
   return asMonographPublisherArchiveEntry(monographPublisherArchiveResult);
+}
+
+async function canDeleteMonographPublisher(monographPublisherId: number): Promise<void> {
+  // Read to confirm monograph publisher exists - this will also take care of returning 404
+  await readMonographPublisher(monographPublisherId);
+
+  // If there are any associations (other than archive entry) deletion is not currently allowed through API
+  const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(monographPublisherId);
+  if (isbnPublisherRanges.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${monographPublisherId} has ${isbnPublisherRanges.length} associated ISBN publisher ranges.`,
+    );
+  }
+
+  const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(monographPublisherId);
+  if (ismnPublisherRanges.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${monographPublisherId} has ${ismnPublisherRanges.length} associated ISMN publisher ranges.`,
+    );
+  }
+
+  const monographMessages = await getMonographPublisherMessages(monographPublisherId);
+  if (monographMessages.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${monographPublisherId} has ${monographMessages.length} associated messages.`,
+    );
+  }
+
+  const monographPublicationRequests = await getMonographPublisherPublicationRequests(monographPublisherId);
+  if (monographPublicationRequests.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${monographPublisherId} has ${monographPublicationRequests.length} associated monograph publication requests.`,
+    );
+  }
+
+  const monographPublications = await getMonographPublisherPublications(monographPublisherId);
+  if (monographPublications.length !== 0) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Monograph publisher id ${monographPublisherId} has ${monographPublications.length} associated monograph publications.`,
+    );
+  }
+
+  return;
+}
+
+export async function cancelApproveMonographPublisherRequest(monographPublisherId: number, user: RequestUser) {
+  // Transferring entry back to monograph publisher request uses shared logic with deletion
+  // Note: throws ApiError if necessary
+  await canDeleteMonographPublisher(monographPublisherId);
+
+  // Update within transaction to simulatenously update archive entry association
+  const db = getKysely();
+
+  // @ts-expect-error dynamic return value
+  const monographPublisher: MonographPublisherReadAdmin = await readMonographPublisher(
+    monographPublisherId,
+    user,
+    true,
+    false,
+  );
+
+  const monographPublisherRequestInsert: MonographPublisherRequestInsert = {
+    official_name: monographPublisher.official_name,
+    other_names: JSON.stringify(monographPublisher.other_names),
+    address: monographPublisher.address,
+    zip: monographPublisher.zip,
+    city: monographPublisher.city,
+    phone: monographPublisher.phone,
+    email: monographPublisher.email,
+    www: monographPublisher.www,
+    lang_code: monographPublisher.lang_code,
+    contact_persons: JSON.stringify(monographPublisher.contact_persons),
+    additional_info: monographPublisher.additional_info,
+    frequency_current: monographPublisher.frequency_current,
+    frequency_next: monographPublisher.frequency_next,
+    affiliate_of: monographPublisher.affiliate_of,
+    affiliates: monographPublisher.affiliates,
+    distributor_of: monographPublisher.distributor_of,
+    distributors: monographPublisher.distributors,
+    classifications: JSON.stringify(monographPublisher.classifications),
+    classification_other: monographPublisher.classification_other,
+    created: getCurrentTime(), // Preserve generation timestamp
+    created_by: user.id,
+    modified: getCurrentTime(),
+    modified_by: user.id,
+  };
+
+  const resultId = await db.transaction().execute(async (trx) => {
+    // 1. Insert entry to monograph_publisher table
+    const { insertId } = await trx
+      .insertInto('monograph_publisher_request')
+      .values(monographPublisherRequestInsert)
+      .executeTakeFirstOrThrow();
+
+    const monographPublisherRequestId = Number(insertId);
+
+    // 2. Change archive entry association
+    const archiveEntryUpdate = await trx
+      .updateTable('monograph_publisher_request_archive')
+      .set({
+        monograph_publisher_request_id: monographPublisherRequestId,
+        monograph_publisher_id: null,
+      })
+      .where('monograph_publisher_id', '=', monographPublisherId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(archiveEntryUpdate, 1);
+
+    // 3. Remove entry from monograph publisher table
+    const monographPublisherDeleteResult = await trx
+      .deleteFrom('monograph_publisher')
+      .where('id', '=', monographPublisherId)
+      .executeTakeFirstOrThrow();
+
+    validateRowsDeleted(monographPublisherDeleteResult, 1);
+
+    return monographPublisherRequestId;
+  });
+
+  // Return new id for redirect
+  return { id: resultId };
 }

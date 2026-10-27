@@ -23,11 +23,11 @@ export function validateRequestBody(schema: ZodType) {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessages = error.issues.map(({ path, message }) =>
-          path.length > 0 ? `[${path.join('.')}] ${message}` : message,
-        );
+        const uniqueErrorMessages = error.issues
+          .map(({ path, message }) => (path.length > 0 ? `[${path.join('.')}] ${message}` : message))
+          .reduce((p: string[], n: string) => (p.includes(n) ? p : p.concat(n)), []);
 
-        throw new ApiValidationError(errorMessages);
+        throw new ApiValidationError(uniqueErrorMessages);
       }
 
       throw new ApiError(

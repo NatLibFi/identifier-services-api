@@ -11,3 +11,5 @@ runIntegrationTestSuite(routers, 'archive');
 
 runIntegrationTestSuite(routers, 'search');
 runIntegrationTestSuite(routers, 'autocomplete');
+
+runIntegrationTestSuite(routers, 'cancel-approve');

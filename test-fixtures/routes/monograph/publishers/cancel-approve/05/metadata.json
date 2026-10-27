@@ -1,0 +1,7 @@
+{
+  "description": "[admin] cannot cancel monograph publisher approval if publisher has ISMN range",
+  "url": "/v2/monograph/publishers/1/cancel-approve",
+  "method": "POST",
+  "role": "admin",
+  "expectedStatus": 409
+}
