@@ -39,8 +39,9 @@ jobs:
       - uses: mikaelvesavuori/license-compliance-action@main
         with:
           allow_licenses: MIT;ISC;0BSD;BSD-2-Clause;BSD-3-Clause;Apache-2.0;BlueOak-1.0.0
-          exclude_pattern: /^@natlibfi/
+          exclude_pattern: /^@natlibfi/;nodemailer
           direct: true
+          # nodemailer@9.1.1 and the current version are both licensed under MIT No Attribution license: https://github.com/nodemailer/nodemailer/tree/v9.1.1#license
 
   njsscan:
     name: Njsscan check
