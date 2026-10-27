@@ -19,8 +19,8 @@ export async function getAssignableIsbnIdentifiers(monographPublisherId: number,
     .where('monograph_publisher_id', '=', monographPublisherId)
     .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
     .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
-    .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc')
-    .orderBy('isbn_identifier.identifier', 'asc')
+    .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc') // Do not alter: Use identifiers from earliest available range first
+    .orderBy('isbn_identifier.identifier', 'asc') // Do not alter: use identifiers in order without trusting the ID - since item numbers are padded the order should always be preserved by default natural sort assuming sort is done one character at time
     .limit(numberOfIdentifiers)
     .execute();
 
@@ -92,8 +92,8 @@ export async function getAssignableIsbnIdentifier(manifestationId: number) {
     .where('monograph_publisher_id', '=', manifestation.monograph_publisher_id)
     .where('isbn_identifier.monograph_publication_manifestation_id', 'is', null)
     .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
-    .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc')
-    .orderBy('isbn_identifier.identifier', 'asc')
+    .orderBy('isbn_identifier.isbn_publisher_range_id', 'asc') // Do not alter: Use identifiers from earliest available range first
+    .orderBy('isbn_identifier.identifier', 'asc') // Do not alter: use identifiers in order without trusting the ID - since item numbers are padded the order should always be preserved by default natural sort assuming sort is done one character at time
     .limit(1)
     .execute();
 
