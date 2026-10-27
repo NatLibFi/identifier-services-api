@@ -38,7 +38,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: mikaelvesavuori/license-compliance-action@main
         with:
+          allow_licenses: MIT;ISC;0BSD;BSD-2-Clause;BSD-3-Clause;Apache-2.0;BlueOak-1.0.0
           exclude_pattern: /^@natlibfi/
+          direct: true
 
   njsscan:
     name: Njsscan check
