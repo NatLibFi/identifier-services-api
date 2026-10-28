@@ -395,7 +395,8 @@ export function translateManifestationType(manifestationType: string, langCode: 
       [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM]: 'CD-ROM',
       [MONOGRAPH_MANIFESTATION_TYPES.MP3]: 'MP3',
       [MONOGRAPH_MANIFESTATION_TYPES.OTHER]: 'muu (sähköinen)',
-      [MONOGRAPH_MANIFESTATION_TYPES.MULTIPART_MONOGRAPH]: 'moniosaisen julkaisun kokonaisuus',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_PRINT]: 'kokonaisuus (painettu)',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_ELECTRONICAL]: 'kokonaisuus (sähköinen)',
     },
     'sv-SE': {
       [MONOGRAPH_MANIFESTATION_TYPES.PAPERBACK]: 'mjuka pärmar',
@@ -407,7 +408,8 @@ export function translateManifestationType(manifestationType: string, langCode: 
       [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM]: 'CD-ROM',
       [MONOGRAPH_MANIFESTATION_TYPES.MP3]: 'MP3',
       [MONOGRAPH_MANIFESTATION_TYPES.OTHER]: 'annan (webpublikation)',
-      [MONOGRAPH_MANIFESTATION_TYPES.MULTIPART_MONOGRAPH]: '<todo ruotsinkielinen käännös moniosaiselle monografialle>',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_PRINT]: '<ruotsinkielinen käännös: Kokonaisuus (painettu)>',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_ELECTRONICAL]: '<ruotsinkielinen käännös: Kokonaisuus (sähköinen)>',
     },
     'en-GB': {
       [MONOGRAPH_MANIFESTATION_TYPES.PAPERBACK]: 'softcover',
@@ -419,8 +421,8 @@ export function translateManifestationType(manifestationType: string, langCode: 
       [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM]: 'CD-ROM',
       [MONOGRAPH_MANIFESTATION_TYPES.MP3]: 'MP3',
       [MONOGRAPH_MANIFESTATION_TYPES.OTHER]: 'other (electronical)',
-      [MONOGRAPH_MANIFESTATION_TYPES.MULTIPART_MONOGRAPH]:
-        '<todo englanninkielinen käännös moniosaiselle monografialle>',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_PRINT]: 'Set (print)',
+      [MONOGRAPH_MANIFESTATION_TYPES.SET_ELECTRONICAL]: 'Set (electronical)',
     },
   };
 

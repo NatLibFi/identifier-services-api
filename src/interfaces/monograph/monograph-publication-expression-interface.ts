@@ -342,6 +342,8 @@ export async function createMonographPublicationExpressionMarc(
     (m) => Object.keys(MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL).includes(m.manifestation_type) && !m.cancelled,
   );
 
+  // Note: MARC records are not generated for SET type of manifestations
+
   if (printManifestations.length > 0 && record_filter !== MARC_RECORD_FILTER.ELECTRONICAL_ONLY) {
     // For print only one MARC record is generated
     const printRecordInformation: CreateMarcRecordInformation = {

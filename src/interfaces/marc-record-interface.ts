@@ -4,7 +4,11 @@ import { MarcRecord } from '@natlibfi/marc-record';
 import { translateManifestationType } from './monograph/monograph-message-template-utils.ts';
 import { isProduction } from '../utils/generic-utils.ts';
 
-import { MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL, SERIAL_PUBLICATION_TYPE } from '../constants.ts';
+import {
+  MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
+  MONOGRAPH_MANIFESTATION_TYPES_SET,
+  SERIAL_PUBLICATION_TYPE,
+} from '../constants.ts';
 
 import type { MonographAuthor } from '../db/types/monograph/types-monograph-author.ts';
 import type { MonographSeriesInformation } from '../db/types/monograph/types-monograph-publication-manifestation.ts';
@@ -298,17 +302,20 @@ export function generate020(publicationInfo: CreateMarcRecordInformation): DataF
         manifestationType,
       );
 
+      const isElectronicalSet = MONOGRAPH_MANIFESTATION_TYPES_SET.SET_ELECTRONICAL === manifestationType;
+
       // Two if clauses are defined for readability
-      if (isElectronical && !isElectronicalManifestationType) {
+      if (isElectronical && !isElectronicalManifestationType && !isElectronicalSet) {
         return null; // Note: these will be stripped by filter
       }
 
-      if (!isElectronical && isElectronicalManifestationType) {
+      if (!isElectronical && (isElectronicalManifestationType || isElectronicalSet)) {
         return null; // Note: these will be stripped by filter
       }
 
+      // Each electronical manifestation type will produce its own record
       const isNotMatchingElectronicalManifestationType =
-        isElectronical && recordManifestationType !== manifestationType;
+        isElectronical && !isElectronicalSet && recordManifestationType !== manifestationType;
 
       if (isElectronical && isNotMatchingElectronicalManifestationType) {
         return null;
@@ -316,11 +323,17 @@ export function generate020(publicationInfo: CreateMarcRecordInformation): DataF
 
       const translatedManifestationType = translateManifestationType(manifestationType, 'fi-FI');
 
+      // Remove detailed set description
+      const processedTranslatedManifestationType = translatedManifestationType.replace(
+        /\s\((painettu|sähköinen)\)/,
+        '',
+      );
+
       return isbnIdentifiers.map((isbnIdentifier) => ({
         tag: '020',
         subfields: [
           { code: 'a', value: isbnIdentifier },
-          { code: 'q', value: translatedManifestationType },
+          { code: 'q', value: processedTranslatedManifestationType },
         ],
       }));
     })
