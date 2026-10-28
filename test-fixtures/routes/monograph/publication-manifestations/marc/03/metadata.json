@@ -1,0 +1,7 @@
+{
+  "description": "[publisher] may not create MARC21 record out of monograph publication manifestation information",
+  "url": "/v2/monograph/publication-manifestations/1/marc",
+  "method": "POST",
+  "role": "publisher",
+  "expectedStatus": 403
+}

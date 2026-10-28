@@ -7,3 +7,5 @@ runIntegrationTestSuite(routers, 'update');
 runIntegrationTestSuite(routers, 'delete');
 runIntegrationTestSuite(routers, 'assign-identifier');
 runIntegrationTestSuite(routers, 'deassign-identifier');
+
+runIntegrationTestSuite(routers, 'marc');

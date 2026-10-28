@@ -13,6 +13,7 @@ import type { MelindaConfiguration } from '../app.ts';
 import type { UnknownObject } from '../generic-types.ts';
 import type { SendToMelindaHttp } from '../validations/melinda-validation.ts';
 import { createSerialPublicationMarc } from './serial/serial-publication-interface.ts';
+import { createMonographPublicationManifestationMarc } from './monograph/monograph-publication-manifestation-interface.ts';
 
 interface MelindaSaveResult {
   success_info?: UnknownObject;
@@ -27,7 +28,7 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
   });
 
   async function sendToMelinda(recordOpts: SendToMelindaHttp) {
-    const { monograph_expression_id, serial_publication_id, record_filter } = recordOpts;
+    const { monograph_expression_id, monograph_manifestation_id, serial_publication_id, record_filter } = recordOpts;
 
     let records: UnknownObject[] = [];
     if (monograph_expression_id) {
@@ -35,6 +36,13 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
       records = await createMonographPublicationExpressionMarc(monograph_expression_id, {
         record_format: MARC_RECORD_FORMAT.MARC_RECORD_JS,
         record_filter,
+      });
+    }
+
+    if (monograph_manifestation_id) {
+      // @ts-expect-error string would be returned only using MARC_RECORD_FORMAT.TEXT
+      records = await createMonographPublicationManifestationMarc(monograph_manifestation_id, {
+        record_format: MARC_RECORD_FORMAT.MARC_RECORD_JS,
       });
     }
 
@@ -72,7 +80,7 @@ export default function createMelindaInterface(melindaConfiguration: MelindaConf
     await Promise.all(
       records.map(async (record) => {
         try {
-          const melindaApiResponse: UnknownObject = await apiClient.create(record, { unique: 1, merge: 0, noop: 1 });
+          const melindaApiResponse: UnknownObject = await apiClient.create(record, { unique: 1, merge: 1, noop: 0 });
           results.push({ success_info: melindaApiResponse });
         } catch (error) {
           if (error instanceof Error) {

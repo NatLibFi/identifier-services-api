@@ -1,8 +1,18 @@
 import HttpStatus from 'http-status';
+import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
 
 import { getKysely } from '../../db/database.ts';
 import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLICATION_REQUEST_STATES } from '../../constants.ts';
+import {
+  MARC_RECORD_FORMAT,
+  MONOGRAPH_AUTHOR_ROLES,
+  MONOGRAPH_EXPRESSION_TYPES,
+  MONOGRAPH_IDENTIFIERS,
+  MONOGRAPH_MANIFESTATION_TYPES,
+  MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
+  MONOGRAPH_MANIFESTATION_TYPES_PRINT,
+  MONOGRAPH_PUBLICATION_REQUEST_STATES,
+} from '../../constants.ts';
 
 import { getApplicationLogger } from '../../utils/logging.ts';
 import {
@@ -18,8 +28,10 @@ import { readMonographPublicationExpression } from './monograph-publication-expr
 import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
 
 import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
+import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
+import generateMarcRecord from '../marc-record-interface.ts';
 
-import type { RequestUser } from '../../generic-types.ts';
+import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type {
   AddMonographPublicationManifestation,
   UpdateMonographPublicationManifestation,
@@ -28,7 +40,8 @@ import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
-import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
+import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
+import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
 
 export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();
@@ -527,4 +540,166 @@ export async function getMonographManifestationRelations(manifestationId: number
 
   const validatedManifestationPublisherInfo = validateGetById(manifestation);
   return validatedManifestationPublisherInfo;
+}
+
+// Important note: record is not generated from cancelled manifestations or manifestations with SET type
+export async function createMonographPublicationManifestationMarc(
+  manifestationId: number,
+  opts: GetMarcRecordHttp,
+): Promise<UnknownObject[] | string> {
+  const { record_format } = opts;
+
+  const db = getKysely();
+  const manifestation = await readMonographPublicationManifestation(manifestationId);
+  const expression = await readMonographPublicationExpression(manifestation.monograph_publication_expression_id);
+
+  // For publisher information: prioritize using publisher request, but fall back to publisher registry information if request is not found
+  const [publisherInformation] = await db
+    .selectFrom('monograph_publication')
+    .leftJoin('monograph_publisher', 'monograph_publisher.id', 'monograph_publication.monograph_publisher_id')
+    .selectAll('monograph_publisher')
+    .where('monograph_publication.id', '=', expression.monograph_publication_id)
+    .execute();
+
+  const [publicationRequest] = await db
+    .selectFrom('monograph_publication_request')
+    .selectAll('monograph_publication_request')
+    .where('monograph_publication_request.monograph_publication_id', '=', expression.monograph_publication_id)
+    .execute();
+
+  let publisherName = null;
+  let publisherPlace = null;
+
+  if (publicationRequest) {
+    publisherName = publicationRequest.official_name;
+    publisherPlace =
+      expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.DISSERTATION
+        ? publicationRequest.locality
+        : publicationRequest.city;
+  } else if (publisherInformation) {
+    publisherName = publisherInformation.official_name;
+    publisherPlace = publisherInformation.city;
+  }
+
+  const marcRecords: UnknownObject[] = [];
+
+  const mainAuthor = expression.authors.find((a) => a.roles.includes(MONOGRAPH_AUTHOR_ROLES.AUTHOR));
+  const contributors = mainAuthor
+    ? expression.authors.filter((a) => a.first_name === mainAuthor.first_name && a.last_name === mainAuthor.last_name)
+    : expression.authors;
+
+  // This will gather SET ISBNs for same manifestation type
+  const isPrintManifestation = Object.keys(MONOGRAPH_MANIFESTATION_TYPES_PRINT).includes(
+    manifestation.manifestation_type,
+  );
+
+  const isElectronicalManifestation = Object.keys(MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL).includes(
+    manifestation.manifestation_type,
+  );
+
+  if (!isPrintManifestation && !isElectronicalManifestation) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      'Manifestation is not either print or electronical type. MARC records cannot be generated for SET type of manifestations.',
+    );
+  }
+
+  const isbnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
+    if (n.isbn_identifier && !n.cancelled) {
+      (p[`${n.manifestation_type}`] ??= []).push(n.isbn_identifier);
+    }
+
+    return p;
+  }, {});
+
+  const ismnIdentifiers = expression.manifestations.reduce((p: Record<string, string[]>, n) => {
+    if (n.ismn_identifier && !n.cancelled) {
+      (p[`${n.manifestation_type}`] ??= []).push(n.ismn_identifier);
+    }
+
+    return p;
+  }, {});
+
+  const publicationInfoBase: CreateMarcRecordInformation = {
+    isElectronical: false, // placeholder to satisfy typing - will be overwritten appropriately
+    isMonograph: true,
+    isSerial: false,
+    isSheetMusic: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.SHEET_MUSIC,
+    isDissertation: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.DISSERTATION,
+    isMap: expression.expression_type === MONOGRAPH_EXPRESSION_TYPES.MAP,
+    isAudiobook: false, // just a default for now as this cannot be true when isElectronical is false
+    title: expression.title,
+    subtitle: expression.subtitle,
+    isbnIdentifiers,
+    ismnIdentifiers,
+    language: expression.expression_language,
+    publisherName,
+    publisherPlace,
+    mapScale: expression.map_scale,
+    mainAuthor,
+    contributors,
+  };
+
+  if (isPrintManifestation) {
+    // For print only one MARC record is generated
+    const printRecordInformation: CreateMarcRecordInformation = {
+      ...publicationInfoBase,
+      isElectronical: false,
+      publicationYear: manifestation.publication_year || undefined, // Use information from first manifestation for request
+      publicationMonth: manifestation.publication_month || undefined, // Use information from first manifestation for request
+      printerName: manifestation.printing_information[0]?.printing_house,
+      printerPlace: manifestation.printing_information[0]?.printing_house_city,
+      edition: manifestation.manifestation_edition,
+      monographSeries: manifestation.series,
+    };
+
+    const printRecord = generateMarcRecord(printRecordInformation);
+    marcRecords.push(printRecord);
+  } else if (isElectronicalManifestation) {
+    const audiobookTypes = [MONOGRAPH_MANIFESTATION_TYPES.CD_ROM, MONOGRAPH_MANIFESTATION_TYPES.MP3];
+    const isAudiobook = audiobookTypes.includes(manifestation.manifestation_type);
+
+    const electronicalRecordInformation: CreateMarcRecordInformation = {
+      ...publicationInfoBase,
+      manifestationType: manifestation.manifestation_type,
+      isElectronical: true,
+      isAudiobook,
+      isMp3: manifestation.manifestation_type === MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL.MP3,
+      publicationYear: manifestation.publication_year || undefined,
+      publicationMonth: manifestation.publication_month || undefined,
+      printerName: manifestation.printing_information[0]?.printing_house,
+      printerPlace: manifestation.printing_information[0]?.printing_house_city,
+      edition: manifestation.manifestation_edition,
+      monographSeries: manifestation.series,
+    };
+
+    const electronicalRecord = generateMarcRecord(electronicalRecordInformation);
+    marcRecords.push(electronicalRecord);
+  }
+
+  if (record_format === MARC_RECORD_FORMAT.MARC_RECORD_JS) {
+    return marcRecords;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const serializableRecords = marcRecords.map((r: any) =>
+    MarcRecordSerializers.Json.from(JSON.stringify(r.toObject())),
+  );
+
+  if (record_format === MARC_RECORD_FORMAT.TEXT) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.Text.to(r)).join('\n\n');
+  }
+
+  if (record_format === MARC_RECORD_FORMAT.ISO2709) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return serializableRecords.map((r: any) => MarcRecordSerializers.ISO2709.to(r)).join('');
+  }
+
+  throw new ApiError(
+    HttpStatus.UNPROCESSABLE_ENTITY,
+    'Unprocessable entity',
+    `Could not serialize marc records to format ${record_format}.`,
+  );
 }

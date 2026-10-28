@@ -7,6 +7,7 @@ import {
   addMonographPublicationManifestationSchema,
   updateMonographPublicationManifestationSchema,
 } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
+import { getMarcRecordSchema } from '../../validations/marc-record-validation.ts';
 
 // Note: adminOnly needs to be applied at main router level
 const monographPublicationManifestationRouter = Router();
@@ -15,6 +16,14 @@ monographPublicationManifestationRouter.post(
   '/',
   validateRequestBody(addMonographPublicationManifestationSchema),
   monographPublicationManifestationController.addMonographPublicationManifestation,
+);
+
+// Note: using POST here as QUERY does not have enough support and GET does not work with request body
+monographPublicationManifestationRouter.post(
+  '/:id/marc',
+  validateRequestParams(idParameterSchema, true),
+  validateRequestBody(getMarcRecordSchema),
+  monographPublicationManifestationController.createMonographPublicationManifestationMarc,
 );
 
 monographPublicationManifestationRouter.post(
