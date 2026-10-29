@@ -1,0 +1,7 @@
+{
+  "description": "[admin] may update invalid status to NO_ISSN_GRANTED if publication has not been assigned ISSN",
+  "url": "/v2/serial/publications/1",
+  "method": "PATCH",
+  "role": "admin",
+  "expectedStatus": 200
+}

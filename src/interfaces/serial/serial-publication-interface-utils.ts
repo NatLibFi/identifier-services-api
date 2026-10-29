@@ -110,7 +110,7 @@ export async function changeSerialPublicationStatus(
     SERIAL_PUBLICATION_STATUS.COMPLETED,
   ];
 
-  if (!hasIssn && statusRequiringIssn) {
+  if (!hasIssn && statusRequiringIssn.includes(newStatus)) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
