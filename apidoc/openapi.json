@@ -6602,6 +6602,12 @@
                 "null"
               ]
             },
+            "contact_persons": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/contact-person"
+              }
+            },
             "created": {
               "type": "string"
             }

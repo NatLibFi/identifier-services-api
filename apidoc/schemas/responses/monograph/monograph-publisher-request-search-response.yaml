@@ -14,5 +14,9 @@ items:
       type:
         - string
         - 'null'
+    contact_persons:
+      type: array
+      items:
+        $ref: '../../common/contact-person.yaml'
     created:
       type: string

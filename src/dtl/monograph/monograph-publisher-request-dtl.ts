@@ -33,6 +33,7 @@ export interface MonographPublisherRequestSearchResult {
   official_name: string;
   email: string | null;
   additional_info: string | null;
+  contact_persons: MonographPublisherContactPerson[];
   created: Date;
 }
 
@@ -97,13 +98,14 @@ export function asMonographPublisherRequestAdminRead(
 export function asMonographPublisherRequestSearchResult(
   monographPublisherRequest: MonographPublisherRequestSelect,
 ): MonographPublisherRequestSearchResult {
-  const { id, official_name, email, additional_info, created } = monographPublisherRequest;
+  const { id, official_name, email, additional_info, contact_persons, created } = monographPublisherRequest;
 
   return {
     id,
     official_name,
     email,
     additional_info,
+    contact_persons,
     created,
   };
 }
