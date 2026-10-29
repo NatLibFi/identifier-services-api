@@ -26,7 +26,7 @@ jobs:
           NPM_CONFIG_IGNORE_SCRIPTS: true
       - run: npm audit --package-lock-only --omit=dev --audit-level=critical
       - run: npm ci --ignore-scripts
-      - run: npm test:allow-fail # TODO: disable allow fail during development period
+      - run: npm run test:allow-fail # TODO: disable allow fail during development period
       # In no circumstances do not remove the build step here: it confirms TypeScript syntax used is compatible with Node runtime
       - run: npm run build --if-present
 
