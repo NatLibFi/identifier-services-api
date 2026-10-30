@@ -202,6 +202,15 @@ export async function revokeIssnIdentifier(
     );
   }
 
+  // ISSN has not been granted to publication so there is nothing to revoke
+  if (publication.status === SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED) {
+    throw new ApiError(
+      HttpStatus.CONFLICT,
+      'Conflict',
+      `Serial publication id ${publication.id} does not have ISSN per publication current status: NO_ISSN_GRANTED`,
+    );
+  }
+
   // Use transaction if provided, otherwise fallback to controlled transaction
   const controlledTransaction = trx ? null : await getKysely().startTransaction().execute();
   const transaction = trx ? trx : controlledTransaction;

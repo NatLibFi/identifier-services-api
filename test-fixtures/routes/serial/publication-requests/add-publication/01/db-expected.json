@@ -118,7 +118,7 @@
       "id": 3,
       "serial_publication_request_id": 1,
       "serial_publisher_id": 1,
-      "status": "NO_ISSN_GRANTED",
+      "status": "NO_PREPUBLICATION_RECORD",
       "title": "A new publication",
       "subtitle": null,
       "place_of_publication": "Foobarila",

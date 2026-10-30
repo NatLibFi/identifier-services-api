@@ -273,7 +273,7 @@ export async function createSerialPublication(
     subseries: JSON.stringify(p.subseries ?? []),
     another_medium: JSON.stringify(p.another_medium ?? []),
     additional_info: p.additional_info,
-    status: SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED,
+    status: SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
     created: getCurrentTime(),
     created_by: user.id,
     modified: getCurrentTime(),
@@ -430,7 +430,7 @@ export async function assignSerialPublicationIssnIdentifier(
     );
 
     // Sanity checks regarding statuses
-    if (publication.status !== SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED) {
+    if (publication.status !== SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD) {
       throw new ApiError(
         HttpStatus.CONFLICT,
         'Conflict',
@@ -438,10 +438,7 @@ export async function assignSerialPublicationIssnIdentifier(
       );
     }
 
-    const unacceptedRequestStatuses = [
-      SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED,
-      SERIAL_PUBLICATION_REQUEST_STATUS.COMPLETED,
-    ];
+    const unacceptedRequestStatuses = [SERIAL_PUBLICATION_REQUEST_STATUS.REJECTED];
 
     if (unacceptedRequestStatuses.includes(request.status)) {
       throw new ApiError(
@@ -453,21 +450,6 @@ export async function assignSerialPublicationIssnIdentifier(
 
     // Assign identifier while taking care of ISSN range deactivation if need be
     await assignIssnIdentifier(publication.id, user, transaction);
-
-    // Change publication state
-    const publicationDbUpdate: SerialPublicationUpdate = {
-      status: SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
-      modified: getCurrentTime(),
-      modified_by: user.id,
-    };
-
-    const publicationUpdateResult = await transaction
-      .updateTable('serial_publication')
-      .set(publicationDbUpdate)
-      .where('id', '=', publicationId)
-      .executeTakeFirstOrThrow();
-
-    validateRowsUpdatedExact(publicationUpdateResult, 1);
 
     // If request state requires automatical change, change it
     const hasUnprocessedPublications =
@@ -555,7 +537,7 @@ export async function revokeSerialPublicationIssnIdentifier(
 
     // Change publication state
     const publicationDbUpdate: SerialPublicationUpdate = {
-      status: SERIAL_PUBLICATION_STATUS.NO_ISSN_GRANTED,
+      status: SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
       modified: getCurrentTime(),
       modified_by: user.id,
     };

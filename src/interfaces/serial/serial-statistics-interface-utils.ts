@@ -176,7 +176,7 @@ export async function getSerialPublicationStatistics(begin: Date, endExclusive: 
   const statusColumn = 'Julkaisun tila';
   const dateColumns = getMonthlyStatColumns(begin, endExclusive);
 
-  // Status: no prepublication record
+  // Status: no prepublication record (i.e., not yet processed/no Melinda record has been created)
   const noPrepublicationRecordDbResult = await getSerialPublicationCreatedStatisticsByStatus(
     begin,
     endExclusive,

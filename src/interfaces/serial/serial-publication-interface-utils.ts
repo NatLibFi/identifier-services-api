@@ -104,7 +104,6 @@ export async function changeSerialPublicationStatus(
 
   // Block other transitions since they require ISSN has been assigned already
   const statusRequiringIssn = [
-    SERIAL_PUBLICATION_STATUS.NO_PREPUBLICATION_RECORD,
     SERIAL_PUBLICATION_STATUS.ISSN_FROZEN,
     SERIAL_PUBLICATION_STATUS.WAITING_FOR_CONTROL_COPY,
     SERIAL_PUBLICATION_STATUS.COMPLETED,

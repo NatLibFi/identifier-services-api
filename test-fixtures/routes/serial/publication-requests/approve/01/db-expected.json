@@ -82,8 +82,8 @@
       "additional_info": "Example info",
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
-      "modified": "2026-01-20T12:00:00.000Z",
-      "modified_by": "admin"
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
     },
     {
       "id": 2,
@@ -111,8 +111,8 @@
       "additional_info": null,
       "created": "2025-01-20T12:00:00.000Z",
       "created_by": "TEST_USER_1",
-      "modified": "2026-01-20T12:00:00.000Z",
-      "modified_by": "admin"
+      "modified": "2025-01-20T12:00:00.000Z",
+      "modified_by": "TEST_USER_1"
     }
   ],
   "serial_publication_archive": [

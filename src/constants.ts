@@ -283,11 +283,11 @@ export const SERIAL_PUBLICATION_MEDIUM = {
 };
 
 export const SERIAL_PUBLICATION_STATUS = {
-  NO_ISSN_GRANTED: 'NO_ISSN_GRANTED',
-  NO_PREPUBLICATION_RECORD: 'NO_PREPUBLICATION_RECORD',
-  ISSN_FROZEN: 'ISSN_FROZEN',
-  WAITING_FOR_CONTROL_COPY: 'WAITING_FOR_CONTROL_COPY',
-  COMPLETED: 'COMPLETED',
+  NO_ISSN_GRANTED: 'NO_ISSN_GRANTED', // Publication was rejected regarding ISSN
+  NO_PREPUBLICATION_RECORD: 'NO_PREPUBLICATION_RECORD', // Publication has not yet been processed
+  ISSN_FROZEN: 'ISSN_FROZEN', // Publication has ISSN and may not be revoked
+  WAITING_FOR_CONTROL_COPY: 'WAITING_FOR_CONTROL_COPY', // Publication has ISSN
+  COMPLETED: 'COMPLETED', // Publication has ISSN and control copy has been received
 };
 
 export const SERIAL_MESSAGE_TYPES = {
