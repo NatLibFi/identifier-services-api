@@ -49,7 +49,7 @@ For database-related mocks (db-init.json and db-expected.json) it is expected to
 
 ### Installation (development)
 
-Clone the repo, install npm packages using `npm i`. Then setup your development env file by renaming `example.env` to `.env.dev` and adjust the settings as necessary (e.g., place correct connection settings for your development Keycloak instance and database). Start API in development mode with `npm run start:dev` which will start server in port 8080. Note that using `npm run dev` will run tests with .only -definition in watch mode.
+Clone the repo, install npm packages using `npm i`. Then setup your development env file by renaming `example.env` to `identifier-services-api.env.dev` and adjust the settings as necessary (e.g., place correct connection settings for your development Keycloak instance and database). **The file should be located in parent folder so that if AI tooling is used in the context of the project root being the workspace, the environment file is not within the default context**. Start API in development mode with `npm run start:dev` which will start server in port 8080. Note that using `npm run dev` will run tests with .only -definition in watch mode.
 
 Note that when in development mode, the application logic may differ from staging/production mode.
 

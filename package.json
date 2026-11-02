@@ -27,7 +27,7 @@
     "test:allow-fail": "NODE_ENV=test vitest",
     "lint:apidoc": "redocly lint --extends recommended apidoc/openapi.yaml",
     "lint:src": "eslint -- src",
-    "dev": "node --env-file-if-exists=.env.dev --watch src/server.ts",
+    "dev": "node --env-file=../identifier-services-api.env.dev --watch src/server.ts",
     "prettify": "npm run prettify:src && npm run prettify:test-fixtures",
     "prettify:src": "prettier --write \"./src/**/*.ts\"",
     "prettify:test-fixtures": "prettier --write \"./test-fixtures/**/*.json\"",
