@@ -14,7 +14,6 @@ import {
 
 import { getIsbnRanges } from './isbn-range-interface.ts';
 import { getIsmnRanges } from './ismn-range-interface.ts';
-import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import type { MonographPublisherConfiguration } from '../../app.ts';
 import type { MonographPublisherContactPerson } from '../../db/types/monograph/types-monograph-publisher.ts';
@@ -483,6 +482,19 @@ export async function getIsmnRangeProgress(): Promise<Record<string, string>[]> 
   }));
 }
 
+interface SelfPublisherStatisticsResultEntry {
+  cancelled: boolean;
+  identifier: string;
+  identifier_assigned: Date;
+  request_official_name: string;
+  request_address: string | null;
+  request_zip: string | null;
+  request_city: string | null;
+  request_contact_person: string | null;
+  request_phone: string | null;
+  request_email: string | null;
+}
+
 export async function getSelfPublisherPublicationStatistics(
   monographPublisherConfiguration: MonographPublisherConfiguration,
   begin: Date,
@@ -491,93 +503,101 @@ export async function getSelfPublisherPublicationStatistics(
 ) {
   const db = getKysely();
 
-  // In future it's worth checking if optimization is required for this query
-  // For now, let API process do filtering instead of DB query regarding identifier type
-  const authorPublisherPublicationRequests = await db
-    .selectFrom('monograph_publication_request')
-    .selectAll()
-    .where(
-      'monograph_publication_request.monograph_publisher_id',
-      '=',
-      monographPublisherConfiguration.SELF_PUBLISHER_ID,
-    )
-    .where('created', '>=', begin)
-    .where('created', '<', endExclusive)
-    .execute();
+  let manifestationsInfo: SelfPublisherStatisticsResultEntry[] = [];
 
-  const publications = await Promise.all(
-    authorPublisherPublicationRequests.map(async (pr) => await readMonographPublication(pr.monograph_publication_id)),
-  );
+  if (identifierType === 'ISBN') {
+    manifestationsInfo = await db
+      .selectFrom('monograph_publication_manifestation')
+      .innerJoin(
+        'isbn_identifier',
+        'isbn_identifier.monograph_publication_manifestation_id',
+        'monograph_publication_manifestation.id',
+      )
+      .innerJoin(
+        'monograph_publication_request',
+        'monograph_publication_request.id',
+        'monograph_publication_manifestation.monograph_publication_request_id',
+      )
+      .select(['monograph_publication_manifestation.cancelled as cancelled'])
+      .select(['isbn_identifier.identifier as identifier', 'isbn_identifier.modified as identifier_assigned'])
+      .select([
+        'monograph_publication_request.official_name as request_official_name',
+        'monograph_publication_request.address as request_address',
+        'monograph_publication_request.zip as request_zip',
+        'monograph_publication_request.city as request_city',
+        'monograph_publication_request.contact_person as request_contact_person',
+        'monograph_publication_request.phone as request_phone',
+        'monograph_publication_request.email as request_email',
+      ])
+      .where('isbn_identifier.modified', '>=', begin)
+      .where('isbn_identifier.modified', '<', endExclusive)
+      .where(
+        'monograph_publication_request.monograph_publisher_id',
+        '=',
+        monographPublisherConfiguration.SELF_PUBLISHER_ID,
+      )
+      .execute();
+  } else if (identifierType === 'ISMN') {
+    manifestationsInfo = await db
+      .selectFrom('monograph_publication_manifestation')
+      .innerJoin(
+        'ismn_identifier',
+        'ismn_identifier.monograph_publication_manifestation_id',
+        'monograph_publication_manifestation.id',
+      )
+      .innerJoin(
+        'monograph_publication_request',
+        'monograph_publication_request.id',
+        'monograph_publication_manifestation.monograph_publication_request_id',
+      )
+      .select(['monograph_publication_manifestation.cancelled as cancelled'])
+      .select(['ismn_identifier.identifier as identifier', 'ismn_identifier.modified as identifier_assigned'])
+      .select([
+        'monograph_publication_request.official_name as request_official_name',
+        'monograph_publication_request.address as request_address',
+        'monograph_publication_request.zip as request_zip',
+        'monograph_publication_request.city as request_city',
+        'monograph_publication_request.contact_person as request_contact_person',
+        'monograph_publication_request.phone as request_phone',
+        'monograph_publication_request.email as request_email',
+      ])
+      .where('ismn_identifier.modified', '>=', begin)
+      .where('ismn_identifier.modified', '<', endExclusive)
+      .where(
+        'monograph_publication_request.monograph_publisher_id',
+        '=',
+        monographPublisherConfiguration.SELF_PUBLISHER_ID,
+      )
+      .execute();
+  } else {
+    throw new Error(`Unsupported identifier type: ${identifierType}`);
+  }
 
-  const filteredPublications = publications.filter((publication) => {
-    const hasIsbn = publication.expressions.some((expression) =>
-      expression.manifestations.some((manifestation) => manifestation.isbn_identifier),
-    );
-    const hasIsmn = publication.expressions.some((expression) =>
-      expression.manifestations.some((manifestation) => manifestation.ismn_identifier),
-    );
-
-    if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
-      return hasIsbn;
-    }
-
-    // Implicit else if for ISMN that relies on type checking
-    return hasIsmn;
-  });
-
-  // The end of this function is a bit cryptic so here is a human-readable description of it:
-  // - For each relevant publication associated with publication request:
-  //   -> Iterate over all expressions
-  //     -> Iterate over all manifestations for each expression
-  //       -> Construct an entry regarding given identifier
-  //
-  // In end of iterative loops flatten the resulting 2d array. This will result to one-dimensional array at the end which is compatible with XLSX/CSV workbook constructor.
-  return filteredPublications
-    .map((publication) => {
-      const publicationRequest = authorPublisherPublicationRequests.find(
-        (pr) => pr.monograph_publication_id === publication.id,
-      );
-      if (!publicationRequest) {
-        throw new Error('Unexpected error occurred. Custom error code: STATISTICS-01.');
-      }
-
-      return publication.expressions
-        .map((expression) =>
-          expression.manifestations.map((manifestation) => ({
-            Registrant_Status_Code: manifestation.cancelled ? 'I' : 'A',
-            Registrant_Prefix_Type: 'A',
-            [`Registrant_Prefix_Or_${identifierType}`]:
-              identifierType === MONOGRAPH_IDENTIFIERS.ISBN
-                ? manifestation.isbn_identifier || ''
-                : manifestation.ismn_identifier || '',
-            Registrant_Name: publicationRequest.official_name,
-            ISO_Country_Code: 'FI',
-            Address_Line_1: publicationRequest.address || '',
-            Address_Line_2:
-              publicationRequest.zip && publicationRequest.city
-                ? `${publicationRequest.zip} ${publicationRequest.city}`
-                : '',
-            Address_Line_3: '',
-            Address_Line_4: '',
-            Admin_Contact_Name: publicationRequest.contact_person || '',
-            Admin_Phone: publicationRequest.phone || '',
-            Admin_Fax: '',
-            Admin_Email: publicationRequest.email || '',
-            Alternate_Contact_Type: '',
-            Alternate_Contact_Name: '',
-            Alternate_Phone: '',
-            Alternate_Fax: '',
-            Alternate_Email: '',
-            SAN: '',
-            GLN: '',
-            Website_URL: '',
-            Registrant_ID: '',
-            ISNI: '',
-          })),
-        )
-        .flat();
-    })
-    .flat();
+  return manifestationsInfo.map((m) => ({
+    Registrant_Status_Code: m.cancelled ? 'I' : 'A',
+    Registrant_Prefix_Type: 'A',
+    [`Registrant_Prefix_Or_${identifierType}`]: m.identifier,
+    Registrant_Name: m.request_official_name,
+    ISO_Country_Code: 'FI',
+    Address_Line_1: m.request_address || '',
+    Address_Line_2: m.request_zip && m.request_city ? `${m.request_zip} ${m.request_city}` : '',
+    Address_Line_3: '',
+    Address_Line_4: '',
+    Admin_Contact_Name: m.request_contact_person || '',
+    Admin_Phone: m.request_phone || '',
+    Admin_Fax: '',
+    Admin_Email: m.request_email || '',
+    Alternate_Contact_Type: '',
+    Alternate_Contact_Name: '',
+    Alternate_Phone: '',
+    Alternate_Fax: '',
+    Alternate_Email: '',
+    SAN: '',
+    GLN: '',
+    Website_URL: '',
+    Registrant_ID: '',
+    ISNI: '',
+  }));
 }
 
 // i.e., publishers whose first publisher identifier of given type has been created during given time period
