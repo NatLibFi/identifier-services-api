@@ -19,15 +19,19 @@ export async function createSerialStatistics(req: Request, res: Response, next: 
     if (output_format === STATISTICS_FORMAT.CSV) {
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', `attachment; filename="tunnisteportaali-serial-${statistics_type}.csv"`);
+      res.status(HttpStatus.OK);
+
       await result.csv.write(res);
-      return res.status(HttpStatus.OK).end();
+      return res.end();
     }
 
     if (output_format === STATISTICS_FORMAT.XLSX) {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.setHeader('Content-Disposition', `attachment; filename="tunnisteportaali-serial-${statistics_type}.xlsx"`);
+      res.status(HttpStatus.OK);
+
       await result.xlsx.write(res);
-      return res.status(HttpStatus.OK).end();
+      return res.end();
     }
 
     throw new ApiError(

@@ -17,7 +17,7 @@ export async function getIssnStatistics(begin: Date, endExclusive: Date): Promis
   }));
 
   const firstSheet: StatisticsWorksheetInfo = {
-    statisticsName: 'ISSN-lohkot (tämänhetkinen tila)',
+    statisticsName: 'ISSN-lohkot',
     data: firstSheetData,
   };
 

@@ -7,7 +7,6 @@ export interface RequestUser {
   roles?: string[];
 }
 
- 
 export type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 
 // Expand Request type so that it may include user information

@@ -249,7 +249,7 @@ export function validateIsbnIdentifier(isbnIdentifierWithDashes: string): void {
   }
 
   if (!publisher_element) {
-    throw new Error('Publisher element is not defined and it\'s a required element in ISBN identifier');
+    throw new Error("Publisher element is not defined and it's a required element in ISBN identifier");
   }
 
   if (publisher_element.length < 1) {
@@ -269,7 +269,7 @@ export function validateIsbnIdentifier(isbnIdentifierWithDashes: string): void {
   }
 
   if (!item_element) {
-    throw new Error('Item element is not defined and it\'s a required element in ISBN identifier');
+    throw new Error("Item element is not defined and it's a required element in ISBN identifier");
   }
 
   if (item_element.length < 1) {
@@ -294,7 +294,7 @@ export function validateIsbnIdentifier(isbnIdentifierWithDashes: string): void {
   }
 
   if (!check_digit) {
-    throw new Error('Item check digit is not defined and it\'s a required element in ISBN identifier');
+    throw new Error("Item check digit is not defined and it's a required element in ISBN identifier");
   }
 
   if (rest.length !== 0) {
