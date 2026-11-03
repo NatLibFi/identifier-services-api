@@ -5,6 +5,6 @@ allOf:
         type:
           - string
           - 'null'
-  - $ref: './monograph-publisher-request.yaml'
+  - $ref: './monograph-publisher-request-base.yaml'
   - $ref: '../common/created-metadata.yaml'
   - $ref: '../common/modified-metadata.yaml'

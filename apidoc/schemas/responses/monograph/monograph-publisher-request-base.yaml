@@ -11,7 +11,7 @@ properties:
   contact_persons:
     type: array
     items:
-      $ref: '../../../common/contact-person.yaml'
+      $ref: '../../common/contact-person.yaml'
   address:
     type: string
   zip:
@@ -25,7 +25,7 @@ properties:
   www:
     type: string
   lang_code:
-    $ref: '../../../enums/lang-code.yaml'
+    $ref: '../../enums/lang-code.yaml'
   frequency_current:
     type: string
   frequency_next:

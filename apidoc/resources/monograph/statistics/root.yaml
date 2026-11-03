@@ -4,10 +4,10 @@ post:
   security:
     - openId:
         - admin
-  description: Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.
+  description: Creates statistics CSV/XLSX regarding monograph.
   tags:
     - monograph
-    - statistics
+    - monograph-statistics
   requestBody:
     required: true
     content:
@@ -33,6 +33,6 @@ post:
     '409':
       description: Conflict
     '422':
-      description: Unprocessable Entity
+      description: Unprocessable entity
     default:
       $ref: '../../../responses/error.yaml'

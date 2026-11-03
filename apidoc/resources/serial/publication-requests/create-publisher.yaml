@@ -6,6 +6,7 @@ post:
         - admin
   tags:
     - serial
+    - serial-publication-request
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   requestBody:

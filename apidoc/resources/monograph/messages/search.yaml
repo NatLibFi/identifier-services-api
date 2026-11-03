@@ -7,7 +7,7 @@ post:
         - admin
   tags:
     - monograph
-    - monograph-messages
+    - monograph-message
   requestBody:
     required: true
     content:

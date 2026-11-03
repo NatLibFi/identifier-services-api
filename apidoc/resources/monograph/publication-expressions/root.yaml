@@ -4,7 +4,6 @@ post:
   security:
     - openId:
         - admin
-        - publisher
   description: Adds a new expression to an existing expression
   tags:
     - monograph

@@ -1,9 +1,10 @@
 post:
-  operationId: createSerialpublicationRequest
+  operationId: createSerialPublicationRequest
   summary: Create a new serial publication request
   security: []
   tags:
     - serial
+    - serial-publication-request
   requestBody:
     required: true
     content:

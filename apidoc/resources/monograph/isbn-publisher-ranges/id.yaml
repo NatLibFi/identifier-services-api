@@ -3,6 +3,7 @@ get:
   summary: Read ISBN publisher range public information (used for Public UI identifier download page)
   security: []
   tags:
+    - public
     - monograph
     - isbn-publisher-range
   parameters:

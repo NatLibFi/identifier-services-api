@@ -1,12 +1,12 @@
 post:
-  operationId: createFromTemplate
+  operationId: createFromTemplateMonograph
   summary: Create message information by using a message template stored to database
   security:
     - openId:
         - admin
   tags:
     - monograph
-    - monograph-messages
+    - monograph-message
   requestBody:
     required: true
     content:

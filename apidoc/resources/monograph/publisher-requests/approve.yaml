@@ -10,7 +10,7 @@ post:
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
-    '204':
+    '200':
       description: Approval was successful
       content:
         application/json:

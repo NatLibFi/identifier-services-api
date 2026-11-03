@@ -33,7 +33,6 @@ patch:
   security:
     - openId:
         - admin
-        # TODO: publisher
   tags:
     - monograph
     - monograph-publication

@@ -6,6 +6,8 @@ post:
     - openId:
         - admin
   tags:
+    - monograph
+    - serial
     - metadata
   requestBody:
     required: true
@@ -15,7 +17,7 @@ post:
           $ref: '../../schemas/requests/melinda/send-to-melinda-body.yaml'
   responses:
     '200':
-      description: Records were created and passed to Melinda API. Note that this does not indicate Melinda API has not encountered errors.
+      description: Records were created and passed to Melinda API. Note that this does indicate whether Melinda API itself encountered errors.
       content:
         application/json:
           schema:

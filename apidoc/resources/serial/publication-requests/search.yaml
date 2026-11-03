@@ -6,6 +6,7 @@ post:
         - admin
   tags:
     - serial
+    - serial-publication-request
   requestBody:
     required: true
     content:

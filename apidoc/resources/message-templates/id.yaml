@@ -5,6 +5,8 @@ patch:
     - openId:
         - admin
   tags:
+    - monograph
+    - serial
     - message-template
   requestBody:
     required: true

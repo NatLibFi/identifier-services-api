@@ -3,6 +3,7 @@ post:
   summary: Create a new monograph publication request
   security: []
   tags:
+    - public
     - monograph
     - monograph-publication-request
   requestBody:

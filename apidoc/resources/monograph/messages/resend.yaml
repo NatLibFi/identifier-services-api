@@ -6,7 +6,7 @@ post:
         - admin
   tags:
     - monograph
-    - monograph-messages
+    - monograph-message
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   requestBody:

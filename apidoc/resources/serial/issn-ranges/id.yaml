@@ -6,7 +6,7 @@ patch:
         - admin
   tags:
     - serial
-    - issn
+    - issn-range
   requestBody:
     required: true
     content:
@@ -39,7 +39,7 @@ delete:
         - admin
   tags:
     - serial
-    - issn
+    - issn-range
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

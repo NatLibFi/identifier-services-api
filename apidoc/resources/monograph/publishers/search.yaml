@@ -1,11 +1,11 @@
 post:
   operationId: searchMonographPublisher
-  summary: Create a monograph publishers
+  summary: Search monograph publishers
   security: []
   tags:
+    - public
     - monograph
     - monograph-publisher
-    - public
   requestBody:
     required: true
     content:

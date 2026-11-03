@@ -6,7 +6,7 @@ get:
         - admin
   tags:
     - serial
-    - issn
+    - issn-range
   responses:
     '200':
       description: Resources could be read
@@ -30,7 +30,7 @@ post:
   description: Creates a new ISSN range. Note new range is not allowed to overlap any existing ranges.
   tags:
     - serial
-    - issn
+    - issn-range
   requestBody:
     required: true
     content:

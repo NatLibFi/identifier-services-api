@@ -1,5 +1,5 @@
 get:
-  operationId: readmonographPublisher
+  operationId: readMonographPublisher
   summary: Read monograph publisher information. Returned information depends on user application role.
   security: []
   tags:
@@ -29,14 +29,14 @@ get:
       $ref: '../../../responses/error.yaml'
 
 patch:
-  operationId: updatemonographPublisher
-  summary: Update ISBN range
+  operationId: updateMonographPublisher
+  summary: Update monograph publisher
   security:
     - openId:
         - admin
   tags:
     - monograph
-    - isbn
+    - monograph-publisher
   requestBody:
     required: true
     content:
@@ -66,14 +66,14 @@ patch:
       $ref: '../../../responses/error.yaml'
 
 delete:
-  operationId: deletemonographPublisher
-  summary: Delete ISBN range
+  operationId: deleteMonographPublisher
+  summary: Delete monograph publisher
   security:
     - openId:
         - admin
   tags:
     - monograph
-    - isbn
+    - monograph-publisher
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

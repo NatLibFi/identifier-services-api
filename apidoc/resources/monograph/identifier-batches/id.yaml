@@ -3,7 +3,9 @@ get:
   summary: Read monograph identifier batch information that is public
   security: []
   tags:
+    - public
     - monograph
+    - identifier-batch
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
@@ -32,6 +34,7 @@ delete:
         - admin
   tags:
     - monograph
+    - identifier-batch
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

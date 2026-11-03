@@ -6,6 +6,7 @@ post:
         - admin
   tags:
     - monograph
+    - identifier-batch
   requestBody:
     required: true
     content:

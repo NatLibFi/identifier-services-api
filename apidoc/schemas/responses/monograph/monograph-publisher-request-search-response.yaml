@@ -1,22 +1,27 @@
-type: array
-items:
-  type: object
-  properties:
-    id:
-      type: number
-    official_name:
-      type: string
-    email:
-      type:
-        - string
-        - 'null'
-    additional_info:
-      type:
-        - string
-        - 'null'
-    contact_persons:
-      type: array
-      items:
-        $ref: '../../common/contact-person.yaml'
-    created:
-      type: string
+type: object
+properties:
+  total_doc:
+    type: number
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: number
+        official_name:
+          type: string
+        email:
+          type:
+            - string
+            - 'null'
+        additional_info:
+          type:
+            - string
+            - 'null'
+        contact_persons:
+          type: array
+          items:
+            $ref: '../../common/contact-person.yaml'
+        created:
+          type: string

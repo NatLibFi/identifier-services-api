@@ -1,11 +1,12 @@
 post:
   operationId: searchSerialPublisher
-  summary: Search a serial publishers
+  summary: Search serial publishers
   security:
     - openId:
         - admin
   tags:
     - serial
+    - serial-publisher
   requestBody:
     required: true
     content:

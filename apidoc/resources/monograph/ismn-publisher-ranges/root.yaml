@@ -7,7 +7,7 @@ post:
   description: Creates a new ISMN publisher range with associations to ISMN range and monograph publisher.
   tags:
     - monograph
-    - ismn
+    - ismn-publisher-range
   requestBody:
     required: true
     content:

@@ -3,6 +3,7 @@ get:
   summary: Read ISMN publisher range public information (used for Public UI identifier download page)
   security: []
   tags:
+    - public
     - monograph
     - ismn-publisher-range
   parameters:

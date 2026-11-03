@@ -35,6 +35,7 @@ patch:
         - admin
   tags:
     - serial
+    - serial-publication
   requestBody:
     required: true
     content:
@@ -71,6 +72,7 @@ delete:
         - admin
   tags:
     - serial
+    - serial-publication
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

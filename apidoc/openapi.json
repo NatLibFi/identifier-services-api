@@ -50,6 +50,8 @@
           }
         ],
         "tags": [
+          "monograph",
+          "serial",
           "metadata"
         ],
         "requestBody": {
@@ -64,7 +66,7 @@
         },
         "responses": {
           "200": {
-            "description": "Records were created and passed to Melinda API. Note that this does not indicate Melinda API has not encountered errors.",
+            "description": "Records were created and passed to Melinda API. Note that this does indicate whether Melinda API itself encountered errors.",
             "content": {
               "application/json": {
                 "schema": {
@@ -94,6 +96,127 @@
         }
       }
     },
+    "/v2/message-templates": {
+      "get": {
+        "operationId": "readMessageTemplate",
+        "summary": "Read message template information for given operation and language",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "serial",
+          "message-templates"
+        ],
+        "parameters": [
+          {
+            "name": "message_type",
+            "in": "query",
+            "required": true,
+            "description": "Type of message to load template for",
+            "schema": {
+              "$ref": "#/components/schemas/message-type"
+            }
+          },
+          {
+            "name": "lang_code",
+            "in": "query",
+            "required": true,
+            "description": "Language to load template for",
+            "schema": {
+              "$ref": "#/components/schemas/lang-code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource was read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/message-template-read"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/v2/message-templates/{id}": {
+      "patch": {
+        "operationId": "updateMessageTemplate",
+        "summary": "Update message template",
+        "security": [
+          {
+            "openId": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "monograph",
+          "serial",
+          "message-template"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/message-template-update-body"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource was updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource was not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/v2/monograph/isbn-ranges": {
       "get": {
         "operationId": "getIsbnRanges",
@@ -107,7 +230,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-range"
         ],
         "responses": {
           "200": {
@@ -144,7 +267,7 @@
         "description": "Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.",
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-range"
         ],
         "requestBody": {
           "required": true,
@@ -198,7 +321,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-range"
         ],
         "parameters": [
           {
@@ -245,7 +368,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-range"
         ],
         "requestBody": {
           "required": true,
@@ -298,7 +421,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-range"
         ],
         "parameters": [
           {
@@ -341,7 +464,7 @@
         "description": "Creates a new ISBN publisher range with associations to ISBN range and monograph publisher.",
         "tags": [
           "monograph",
-          "isbn"
+          "isbn-publisher-range"
         ],
         "requestBody": {
           "required": true,
@@ -388,6 +511,7 @@
         "summary": "Read ISBN publisher range public information (used for Public UI identifier download page)",
         "security": [],
         "tags": [
+          "public",
           "monograph",
           "isbn-publisher-range"
         ],
@@ -472,7 +596,7 @@
         ],
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-range"
         ],
         "responses": {
           "200": {
@@ -509,7 +633,7 @@
         "description": "Creates a new ISMN range. Note new range is not allowed to overlap any existing ranges.",
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-range"
         ],
         "requestBody": {
           "required": true,
@@ -563,7 +687,7 @@
         ],
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-range"
         ],
         "parameters": [
           {
@@ -610,7 +734,7 @@
         ],
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-range"
         ],
         "requestBody": {
           "required": true,
@@ -663,7 +787,7 @@
         ],
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-range"
         ],
         "parameters": [
           {
@@ -706,7 +830,7 @@
         "description": "Creates a new ISMN publisher range with associations to ISMN range and monograph publisher.",
         "tags": [
           "monograph",
-          "ismn"
+          "ismn-publisher-range"
         ],
         "requestBody": {
           "required": true,
@@ -753,6 +877,7 @@
         "summary": "Read ISMN publisher range public information (used for Public UI identifier download page)",
         "security": [],
         "tags": [
+          "public",
           "monograph",
           "ismn-publisher-range"
         ],
@@ -836,7 +961,8 @@
           }
         ],
         "tags": [
-          "monograph"
+          "monograph",
+          "identifier-batch"
         ],
         "requestBody": {
           "required": true,
@@ -883,7 +1009,9 @@
         "summary": "Read monograph identifier batch information that is public",
         "security": [],
         "tags": [
-          "monograph"
+          "public",
+          "monograph",
+          "identifier-batch"
         ],
         "parameters": [
           {
@@ -929,7 +1057,8 @@
           }
         ],
         "tags": [
-          "monograph"
+          "monograph",
+          "identifier-batch"
         ],
         "parameters": [
           {
@@ -960,7 +1089,7 @@
     },
     "/v2/monograph/identifier-batches/{id}/download": {
       "post": {
-        "operationId": "downloadMonographIdentifierBattch",
+        "operationId": "downloadMonographIdentifierBatch",
         "summary": "Download ISBN/ISMN identifiers associated with batch id given as parameter as text file",
         "security": [],
         "tags": [
@@ -1020,7 +1149,7 @@
     },
     "/v2/monograph/publishers/{id}": {
       "get": {
-        "operationId": "readmonographPublisher",
+        "operationId": "readMonographPublisher",
         "summary": "Read monograph publisher information. Returned information depends on user application role.",
         "security": [],
         "tags": [
@@ -1069,8 +1198,8 @@
         }
       },
       "patch": {
-        "operationId": "updatemonographPublisher",
-        "summary": "Update ISBN range",
+        "operationId": "updateMonographPublisher",
+        "summary": "Update monograph publisher",
         "security": [
           {
             "openId": [
@@ -1080,7 +1209,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "monograph-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -1129,8 +1258,8 @@
         }
       },
       "delete": {
-        "operationId": "deletemonographPublisher",
-        "summary": "Delete ISBN range",
+        "operationId": "deleteMonographPublisher",
+        "summary": "Delete monograph publisher",
         "security": [
           {
             "openId": [
@@ -1140,7 +1269,7 @@
         ],
         "tags": [
           "monograph",
-          "isbn"
+          "monograph-publisher"
         ],
         "parameters": [
           {
@@ -1181,6 +1310,7 @@
           }
         ],
         "tags": [
+          "monograph",
           "monograph-publisher"
         ],
         "parameters": [
@@ -1275,12 +1405,12 @@
     "/v2/monograph/publishers/search": {
       "post": {
         "operationId": "searchMonographPublisher",
-        "summary": "Create a monograph publishers",
+        "summary": "Search monograph publishers",
         "security": [],
         "tags": [
+          "public",
           "monograph",
-          "monograph-publisher",
-          "public"
+          "monograph-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -1406,6 +1536,7 @@
         "summary": "Create a new monograph publisher request",
         "security": [],
         "tags": [
+          "public",
           "monograph",
           "monograph-publisher-request"
         ],
@@ -1628,7 +1759,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Approval was successful",
             "content": {
               "application/json": {
@@ -1909,8 +2040,7 @@
         "security": [
           {
             "openId": [
-              "admin",
-              "publisher"
+              "admin"
             ]
           }
         ],
@@ -2162,8 +2292,7 @@
         "security": [
           {
             "openId": [
-              "admin",
-              "publisher"
+              "admin"
             ]
           }
         ],
@@ -2518,6 +2647,7 @@
         "summary": "Create a new monograph publication request",
         "security": [],
         "tags": [
+          "public",
           "monograph",
           "monograph-publication-request"
         ],
@@ -2823,7 +2953,7 @@
     "/v2/monograph/publication-requests/{id}/reprocess": {
       "post": {
         "operationId": "reprocessMonographPublicationRequest",
-        "summary": "Transfer monograph publication request from completed state back into processing state. No alterations are made for associated entitites.",
+        "summary": "Transfer monograph publication request from completed state back into processing state. No alterations are made for associated entities.",
         "security": [
           {
             "openId": [
@@ -2912,7 +3042,7 @@
     },
     "/v2/monograph/messages/create-from-template": {
       "post": {
-        "operationId": "createFromTemplate",
+        "operationId": "createFromTemplateMonograph",
         "summary": "Create message information by using a message template stored to database",
         "security": [
           {
@@ -2923,7 +3053,7 @@
         ],
         "tags": [
           "monograph",
-          "monograph-messages"
+          "monograph-message"
         ],
         "requestBody": {
           "required": true,
@@ -2980,7 +3110,7 @@
         ],
         "tags": [
           "monograph",
-          "monograph-messages"
+          "monograph-message"
         ],
         "requestBody": {
           "required": true,
@@ -3038,7 +3168,7 @@
         ],
         "tags": [
           "monograph",
-          "monograph-messages"
+          "monograph-message"
         ],
         "requestBody": {
           "required": true,
@@ -3086,7 +3216,7 @@
         ],
         "tags": [
           "monograph",
-          "monograph-messages"
+          "monograph-message"
         ],
         "parameters": [
           {
@@ -3135,7 +3265,7 @@
         ],
         "tags": [
           "monograph",
-          "monograph-messages"
+          "monograph-message"
         ],
         "parameters": [
           {
@@ -3195,10 +3325,10 @@
             ]
           }
         ],
-        "description": "Creates a new ISBN range. Note new range is not allowed to overlap any existing ranges.",
+        "description": "Creates statistics CSV/XLSX regarding monograph.",
         "tags": [
           "monograph",
-          "statistics"
+          "monograph-statistics"
         ],
         "requestBody": {
           "required": true,
@@ -3238,7 +3368,7 @@
             "description": "Conflict"
           },
           "422": {
-            "description": "Unprocessable Entity"
+            "description": "Unprocessable entity"
           },
           "default": {
             "$ref": "#/components/responses/error"
@@ -3259,7 +3389,7 @@
         ],
         "tags": [
           "serial",
-          "issn"
+          "issn-range"
         ],
         "responses": {
           "200": {
@@ -3296,7 +3426,7 @@
         "description": "Creates a new ISSN range. Note new range is not allowed to overlap any existing ranges.",
         "tags": [
           "serial",
-          "issn"
+          "issn-range"
         ],
         "requestBody": {
           "required": true,
@@ -3350,7 +3480,7 @@
         ],
         "tags": [
           "serial",
-          "issn"
+          "issn-range"
         ],
         "requestBody": {
           "required": true,
@@ -3403,7 +3533,7 @@
         ],
         "tags": [
           "serial",
-          "issn"
+          "issn-range"
         ],
         "parameters": [
           {
@@ -3444,7 +3574,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -3491,7 +3622,8 @@
         "summary": "Read serial publisher information.",
         "security": [],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "parameters": [
           {
@@ -3537,7 +3669,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -3596,7 +3729,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "parameters": [
           {
@@ -3628,7 +3762,7 @@
     "/v2/serial/publishers/search": {
       "post": {
         "operationId": "searchSerialPublisher",
-        "summary": "Search a serial publishers",
+        "summary": "Search serial publishers",
         "security": [
           {
             "openId": [
@@ -3637,7 +3771,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -3701,7 +3836,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publisher"
         ],
         "requestBody": {
           "required": true,
@@ -3808,7 +3944,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication"
         ],
         "requestBody": {
           "required": true,
@@ -3867,7 +4004,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication"
         ],
         "parameters": [
           {
@@ -3908,7 +4046,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication"
         ],
         "parameters": [
           {
@@ -3916,7 +4055,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Operation was successful",
             "content": {
               "application/json": {
@@ -3959,7 +4098,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication"
         ],
         "parameters": [
           {
@@ -3967,7 +4107,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Operation was successful",
             "content": {
               "application/json": {
@@ -4011,6 +4151,7 @@
         ],
         "tags": [
           "serial",
+          "serial-publication",
           "metadata"
         ],
         "requestBody": {
@@ -4077,7 +4218,7 @@
     "/v2/serial/publications/search": {
       "post": {
         "operationId": "searchSerialPublication",
-        "summary": "Search a serial publications",
+        "summary": "Search serial publications",
         "security": [
           {
             "openId": [
@@ -4086,7 +4227,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication"
         ],
         "requestBody": {
           "required": true,
@@ -4140,11 +4282,12 @@
     },
     "/v2/serial/publication-requests": {
       "post": {
-        "operationId": "createSerialpublicationRequest",
+        "operationId": "createSerialPublicationRequest",
         "summary": "Create a new serial publication request",
         "security": [],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "requestBody": {
           "required": true,
@@ -4192,7 +4335,7 @@
         }
       }
     },
-    "/v2/serial/publication-requests/${id}": {
+    "/v2/serial/publication-requests/{id}": {
       "get": {
         "operationId": "readSerialPublicationRequest",
         "summary": "Read serial publication request information.",
@@ -4204,7 +4347,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4250,7 +4394,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "requestBody": {
           "required": true,
@@ -4309,7 +4454,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4338,7 +4484,7 @@
         }
       }
     },
-    "/v2/serial/publication-requests/${id}/add-publication": {
+    "/v2/serial/publication-requests/{id}/add-publication": {
       "post": {
         "operationId": "addSerialPublication",
         "summary": "Create a new serial publication and attach it to request",
@@ -4350,7 +4496,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4396,7 +4543,7 @@
         }
       }
     },
-    "/v2/serial/publication-requests/${id}/create-publisher": {
+    "/v2/serial/publication-requests/{id}/create-publisher": {
       "post": {
         "operationId": "createSerialPublisherFromRequest",
         "summary": "Creates a new serial publisher from the requests information",
@@ -4408,7 +4555,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4454,7 +4602,7 @@
         }
       }
     },
-    "/v2/serial/publication-requests/${id}/approve": {
+    "/v2/serial/publication-requests/{id}/approve": {
       "post": {
         "operationId": "approveSerialPublicationRequest",
         "summary": "Approves request and assigns ISSN for each request publication.",
@@ -4466,7 +4614,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4474,7 +4623,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Operation was successful",
             "content": {
               "application/json": {
@@ -4505,7 +4654,7 @@
         }
       }
     },
-    "/v2/serial/publication-requests/${id}/reject": {
+    "/v2/serial/publication-requests/{id}/reject": {
       "post": {
         "operationId": "rejectSerialPublicationRequest",
         "summary": "Rejects request.",
@@ -4517,7 +4666,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "parameters": [
           {
@@ -4568,7 +4718,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-publication-request"
         ],
         "requestBody": {
           "required": true,
@@ -4632,7 +4783,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-message"
         ],
         "requestBody": {
           "required": true,
@@ -4688,7 +4840,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-message"
         ],
         "requestBody": {
           "required": true,
@@ -4745,7 +4898,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-message"
         ],
         "requestBody": {
           "required": true,
@@ -4792,7 +4946,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-message"
         ],
         "parameters": [
           {
@@ -4840,7 +4995,8 @@
           }
         ],
         "tags": [
-          "serial"
+          "serial",
+          "serial-message"
         ],
         "parameters": [
           {
@@ -4902,7 +5058,7 @@
         ],
         "tags": [
           "serial",
-          "statistics"
+          "serial-statistics"
         ],
         "requestBody": {
           "required": true,
@@ -5026,6 +5182,25 @@
           }
         }
       },
+      "message-type": {
+        "type": "string",
+        "enum": [
+          "ISBN_ASSIGNMENT",
+          "ISBN_LIST_DELIVERY",
+          "ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION",
+          "ISMN_ASSIGNMENT",
+          "ISMN_LIST_DELIVERY",
+          "ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION"
+        ]
+      },
+      "lang-code": {
+        "type": "string",
+        "enum": [
+          "fi-FI",
+          "sv-SE",
+          "en-GB"
+        ]
+      },
       "created-metadata": {
         "type": "object",
         "properties": {
@@ -5053,6 +5228,50 @@
           "modified": {
             "type": "string",
             "example": "2024-12-01T00:00:00.000Z"
+          }
+        }
+      },
+      "message-template-read": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "message_type": {
+                "type": "string"
+              },
+              "lang_code": {
+                "$ref": "#/components/schemas/lang-code"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/created-metadata"
+          },
+          {
+            "$ref": "#/components/schemas/modified-metadata"
+          }
+        ]
+      },
+      "message-template-update-body": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
           }
         }
       },
@@ -5869,14 +6088,6 @@
           }
         ]
       },
-      "lang-code": {
-        "type": "string",
-        "enum": [
-          "fi-FI",
-          "sv-SE",
-          "en-GB"
-        ]
-      },
       "contact-person": {
         "type": "object",
         "properties": {
@@ -6044,6 +6255,78 @@
           }
         }
       },
+      "monograph-publisher-request-base": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "official_name": {
+            "type": "string"
+          },
+          "other_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contact_persons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/contact-person"
+            }
+          },
+          "address": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "www": {
+            "type": "string"
+          },
+          "lang_code": {
+            "$ref": "#/components/schemas/lang-code"
+          },
+          "frequency_current": {
+            "type": "string"
+          },
+          "frequency_next": {
+            "type": "string"
+          },
+          "affiliate_of": {
+            "type": "string"
+          },
+          "affiliates": {
+            "type": "string"
+          },
+          "distributor_of": {
+            "type": "string"
+          },
+          "distributors": {
+            "type": "string"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "String is a numeric classification code"
+            }
+          },
+          "classification_other": {
+            "type": "string"
+          }
+        }
+      },
       "monograph-publisher-request": {
         "allOf": [
           {
@@ -6058,7 +6341,7 @@
             }
           },
           {
-            "$ref": "#/components/schemas/monograph-publisher-request"
+            "$ref": "#/components/schemas/monograph-publisher-request-base"
           },
           {
             "$ref": "#/components/schemas/created-metadata"
@@ -6518,36 +6801,44 @@
         ]
       },
       "monograph-publisher-request-search-response": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "official_name": {
-              "type": "string"
-            },
-            "email": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "additional_info": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "contact_persons": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/contact-person"
+        "type": "object",
+        "properties": {
+          "total_doc": {
+            "type": "number"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "official_name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "additional_info": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "contact_persons": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/contact-person"
+                  }
+                },
+                "created": {
+                  "type": "string"
+                }
               }
-            },
-            "created": {
-              "type": "string"
             }
           }
         }
@@ -6878,7 +7169,7 @@
           "limit": {
             "type": "number",
             "minimum": 1,
-            "maximum": 10
+            "maximum": 50
           },
           "offset": {
             "type": "number",
@@ -7658,33 +7949,41 @@
         ]
       },
       "monograph-publication-request-search-response": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "publication_primary_title": {
-              "type": "string"
-            },
-            "official_name": {
-              "type": "string"
-            },
-            "contact_person": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "email": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "created": {
-              "type": "string"
+        "type": "object",
+        "properties": {
+          "total_doc": {
+            "type": "number"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "publication_primary_title": {
+                  "type": "string"
+                },
+                "official_name": {
+                  "type": "string"
+                },
+                "contact_person": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                }
+              }
             }
           }
         }

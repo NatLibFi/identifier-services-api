@@ -6,7 +6,7 @@ get:
         - admin
   tags:
     - monograph
-    - ismn
+    - ismn-range
   responses:
     '200':
       description: Resources could be read
@@ -30,7 +30,7 @@ post:
   description: Creates a new ISMN range. Note new range is not allowed to overlap any existing ranges.
   tags:
     - monograph
-    - ismn
+    - ismn-range
   requestBody:
     required: true
     content:

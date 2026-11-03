@@ -4,6 +4,7 @@ get:
   security: []
   tags:
     - serial
+    - serial-publisher
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
@@ -32,6 +33,7 @@ patch:
         - admin
   tags:
     - serial
+    - serial-publisher
   requestBody:
     required: true
     content:
@@ -68,6 +70,7 @@ delete:
         - admin
   tags:
     - serial
+    - serial-publisher
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

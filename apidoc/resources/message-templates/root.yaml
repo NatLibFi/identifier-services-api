@@ -5,9 +5,10 @@ get:
     - openId:
         - admin
   tags:
+    - monograph
+    - serial
     - message-templates
   parameters:
-    - $ref: '../../parameters/path/id.yaml'
     - name: message_type
       in: query
       required: true

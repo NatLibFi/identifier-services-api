@@ -1,6 +1,6 @@
 post:
   operationId: reprocessMonographPublicationRequest
-  summary: Transfer monograph publication request from completed state back into processing state. No alterations are made for associated entitites.
+  summary: Transfer monograph publication request from completed state back into processing state. No alterations are made for associated entities.
   security:
     - openId:
         - admin

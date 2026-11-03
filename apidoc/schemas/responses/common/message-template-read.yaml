@@ -8,7 +8,7 @@ allOf:
       message_type:
         type: string
       lang_code:
-        $ref: '../../enums/lang-code'
+        $ref: '../../enums/lang-code.yaml'
       subject:
         type: string
       body:

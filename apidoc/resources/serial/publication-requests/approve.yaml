@@ -6,10 +6,11 @@ post:
         - admin
   tags:
     - serial
+    - serial-publication-request
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
-    '204':
+    '200':
       description: Operation was successful
       content:
         application/json:

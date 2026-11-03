@@ -10,7 +10,7 @@ export const searchMonographPublicationSchema = z
   .object({
     search_text: z.string().max(100).optional(),
     monograph_publisher_id: z.number().optional(),
-    limit: z.number().min(1).max(10), // Note: limit is made low because each entry will result into a normal interface read operation
+    limit: z.number().min(1).max(50), // Note: limit is made low because each entry will result into a normal interface read operation
     offset: z.number().min(0).max(100000),
   })
   .strict();

@@ -6,7 +6,7 @@ get:
         - admin
   tags:
     - monograph
-    - isbn
+    - isbn-range
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:
@@ -35,7 +35,7 @@ patch:
         - admin
   tags:
     - monograph
-    - isbn
+    - isbn-range
   requestBody:
     required: true
     content:
@@ -68,7 +68,7 @@ delete:
         - admin
   tags:
     - monograph
-    - isbn
+    - isbn-range
   parameters:
     - $ref: '../../../parameters/path/id.yaml'
   responses:

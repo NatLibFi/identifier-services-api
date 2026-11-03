@@ -4,7 +4,6 @@ patch:
   security:
     - openId:
         - admin
-        # TODO: publisher
   tags:
     - monograph
     - monograph-publication-manifestation
@@ -42,7 +41,6 @@ delete:
   security:
     - openId:
         - admin
-        # TODO: publisher
   tags:
     - monograph
     - monograph-publication-manifestation

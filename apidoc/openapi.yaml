@@ -19,6 +19,11 @@ paths:
   /v2/melinda:
     $ref: './resources/melinda/root.yaml'
 
+  /v2/message-templates:
+    $ref: './resources/message-templates/root.yaml'
+  /v2/message-templates/{id}:
+    $ref: './resources/message-templates/id.yaml'
+
   # Monograph
 
   /v2/monograph/isbn-ranges:
@@ -149,15 +154,15 @@ paths:
 
   /v2/serial/publication-requests:
     $ref: './resources/serial/publication-requests/root.yaml'
-  /v2/serial/publication-requests/${id}:
+  /v2/serial/publication-requests/{id}:
     $ref: './resources/serial/publication-requests/id.yaml'
-  /v2/serial/publication-requests/${id}/add-publication:
+  /v2/serial/publication-requests/{id}/add-publication:
     $ref: './resources/serial/publication-requests/add-serial-publication.yaml'
-  /v2/serial/publication-requests/${id}/create-publisher:
+  /v2/serial/publication-requests/{id}/create-publisher:
     $ref: './resources/serial/publication-requests/create-publisher.yaml'
-  /v2/serial/publication-requests/${id}/approve:
+  /v2/serial/publication-requests/{id}/approve:
     $ref: './resources/serial/publication-requests/approve.yaml'
-  /v2/serial/publication-requests/${id}/reject:
+  /v2/serial/publication-requests/{id}/reject:
     $ref: './resources/serial/publication-requests/reject.yaml'
   /v2/serial/publication-requests/search:
     $ref: './resources/serial/publication-requests/search.yaml'
@@ -179,3 +184,4 @@ components:
   securitySchemes:
     openId:
       type: openIdConnect
+      # openIdConnectUrl omitted on purpose

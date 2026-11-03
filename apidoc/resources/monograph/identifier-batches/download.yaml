@@ -1,6 +1,6 @@
 # Using HTTP POST mainly for turnstile token since we don't yet have HTTP QUERY (i.e., GET requests with body)
 post:
-  operationId: downloadMonographIdentifierBattch
+  operationId: downloadMonographIdentifierBatch
   summary: Download ISBN/ISMN identifiers associated with batch id given as parameter as text file
   security: []
   tags:
