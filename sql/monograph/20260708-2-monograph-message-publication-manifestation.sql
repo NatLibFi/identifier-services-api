@@ -1,8 +1,8 @@
--- monograph_message_publication_manifestation v2.0.0-alpha.2
+-- monograph_message_publication_manifestation v2.0.0-alpha.3
 CREATE TABLE monograph_message_publication_manifestation (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  monograph_message_id INT UNSIGNED,
-  monograph_publication_manifestation_id INT UNSIGNED,
+  monograph_message_id INT UNSIGNED NOT NULL,
+  monograph_publication_manifestation_id INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (monograph_message_id) REFERENCES monograph_message(id),
   FOREIGN KEY (monograph_publication_manifestation_id) REFERENCES monograph_publication_manifestation(id),

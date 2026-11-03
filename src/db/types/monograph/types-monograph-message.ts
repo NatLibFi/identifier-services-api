@@ -4,7 +4,7 @@ export interface MonographMessage {
   id: Generated<number>;
   message_type: string;
   monograph_publisher_id: number; // Always required
-  monograph_publication_request_id: number | null; // Required with ISBN_ASSINGMENT / ISMN_ASSIGNMENT message type
+  monograph_publication_request_id: number | null; // Required with ISBN_ASSIGNMENT / ISMN_ASSIGNMENT message type
   isbn_publisher_range_id: number | null; // Required with ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
   ismn_publisher_range_id: number | null; // Required with ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
   monograph_identifier_batch_id: number | null; // Required with ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
