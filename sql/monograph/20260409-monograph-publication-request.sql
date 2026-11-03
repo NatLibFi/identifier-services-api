@@ -27,5 +27,6 @@ CREATE TABLE monograph_publication_request (
   PRIMARY KEY (`id`),
   UNIQUE (monograph_publication_id),
   FOREIGN KEY (monograph_publisher_id) REFERENCES monograph_publisher(id),
-  FOREIGN KEY (monograph_publication_id) REFERENCES monograph_publication(id)
+  FOREIGN KEY (monograph_publication_id) REFERENCES monograph_publication(id),
+  INDEX idx_monograph_publication_request_state (request_state)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

@@ -1,4 +1,4 @@
--- message template v2.0.0-alpha.1
+-- message template v2.0.0-alpha.2
 CREATE TABLE message_template (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
@@ -10,5 +10,6 @@ CREATE TABLE message_template (
   created_by VARCHAR(36) NOT NULL,
   modified DATETIME NOT NULL,
   modified_by VARCHAR(36) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE(message_type, lang_code)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

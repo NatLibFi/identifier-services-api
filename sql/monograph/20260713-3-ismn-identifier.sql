@@ -14,5 +14,6 @@ CREATE TABLE ismn_identifier (
   UNIQUE (monograph_publication_manifestation_id),
   FOREIGN KEY (ismn_publisher_range_id) REFERENCES ismn_publisher_range(id),
   FOREIGN KEY (monograph_publication_manifestation_id) REFERENCES monograph_publication_manifestation(id),
-  FOREIGN KEY (monograph_identifier_batch_id) REFERENCES monograph_identifier_batch(id)
+  FOREIGN KEY (monograph_identifier_batch_id) REFERENCES monograph_identifier_batch(id),
+  INDEX idx_ismn_identifier_modified (modified) -- modification is either creation, assignation or revoking of identifier
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

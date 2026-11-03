@@ -1,7 +1,7 @@
--- monograph_message v2.0.0-alpha.5
+-- monograph_message v2.0.0-alpha.7
 CREATE TABLE monograph_message (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  monograph_publisher_id INT UNSIGNED,
+  monograph_publisher_id INT UNSIGNED NOT NULL,
   monograph_publication_request_id INT UNSIGNED,
   monograph_identifier_batch_id INT UNSIGNED,
   isbn_publisher_range_id INT UNSIGNED,
@@ -14,5 +14,10 @@ CREATE TABLE monograph_message (
   `sent` DATETIME NOT NULL,
   sent_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (monograph_publisher_id) REFERENCES monograph_publisher(id)
+  FOREIGN KEY (monograph_publisher_id) REFERENCES monograph_publisher(id),
+  FOREIGN KEY (monograph_publication_request_id) REFERENCES monograph_publication_request(id),
+  FOREIGN KEY (monograph_identifier_batch_id) REFERENCES monograph_identifier_batch(id),
+  FOREIGN KEY (isbn_publisher_range_id) REFERENCES isbn_publisher_range(id),
+  FOREIGN KEY (ismn_publisher_range_id) REFERENCES ismn_publisher_range(id),
+  INDEX idx_monograph_message_sent (sent) -- for monitoring and statistics
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

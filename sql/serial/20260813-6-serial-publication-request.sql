@@ -1,4 +1,4 @@
--- serial publication request v2.0.0-alpha.1
+-- serial publication request v2.0.0-alpha.2
 CREATE TABLE serial_publication_request (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   serial_publisher_id INT UNSIGNED,
@@ -16,5 +16,6 @@ CREATE TABLE serial_publication_request (
   modified DATETIME NOT NULL,
   modified_by VARCHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (serial_publisher_id) REFERENCES serial_publisher(id)
+  FOREIGN KEY (serial_publisher_id) REFERENCES serial_publisher(id),
+  INDEX idx_serial_publication_status_created (status, created)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

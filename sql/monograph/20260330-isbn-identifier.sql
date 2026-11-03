@@ -1,4 +1,4 @@
--- ISBN identifier v2.0.0-alpha.5
+-- ISBN identifier v2.0.0-alpha.6
 CREATE TABLE isbn_identifier (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   identifier VARCHAR(20) NOT NULL,
@@ -14,5 +14,6 @@ CREATE TABLE isbn_identifier (
   UNIQUE (monograph_publication_manifestation_id),
   FOREIGN KEY (isbn_publisher_range_id) REFERENCES isbn_publisher_range(id),
   FOREIGN KEY (monograph_publication_manifestation_id) REFERENCES monograph_publication_manifestation(id),
-  FOREIGN KEY (monograph_identifier_batch_id) REFERENCES monograph_identifier_batch(id)
+  FOREIGN KEY (monograph_identifier_batch_id) REFERENCES monograph_identifier_batch(id),
+  INDEX idx_isbn_identifier_modified (modified) -- modification is either creation, assignation or revoking of identifier
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

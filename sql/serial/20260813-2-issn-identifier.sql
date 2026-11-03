@@ -1,4 +1,4 @@
--- ISSN identifier v2.0.0-alpha.4
+-- ISSN identifier v2.0.0-alpha.5
 CREATE TABLE issn_identifier (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   issn_range_id INT UNSIGNED,
@@ -11,5 +11,6 @@ CREATE TABLE issn_identifier (
   PRIMARY KEY (`id`),
   UNIQUE (identifier),
   FOREIGN KEY (issn_range_id) REFERENCES issn_range(id),
-  FOREIGN KEY (serial_publication_id) REFERENCES serial_publication(id)
+  FOREIGN KEY (serial_publication_id) REFERENCES serial_publication(id),
+  INDEX idx_issn_identifier_range_state (issn_range_id, serial_publication_id) -- faster lookups on ranges free identifiers
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;

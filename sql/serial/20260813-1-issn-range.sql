@@ -1,4 +1,4 @@
--- ISSN range v2.0.0-alpha.2
+-- ISSN range v2.0.0-alpha.3
 CREATE TABLE issn_range (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `block` VARCHAR(4) NOT NULL,
@@ -9,5 +9,6 @@ CREATE TABLE issn_range (
   created_by VARCHAR(36) NOT NULL,
   modified DATETIME NOT NULL,
   modified_by VARCHAR(36) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE(`block`, range_begin, range_end)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_swedish_ci;
