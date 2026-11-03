@@ -1,27 +1,26 @@
 import HttpStatus from 'http-status';
 
-import { constructSerialMessage } from './serial-message-template-utils.ts';
-
-import { ApiError } from '../../utils/api-error.ts';
-import { getApplicationLogger } from '../../utils/logging.ts';
-
-import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById, validateRowsInserted } from '../shared-interface-utils.ts';
-import { sendEmail } from '../email-utils.ts';
-import { isProduction } from '../../utils/generic-utils.ts';
-
-import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
-
-import { changeSerialPublicationRequestStatus } from './serial-publication-request-interface-utils.ts';
 import { SERIAL_PUBLICATION_REQUEST_STATUS } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+import { isProduction } from '../../utils/generic-utils.ts';
+import { getApplicationLogger } from '../../utils/logging.ts';
+import { sendEmail } from '../email-utils.ts';
+import { getCurrentTime, validateGetById, validateRowsInserted } from '../shared-interface-utils.ts';
+import { constructSerialMessage } from './serial-message-template-utils.ts';
+import { changeSerialPublicationRequestStatus } from './serial-publication-request-interface-utils.ts';
+
+import { getKysely } from '../../db/database.ts';
 import {
   asSerialMessageAdminRead,
   asSerialMessageSearchResult,
   type SerialMessageInfo,
 } from '../../dtl/serial/serial-message-dtl.ts';
+import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
 
 import type { MessagingConfiguration } from '../../app.ts';
+import type { LoadedSerialMessageTemplate, SerialMessageSelect } from '../../db/types/serial/types-serial-message.ts';
+import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateSerialMessageFromTemplate,
@@ -29,9 +28,6 @@ import type {
   SearchSerialMessage,
   SendSerialMessage,
 } from '../../validations/serial/serial-message-validation.ts';
-
-import type { LoadedSerialMessageTemplate, SerialMessageSelect } from '../../db/types/serial/types-serial-message.ts';
-import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createSerialMessageInterface(messagingConfiguration: MessagingConfiguration) {

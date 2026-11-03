@@ -1,4 +1,5 @@
 import type { Kysely } from 'kysely';
+
 import type { Database } from '../../../db/types.ts';
 
 // Table version: monograph publisher v2.0.0-alpha.1

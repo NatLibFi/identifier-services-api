@@ -1,40 +1,29 @@
+import type { MessageTemplate } from './types/message-template.ts';
 import type { IsbnIdentifier } from './types/monograph/types-isbn-identifier.ts';
 import type { IsbnPublisherRange } from './types/monograph/types-isbn-publisher-range.ts';
 import type { IsbnRange } from './types/monograph/types-isbn-range.ts';
-
 import type { IsmnIdentifier } from './types/monograph/types-ismn-identifier.ts';
 import type { IsmnPublisherRange } from './types/monograph/types-ismn-publisher-range.ts';
 import type { IsmnRange } from './types/monograph/types-ismn-range.ts';
-
-import type { MonographIdentifierBatch } from './types/monograph/types-monograph-identifier-batch.ts';
 import type { MonographIdentifierBatchDownload } from './types/monograph/types-monograph-identifier-batch-download.ts';
-
-import type { MonographMessage } from './types/monograph/types-monograph-message.ts';
+import type { MonographIdentifierBatch } from './types/monograph/types-monograph-identifier-batch.ts';
 import type { MonographMessagePublicationManifestation } from './types/monograph/types-monograph-message-publication-manifestation.ts';
-
-import type { MonographPublisher } from './types/monograph/types-monograph-publisher.ts';
-import type { MonographPublisherRequest } from './types/monograph/types-monograph-publisher-request.ts';
-import type { MonographPublisherRequestArchive } from './types/monograph/types-monograph-publisher-request-archive.ts';
-
+import type { MonographMessage } from './types/monograph/types-monograph-message.ts';
 import type { MonographPublicationExpression } from './types/monograph/types-monograph-publication-expression.ts';
 import type { MonographPublicationManifestation } from './types/monograph/types-monograph-publication-manifestation.ts';
 import type { MonographPublicationRequest } from './types/monograph/types-monograph-publication-request.ts';
 import type { MonographPublication } from './types/monograph/types-monograph-publication.ts';
-
-import type { MessageTemplate } from './types/message-template.ts';
-
-import type { IssnRange } from './types/serial/types-issn-range.ts';
+import type { MonographPublisherRequestArchive } from './types/monograph/types-monograph-publisher-request-archive.ts';
+import type { MonographPublisherRequest } from './types/monograph/types-monograph-publisher-request.ts';
+import type { MonographPublisher } from './types/monograph/types-monograph-publisher.ts';
 import type { IssnIdentifier } from './types/serial/types-isnn-identifier.ts';
-
-import type { SerialPublisher } from './types/serial/types-serial-publisher.ts';
-
-import type { SerialPublication } from './types/serial/types-serial-publication.ts';
-import type { SerialPublicationArchive } from './types/serial/types-serial-publication-archive.ts';
-
-import type { SerialPublicationRequest } from './types/serial/types-serial-publication-request.ts';
-import type { SerialPublicationRequestArchive } from './types/serial/types-serial-publication-request-archive.ts';
-
+import type { IssnRange } from './types/serial/types-issn-range.ts';
 import type { SerialMessage } from './types/serial/types-serial-message.ts';
+import type { SerialPublicationArchive } from './types/serial/types-serial-publication-archive.ts';
+import type { SerialPublicationRequestArchive } from './types/serial/types-serial-publication-request-archive.ts';
+import type { SerialPublicationRequest } from './types/serial/types-serial-publication-request.ts';
+import type { SerialPublication } from './types/serial/types-serial-publication.ts';
+import type { SerialPublisher } from './types/serial/types-serial-publisher.ts';
 
 export interface Database {
   // Monograph

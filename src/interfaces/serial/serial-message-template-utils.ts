@@ -1,21 +1,21 @@
 import HttpStatus from 'http-status';
 
-import { ApiError } from '../../utils/api-error.ts';
-import { getKysely } from '../../db/database.ts';
+import { SERIAL_MESSAGE_TYPES, SERIAL_PUBLICATION_MEDIUM } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+
+import { getKysely } from '../../db/database.ts';
+import { getMessageTemplate } from '../message-template-interface.ts';
+import { readSerialPublication } from './serial-publication-interface.ts';
 import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
 import { readSerialPublisher } from './serial-publisher-interface.ts';
-import { readSerialPublication } from './serial-publication-interface.ts';
 
-import { SERIAL_MESSAGE_TYPES, SERIAL_PUBLICATION_MEDIUM } from '../../constants.ts';
-import { getMessageTemplate } from '../message-template-interface.ts';
-
+import type { LoadedSerialMessageTemplate } from '../../db/types/serial/types-serial-message.ts';
+import type { SerialPublisherSelect } from '../../db/types/serial/types-serial-publisher.ts';
+import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
 import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreateSerialMessageFromTemplate } from '../../validations/serial/serial-message-validation.ts';
-import type { SerialPublisherSelect } from '../../db/types/serial/types-serial-publisher.ts';
-import type { LoadedSerialMessageTemplate } from '../../db/types/serial/types-serial-message.ts';
-import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
 
 async function constructIssnAssignedMessage(
   serialPublisher: SerialPublisherSelect,
@@ -280,7 +280,7 @@ export async function constructSerialMessage(
         throw new ApiError(
           HttpStatus.UNPROCESSABLE_ENTITY,
           'Validation error',
-          `Required parameter serial_publication_request_id was not defined.`,
+          'Required parameter serial_publication_request_id was not defined.',
         );
       }
 

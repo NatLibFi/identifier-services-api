@@ -1,4 +1,5 @@
 import type { Generated, Updateable, Insertable, Selectable, JSONColumnType } from 'kysely';
+
 import type { SerialPublicationAssociatedSeries, SerialPublicationPreviousSeries } from './types-serial-publication.ts';
 
 export interface SerialPublicationArchive {

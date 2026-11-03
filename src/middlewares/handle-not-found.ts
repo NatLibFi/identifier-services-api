@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
+
 import HttpStatus from 'http-status';
 
 import { getApplicationLogger } from '../utils/logging.ts';

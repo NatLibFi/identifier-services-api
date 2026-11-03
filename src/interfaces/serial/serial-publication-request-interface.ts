@@ -1,8 +1,10 @@
+import type { Transaction } from 'kysely';
+
 import HttpStatus from 'http-status';
 
-import { ApiError } from '../../utils/api-error.ts';
-import { getKysely } from '../../db/database.ts';
+import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
 import {
   getCurrentTime,
   removeUndefinedProperties,
@@ -11,22 +13,7 @@ import {
   validateRowsInserted,
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
-
-import {
-  asSerialPublicationRequestAdminRead,
-  asSerialPublicationRequestAdminReadLite,
-  asSerialPublicationRequestSearchResult,
-  type SerialPublicationRequestAdminRead,
-} from '../../dtl/serial/serial-publication-request-dtl.ts';
-
-import {
-  assignSerialPublicationIssnIdentifier,
-  createSerialPublication,
-  deleteSerialPublication,
-  readSerialPublication,
-} from './serial-publication-interface.ts';
 import { getNewSerialPublicationArchiveEntryDbEntry } from './serial-publication-interface-utils.ts';
-
 import {
   getNewSerialPublicationRequestArchiveDbEntry,
   getDbSerialPublicationRequestEntries,
@@ -37,23 +24,35 @@ import {
   changeSerialPublicationRequestStatus,
 } from './serial-publication-request-interface-utils.ts';
 
+import { getKysely } from '../../db/database.ts';
+import {
+  asSerialPublicationRequestAdminRead,
+  asSerialPublicationRequestAdminReadLite,
+  asSerialPublicationRequestSearchResult,
+  type SerialPublicationRequestAdminRead,
+} from '../../dtl/serial/serial-publication-request-dtl.ts';
+import {
+  assignSerialPublicationIssnIdentifier,
+  createSerialPublication,
+  deleteSerialPublication,
+  readSerialPublication,
+} from './serial-publication-interface.ts';
+import { createSerialPublisher } from './serial-publisher-interface.ts';
+
+import type { Database } from '../../db/types.ts';
+import type {
+  SerialPublicationRequestSelect,
+  SerialPublicationRequestUpdate,
+} from '../../db/types/serial/types-serial-publication-request.ts';
+import type { SerialPublicationInsert } from '../../db/types/serial/types-serial-publication.ts';
+import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
+import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateSerialPublicationRequestHttp,
   SearchSerialPublicationRequestHttp,
   UpdateSerialPublicationRequestHttp,
 } from '../../validations/serial/serial-publication-request-validation.ts';
-import type { RequestUser } from '../../generic-types.ts';
-import type { SerialPublicationInsert } from '../../db/types/serial/types-serial-publication.ts';
-import type {
-  SerialPublicationRequestSelect,
-  SerialPublicationRequestUpdate,
-} from '../../db/types/serial/types-serial-publication-request.ts';
 import type { CreateSerialPublicationHttp } from '../../validations/serial/serial-publication-validation.ts';
-import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
-import { SERIAL_PUBLICATION_REQUEST_STATUS, SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
-import type { Transaction } from 'kysely';
-import type { Database } from '../../db/types.ts';
-import { createSerialPublisher } from './serial-publisher-interface.ts';
 import type { CreateSerialPublisherHttp } from '../../validations/serial/serial-publisher-validation.ts';
 
 export async function createSerialPublicationRequest(

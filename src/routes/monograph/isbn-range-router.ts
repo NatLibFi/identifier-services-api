@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import * as isbnRangeControllers from '../../controllers/monograph/isbn-range-controller.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
-import { createIsbnRangeSchema, updateIsbnRangeSchema } from '../../validations/monograph/isbn-range-validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
+import { createIsbnRangeSchema, updateIsbnRangeSchema } from '../../validations/monograph/isbn-range-validation.ts';
 
 const isbnRangeRouter = Router();
 

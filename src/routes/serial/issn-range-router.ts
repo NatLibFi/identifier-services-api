@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import * as issnRangeControllers from '../../controllers/serial/issn-range-controller.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
-import { createIssnRangeSchema, updateIssnRangeSchema } from '../../validations/serial/issn-range-validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
+import { createIssnRangeSchema, updateIssnRangeSchema } from '../../validations/serial/issn-range-validation.ts';
 
 const issnRangeRouter = Router();
 

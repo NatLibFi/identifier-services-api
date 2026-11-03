@@ -1,4 +1,5 @@
 import type { Generated, Updateable, Insertable, Selectable, JSONColumnType } from 'kysely';
+
 import type { MonographAuthor } from './types-monograph-author.ts';
 
 export interface MonographPublicationExpression {

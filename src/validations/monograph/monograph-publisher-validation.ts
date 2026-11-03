@@ -1,8 +1,9 @@
 import * as z from 'zod';
 
+import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES } from '../../constants.ts';
+
 import { langCodeEnum, monographIdentifierEnum } from '../common-validation-enum.ts';
 import { contactPersonSchema } from '../common-validation.ts';
-import { MONOGRAPH_IDENTIFIERS, MONOGRAPH_PUBLISHER_CLASSIFICATION_CODES } from '../../constants.ts';
 
 export const updateMonographPublisherSchema = z
   .object({

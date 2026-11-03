@@ -1,9 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import { ApiError } from '../utils/api-error.ts';
 import { isAutomatedTest, isDevelopment } from '../utils/generic-utils.ts';
 import { isAdmin, isPublisher } from '../utils/permission-utils.ts';
+
 import type { TurnstileConfiguration } from '../app.ts';
 
 export function initializeTurnstileMiddleware(turnstileConfiguration: TurnstileConfiguration) {

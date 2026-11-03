@@ -1,26 +1,19 @@
 import { Router } from 'express';
 
-import isbnRangeRouter from './isbn-range-router.ts';
+import { allowAdminOnly } from '../../middlewares/auth.ts';
 import isbnPublisherRangeRouter from './isbn-publisher-range-router.ts';
-
-import ismnRangeRouter from './ismn-range-router.ts';
+import isbnRangeRouter from './isbn-range-router.ts';
 import ismnPublisherRangeRouter from './ismn-publisher-range-router.ts';
-
-import monographPublisherRouter from './monograph-publisher-router.ts';
-import createMonographPublisherRequestRouter from './monograph-publisher-request-router.ts';
-
-import monographPublicationRouter from './monograph-publication-router.ts';
+import ismnRangeRouter from './ismn-range-router.ts';
+import createMonographIdentifierBatchRouter from './monograph-identifier-batch-router.ts';
+import createMonographMessageRouter from './monograph-message-router.ts';
 import monographPublicationExpressionRouter from './monograph-publication-expression-router.ts';
 import monographPublicationManifestationRouter from './monograph-publication-manifestation-router.ts';
-
 import createMonographPublicationRequestRouter from './monograph-publication-request-router.ts';
-
-import createMonographIdentifierBatchRouter from './monograph-identifier-batch-router.ts';
-
-import createMonographMessageRouter from './monograph-message-router.ts';
+import monographPublicationRouter from './monograph-publication-router.ts';
+import createMonographPublisherRequestRouter from './monograph-publisher-request-router.ts';
+import monographPublisherRouter from './monograph-publisher-router.ts';
 import createMonographStatisticsRouter from './monograph-statistics-router.ts';
-
-import { allowAdminOnly } from '../../middlewares/auth.ts';
 
 import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
 import type { MiddlewareFunction } from '../../generic-types.ts';

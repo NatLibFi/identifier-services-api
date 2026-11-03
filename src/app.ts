@@ -1,36 +1,31 @@
+import type { PoolOptions } from 'mysql2';
+
+import http from 'http';
+
+import { generatePassportMiddlewares } from '@natlibfi/passport-natlibfi-keycloak';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import http from 'http';
-import type { PoolOptions } from 'mysql2';
 import qs from 'qs';
 
-import { generatePassportMiddlewares } from '@natlibfi/passport-natlibfi-keycloak';
-
-import { generateAuthenticationMiddleware, generateRoleMapMiddleware } from './middlewares/auth.ts';
-import handleErrors from './middlewares/handle-errors.ts';
-import handleNotFound from './middlewares/handle-not-found.ts';
-import validateContentType from './middlewares/content-type.ts';
-
-import healthRouter from './routes/health-router.ts';
-import createMonographRouter from './routes/monograph/monograph-router.ts';
-import createSerialRouter from './routes/serial/serial-router.ts';
-
-import createMelindaRouter from './routes/melinda-router.ts';
-
-import createMessageTemplateRouter from './routes/message-template-router.ts';
-
-import testAuthenticationRouter from './routes/test-auth-router.ts';
-
-import { allowAdminOnly } from './middlewares/auth.ts';
-import { initializeTurnstileMiddleware } from './middlewares/turnstile.ts';
-
-import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
-import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
 import { isAutomatedTest } from './utils/generic-utils.ts';
+import { createApplicationLogger, createExpressLogger } from './utils/logging.ts';
 
 import packageJson from '../package.json' with { type: 'json' };
+import { createKyselySingleton, testDatabaseConnection } from './db/database.ts';
+import { generateAuthenticationMiddleware, generateRoleMapMiddleware } from './middlewares/auth.ts';
+import { allowAdminOnly } from './middlewares/auth.ts';
+import validateContentType from './middlewares/content-type.ts';
+import handleErrors from './middlewares/handle-errors.ts';
+import handleNotFound from './middlewares/handle-not-found.ts';
+import { initializeTurnstileMiddleware } from './middlewares/turnstile.ts';
+import healthRouter from './routes/health-router.ts';
+import createMelindaRouter from './routes/melinda-router.ts';
+import createMessageTemplateRouter from './routes/message-template-router.ts';
+import createMonographRouter from './routes/monograph/monograph-router.ts';
+import createSerialRouter from './routes/serial/serial-router.ts';
+import testAuthenticationRouter from './routes/test-auth-router.ts';
 
 export interface KeycloakOptions {
   algorithms?: string[];

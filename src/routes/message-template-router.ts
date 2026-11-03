@@ -1,11 +1,9 @@
 import { Router } from 'express';
 
 import * as messageTemplateControllers from '../controllers/message-template-controller.ts';
-
 import { validateRequestBody, validateRequestParams, validateRequestQuery } from '../middlewares/validation.ts';
-
-import { getMessageTemplateSchema, updateMessageTemplateSchema } from '../validations/message-template-validation.ts';
 import { idParameterSchema } from '../validations/common-validation.ts';
+import { getMessageTemplateSchema, updateMessageTemplateSchema } from '../validations/message-template-validation.ts';
 
 export default function () {
   const messageTemplateRouter = Router();

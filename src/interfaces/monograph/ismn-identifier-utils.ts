@@ -1,11 +1,12 @@
-import { getKysely } from '../../db/database.ts';
+import type { Transaction } from 'kysely';
 
 import { MONOGRAPH_EXPRESSION_TYPES } from '../../constants.ts';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
 import { getCurrentTime } from '../shared-interface-utils.ts';
 
-import type { Transaction } from 'kysely';
+import { getKysely } from '../../db/database.ts';
+
 import type { Database } from '../../db/types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 
@@ -243,7 +244,7 @@ export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
   }
 
   if (!publisher_element) {
-    throw new Error("Publisher element is not defined and it's a required element in ISMN identifier");
+    throw new Error('Publisher element is not defined and it\'s a required element in ISMN identifier');
   }
 
   if (publisher_element.length < 3) {
@@ -261,7 +262,7 @@ export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
   }
 
   if (!item_element) {
-    throw new Error("Item element is not defined and it's a required element in ISMN identifier");
+    throw new Error('Item element is not defined and it\'s a required element in ISMN identifier');
   }
 
   if (item_element.length < 1) {
@@ -286,7 +287,7 @@ export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
   }
 
   if (!check_digit) {
-    throw new Error("Item check digit is not defined and it's a required element in ISMN identifier");
+    throw new Error('Item check digit is not defined and it\'s a required element in ISMN identifier');
   }
 
   if (rest.length !== 0) {

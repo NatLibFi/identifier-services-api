@@ -1,7 +1,8 @@
+import { Server } from 'node:http';
+
 import { expect, test, describe } from 'vitest';
 
 import startApp from './app.ts';
-import { Server } from 'node:http';
 
 describe('app.ts default export', async () => {
   test('properly starts http-server', async () => {

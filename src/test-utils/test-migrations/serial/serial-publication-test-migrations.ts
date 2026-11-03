@@ -1,4 +1,5 @@
 import type { Kysely } from 'kysely';
+
 import type { Database } from '../../../db/types.ts';
 
 export async function createSerialPublicationTable(db: Kysely<Database>): Promise<void> {

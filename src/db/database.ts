@@ -1,5 +1,5 @@
-import { createPool, type PoolOptions } from 'mysql2';
 import { CompiledQuery, Kysely, MysqlDialect } from 'kysely';
+import { createPool, type PoolOptions } from 'mysql2';
 
 import type { Database } from './types.ts';
 
@@ -38,7 +38,7 @@ export function getKysely() {
 }
 
 export async function testDatabaseConnection(db: Kysely<Database>) {
-  const testQueryResult = await db.executeQuery(CompiledQuery.raw(`SELECT 1`));
+  const testQueryResult = await db.executeQuery(CompiledQuery.raw('SELECT 1'));
   const querySuccessful = !!testQueryResult && testQueryResult.rows.length > 0;
 
   if (querySuccessful) {

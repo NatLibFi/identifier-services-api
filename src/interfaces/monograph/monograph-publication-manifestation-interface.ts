@@ -1,8 +1,6 @@
-import HttpStatus from 'http-status';
 import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
+import HttpStatus from 'http-status';
 
-import { getKysely } from '../../db/database.ts';
-import { ApiError } from '../../utils/api-error.ts';
 import {
   MARC_RECORD_FORMAT,
   MONOGRAPH_AUTHOR_ROLES,
@@ -14,6 +12,7 @@ import {
   MONOGRAPH_PUBLICATION_REQUEST_STATES,
 } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
 import {
   getCurrentTime,
@@ -21,27 +20,28 @@ import {
   validateGetById,
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
-import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { assignIsbnIdentifier, deassignIsbnIdentifier, getAssignableIsbnIdentifier } from './isbn-identifier-utils.ts';
 import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
-import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
+import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
-
-import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
 import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
-import generateMarcRecord from '../marc-record-interface.ts';
 
-import type { RequestUser, UnknownObject } from '../../generic-types.ts';
-import type {
-  AddMonographPublicationManifestation,
-  UpdateMonographPublicationManifestation,
-} from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
+import { getKysely } from '../../db/database.ts';
+import { asMonographPublicationManifestationAdminRead } from '../../dtl/monograph/monograph-publication-manifestation-dtl.ts';
+import generateMarcRecord from '../marc-record-interface.ts';
+import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
+
 import type {
   MonographPublicationManifestationSelect,
   MonographPublicationManifestationUpdate,
 } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
-import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
+import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
+import type {
+  AddMonographPublicationManifestation,
+  UpdateMonographPublicationManifestation,
+} from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
+import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
 
 export async function readMonographPublicationManifestation(id: number) {
   const db = getKysely();

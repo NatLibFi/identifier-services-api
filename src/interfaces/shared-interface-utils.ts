@@ -1,10 +1,10 @@
+import type { DeleteResult, ExpressionBuilder, InsertResult, ReferenceExpression, UpdateResult } from 'kysely';
+
 import HttpStatus from 'http-status';
 import { sql } from 'kysely';
-
-import { ApiError } from '../utils/api-error.ts';
 import { DateTime } from 'luxon';
 
-import type { DeleteResult, ExpressionBuilder, InsertResult, ReferenceExpression, UpdateResult } from 'kysely';
+import { ApiError } from '../utils/api-error.ts';
 
 export function validateGetById<T>(dbResult: T[]): T {
   if (dbResult.length === 0 || dbResult[0] === undefined) {

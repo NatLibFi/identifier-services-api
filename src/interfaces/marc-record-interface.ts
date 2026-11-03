@@ -1,8 +1,5 @@
-import { DateTime } from 'luxon';
 import { MarcRecord } from '@natlibfi/marc-record';
-
-import { translateManifestationType } from './monograph/monograph-message-template-utils.ts';
-import { isProduction } from '../utils/generic-utils.ts';
+import { DateTime } from 'luxon';
 
 import {
   MONOGRAPH_MANIFESTATION_TYPES_ELECTRONICAL,
@@ -10,13 +7,16 @@ import {
   SERIAL_PUBLICATION_TYPE,
 } from '../constants.ts';
 
+import { isProduction } from '../utils/generic-utils.ts';
+import { translateManifestationType } from './monograph/monograph-message-template-utils.ts';
+
 import type { MonographAuthor } from '../db/types/monograph/types-monograph-author.ts';
 import type { MonographSeriesInformation } from '../db/types/monograph/types-monograph-publication-manifestation.ts';
-import type { UnknownObject } from '../generic-types.ts';
 import type {
   SerialPublicationAssociatedSeries,
   SerialPublicationPreviousSeries,
 } from '../db/types/serial/types-serial-publication.ts';
+import type { UnknownObject } from '../generic-types.ts';
 
 export interface CreateMarcRecordInformation {
   isElectronical: boolean;

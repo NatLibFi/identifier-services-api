@@ -4,7 +4,6 @@ import * as monographPublicationController from '../../controllers/monograph/mon
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
-  mergeMonographPublicationSchema,
   searchMonographPublicationSchema,
   updateMonographPublicationSchema,
 } from '../../validations/monograph/monograph-publication-validation.ts';
@@ -16,13 +15,6 @@ monographPublicationRouter.post(
   '/search',
   validateRequestBody(searchMonographPublicationSchema),
   monographPublicationController.searchMonographPublication,
-);
-
-monographPublicationRouter.post(
-  '/:id/merge',
-  validateRequestParams(idParameterSchema),
-  validateRequestBody(mergeMonographPublicationSchema),
-  monographPublicationController.mergeMonographPublication,
 );
 
 monographPublicationRouter.get(

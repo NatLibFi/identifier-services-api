@@ -1,10 +1,11 @@
 import { sql } from 'kysely';
 
-import { getIssnRanges } from './issn-range-interface.ts';
-import { getKysely } from '../../db/database.ts';
+import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
 
 import type { MonthlyStatistics, StatisticsWorksheetInfo } from '../monograph/monograph-statistics-interface-utils.ts';
-import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+
+import { getKysely } from '../../db/database.ts';
+import { getIssnRanges } from './issn-range-interface.ts';
 
 export async function getIssnStatistics(begin: Date, endExclusive: Date): Promise<StatisticsWorksheetInfo[]> {
   const issnRanges = await getIssnRanges();

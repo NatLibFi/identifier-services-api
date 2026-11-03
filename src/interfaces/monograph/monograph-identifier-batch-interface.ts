@@ -1,11 +1,12 @@
 import { createHash } from 'crypto';
+
 import HttpStatus from 'http-status';
 
-import { ApiError } from '../../utils/api-error.ts';
-import { getKysely } from '../../db/database.ts';
+import { MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+import { isProduction } from '../../utils/generic-utils.ts';
 import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
-import { asMonographIdentifierBatchAdminRead } from '../../dtl/monograph/monograph-identifier-batch-dtl.ts';
 import {
   createIsbnIdentifierBatch,
   createIsmnIdentifierBatch,
@@ -17,7 +18,8 @@ import {
   identifierBatchHasPublisherPublicationAssignations,
 } from './monograph-identifier-batch-interface-utils.ts';
 
-import { isProduction } from '../../utils/generic-utils.ts';
+import { getKysely } from '../../db/database.ts';
+import { asMonographIdentifierBatchAdminRead } from '../../dtl/monograph/monograph-identifier-batch-dtl.ts';
 import { readMonographPublisher } from './monograph-publisher-interface.ts';
 
 import type {
@@ -26,7 +28,6 @@ import type {
 } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreateMonographIdentifierBatchHttp } from '../../validations/monograph/monograph-identifier-batch-validation.ts';
-import { MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
 
 export async function readMonographIdentifierBatch(batchId: number) {
   const db = getKysely();

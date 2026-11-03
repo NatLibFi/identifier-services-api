@@ -3,11 +3,11 @@ import { Router } from 'express';
 import * as monographPublicationManifestationController from '../../controllers/monograph/monograph-publication-manifestation-controller.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
+import { getMarcRecordSchema } from '../../validations/marc-record-validation.ts';
 import {
   addMonographPublicationManifestationSchema,
   updateMonographPublicationManifestationSchema,
 } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
-import { getMarcRecordSchema } from '../../validations/marc-record-validation.ts';
 
 // Note: adminOnly needs to be applied at main router level
 const monographPublicationManifestationRouter = Router();

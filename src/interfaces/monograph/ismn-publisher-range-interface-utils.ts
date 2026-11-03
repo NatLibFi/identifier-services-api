@@ -1,9 +1,10 @@
 import { SYSTEM_USER, ISMN_IDENTIFIER_LENGTH } from '../../constants.ts';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
-import { calculateIsbnIsmnCheckDigit } from './monograph-identifier-utils.ts';
-import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
 import { getCurrentTime } from '../shared-interface-utils.ts';
+import { validateIsmnIdentifier } from './ismn-identifier-utils.ts';
+import { calculateIsbnIsmnCheckDigit } from './monograph-identifier-utils.ts';
+
 import { getKysely } from '../../db/database.ts';
 
 import type { IsmnIdentifierInsert } from '../../db/types/monograph/types-ismn-identifier.ts';

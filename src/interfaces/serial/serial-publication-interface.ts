@@ -1,6 +1,7 @@
-import HttpStatus from 'http-status';
+import type { Transaction } from 'kysely';
 
 import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
+import HttpStatus from 'http-status';
 
 import {
   MARC_RECORD_FORMAT,
@@ -10,7 +11,6 @@ import {
 } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
-import { getKysely } from '../../db/database.ts';
 import {
   getCurrentTime,
   removeUndefinedProperties,
@@ -19,17 +19,6 @@ import {
   validateRowsInserted,
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
-
-import {
-  asSerialPublicationAdminRead,
-  asSerialPublicationSearchResult,
-  type SerialPublicationAdminRead,
-} from '../../dtl/serial/serial-publication-dtl.ts';
-
-import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
-import { readSerialPublisher } from './serial-publisher-interface.ts';
-import generateMarcRecord from '../marc-record-interface.ts';
-
 import {
   assignIssnIdentifier,
   revokeIssnIdentifier,
@@ -41,23 +30,32 @@ import {
   getSerialPublicationArchiveEntry,
 } from './serial-publication-interface-utils.ts';
 
-import type { Transaction } from 'kysely';
+import { getKysely } from '../../db/database.ts';
+import {
+  asSerialPublicationAdminRead,
+  asSerialPublicationSearchResult,
+  type SerialPublicationAdminRead,
+} from '../../dtl/serial/serial-publication-dtl.ts';
+import generateMarcRecord from '../marc-record-interface.ts';
+import { readSerialPublicationRequest } from './serial-publication-request-interface.ts';
+import { readSerialPublisher } from './serial-publisher-interface.ts';
+
 import type { Database } from '../../db/types.ts';
-import type {
-  CreateSerialPublicationHttp,
-  SearchSerialPublicationHttp,
-  UpdateSerialPublicationHttp,
-} from '../../validations/serial/serial-publication-validation.ts';
-import type { RequestUser, UnknownObject } from '../../generic-types.ts';
+import type { MonographAuthor } from '../../db/types/monograph/types-monograph-author.ts';
+import type { SerialPublicationRequestUpdate } from '../../db/types/serial/types-serial-publication-request.ts';
 import type {
   SerialPublicationInsert,
   SerialPublicationUpdate,
 } from '../../db/types/serial/types-serial-publication.ts';
 import type { SerialPublicationRequestAdminRead } from '../../dtl/serial/serial-publication-request-dtl.ts';
-import type { SerialPublicationRequestUpdate } from '../../db/types/serial/types-serial-publication-request.ts';
+import type { RequestUser, UnknownObject } from '../../generic-types.ts';
 import type { GetMarcRecordHttp } from '../../validations/marc-record-validation.ts';
+import type {
+  CreateSerialPublicationHttp,
+  SearchSerialPublicationHttp,
+  UpdateSerialPublicationHttp,
+} from '../../validations/serial/serial-publication-validation.ts';
 import type { CreateMarcRecordInformation } from '../marc-record-interface.ts';
-import type { MonographAuthor } from '../../db/types/monograph/types-monograph-author.ts';
 
 export async function readSerialPublication(id: number, trx?: Transaction<Database>) {
   // Use transaction if provided

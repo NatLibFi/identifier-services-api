@@ -8,9 +8,7 @@ import {
 } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
-import { getKysely } from '../../db/database.ts';
 import { isAdmin } from '../../utils/permission-utils.ts';
-
 import {
   constructJsonContainsSearch,
   getCurrentTime,
@@ -33,6 +31,7 @@ import {
   useIsmnPublisherIdentifierSearch,
 } from './monograph-publisher-interface-utils.ts';
 
+import { getKysely } from '../../db/database.ts';
 import {
   asMonographPublisherAdminRead,
   asMonographPublisherAdminSearchRead,
@@ -41,18 +40,18 @@ import {
   asMonographPublisherGuestRead,
 } from '../../dtl/monograph/monograph-publisher-dtl.ts';
 
-import type { RequestUser } from '../../generic-types.ts';
+import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
+import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 import type {
   MonographPublisherReadAdmin,
   MonographPublisherSelect,
   MonographPublisherUpdate,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
+import type { RequestUser } from '../../generic-types.ts';
 import type {
   SearchMonographPublisherHttp,
   UpdateMonographPublisherHttp,
 } from '../../validations/monograph/monograph-publisher-validation.ts';
-import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
-import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 
 // useAdminLite -> reserved for searching using publisher identifier as this relies on using read for found entries
 // Utility of not having dynamic attributes associated with DB schema models (e.g., publisher identifier and total/free/used)
@@ -225,7 +224,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
     throw new ApiError(
       HttpStatus.FORBIDDEN,
       'Forbidden',
-      `Identifier type and category filtering is only available for administrator users.`,
+      'Identifier type and category filtering is only available for administrator users.',
     );
   }
 

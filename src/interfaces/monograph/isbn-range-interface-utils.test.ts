@@ -1,13 +1,13 @@
-import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
-
 import { createConnection, type Connection } from 'mysql2/promise';
 import { v4 as UUIDv4 } from 'uuid';
-
-import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
-import { getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
-import { createIsbnRangeTable } from '../../test-utils/test-migrations/monograph/isbn-range-test-migrations.ts';
+import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
 
 import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../test-utils/test-constants.ts';
+
+import { createIsbnRangeTable } from '../../test-utils/test-migrations/monograph/isbn-range-test-migrations.ts';
+import { getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
+
+import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
 
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 

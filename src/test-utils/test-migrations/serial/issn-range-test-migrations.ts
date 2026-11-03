@@ -1,4 +1,5 @@
 import type { Kysely } from 'kysely';
+
 import type { Database } from '../../../db/types.ts';
 
 export async function createIssnRangeTable(db: Kysely<Database>): Promise<void> {

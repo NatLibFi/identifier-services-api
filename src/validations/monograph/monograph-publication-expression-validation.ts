@@ -5,7 +5,6 @@ import {
   monographExpressionTypeEnum,
   publicationLanguageEnum,
 } from '../common-validation-enum.ts';
-
 import { createMonographPublicationManifestationSchema } from './monograph-publication-manifestation-validation.ts';
 
 const monographPublicationExpressionAuthorSchema = z

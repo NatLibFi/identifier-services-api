@@ -1,7 +1,7 @@
+import { Server as HttpServer } from 'http';
+
 import startApp from './app.ts';
 import * as config from './config.ts';
-
-import { Server as HttpServer } from 'http';
 
 run();
 

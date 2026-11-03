@@ -1,17 +1,15 @@
 import HttpStatus from 'http-status';
 
-import { constructMonographMessage, sanityCheckMessageRelations } from './monograph-message-template-utils.ts';
-
 import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
+import { isProduction } from '../../utils/generic-utils.ts';
 import { getApplicationLogger } from '../../utils/logging.ts';
+import { sendEmail } from '../email-utils.ts';
+import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import { constructMonographMessage, sanityCheckMessageRelations } from './monograph-message-template-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
-import { sendEmail } from '../email-utils.ts';
-import { isProduction } from '../../utils/generic-utils.ts';
-
 import {
   asMonographMessageAdminRead,
   asMonographMessageSearchResult,
@@ -19,6 +17,7 @@ import {
 } from '../../dtl/monograph/monograph-message-dtl.ts';
 
 import type { MessagingConfiguration, MonographPublisherConfiguration } from '../../app.ts';
+import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographMessageFromTemplate,
@@ -26,7 +25,6 @@ import type {
   SearchMonographMessage,
   SendMonographMessage,
 } from '../../validations/monograph/monograph-message-validation.ts';
-import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 
 // Note: interface is created using returned function due to need to have configuration separate from config.ts for integration testing purposes
 export default function createMonographMessageInterface(

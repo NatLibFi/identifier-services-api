@@ -1,19 +1,18 @@
+import { createMelindaApiRecordClient } from '@natlibfi/melinda-rest-api-client';
 import HttpStatus from 'http-status';
 
-import { createMelindaApiRecordClient } from '@natlibfi/melinda-rest-api-client';
-
-import { ApiError } from '../utils/api-error.ts';
 import { MARC_RECORD_FORMAT } from '../constants.ts';
 
-import { createMonographPublicationExpressionMarc } from './monograph/monograph-publication-expression-interface.ts';
-
+import { ApiError } from '../utils/api-error.ts';
 import { isAutomatedTest } from '../utils/generic-utils.ts';
+
+import { createMonographPublicationExpressionMarc } from './monograph/monograph-publication-expression-interface.ts';
+import { createMonographPublicationManifestationMarc } from './monograph/monograph-publication-manifestation-interface.ts';
+import { createSerialPublicationMarc } from './serial/serial-publication-interface.ts';
 
 import type { MelindaConfiguration } from '../app.ts';
 import type { UnknownObject } from '../generic-types.ts';
 import type { SendToMelindaHttp } from '../validations/melinda-validation.ts';
-import { createSerialPublicationMarc } from './serial/serial-publication-interface.ts';
-import { createMonographPublicationManifestationMarc } from './monograph/monograph-publication-manifestation-interface.ts';
 
 interface MelindaSaveResult {
   success_info?: UnknownObject;

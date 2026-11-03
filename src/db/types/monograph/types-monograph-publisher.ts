@@ -1,4 +1,5 @@
 import type { Generated, Updateable, JSONColumnType, Insertable, Selectable } from 'kysely';
+
 import type {
   IsbnPublisherRangeSelectExtended,
   IsmnPublisherRangeSelectExtended,

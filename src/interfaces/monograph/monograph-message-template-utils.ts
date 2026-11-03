@@ -1,19 +1,5 @@
 import HttpStatus from 'http-status';
 
-import { getKysely } from '../../db/database.ts';
-import { ApiError } from '../../utils/api-error.ts';
-
-import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
-import { readMonographPublicationRequest } from './monograph-publication-request-interface.ts';
-import { readMonographPublisher } from './monograph-publisher-interface.ts';
-import { readIsbnPublisherRange } from './isbn-publisher-range-interface.ts';
-import {
-  getMonographManifestationRelations,
-  readMonographPublicationManifestation,
-} from './monograph-publication-manifestation-interface.ts';
-
-import { validateGetById } from '../shared-interface-utils.ts';
-
 import {
   APPLICATION_UI_URL,
   ISBN_PUBLISHER_IDENTIFIER_CATEGORY_TO_LENGTH,
@@ -22,15 +8,26 @@ import {
   MONOGRAPH_MESSAGE_TYPES,
 } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+import { validateGetById } from '../shared-interface-utils.ts';
 import {
   getMonographPublisherIsbnRangesLite,
   getMonographPublisherIsmnRangesLite,
 } from './monograph-publisher-interface-utils.ts';
 
+import { getKysely } from '../../db/database.ts';
+import { readIsbnPublisherRange } from './isbn-publisher-range-interface.ts';
 import { readIsmnPublisherRange } from './ismn-publisher-range-interface.ts';
+import { readMonographIdentifierBatch } from './monograph-identifier-batch-interface.ts';
+import { readMonographPublicationExpression } from './monograph-publication-expression-interface.ts';
+import {
+  getMonographManifestationRelations,
+  readMonographPublicationManifestation,
+} from './monograph-publication-manifestation-interface.ts';
+import { readMonographPublicationRequest } from './monograph-publication-request-interface.ts';
+import { readMonographPublisher } from './monograph-publisher-interface.ts';
 
 import type { MonographIdentifierBatchSelect } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
-import { readMonographIdentifierBatch } from './monograph-identifier-batch-interface.ts';
 
 interface MessageRelations {
   messageType: string;
@@ -171,7 +168,7 @@ async function checkIdentifierAssignmentRelations(relations: MessageRelations) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `Selected manifestations need to belong to exactly one expression for purposes of sending a message.`,
+      'Selected manifestations need to belong to exactly one expression for purposes of sending a message.',
     );
   }
 
@@ -180,7 +177,7 @@ async function checkIdentifierAssignmentRelations(relations: MessageRelations) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `No expression information could be derived from manifestations.`,
+      'No expression information could be derived from manifestations.',
     );
   }
 
@@ -590,7 +587,7 @@ async function constructMonographPublisherRegisteredMessage(
     const cat5PublisherRange = cat5PublisherRanges[0];
     if (cat5PublisherRanges.length !== 1 || !cat5PublisherRange) {
       throw new Error(
-        `Publisher needs to have exactly one category 5 ISBN publisher range for constructing registration confirmation message`,
+        'Publisher needs to have exactly one category 5 ISBN publisher range for constructing registration confirmation message',
       );
     }
 
@@ -607,7 +604,7 @@ async function constructMonographPublisherRegisteredMessage(
     const cat7PublisherRange = cat7PublisherRanges[0];
     if (cat7PublisherRanges.length !== 1 || !cat7PublisherRange) {
       throw new Error(
-        `Publisher needs to have exactly one category 7 ISMN publisher range for constructing registration confirmation message`,
+        'Publisher needs to have exactly one category 7 ISMN publisher range for constructing registration confirmation message',
       );
     }
 

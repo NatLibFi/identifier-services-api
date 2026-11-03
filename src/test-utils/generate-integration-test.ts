@@ -4,12 +4,12 @@ import path from 'node:path';
 import Sinon from 'sinon';
 import { describe, inject, onTestFailed, test } from 'vitest';
 
-import startApp from '../app.ts';
+import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE } from './test-constants.ts';
 
 import { dropTestDatabase, initializeTestDb, validateDbState } from './test-database-utils.ts';
 import { getAccessToken, sendTestHttpRequest, validateHttpResponse } from './test-http-utils.ts';
 
-import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE } from './test-constants.ts';
+import startApp from '../app.ts';
 
 import type { UnknownObject } from '../generic-types.ts';
 

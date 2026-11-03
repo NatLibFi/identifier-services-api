@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 import createMonographStatisticsControllers from '../../controllers/monograph/monograph-statistics-controller.ts';
-
 import { validateRequestBody } from '../../middlewares/validation.ts';
 import { createMonographStatistics } from '../../validations/monograph/monograph-statistics-validation.ts';
 

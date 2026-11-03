@@ -1,16 +1,14 @@
 import { Router } from 'express';
 
 import * as monographPublisherRequestController from '../../controllers/monograph/monograph-publisher-request-controller.ts';
-import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
-
 import { allowAdminOnly } from '../../middlewares/auth.ts';
-
+import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
+import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
   createMonographPublisherRequestSchema,
   updateMonographPublisherRequestSchema,
   searchMonographPublisherRequestSchema,
 } from '../../validations/monograph/monograph-publisher-request-validation.ts';
-import { idParameterSchema } from '../../validations/common-validation.ts';
 
 import type { MiddlewareFunction } from '../../generic-types.ts';
 

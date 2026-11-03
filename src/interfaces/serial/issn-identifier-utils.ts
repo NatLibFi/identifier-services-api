@@ -1,16 +1,19 @@
+import type { Transaction } from 'kysely';
+
 import HttpStatus from 'http-status';
 
-import { getKysely } from '../../db/database.ts';
+import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
 import { getCurrentTime, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 
-import type { IssnIdentifierSelect, IssnIdentifierUpdate } from '../../db/types/serial/types-isnn-identifier.ts';
+import { getKysely } from '../../db/database.ts';
+
 import type { Database } from '../../db/types.ts';
-import type { Transaction } from 'kysely';
-import type { RequestUser } from '../../generic-types.ts';
+import type { IssnIdentifierSelect, IssnIdentifierUpdate } from '../../db/types/serial/types-isnn-identifier.ts';
 import type { IssnRangeUpdate } from '../../db/types/serial/types-issn-range.ts';
 import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
-import { SERIAL_PUBLICATION_STATUS } from '../../constants.ts';
+import type { RequestUser } from '../../generic-types.ts';
 
 // Old API code
 export function calculateCheckDigitIssn(issnWithoutCheckDigit: string): string {

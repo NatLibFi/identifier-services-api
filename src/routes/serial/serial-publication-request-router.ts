@@ -1,17 +1,17 @@
 import { Router } from 'express';
 
 import * as serialPublicationRequestControllers from '../../controllers/serial/serial-publication-request-controller.ts';
+import { allowAdminOnly } from '../../middlewares/auth.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
+import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
   createSerialPublicationRequestSchema,
   searchSerialPublicationRequestSchema,
   updateSerialPublicationRequestSchema,
 } from '../../validations/serial/serial-publication-request-validation.ts';
-import { idParameterSchema } from '../../validations/common-validation.ts';
-import { allowAdminOnly } from '../../middlewares/auth.ts';
+import { createSerialPublicationSchema } from '../../validations/serial/serial-publication-validation.ts';
 
 import type { MiddlewareFunction } from '../../generic-types.ts';
-import { createSerialPublicationSchema } from '../../validations/serial/serial-publication-validation.ts';
 
 export default function createSerialPublicationRequestRouter(turnstileMiddleware: MiddlewareFunction) {
   const serialPublicationRequestRouter = Router();

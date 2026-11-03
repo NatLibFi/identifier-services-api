@@ -1,7 +1,8 @@
-import { getKysely } from '../../db/database.ts';
+import { MONOGRAPH_EXPRESSION_TYPES, MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
+
 import { validateGetById } from '../shared-interface-utils.ts';
 
-import { MONOGRAPH_EXPRESSION_TYPES, MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
+import { getKysely } from '../../db/database.ts';
 
 import type { MonographPublicationExpressionSelect } from '../../db/types/monograph/types-monograph-publication-expression.ts';
 

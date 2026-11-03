@@ -1,10 +1,13 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
-import type { ApplicationRoleMap } from '../app.ts';
-import { getApplicationRoles, isAdmin } from '../utils/permission-utils.ts';
-import { ApiError } from '../utils/api-error.ts';
 import { APPLICATION_ROLES } from '../constants.ts';
+
+import { ApiError } from '../utils/api-error.ts';
+import { getApplicationRoles, isAdmin } from '../utils/permission-utils.ts';
+
+import type { ApplicationRoleMap } from '../app.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function generateAuthenticationMiddleware(passportMiddlewares: any) {

@@ -1,14 +1,16 @@
-import { getCurrentTime } from '../shared-interface-utils.ts';
+import type { Insertable } from 'kysely';
+
 import { APPLICATION_USER_UI_PUBLIC } from '../../constants.ts';
 
-import type { Insertable } from 'kysely';
+import { getCurrentTime } from '../shared-interface-utils.ts';
+
+import type { MonographPublisherRequestArchiveInsert } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographPublisherRequestV1Http,
   CreateMonographPublisherRequestV2Http,
 } from '../../validations/monograph/monograph-publisher-request-validation.ts';
-import type { MonographPublisherRequestArchiveInsert } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 
 export function getDbPublisherRequestEntry(
   createDoc: CreateMonographPublisherRequestV1Http | CreateMonographPublisherRequestV2Http,

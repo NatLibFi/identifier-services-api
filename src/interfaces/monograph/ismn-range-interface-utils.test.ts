@@ -1,14 +1,14 @@
-import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
-
 import { createConnection, type Connection } from 'mysql2/promise';
 import { v4 as UUIDv4 } from 'uuid';
-
-import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
-import { getIsmnRangeConflict } from './ismn-range-interface-utils.ts';
-import { createIsmnRangeTable } from '../../test-utils/test-migrations/monograph/ismn-range-test-migrations.ts';
+import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
 
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../test-utils/test-constants.ts';
+
+import { createIsmnRangeTable } from '../../test-utils/test-migrations/monograph/ismn-range-test-migrations.ts';
+import { getIsmnRangeConflict } from './ismn-range-interface-utils.ts';
+
+import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
 
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
 

@@ -1,5 +1,6 @@
-import type { ApplicationRoleMap } from '../app.ts';
 import { APPLICATION_ROLES } from '../constants.ts';
+
+import type { ApplicationRoleMap } from '../app.ts';
 
 interface RequestUser {
   id: null | string;

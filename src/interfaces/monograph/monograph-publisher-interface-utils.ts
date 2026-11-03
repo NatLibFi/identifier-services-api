@@ -1,30 +1,29 @@
 import HttpStatus from 'http-status';
 
-import { getKysely } from '../../db/database.ts';
+import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+
+import { getKysely } from '../../db/database.ts';
 import {
   finnishIsbnPublisherStringStart,
   ismnPublisherIdentifierLikeString,
 } from '../../validations/common-validation-regex.ts';
-
 import { readMonographPublisher } from './monograph-publisher-interface.ts';
-
-import { ApiError } from '../../utils/api-error.ts';
-import { MONOGRAPH_MESSAGE_TYPES } from '../../constants.ts';
 
 import type {
   IsbnPublisherRangeSelect,
   IsbnPublisherRangeSelectLite,
 } from '../../db/types/monograph/types-isbn-publisher-range.ts';
-import type { RequestUser } from '../../generic-types.ts';
 import type {
   IsmnPublisherRangeSelect,
   IsmnPublisherRangeSelectLite,
 } from '../../db/types/monograph/types-ismn-publisher-range.ts';
+import type { MonographIdentifierBatchSelectExtended } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
 import type { MonographPublicationSelect } from '../../db/types/monograph/types-monograph-publication.ts';
-import type { MonographIdentifierBatchSelectExtended } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
+import type { RequestUser } from '../../generic-types.ts';
 
 export interface IsbnPublisherRangeSelectExtended extends IsbnPublisherRangeSelect {
   monograph_identifier_batches: MonographIdentifierBatchSelectExtended[];
@@ -119,7 +118,7 @@ export async function getMonographPublisherIsbnRanges(
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
-      `Problem with identifier batches observed in database. Please notify system administrators.`,
+      'Problem with identifier batches observed in database. Please notify system administrators.',
     );
   }
 
@@ -209,7 +208,7 @@ export async function getMonographPublisherIsmnRanges(
     throw new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,
       'Internal server error',
-      `Problem with identifier batches observed in database. Please notify system administrators.`,
+      'Problem with identifier batches observed in database. Please notify system administrators.',
     );
   }
 

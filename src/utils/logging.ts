@@ -1,8 +1,8 @@
+import type { Handler } from 'express';
+
 import expressWinston from 'express-winston';
 import { DateTime } from 'luxon';
 import winston from 'winston';
-
-import type { Handler } from 'express';
 
 // Loggers are singletons (see e.g., https://refactoring.guru/design-patterns/singleton)
 let APPLICATION_LOGGER: winston.Logger | undefined;

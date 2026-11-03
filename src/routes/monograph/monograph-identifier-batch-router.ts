@@ -1,15 +1,13 @@
 import { Router } from 'express';
 
 import * as monographIdentifierBatchControllers from '../../controllers/monograph/monograph-identifier-batch-controller.ts';
-
 import { allowAdminOnly } from '../../middlewares/auth.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
-
+import { idParameterSchema } from '../../validations/common-validation.ts';
 import {
   createMonographIdentifierBatchSchema,
   downloadMonographIdentifierBatchSchema,
 } from '../../validations/monograph/monograph-identifier-batch-validation.ts';
-import { idParameterSchema } from '../../validations/common-validation.ts';
 
 import type { MiddlewareFunction } from '../../generic-types.ts';
 

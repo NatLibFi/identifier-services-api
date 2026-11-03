@@ -1,17 +1,16 @@
 import HttpStatus from 'http-status';
 
-import { getKysely } from '../db/database.ts';
-
 import { ApiError } from '../utils/api-error.ts';
-
-import { asMessageTemplateAdminRead } from '../dtl/message-template-dtl.ts';
 import { getCurrentTime, removeUndefinedProperties } from './shared-interface-utils.ts';
 
+import { getKysely } from '../db/database.ts';
+import { asMessageTemplateAdminRead } from '../dtl/message-template-dtl.ts';
+
+import type { RequestUser } from '../generic-types.ts';
 import type {
   MessageTemplateRetrieveHttpParams,
   MessageTemplateUpdateHttpBody,
 } from '../validations/message-template-validation.ts';
-import type { RequestUser } from '../generic-types.ts';
 
 export async function getMessageTemplate(params: MessageTemplateRetrieveHttpParams) {
   const db = getKysely();

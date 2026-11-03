@@ -1,9 +1,6 @@
+import type { Transaction } from 'kysely';
+
 import HttpStatus from 'http-status';
-
-import { getKysely } from '../../db/database.ts';
-import { getCurrentTime, validateRowsUpdatedExact, validateRowsUpdatedMax } from '../shared-interface-utils.ts';
-
-import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import {
   APPLICATION_USER_UI_PUBLIC,
@@ -11,21 +8,24 @@ import {
   MONOGRAPH_MANIFESTATION_TYPES,
   MONOGRAPH_PUBLICATION_REQUEST_STATES,
 } from '../../constants.ts';
-import { monographAuthorRoleEnum } from '../../validations/common-validation-enum.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
+import { getCurrentTime, validateRowsUpdatedExact, validateRowsUpdatedMax } from '../shared-interface-utils.ts';
 
+import { getKysely } from '../../db/database.ts';
+import { monographAuthorRoleEnum } from '../../validations/common-validation-enum.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
+
+import type { Database } from '../../db/types.ts';
+import type { MonographPrintingInformation } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
+import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
+import type { MonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
+import type { RequestUser } from '../../generic-types.ts';
+import type { CreateMonographPublicationManifestation } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
 import type {
   CreateMonographPublicationRequestV1Http,
   CreateMonographPublicationRequestV2Http,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
-import type { CreateMonographPublicationManifestation } from '../../validations/monograph/monograph-publication-manifestation-validation.ts';
-import type { MonographPrintingInformation } from '../../db/types/monograph/types-monograph-publication-manifestation.ts';
-import type { RequestUser } from '../../generic-types.ts';
-import type { MonographPublicationRequestSelect } from '../../db/types/monograph/types-monograph-publication-request.ts';
-import type { Transaction } from 'kysely';
-import type { Database } from '../../db/types.ts';
-import type { MonographPublicationExpressionAdminRead } from '../../dtl/monograph/monograph-publication-expression-dtl.ts';
 
 export function getMonographAuthorV1(firstName?: string, lastName?: string, roles?: string[]) {
   if (!firstName || !lastName || !roles || roles.length === 0) {

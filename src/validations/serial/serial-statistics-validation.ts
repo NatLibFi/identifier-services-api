@@ -1,7 +1,8 @@
 import * as z from 'zod';
 
-import { dateString } from '../common-validation-regex.ts';
 import { SERIAL_STATISTIC_TYPE, STATISTICS_FORMAT } from '../../constants.ts';
+
+import { dateString } from '../common-validation-regex.ts';
 
 export const createSerialStatistics = z
   .object({

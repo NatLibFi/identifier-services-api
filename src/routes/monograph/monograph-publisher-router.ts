@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
 import * as monographPublisherControllers from '../../controllers/monograph/monograph-publisher-controller.ts';
+import { allowAdminOnly } from '../../middlewares/auth.ts';
 import { validateRequestBody, validateRequestParams } from '../../middlewares/validation.ts';
 import { idParameterSchema } from '../../validations/common-validation.ts';
-import { allowAdminOnly } from '../../middlewares/auth.ts';
 import {
   monographPublisherAutocompleteSchema,
   searchMonographPublisherSchema,

@@ -1,9 +1,10 @@
 import type { NextFunction, Request, Response } from 'express';
+
 import HttpStatus from 'http-status';
 
-import { getApplicationLogger } from '../utils/logging.ts';
 import { ApiError } from '../utils/api-error.ts';
 import { ApiValidationError } from '../utils/api-validation-error.ts';
+import { getApplicationLogger } from '../utils/logging.ts';
 import respondWithProblemDocument from '../utils/problem-json.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

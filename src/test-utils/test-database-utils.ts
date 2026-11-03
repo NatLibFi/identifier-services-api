@@ -1,48 +1,37 @@
-import { v4 as UUIDv4 } from 'uuid';
-
 import type { Kysely } from 'kysely';
 import type { PoolOptions } from 'mysql2';
+
 import { createConnection } from 'mysql2/promise';
+import { v4 as UUIDv4 } from 'uuid';
 import { expect } from 'vitest';
 
 import { createKyselySingleton, dropKyselySingleton, getKysely } from '../db/database.ts';
-
-import { createIsmnRangeTable } from './test-migrations/monograph/ismn-range-test-migrations.ts';
-import { createIsmnPublisherRangeTable } from './test-migrations/monograph/ismn-publisher-range-test-migrations.ts';
-import { createIsmnIdentifierTable } from './test-migrations/monograph/ismn-identifier-test-migrations.ts';
-
-import { createIsbnRangeTable } from './test-migrations/monograph/isbn-range-test-migrations.ts';
-import { createIsbnPublisherRangeTable } from './test-migrations/monograph/isbn-publisher-range-test-migrations.ts';
 import { createIsbnIdentifierTable } from './test-migrations/monograph/isbn-identifier-test-migrations.ts';
-
-import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
-import { createMonographPublisherRequestTable } from './test-migrations/monograph/monograph-publisher-request-test-migrations.ts';
-import { createMonographPublisherRequestArchiveTable } from './test-migrations/monograph/monograph-publisher-request-archive-test-migrations.ts';
-
-import { createMonographPublicationTable } from './test-migrations/monograph/monograph-publication-test-migrations.ts';
-import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
+import { createIsbnPublisherRangeTable } from './test-migrations/monograph/isbn-publisher-range-test-migrations.ts';
+import { createIsbnRangeTable } from './test-migrations/monograph/isbn-range-test-migrations.ts';
+import { createIsmnIdentifierTable } from './test-migrations/monograph/ismn-identifier-test-migrations.ts';
+import { createIsmnPublisherRangeTable } from './test-migrations/monograph/ismn-publisher-range-test-migrations.ts';
+import { createIsmnRangeTable } from './test-migrations/monograph/ismn-range-test-migrations.ts';
+import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
+import { createMonographIdentifierBatchDownloadTable } from './test-migrations/monograph/monograph-identifier-batch-download.ts';
+import { createMonographIdentifierBatchTable } from './test-migrations/monograph/monograph-identifier-batch.ts';
+import { createMonographMessagePublicationManifestationTable } from './test-migrations/monograph/monograph-message-publication-manifestation-test-migrations.ts';
+import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
 import { createMonographPublicationExpressionTable } from './test-migrations/monograph/monograph-publication-expression-test-migrations.ts';
 import { createMonographPublicationManifestationTable } from './test-migrations/monograph/monograph-publication-manifestation-test-migrations.ts';
-
-import { createMonographIdentifierBatchTable } from './test-migrations/monograph/monograph-identifier-batch.ts';
-import { createMonographIdentifierBatchDownloadTable } from './test-migrations/monograph/monograph-identifier-batch-download.ts';
-
-import { createMessageTemplateTable } from './test-migrations/monograph/message-template-test-migrations.ts';
-
-import { createMonographMessageTable } from './test-migrations/monograph/monograph-message-test-migrations.ts';
-import { createMonographMessagePublicationManifestationTable } from './test-migrations/monograph/monograph-message-publication-manifestation-test-migrations.ts';
-
-import { createIssnRangeTable } from './test-migrations/serial/issn-range-test-migrations.ts';
+import { createMonographPublicationRequestTable } from './test-migrations/monograph/monograph-publication-request-test-migrations.ts';
+import { createMonographPublicationTable } from './test-migrations/monograph/monograph-publication-test-migrations.ts';
+import { createMonographPublisherRequestArchiveTable } from './test-migrations/monograph/monograph-publisher-request-archive-test-migrations.ts';
+import { createMonographPublisherRequestTable } from './test-migrations/monograph/monograph-publisher-request-test-migrations.ts';
+import { createMonographPublisherTable } from './test-migrations/monograph/monograph-publisher-test-migrations.ts';
 import { createIssnIdentifierTable } from './test-migrations/serial/issn-identifier-test-migrations.ts';
-
-import { createSerialPublisherTable } from './test-migrations/serial/serial-publisher-test-migrations.ts';
-import { createSerialPublicationTable } from './test-migrations/serial/serial-publication-test-migrations.ts';
-import { createSerialPublicationArchiveTable } from './test-migrations/serial/serial-publication-archive-test-migrations.ts';
-
-import { createSerialPublicationRequestTable } from './test-migrations/serial/serial-publication-request-test-migrations.ts';
-import { createSerialPublicationRequestArchiveTable } from './test-migrations/serial/serial-publication-request-archive-migrations.ts';
-
+import { createIssnRangeTable } from './test-migrations/serial/issn-range-test-migrations.ts';
 import { createSerialMessageTable } from './test-migrations/serial/serial-message-test-migrations.ts';
+import { createSerialPublicationArchiveTable } from './test-migrations/serial/serial-publication-archive-test-migrations.ts';
+import { createSerialPublicationRequestArchiveTable } from './test-migrations/serial/serial-publication-request-archive-migrations.ts';
+import { createSerialPublicationRequestTable } from './test-migrations/serial/serial-publication-request-test-migrations.ts';
+import { createSerialPublicationTable } from './test-migrations/serial/serial-publication-test-migrations.ts';
+import { createSerialPublisherTable } from './test-migrations/serial/serial-publisher-test-migrations.ts';
 
 import type { Database } from '../db/types.ts';
 import type { UnknownObject } from '../generic-types.ts';

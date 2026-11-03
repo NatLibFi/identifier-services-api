@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
 
 import { APPLICATION_ROLES } from '../constants.ts';
+
 import type { TestDefinition } from './generate-integration-test.ts';
 
 // Use loopback to avoid needing to resolve hostname

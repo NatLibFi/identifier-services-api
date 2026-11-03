@@ -1,9 +1,9 @@
 import { ISBN_RANGE_MAX_LENGTH } from '../../constants/monograph/isbn-constants.ts';
 
-import { getKysely } from '../../db/database.ts';
-
 import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { testRangeOverlap } from './monograph-range-utils.ts';
+
+import { getKysely } from '../../db/database.ts';
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';

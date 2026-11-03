@@ -4,16 +4,15 @@ import { SERIAL_STATISTIC_TYPE } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
 import {
+  formatStatisticsToWorkbook,
+  type StatisticsWorksheetInfo,
+} from '../monograph/monograph-statistics-interface-utils.ts';
+import {
   getIssnStatistics,
   getSerialPublicationRequestStatistics,
   getSerialPublicationStatistics,
   getSerialPublisherStatistics,
 } from './serial-statistics-interface-utils.ts';
-
-import {
-  formatStatisticsToWorkbook,
-  type StatisticsWorksheetInfo,
-} from '../monograph/monograph-statistics-interface-utils.ts';
 
 import type { CreateSerialStatisticsHttp } from '../../validations/serial/serial-statistics-validation.ts';
 

@@ -1,3 +1,5 @@
+import type { PoolOptions } from 'mysql2';
+
 import fs from 'node:fs';
 
 import {
@@ -10,7 +12,6 @@ import {
 } from './utils/config-utils.ts';
 
 import type { ApplicationRoleMap, KeycloakOptions } from './app.ts';
-import type { PoolOptions } from 'mysql2';
 
 // COMMON
 export const NODE_ENV = readEnvironmentVariable<string>('NODE_ENV');

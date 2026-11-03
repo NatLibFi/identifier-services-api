@@ -1,11 +1,11 @@
+import { CompiledQuery, Kysely } from 'kysely';
+import { createConnection, type Connection } from 'mysql2/promise';
+import { v4 as UUIDv4 } from 'uuid';
 import { afterEach, beforeEach, test, describe, inject, expect, onTestFailed } from 'vitest';
 
-import { createConnection, type Connection } from 'mysql2/promise';
-import { CompiledQuery, Kysely } from 'kysely';
-import { v4 as UUIDv4 } from 'uuid';
+import { createKyselySingleton, dropKyselySingleton, getKysely } from './database.ts';
 
 import type { Database } from './types.ts';
-import { createKyselySingleton, dropKyselySingleton, getKysely } from './database.ts';
 
 // Note: these tests test database creation and as such they do not utilize test helpers
 // That other test requiring test database utilize
@@ -41,7 +41,7 @@ describe('database', async () => {
 
     expect(db).toBeInstanceOf(Kysely);
 
-    const testQueryResult = await db.executeQuery(CompiledQuery.raw(`SELECT 1 AS result`));
+    const testQueryResult = await db.executeQuery(CompiledQuery.raw('SELECT 1 AS result'));
     expect(Array.isArray(testQueryResult.rows)).toBe(true);
     expect(testQueryResult.rows.length).toBe(1);
     expect(testQueryResult.rows[0]).toStrictEqual({ result: 1 });

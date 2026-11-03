@@ -1,22 +1,21 @@
 import HttpStatus from 'http-status';
 
-import { getKysely } from '../../db/database.ts';
-import { getApplicationLogger } from '../../utils/logging.ts';
-import { ApiError } from '../../utils/api-error.ts';
+import {
+  MONOGRAPH_EXPRESSION_TYPES,
+  MONOGRAPH_IDENTIFIERS,
+  MONOGRAPH_PUBLICATION_REQUEST_STATES,
+} from '../../constants.ts';
 
+import { ApiError } from '../../utils/api-error.ts';
+import { getApplicationLogger } from '../../utils/logging.ts';
 import {
   getCurrentTime,
   removeUndefinedProperties,
   validateGetById,
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
-
-import {
-  asMonographPublicationRequestAdminRead,
-  asMonographPublicationRequestSearchResult,
-} from '../../dtl/monograph/monograph-publication-request-dtl.ts';
-import { readMonographPublication } from './monograph-publication-interface.ts';
-
+import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from './isbn-identifier-utils.ts';
+import { assignIsmnIdentifier, getAssignableIsmnIdentifiers } from './ismn-identifier-utils.ts';
 import {
   changeMonographPublicationRequestState,
   changePublicationRequestPublisher,
@@ -26,25 +25,23 @@ import {
   getDbPublicationRequestEntry,
 } from './monograph-publication-request-interface-utils.ts';
 
-import { assignIsbnIdentifier, getAssignableIsbnIdentifiers } from './isbn-identifier-utils.ts';
-import { assignIsmnIdentifier, getAssignableIsmnIdentifiers } from './ismn-identifier-utils.ts';
-
+import { getKysely } from '../../db/database.ts';
 import {
-  MONOGRAPH_EXPRESSION_TYPES,
-  MONOGRAPH_IDENTIFIERS,
-  MONOGRAPH_PUBLICATION_REQUEST_STATES,
-} from '../../constants.ts';
+  asMonographPublicationRequestAdminRead,
+  asMonographPublicationRequestSearchResult,
+} from '../../dtl/monograph/monograph-publication-request-dtl.ts';
+import { readMonographPublication } from './monograph-publication-interface.ts';
 
 import type {
   MonographPublicationRequestSelect,
   MonographPublicationRequestSelectExtended,
 } from '../../db/types/monograph/types-monograph-publication-request.ts';
+import type { RequestUser } from '../../generic-types.ts';
 import type {
   CreateMonographPublicationRequestV1Http,
   SearchMonographPublicationRequestHttp,
   UpdateMonographPublicationRequestHttp,
 } from '../../validations/monograph/monograph-publication-request-validation.ts';
-import type { RequestUser } from '../../generic-types.ts';
 
 export async function readMonographPublicationRequest(id: number) {
   const db = getKysely();

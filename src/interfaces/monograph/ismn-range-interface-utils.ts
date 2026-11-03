@@ -1,9 +1,9 @@
 import { ISMN_RANGE_MAX_LENGTH } from '../../constants/monograph/ismn-constants.ts';
 
-import { getKysely } from '../../db/database.ts';
-
 import { generateRangeArray } from '../../utils/generic-utils.ts';
 import { testRangeOverlap } from './monograph-range-utils.ts';
+
+import { getKysely } from '../../db/database.ts';
 
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
