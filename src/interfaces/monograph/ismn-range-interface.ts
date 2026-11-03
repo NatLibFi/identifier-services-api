@@ -204,6 +204,27 @@ export async function processIsmnRangeEdit(
     );
   }
 
+  // Validate proposed outcome
+  const proposedBeginNumber = Number(proposedRangeEdit.range_begin);
+  const proposedEndNumber = Number(proposedRangeEdit.range_end);
+
+  if (proposedBeginNumber > proposedEndNumber) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `ISMN range id ${id} range adjustment is invalid: range_begin must not exceed range_end.`,
+    );
+  }
+
+  // Sanity check: length must remain equal
+  if (proposedRangeEdit.range_begin.length !== proposedRangeEdit.range_end.length) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `ISMN range id ${id} range adjustment is invalid: range_begin must have equal length with range_end.`,
+    );
+  }
+
   // Find potential conflicts with other ranges that what is being processed
   const conflictingIsmnRanges = await getIsmnRangeConflict(proposedRangeEdit);
   const filteredConflictingIsmnRanges = conflictingIsmnRanges.filter((ismnRange) => ismnRange.id !== currentRange.id);

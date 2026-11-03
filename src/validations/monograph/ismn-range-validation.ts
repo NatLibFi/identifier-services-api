@@ -44,7 +44,7 @@ export const createIsmnRangeSchema = z
       ctx.addIssue({
         path: ['range_begin'],
         code: 'custom',
-        message: 'Range begin cannot be less than range end',
+        message: 'Range begin cannot be greater than range end',
       });
     }
   });
@@ -80,7 +80,7 @@ export const updateIsmnRangeSchema = z
       ctx.addIssue({
         path: ['range_begin'],
         code: 'custom',
-        message: 'Range begin cannot be less than range end',
+        message: 'Range begin cannot be greater than range end',
       });
     }
 

@@ -106,7 +106,7 @@ export async function assignIssnIdentifier(publicationId: number, user: RequestU
       .select(['id', 'serial_publication_id', 'identifier'])
       .where('issn_range_id', '=', validatedIssnRange.id)
       .where('serial_publication_id', 'is', null)
-      .orderBy('id', 'asc') // Use identifiers in order
+      .orderBy('identifier', 'asc') // Use identifiers in order
       .limit(1)
       .execute();
 

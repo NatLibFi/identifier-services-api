@@ -183,6 +183,27 @@ export async function processIsbnRangeEdit(
     );
   }
 
+  // Validate proposed outcome
+  const proposedBeginNumber = Number(proposedRangeEdit.range_begin);
+  const proposedEndNumber = Number(proposedRangeEdit.range_end);
+
+  if (proposedBeginNumber > proposedEndNumber) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `ISBN range id ${id} range adjustment is invalid: range_begin must not exceed range_end.`,
+    );
+  }
+
+  // Sanity check: length must remain equal
+  if (proposedRangeEdit.range_begin.length !== proposedRangeEdit.range_end.length) {
+    throw new ApiError(
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      'Unprocessable entity',
+      `ISBN range id ${id} range adjustment is invalid: range_begin must have equal length with range_end.`,
+    );
+  }
+
   // Find potential conflicts with other ranges that what is being processed
   const conflictingIsbnRanges = await getIsbnRangeConflict(proposedRangeEdit);
   const filteredConflictingIsbnRanges = conflictingIsbnRanges.filter((isbnRange) => isbnRange.id !== currentRange.id);

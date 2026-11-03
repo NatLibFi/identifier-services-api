@@ -10,7 +10,7 @@ export async function createMonographMessageTable(db: Kysely<Database>): Promise
     .addColumn('recipient', 'varchar(100)', (col) => col.notNull())
     .addColumn('subject', 'varchar(150)', (col) => col.notNull())
     .addColumn('body', 'text', (col) => col.notNull())
-    .addColumn('monograph_publisher_id', 'integer')
+    .addColumn('monograph_publisher_id', 'integer', (col) => col.notNull())
     .addColumn('monograph_publication_request_id', 'integer')
     .addColumn('isbn_publisher_range_id', 'integer')
     .addColumn('ismn_publisher_range_id', 'integer')

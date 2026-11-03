@@ -17,6 +17,14 @@ export const createMonographIdentifierBatchSchema = z
       });
     }
 
+    if (data.isbn_publisher_range_id && data.ismn_publisher_range_id) {
+      ctx.addIssue({
+        path: ['isbn_publisher_range_id'],
+        code: 'custom',
+        message: 'Both isbn_publisher_range_id and ismn_publisher_range_id cannot be defined',
+      });
+    }
+
     // For automated tests allow identifier count less than 20
     if (!isAutomatedTest() && data.identifier_count < 20) {
       ctx.addIssue({
