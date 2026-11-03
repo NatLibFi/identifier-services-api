@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import * as monographPublisherInterface from '../../interfaces/monograph/monograph-publisher-interface.ts';
@@ -23,8 +24,8 @@ export async function readMonographPublisherArchiveEntry(req: Request, res: Resp
 
 export async function deleteMonographPublisher(req: Request, res: Response, next: NextFunction) {
   try {
-    const result = await monographPublisherInterface.deleteMonographPublisher(Number(req.params['id']));
-    return res.status(HttpStatus.NO_CONTENT).json(result);
+    await monographPublisherInterface.deleteMonographPublisher(Number(req.params['id']));
+    return res.status(HttpStatus.NO_CONTENT).end();
   } catch (error) {
     return next(error);
   }

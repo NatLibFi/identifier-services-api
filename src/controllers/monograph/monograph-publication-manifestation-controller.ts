@@ -1,8 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import { MARC_RECORD_FORMAT } from '../../constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
+
 import * as monographPublicationManifestationInterface from '../../interfaces/monograph/monograph-publication-manifestation-interface.ts';
 
 export async function addMonographPublicationManifestation(req: Request, res: Response, next: NextFunction) {
@@ -81,7 +84,7 @@ export async function createMonographPublicationManifestationMarc(req: Request, 
     if (record_format === MARC_RECORD_FORMAT.ISO2709) {
       // Using default content-type for binary types
       res.setHeader('content-type', 'application/octet-stream');
-      return res.status(HttpStatus.OK).attachment(`monograph-expression-${req.params['id']}.mrc`).send(result);
+      return res.status(HttpStatus.OK).attachment(`monograph-manifestation-${req.params['id']}.mrc`).send(result);
     }
 
     // Using MARC_RECORD_JS is disallowed for http endpoint but allowed in validation to make typing consistent

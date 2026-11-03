@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import * as monographIdentifierBatchInterface from '../../interfaces/monograph/monograph-identifier-batch-interface.ts';
@@ -35,7 +36,7 @@ export async function downloadBatchIdentifiers(req: Request, res: Response, next
     const result = await monographIdentifierBatchInterface.downloadMonographIdentifierBatch(Number(req.params['id']));
 
     const fileName = `monograph-identifier-batch-${req.params['id']}-identifiers.txt`;
-    return res.attachment(fileName).send(result);
+    return res.status(HttpStatus.OK).attachment(fileName).send(result);
   } catch (error) {
     return next(error);
   }

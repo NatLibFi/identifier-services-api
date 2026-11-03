@@ -1,8 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
-import * as messageTemplateInterface from '../interfaces/message-template-interface.ts';
 import { ApiError } from '../utils/api-error.ts';
+
+import * as messageTemplateInterface from '../interfaces/message-template-interface.ts';
 
 export async function getMessageTemplate(req: Request, res: Response, next: NextFunction) {
   try {

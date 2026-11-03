@@ -1,7 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import { STATISTICS_FORMAT } from '../../constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
 
 import * as serialStatisticsInterface from '../../interfaces/serial/serial-statistics-interface.ts';

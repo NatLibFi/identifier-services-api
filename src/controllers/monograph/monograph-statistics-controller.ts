@@ -1,7 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import { STATISTICS_FORMAT } from '../../constants.ts';
+
 import { ApiError } from '../../utils/api-error.ts';
 
 import createMonographStatisticsInterface from '../../interfaces/monograph/monograph-statistics-interface.ts';
@@ -23,15 +25,19 @@ export default function createMonographStatisticsControllers(
       if (output_format === STATISTICS_FORMAT.CSV) {
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', `attachment; filename="tunnisteportaali-${statistics_type}.csv"`);
+        res.status(HttpStatus.OK);
+
         await result.csv.write(res);
-        return res.status(HttpStatus.OK).end();
+        return res.end();
       }
 
       if (output_format === STATISTICS_FORMAT.XLSX) {
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', `attachment; filename="tunnisteportaali-${statistics_type}.xlsx"`);
+        res.status(HttpStatus.OK);
+
         await result.xlsx.write(res);
-        return res.status(HttpStatus.OK).end();
+        return res.end();
       }
 
       throw new ApiError(

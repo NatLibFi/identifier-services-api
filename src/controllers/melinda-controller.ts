@@ -1,8 +1,9 @@
+import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import createMelindaInterface from '../interfaces/melinda-interface.ts';
 
-import type { Request, Response, NextFunction } from 'express';
 import type { MelindaConfiguration } from '../app.ts';
 
 export default function createMelindaControllers(melindaConfiguration: MelindaConfiguration) {

@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import * as issnRangeInterface from '../../interfaces/serial/issn-range-interface.ts';

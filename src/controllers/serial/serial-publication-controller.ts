@@ -2,8 +2,10 @@ import type { Request, Response, NextFunction } from 'express';
 
 import HttpStatus from 'http-status';
 
-import { ApiError } from '../../utils/api-error.ts';
 import { MARC_RECORD_FORMAT } from '../../constants.ts';
+
+import { ApiError } from '../../utils/api-error.ts';
+
 import * as serialPublicationInterface from '../../interfaces/serial/serial-publication-interface.ts';
 
 export async function readSerialPublication(req: Request, res: Response, next: NextFunction) {

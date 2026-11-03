@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+
 import HttpStatus from 'http-status';
 
 import * as serialPublisherInterface from '../../interfaces/serial/serial-publisher-interface.ts';
