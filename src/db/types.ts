@@ -16,7 +16,7 @@ import type { MonographPublication } from './types/monograph/types-monograph-pub
 import type { MonographPublisherRequestArchive } from './types/monograph/types-monograph-publisher-request-archive.ts';
 import type { MonographPublisherRequest } from './types/monograph/types-monograph-publisher-request.ts';
 import type { MonographPublisher } from './types/monograph/types-monograph-publisher.ts';
-import type { IssnIdentifier } from './types/serial/types-isnn-identifier.ts';
+import type { IssnIdentifier } from './types/serial/types-issn-identifier.ts';
 import type { IssnRange } from './types/serial/types-issn-range.ts';
 import type { SerialMessage } from './types/serial/types-serial-message.ts';
 import type { SerialPublicationArchive } from './types/serial/types-serial-publication-archive.ts';

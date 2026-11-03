@@ -11,7 +11,7 @@ import { getKysely } from '../../db/database.ts';
 import { readIssnRange } from './issn-range-interface.ts';
 
 import type { Database } from '../../db/types.ts';
-import type { IssnIdentifierInsert } from '../../db/types/serial/types-isnn-identifier.ts';
+import type { IssnIdentifierInsert } from '../../db/types/serial/types-issn-identifier.ts';
 import type { IssnRangeSelect } from '../../db/types/serial/types-issn-range.ts';
 import type { RequestUser } from '../../generic-types.ts';
 import type { CreateIssnRangeHttp } from '../../validations/serial/issn-range-validation.ts';

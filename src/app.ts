@@ -162,8 +162,9 @@ export default async function startApp(options: AppOptions): Promise<http.Server
       logger.info('Custom CA definition will be used for database connection');
     }
 
-    const db = createKyselySingleton(dbConfig);
-    await testDatabaseConnection(db);
+    createKyselySingleton(dbConfig);
+
+    await testDatabaseConnection();
     logger.info('Database connection has been established successfully');
   }
 

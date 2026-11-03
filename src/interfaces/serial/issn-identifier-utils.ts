@@ -10,7 +10,7 @@ import { getCurrentTime, validateRowsUpdatedExact } from '../shared-interface-ut
 import { getKysely } from '../../db/database.ts';
 
 import type { Database } from '../../db/types.ts';
-import type { IssnIdentifierSelect, IssnIdentifierUpdate } from '../../db/types/serial/types-isnn-identifier.ts';
+import type { IssnIdentifierSelect, IssnIdentifierUpdate } from '../../db/types/serial/types-issn-identifier.ts';
 import type { IssnRangeUpdate } from '../../db/types/serial/types-issn-range.ts';
 import type { SerialPublicationAdminRead } from '../../dtl/serial/serial-publication-dtl.ts';
 import type { RequestUser } from '../../generic-types.ts';

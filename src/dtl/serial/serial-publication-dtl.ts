@@ -1,4 +1,4 @@
-import type { IssnIdentifierSelect } from '../../db/types/serial/types-isnn-identifier.ts';
+import type { IssnIdentifierSelect } from '../../db/types/serial/types-issn-identifier.ts';
 import type { SerialPublicationArchiveSelect } from '../../db/types/serial/types-serial-publication-archive.ts';
 import type { SerialPublicationSelect } from '../../db/types/serial/types-serial-publication.ts';
 

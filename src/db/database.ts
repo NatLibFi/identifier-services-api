@@ -3,9 +3,9 @@ import { createPool, type PoolOptions } from 'mysql2';
 
 import type { Database } from './types.ts';
 
-let db: Kysely<Database>;
+let db: Kysely<Database> | undefined;
 
-export function createKyselySingleton(dbConfig: PoolOptions) {
+export function createKyselySingleton(dbConfig: PoolOptions): Kysely<Database> {
   if (db) {
     throw new Error('Kysely singleton already created');
   }
@@ -37,7 +37,8 @@ export function getKysely() {
   return db;
 }
 
-export async function testDatabaseConnection(db: Kysely<Database>) {
+export async function testDatabaseConnection() {
+  const db = getKysely();
   const testQueryResult = await db.executeQuery(CompiledQuery.raw('SELECT 1'));
   const querySuccessful = !!testQueryResult && testQueryResult.rows.length > 0;
 
@@ -50,12 +51,10 @@ export async function testDatabaseConnection(db: Kysely<Database>) {
 
 export async function dropKyselySingleton() {
   if (!db) {
-    throw Error('Kysely singleton was not defined and cannot be dropped');
+    throw new Error('Kysely singleton was not defined and cannot be dropped');
   }
 
   await db.destroy();
 
-  // This function should never be used outside of tests. We can declare type safety for db to avoid unnecessary undefined checks.
-  // @ts-expect-error disable typechecking for test-only case
   db = undefined;
 }
