@@ -2,7 +2,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { getCurrentTime, validateRowsDeleted, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
-import { getBatchIsbnIdentifiers } from './isbn-identifier-utils.ts';
+import { getBatchIsbnIdentifierIds } from './isbn-identifier-utils.ts';
 import { getIsbnPublisherRangeCategory, getNumberOfIsbnIdentifiers } from './isbn-publisher-range-interface-utils.ts';
 import { getBatchIsmnIdentifiers } from './ismn-identifier-utils.ts';
 import { getIsmnPublisherRangeCategory, getNumberOfIsmnIdentifiers } from './ismn-publisher-range-interface-utils.ts';
@@ -41,7 +41,7 @@ export async function createIsbnIdentifierBatch(
   let identifierIds: number[] = [];
 
   try {
-    identifierIds = await getBatchIsbnIdentifiers(isbnPublisherRangeId, identifierCount);
+    identifierIds = await getBatchIsbnIdentifierIds(isbnPublisherRangeId, identifierCount);
   } catch (error) {
     if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
       throw new ApiError(

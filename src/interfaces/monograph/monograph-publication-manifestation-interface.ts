@@ -20,7 +20,11 @@ import {
   validateGetById,
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
-import { assignIsbnIdentifier, deassignIsbnIdentifier, getAssignableIsbnIdentifier } from './isbn-identifier-utils.ts';
+import {
+  assignIsbnIdentifier,
+  revokeIsbnIdentifier,
+  getAssignableIsbnIdentifierString,
+} from './isbn-identifier-utils.ts';
 import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
 import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
@@ -251,7 +255,7 @@ export async function addMonographPublicationManifestation(
   return readMonographPublicationManifestation(Number(insertId));
 }
 
-export async function assignManifestationIdentifier(id: number, user: RequestUser) {
+export async function assignManifestationIdentifier(manifestationId: number, user: RequestUser) {
   const logger = getApplicationLogger();
   const db = getKysely();
 
@@ -276,7 +280,7 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
     .select(['isbn_identifier.identifier as isbn_identifier'])
     .select(['ismn_identifier.identifier as ismn_identifier'])
     .select(['monograph_publication_request.request_state as request_state'])
-    .where('monograph_publication_manifestation.id', '=', id)
+    .where('monograph_publication_manifestation.id', '=', manifestationId)
     .execute();
 
   const validManifestation = validateGetById(manifestation);
@@ -303,23 +307,23 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
 
   try {
     if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
-      const isbnIdentifier = await getAssignableIsbnIdentifier(id);
+      const isbnIdentifier = await getAssignableIsbnIdentifierString(manifestationId);
 
       await db.transaction().execute(async (trx) => {
-        await assignIsbnIdentifier(id, isbnIdentifier, trx, user);
+        await assignIsbnIdentifier(manifestationId, isbnIdentifier, trx, user);
       });
 
-      return readMonographPublicationManifestation(id);
+      return readMonographPublicationManifestation(manifestationId);
     }
 
     if (identifierType === MONOGRAPH_IDENTIFIERS.ISMN) {
-      const ismnIdentifier = await getAssignableIsmnIdentifier(id);
+      const ismnIdentifier = await getAssignableIsmnIdentifier(manifestationId);
 
       await db.transaction().execute(async (trx) => {
-        await assignIsmnIdentifier(id, ismnIdentifier, trx, user);
+        await assignIsmnIdentifier(manifestationId, ismnIdentifier, trx, user);
       });
 
-      return readMonographPublicationManifestation(id);
+      return readMonographPublicationManifestation(manifestationId);
     }
 
     // Note: this part of code should never be reached. There however exist an ApiError to catch this case also.
@@ -335,6 +339,14 @@ export async function assignManifestationIdentifier(id: number, user: RequestUse
 
     if (error.cause === 'Inadequate number of identifiers') {
       throw new ApiError(HttpStatus.CONFLICT, 'Conflict', 'Publisher does not have enough available identifiers.');
+    }
+
+    if (error.cause === 'Manifestation cancelled') {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        'Publication manifestation is cancelled and cannot be given ISBN or ISMN identifier.',
+      );
     }
 
     if (error.cause === 'No publisher defined') {
@@ -420,7 +432,7 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
   try {
     if (identifierType === MONOGRAPH_IDENTIFIERS.ISBN) {
       await db.transaction().execute(async (trx) => {
-        await deassignIsbnIdentifier(id, trx, user);
+        await revokeIsbnIdentifier(id, trx, user);
       });
 
       return readMonographPublicationManifestation(id);
