@@ -36,14 +36,14 @@ export function asSerialPublisherAdminRead(serialPublisher: SerialPublisherSelec
   };
 }
 
-export interface SerialPublisherAutocompleteResult {
+export interface SerialPublisherAutocompleteRead {
   id: number;
   official_name: string;
 }
 
-export function asSerialPublisherAutocomplete(
+export function asSerialPublisherAutocompleteRead(
   serialPublisher: SerialPublisherSelect,
-): SerialPublisherAutocompleteResult {
+): SerialPublisherAutocompleteRead {
   const { id, official_name } = serialPublisher;
   return { id, official_name };
 }

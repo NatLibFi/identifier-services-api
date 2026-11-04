@@ -1,6 +1,6 @@
 import type { IssnRangeSelect } from '../../db/types/serial/types-issn-range.ts';
 
-export interface IssnRangeRead extends IssnRangeSelect {
+export interface IssnRangeAdminRead extends IssnRangeSelect {
   taken: number;
   total: number;
   free: number;
@@ -10,7 +10,7 @@ export function asIssnRangeAdminRead(
   issnRange: IssnRangeSelect,
   takenIdentifierCount: number,
   totalIdentifiersCount: number,
-): IssnRangeRead {
+): IssnRangeAdminRead {
   const { id, block, range_begin, range_end, active, created, created_by, modified, modified_by } = issnRange;
 
   return {

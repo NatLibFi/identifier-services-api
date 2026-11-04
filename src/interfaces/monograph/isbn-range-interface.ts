@@ -9,7 +9,11 @@ import {
 } from './isbn-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { asIsbnRangeAdminRead, type IsbnRangeRead } from '../../dtl/monograph/isbn-range-dtl.ts';
+import {
+  asIsbnRangeAdminReadList,
+  asIsbnRangeAdminRead,
+  type IsbnRangeAdminRead,
+} from '../../dtl/monograph/isbn-range-dtl.ts';
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -28,11 +32,8 @@ export async function getIsbnRanges() {
         .where('isbn_range_id', '=', r.id)
         .executeTakeFirstOrThrow();
 
-      return {
-        ...asIsbnRangeAdminRead(r),
-        free: total - taken,
-        taken,
-      };
+      const free = total - taken;
+      return asIsbnRangeAdminReadList(r, free, taken);
     }),
   );
 }
@@ -69,17 +70,14 @@ export async function createIsbnRange(isbnRangeCreateDoc: CreateIsbnRangeHttp, u
   return { id: Number(result.insertId) };
 }
 
-export async function readIsbnRange(id: number): Promise<IsbnRangeRead> {
+export async function readIsbnRange(id: number): Promise<IsbnRangeAdminRead> {
   const db = getKysely();
   const dbResult = await db.selectFrom('isbn_range').selectAll().where('id', '=', id).execute();
 
   const isbnRangeResult = validateGetById<IsbnRangeSelect>(dbResult);
   const availablePublisherRanges = await getAvailableIsbnPublisherRanges(isbnRangeResult);
 
-  return {
-    ...asIsbnRangeAdminRead(isbnRangeResult),
-    available_publisher_ranges: availablePublisherRanges,
-  };
+  return asIsbnRangeAdminRead(isbnRangeResult, availablePublisherRanges);
 }
 
 export async function updateIsbnRange(id: number, isbnRangeUpdateDoc: UpdateIsbnRangeHttp, user: RequestUser) {

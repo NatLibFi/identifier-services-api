@@ -11,7 +11,11 @@ import {
 } from './ismn-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { asIsmnRangeAdminRead, type IsmnRangeRead } from '../../dtl/monograph/ismn-range-dtl.ts';
+import {
+  asIsmnRangeAdminReadList,
+  asIsmnRangeAdminRead,
+  type IsmnRangeAdminRead,
+} from '../../dtl/monograph/ismn-range-dtl.ts';
 
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -30,11 +34,8 @@ export async function getIsmnRanges() {
         .where('ismn_range_id', '=', r.id)
         .executeTakeFirstOrThrow();
 
-      return {
-        ...asIsmnRangeAdminRead(r),
-        free: total - taken,
-        taken,
-      };
+      const free = total - taken;
+      return asIsmnRangeAdminReadList(r, free, taken);
     }),
   );
 }
@@ -89,17 +90,14 @@ export async function createIsmnRange(ismnRangeCreateDoc: CreateIsmnRangeHttp, u
   return { id: Number(result.insertId) };
 }
 
-export async function readIsmnRange(id: number): Promise<IsmnRangeRead> {
+export async function readIsmnRange(id: number): Promise<IsmnRangeAdminRead> {
   const db = getKysely();
   const dbResult = await db.selectFrom('ismn_range').selectAll().where('id', '=', id).execute();
 
   const ismnRangeResult = validateGetById<IsmnRangeSelect>(dbResult);
   const availablePublisherRanges = await getAvailableIsmnPublisherRanges(ismnRangeResult);
 
-  return {
-    ...asIsmnRangeAdminRead(ismnRangeResult),
-    available_publisher_ranges: availablePublisherRanges,
-  };
+  return asIsmnRangeAdminRead(ismnRangeResult, availablePublisherRanges);
 }
 
 export async function updateIsmnRange(id: number, ismnRangeUpdateDoc: UpdateIsmnRangeHttp, user: RequestUser) {

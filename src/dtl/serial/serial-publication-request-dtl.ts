@@ -21,9 +21,45 @@ export interface SerialPublicationRequestSearchResult {
   created: Date;
 }
 
+function getSerialPublicationRequestArchiveEntry(archiveEntry: SerialPublicationRequestArchiveSelect | null) {
+  if (!archiveEntry) {
+    return null;
+  }
+
+  const {
+    id,
+    serial_publication_request_id,
+    publisher_name,
+    contact_person,
+    email,
+    phone,
+    address,
+    zip,
+    city,
+    lang_code,
+    created,
+    created_by,
+  } = archiveEntry;
+
+  return {
+    id,
+    serial_publication_request_id,
+    publisher_name,
+    contact_person,
+    email,
+    phone,
+    address,
+    zip,
+    city,
+    lang_code,
+    created,
+    created_by,
+  };
+}
+
 export function asSerialPublicationRequestAdminRead(
   request: SerialPublicationRequestSelectExtended,
-  archive_entry: SerialPublicationRequestArchiveSelect | null,
+  archiveEntry: SerialPublicationRequestArchiveSelect | null,
   publications: SerialPublicationAdminRead[],
 ): SerialPublicationRequestAdminRead {
   const {
@@ -58,8 +94,8 @@ export function asSerialPublicationRequestAdminRead(
     zip,
     city,
     lang_code,
-    archive_entry,
-    publications,
+    archive_entry: getSerialPublicationRequestArchiveEntry(archiveEntry),
+    publications, // Note: passed parameter has already gone through serial publication DTL
     created,
     created_by,
     modified,

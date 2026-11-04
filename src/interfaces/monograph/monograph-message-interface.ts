@@ -255,6 +255,8 @@ export default function createMonographMessageInterface(
       .where('monograph_message.id', '=', messageId)
       .execute();
 
+    // @ts-expect-error monograph publisher ID is always defined and each publisher has name per DB definition
+    // but for some reason typescript does not understand this
     const validatedMessageResult: MonographMessageInfo = {
       ...validateGetById(messageResult),
       expression_title: null,

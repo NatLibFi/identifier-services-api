@@ -17,8 +17,86 @@ export interface SerialPublicationAdminRead extends SerialPublicationSelect {
   archive_entry: SerialPublicationArchiveSelect | null;
 }
 
+function getSerialPublicationIssnIdentifier(issnIdentifier: IssnIdentifierSelect | null) {
+  if (!issnIdentifier) {
+    return null;
+  }
+
+  const { id, issn_range_id, serial_publication_id, identifier, created, created_by, modified, modified_by } =
+    issnIdentifier;
+
+  return {
+    id,
+    issn_range_id,
+    serial_publication_id,
+    identifier,
+    created,
+    created_by,
+    modified,
+    modified_by,
+  };
+}
+
+function getSerialPublicationArchiveEntry(archiveEntry: SerialPublicationArchiveSelect | null) {
+  if (!archiveEntry) {
+    return null;
+  }
+
+  const {
+    id,
+    serial_publication_id,
+    title,
+    subtitle,
+    place_of_publication,
+    printer,
+    issued_from_year,
+    issued_from_number,
+    frequency,
+    frequency_other,
+    language,
+    publication_type,
+    publication_type_other,
+    medium,
+    medium_other,
+    url,
+    previous,
+    main_series,
+    subseries,
+    another_medium,
+    additional_info,
+    created,
+    created_by,
+  } = archiveEntry;
+
+  return {
+    id,
+    serial_publication_id,
+    title,
+    subtitle,
+    place_of_publication,
+    printer,
+    issued_from_year,
+    issued_from_number,
+    frequency,
+    frequency_other,
+    language,
+    publication_type,
+    publication_type_other,
+    medium,
+    medium_other,
+    url,
+    previous,
+    main_series,
+    subseries,
+    another_medium,
+    additional_info,
+    created,
+    created_by,
+  };
+}
+
 export function asSerialPublicationAdminRead(
-  p: SerialPublicationSelect,
+  serialPublication: SerialPublicationSelect,
   archiveEntry: SerialPublicationArchiveSelect | null,
   issnIdentifier: IssnIdentifierSelect | null,
 ): SerialPublicationAdminRead {
@@ -50,7 +128,7 @@ export function asSerialPublicationAdminRead(
     created_by,
     modified,
     modified_by,
-  } = p;
+  } = serialPublication;
 
   return {
     id,
@@ -76,8 +154,8 @@ export function asSerialPublicationAdminRead(
     another_medium,
     additional_info,
     status,
-    issn_identifier: issnIdentifier,
-    archive_entry: archiveEntry,
+    issn_identifier: getSerialPublicationIssnIdentifier(issnIdentifier),
+    archive_entry: getSerialPublicationArchiveEntry(archiveEntry),
     created,
     created_by,
     modified,
@@ -85,8 +163,10 @@ export function asSerialPublicationAdminRead(
   };
 }
 
-export function asSerialPublicationSearchResult(p: SerialPublicationSearchResult): SerialPublicationSearchResult {
-  const { id, issn, title, language, medium, status, created } = p;
+export function asSerialPublicationSearchResult(
+  serialPublicationSearchResult: SerialPublicationSearchResult,
+): SerialPublicationSearchResult {
+  const { id, issn, title, language, medium, status, created } = serialPublicationSearchResult;
 
   return {
     id,

@@ -34,7 +34,7 @@ import {
 import { getKysely } from '../../db/database.ts';
 import {
   asMonographPublisherAdminRead,
-  asMonographPublisherAdminSearchRead,
+  asMonographPublisherAdminReadSearch,
   asMonographPublisherArchiveEntry,
   asMonographPublisherAutocompleteRead,
   asMonographPublisherGuestRead,
@@ -43,7 +43,7 @@ import {
 import type { MonographPublisherRequestArchiveSelect } from '../../db/types/monograph/types-monograph-publisher-request-archive.ts';
 import type { MonographPublisherRequestInsert } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 import type {
-  MonographPublisherReadAdmin,
+  MonographPublisherAdminRead,
   MonographPublisherSelect,
   MonographPublisherUpdate,
 } from '../../db/types/monograph/types-monograph-publisher.ts';
@@ -70,7 +70,7 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
     const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(id);
     const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(id);
 
-    return asMonographPublisherAdminSearchRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
+    return asMonographPublisherAdminReadSearch(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
   } else if (isAdmin(user)) {
     const isbnPublisherRanges = await getMonographPublisherIsbnRanges(id);
     const ismnPublisherRanges = await getMonographPublisherIsmnRanges(id);
@@ -333,7 +333,7 @@ export async function searchMonographPublisher(searchParameters: SearchMonograph
         result.map(async (p) => {
           const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(p.id);
           const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(p.id);
-          return asMonographPublisherAdminSearchRead(p, isbnPublisherRanges, ismnPublisherRanges);
+          return asMonographPublisherAdminReadSearch(p, isbnPublisherRanges, ismnPublisherRanges);
         }),
       ),
     };
@@ -450,7 +450,7 @@ export async function cancelApproveMonographPublisherRequest(monographPublisherI
   const db = getKysely();
 
   // @ts-expect-error dynamic return value
-  const monographPublisher: MonographPublisherReadAdmin = await readMonographPublisher(
+  const monographPublisher: MonographPublisherAdminRead = await readMonographPublisher(
     monographPublisherId,
     user,
     true,

@@ -4,6 +4,11 @@ export interface SerialMessageInfo extends SerialMessageSelect {
   serial_publisher_name: string | null;
 }
 
+export type SerialMessageSearchResult = Omit<
+  SerialMessageSelect,
+  'serial_publisher_id' | 'serial_publication_request_id' | 'lang_code' | 'body'
+>;
+
 export function asSerialMessageAdminRead(message: SerialMessageInfo): SerialMessageInfo {
   const {
     id,
@@ -34,9 +39,7 @@ export function asSerialMessageAdminRead(message: SerialMessageInfo): SerialMess
   };
 }
 
-export function asSerialMessageSearchResult(
-  serialMessage: SerialMessageSelect,
-): Omit<SerialMessageSelect, 'serial_publisher_id' | 'serial_publication_request_id' | 'lang_code' | 'body'> {
+export function asSerialMessageSearchResult(serialMessage: SerialMessageSelect): SerialMessageSearchResult {
   const { id, message_type, recipient, subject, sent, sent_by } = serialMessage;
 
   return {

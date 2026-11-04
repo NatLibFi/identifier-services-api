@@ -14,7 +14,7 @@ import {
 } from './issn-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { asIssnRangeAdminRead, type IssnRangeRead } from '../../dtl/serial/issn-range-dtl.ts';
+import { asIssnRangeAdminRead, type IssnRangeAdminRead } from '../../dtl/serial/issn-range-dtl.ts';
 
 import type { IssnRangeSelect } from '../../db/types/serial/types-issn-range.ts';
 import type { RequestUser } from '../../generic-types.ts';
@@ -70,7 +70,7 @@ export async function createIssnRange(issnRangeCreateDoc: CreateIssnRangeHttp, u
   return { id: issnRangeId };
 }
 
-export async function readIssnRange(id: number): Promise<IssnRangeRead> {
+export async function readIssnRange(id: number): Promise<IssnRangeAdminRead> {
   const db = getKysely();
   const dbResult = await db.selectFrom('issn_range').selectAll().where('id', '=', id).execute();
   const issnRangeResult = validateGetById<IssnRangeSelect>(dbResult);

@@ -18,7 +18,10 @@ import {
 } from './serial-publisher-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
-import { asSerialPublisherAdminRead, asSerialPublisherAutocomplete } from '../../dtl/serial/serial-publisher-dtl.ts';
+import {
+  asSerialPublisherAdminRead,
+  asSerialPublisherAutocompleteRead,
+} from '../../dtl/serial/serial-publisher-dtl.ts';
 
 import type { Database } from '../../db/types.ts';
 import type {
@@ -239,5 +242,5 @@ export async function serialPublisherAutocomplete(search_text: string) {
     .offset(0)
     .execute();
 
-  return result.map(asSerialPublisherAutocomplete);
+  return result.map(asSerialPublisherAutocompleteRead);
 }

@@ -45,14 +45,14 @@ export type MonographPublisherInsert = Insertable<MonographPublisher>;
 export type MonographPublisherUpdate = Updateable<MonographPublisher>;
 export type MonographPublisherSelect = Selectable<MonographPublisher>;
 
-export interface MonographPublisherReadAdmin extends MonographPublisherSelect {
+export interface MonographPublisherAdminRead extends MonographPublisherSelect {
   isbn_publisher_ranges: IsbnPublisherRangeSelectExtended[];
   ismn_publisher_ranges: IsmnPublisherRangeSelectExtended[];
   isbn_join_msg_sent: boolean;
   ismn_join_msg_sent: boolean;
 }
 
-export interface MonographPublisherReadAdminSearch extends MonographPublisherSelect {
+export interface MonographPublisherAdminReadSearch extends MonographPublisherSelect {
   isbn_publisher_ranges: {
     id: number;
     publisher_identifier: string;
@@ -63,7 +63,7 @@ export interface MonographPublisherReadAdminSearch extends MonographPublisherSel
   }[];
 }
 
-export interface MonographPublisherReadGuest extends Omit<
+export interface MonographPublisherGuestRead extends Omit<
   MonographPublisherSelect,
   | 'email'
   | 'lang_code'
@@ -92,7 +92,7 @@ export interface MonographPublisherReadGuest extends Omit<
   }[];
 }
 
-export type MonographPublisherReadAutocomplete = Omit<
-  MonographPublisherReadGuest,
+export type MonographPublisherAutocompleteRead = Omit<
+  MonographPublisherGuestRead,
   'address' | 'zip' | 'city' | 'phone' | 'www' | 'has_quitted' | 'isbn_publisher_ranges' | 'ismn_publisher_ranges'
 >;

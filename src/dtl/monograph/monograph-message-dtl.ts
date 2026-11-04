@@ -1,11 +1,7 @@
 import type { MonographMessageSelect } from '../../db/types/monograph/types-monograph-message.ts';
 
-export interface MonographMessageInfo {
-  id: number;
-  message_type: string;
-  monograph_publisher_id: number; // Always defined
-  monograph_publisher_name: string | null; // Always defined
-  monograph_publication_request_id: number | null; // For ISBN_ASSIGNMENT and ISMN_ASSIGNMENT
+export interface MonographMessageInfo extends MonographMessageSelect {
+  monograph_publisher_name: string; // Always defined
   expression_title: string | null; // For ISBN_ASSIGNMENT and ISMN_ASSIGNMENT
   manifestation_info:
     | {
@@ -14,14 +10,15 @@ export interface MonographMessageInfo {
       }[]
     | null;
   monograph_identifier_batch_id: number | null; // For ISBN_LIST_DELIVERY and ISMN_LIST_DELIVERY
-  isbn_publisher_range_id: number | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
   isbn_publisher_identifier: string | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
-  ismn_publisher_range_id: number | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
   ismn_publisher_identifier: string | null; // For ISBN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION and ISMN_PUBLISHER_REGISTRY_JOIN_CONFIRMATION
+}
+
+export interface MonographMessageSearchResult {
+  id: number;
+  message_type: string;
   recipient: string;
-  lang_code: string;
   subject: string;
-  body: string;
   sent: Date;
   sent_by: string;
 }
@@ -70,9 +67,7 @@ export function asMonographMessageAdminRead(monographMessageInfo: MonographMessa
   };
 }
 
-export function asMonographMessageSearchResult(
-  monographMessage: MonographMessageSelect,
-): Partial<MonographMessageSelect> {
+export function asMonographMessageSearchResult(monographMessage: MonographMessageSelect): MonographMessageSearchResult {
   const { id, message_type, recipient, subject, sent, sent_by } = monographMessage;
 
   return {

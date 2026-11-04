@@ -1,7 +1,7 @@
 import type { MonographPublisherRequestSelect } from '../../db/types/monograph/types-monograph-publisher-request.ts';
 import type { MonographPublisherContactPerson } from '../../db/types/monograph/types-monograph-publisher.ts';
 
-export interface MonographPublisherRequestReadAdmin {
+export interface MonographPublisherRequestAdminRead {
   id: number;
   official_name: string;
   other_names: string[];
@@ -39,7 +39,7 @@ export interface MonographPublisherRequestSearchResult {
 
 export function asMonographPublisherRequestAdminRead(
   monographPublisherRequest: MonographPublisherRequestSelect,
-): MonographPublisherRequestReadAdmin {
+): MonographPublisherRequestAdminRead {
   const {
     id,
     official_name,
