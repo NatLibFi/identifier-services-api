@@ -40,23 +40,34 @@ export function getIsbnPublisherIdentifierParts(isbnPublisherIdentifier: string)
     );
   }
 
+  if (registrant.length < 1 || registrant.length > 5) {
+    throw new Error(`Invalid registrant length value prevents providing publisher identifier parts: ${registrant}`);
+  }
+
   if (rest.length !== 0) {
     throw new Error(
-      `Invalid registrant number value prevents providing publisher identifier parts: ${registrantNumber}`,
+      `Publisher identifier has invalid format. Following entries were found when expecting none: ${JSON.stringify(rest)}`,
     );
   }
 
   return { gs1, registrationGroup, registrant };
 }
 
-export function getIsbnIdentifiers(publisherIdentifier: string) {
-  const isbnIdentifiers = [];
+export function getIsbnIdentifiers(publisherIdentifier: string): string[] {
+  const isbnIdentifiers: string[] = [];
 
   const { gs1, registrationGroup, registrant } = getIsbnPublisherIdentifierParts(publisherIdentifier);
 
   const checkDigitLength = 1; // For readability
   const publicationIdentifierLength =
     ISBN_IDENTIFIER_LENGTH - gs1.length - registrationGroup.length - registrant.length - checkDigitLength;
+
+  // Sanity check: publication identifier should be of sensible length
+  if (publicationIdentifierLength < 1 || publicationIdentifierLength > 5) {
+    throw new Error(
+      `Publication identifier length was invalid (expected 0 < x < 6, got ${publicationIdentifierLength})`,
+    );
+  }
 
   const rangeEnd = Array.from({ length: publicationIdentifierLength })
     .map(() => '9')
@@ -103,6 +114,11 @@ export function isbnPublisherRangeContainsIdentifier(range: IsbnRangeSelect, pub
   const rangeBeginNumber = Number(range.range_begin);
   const rangeEndNumber = Number(range.range_end);
 
+  // Sanity check: range start and end must be convertible to numbers
+  if (isNaN(rangeBeginNumber) || isNaN(rangeEndNumber)) {
+    throw new Error('Range begin or end cannot be NaN!');
+  }
+
   if (registrantNumber < rangeBeginNumber) {
     return false;
   }
@@ -134,7 +150,7 @@ export async function canDeleteIsbnPublisherRange(isbnPublisherRange: IsbnPublis
   }
 
   // Check if any message is directly associated with the ISBN publisher range
-  // If a message is associated with the publisher range, it means a identifiers have been made public
+  // If a message is associated with the publisher range, it means identifiers have been made public
   const { numMessages } = await db
     .selectFrom('monograph_message')
     .select(db.fn.countAll<number>().as('numMessages'))
@@ -152,14 +168,16 @@ export function generateIsbnIdentifierDbEntry(
   isbnIdentifier: string,
   isbnPublisherRangeId: number,
 ): IsbnIdentifierInsert {
+  const currentTime = getCurrentTime();
+
   return {
     identifier: isbnIdentifier,
     isbn_publisher_range_id: isbnPublisherRangeId,
     monograph_publication_manifestation_id: null,
     monograph_identifier_batch_id: null,
-    created: getCurrentTime(),
+    created: currentTime,
     created_by: SYSTEM_USER,
-    modified: getCurrentTime(),
+    modified: currentTime,
     modified_by: SYSTEM_USER,
   };
 }
@@ -168,7 +186,7 @@ export function getNumberOfIsbnIdentifiers(isbnPublisherRange: IsbnPublisherRang
   const { registrant } = getIsbnPublisherIdentifierParts(isbnPublisherRange.publisher_identifier);
 
   // DO NOT ALTER THIS UNLESS YOU ARE FULLY SURE WHAT YOU ARE DOING
-  // Map represents number of ISBN identifiers for given length of registrant in ISBN publisher identifier
+  // Map represents number of ISBN identifiers for given length of registrant in ISBN publisher identifier in Finnish use case
   const registrantIdentifierCountMap: Record<number, number> = {
     1: 100000,
     2: 10000,
