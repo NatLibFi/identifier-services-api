@@ -2,7 +2,7 @@ import HttpStatus from 'http-status';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { generateRangeArray } from '../../utils/generic-utils.ts';
-import { getCurrentTime } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateRowsInserted, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 import {
   canDeleteIsbnPublisherRange,
   generateIsbnIdentifierDbEntry,
@@ -33,10 +33,10 @@ interface IsbnPublisherRangeCreateResult {
 }
 
 export async function createIsbnPublisherRange(
-  isbnPublisherRanceCreateDoc: CreateIsbnPublisherRangeHttp,
+  isbnPublisherRangeCreateDoc: CreateIsbnPublisherRangeHttp,
   user: RequestUser,
 ): Promise<IsbnPublisherRangeCreateResult> {
-  const { publisher_identifier, monograph_publisher_id, isbn_range_id } = isbnPublisherRanceCreateDoc;
+  const { publisher_identifier, monograph_publisher_id, isbn_range_id } = isbnPublisherRangeCreateDoc;
   const db = getKysely();
 
   const isbnRange = await db.selectFrom('isbn_range').selectAll().where('id', '=', isbn_range_id).executeTakeFirst();
@@ -109,26 +109,30 @@ export async function createIsbnPublisherRange(
 
   // Processed within transaction to create ISBN identifiers associated with the ISBN publisher range in batches of 1k
   const result: IsbnPublisherRangeCreateResult = await db.transaction().execute(async (trx) => {
+    const currentTime = getCurrentTime();
+
     // When last ISBN publisher range is assigned, deactivate range
     if (isLastAvailable) {
-      await trx
+      const rangeActiveUpdate = await trx
         .updateTable('isbn_range')
         .set({
           active: false,
           modified_by: user.id,
-          modified: getCurrentTime(),
+          modified: currentTime,
         })
         .where('id', '=', isbn_range_id)
         .executeTakeFirstOrThrow();
+
+      validateRowsUpdatedExact(rangeActiveUpdate, 1);
     }
 
     const isbnPublisherRangeData = {
       publisher_identifier,
       monograph_publisher_id,
       isbn_range_id,
-      created: getCurrentTime(),
+      created: currentTime,
       created_by: user.id,
-      modified: getCurrentTime(),
+      modified: currentTime,
       modified_by: user.id,
     };
 
@@ -137,24 +141,28 @@ export async function createIsbnPublisherRange(
       .values(isbnPublisherRangeData)
       .executeTakeFirstOrThrow();
 
+    validateRowsInserted(result, 1);
+
     const publisherRangeId = Number(result.insertId);
     const numBatches = Math.ceil(associatedIsbnIdentifiers.length / 1000);
 
-    await Promise.all(
-      generateRangeArray(numBatches).map(async (batchIdx) => {
-        const batchStart = 1000 * batchIdx;
-        const batchMaxEnd = batchStart + 1000;
-        const batchEnd =
-          associatedIsbnIdentifiers.length >= batchMaxEnd ? batchMaxEnd : associatedIsbnIdentifiers.length;
+    // Note: do not change to concurrent processing using Promise.all
+    for (const batchIdx of generateRangeArray(numBatches)) {
+      const batchStart = 1000 * batchIdx;
+      const batchMaxEnd = batchStart + 1000;
+      const batchEnd = associatedIsbnIdentifiers.length >= batchMaxEnd ? batchMaxEnd : associatedIsbnIdentifiers.length;
 
-        const batchIdentifiers = associatedIsbnIdentifiers.slice(batchStart, batchEnd);
-        const batchDbEntries = batchIdentifiers.map((identifier) =>
-          generateIsbnIdentifierDbEntry(identifier, publisherRangeId),
-        );
+      const batchIdentifiers = associatedIsbnIdentifiers.slice(batchStart, batchEnd);
+      const batchDbEntries = batchIdentifiers.map((identifier) =>
+        generateIsbnIdentifierDbEntry(identifier, publisherRangeId),
+      );
 
-        await trx.insertInto('isbn_identifier').values(batchDbEntries).execute();
-      }),
-    );
+      const identifierInsertResult = await trx
+        .insertInto('isbn_identifier')
+        .values(batchDbEntries)
+        .executeTakeFirstOrThrow();
+      validateRowsInserted(identifierInsertResult, batchIdentifiers.length);
+    }
 
     return {
       id: publisherRangeId,
@@ -239,7 +247,7 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
     throw new ApiError(
       HttpStatus.CONFLICT,
       'Conflict',
-      `ISBN publisher range id ${isbnPublisherRangeId} cannot be deleted due to an constraint: ${allowRangeDeletion.reason}`,
+      `ISBN publisher range id ${isbnPublisherRangeId} cannot be deleted due to a constraint: ${allowRangeDeletion.reason}`,
     );
   }
 
@@ -255,7 +263,7 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
 
     if (Number(isbnIdentifierResult.numDeletedRows) !== expectedIdentifierDeleteCount) {
       throw new Error(
-        `ISBN identifiers associated with ISBN publisher range were not properly deleted (count after delete was ${Number(isbnIdentifierResult.numDeletedRows)}).`,
+        `Expected ${expectedIdentifierDeleteCount} to be deleted, however ${Number(isbnIdentifierResult.numDeletedRows)} were.`,
       );
     }
 
