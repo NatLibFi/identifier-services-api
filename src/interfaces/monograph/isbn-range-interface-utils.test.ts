@@ -7,7 +7,7 @@ import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../t
 import { createIsbnRangeTable } from '../../test-utils/test-migrations/monograph/isbn-range-test-migrations.ts';
 import { getIsbnRangeConflicts } from './isbn-range-interface-utils.ts';
 
-import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
+import { createKyselySingleton, dropKyselySingleton, getKysely } from '../../db/database.ts';
 
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 
@@ -53,75 +53,93 @@ describe('getIsbnRangeConflicts', async () => {
   });
 
   test('Finds conflict between when ranges overlap (same range length)', async () => {
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '978',
-      registration_group: '951',
-      range_begin: '0',
-      range_end: '1',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '978',
+        registration_group: '951',
+        range_begin: '0',
+        range_end: '1',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsbnRange]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsbnRange]);
+    });
   });
 
   test('Finds conflict between when ranges overlap (different range length) #1', async () => {
-    // Note: range with begin of 1 and end of 2 reserve all publisher identifiers between 10000-19999 due to how item numbering works
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '978',
-      registration_group: '951',
-      range_begin: '19999',
-      range_end: '21999',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      // Note: range with begin of 1 and end of 2 reserve all publisher identifiers between 10000-19999 due to how item numbering works
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '978',
+        registration_group: '951',
+        range_begin: '19999',
+        range_end: '21999',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsbnRange]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsbnRange]);
+    });
   });
 
   test('Finds conflict between when ranges overlap (different range length) #2', async () => {
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '978',
-      registration_group: '951',
-      range_begin: '10',
-      range_end: '19',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '978',
+        registration_group: '951',
+        range_begin: '10',
+        range_end: '19',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsbnRange]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsbnRange]);
+    });
   });
 
   test('Does not find conflict when gs1 does not match', async () => {
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '979',
-      registration_group: '951',
-      range_begin: '0',
-      range_end: '1',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '979',
+        registration_group: '951',
+        range_begin: '0',
+        range_end: '1',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([]);
+    });
   });
 
   test('Does not find conflict when registration_group does not match', async () => {
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '978',
-      registration_group: '952',
-      range_begin: '0',
-      range_end: '1',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '978',
+        registration_group: '952',
+        range_begin: '0',
+        range_end: '1',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([]);
+    });
   });
 
   test('Does not find conflict when gs1 and registration_group matches, but ranges do not overlap', async () => {
-    const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
-      gs1: '978',
-      registration_group: '951',
-      range_begin: '20',
-      range_end: '29',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
+        gs1: '978',
+        registration_group: '951',
+        range_begin: '20',
+        range_end: '29',
+      };
 
-    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
-    expect(result).toStrictEqual([]);
+      const result = await getIsbnRangeConflicts(isbnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([]);
+    });
   });
 });

@@ -15,7 +15,7 @@ import {
   validateRowsUpdatedExact,
 } from '../shared-interface-utils.ts';
 import { assignIsbnIdentifier, getAssignableIsbnIdentifierStrings } from './isbn-identifier-utils.ts';
-import { assignIsmnIdentifier, getAssignableIsmnIdentifiers } from './ismn-identifier-utils.ts';
+import { assignIsmnIdentifier, getAssignableIsmnIdentifierStrings } from './ismn-identifier-utils.ts';
 import {
   changeMonographPublicationRequestState,
   changePublicationRequestPublisher,
@@ -313,7 +313,10 @@ export async function approveMonographPublicationRequest(id: number, user: Reque
 
       // Assign ISMN for all manifestations requiring one that are not cancelled
       if (manifestationsRequiringIsmn) {
-        const ismnIdentifiers = await getAssignableIsmnIdentifiers(publisherId, manifestationsRequiringIsmn.length);
+        const ismnIdentifiers = await getAssignableIsmnIdentifierStrings(
+          publisherId,
+          manifestationsRequiringIsmn.length,
+        );
 
         await Promise.all(
           manifestationsRequiringIsmn.map(async (manifestationId, idx) => {

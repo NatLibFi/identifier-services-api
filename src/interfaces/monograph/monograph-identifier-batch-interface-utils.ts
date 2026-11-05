@@ -4,7 +4,7 @@ import { ApiError } from '../../utils/api-error.ts';
 import { getCurrentTime, validateRowsDeleted, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 import { getBatchIsbnIdentifierIds } from './isbn-identifier-utils.ts';
 import { getIsbnPublisherRangeCategory, getNumberOfIsbnIdentifiers } from './isbn-publisher-range-interface-utils.ts';
-import { getBatchIsmnIdentifiers } from './ismn-identifier-utils.ts';
+import { getBatchIsmnIdentifierIds } from './ismn-identifier-utils.ts';
 import { getIsmnPublisherRangeCategory, getNumberOfIsmnIdentifiers } from './ismn-publisher-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
@@ -119,7 +119,7 @@ export async function createIsmnIdentifierBatch(
   let identifierIds: number[] = [];
 
   try {
-    identifierIds = await getBatchIsmnIdentifiers(ismnPublisherRangeId, identifierCount);
+    identifierIds = await getBatchIsmnIdentifierIds(ismnPublisherRangeId, identifierCount);
   } catch (error) {
     if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
       throw new ApiError(

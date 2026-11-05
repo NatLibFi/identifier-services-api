@@ -3,14 +3,14 @@ import type { Transaction } from 'kysely';
 import { MONOGRAPH_EXPRESSION_TYPES } from '../../constants.ts';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
-import { getCurrentTime } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateRowsUpdatedExact } from '../shared-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
 
 import type { Database } from '../../db/types.ts';
 import type { RequestUser } from '../../generic-types.ts';
 
-export async function getAssignableIsmnIdentifiers(monographPublisherId: number, numberOfIdentifiers: number) {
+export async function getAssignableIsmnIdentifierStrings(monographPublisherId: number, numberOfIdentifiers: number) {
   const db = getKysely();
   const ismnIdentifiers = await db
     .selectFrom('ismn_identifier')
@@ -35,14 +35,14 @@ export async function getAssignableIsmnIdentifiers(monographPublisherId: number,
   return ismnIdentifiers.map(({ identifier }) => identifier);
 }
 
-export async function getBatchIsmnIdentifiers(ismnPublisherRangeId: number, numberOfIdentifiers: number) {
+export async function getBatchIsmnIdentifierIds(ismnPublisherRangeId: number, numberOfIdentifiers: number) {
   const db = getKysely();
   const ismnIdentifiers = await db
     .selectFrom('ismn_identifier')
     .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
     .selectAll('ismn_identifier')
     .select('ismn_publisher_range.id as ismn_publisher_range_id')
-    .where('ismn_publisher_range_id', '=', ismnPublisherRangeId)
+    .where('ismn_identifier.ismn_publisher_range_id', '=', ismnPublisherRangeId)
     .where('ismn_identifier.monograph_publication_manifestation_id', 'is', null)
     .where('ismn_identifier.monograph_identifier_batch_id', 'is', null)
     .orderBy('ismn_identifier.identifier', 'asc')
@@ -59,7 +59,7 @@ export async function getBatchIsmnIdentifiers(ismnPublisherRangeId: number, numb
   return ismnIdentifiers.map(({ id }) => id);
 }
 
-export async function getAssignableIsmnIdentifier(manifestationId: number) {
+export async function getAssignableIsmnIdentifierString(manifestationId: number) {
   const db = getKysely();
   const manifestation = await db
     .selectFrom('monograph_publication_manifestation')
@@ -82,6 +82,13 @@ export async function getAssignableIsmnIdentifier(manifestationId: number) {
   if (!manifestation.monograph_publisher_id) {
     throw new Error(`Monograph publisher was not defined for manifestation id ${manifestationId}`, {
       cause: 'No publisher defined',
+    });
+  }
+
+  // Sanity check: cannot assign ISMN for cancelled manifestation
+  if (manifestation.cancelled) {
+    throw new Error(`Monograph publication manifestation id ${manifestationId} is cancelled`, {
+      cause: 'Manifestation cancelled',
     });
   }
 
@@ -114,8 +121,7 @@ export async function assignIsmnIdentifier(
   trx: Transaction<Database>,
   user: RequestUser,
 ) {
-  const db = getKysely();
-  const ismnIdentifier = await db
+  const ismnIdentifier = await trx
     .selectFrom('ismn_identifier')
     .leftJoin('ismn_publisher_range', 'ismn_publisher_range.id', 'ismn_identifier.ismn_publisher_range_id')
     .selectAll('ismn_identifier')
@@ -134,7 +140,7 @@ export async function assignIsmnIdentifier(
   }
 
   // Sanity check identifier publisher range belongs to manifestation expression publication
-  const manifestation = await db
+  const manifestation = await trx
     .selectFrom('monograph_publication_manifestation')
     .leftJoin(
       'monograph_publication_expression',
@@ -162,17 +168,16 @@ export async function assignIsmnIdentifier(
   // Sanity check: monograph_publisher_id is same for manifestation and ISMN identifier
   if (manifestation.monograph_publisher_id !== ismnIdentifier.monograph_publisher_id) {
     throw new Error(
-      `Cannot allocate manifestation id ${manifestationId} ISMN identifier id ${identifierString} because it does not belong the monograph publisher that the manifestation belongs to`,
+      `Cannot allocate manifestation id ${manifestationId} ISMN identifier ${identifierString} because it does not belong the monograph publisher that the manifestation belongs to`,
       { cause: 'Mismatching publisher between ISMN identifier and manifestation' },
     );
   }
 
-  // Sanity check: cannot assign identifier that has already been assigned
-  if (ismnIdentifier.monograph_publication_manifestation_id !== null) {
-    throw new Error(
-      `Cannot allocate manifestation id ${manifestationId} ISMN identifier ${identifierString} because the identifier has been used by manifestation id ${ismnIdentifier.monograph_publication_manifestation_id}`,
-      { cause: 'ISMN already assigned' },
-    );
+  // Sanity check: cannot assign ISMN for cancelled manifestation
+  if (manifestation.cancelled) {
+    throw new Error(`Monograph publication manifestation id ${manifestationId} is cancelled`, {
+      cause: 'Manifestation cancelled',
+    });
   }
 
   // Important note for future implementations: ISMN identifier assignment check is skipped because expression type check should exist in both ISMN and ISMN assignation functions
@@ -198,17 +203,16 @@ export async function assignIsmnIdentifier(
       modified_by: user.id,
     })
     .where('id', '=', ismnIdentifier.id)
+    .where('monograph_publication_manifestation_id', 'is', null) // optimistic guard
     .executeTakeFirstOrThrow();
 
-  if (Number(assignResult.numUpdatedRows) !== 1) {
-    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-  }
+  validateRowsUpdatedExact(assignResult, 1);
 
   return;
 }
 
-export async function deassignIsmnIdentifier(manifestationId: number, trx: Transaction<Database>, user: RequestUser) {
-  const assignResult = await trx
+export async function revokeIsmnIdentifier(manifestationId: number, trx: Transaction<Database>, user: RequestUser) {
+  const revokeResult = await trx
     .updateTable('ismn_identifier')
     .set({
       monograph_publication_manifestation_id: null,
@@ -216,11 +220,10 @@ export async function deassignIsmnIdentifier(manifestationId: number, trx: Trans
       modified_by: user.id,
     })
     .where('monograph_publication_manifestation_id', '=', manifestationId)
+    .where('monograph_identifier_batch_id', 'is', null) // Sanity check
     .executeTakeFirstOrThrow();
 
-  if (Number(assignResult.numUpdatedRows) !== 1) {
-    throw new Error('Unexpected number of rows would have been updated. Throw error to initialize rollback.');
-  }
+  validateRowsUpdatedExact(revokeResult, 1);
 
   return;
 }
@@ -265,10 +268,6 @@ export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
     throw new Error("Item element is not defined and it's a required element in ISMN identifier");
   }
 
-  if (item_element.length < 1) {
-    throw new Error(`Item element ${item_element} is too short for ISMN identifier (minimum length: 1)`);
-  }
-
   if (item_element.length > 5) {
     throw new Error(`Item element ${item_element} is too long for ISMN identifier (maximum length: 5)`);
   }
@@ -296,7 +295,7 @@ export function validateIsmnIdentifier(ismnIdentifierWithDashes: string): void {
     );
   }
 
-  if (!/^[0-9]{1}$/.test(check_digit) || isNaN(Number(check_digit))) {
+  if (!/^[0-9]{1}$/.test(check_digit)) {
     throw new Error(`Item check digit ${check_digit} must be a number`);
   }
 

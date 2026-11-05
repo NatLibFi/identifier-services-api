@@ -48,6 +48,10 @@ export async function createIsbnPublisherRange(
     );
   }
 
+  if (!isbnRange.active) {
+    throw new ApiError(HttpStatus.CONFLICT, 'Conflict', `Selected ISBN range id ${isbn_range_id} is not active.`);
+  }
+
   if (!isbnPublisherRangeContainsIdentifier(isbnRange, publisher_identifier)) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -56,6 +60,8 @@ export async function createIsbnPublisherRange(
     );
   }
 
+  // TODO: fix to utilize locked read within transaction
+  // Currently concurrent assignments can result into invalid value for 'active'
   const availableIsbnRangePublisherRanges = await getAvailableIsbnPublisherRanges(isbnRange);
   const isAvailable = availableIsbnRangePublisherRanges.includes(publisher_identifier);
   const isLastAvailable = availableIsbnRangePublisherRanges.filter((v) => v !== publisher_identifier).length === 0;
@@ -91,6 +97,8 @@ export async function createIsbnPublisherRange(
   }
 
   // Sanity check: publisher identifier does not exist in DB yet
+  // TODO: concurrent creates may race past this check. They will run into UNIQUE check in DB level and produce unknown error.
+  // Fix issue and rise ApiError with CONFLICT status instead
   const existingIsbnPublisherRange = await db
     .selectFrom('isbn_publisher_range')
     .selectAll()
@@ -161,6 +169,7 @@ export async function createIsbnPublisherRange(
         .insertInto('isbn_identifier')
         .values(batchDbEntries)
         .executeTakeFirstOrThrow();
+
       validateRowsInserted(identifierInsertResult, batchIdentifiers.length);
     }
 
@@ -241,8 +250,9 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
   const db = getKysely();
 
   const isbnPublisherRange = await readIsbnPublisherRange(isbnPublisherRangeId);
-
   const allowRangeDeletion = await canDeleteIsbnPublisherRange(isbnPublisherRange);
+
+  // TODO: fix to locked read within transaction. Current version degrades to FK-violation and produces generic API error
   if (allowRangeDeletion.result === false) {
     throw new ApiError(
       HttpStatus.CONFLICT,
@@ -263,7 +273,7 @@ export async function deleteIsbnPublisherRange(isbnPublisherRangeId: number) {
 
     if (Number(isbnIdentifierResult.numDeletedRows) !== expectedIdentifierDeleteCount) {
       throw new Error(
-        `Expected ${expectedIdentifierDeleteCount} to be deleted, however ${Number(isbnIdentifierResult.numDeletedRows)} were.`,
+        `Expected ${expectedIdentifierDeleteCount} ISBN identifiers to be deleted, however ${Number(isbnIdentifierResult.numDeletedRows)} were.`,
       );
     }
 

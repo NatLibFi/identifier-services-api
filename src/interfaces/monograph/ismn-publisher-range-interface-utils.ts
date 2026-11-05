@@ -140,14 +140,16 @@ export function generateIsmnIdentifierDbEntry(
   ismnIdentifier: string,
   ismnPublisherRangeId: number,
 ): IsmnIdentifierInsert {
+  const currentTime = getCurrentTime();
+
   return {
     identifier: ismnIdentifier,
     ismn_publisher_range_id: ismnPublisherRangeId,
     monograph_publication_manifestation_id: null,
     monograph_identifier_batch_id: null,
-    created: getCurrentTime(),
+    created: currentTime,
     created_by: SYSTEM_USER,
-    modified: getCurrentTime(),
+    modified: currentTime,
     modified_by: SYSTEM_USER,
   };
 }

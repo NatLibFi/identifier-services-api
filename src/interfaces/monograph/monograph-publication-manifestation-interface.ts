@@ -25,7 +25,11 @@ import {
   revokeIsbnIdentifier,
   getAssignableIsbnIdentifierString,
 } from './isbn-identifier-utils.ts';
-import { assignIsmnIdentifier, deassignIsmnIdentifier, getAssignableIsmnIdentifier } from './ismn-identifier-utils.ts';
+import {
+  assignIsmnIdentifier,
+  revokeIsmnIdentifier,
+  getAssignableIsmnIdentifierString,
+} from './ismn-identifier-utils.ts';
 import { getExpressionIdentifierType } from './monograph-identifier-utils.ts';
 import { validateAddManifestationRequest } from './monograph-publication-manifestation-interface-utils.ts';
 import { changeStatusNewToProcessed } from './monograph-publication-request-interface-utils.ts';
@@ -317,7 +321,7 @@ export async function assignManifestationIdentifier(manifestationId: number, use
     }
 
     if (identifierType === MONOGRAPH_IDENTIFIERS.ISMN) {
-      const ismnIdentifier = await getAssignableIsmnIdentifier(manifestationId);
+      const ismnIdentifier = await getAssignableIsmnIdentifierString(manifestationId);
 
       await db.transaction().execute(async (trx) => {
         await assignIsmnIdentifier(manifestationId, ismnIdentifier, trx, user);
@@ -440,7 +444,7 @@ export async function deassignManifestationIdentifier(id: number, user: RequestU
 
     if (identifierType === MONOGRAPH_IDENTIFIERS.ISMN) {
       await db.transaction().execute(async (trx) => {
-        await deassignIsmnIdentifier(id, trx, user);
+        await revokeIsmnIdentifier(id, trx, user);
       });
 
       return readMonographPublicationManifestation(id);
