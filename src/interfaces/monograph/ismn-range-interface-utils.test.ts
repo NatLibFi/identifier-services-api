@@ -6,9 +6,9 @@ import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/
 import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../test-utils/test-constants.ts';
 
 import { createIsmnRangeTable } from '../../test-utils/test-migrations/monograph/ismn-range-test-migrations.ts';
-import { getIsmnRangeConflict } from './ismn-range-interface-utils.ts';
+import { getIsmnRangeConflicts } from './ismn-range-interface-utils.ts';
 
-import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
+import { createKyselySingleton, dropKyselySingleton, getKysely } from '../../db/database.ts';
 
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
 
@@ -54,63 +54,78 @@ describe('getIsmnRangeConflicts', async () => {
   });
 
   test('Finds conflict between when ranges overlap (same range length)', async () => {
-    const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
-      gs1: ISMN_VALID_GS1['979'],
-      registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
-      range_begin: '0',
-      range_end: '1',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
+        gs1: ISMN_VALID_GS1['979'],
+        registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
+        range_begin: '0',
+        range_end: '1',
+      };
 
-    const result = await getIsmnRangeConflict(ismnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsmnRange]);
+      const result = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsmnRange]);
+    });
   });
 
   test('Finds conflict between when ranges overlap (different range length) #1', async () => {
-    // Note: range with begin of 1 and end of 2 takes essentially all publisher identifiers between 10000-19999
-    const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
-      gs1: ISMN_VALID_GS1['979'],
-      registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
-      range_begin: '19999',
-      range_end: '21999',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      // Note: range with begin of 1 and end of 2 takes essentially all publisher identifiers between 10000-19999
+      const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
+        gs1: ISMN_VALID_GS1['979'],
+        registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
+        range_begin: '19999',
+        range_end: '21999',
+      };
 
-    const result = await getIsmnRangeConflict(ismnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsmnRange]);
+      const result = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsmnRange]);
+    });
   });
 
   test('Finds conflict between when ranges overlap (different range length) #2', async () => {
-    const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
-      gs1: ISMN_VALID_GS1['979'],
-      registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
-      range_begin: '10',
-      range_end: '19',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
+        gs1: ISMN_VALID_GS1['979'],
+        registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
+        range_begin: '10',
+        range_end: '19',
+      };
 
-    const result = await getIsmnRangeConflict(ismnRangeCreateDoc);
-    expect(result).toStrictEqual([initialIsmnRange]);
+      const result = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([initialIsmnRange]);
+    });
   });
 
   test('Does not find conflict when registration_group does not match', async () => {
-    const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
-      gs1: ISMN_VALID_GS1['979'],
-      registration_group: '2', // Unallocated for now, but might be allocated to ISMN in future
-      range_begin: '0',
-      range_end: '1',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
+        gs1: ISMN_VALID_GS1['979'],
+        registration_group: '2', // Unallocated for now, but might be allocated to ISMN in future
+        range_begin: '0',
+        range_end: '1',
+      };
 
-    const result = await getIsmnRangeConflict(ismnRangeCreateDoc);
-    expect(result).toStrictEqual([]);
+      const result = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([]);
+    });
   });
 
   test('Does not find conflict when gs1 and registration_group matches, but ranges do not overlap', async () => {
-    const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
-      gs1: ISMN_VALID_GS1['979'],
-      registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
-      range_begin: '20',
-      range_end: '29',
-    };
+    const db = getKysely();
+    await db.transaction().execute(async (trx) => {
+      const ismnRangeCreateDoc: CreateIsmnRangeHttp = {
+        gs1: ISMN_VALID_GS1['979'],
+        registration_group: ISMN_VALID_REGISTRATION_GROUPS['0'],
+        range_begin: '20',
+        range_end: '29',
+      };
 
-    const result = await getIsmnRangeConflict(ismnRangeCreateDoc);
-    expect(result).toStrictEqual([]);
+      const result = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
+      expect(result).toStrictEqual([]);
+    });
   });
 });

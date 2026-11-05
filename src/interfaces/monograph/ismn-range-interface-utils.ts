@@ -7,10 +7,11 @@ import { getKysely } from '../../db/database.ts';
 
 import type { IsmnRangeSelect } from '../../db/types/monograph/types-ismn-range.ts';
 import type { CreateIsmnRangeHttp } from '../../validations/monograph/ismn-range-validation.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
-export async function getIsmnRangeConflict(ismnRangeCreateDoc: CreateIsmnRangeHttp) {
-  const db = getKysely();
-  const currentIsmnRanges = await db.selectFrom('ismn_range').selectAll().execute();
+export async function getIsmnRangeConflicts(ismnRangeCreateDoc: CreateIsmnRangeHttp, trx: Transaction<Database>) {
+  const currentIsmnRanges = await trx.selectFrom('ismn_range').selectAll().forUpdate().execute();
 
   const conflictingRanges = currentIsmnRanges.filter((currentIsmnRange) => {
     const gs1Matches = currentIsmnRange.gs1 === ismnRangeCreateDoc.gs1;

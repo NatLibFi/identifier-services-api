@@ -3,11 +3,17 @@ import HttpStatus from 'http-status';
 import { ISMN_VALID_GS1, ISMN_VALID_REGISTRATION_GROUPS } from '../../constants/monograph/ismn-constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
-import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import {
+  getCurrentTime,
+  validateGetById,
+  validateRowsDeleted,
+  validateRowsInserted,
+  validateRowsUpdatedExact,
+} from '../shared-interface-utils.ts';
 import {
   getAllIsmnPublisherRanges,
   getAvailableIsmnPublisherRanges,
-  getIsmnRangeConflict,
+  getIsmnRangeConflicts,
 } from './ismn-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
@@ -41,53 +47,57 @@ export async function getIsmnRanges() {
 }
 
 export async function createIsmnRange(ismnRangeCreateDoc: CreateIsmnRangeHttp, user: RequestUser) {
-  const conflictingIsmnRanges = await getIsmnRangeConflict(ismnRangeCreateDoc);
-
-  if (conflictingIsmnRanges.length > 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISMN range cannot be created due to conflict between existing ISMN ranges (ids: ${conflictingIsmnRanges.map(({ id }) => id).join(', ')})`,
-    );
-  }
-
   const { gs1, registration_group, range_begin, range_end } = ismnRangeCreateDoc;
-
-  // Sanity check for ISMN gs1 and registration_group even though API validation should always take care of these
-  if (gs1 !== ISMN_VALID_GS1['979']) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `ISMN range cannot have other gs1 definition than ${ISMN_VALID_GS1['979']}`,
-    );
-  }
-
-  if (registration_group !== ISMN_VALID_REGISTRATION_GROUPS['0']) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `ISMN range cannot have other registration_group definition than ${ISMN_VALID_REGISTRATION_GROUPS['0']}`,
-    );
-  }
-
   const db = getKysely();
 
-  const result = await db
-    .insertInto('ismn_range')
-    .values({
-      gs1,
-      registration_group,
-      range_begin,
-      range_end,
-      active: true,
-      created: getCurrentTime(),
-      created_by: user.id,
-      modified: getCurrentTime(),
-      modified_by: user.id,
-    })
-    .executeTakeFirstOrThrow();
+  const result = await db.transaction().execute(async (trx) => {
+    const conflictingIsmnRanges = await getIsmnRangeConflicts(ismnRangeCreateDoc, trx);
 
-  return { id: Number(result.insertId) };
+    if (conflictingIsmnRanges.length > 0) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN range cannot be created due to conflict between existing ISMN ranges (ids: ${conflictingIsmnRanges.map(({ id }) => id).join(', ')})`,
+      );
+    }
+
+    // Sanity check for ISMN gs1 and registration_group even though API validation should always take care of these
+    if (gs1 !== ISMN_VALID_GS1['979']) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `ISMN range cannot have other gs1 definition than ${ISMN_VALID_GS1['979']}`,
+      );
+    }
+
+    if (registration_group !== ISMN_VALID_REGISTRATION_GROUPS['0']) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `ISMN range cannot have other registration_group definition than ${ISMN_VALID_REGISTRATION_GROUPS['0']}`,
+      );
+    }
+
+    const createResult = await trx
+      .insertInto('ismn_range')
+      .values({
+        gs1,
+        registration_group,
+        range_begin,
+        range_end,
+        active: true,
+        created: getCurrentTime(),
+        created_by: user.id,
+        modified: getCurrentTime(),
+        modified_by: user.id,
+      })
+      .executeTakeFirstOrThrow();
+
+    validateRowsInserted(createResult, 1);
+    return Number(createResult.insertId);
+  });
+
+  return { id: result };
 }
 
 export async function readIsmnRange(id: number): Promise<IsmnRangeAdminRead> {
@@ -119,57 +129,83 @@ export async function deleteIsmnRange(id: number) {
   // Read to confirm range exists - this will also take care of returning 404
   await readIsmnRange(id);
 
-  const { count: numAssociatedPublisherRanges } = await db
-    .selectFrom('ismn_publisher_range')
-    .select(db.fn.countAll<number>().as('count'))
-    .where('ismn_range_id', '=', id)
-    .executeTakeFirstOrThrow();
+  await db.transaction().execute(async (trx) => {
+    const { count: numAssociatedPublisherRanges } = await trx
+      .selectFrom('ismn_publisher_range')
+      .select(trx.fn.countAll<number>().as('count'))
+      .where('ismn_range_id', '=', id)
+      .executeTakeFirstOrThrow();
 
-  if (numAssociatedPublisherRanges !== 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISMN range id ${id} has ${numAssociatedPublisherRanges} associated ISMN publisher ranges.`,
-    );
-  }
+    if (numAssociatedPublisherRanges !== 0) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN range id ${id} has ${numAssociatedPublisherRanges} associated ISMN publisher ranges.`,
+      );
+    }
 
-  await db.deleteFrom('ismn_range').where('id', '=', id).executeTakeFirstOrThrow();
+    const deleteResult = await trx.deleteFrom('ismn_range').where('id', '=', id).executeTakeFirstOrThrow();
+    validateRowsDeleted(deleteResult, 1);
+  });
 
   return;
 }
 
 export async function processIsmnRangeActiveEdit(id: number, active: boolean, user: RequestUser) {
-  const currentRange = await readIsmnRange(id);
-
-  const noStateChange =
-    (active === true && currentRange.active === true) || (active === false && currentRange.active === false);
-
-  if (noStateChange) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISMN range id ${currentRange.id} has already active=${active}`,
-    );
-  }
-
-  if (active && currentRange.available_publisher_ranges.length === 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `Cannot activate ISMN range id ${currentRange.id} as it does not have any more available ISMN publisher ranges.`,
-    );
-  }
-
   const db = getKysely();
-  await db
-    .updateTable('ismn_range')
-    .set({
-      active,
-      modified_by: user.id,
-      modified: getCurrentTime(),
-    })
-    .where('id', '=', currentRange.id)
-    .executeTakeFirstOrThrow();
+
+  await db.transaction().execute(async (trx) => {
+    const dbResult = await trx
+      .selectFrom('ismn_range')
+      .selectAll()
+      .where('id', '=', id)
+      .forUpdate() // lock row
+      .execute();
+
+    const currentRange = validateGetById<IsmnRangeSelect>(dbResult);
+
+    const noStateChange =
+      (active === true && currentRange.active === true) || (active === false && currentRange.active === false);
+
+    if (noStateChange) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN range id ${currentRange.id} has already active=${active}`,
+      );
+    }
+
+    if (active) {
+      const { taken } = await trx
+        .selectFrom('ismn_publisher_range')
+        .select(trx.fn.countAll<number>().as('taken'))
+        .where('ismn_range_id', '=', id)
+        .executeTakeFirstOrThrow();
+
+      const rangeMaxPublisherRanges = getAllIsmnPublisherRanges(currentRange).length;
+
+      // Sanity check: if number of taken ranges is equal to number of publisher ranges that may be given from the range, the range cannot be set to active
+      if (taken === rangeMaxPublisherRanges) {
+        throw new ApiError(
+          HttpStatus.CONFLICT,
+          'Conflict',
+          `Cannot activate ISMN range id ${currentRange.id} as it does not have any more available ISMN publisher ranges.`,
+        );
+      }
+    }
+
+    const updateResult = await trx
+      .updateTable('ismn_range')
+      .set({
+        active,
+        modified_by: user.id,
+        modified: getCurrentTime(),
+      })
+      .where('id', '=', currentRange.id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(updateResult, 1);
+  });
 
   return;
 }
@@ -180,72 +216,83 @@ export async function processIsmnRangeEdit(
   range_end: string | undefined,
   user: RequestUser,
 ) {
-  const currentRange = await readIsmnRange(id);
-
-  // Verify range adjustment does not conflict with other existing ranges
-  const proposedRangeEdit = {
-    gs1: currentRange.gs1,
-    registration_group: currentRange.registration_group,
-    range_begin: range_begin || currentRange.range_begin,
-    range_end: range_end || currentRange.range_end,
-  };
-
-  // Sanity check: verify there would be adjustment (API validation should confirm this, but just in case)
-  const rangeBeginAdjusted = proposedRangeEdit.range_begin !== currentRange.range_begin;
-  const rangeEndAdjusted = proposedRangeEdit.range_end !== currentRange.range_end;
-
-  if (!rangeBeginAdjusted && !rangeEndAdjusted) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `ISMN range id ${id} range_begin and range_edit would not have been adjusted. Refusing to process noop.`,
-    );
-  }
-
-  // Validate proposed outcome
-  const proposedBeginNumber = Number(proposedRangeEdit.range_begin);
-  const proposedEndNumber = Number(proposedRangeEdit.range_end);
-
-  if (proposedBeginNumber > proposedEndNumber) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `ISMN range id ${id} range adjustment is invalid: range_begin must not exceed range_end.`,
-    );
-  }
-
-  // Sanity check: length must remain equal
-  if (proposedRangeEdit.range_begin.length !== proposedRangeEdit.range_end.length) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      `ISMN range id ${id} range adjustment is invalid: range_begin must have equal length with range_end.`,
-    );
-  }
-
-  // Find potential conflicts with other ranges that what is being processed
-  const conflictingIsmnRanges = await getIsmnRangeConflict(proposedRangeEdit);
-  const filteredConflictingIsmnRanges = conflictingIsmnRanges.filter((ismnRange) => ismnRange.id !== currentRange.id);
-
-  if (filteredConflictingIsmnRanges.length > 0) {
-    throw new ApiError(
-      HttpStatus.CONFLICT,
-      'Conflict',
-      `ISMN range cannot be created due to conflict between existing ISMN ranges (ids: ${filteredConflictingIsmnRanges.map(({ id }) => id).join(', ')})`,
-    );
-  }
-
   const db = getKysely();
-  await db
-    .updateTable('ismn_range')
-    .set({
-      range_begin,
-      range_end,
-      modified_by: user.id,
-      modified: getCurrentTime(),
-    })
-    .where('id', '=', id)
-    .executeTakeFirstOrThrow();
+  await db.transaction().execute(async (trx) => {
+    const dbResult = await trx
+      .selectFrom('ismn_range')
+      .selectAll()
+      .where('id', '=', id)
+      .forUpdate() // lock row
+      .execute();
+
+    const currentRange = validateGetById<IsmnRangeSelect>(dbResult);
+
+    // Verify range adjustment does not conflict with other existing ranges
+    const proposedRangeEdit = {
+      gs1: currentRange.gs1,
+      registration_group: currentRange.registration_group,
+      range_begin: range_begin || currentRange.range_begin,
+      range_end: range_end || currentRange.range_end,
+    };
+
+    // Sanity check: verify there would be adjustment (API validation should confirm this, but just in case)
+    const rangeBeginAdjusted = proposedRangeEdit.range_begin !== currentRange.range_begin;
+    const rangeEndAdjusted = proposedRangeEdit.range_end !== currentRange.range_end;
+
+    if (!rangeBeginAdjusted && !rangeEndAdjusted) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `ISMN range id ${id} range_begin and range_end would not have been adjusted. Refusing to process noop.`,
+      );
+    }
+
+    // Validate proposed outcome
+    const proposedBeginNumber = Number(proposedRangeEdit.range_begin);
+    const proposedEndNumber = Number(proposedRangeEdit.range_end);
+
+    if (proposedBeginNumber > proposedEndNumber) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `ISMN range id ${id} range adjustment is invalid: range_begin must not exceed range_end.`,
+      );
+    }
+
+    // Sanity check: length must remain equal
+    if (proposedRangeEdit.range_begin.length !== proposedRangeEdit.range_end.length) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        `ISMN range id ${id} range adjustment is invalid: range_begin must have equal length with range_end.`,
+      );
+    }
+
+    // Find potential conflicts with other ranges that what is being processed
+    const conflictingIsmnRanges = await getIsmnRangeConflicts(proposedRangeEdit, trx);
+    const filteredConflictingIsmnRanges = conflictingIsmnRanges.filter((ismnRange) => ismnRange.id !== currentRange.id);
+
+    if (filteredConflictingIsmnRanges.length > 0) {
+      throw new ApiError(
+        HttpStatus.CONFLICT,
+        'Conflict',
+        `ISMN range cannot be updated due to conflict between existing ISMN ranges (ids: ${filteredConflictingIsmnRanges.map(({ id }) => id).join(', ')})`,
+      );
+    }
+
+    const updateResult = await trx
+      .updateTable('ismn_range')
+      .set({
+        range_begin: proposedRangeEdit.range_begin,
+        range_end: proposedRangeEdit.range_end,
+        modified_by: user.id,
+        modified: getCurrentTime(),
+      })
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+
+    validateRowsUpdatedExact(updateResult, 1);
+  });
 
   return;
 }
