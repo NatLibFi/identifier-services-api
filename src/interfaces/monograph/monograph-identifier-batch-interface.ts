@@ -6,7 +6,7 @@ import { MONOGRAPH_IDENTIFIERS } from '../../constants.ts';
 
 import { ApiError } from '../../utils/api-error.ts';
 import { isProduction } from '../../utils/generic-utils.ts';
-import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
+import { getCurrentTime, validateGetById, validateRowsInserted } from '../shared-interface-utils.ts';
 import {
   createIsbnIdentifierBatch,
   createIsmnIdentifierBatch,
@@ -82,7 +82,7 @@ export async function readPublicMonographIdentifierBatch(batchId: number) {
   }
 
   const batchPublicInfo = {
-    id: batchId,
+    id: result.id,
     monograph_publisher_name: result.monograph_publisher_name,
     identifier_type: identifierType,
     identifier_count: identifierCount,
@@ -103,6 +103,7 @@ export async function createMonographIdentifierBatch(
     return await createIsmnIdentifierBatch(ismn_publisher_range_id, identifier_count, user);
   }
 
+  // Should be unreachable: defense in-depth
   throw new ApiError(
     HttpStatus.UNPROCESSABLE_ENTITY,
     'Unprocessable entity',
@@ -111,41 +112,48 @@ export async function createMonographIdentifierBatch(
 }
 
 export async function deleteMonographIdentifierBatch(batchId: number, user: RequestUser) {
-  // Const verify batch exists through read
+  // verify batch exists through read
   const identifierBatch = await readMonographIdentifierBatch(batchId);
 
-  // Guard against removing batch that is in use
-  // Note: this guard does allow old batches of which system does not contain messages of to be deleted
-  const hasAssociatedMessages = await identifierBatchHasMessages(batchId);
-  if (hasAssociatedMessages) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      'Identifier batch has been sent as message and thus cannot be deleted.',
-    );
-  }
+  const db = getKysely();
 
-  const hasAssociatedDownloads = await identifierBatchHasDownloads(batchId);
-  if (hasAssociatedDownloads) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      'Identifier batch has been downloaded by an user and thus cannot be deleted.',
-    );
-  }
+  await db.transaction().execute(async (trx) => {
+    // Guard against removing batch that is in use
+    // Note: this guard does allow old batches of which system does not contain messages of to be deleted
+    const hasAssociatedMessages = await identifierBatchHasMessages(batchId, trx);
+    if (hasAssociatedMessages) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        'Identifier batch has been sent as message and thus cannot be deleted.',
+      );
+    }
 
-  // Publisher assigned identifiers have both: batch_id and publication_id
-  // Having batch_id is pre-requisite for publisher to be able to assign identifiers
-  const hasAssociatedPublisherAssignedIdentifiers = await identifierBatchHasPublisherPublicationAssignations(batchId);
-  if (hasAssociatedPublisherAssignedIdentifiers) {
-    throw new ApiError(
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      'Unprocessable entity',
-      'Identifier batch identifiers has already assigned by publisher and thus cannot be deleted.',
-    );
-  }
+    const hasAssociatedDownloads = await identifierBatchHasDownloads(batchId, trx);
+    if (hasAssociatedDownloads) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        'Identifier batch has been downloaded by a user and thus cannot be deleted.',
+      );
+    }
 
-  await deleteIdentifierBatch(identifierBatch, user);
+    // Publisher assigned identifiers have both: batch_id and publication_id
+    // Having batch_id is pre-requisite for publisher to be able to assign identifiers
+    const hasAssociatedPublisherAssignedIdentifiers = await identifierBatchHasPublisherPublicationAssignations(
+      batchId,
+      trx,
+    );
+    if (hasAssociatedPublisherAssignedIdentifiers) {
+      throw new ApiError(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'Unprocessable entity',
+        'Identifier batch identifiers has already assigned by publisher and thus cannot be deleted.',
+      );
+    }
+
+    await deleteIdentifierBatch(identifierBatch, user, trx);
+  });
 
   return;
 }
@@ -153,7 +161,7 @@ export async function deleteMonographIdentifierBatch(batchId: number, user: Requ
 export async function downloadMonographIdentifierBatch(batchId: number) {
   const identifierBatch = await readMonographIdentifierBatch(batchId);
   const identifiers = await getIdentifierBatchIdentifiers(identifierBatch);
-  const monographPublisher = await readMonographPublisher(identifierBatch.monograph_publisher_id);
+  const monographPublisher = await readMonographPublisher(identifierBatch.monograph_publisher_id, undefined);
 
   const db = getKysely();
   const containsPublisherAssignedPublication = identifiers.some(
@@ -184,17 +192,21 @@ export async function downloadMonographIdentifierBatch(batchId: number) {
   }
 
   const resultBody = identifiers.reduce((acc: string, { identifier }) => `${acc}${identifier}\r\n`, '');
-  const sha256sum = createHash('sha256').update(resultBody).digest('hex');
+  const sha256sum = createHash('sha256').update(resultBody).digest('hex'); // Note: checksum covers identifiers only
 
   // Save download entry to db
-  await db
-    .insertInto('monograph_identifier_batch_download')
-    .values({
-      monograph_identifier_batch_id: batchId,
-      sha256sum,
-      created: getCurrentTime(),
-    })
-    .executeTakeFirstOrThrow();
+  await db.transaction().execute(async (trx) => {
+    const createBatchDownloadResult = await trx
+      .insertInto('monograph_identifier_batch_download')
+      .values({
+        monograph_identifier_batch_id: batchId,
+        sha256sum,
+        created: getCurrentTime(),
+      })
+      .executeTakeFirstOrThrow();
+
+    validateRowsInserted(createBatchDownloadResult, 1);
+  });
 
   return `${headerText}${resultBody}`;
 }

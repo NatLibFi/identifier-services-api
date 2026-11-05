@@ -35,9 +35,12 @@ export async function getAssignableIsbnIdentifierStrings(monographPublisherId: n
   return isbnIdentifiers.map(({ identifier }) => identifier);
 }
 
-export async function getBatchIsbnIdentifierIds(isbnPublisherRangeId: number, numberOfIdentifiers: number) {
-  const db = getKysely();
-  const isbnIdentifiers = await db
+export async function getBatchIsbnIdentifierIds(
+  isbnPublisherRangeId: number,
+  numberOfIdentifiers: number,
+  trx: Transaction<Database>,
+) {
+  const isbnIdentifiers = await trx
     .selectFrom('isbn_identifier')
     .leftJoin('isbn_publisher_range', 'isbn_publisher_range.id', 'isbn_identifier.isbn_publisher_range_id')
     .selectAll('isbn_identifier')
@@ -47,6 +50,7 @@ export async function getBatchIsbnIdentifierIds(isbnPublisherRangeId: number, nu
     .where('isbn_identifier.monograph_identifier_batch_id', 'is', null)
     .orderBy('isbn_identifier.identifier', 'asc')
     .limit(numberOfIdentifiers)
+    .forUpdate() // lock for batch creation
     .execute();
 
   if (isbnIdentifiers.length < numberOfIdentifiers) {

@@ -18,6 +18,8 @@ import type {
   MonographIdentifierBatchSelect,
 } from '../../db/types/monograph/types-monograph-identifier-batch.ts';
 import type { RequestUser } from '../../generic-types.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
 export async function createIsbnIdentifierBatch(
   isbnPublisherRangeId: number,
@@ -34,37 +36,39 @@ export async function createIsbnIdentifierBatch(
     throw new ApiError(
       HttpStatus.UNPROCESSABLE_ENTITY,
       'Unprocessable entity',
-      'Cannot generate batch for category 5 ISBN publisher range (only available for category 4 and above).',
+      'Cannot generate batch for category 5 ISBN publisher range (only available for category 1-4).',
     );
   }
 
   let identifierIds: number[] = [];
 
-  try {
-    identifierIds = await getBatchIsbnIdentifierIds(isbnPublisherRangeId, identifierCount);
-  } catch (error) {
-    if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
+  // Do operation within transaction
+  const result = await db.transaction().execute(async (trx) => {
+    const currentTime = getCurrentTime();
+
+    try {
+      identifierIds = await getBatchIsbnIdentifierIds(isbnPublisherRangeId, identifierCount, trx);
+    } catch (error) {
+      if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
+        throw new ApiError(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'Unprocessable entity',
+          `${identifierCount} ISBN identifiers cannot be provided from ISBN publisher range id ${isbnPublisherRangeId} (${isbnPublisherRange.publisher_identifier}).`,
+        );
+      }
+
       throw new ApiError(
-        HttpStatus.UNPROCESSABLE_ENTITY,
-        'Unprocessable entity',
-        `${identifierCount} ISBN identifiers cannot be provided from ISBN publisher range id ${isbnPublisherRangeId} (${isbnPublisherRange.publisher_identifier}).`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        'Unknown error occurred during attempting to gather ISBN identifiers for the batch',
       );
     }
 
-    throw new ApiError(
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      'Internal server error',
-      'Unknown error occurred during attempting to gather ISBN identifiers for the batch',
-    );
-  }
-
-  // Do operation within transaction
-  const result = await db.transaction().execute(async (trx) => {
     const batchDbEntry = {
       monograph_publisher_id: isbnPublisherRange.monograph_publisher_id,
       isbn_publisher_range_id: isbnPublisherRange.id,
       ismn_publisher_range_id: null,
-      created: getCurrentTime(),
+      created: currentTime,
       created_by: user.id,
     };
 
@@ -77,7 +81,7 @@ export async function createIsbnIdentifierBatch(
     // Assign identifiers
     const identifierUpdateResult = await trx
       .updateTable('isbn_identifier')
-      .set({ monograph_identifier_batch_id: batchId, modified: getCurrentTime(), modified_by: user.id })
+      .set({ monograph_identifier_batch_id: batchId, modified: currentTime, modified_by: user.id })
       .where('id', 'in', identifierIds)
       .executeTakeFirstOrThrow();
 
@@ -112,32 +116,32 @@ export async function createIsmnIdentifierBatch(
     throw new ApiError(
       HttpStatus.UNPROCESSABLE_ENTITY,
       'Unprocessable entity',
-      'Cannot generate batch for category 7 ISMN publisher range (only available for category 6 and above).',
+      'Cannot generate batch for category 7 ISMN publisher range (only available for category 3-6).',
     );
   }
 
   let identifierIds: number[] = [];
 
-  try {
-    identifierIds = await getBatchIsmnIdentifierIds(ismnPublisherRangeId, identifierCount);
-  } catch (error) {
-    if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
+  // Do operation within transaction
+  const result = await db.transaction().execute(async (trx) => {
+    try {
+      identifierIds = await getBatchIsmnIdentifierIds(ismnPublisherRangeId, identifierCount, trx);
+    } catch (error) {
+      if (error instanceof Error && error.cause === 'Inadequate number of identifiers') {
+        throw new ApiError(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'Unprocessable entity',
+          `${identifierCount} ISMN identifiers cannot be provided from ISMN publisher range id ${ismnPublisherRangeId} (${ismnPublisherRange.publisher_identifier}).`,
+        );
+      }
+
       throw new ApiError(
-        HttpStatus.UNPROCESSABLE_ENTITY,
-        'Unprocessable entity',
-        `${identifierCount} ISMN identifiers cannot be provided from ISMN publisher range id ${ismnPublisherRangeId} (${ismnPublisherRange.publisher_identifier}).`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        'Unknown error occurred during attempting to gather ISMN identifiers for the batch',
       );
     }
 
-    throw new ApiError(
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      'Internal server error',
-      'Unknown error occurred during attempting to gather ISBN identifiers for the batch',
-    );
-  }
-
-  // Do operation within transaction
-  const result = await db.transaction().execute(async (trx) => {
     const batchDbEntry = {
       monograph_publisher_id: ismnPublisherRange.monograph_publisher_id,
       isbn_publisher_range_id: null,
@@ -176,42 +180,43 @@ export async function createIsmnIdentifierBatch(
   return result;
 }
 
-export async function identifierBatchHasMessages(batchId: number) {
-  const db = getKysely();
-  const { message_count } = await db
+export async function identifierBatchHasMessages(batchId: number, trx: Transaction<Database>) {
+  const { message_count } = await trx
     .selectFrom('monograph_message')
-    .select(db.fn.countAll<number>().as('message_count'))
+    .select(trx.fn.countAll<number>().as('message_count'))
     .where('monograph_identifier_batch_id', '=', batchId)
+    .forUpdate()
     .executeTakeFirstOrThrow();
 
   return message_count !== 0;
 }
 
-export async function identifierBatchHasDownloads(batchId: number) {
-  const db = getKysely();
-  const { download_count } = await db
+export async function identifierBatchHasDownloads(batchId: number, trx: Transaction<Database>) {
+  const { download_count } = await trx
     .selectFrom('monograph_identifier_batch_download')
-    .select(db.fn.countAll<number>().as('download_count'))
+    .select(trx.fn.countAll<number>().as('download_count'))
     .where('monograph_identifier_batch_id', '=', batchId)
+    .forUpdate()
     .executeTakeFirstOrThrow();
 
   return download_count !== 0;
 }
 
-export async function identifierBatchHasPublisherPublicationAssignations(batchId: number) {
-  const db = getKysely();
-  const { isbn_assigned_count } = await db
+export async function identifierBatchHasPublisherPublicationAssignations(batchId: number, trx: Transaction<Database>) {
+  const { isbn_assigned_count } = await trx
     .selectFrom('isbn_identifier')
-    .select(db.fn.countAll<number>().as('isbn_assigned_count'))
+    .select(trx.fn.countAll<number>().as('isbn_assigned_count'))
     .where('monograph_identifier_batch_id', '=', batchId)
     .where('monograph_publication_manifestation_id', 'is not', null)
+    .forUpdate()
     .executeTakeFirstOrThrow();
 
-  const { ismn_assigned_count } = await db
+  const { ismn_assigned_count } = await trx
     .selectFrom('ismn_identifier')
-    .select(db.fn.countAll<number>().as('ismn_assigned_count'))
+    .select(trx.fn.countAll<number>().as('ismn_assigned_count'))
     .where('monograph_identifier_batch_id', '=', batchId)
     .where('monograph_publication_manifestation_id', 'is not', null)
+    .forUpdate()
     .executeTakeFirstOrThrow();
 
   return isbn_assigned_count > 0 || ismn_assigned_count > 0;
@@ -220,10 +225,10 @@ export async function identifierBatchHasPublisherPublicationAssignations(batchId
 export async function deleteIdentifierBatch(
   identifierBatch: MonographIdentifierBatchSelectExtended,
   user: RequestUser,
+  trx: Transaction<Database>,
 ): Promise<void> {
-  const db = getKysely();
-
   // Fetch associated publisher identifier: this is used to determine validation check for affected identifier rows
+  // This is done outside of existing transaction which is fine for this case
   let publisherRangeIdentifierCount: number;
 
   if (identifierBatch.isbn_publisher_range_id) {
@@ -240,57 +245,57 @@ export async function deleteIdentifierBatch(
     );
   }
 
-  // Make changes within transaction
-  await db.transaction().execute(async (trx) => {
-    // Handle altering ISBN identifiers
-    if (identifierBatch.isbn_publisher_range_id) {
-      const identifierUpdateResult = await trx
-        .updateTable('isbn_identifier')
-        .set({ monograph_identifier_batch_id: null, modified: getCurrentTime(), modified_by: user.id })
-        .where('monograph_identifier_batch_id', '=', identifierBatch.id)
-        .executeTakeFirstOrThrow();
-
-      const numChangedIdentifiers = Number(identifierUpdateResult.numChangedRows);
-
-      // Sanity check: number of changed identifiers cannot exceed maximum number of identifiers for the publisher range
-      if (numChangedIdentifiers > publisherRangeIdentifierCount) {
-        throw new ApiError(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          'Internal server error',
-          `DB query would have resulted to changing ${numChangedIdentifiers} ISBN identifiers and ISBN publisher range id ${identifierBatch.isbn_publisher_range_id} only may contain maximum of ${publisherRangeIdentifierCount} identifiers.`,
-        );
-      }
-    } else if (identifierBatch.ismn_publisher_range_id) {
-      // Handle altering ISMN identifiers
-      const identifierUpdateResult = await trx
-        .updateTable('ismn_identifier')
-        .set({ monograph_identifier_batch_id: null, modified: getCurrentTime(), modified_by: user.id })
-        .where('monograph_identifier_batch_id', '=', identifierBatch.id)
-        .executeTakeFirstOrThrow();
-
-      const numChangedIdentifiers = Number(identifierUpdateResult.numChangedRows);
-
-      // Sanity check: number of changed identifiers cannot exceed maximum number of identifiers for the publisher range
-      if (numChangedIdentifiers > publisherRangeIdentifierCount) {
-        throw new ApiError(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          'Internal server error',
-          `DB query would have resulted to changing ${numChangedIdentifiers} ISMN identifiers and ISMN publisher range id ${identifierBatch.isbn_publisher_range_id} only may contain maximum of ${publisherRangeIdentifierCount} identifiers.`,
-        );
-      }
-
-      // Final verification against the original batch read
-      validateRowsUpdatedExact(identifierUpdateResult, identifierBatch.identifier_count);
-    }
-
-    // Finally remove the batch itself
-    const deleteResult = await trx
-      .deleteFrom('monograph_identifier_batch')
-      .where('id', '=', identifierBatch.id)
+  // Handle altering ISBN identifiers
+  if (identifierBatch.isbn_publisher_range_id) {
+    const identifierUpdateResult = await trx
+      .updateTable('isbn_identifier')
+      .set({ monograph_identifier_batch_id: null, modified: getCurrentTime(), modified_by: user.id })
+      .where('monograph_identifier_batch_id', '=', identifierBatch.id)
       .executeTakeFirstOrThrow();
 
-    validateRowsDeleted(deleteResult, 1);
-  });
+    const numChangedIdentifiers = Number(identifierUpdateResult.numUpdatedRows);
+
+    // Sanity check: number of changed identifiers cannot exceed maximum number of identifiers for the publisher range
+    if (numChangedIdentifiers > publisherRangeIdentifierCount) {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        `DB query would have resulted to changing ${numChangedIdentifiers} ISBN identifiers and ISBN publisher range id ${identifierBatch.isbn_publisher_range_id} only may contain maximum of ${publisherRangeIdentifierCount} identifiers.`,
+      );
+    }
+
+    // Final verification against the original batch read
+    validateRowsUpdatedExact(identifierUpdateResult, identifierBatch.identifier_count);
+  } else if (identifierBatch.ismn_publisher_range_id) {
+    // Handle altering ISMN identifiers
+    const identifierUpdateResult = await trx
+      .updateTable('ismn_identifier')
+      .set({ monograph_identifier_batch_id: null, modified: getCurrentTime(), modified_by: user.id })
+      .where('monograph_identifier_batch_id', '=', identifierBatch.id)
+      .executeTakeFirstOrThrow();
+
+    const numChangedIdentifiers = Number(identifierUpdateResult.numUpdatedRows);
+
+    // Sanity check: number of changed identifiers cannot exceed maximum number of identifiers for the publisher range
+    if (numChangedIdentifiers > publisherRangeIdentifierCount) {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        `DB query would have resulted to changing ${numChangedIdentifiers} ISMN identifiers and ISMN publisher range id ${identifierBatch.ismn_publisher_range_id} only may contain maximum of ${publisherRangeIdentifierCount} identifiers.`,
+      );
+    }
+
+    // Final verification against the original batch read
+    validateRowsUpdatedExact(identifierUpdateResult, identifierBatch.identifier_count);
+  }
+
+  // Finally remove the batch itself
+  const deleteResult = await trx
+    .deleteFrom('monograph_identifier_batch')
+    .where('id', '=', identifierBatch.id)
+    .executeTakeFirstOrThrow();
+
+  validateRowsDeleted(deleteResult, 1);
 
   return;
 }
@@ -355,7 +360,11 @@ export async function getIdentifierBatchIdentifiers(
       .where('ismn_publisher_range_id', '=', identifierBatch.ismn_publisher_range_id)
       .execute();
   } else {
-    throw new Error(`Cannot provide identifiers for batch id ${identifierBatch.id}`);
+    throw new ApiError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      'Internal server error',
+      'Data corrupted: both ISBN and ISMN publisher range association were defined',
+    );
   }
 
   return identifiers;

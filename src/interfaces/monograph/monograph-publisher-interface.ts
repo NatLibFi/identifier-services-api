@@ -61,6 +61,14 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
   const dbResult = await db.selectFrom('monograph_publisher').selectAll().where('id', '=', id).execute();
   const monographPublisherResult = validateGetById<MonographPublisherSelect>(dbResult);
 
+  // Manage guest users and cases where user information is not defined
+  if (!user || !isAdmin(user)) {
+    const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(id);
+    const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(id);
+
+    return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
+  }
+
   // Disallow skipping DTL for other than admin users
   if (isAdmin(user) && !useDtl) {
     return monographPublisherResult;
@@ -84,10 +92,11 @@ export async function readMonographPublisher(id: number, user?: RequestUser, use
     );
   }
 
-  const isbnPublisherRanges = await getMonographPublisherIsbnRangesLite(id);
-  const ismnPublisherRanges = await getMonographPublisherIsmnRangesLite(id);
-
-  return asMonographPublisherGuestRead(monographPublisherResult, isbnPublisherRanges, ismnPublisherRanges);
+  throw new ApiError(
+    HttpStatus.INTERNAL_SERVER_ERROR,
+    'Internal server error',
+    'This code should not have been reached and is there only for sanity check.',
+  );
 }
 
 export async function deleteMonographPublisher(monographPublisherId: number) {
