@@ -7,10 +7,15 @@ import { getKysely } from '../../db/database.ts';
 
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
+import type { Transaction } from 'kysely';
+import type { Database } from '../../db/types.ts';
 
-export async function getIsbnRangeConflicts(isbnRangeCreateDoc: CreateIsbnRangeHttp) {
-  const db = getKysely();
-  const currentIsbnRanges = await db.selectFrom('isbn_range').selectAll().execute();
+export async function getIsbnRangeConflicts(isbnRangeCreateDoc: CreateIsbnRangeHttp, trx: Transaction<Database>) {
+  const currentIsbnRanges = await trx
+    .selectFrom('isbn_range')
+    .selectAll()
+    .forUpdate() // Locking read
+    .execute();
 
   const conflictingRanges = currentIsbnRanges.filter((currentIsbnRange) => {
     const gs1Matches = currentIsbnRange.gs1 === isbnRangeCreateDoc.gs1;
