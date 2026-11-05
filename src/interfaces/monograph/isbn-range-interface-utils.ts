@@ -8,13 +8,16 @@ import { getKysely } from '../../db/database.ts';
 import type { IsbnRangeSelect } from '../../db/types/monograph/types-isbn-range.ts';
 import type { CreateIsbnRangeHttp } from '../../validations/monograph/isbn-range-validation.ts';
 
-export async function getIsbnRangeConflict(isbnRangeCreateDoc: CreateIsbnRangeHttp) {
+export async function getIsbnRangeConflicts(isbnRangeCreateDoc: CreateIsbnRangeHttp) {
   const db = getKysely();
   const currentIsbnRanges = await db.selectFrom('isbn_range').selectAll().execute();
 
   const conflictingRanges = currentIsbnRanges.filter((currentIsbnRange) => {
     const gs1Matches = currentIsbnRange.gs1 === isbnRangeCreateDoc.gs1;
     const registrationGroupMatches = currentIsbnRange.registration_group === isbnRangeCreateDoc.registration_group;
+
+    // Range normalization between categories is done via right padding range_begin with zeroes and right padding range end with 9.
+    // This is so that existing range of 10-19 would for example block range of 000-150 or 19000-21000.
 
     const currentRangeStartNumber = Number(currentIsbnRange.range_begin.padEnd(ISBN_RANGE_MAX_LENGTH, '0'));
     const currentRangeEndNumber = Number(currentIsbnRange.range_end.padEnd(ISBN_RANGE_MAX_LENGTH, '9'));
@@ -41,6 +44,7 @@ export async function getAvailableIsbnPublisherRanges(isbnRange: IsbnRangeSelect
     .selectAll()
     .where('isbn_range_id', '=', isbnRange.id)
     .execute();
+
   const associatedPublisherIdentifiers = associatedIsbnPublisherRanges.map(
     ({ publisher_identifier }) => publisher_identifier,
   );

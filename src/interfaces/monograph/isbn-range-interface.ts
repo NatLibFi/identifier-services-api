@@ -5,7 +5,7 @@ import { getCurrentTime, validateGetById } from '../shared-interface-utils.ts';
 import {
   getAllIsbnPublisherRanges,
   getAvailableIsbnPublisherRanges,
-  getIsbnRangeConflict,
+  getIsbnRangeConflicts,
 } from './isbn-range-interface-utils.ts';
 
 import { getKysely } from '../../db/database.ts';
@@ -39,7 +39,7 @@ export async function getIsbnRanges() {
 }
 
 export async function createIsbnRange(isbnRangeCreateDoc: CreateIsbnRangeHttp, user: RequestUser) {
-  const conflictingIsbnRanges = await getIsbnRangeConflict(isbnRangeCreateDoc);
+  const conflictingIsbnRanges = await getIsbnRangeConflicts(isbnRangeCreateDoc);
 
   if (conflictingIsbnRanges.length > 0) {
     throw new ApiError(
@@ -204,7 +204,7 @@ export async function processIsbnRangeEdit(
   }
 
   // Find potential conflicts with other ranges that what is being processed
-  const conflictingIsbnRanges = await getIsbnRangeConflict(proposedRangeEdit);
+  const conflictingIsbnRanges = await getIsbnRangeConflicts(proposedRangeEdit);
   const filteredConflictingIsbnRanges = conflictingIsbnRanges.filter((isbnRange) => isbnRange.id !== currentRange.id);
 
   if (filteredConflictingIsbnRanges.length > 0) {

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, test, describe, inject, expect } from 'vitest';
 import { TEST_CREATION_DATE, TEST_MODIFICATION_DATE, TEST_USER_1 } from '../../test-utils/test-constants.ts';
 
 import { createIsbnRangeTable } from '../../test-utils/test-migrations/monograph/isbn-range-test-migrations.ts';
-import { getIsbnRangeConflict } from './isbn-range-interface-utils.ts';
+import { getIsbnRangeConflicts } from './isbn-range-interface-utils.ts';
 
 import { createKyselySingleton, dropKyselySingleton } from '../../db/database.ts';
 
@@ -60,12 +60,12 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '1',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([initialIsbnRange]);
   });
 
   test('Finds conflict between when ranges overlap (different range length) #1', async () => {
-    // Note: range with begin of 1 and end of 2 takes essentially all publisher identifiers between 10000-19999
+    // Note: range with begin of 1 and end of 2 reserve all publisher identifiers between 10000-19999 due to how item numbering works
     const isbnRangeCreateDoc: CreateIsbnRangeHttp = {
       gs1: '978',
       registration_group: '951',
@@ -73,7 +73,7 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '21999',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([initialIsbnRange]);
   });
 
@@ -85,7 +85,7 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '19',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([initialIsbnRange]);
   });
 
@@ -97,7 +97,7 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '1',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([]);
   });
 
@@ -109,7 +109,7 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '1',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([]);
   });
 
@@ -121,7 +121,7 @@ describe('getIsbnRangeConflicts', async () => {
       range_end: '29',
     };
 
-    const result = await getIsbnRangeConflict(isbnRangeCreateDoc);
+    const result = await getIsbnRangeConflicts(isbnRangeCreateDoc);
     expect(result).toStrictEqual([]);
   });
 });
