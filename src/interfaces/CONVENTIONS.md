@@ -18,7 +18,6 @@ Monograph and serial interfaces are located in separate subfolders. Cross-domain
 - Each DB action which alters the DB state must be done within a transaction.
 - Each DB action which alters the DB state must be confirmed using validators located at `src/interfaces/shared-interface-utils.ts`. If number of changes is unexpected, an error must be thrown so that the transaction is not committed.
 - Prefer simple automatically controlled transactions (`await db.transaction().execute(async trx => {...})`) over manually controlled transaction (`await db.startTransaction()`). Manual transactions are allowed, if there is a need to pass the transaction between functions.
-- Interface should always throw ApiError when possible
 - Input validation happens at the middleware level using Zod schemas, but validation regarding data conflicts (e.g., refusing to assign already assigned identifier) is responsibility of interface
 - Return values must utilize DTL function or construct a new Object that is returned to avoid including any Object attributes accidentally
 - All interface functions must be exported and used by some controller. The interface function tests are integration tests defined in routers section.

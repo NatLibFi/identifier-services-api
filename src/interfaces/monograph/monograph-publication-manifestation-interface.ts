@@ -515,10 +515,16 @@ export async function deleteMonographPublicationManifestation(manifestationId: n
   return;
 }
 
-export async function getMonographManifestationRelations(manifestationId: number) {
+export async function getMonographManifestationRelations(manifestationIds: number[]) {
+  if (manifestationIds.length === 0) {
+    throw new Error(
+      'getMonographManifestationRelations cannot investigate relations since manifestation id array was empty',
+    );
+  }
+
   const db = getKysely();
 
-  const manifestation = await db
+  const manifestations = await db
     .selectFrom('monograph_publication_manifestation')
     .leftJoin(
       'monograph_publication_expression',
@@ -551,11 +557,22 @@ export async function getMonographManifestationRelations(manifestationId: number
       'isbn_identifier.identifier as isbnIdentifier',
       'ismn_identifier.identifier as ismnIdentifier',
     ])
-    .where('monograph_publication_manifestation.id', '=', manifestationId)
+    .where('monograph_publication_manifestation.id', 'in', manifestationIds)
     .execute();
 
-  const validatedManifestationPublisherInfo = validateGetById(manifestation);
-  return validatedManifestationPublisherInfo;
+  const missingManifestations = manifestationIds.filter(
+    (manifestationId) => !manifestations.find((m) => m.manifestationId === manifestationId),
+  );
+
+  if (missingManifestations.length > 0) {
+    throw new ApiError(
+      HttpStatus.NOT_FOUND,
+      'Not found',
+      `Could not find following manifestation(s) from DB: ${JSON.stringify(missingManifestations)}`,
+    );
+  }
+
+  return manifestations;
 }
 
 // Important note: record is not generated from cancelled manifestations or manifestations with SET type
