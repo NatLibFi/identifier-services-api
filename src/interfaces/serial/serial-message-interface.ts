@@ -138,20 +138,20 @@ export default function createSerialMessageInterface(messagingConfiguration: Mes
         );
       }
 
-      // 3. Send the message using SMTP.
-      // This is done within the same transaction to guarantee state between db/email provider will match.
-      if (messagingConfiguration.SEND_EMAILS) {
-        await sendEmail({
-          from: messagingConfiguration.ISSN_EMAIL,
-          to: recipient,
-          subject: finalSubject,
-          text: finalBody,
-          smtpConfig: messagingConfiguration.SMTP_CONFIG,
-        });
-      }
-
       return Number(messageSaveResult.insertId);
     });
+
+    // 3. Send the message using SMTP.
+    // This is done after transaction to guarantee no emails without DB entry can be sent.
+    if (messagingConfiguration.SEND_EMAILS) {
+      await sendEmail({
+        from: messagingConfiguration.ISSN_EMAIL,
+        to: recipient,
+        subject: finalSubject,
+        text: finalBody,
+        smtpConfig: messagingConfiguration.SMTP_CONFIG,
+      });
+    }
 
     return messageId;
   }

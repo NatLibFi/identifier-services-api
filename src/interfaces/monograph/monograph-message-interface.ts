@@ -52,7 +52,7 @@ export default function createMonographMessageInterface(
         messageType: message_type,
         monographPublisherId: monograph_publisher_id,
         prioritizeRequestInformation,
-        monographIdentifierBatchId: monograph_identifier_batch_id || null,
+        monographIdentifierBatchId: monograph_identifier_batch_id ?? null,
         manifestationIds: manifestation_ids,
       });
     } catch (error) {
@@ -68,7 +68,9 @@ export default function createMonographMessageInterface(
     }
 
     // Sanity check: recipient cannot be empty at this point
-    if (!result.messagePublisher.recipient || result.messagePublisher.recipient.length === 0) {
+    const recipient = result.messagePublisher.recipient.trim();
+
+    if (!recipient) {
       throw new ApiError(
         HttpStatus.UNPROCESSABLE_ENTITY,
         'Unprocessable entity',
@@ -90,9 +92,12 @@ export default function createMonographMessageInterface(
     });
 
     // Replacements that are shared between all templates are done here
-    result.body = result.body.replace('#DATE#', new Date().toLocaleDateString('fi-FI'));
+    result.body = result.body.replace(
+      '#DATE#',
+      new Date().toLocaleDateString('fi-FI', { timeZone: 'Europe/Helsinki' }),
+    );
     result.body = result.body.replace('#USER#', user.name);
-    result.body = result.body.replace('#EMAIL#', result.messagePublisher.recipient);
+    result.body = result.body.replace('#EMAIL#', recipient);
 
     result.body = result.body.replace('#PUBLISHER#', result.messagePublisher.officialName);
     result.body = result.body.replace(
@@ -108,7 +113,7 @@ export default function createMonographMessageInterface(
       ismn_publisher_range_id: result.ismn_publisher_range_id,
       monograph_identifier_batch_id: result.monograph_identifier_batch_id,
       manifestation_ids: manifestation_ids ?? [],
-      recipient: result.messagePublisher.recipient,
+      recipient: recipient,
       subject: result.subject,
       body: result.body,
       lang_code: result.messagePublisher.langCode,
@@ -180,32 +185,30 @@ export default function createMonographMessageInterface(
         .executeTakeFirstOrThrow();
 
       // 2. Save manifestation associations if there are any
-      await Promise.all(
-        manifestation_ids.map(async (manifestationId) => {
-          await trx
-            .insertInto('monograph_message_publication_manifestation')
-            .values({
-              monograph_message_id: Number(messageSaveResult.insertId),
-              monograph_publication_manifestation_id: manifestationId,
-            })
-            .executeTakeFirstOrThrow();
-        }),
-      );
-
-      // 3. Finally send the message using SMTP.
-      // This is done within the same transaction to guarantee state between db/email provider will match.
-      if (messagingConfiguration.SEND_EMAILS) {
-        await sendEmail({
-          from: messagingConfiguration.ISBN_EMAIL,
-          to: recipient,
-          subject: finalSubject,
-          text: finalBody,
-          smtpConfig: messagingConfiguration.SMTP_CONFIG,
-        });
+      for (const manifestationId of manifestation_ids) {
+        await trx
+          .insertInto('monograph_message_publication_manifestation')
+          .values({
+            monograph_message_id: Number(messageSaveResult.insertId),
+            monograph_publication_manifestation_id: manifestationId,
+          })
+          .executeTakeFirstOrThrow();
       }
 
       return Number(messageSaveResult.insertId);
     });
+
+    // 3. Finally send the message using SMTP.
+    // This is done after transaction to guarantee no emails without DB entry can be sent.
+    if (messagingConfiguration.SEND_EMAILS) {
+      await sendEmail({
+        from: messagingConfiguration.ISBN_EMAIL,
+        to: recipient,
+        subject: finalSubject,
+        text: finalBody,
+        smtpConfig: messagingConfiguration.SMTP_CONFIG,
+      });
+    }
 
     return messageId;
   }
@@ -298,6 +301,7 @@ export default function createMonographMessageInterface(
         manifestation_type: m.manifestation_type,
         identifier: m.isbn_identifier,
       }));
+
       validatedMessageResult.expression_title = messageManifestations[0]?.expression_title || '';
     }
 
