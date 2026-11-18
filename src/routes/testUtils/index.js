@@ -46,9 +46,11 @@ export default ({rootPath}) => {
   }
 
   let requester;
+  let app;
 
   afterEach(async () => {
     await requester.close();
+    await app.close();
   });
 
   return (...args) => () => {
@@ -94,7 +96,7 @@ export default ({rootPath}) => {
             const pgFixtures = await pgFixturesFactory({rootPath: dir});
             await pgFixtures.populate([sub, 'dbContents.json'], dbInitRequired);
 
-            const app = await startApp();
+            app = await startApp();
             requester = chai.request(app).keepOpen();
 
             const token = await auth(username, password);
