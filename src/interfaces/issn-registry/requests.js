@@ -102,7 +102,6 @@ export default function () {
       // Save publications and their archive information
       // Loop is used instead of resolving Promise.all
       // so that the link between archive record and publication can be established
-      /* eslint-disable functional/no-loop-statements */
       for (const publication of publications) {
         const previousEntity = getPublicationJSONattribute(publication.previous, ['title', 'issn', 'lastIssue']);
         const mainSeries = getPublicationJSONattribute(publication.mainSeries);

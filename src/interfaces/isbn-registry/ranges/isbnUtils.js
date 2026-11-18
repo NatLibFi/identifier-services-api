@@ -131,7 +131,6 @@ export function calculateCheckDigitIsbn(isbn) {
    * @param {string} identifier ISBN-13 identifier without check digit and dashes (ISBN-13 or ISMN)
    * @returns Check digit in string format
    */
-  /* eslint-disable no-param-reassign */
   function calculateIsbn13CheckDigit(identifier) {
     const sum = identifier.split('').reduce((acc, char, i) => {
       if (i % 2 === 0) {
@@ -144,7 +143,6 @@ export function calculateCheckDigitIsbn(isbn) {
 
     return `${(10 - (sum % 10)) % 10}`;
   }
-  /* eslint-enable no-param-reassign */
 }
 
 /**

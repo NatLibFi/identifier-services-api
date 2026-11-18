@@ -117,7 +117,7 @@ export function convertToMarcIsbnIsmn(publication, electronicalRecordPublication
 function generate008({publication, electronical, sheetmusic, dissertation}) {
   const {language, year} = publication;
 
-  /* eslint-disable functional/no-let */
+ 
   const date = new Date();
 
   // Constructing field without immutability constraint
@@ -174,11 +174,11 @@ function generate008({publication, electronical, sheetmusic, dissertation}) {
   field += '| ';
 
   return field;
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generate020({publication, electronical, sheetmusic, electronicalRecordPublicationType}) {
-  /* eslint-disable functional/no-let */
+ 
   // For sheetmusic material, field is not produced
   if (sheetmusic) {
     return [];
@@ -243,11 +243,11 @@ function generate020({publication, electronical, sheetmusic, electronicalRecordP
     });
   }
 
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generate024({publication, electronical, sheetmusic, electronicalRecordPublicationType}) {
-  /* eslint-disable functional/no-let */
+ 
 
   if (!sheetmusic) {
     return [];
@@ -306,7 +306,7 @@ function generate024({publication, electronical, sheetmusic, electronicalRecordP
       return {...field, subfields};
     });
   }
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generate040() {
@@ -485,7 +485,7 @@ function generate264b({publication, electronical}) {
 }
 
 function generate336({sheetmusic, map, audiobook}) {
-  /* eslint-disable functional/no-let */
+ 
   let subfields;
 
   if (sheetmusic) {
@@ -521,7 +521,7 @@ function generate336({sheetmusic, map, audiobook}) {
       ]
     }
   ];
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generate337({electronical}) {
@@ -620,7 +620,7 @@ function generate347({electronical, audiobook, electronicalRecordPublicationType
 }
 
 function generate490({publication}) {
-  /* eslint-disable functional/no-let */
+ 
 
   if (publication.series) {
     let subfieldA = publication.series;
@@ -651,7 +651,7 @@ function generate490({publication}) {
   }
 
   return [];
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generateTestField() {
@@ -711,7 +711,7 @@ function generate594() {
 }
 
 function generate700({publication}) {
-  /* eslint-disable functional/no-let */
+ 
   let fields = [];
 
   if (publication.role1 && !publication.role1.includes('AUTHOR')) {
@@ -741,7 +741,7 @@ function generate700({publication}) {
   });
 
   return fields;
-  /* eslint-enable functional/no-let */
+  
 }
 
 function generate776({publication, electronical}) {

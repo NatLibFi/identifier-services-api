@@ -180,7 +180,7 @@ export default function () {
    * @param {Object} user User making the request
    * @returns {Object} message object as JSON that can be displayed in front-end text editor
    */
-  /* eslint-disable functional/no-let */
+ 
   async function loadTemplate(doc, user) {
     const {code, publisherId, formId} = doc;
     let form;
@@ -338,7 +338,7 @@ export default function () {
       });
     }
   }
-  /* eslint-enable functional/no-let */
+  
 
   /**
    * Queries ISSN messages
