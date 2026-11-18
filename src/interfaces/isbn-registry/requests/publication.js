@@ -90,7 +90,7 @@ export default function () {
 
     // Inform customer that the request was successfully received if system is configured to send emails
     // If logged in user is initiating the creation of request, do not send confirmation email
-    /* eslint-disable functional/no-let */
+   
     if (SEND_EMAILS && !user && !copy) {
       let messageBody = getNotifyClientMessageBody(doc.langCode);
       let subject = getNotifyClientMessageSubject(doc.langCode);
@@ -118,7 +118,7 @@ export default function () {
       }
     }
 
-    /* eslint-enable functional/no-let */
+    
     return result.toJSON();
 
     function getNotifyClientMessageBody(lang) {

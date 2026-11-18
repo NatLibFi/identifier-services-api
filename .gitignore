@@ -138,3 +138,5 @@ private-package-installs
 
 # apidoc dev build
 src/public
+
+*.md

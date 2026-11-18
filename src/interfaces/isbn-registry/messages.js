@@ -192,7 +192,7 @@ export default function () {
    * @param {Object} user User initiating the request
    * @returns {Object} Object containing message loaded from a template
    */
-  /* eslint-disable functional/no-let */
+ 
   async function loadTemplate(doc, user) {
     const {code, publisherId, publicationId, identifierBatchId} = doc;
 
@@ -422,7 +422,7 @@ export default function () {
       return true;
     }
   }
-  /* eslint-enable functional/no-let */
+  
 
   /**
    * Queries ISBN messages

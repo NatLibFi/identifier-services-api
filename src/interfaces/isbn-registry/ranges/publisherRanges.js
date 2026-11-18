@@ -465,7 +465,7 @@ export default function (identifierType) {
      * @param {string} publisherIdentifier Publisher identifier which deletion to test for
      * @returns {boolean} True if deletion is valid, otherwise false
      */
-    /* eslint-disable functional/no-let */
+   
     function _previousRangeModelDeleteTest(range, publisherIdentifier) {
       // Create identifier from previous value of next pointer
       // If it matches the identifier we can verify deletion via decreasing pointer is ok.
@@ -486,7 +486,7 @@ export default function (identifierType) {
 
       return false;
     }
-    /* eslint-enable functional/no-let */
+    
   }
 
   /**
@@ -594,7 +594,6 @@ export default function (identifierType) {
  * @param {boolean} useCanceledFromAnyRange Defines if canceled identifiers from any publisher's range sharing category may be used. If false, only canceled identifiers from active range are used.
  * @returns {Object} Generated identifier batch if generation was successfull, otherwise throws instance of ApiError
  */
-  /* eslint-disable functional/no-let,functional/no-loop-statements */
   async function generateIdentifierBatch(publisherId, count, publicationId, user, t, useCanceledFromAnyRange = false) {
     // Test that either only count or publicationId is defined
     if (count && publicationId) {
@@ -728,7 +727,7 @@ export default function (identifierType) {
     // Calculate how many canceled identifiers should be utilized
     const canceledIdentifiersRequiredCount = countDefinition > canceledIdentifiers.length ? canceledIdentifiers.length : countDefinition;
 
-    let identifierObjects = []; // eslint-disable-line
+    let identifierObjects = [];
     const usedCanceledIdentifiers = [];
 
     // If new identifiers are required on top of using canceled identifiers

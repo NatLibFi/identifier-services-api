@@ -53,7 +53,7 @@ export default function (registry) {
   const {publicationModel} = getPublicationModelByRegistry(registry);
 
   // Establish Melinda connections if parameters are available
-  /* eslint-disable functional/no-let */
+ 
   let melindaApiClient = false;
   let melindaSruClient = false;
 
@@ -72,7 +72,7 @@ export default function (registry) {
     logger.debug('Melinda SRU configuration was found');
     melindaSruClient = createMelindaSruClient({url: MELINDA_SRU_URL, recordSchema: 'marcxml'});
   }
-  /* eslint-enable functional/no-let */
+  
 
 
   // Required by issn registry marc generation in addition to publication model

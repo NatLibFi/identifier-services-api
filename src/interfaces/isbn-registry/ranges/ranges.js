@@ -156,7 +156,7 @@ export default function (identifierType) {
    * @returns Resulting database entry in JSON format if success. Throws ApiError on failure.
    */
 
-  /* eslint-disable functional/no-let */
+ 
   async function create(doc, user) {
 
     // Generate payload
@@ -352,7 +352,6 @@ export default function (identifierType) {
   * @param {Object} user User initiating the job
   * @returns Generated publisher identifier on success, ApiError on failure
   */
-  /* eslint-disable functional/no-let,functional/no-loop-statements*/
   async function generateSubrange({rangeId, publisherId, selectedPublisherIdentifier}, user) {
 
     // Start transaction
@@ -560,7 +559,7 @@ export default function (identifierType) {
       throw err;
     }
   }
-  /* eslint-enable functional/no-let */
+  
 
   /**
    * Generates options for creating new subrange for publisher. Options consist of publisher identifiers within the selected range
