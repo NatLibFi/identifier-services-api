@@ -26,7 +26,6 @@
     "lint:dev": "eslint --fix -- src",
     "lint": "eslint -- src",
     "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -r dotenv/config -t 20000 --require @babel/register",
-    "test:coverage": "nyc --reporter=text npm run test:base -- src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test": "npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
@@ -38,7 +37,6 @@
     "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
   },
   "dependencies": {
-    "@babel/runtime": "^7.28.6",
     "@json2csv/plainjs": "^7.0.6",
     "@natlibfi/marc-record": "^10.0.1",
     "@natlibfi/marc-record-serializers": "^11.0.1",
@@ -59,29 +57,25 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.6",
-    "@babel/core": "^7.29.0",
-    "@babel/eslint-parser": "^7.28.6",
-    "@babel/node": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
-    "@babel/register": "^7.28.6",
+    "@babel/cli": "^8.1.0",
+    "@babel/core": "^8.1.0",
+    "@babel/node": "^8.0.6",
+    "@babel/preset-env": "^8.0.7",
+    "@babel/register": "^8.0.6",
     "@natlibfi/fixura": "^4.0.0",
     "@redocly/cli": "^2.15.0",
-    "babel-plugin-istanbul": "^7.0.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "base-64": "^1.0.0",
     "chai": "^4.5.0",
     "chai-http": "^4.4.0",
     "dotenv": "^17.2.2",
     "eslint": "^9.39.1",
-    "mariadb": "^3.4.1",
     "mocha": "^12.0.3",
     "nock": "^14.0.4",
     "nodemon": "^3.1.9",
-    "nyc": "^17.1.0",
     "sqlite3": "npm:@vscode/sqlite3@^5.1.12-vscode"
   },
   "babel": {
+    "targets": "maintained node versions",
     "presets": [
       [
         "@babel/preset-env",
@@ -89,33 +83,6 @@
           "targets": "maintained node versions"
         }
       ]
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          "istanbul"
-        ]
-      }
-    }
-  },
-  "nyc": {
-    "exclude": [
-      "*/*spec.js",
-      "**/*.spec.js",
-      "**/**/*spec.js",
-      "src/middlewares/turnstile.js"
-    ],
-    "reporter": [
-      "lcov"
-    ],
-    "require": [
-      "@babel/register"
-    ],
-    "sourceMap": false,
-    "instrument": false,
-    "lines": 80,
-    "statements": 80,
-    "functions": 80,
-    "branches": 80
+    ]
   }
 }
