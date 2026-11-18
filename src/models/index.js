@@ -42,7 +42,6 @@ import applyIssnRegistryAssociations from './issn-registry/associations';
 
 import * as commonModels from './common';
 
-/* eslint-disable functional/no-let */
 let sequelize;
 
 const logger = createLogger();

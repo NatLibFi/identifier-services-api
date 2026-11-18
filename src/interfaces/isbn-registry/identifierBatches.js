@@ -322,7 +322,7 @@ export default function () {
       }
 
       // Manage canceled identifier re-cancellation
-      /* eslint-disable functional/no-let */
+     
       if (identifierBatch.identifierCanceledUsedCount > 0) {
 
         // Helper variables required for gathering the identifiers that can be canceled through update operation to subrange counters
@@ -353,7 +353,6 @@ export default function () {
 
         // TO DO: improve processing to remove unnecessary overhead from two separate forEach loops
         // For loop used because of async
-        // eslint-disable-next-line
         for (let i = 0; i < identifiers.length; i++) {
           // Just to improve readability
           const identifier = identifiers[i];
@@ -394,7 +393,7 @@ export default function () {
           }
         }
       }
-      /* eslint-enable functional/no-let */
+      
 
       // Delete identifiers
       await Promise.all(identifiers.map(i => i.destroy({transaction: t})));
@@ -450,7 +449,7 @@ export default function () {
       }
 
       // Format to text file to include publisher information
-      let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${result.publisher.officialName}\r\n`; // eslint-disable-line
+      let headerText = `Seuraavat tunnukset on myönnetty kustantajalle ${result.publisher.officialName}\r\n`;  
       headerText += `Följande identifikatorer har tilldelats åt förlaget ${result.publisher.officialName}\r\n`;
       headerText += `Following identifiers have been assigned to publisher ${result.publisher.officialName}\r\n\r\n`;
 

@@ -102,7 +102,7 @@ function isElectronical(publication) {
 }
 
 function generate008({publication, electronical}) {
-  /* eslint-disable functional/no-let */
+ 
   const date = new Date();
 
   // Constructing field without immutability constraint
@@ -150,7 +150,7 @@ function generate008({publication, electronical}) {
   field += '| ';
 
   return field;
-  /* eslint-enable functional/no-let */
+  
 
   function getPublicationTypeInfo(publication) {
     const mapToCharacterP = [

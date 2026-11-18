@@ -94,7 +94,7 @@ export default function () {
 
       // Inform customer that the request was successfully received if system is configured to send emails
       // and user who initiated the request is not logged in
-      /* eslint-disable functional/no-let */
+     
       if (!user && SEND_EMAILS) {
         let messageBody = getNotifyClientMessageBody(doc.langCode);
         let subject = getNotifyClientMessageSubject(doc.langCode);
@@ -121,7 +121,7 @@ export default function () {
           logger.error('Encountered error when attempting to send ISBN registry publisher request confirmation email using nodemailer.');
         }
       }
-      /* eslint-enable functional/no-let */
+      
 
       // Return saved publisher information
       return result.toJSON();

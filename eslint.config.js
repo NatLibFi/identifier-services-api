@@ -1,55 +1,41 @@
-import functional from "eslint-plugin-functional";
-
 // Eslint configuration object for src
 const configSrc = {
-  files: [
-    "src/*"
-  ],
+  files: ["src/*"],
   rules: {
     "no-console": "warn",
-    "eqeqeq": ["error", "always"],
+    eqeqeq: ["error", "always"],
     "no-const-assign": "error",
     "max-depth": ["warn", 4],
     "max-lines": ["warn", 500],
-    "max-lines-per-function": ["warn", {"max": 100}],
-    "no-else-return": ["error", {allowElseIf: false}],
+    "max-lines-per-function": ["warn", { max: 100 }],
+    "no-else-return": ["error", { allowElseIf: false }],
     "no-plusplus": [
       "error",
       {
-        "allowForLoopAfterthoughts": true
-      }
+        allowForLoopAfterthoughts: true,
+      },
     ],
     "array-callback-return": [
       "error",
       {
-        "checkForEach": false
-      }
+        checkForEach: false,
+      },
     ],
     "no-unused-vars": [
       "error",
       {
-        "argsIgnorePattern": "next"
-      }
+        argsIgnorePattern: "next",
+      },
     ],
-    "no-warning-comments": "off"
-  }
+    "no-warning-comments": "off",
+  },
 };
 
 // Eslint configuration object for globally ignoring .js files
 // - ignore all files that start with a dot
 // - ignore all files inside directories named 'dist'
 const configIgnores = {
-  ignores: [
-    "**/.*",
-    "**/dist/"
-  ]
+  ignores: ["**/.*", "**/dist/"],
 };
 
-export default [
-  configSrc,
-  configIgnores,
-  functional.configs.externalVanillaRecommended,
-  functional.configs.recommended,
-  functional.configs.stylistic,
-  functional.configs.disableTypeChecked
-];
+export default [configSrc, configIgnores];

@@ -267,14 +267,14 @@ export default function () {
     // has been evaluated in the database query. At the time of writing, this bug remains unsolved.
 
 
-    /* eslint-disable functional/no-let */
+   
     const attributes = ['id', 'officialName', 'otherNames', 'email', 'contactPerson', 'hasQuitted', 'activeIdentifierIsbn', 'activeIdentifierIsmn'];
     const {searchText, hasQuitted, category, identifierType, offset = 0, limit = 10} = guiOpts;
     const order = [['id', 'DESC'], ['promoteSorting', 'DESC']];
     const trimmedSearchText = searchText ? searchText.trim() : undefined;
 
     let publisherIds = null; // Utilized in queries using publisher identifier
-    /* eslint-enable functional/no-let */
+    
 
     // Set of properties are allowed only for admin users, if attempt to use these, throw a error
     if (!isAdmin(user)) {
@@ -500,14 +500,14 @@ export default function () {
     // Basically the reason seems to be that the duplicate entries are cut from the resulting rows attribute after the limiter
     // has been evaluated in the database query. At the time of writing, this bug remains unsolved.
 
-    /* eslint-disable functional/no-let */
+   
     const attributes = ['id', 'officialName', 'otherNames', 'hasQuitted', 'activeIdentifierIsbn', 'activeIdentifierIsmn'];
     const {searchText, offset = 0, limit = 10} = guiOpts;
     const order = [['id', 'DESC']];
     const trimmedSearchText = searchText ? searchText.trim() : undefined;
 
     let publisherIds = null; // Utilized in queries using publisher identifier
-    /* eslint-enable functional/no-let */
+    
 
     // Search by identifier, populate matching publisher IDs
     // ISBN publisher identifier

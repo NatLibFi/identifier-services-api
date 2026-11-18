@@ -45,7 +45,7 @@ export default ({rootPath}) => {
     throw new Error('Won\'t run automated tests when SEND_EMAILS is set to true. Set SEND_EMAILS to false and try again.');
   }
 
-  let requester; // eslint-disable-line functional/no-let
+  let requester;
 
   afterEach(async () => {
     await requester.close();
