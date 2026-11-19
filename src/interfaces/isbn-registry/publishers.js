@@ -31,7 +31,7 @@ import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
 
-import * as xl from 'excel4node';
+import xl from 'excel4node';
 
 import sequelize from '../../models';
 import {ApiError, isAdmin} from '../../utils';

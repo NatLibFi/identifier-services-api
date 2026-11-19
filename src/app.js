@@ -132,7 +132,7 @@ export default async function run() { // eslint-disable-line
     app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares));
   }
 
-  app.use('/', express.static(path.resolve(__dirname, 'public')));
+  // app.use('/', express.static(path.resolve(__dirname, 'public')));
   app.use('/ping', routes.createStatusRouter());
   app.use('/public', routes.createPublicRouter());
 

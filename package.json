@@ -4,6 +4,7 @@
   "author": {
     "name": "The National Library of Finland"
   },
+  "type": "module",
   "keywords": [],
   "homepage": "https://github.com/natlibfi/identifier-services-api",
   "bugs": {
@@ -21,20 +22,19 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "node ./dist/index",
+    "start": "node ./src/index",
     "lint:apidoc": "redocly lint apidoc/openapi.yaml",
     "lint:dev": "eslint --fix -- src",
     "lint": "eslint -- src",
-    "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -r dotenv/config -t 20000 --require @babel/register",
+    "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -t 20000",
     "test": "npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
     "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
     "test:public-routes": "npm run test:base -- -b src/routes/public/*spec.js",
-    "build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified && npm run build:apidoc",
     "build:apidoc": "redocly bundle apidoc/openapi.yaml -o dist/public/openapi.json --ext json",
     "build:apidoc-dev": "redocly bundle apidoc/openapi.yaml -o src/public/openapi.json",
-    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && babel-node src/index.js'"
+    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && node src/index.js'"
   },
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
@@ -57,11 +57,6 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "@babel/cli": "^8.1.0",
-    "@babel/core": "^8.1.0",
-    "@babel/node": "^8.0.6",
-    "@babel/preset-env": "^8.0.7",
-    "@babel/register": "^8.0.6",
     "@natlibfi/fixura": "^4.0.0",
     "@redocly/cli": "^2.15.0",
     "base-64": "^1.0.0",
@@ -73,16 +68,5 @@
     "nock": "^14.0.4",
     "nodemon": "^3.1.9",
     "sqlite3": "npm:@vscode/sqlite3@^5.1.12-vscode"
-  },
-  "babel": {
-    "targets": "maintained node versions",
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": "maintained node versions"
-        }
-      ]
-    ]
   }
 }

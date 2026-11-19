@@ -25,7 +25,7 @@
  *
  */
 
-import * as xl from 'excel4node';
+import xl from 'excel4node';
 import {Parser} from '@json2csv/plainjs';
 
 import {DB_TYPES} from '../../../models/constants';

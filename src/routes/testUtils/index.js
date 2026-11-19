@@ -33,7 +33,9 @@ import {readdirSync, statSync} from 'fs';
 import {join as joinPath} from 'path';
 import base64 from 'base-64';
 
-import pgFixturesFactory from './dbUtils';
+import 'dotenv/config';
+
+import pgFixturesFactory from './dbUtils.js';
 
 import {SEND_EMAILS} from '../../config';
 

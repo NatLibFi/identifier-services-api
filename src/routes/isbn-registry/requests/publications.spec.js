@@ -30,7 +30,7 @@ import testSuiteFactory from '../../testUtils';
 describe('app', () => {
   const generateTestSuite = testSuiteFactory({
     rootPath: [
-      __dirname,
+      import.meta.dirname,
       '..',
       '..',
       '..',
