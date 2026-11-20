@@ -29,9 +29,9 @@
 
 import HttpStatus from 'http-status';
 
-import {ApiError} from '../../../utils';
-import {ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../constants';
-import {testOverlap1, testOverlap2} from './isbnUtils';
+import {ApiError} from '../../../utils/index.js';
+import {ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../constants.js';
+import {testOverlap1, testOverlap2} from './isbnUtils.js';
 
 /**
  * Creates payload for creating new ISBN range

@@ -35,9 +35,9 @@ import {
   validateSetPublisher,
   validateQueryPublicationRequestIsbn,
   validateRequestId
-} from '../../validations';
+} from '../../validations/index.js';
 
-import {publicationRequestIsbnFactory} from '../../../interfaces';
+import {publicationRequestIsbnFactory} from '../../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const publicationRequests = publicationRequestIsbnFactory();

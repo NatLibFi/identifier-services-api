@@ -28,19 +28,19 @@ import fs from 'node:fs';
 
 import {Sequelize} from 'sequelize';
 
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../utils/local-melinda-utils.js';
 
-import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED, DB_CA_FILEPATH} from '../config';
-import {DB_TYPES} from './constants';
-import {isMysqlOrMaria, isValidDatabaseDialect} from './utils';
+import {DB_URI, DB_DIALECT, DB_DIALECT_OPTIONS, NODE_ENV, DB_BENCHMARK_ENABLED, DB_CA_FILEPATH} from '../config.js';
+import {DB_TYPES} from './constants.js';
+import {isMysqlOrMaria, isValidDatabaseDialect} from './utils.js';
 
-import * as isbnRegistryModels from './isbn-registry';
-import applyIsbnRegistryAssociations from './isbn-registry/associations';
+import * as isbnRegistryModels from './isbn-registry/index.js';
+import applyIsbnRegistryAssociations from './isbn-registry/associations.js';
 
-import * as issnRegistryModels from './issn-registry';
-import applyIssnRegistryAssociations from './issn-registry/associations';
+import * as issnRegistryModels from './issn-registry/index.js';
+import applyIssnRegistryAssociations from './issn-registry/associations.js';
 
-import * as commonModels from './common';
+import * as commonModels from './common/index.js';
 
 let sequelize;
 
@@ -65,22 +65,27 @@ if (NODE_ENV === 'test') {
   logger.info(`using DB dialect of "${DB_DIALECT}"`);
   logger.info(`apply DB engine definitions regarding engine, charset and collate: ${applyEngineDefinitions}`);
 
-  // Initialize dialect options for ssl separately for injecting ca if need be
-  const sslOptions = DB_DIALECT_OPTIONS.ssl ? DB_DIALECT_OPTIONS.ssl : {};
-
   const dialectOptions = {
     ...DB_DIALECT_OPTIONS,
-    ssl: sslOptions,
   };
 
-  // If ca file has been passed, read it and add to dialect options
+  // Initialize dialect options for ssl separately for injecting ca if need be
+  let sslOptions = DB_DIALECT_OPTIONS.ssl ? DB_DIALECT_OPTIONS.ssl : {};
+
+  // If ca file has been passed, read it and add to ssl options
   if (DB_CA_FILEPATH) {
-    dialectOptions.ssl = {
+    sslOptions = {
       ...sslOptions,
       ca: fs.readFileSync(DB_CA_FILEPATH),
     };
 
     logger.info('Database connection CA has been overwritten from file');
+  }
+
+  // If ssl options are defined, add them to dialect options
+  // Otherwise do not define them (required e.g., for development environment in some cases)
+  if(Object.keys(sslOptions).length > 0) {
+    dialectOptions.ssl = sslOptions;
   }
 
   const logDbBenchmark = (_message, timeMS) => logger.debug(`SQL took ${timeMS}ms`);

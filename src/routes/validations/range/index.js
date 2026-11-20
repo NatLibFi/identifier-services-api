@@ -26,7 +26,7 @@
  */
 
 import {Joi} from 'celebrate';
-import regexPatterns from '../patterns';
+import regexPatterns from '../patterns.js';
 
 export const validateCreateRangeIsbn = {
   prefix: Joi.number().integer().min(978).max(979).required(),

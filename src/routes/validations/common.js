@@ -26,7 +26,7 @@
  */
 
 import {Joi} from 'celebrate';
-import regexPatterns from './patterns';
+import regexPatterns from './patterns.js';
 
 export const validateRequestId = {
   id: Joi.number().integer().required()

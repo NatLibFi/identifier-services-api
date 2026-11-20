@@ -29,10 +29,10 @@
 
 import {DataTypes} from 'sequelize';
 
-import {isValidIssnIdentifier} from './validators';
-import {canApplyIndex, isMysqlOrMaria} from '../utils';
-import {TABLE_PREFIX} from '../../config';
-import {jsonToPreviousString, previousStringToJson} from '../modelUtils';
+import {isValidIssnIdentifier} from './validators.js';
+import {canApplyIndex, isMysqlOrMaria} from '../utils.js';
+import {TABLE_PREFIX} from '../../config.js';
+import {jsonToPreviousString, previousStringToJson} from '../modelUtils/index.js';
 
 export default function (sequelize, dialect) {
   const indexes = canApplyIndex(dialect) ? getIndexes() : [];

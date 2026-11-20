@@ -25,14 +25,14 @@
  *
  */
 
-export {default as issnRequestFactory} from './requests';
-export {default as issnRequestArchiveFactory} from './archivedRequests';
+export {default as issnRequestFactory} from './requests.js';
+export {default as issnRequestArchiveFactory} from './archivedRequests.js';
 
-export {default as issnPublisherFactory} from './publishers';
-export {default as issnPublicationFactory} from './publications';
+export {default as issnPublisherFactory} from './publishers.js';
+export {default as issnPublicationFactory} from './publications.js';
 
-export {default as issnRangeFactory} from './ranges';
+export {default as issnRangeFactory} from './ranges.js';
 
-export {default as messageIssnFactory} from './messages';
+export {default as messageIssnFactory} from './messages.js';
 
-export {default as statisticsIssnFactory} from './statistics';
+export {default as statisticsIssnFactory} from './statistics.js';

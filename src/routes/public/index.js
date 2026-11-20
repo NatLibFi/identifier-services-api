@@ -27,8 +27,8 @@
 
 import {Router} from 'express';
 
-import {default as createPublicIsbnRegistryRouter} from './isbn-registry';
-import {default as createPublicIssnRegistryRouter} from './issn-registry';
+import {default as createPublicIsbnRegistryRouter} from './isbn-registry.js';
+import {default as createPublicIssnRegistryRouter} from './issn-registry.js';
 
 export default function () {
   return new Router()

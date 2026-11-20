@@ -25,4 +25,4 @@
  *
  */
 
-export {emptyQueryResult, generateQuery} from './queries';
+export {emptyQueryResult, generateQuery} from './queries.js';

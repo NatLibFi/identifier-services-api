@@ -29,15 +29,15 @@
 
 import HttpStatus from 'http-status';
 import {QueryTypes} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../../utils/local-melinda-utils.js';
 
-import sequelize from '../../../models';
-import {ApiError} from '../../../utils';
-import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../../constants';
+import sequelize from '../../../models/index.js';
+import {ApiError} from '../../../utils/index.js';
+import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../../constants.js';
 
-import {AUTHOR_PUBLISHER_ID_ISBN, DB_DIALECT, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config';
-import {formatPublicationToPIID, formatPublisherToPIID} from './statisticsUtils';
-import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../../common/utils/statisticsUtils';
+import {AUTHOR_PUBLISHER_ID_ISBN, DB_DIALECT, STATE_PUBLISHER_ID_ISBN, UNIVERSITY_PUBLISHER_ID_ISBN, WEBSITE_USER} from '../../../config.js';
+import {formatPublicationToPIID, formatPublisherToPIID} from './statisticsUtils.js';
+import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../../common/utils/statisticsUtils.js';
 
 /**
  * ISBN statistics interface.

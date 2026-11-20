@@ -30,8 +30,8 @@
 import {MarcRecord} from '@natlibfi/marc-record';
 import {DateTime} from 'luxon';
 
-import {ISSN_PUBLICATION_TYPES, ISSN_REGISTRY_PUBLICATION_MEDIUM} from '../constants';
-import {NODE_ENV} from '../../config';
+import {ISSN_PUBLICATION_TYPES, ISSN_REGISTRY_PUBLICATION_MEDIUM} from '../constants.js';
+import {NODE_ENV} from '../../config.js';
 
 /**
  * Convert ISSN-registry publication entry to MARC record

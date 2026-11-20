@@ -29,8 +29,8 @@
 
 import HttpStatus from 'http-status';
 
-import {ApiError} from '../../utils';
-import sequelize from '../../models';
+import {ApiError} from '../../utils/index.js';
+import sequelize from '../../models/index.js';
 
 /**
  * Abstract interface that provides CRUD operations for the model given as parameter.

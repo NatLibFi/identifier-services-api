@@ -29,9 +29,9 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateTurnstile} from '../../middlewares/turnstile';
-import {validateCreateIssnRequest} from '../validations';
-import {issnRequestFactory} from '../../interfaces';
+import {validateTurnstile} from '../../middlewares/turnstile.js';
+import {validateCreateIssnRequest} from '../validations/index.js';
+import {issnRequestFactory} from '../../interfaces/index.js';
 
 export default function () {
   const issnRequests = issnRequestFactory();

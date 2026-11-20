@@ -29,11 +29,11 @@
 
 import HttpStatus from 'http-status';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import abstractModelInterface from '../common/abstractModelInterface';
-import {testOverlap1, testOverlap2} from '../isbn-registry/ranges/isbnUtils';
-import {calculateCheckDigitIssn} from './rangeUtils';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
+import {testOverlap1, testOverlap2} from '../isbn-registry/ranges/isbnUtils.js';
+import {calculateCheckDigitIssn} from './rangeUtils.js';
 
 /**
  * ISSN range interface. Contains CRUD operations and a number of helper functions.

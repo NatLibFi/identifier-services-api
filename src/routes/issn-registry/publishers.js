@@ -35,9 +35,9 @@ import {
   validateQueryBody,
   validateRequestId,
   validatePublisherAutocompleteBody
-} from '../validations';
+} from '../validations/index.js';
 
-import {issnPublisherFactory} from '../../interfaces';
+import {issnPublisherFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const issnPublishers = issnPublisherFactory();

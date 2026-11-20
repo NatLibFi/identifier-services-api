@@ -29,16 +29,16 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
 import xl from 'excel4node';
 
-import sequelize from '../../models';
-import {ApiError, isAdmin} from '../../utils';
-import {AUDIT_OPERATION_TYPES, COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
-import {generateQuery, emptyQueryResult} from '../interfaceUtils';
+import sequelize from '../../models/index.js';
+import {ApiError, isAdmin} from '../../utils/index.js';
+import {AUDIT_OPERATION_TYPES, COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants.js';
+import {generateQuery, emptyQueryResult} from '../interfaceUtils/index.js';
 
-import regexPatterns from '../../routes/validations/patterns';
+import regexPatterns from '../../routes/validations/patterns.js';
 
 /**
  * ISBN publishers interface. Contains read, query and update operations.

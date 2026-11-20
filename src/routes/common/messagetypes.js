@@ -33,9 +33,9 @@ import {
   validateCreateMessageType,
   validateUpdateMessageType,
   validateRequestId
-} from '../validations';
+} from '../validations/index.js';
 
-import {messageTypeFactory} from '../../interfaces';
+import {messageTypeFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware, registry) {
 

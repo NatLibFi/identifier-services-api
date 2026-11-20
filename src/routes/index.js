@@ -25,7 +25,7 @@
  *
  */
 
-export {createAuthenticationRouter, createStatusRouter} from './common';
-export {default as createIsbnRegistryRouter} from './isbn-registry';
-export {default as createIssnRegistryRouter} from './issn-registry';
-export {default as createPublicRouter} from './public';
+export {createAuthenticationRouter, createStatusRouter} from './common/index.js';
+export {default as createIsbnRegistryRouter} from './isbn-registry/index.js';
+export {default as createIssnRegistryRouter} from './issn-registry/index.js';
+export {default as createPublicRouter} from './public/index.js';

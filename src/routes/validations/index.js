@@ -29,14 +29,14 @@ export {
   validatePublisherAutocompleteBody,
   validateQueryBody,
   validateRequestId
-} from './common';
+} from './common.js';
 
 export {
   validateCreateRangeIsbn,
   validateCreateRangeIsmn,
   validateCreateRangeIssn,
   validateCreateSubRange
-} from './range';
+} from './range/index.js';
 
 export {
   validateCreatePublisherRequestIsbn,
@@ -47,7 +47,7 @@ export {
   validateIsbnRegistryPublisherGetInformationPackageQueryBody,
   validateCreateIssnPublisher,
   validateUpdateIssnPublisher
-} from './publisher';
+} from './publisher/index.js';
 
 export {
   validateCreatePublicationRequestIsbn,
@@ -58,7 +58,7 @@ export {
   validateCreatePublicationIssn,
   validateUpdatePublicationIssn,
   validateIssnPublicationQueryBody
-} from './publication';
+} from './publication/index.js';
 
 export {
   validateCreateMessageTemplate,
@@ -72,26 +72,26 @@ export {
   validateSendMessageIsbn,
   validateSendMessageIssn,
   validateResendMessage
-} from './message';
+} from './message/index.js';
 
 export {
   validateCreateIdentifierBatch,
   validateQueryIdentifierBatch,
   validateCancelOrRemoveIdentifier
-} from './identifiers';
+} from './identifiers/index.js';
 
 export {
   validateStatisticsRequestIsbn,
   validateStatisticsRequestIssn
-} from './statistics';
+} from './statistics/index.js';
 
 export {
   validateCreateIssnRequest,
   validateUpdateIssnRequest,
   validateQueryIssnRequest,
   validateIssnArchiveSearch
-} from './issnForm';
+} from './issnForm/index.js';
 
 export {
   validateGetMarcRecord
-} from './marc';
+} from './marc/index.js';

@@ -30,14 +30,14 @@
 import HttpStatus from 'http-status';
 import {QueryTypes} from 'sequelize';
 
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants.js';
 
-import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../common/utils/statisticsUtils';
-import {DB_DIALECT} from '../../config';
+import {formatStatisticsToCsv, formatStatisticsToXlsx, getSQLDateDefinition} from '../common/utils/statisticsUtils.js';
+import {DB_DIALECT} from '../../config.js';
 
 /**
  * ISSN-registry statistics interface.

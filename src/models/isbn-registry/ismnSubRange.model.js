@@ -29,9 +29,9 @@
 
 import {DataTypes} from 'sequelize';
 
-import {canApplyIndex, isMysqlOrMaria} from '../utils';
-import {ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../interfaces/constants';
-import {TABLE_PREFIX} from '../../config';
+import {canApplyIndex, isMysqlOrMaria} from '../utils.js';
+import {ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../interfaces/constants.js';
+import {TABLE_PREFIX} from '../../config.js';
 
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index

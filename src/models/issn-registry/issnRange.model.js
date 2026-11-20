@@ -29,9 +29,9 @@
 
 import {DataTypes} from 'sequelize';
 
-import {isValidIssnIdentifier} from './validators';
-import {isMysqlOrMaria} from '../utils';
-import {TABLE_PREFIX} from '../../config';
+import {isValidIssnIdentifier} from './validators.js';
+import {isMysqlOrMaria} from '../utils.js';
+import {TABLE_PREFIX} from '../../config.js';
 
 export default function (sequelize, dialect) {
   sequelize.define(

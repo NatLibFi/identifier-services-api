@@ -30,8 +30,8 @@
 import nodemailer from 'nodemailer';
 import {convert} from 'html-to-text';
 
-import {SMTP_CONFIG, MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../../config';
-import {ISSN_REGISTRY_PUBLICATION_MEDIUM, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES} from '../../constants';
+import {SMTP_CONFIG, MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../../config.js';
+import {ISSN_REGISTRY_PUBLICATION_MEDIUM, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES} from '../../constants.js';
 
 /**
  * Utility function for sending email using nodemailer library

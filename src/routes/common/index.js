@@ -26,16 +26,16 @@
  */
 
 // AUTH ROUTER
-export {default as createAuthenticationRouter} from './authentication';
+export {default as createAuthenticationRouter} from './authentication.js';
 
 // STATUS ROUTER
-export {default as createStatusRouter} from './status';
+export {default as createStatusRouter} from './status.js';
 
 // MESSAGETYPES ROUTER
-export {default as createMessageTypeRouter} from './messagetypes';
+export {default as createMessageTypeRouter} from './messagetypes.js';
 
 // MESSAGETEMPLATES ROUTER
-export {default as createMessageTemplateRouter} from './messagetemplates';
+export {default as createMessageTemplateRouter} from './messagetemplates.js';
 
 // MARC ROUTER
-export {default as createMarcRouter} from './marc';
+export {default as createMarcRouter} from './marc.js';

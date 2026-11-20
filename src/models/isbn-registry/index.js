@@ -26,30 +26,30 @@
  */
 
 // Messages
-export {default as messageIsbnModel} from './messageIsbn.model';
-export {default as messageTypeIsbnModel} from './messageTypeIsbn.model';
-export {default as messageTemplateIsbnModel} from './messageTemplateIsbn.model';
-export {default as groupMessageIsbnModel} from './groupMessageIsbn.model';
+export {default as messageIsbnModel} from './messageIsbn.model.js';
+export {default as messageTypeIsbnModel} from './messageTypeIsbn.model.js';
+export {default as messageTemplateIsbnModel} from './messageTemplateIsbn.model.js';
+export {default as groupMessageIsbnModel} from './groupMessageIsbn.model.js';
 
 // Publication
-export {default as publicationIsbnModel} from './publicationIsbn.model';
+export {default as publicationIsbnModel} from './publicationIsbn.model.js';
 
 // Publisher
-export {default as publisherIsbnModel} from './publisherIsbn.model';
-export {default as publisherIsbnArchiveRecordModel} from './publisherIsbnArchiveRecord.model';
+export {default as publisherIsbnModel} from './publisherIsbn.model.js';
+export {default as publisherIsbnArchiveRecordModel} from './publisherIsbnArchiveRecord.model.js';
 
 // Identifiers
-export {default as identifierModel} from './identifier.model';
-export {default as identifierBatchModel} from './identifierBatch.model';
-export {default as identifierCanceledModel} from './identifierCanceled.model';
+export {default as identifierModel} from './identifier.model.js';
+export {default as identifierBatchModel} from './identifierBatch.model.js';
+export {default as identifierCanceledModel} from './identifierCanceled.model.js';
 
 // Ranges
-export {default as isbnRangeModel} from './isbnRange.model';
-export {default as isbnSubRangeModel} from './isbnSubRange.model';
-export {default as isbnSubRangeCanceledModel} from './isbnSubRangeCanceled.model';
+export {default as isbnRangeModel} from './isbnRange.model.js';
+export {default as isbnSubRangeModel} from './isbnSubRange.model.js';
+export {default as isbnSubRangeCanceledModel} from './isbnSubRangeCanceled.model.js';
 
-export {default as ismnRangeModel} from './ismnRange.model';
-export {default as ismnSubRangeModel} from './ismnSubRange.model';
-export {default as ismnSubRangeCanceledModel} from './ismnSubRangeCanceled.model';
+export {default as ismnRangeModel} from './ismnRange.model.js';
+export {default as ismnSubRangeModel} from './ismnSubRange.model.js';
+export {default as ismnSubRangeCanceledModel} from './ismnSubRangeCanceled.model.js';
 
-export {default as identifierBatchDownload} from './identifierBatchDownload.model';
+export {default as identifierBatchDownload} from './identifierBatchDownload.model.js';

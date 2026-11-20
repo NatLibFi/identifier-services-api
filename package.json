@@ -17,30 +17,29 @@
   "license": "GPL-3.0-only",
   "private": true,
   "version": "3.0.0-alpha.3",
-  "main": "./dist/index.js",
+  "main": "./src/index.js",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
-    "start": "node ./src/index",
+    "start": "node ./src/index.js",
     "lint:apidoc": "redocly lint apidoc/openapi.yaml",
     "lint:dev": "eslint --fix -- src",
     "lint": "eslint -- src",
-    "test:base": "DOTENV_CONFIG_PATH=test-fixtures/test-environment mocha -t 20000",
-    "test": "npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
+    "test:base": "mocha -t 20000",
+    "test": "dotenv run -f test-fixtures/test-environment -- npm run test:base -- -b src/routes/**/*.spec.js src/routes/**/**/*.spec.js src/interfaces/**/*.spec.js src/interfaces/**/**/*spec.js",
     "test:isbn-registry-routes": "npm run test:base -- -b src/routes/isbn-registry/**/*spec.js src/routes/isbn-registry/*spec.js src/interfaces/isbn-registry/*.spec.js src/interfaces/isbn-registry/**/*spec.js",
     "test:issn-registry-routes": "npm run test:base -- -b src/routes/issn-registry/**/*spec.js src/routes/issn-registry/*spec.js src/interfaces/issn-registry/*.spec.js src/interfaces/issn-registry/**/*spec.js",
     "test:common-routes": "npm run test:base -- -b src/routes/common/*spec.js",
     "test:public-routes": "npm run test:base -- -b src/routes/public/*spec.js",
     "build:apidoc": "redocly bundle apidoc/openapi.yaml -o dist/public/openapi.json --ext json",
     "build:apidoc-dev": "redocly bundle apidoc/openapi.yaml -o src/public/openapi.json",
-    "watch:dev": "DOTENV_CONFIG_PATH=.env.dev nodemon -r dotenv/config -w apidoc -w src --ignore 'src/public/openapi.json' --exec 'npm run build:apidoc-dev && node src/index.js'"
+    "watch:dev": "dotenv run -f ../identifier-services-api-v1-dev-env -- nodemon -w src --ignore 'src/public/openapi.json' src/index.js"
   },
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
     "@natlibfi/marc-record": "^10.0.1",
     "@natlibfi/marc-record-serializers": "^11.0.1",
-    "@natlibfi/melinda-backend-commons": "^3.0.4",
     "@natlibfi/melinda-rest-api-client": "^6.0.3",
     "@natlibfi/passport-natlibfi-keycloak": "^3.0.14",
     "@natlibfi/sru-client": "^7.0.1",
@@ -49,12 +48,14 @@
     "cors": "^2.8.6",
     "excel4node": "^1.8.2",
     "express": "^4.21.2",
+    "express-winston": "^4.2.0",
     "html-to-text": "^9.0.4",
     "http-status": "^2.1.0",
     "luxon": "^3.6.1",
     "mysql2": "^3.16.2",
     "nodemailer": "^9.0.5",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@natlibfi/fixura": "^4.0.0",
@@ -62,8 +63,9 @@
     "base-64": "^1.0.0",
     "chai": "^4.5.0",
     "chai-http": "^4.4.0",
-    "dotenv": "^17.2.2",
+    "dotenv": "^18.0.10",
     "eslint": "^9.39.1",
+    "mariadb": "^3.5.5",
     "mocha": "^12.0.3",
     "nock": "^14.0.4",
     "nodemon": "^3.1.9",

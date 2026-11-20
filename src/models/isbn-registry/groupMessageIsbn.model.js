@@ -29,8 +29,8 @@
 
 import {DataTypes} from 'sequelize';
 
-import {canApplyIndex, isMysqlOrMaria} from '../utils';
-import {TABLE_PREFIX} from '../../config';
+import {canApplyIndex, isMysqlOrMaria} from '../utils.js';
+import {TABLE_PREFIX} from '../../config.js';
 
 // NOTE: not in use
 /* istanbul ignore next */

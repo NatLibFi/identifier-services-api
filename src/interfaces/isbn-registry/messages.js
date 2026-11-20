@@ -29,15 +29,15 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import {AUTHOR_PUBLISHER_ID_ISBN, ISBN_EMAIL, MESSAGE_TYPE_CONFIG_ISBN, NODE_ENV, SEND_EMAILS, UI_URL} from '../../config';
+import {AUTHOR_PUBLISHER_ID_ISBN, ISBN_EMAIL, MESSAGE_TYPE_CONFIG_ISBN, NODE_ENV, SEND_EMAILS, UI_URL} from '../../config.js';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {generateQuery} from '../interfaceUtils';
-import {getTestPrefixedMessageBody, getTestPrefixedSubject, isValidIsbnMessageCode, sendEmail, translatePublicationTypeIsbn} from '../common/utils/messageUtils';
-import abstractModelInterface from '../common/abstractModelInterface';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {generateQuery} from '../interfaceUtils/index.js';
+import {getTestPrefixedMessageBody, getTestPrefixedSubject, isValidIsbnMessageCode, sendEmail, translatePublicationTypeIsbn} from '../common/utils/messageUtils.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
 
 /**
  * ISBN-registry message interface. Contains send, loadTemplate, read and query operations.

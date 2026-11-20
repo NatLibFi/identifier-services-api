@@ -25,8 +25,8 @@
  *
  */
 
-import {readEnvironmentVariable} from '@natlibfi/melinda-backend-commons';
-import {parseBoolean} from './utils';
+import {readEnvironmentVariable} from './utils/local-melinda-utils.js';
+import {parseBoolean} from './utils/index.js';
 
 // ENV
 export const NODE_ENV = readEnvironmentVariable('NODE_ENV', {defaultValue: 'development'});

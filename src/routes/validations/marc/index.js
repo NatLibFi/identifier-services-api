@@ -27,7 +27,7 @@
 
 import {Joi} from 'celebrate';
 
-import regexPatterns from '../patterns';
+import regexPatterns from '../patterns.js';
 
 export const validateGetMarcRecord = {
   format: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).regex(regexPatterns.marcFormats),

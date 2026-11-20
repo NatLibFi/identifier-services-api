@@ -26,24 +26,24 @@
  */
 
 // Messages
-export {default as messageIssnModel} from './messageIssn.model';
-export {default as messageTypeIssnModel} from './messageTypeIssn.model';
-export {default as messageTemplateIssnModel} from './messageTemplateIssn.model';
+export {default as messageIssnModel} from './messageIssn.model.js';
+export {default as messageTypeIssnModel} from './messageTypeIssn.model.js';
+export {default as messageTemplateIssnModel} from './messageTemplateIssn.model.js';
 
 // Publications
-export {default as publicationIssnModel} from './publicationIssn.model';
-export {default as publicationIssnArchiveModel} from './publicationIssnArchive.model';
+export {default as publicationIssnModel} from './publicationIssn.model.js';
+export {default as publicationIssnArchiveModel} from './publicationIssnArchive.model.js';
 
 // Publisher
-export {default as publisherIssnModel} from './publisherIssn.model';
+export {default as publisherIssnModel} from './publisherIssn.model.js';
 
 // Range
-export {default as issnRangeModel} from './issnRange.model';
+export {default as issnRangeModel} from './issnRange.model.js';
 
 // Identifiers
-export {default as issnUsedModel} from './issnUsed.model';
-export {default as issnCanceledModel} from './issnCanceled.model';
+export {default as issnUsedModel} from './issnUsed.model.js';
+export {default as issnCanceledModel} from './issnCanceled.model.js';
 
 // Forms
-export {default as issnFormModel} from './issnForm.model';
-export {default as issnFormArchiveModel} from './issnFormArchive.model';
+export {default as issnFormModel} from './issnForm.model.js';
+export {default as issnFormArchiveModel} from './issnFormArchive.model.js';

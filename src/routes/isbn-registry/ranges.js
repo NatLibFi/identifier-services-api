@@ -29,10 +29,10 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateCreateRangeIsbn, validateCreateRangeIsmn} from '../validations';
+import {validateRequestId, validateCreateRangeIsbn, validateCreateRangeIsmn} from '../validations/index.js';
 
-import {rangesFactory} from '../../interfaces';
-import {COMMON_IDENTIFIER_TYPES} from '../../interfaces/constants';
+import {rangesFactory} from '../../interfaces/index.js';
+import {COMMON_IDENTIFIER_TYPES} from '../../interfaces/constants.js';
 
 export default function (permissionMiddleware, identifierType) {
   const rangesInterface = rangesFactory(identifierType);

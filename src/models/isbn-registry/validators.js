@@ -25,7 +25,7 @@
  *
  */
 
-import {calculateCheckDigitIsbn} from '../../interfaces/isbn-registry/ranges/isbnUtils';
+import {calculateCheckDigitIsbn} from '../../interfaces/isbn-registry/ranges/isbnUtils.js';
 
 export function isValidIsbnOrIsmnIdentifier(value) {
   // Note: ISBN validation regexp considers only Finnish ISBN language groups

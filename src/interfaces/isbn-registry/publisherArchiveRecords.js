@@ -29,8 +29,8 @@
 
 import HttpStatus from 'http-status';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
 
 /**
  * ISBN publisher archive entries interface. Contains query operation.

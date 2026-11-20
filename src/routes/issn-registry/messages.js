@@ -35,9 +35,9 @@ import {
   validateSendMessageIssn,
   validateResendMessage,
   validateQueryMessageIssn
-} from '../validations';
+} from '../validations/index.js';
 
-import {messageIssnFactory} from '../../interfaces';
+import {messageIssnFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
 

@@ -29,9 +29,9 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody, validateIsbnRegistryPublisherEmailDownloadQueryBody, validateIsbnRegistryPublisherGetInformationPackageQueryBody} from '../validations';
+import {validateRequestId, validateIsbnPublisherQueryBody, validatePublisherAutocompleteBody, validateIsbnRegistryPublisherEmailDownloadQueryBody, validateIsbnRegistryPublisherGetInformationPackageQueryBody} from '../validations/index.js';
 
-import {publishersIsbnFactory} from '../../interfaces';
+import {publishersIsbnFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
 

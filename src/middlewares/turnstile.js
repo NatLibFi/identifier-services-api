@@ -27,8 +27,8 @@
 
 import HttpStatus from 'http-status';
 
-import {NODE_ENV, TURNSTILE_SECRET_KEY, TURNSTILE_URL, DISABLE_TURNSTILE} from '../config';
-import {ApiError, isAdmin} from '../utils';
+import {NODE_ENV, TURNSTILE_SECRET_KEY, TURNSTILE_URL, DISABLE_TURNSTILE} from '../config.js';
+import {ApiError, isAdmin} from '../utils/index.js';
 
 /**
  * Validates turnstile token

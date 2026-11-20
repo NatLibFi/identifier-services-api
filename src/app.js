@@ -27,7 +27,6 @@
 
 /* eslint-disable no-unused-vars*/
 import {generatePassportMiddlewares} from '@natlibfi/passport-natlibfi-keycloak';
-import {createLogger} from '@natlibfi/melinda-backend-commons';
 
 import express from 'express';
 import cors from 'cors';
@@ -37,11 +36,12 @@ import HttpStatus from 'http-status';
 import {isCelebrateError} from 'celebrate';
 import path from 'path';
 
-import sequelize from './models';
-import * as routes from './routes';
+import sequelize from './models/index.js';
+import * as routes from './routes/index.js';
 
-import {ApiError, bodyParse, getExpressLogger} from './utils';
-import {getUserApplicationRoles, generateUserAuthorizationMiddleware, generatePermissionMiddleware} from './middlewares';
+import {ApiError, bodyParse, getExpressLogger} from './utils/index.js';
+import {createLogger} from './utils/local-melinda-utils.js';
+import {getUserApplicationRoles, generateUserAuthorizationMiddleware, generatePermissionMiddleware} from './middlewares/index.js';
 
 import {
   CORS_WHITELIST,
@@ -57,7 +57,7 @@ import {
   HTTPS_PORT,
   SEND_EMAILS,
   NODE_ENV
-} from './config';
+} from './config.js';
 
 export default async function run() { // eslint-disable-line
   const logger = createLogger();
