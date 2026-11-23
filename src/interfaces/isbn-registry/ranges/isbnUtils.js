@@ -29,8 +29,8 @@
 
 import HttpStatus from 'http-status';
 
-import {ApiError} from '../../../utils';
-import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH} from '../../constants';
+import {ApiError} from '../../../utils/index.js';
+import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH} from '../../constants.js';
 
 /**
  * Creates payload for creating new ISBN range

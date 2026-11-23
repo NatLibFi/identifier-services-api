@@ -28,17 +28,17 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import HttpStatus from 'http-status';
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../../utils/local-melinda-utils.js';
 
-import sequelize from '../../../models';
+import sequelize from '../../../models/index.js';
 
-import {ApiError} from '../../../utils';
-import {formatPayloadCreateIsbnRange, formatPublisherIdentifierIsbn, isbnRangeOverlapsExisting} from './isbnUtils';
-import {formatPayloadCreateIsmnRange, formatPublisherIdentifierIsmn, ismnRangeOverlapsExisting} from './ismnUtils';
-import {publisherIdentifierBelongsToRange} from './genericUtils';
-import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../constants';
+import {ApiError} from '../../../utils/index.js';
+import {formatPayloadCreateIsbnRange, formatPublisherIdentifierIsbn, isbnRangeOverlapsExisting} from './isbnUtils.js';
+import {formatPayloadCreateIsmnRange, formatPublisherIdentifierIsmn, ismnRangeOverlapsExisting} from './ismnUtils.js';
+import {publisherIdentifierBelongsToRange} from './genericUtils.js';
+import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../../constants.js';
 
-import abstractModelInterface from '../../common/abstractModelInterface';
+import abstractModelInterface from '../../common/abstractModelInterface.js';
 
 /**
  * Abstract range interface used for ISBN and ISMN ranges. Contains vast number of operations.

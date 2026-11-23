@@ -26,7 +26,7 @@
  */
 
 import {assert} from 'chai';
-import {calculateCheckDigitIsbn} from './isbnUtils';
+import {calculateCheckDigitIsbn} from './isbnUtils.js';
 
 describe('ISBN utils', () => {
   // Note: valid ISBN and ISMNs were fetched from production data randomly

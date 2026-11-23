@@ -30,13 +30,13 @@
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import abstractModelInterface from '../common/abstractModelInterface';
-import {ISSN_REGISTRY_FORM_STATUS, ISSN_REGISTRY_PUBLICATION_MEDIUM, ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
-import {generateQuery} from '../interfaceUtils';
-import {calculateCheckDigitIssn, validateIssn} from './rangeUtils';
-import {transformIssnPublicationFromDb} from './utils';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
+import {ISSN_REGISTRY_FORM_STATUS, ISSN_REGISTRY_PUBLICATION_MEDIUM, ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants.js';
+import {generateQuery} from '../interfaceUtils/index.js';
+import {calculateCheckDigitIssn, validateIssn} from './rangeUtils.js';
+import {transformIssnPublicationFromDb} from './utils.js';
 
 
 /**

@@ -28,8 +28,8 @@
 /* Based on implementation of fixura-mongo-js by University Of Helsinki (The National Library Of Finland) */
 
 import fixturesFactory, {READERS} from '@natlibfi/fixura';
-import sequelize from '../../models';
-import {transformIssnPublicationFromDb, transformIssnPublicationToDb} from '../../interfaces/issn-registry/utils';
+import sequelize from '../../models/index.js';
+import {transformIssnPublicationFromDb, transformIssnPublicationToDb} from '../../interfaces/issn-registry/utils.js';
 
 export default function ({rootPath} = {}) {
   const {getFixture} = fixturesFactory({root: rootPath, reader: READERS.JSON});

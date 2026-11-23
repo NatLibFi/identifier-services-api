@@ -30,15 +30,15 @@
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 
-import sequelize from '../../../models';
-import {ApiError} from '../../../utils';
+import sequelize from '../../../models/index.js';
+import {ApiError} from '../../../utils/index.js';
 
-import identifiersFactory from '../identifiers';
+import identifiersFactory from '../identifiers.js';
 
-import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES, ISBN_REGISTRY_FORMATS} from '../../constants';
-import {formatPublisherIdentifierIsbn, calculateCheckDigitIsbn, isValidIdentifier} from './isbnUtils';
-import {formatPublisherIdentifierIsmn} from './ismnUtils';
-import abstractModelInterface from '../../common/abstractModelInterface';
+import {COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES, ISBN_REGISTRY_FORMATS} from '../../constants.js';
+import {formatPublisherIdentifierIsbn, calculateCheckDigitIsbn, isValidIdentifier} from './isbnUtils.js';
+import {formatPublisherIdentifierIsmn} from './ismnUtils.js';
+import abstractModelInterface from '../../common/abstractModelInterface.js';
 
 /**
  * Abstract publisher range interface. Contains CRUD operations and a number of helper functions.

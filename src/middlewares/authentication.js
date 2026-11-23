@@ -27,8 +27,8 @@
 
 import HttpStatus from 'http-status';
 
-import {permissions} from './permissions';
-import {ApiError, getRolesFromKeycloakRoles} from '../utils';
+import {permissions} from './permissions.js';
+import {ApiError, getRolesFromKeycloakRoles} from '../utils/index.js';
 
 /**
  * Returns generator for middleware which passes request to passportmiddleware if it contains authorization header

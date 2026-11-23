@@ -26,9 +26,9 @@
  */
 
 import {Joi} from 'celebrate';
-import regexPatterns from '../patterns';
+import regexPatterns from '../patterns.js';
 
-import {MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../../config';
+import {MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../../config.js';
 
 export const validateCreateMessageType = {
   name: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(50).required(),

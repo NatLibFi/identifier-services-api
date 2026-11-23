@@ -25,18 +25,18 @@
  *
  */
 
-export {default as identifierBatchesFactory} from './identifierBatches';
-export {default as identifiersFactory} from './identifiers';
+export {default as identifierBatchesFactory} from './identifierBatches.js';
+export {default as identifiersFactory} from './identifiers.js';
 
-export {default as rangesFactory} from './ranges/ranges';
-export {default as subRangesFactory} from './ranges/publisherRanges';
+export {default as rangesFactory} from './ranges/ranges.js';
+export {default as subRangesFactory} from './ranges/publisherRanges.js';
 
-export {default as publishersIsbnFactory} from './publishers';
-export {default as publishersIsbnArchiveRecordsFactory} from './publisherArchiveRecords';
+export {default as publishersIsbnFactory} from './publishers.js';
+export {default as publishersIsbnArchiveRecordsFactory} from './publisherArchiveRecords.js';
 
-export {default as publisherRequestIsbnFactory} from './requests/publisher';
-export {default as publicationRequestIsbnFactory} from './requests/publication';
+export {default as publisherRequestIsbnFactory} from './requests/publisher.js';
+export {default as publicationRequestIsbnFactory} from './requests/publication.js';
 
-export {default as messageIsbnFactory} from './messages';
+export {default as messageIsbnFactory} from './messages.js';
 
-export {default as statisticsIsbnFactory} from './statistics/index';
+export {default as statisticsIsbnFactory} from './statistics/index.js';

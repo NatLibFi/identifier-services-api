@@ -34,9 +34,9 @@ import {
   validateRequestId,
   validateCreatePublisherRequestIsbn,
   validateUpdatePublisherRequestIsbn
-} from '../../validations';
+} from '../../validations/index.js';
 
-import {publisherRequestIsbnFactory} from '../../../interfaces';
+import {publisherRequestIsbnFactory} from '../../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
 

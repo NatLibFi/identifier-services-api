@@ -29,15 +29,15 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../../utils/local-melinda-utils.js';
 
-import sequelize from '../../../models';
-import {ApiError} from '../../../utils';
-import {generateQuery} from '../../interfaceUtils';
-import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config';
-import {COMMON_LANGUAGES, ISBN_REGISTRY_FORMATS} from '../../constants';
-import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils';
-import abstractModelInterface from '../../common/abstractModelInterface';
+import sequelize from '../../../models/index.js';
+import {ApiError} from '../../../utils/index.js';
+import {generateQuery} from '../../interfaceUtils/index.js';
+import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config.js';
+import {COMMON_LANGUAGES, ISBN_REGISTRY_FORMATS} from '../../constants.js';
+import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils.js';
+import abstractModelInterface from '../../common/abstractModelInterface.js';
 
 /**
  * ISBN-registry publication request interface. Contains CRUD operations and a number of helper functions.

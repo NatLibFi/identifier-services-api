@@ -29,11 +29,11 @@
 
 import HttpStatus from 'http-status';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {COMMON_REGISTRY_TYPES} from '../constants';
-import {MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../config';
-import abstractInterface from './abstractModelInterface';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {COMMON_REGISTRY_TYPES} from '../constants.js';
+import {MESSAGE_TYPE_CONFIG_ISBN, MESSAGE_TYPE_CONFIG_ISSN} from '../../config.js';
+import abstractInterface from './abstractModelInterface.js';
 
 /**
  * Abstract message type interface that may be used by many registries. Contains mainly CRUD operations.

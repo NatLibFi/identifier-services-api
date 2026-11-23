@@ -29,9 +29,9 @@
 
 import HttpStatus from 'http-status';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {transformIssnPublicationFromDb} from './utils';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {transformIssnPublicationFromDb} from './utils.js';
 
 /**
  * Issn registry form archive interface. Contains read operation for archive information to be able to be read.

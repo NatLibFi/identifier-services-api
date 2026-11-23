@@ -33,10 +33,10 @@ import {
   validateCreateIdentifierBatch,
   validateQueryIdentifierBatch,
   validateRequestId
-} from '../validations';
+} from '../validations/index.js';
 
-import {identifierBatchesFactory, subRangesFactory} from '../../interfaces';
-import {COMMON_IDENTIFIER_TYPES} from '../../interfaces/constants';
+import {identifierBatchesFactory, subRangesFactory} from '../../interfaces/index.js';
+import {COMMON_IDENTIFIER_TYPES} from '../../interfaces/constants.js';
 
 export default function (permissionMiddleware) {
 

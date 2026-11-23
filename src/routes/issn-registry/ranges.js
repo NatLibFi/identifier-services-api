@@ -29,9 +29,9 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateCreateRangeIssn, validateRequestId} from '../validations';
+import {validateCreateRangeIssn, validateRequestId} from '../validations/index.js';
 
-import {issnRangeFactory} from '../../interfaces';
+import {issnRangeFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const issnRangeInterface = issnRangeFactory();

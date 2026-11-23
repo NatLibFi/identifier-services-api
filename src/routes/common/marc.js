@@ -32,10 +32,10 @@ import HttpStatus from 'http-status';
 import {
   validateRequestId,
   validateGetMarcRecord
-} from '../validations';
+} from '../validations/index.js';
 
-import {marcFactory} from '../../interfaces';
-import {ApiError} from '../../utils';
+import {marcFactory} from '../../interfaces/index.js';
+import {ApiError} from '../../utils/index.js';
 
 export default function (permissionMiddleware, registry) {
 

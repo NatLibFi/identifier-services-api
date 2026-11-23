@@ -25,9 +25,9 @@
  *
  */
 
-import {handleInterrupt} from '@natlibfi/melinda-backend-commons';
+import {handleInterrupt} from './utils/local-melinda-utils.js';
 
-import startApp from './app';
+import startApp from './app.js';
 
 run();
 

@@ -25,7 +25,7 @@
  *
  */
 
-import {COMMON_IDENTIFIER_TYPES} from '../../constants';
+import {COMMON_IDENTIFIER_TYPES} from '../../constants.js';
 
 /**
  * Tests whether publisher identifier is valid for the range given as parameter

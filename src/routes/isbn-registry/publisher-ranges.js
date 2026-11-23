@@ -29,9 +29,9 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateRequestId, validateCreateSubRange} from '../validations';
+import {validateRequestId, validateCreateSubRange} from '../validations/index.js';
 
-import {rangesFactory, subRangesFactory} from '../../interfaces';
+import {rangesFactory, subRangesFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware, identifierType) {
   const isbnRanges = rangesFactory(identifierType);

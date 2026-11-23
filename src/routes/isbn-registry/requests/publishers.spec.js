@@ -25,12 +25,12 @@
  *
  */
 
-import testSuiteFactory from '../../testUtils';
+import testSuiteFactory from '../../testUtils/index.js';
 
 describe('app', () => {
   const generateTestSuite = testSuiteFactory({
     rootPath: [
-      __dirname,
+      import.meta.dirname,
       '..',
       '..',
       '..',

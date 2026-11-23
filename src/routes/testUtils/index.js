@@ -28,14 +28,14 @@
 import chai, {expect} from 'chai';
 import chaiHttp from 'chai-http';
 import fixtureFactory, {READERS} from '@natlibfi/fixura';
-import startApp from '../../app';
+import startApp from '../../app.js';
 import {readdirSync, statSync} from 'fs';
 import {join as joinPath} from 'path';
 import base64 from 'base-64';
 
-import pgFixturesFactory from './dbUtils';
+import pgFixturesFactory from './dbUtils.js';
 
-import {SEND_EMAILS} from '../../config';
+import {SEND_EMAILS} from '../../config.js';
 
 chai.use(chaiHttp);
 

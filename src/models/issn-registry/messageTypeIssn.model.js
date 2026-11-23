@@ -29,8 +29,8 @@
 
 import {DataTypes} from 'sequelize';
 
-import {isMysqlOrMaria} from '../utils';
-import {TABLE_PREFIX} from '../../config';
+import {isMysqlOrMaria} from '../utils.js';
+import {TABLE_PREFIX} from '../../config.js';
 
 export default function (sequelize, dialect) {
   sequelize.define(

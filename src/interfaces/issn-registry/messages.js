@@ -29,16 +29,16 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import {ISSN_EMAIL, MESSAGE_TYPE_CONFIG_ISSN, NODE_ENV, SEND_EMAILS} from '../../config';
+import {ISSN_EMAIL, MESSAGE_TYPE_CONFIG_ISSN, NODE_ENV, SEND_EMAILS} from '../../config.js';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {generateQuery} from '../interfaceUtils';
-import {getIssnPublisherEmail, getTestPrefixedMessageBody, getTestPrefixedSubject, isValidIssnMessageCode, sendEmail, translatePublicationMediumIssn} from '../common/utils/messageUtils';
-import abstractModelInterface from '../common/abstractModelInterface';
-import {ISSN_REGISTRY_FORM_STATUS} from '../constants';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {generateQuery} from '../interfaceUtils/index.js';
+import {getIssnPublisherEmail, getTestPrefixedMessageBody, getTestPrefixedSubject, isValidIssnMessageCode, sendEmail, translatePublicationMediumIssn} from '../common/utils/messageUtils.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
+import {ISSN_REGISTRY_FORM_STATUS} from '../constants.js';
 
 /**
  * ISSN registry message interface. Contains send, loadTemplate, read and query operations.

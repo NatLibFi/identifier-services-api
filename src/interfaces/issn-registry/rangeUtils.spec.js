@@ -26,7 +26,7 @@
  */
 
 import {assert} from 'chai';
-import {calculateCheckDigitIssn, validateIssn} from './rangeUtils';
+import {calculateCheckDigitIssn, validateIssn} from './rangeUtils.js';
 
 describe('ISSN check digit utils', () => {
   // Valid ISSNs fetched from portal.issn.org randomly from items having status of 'Confirmed'

@@ -31,13 +31,13 @@ import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 import {createHash} from 'crypto';
 
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import sequelize from '../../models';
-import {ApiError, isAdmin} from '../../utils';
-import {COMMON_IDENTIFIER_TYPES} from '../constants';
-import abstractModelInterface from '../common/abstractModelInterface';
-import {NODE_ENV} from '../../config';
+import sequelize from '../../models/index.js';
+import {ApiError, isAdmin} from '../../utils/index.js';
+import {COMMON_IDENTIFIER_TYPES} from '../constants.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
+import {NODE_ENV} from '../../config.js';
 
 /**
  * ISBN-registry identifier batch interface. Contains read, query, download and remove operations for ISBN-registry identifier batches.

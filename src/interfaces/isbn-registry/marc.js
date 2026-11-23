@@ -28,9 +28,9 @@
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
 import {MarcRecord} from '@natlibfi/marc-record';
-import {NODE_ENV} from '../../config';
+import {NODE_ENV} from '../../config.js';
 
-import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../constants';
+import {ISBN_REGISTRY_FORMATS, ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES, ISBN_REGISTRY_PUBLICATION_TYPES} from '../constants.js';
 
 /**
  * Convert ISBN-registry publication entry to MARC record

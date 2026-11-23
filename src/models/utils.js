@@ -25,7 +25,7 @@
  *
  */
 
-import {DB_TYPES} from './constants';
+import {DB_TYPES} from './constants.js';
 
 export function isValidDatabaseDialect(dialect) {
   return typeof dialect === 'string' && Object.keys(DB_TYPES).includes(dialect);
