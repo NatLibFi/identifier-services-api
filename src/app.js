@@ -132,8 +132,10 @@ export default async function run() { // eslint-disable-line
     app.use('/auth', routes.createAuthenticationRouter(passportMiddlewares));
   }
 
-  // app.use('/', express.static(path.resolve(__dirname, 'public')));
-  app.use('/ping', routes.createStatusRouter());
+  const statusRouter = routes.createStatusRouter();
+
+  app.use('/', statusRouter);
+
   app.use('/public', routes.createPublicRouter());
 
   app.use('/isbn-registry', gatherUserInformationMiddlewares, routes.createIsbnRegistryRouter({permissionMiddleware}));
