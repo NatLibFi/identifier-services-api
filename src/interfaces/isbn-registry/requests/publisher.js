@@ -29,15 +29,15 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../../utils/local-melinda-utils.js';
 
-import sequelize from '../../../models';
-import {ApiError} from '../../../utils';
-import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config';
-import {generateQuery} from '../../interfaceUtils';
-import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils';
-import abstractModelInterface from '../../common/abstractModelInterface';
-import {COMMON_LANGUAGES} from '../../constants';
+import sequelize from '../../../models/index.js';
+import {ApiError} from '../../../utils/index.js';
+import {ISBN_EMAIL, NODE_ENV, SEND_EMAILS, WEBSITE_USER} from '../../../config.js';
+import {generateQuery} from '../../interfaceUtils/index.js';
+import {getTestPrefixedMessageBody, getTestPrefixedSubject, sendEmail} from '../../common/utils/messageUtils.js';
+import abstractModelInterface from '../../common/abstractModelInterface.js';
+import {COMMON_LANGUAGES} from '../../constants.js';
 
 /**
  * Publisher registry request interface. Contains create, read and query operations and a number of helper functions.
@@ -94,7 +94,7 @@ export default function () {
 
       // Inform customer that the request was successfully received if system is configured to send emails
       // and user who initiated the request is not logged in
-      /* eslint-disable functional/no-let */
+     
       if (!user && SEND_EMAILS) {
         let messageBody = getNotifyClientMessageBody(doc.langCode);
         let subject = getNotifyClientMessageSubject(doc.langCode);
@@ -121,7 +121,7 @@ export default function () {
           logger.error('Encountered error when attempting to send ISBN registry publisher request confirmation email using nodemailer.');
         }
       }
-      /* eslint-enable functional/no-let */
+      
 
       // Return saved publisher information
       return result.toJSON();

@@ -27,12 +27,12 @@
 
 import bodyParser from 'body-parser';
 
-import {createLogger, createExpressLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger, createExpressLogger} from '../utils/local-melinda-utils.js';
 
-import validateContentType from '../middlewares/validate-content-type';
-import {ENABLE_PROXY, PROXY_CUSTOM_HEADER, ROLE_MAP} from '../config';
+import validateContentType from '../middlewares/validate-content-type.js';
+import {ENABLE_PROXY, PROXY_CUSTOM_HEADER, ROLE_MAP} from '../config.js';
 
-export {ApiError} from './apiError';
+export {ApiError} from './apiError.js';
 
 export function bodyParse() {
   validateContentType({

@@ -25,4 +25,4 @@
  *
  */
 
-export {default as audietEntryModel} from './auditEntry.model';
+export {default as audietEntryModel} from './auditEntry.model.js';

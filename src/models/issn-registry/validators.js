@@ -25,7 +25,7 @@
  *
  */
 
-import {calculateCheckDigitIssn} from '../../interfaces/issn-registry/rangeUtils';
+import {calculateCheckDigitIssn} from '../../interfaces/issn-registry/rangeUtils.js';
 
 export function isValidIssnIdentifier(value) {
   const issnIdentifierRegex = /^[0-9]{4}-[0-9]{3}[0-9X]$/;

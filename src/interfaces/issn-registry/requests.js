@@ -30,12 +30,12 @@
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {WEBSITE_USER} from '../../config';
-import {ISSN_REGISTRY_FORM_STATUS, ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants';
-import {generateQuery} from '../interfaceUtils';
-import abstractModelInterface from '../common/abstractModelInterface';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {WEBSITE_USER} from '../../config.js';
+import {ISSN_REGISTRY_FORM_STATUS, ISSN_REGISTRY_PUBLICATION_STATUS} from '../constants.js';
+import {generateQuery} from '../interfaceUtils/index.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
 
 /**
  * ISSN request form interface. Contains CRU operations and a number of helper functions.
@@ -102,7 +102,6 @@ export default function () {
       // Save publications and their archive information
       // Loop is used instead of resolving Promise.all
       // so that the link between archive record and publication can be established
-      /* eslint-disable functional/no-loop-statements */
       for (const publication of publications) {
         const previousEntity = getPublicationJSONattribute(publication.previous, ['title', 'issn', 'lastIssue']);
         const mainSeries = getPublicationJSONattribute(publication.mainSeries);

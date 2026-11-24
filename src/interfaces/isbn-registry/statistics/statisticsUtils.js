@@ -29,9 +29,9 @@
 
 import HttpStatus from 'http-status';
 
-import {ApiError} from '../../../utils';
-import {AUTHOR_PUBLISHER_ID_ISBN} from '../../../config';
-import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES} from '../../constants';
+import {ApiError} from '../../../utils/index.js';
+import {AUTHOR_PUBLISHER_ID_ISBN} from '../../../config.js';
+import {ISBN_REGISTRY_PUBLICATION_ELECTRONICAL_TYPES, ISBN_REGISTRY_PUBLICATION_PRINT_TYPES} from '../../constants.js';
 
 /**
  * Formats items so that statistics have required headers

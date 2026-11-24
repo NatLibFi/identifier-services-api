@@ -26,7 +26,7 @@
  */
 
 import {Joi} from 'celebrate';
-import regexPatterns from '../patterns';
+import regexPatterns from '../patterns.js';
 
 export const validateCreatePublicationIssn = {
   title: Joi.string().regex(regexPatterns.utf8mb4, {invert: true}).max(200).required(),

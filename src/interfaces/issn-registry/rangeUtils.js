@@ -32,7 +32,6 @@
  * @param {string} issnWithoutCheckDigit ISSN number without the check digit (e.g., block and number)
  * @returns {string} Check digit if the input value was valid and check digit is considered valid, otherwise throws an error
  */
-/* eslint-disable functional/no-let */
 export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
   // Remove dash if there is one
   const formattedIssnWithoutCheckDigit = issnWithoutCheckDigit.replace('-', '');
@@ -44,7 +43,6 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
 
   let sumOfDigits = 0;
 
-  // eslint-disable-next-line functional/no-loop-statements
   for (let i = 0; i < formattedIssnWithoutCheckDigit.length; i++) {
     sumOfDigits += Number(formattedIssnWithoutCheckDigit.charAt(i)) * (8 - i);
   }
@@ -63,7 +61,7 @@ export function calculateCheckDigitIssn(issnWithoutCheckDigit) {
     return v.match(/^[0-9]{7}$/);
   }
 }
-/* eslint-enable functional/no-let */
+
 
 /**
  * Utility function to validate ISSN identifier

@@ -29,9 +29,9 @@
 
 import {DataTypes} from 'sequelize';
 
-import {isValidIsbnOrIsmnIdentifier} from './validators';
-import {canApplyIndex, isMysqlOrMaria} from '../utils';
-import {TABLE_PREFIX} from '../../config';
+import {isValidIsbnOrIsmnIdentifier} from './validators.js';
+import {canApplyIndex, isMysqlOrMaria} from '../utils.js';
+import {TABLE_PREFIX} from '../../config.js';
 
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index

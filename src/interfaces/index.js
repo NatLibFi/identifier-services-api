@@ -25,6 +25,6 @@
  *
  */
 
-export * from './isbn-registry';
-export * from './issn-registry';
-export * from './common';
+export * from './isbn-registry/index.js';
+export * from './issn-registry/index.js';
+export * from './common/index.js';

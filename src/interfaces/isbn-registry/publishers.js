@@ -29,16 +29,16 @@
 
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import * as xl from 'excel4node';
+import xl from 'excel4node';
 
-import sequelize from '../../models';
-import {ApiError, isAdmin} from '../../utils';
-import {AUDIT_OPERATION_TYPES, COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants';
-import {generateQuery, emptyQueryResult} from '../interfaceUtils';
+import sequelize from '../../models/index.js';
+import {ApiError, isAdmin} from '../../utils/index.js';
+import {AUDIT_OPERATION_TYPES, COMMON_IDENTIFIER_TYPES, ISBN_REGISTRY_ISBN_RANGE_LENGTH, ISBN_REGISTRY_ISMN_RANGE_LENGTH} from '../constants.js';
+import {generateQuery, emptyQueryResult} from '../interfaceUtils/index.js';
 
-import regexPatterns from '../../routes/validations/patterns';
+import regexPatterns from '../../routes/validations/patterns.js';
 
 /**
  * ISBN publishers interface. Contains read, query and update operations.
@@ -267,14 +267,14 @@ export default function () {
     // has been evaluated in the database query. At the time of writing, this bug remains unsolved.
 
 
-    /* eslint-disable functional/no-let */
+   
     const attributes = ['id', 'officialName', 'otherNames', 'email', 'contactPerson', 'hasQuitted', 'activeIdentifierIsbn', 'activeIdentifierIsmn'];
     const {searchText, hasQuitted, category, identifierType, offset = 0, limit = 10} = guiOpts;
     const order = [['id', 'DESC'], ['promoteSorting', 'DESC']];
     const trimmedSearchText = searchText ? searchText.trim() : undefined;
 
     let publisherIds = null; // Utilized in queries using publisher identifier
-    /* eslint-enable functional/no-let */
+    
 
     // Set of properties are allowed only for admin users, if attempt to use these, throw a error
     if (!isAdmin(user)) {
@@ -500,14 +500,14 @@ export default function () {
     // Basically the reason seems to be that the duplicate entries are cut from the resulting rows attribute after the limiter
     // has been evaluated in the database query. At the time of writing, this bug remains unsolved.
 
-    /* eslint-disable functional/no-let */
+   
     const attributes = ['id', 'officialName', 'otherNames', 'hasQuitted', 'activeIdentifierIsbn', 'activeIdentifierIsmn'];
     const {searchText, offset = 0, limit = 10} = guiOpts;
     const order = [['id', 'DESC']];
     const trimmedSearchText = searchText ? searchText.trim() : undefined;
 
     let publisherIds = null; // Utilized in queries using publisher identifier
-    /* eslint-enable functional/no-let */
+    
 
     // Search by identifier, populate matching publisher IDs
     // ISBN publisher identifier

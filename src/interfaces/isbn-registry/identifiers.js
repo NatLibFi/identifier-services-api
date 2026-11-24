@@ -29,11 +29,11 @@
 
 import HttpStatus from 'http-status';
 
-import {createLogger} from '@natlibfi/melinda-backend-commons/dist/utils';
+import {createLogger} from '../../utils/local-melinda-utils.js';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import {ISBN_REGISTRY_FORMATS, COMMON_IDENTIFIER_TYPES} from '../constants';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import {ISBN_REGISTRY_FORMATS, COMMON_IDENTIFIER_TYPES} from '../constants.js';
 
 /**
  * ISBN-registry identifier interface. Contains cancel and remove operations for ISBN-registry identifiers.

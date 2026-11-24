@@ -30,10 +30,10 @@
 import HttpStatus from 'http-status';
 import {Op} from 'sequelize';
 
-import sequelize from '../../models';
-import {ApiError} from '../../utils';
-import abstractModelInterface from '../common/abstractModelInterface';
-import {generateQuery} from '../interfaceUtils';
+import sequelize from '../../models/index.js';
+import {ApiError} from '../../utils/index.js';
+import abstractModelInterface from '../common/abstractModelInterface.js';
+import {generateQuery} from '../interfaceUtils/index.js';
 
 /**
  * ISSN publisher interface. Contains CRUD + query operations.

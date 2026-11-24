@@ -36,9 +36,9 @@ import {
   validateRequestId,
   validateSetPublisher,
   validateCreatePublicationIssn
-} from '../validations';
+} from '../validations/index.js';
 
-import {issnRequestFactory, issnPublicationFactory} from '../../interfaces';
+import {issnRequestFactory, issnPublicationFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const issnRequests = issnRequestFactory();

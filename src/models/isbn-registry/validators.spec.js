@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {isValidIsbnOrIsmnIdentifier} from './validators';
+import {isValidIsbnOrIsmnIdentifier} from './validators.js';
 
 describe('Identifier model validator', () => {
   it('should evaluate valid ISBN/ISMN identifers as valid values', () => {

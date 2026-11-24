@@ -29,8 +29,8 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateCancelOrRemoveIdentifier} from '../validations';
-import {identifiersFactory} from '../../interfaces';
+import {validateCancelOrRemoveIdentifier} from '../validations/index.js';
+import {identifiersFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const identifiers = identifiersFactory();

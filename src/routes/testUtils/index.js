@@ -28,14 +28,14 @@
 import chai, {expect} from 'chai';
 import chaiHttp from 'chai-http';
 import fixtureFactory, {READERS} from '@natlibfi/fixura';
-import startApp from '../../app';
+import startApp from '../../app.js';
 import {readdirSync, statSync} from 'fs';
 import {join as joinPath} from 'path';
 import base64 from 'base-64';
 
-import pgFixturesFactory from './dbUtils';
+import pgFixturesFactory from './dbUtils.js';
 
-import {SEND_EMAILS} from '../../config';
+import {SEND_EMAILS} from '../../config.js';
 
 chai.use(chaiHttp);
 
@@ -45,10 +45,12 @@ export default ({rootPath}) => {
     throw new Error('Won\'t run automated tests when SEND_EMAILS is set to true. Set SEND_EMAILS to false and try again.');
   }
 
-  let requester; // eslint-disable-line functional/no-let
+  let requester;
+  let app;
 
   afterEach(async () => {
     await requester.close();
+    await app.close();
   });
 
   return (...args) => () => {
@@ -94,7 +96,7 @@ export default ({rootPath}) => {
             const pgFixtures = await pgFixturesFactory({rootPath: dir});
             await pgFixtures.populate([sub, 'dbContents.json'], dbInitRequired);
 
-            const app = await startApp();
+            app = await startApp();
             requester = chai.request(app).keepOpen();
 
             const token = await auth(username, password);

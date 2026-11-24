@@ -33,14 +33,14 @@ import * as MarcRecordSerializers from '@natlibfi/marc-record-serializers';
 import {createMelindaApiRecordClient as createMelindaApiClient} from '@natlibfi/melinda-rest-api-client';
 import createMelindaSruClient from '@natlibfi/sru-client';
 
-import {createLogger} from '@natlibfi/melinda-backend-commons';
+import {createLogger} from '../../../utils/local-melinda-utils.js';
 
-import sequelize from '../../../models';
-import {ApiError} from '../../../utils';
-import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../constants';
-import {convertToMarc, getRecordIdentifiers} from './marcUtils';
-import {MELINDA_API_PASSWORD, MELINDA_API_URL, MELINDA_API_USER, MELINDA_CREATE_RECORD_PARAMS, MELINDA_SRU_URL} from '../../../config';
-import {transformIssnPublicationFromDb} from '../../issn-registry/utils';
+import sequelize from '../../../models/index.js';
+import {ApiError} from '../../../utils/index.js';
+import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../constants.js';
+import {convertToMarc, getRecordIdentifiers} from './marcUtils.js';
+import {MELINDA_API_PASSWORD, MELINDA_API_URL, MELINDA_API_USER, MELINDA_CREATE_RECORD_PARAMS, MELINDA_SRU_URL} from '../../../config.js';
+import {transformIssnPublicationFromDb} from '../../issn-registry/utils.js';
 
 /**
  * MARC interface for both ISBN and ISSN registries.
@@ -53,7 +53,7 @@ export default function (registry) {
   const {publicationModel} = getPublicationModelByRegistry(registry);
 
   // Establish Melinda connections if parameters are available
-  /* eslint-disable functional/no-let */
+ 
   let melindaApiClient = false;
   let melindaSruClient = false;
 
@@ -72,7 +72,7 @@ export default function (registry) {
     logger.debug('Melinda SRU configuration was found');
     melindaSruClient = createMelindaSruClient({url: MELINDA_SRU_URL, recordSchema: 'marcxml'});
   }
-  /* eslint-enable functional/no-let */
+  
 
 
   // Required by issn registry marc generation in addition to publication model

@@ -25,10 +25,10 @@
  *
  */
 
-import * as xl from 'excel4node';
+import xl from 'excel4node';
 import {Parser} from '@json2csv/plainjs';
 
-import {DB_TYPES} from '../../../models/constants';
+import {DB_TYPES} from '../../../models/constants.js';
 
 export function formatStatisticsToCsv(jsonData) {
   const parser = new Parser({});

@@ -35,9 +35,9 @@ import {
   validateLoadTemplateIsbn,
   validateSendMessageIsbn,
   validateResendMessage
-} from '../validations';
+} from '../validations/index.js';
 
-import {messageIsbnFactory} from '../../interfaces';
+import {messageIsbnFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
 

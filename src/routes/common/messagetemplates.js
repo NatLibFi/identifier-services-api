@@ -33,9 +33,9 @@ import {
   validateCreateMessageTemplate,
   validateUpdateMessageTemplate,
   validateRequestId
-} from '../validations';
+} from '../validations/index.js';
 
-import {messageTemplateFactory} from '../../interfaces';
+import {messageTemplateFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware, registry) {
 

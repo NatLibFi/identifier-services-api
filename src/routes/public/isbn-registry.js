@@ -29,21 +29,21 @@ import {Router} from 'express';
 import {celebrate, Segments} from 'celebrate';
 import HttpStatus from 'http-status';
 
-import {validateTurnstile} from '../../middlewares/turnstile';
+import {validateTurnstile} from '../../middlewares/turnstile.js';
 
 import {
   validateRequestId,
   validateCreatePublisherRequestIsbn,
   validateCreatePublicationRequestIsbn,
   validateQueryBody
-} from '../validations';
+} from '../validations/index.js';
 
 import {
   identifierBatchesFactory,
   publishersIsbnFactory,
   publisherRequestIsbnFactory,
   publicationRequestIsbnFactory
-} from '../../interfaces';
+} from '../../interfaces/index.js';
 
 export default function () {
   const publishers = publishersIsbnFactory();

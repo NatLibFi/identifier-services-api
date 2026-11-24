@@ -27,14 +27,14 @@
 
 /* Publication to MARC conversion is based on original work by Petteri Kivimäki (Identifier Registry) */
 
-import sequelize from '../../../models';
+import sequelize from '../../../models/index.js';
 import HttpStatus from 'http-status';
 
-import abstractModelInterface from '../abstractModelInterface';
-import {ApiError} from '../../../utils';
-import {ISBN_REGISTRY_FORMATS, COMMON_REGISTRY_TYPES, COMMON_IDENTIFIER_TYPES} from '../../constants';
-import {convertToMarcIsbnIsmn} from '../../isbn-registry/marc';
-import {convertToMarcIssn} from '../../issn-registry/marc';
+import abstractModelInterface from '../abstractModelInterface.js';
+import {ApiError} from '../../../utils/index.js';
+import {ISBN_REGISTRY_FORMATS, COMMON_REGISTRY_TYPES, COMMON_IDENTIFIER_TYPES} from '../../constants.js';
+import {convertToMarcIsbnIsmn} from '../../isbn-registry/marc.js';
+import {convertToMarcIssn} from '../../issn-registry/marc.js';
 
 const publicationIssnModel = sequelize.models.publicationIssn;
 const publicationIssnModelInterface = abstractModelInterface(publicationIssnModel);

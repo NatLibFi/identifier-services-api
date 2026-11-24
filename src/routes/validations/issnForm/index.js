@@ -27,8 +27,8 @@
 
 import {Joi} from 'celebrate';
 
-import regexPatterns from '../patterns';
-import {validateCreatePublicationIssn} from '../publication/issn';
+import regexPatterns from '../patterns.js';
+import {validateCreatePublicationIssn} from '../publication/issn.js';
 
 
 const formCreateObject = {

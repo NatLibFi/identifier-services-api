@@ -29,10 +29,10 @@
 
 import {DataTypes} from 'sequelize';
 
-import {previousStringDataToArray, arrayToString} from '../modelUtils';
-import {canApplyIndex, isMysqlOrMaria} from '../utils';
+import {previousStringDataToArray, arrayToString} from '../modelUtils/index.js';
+import {canApplyIndex, isMysqlOrMaria} from '../utils.js';
 
-import {TABLE_PREFIX} from '../../config';
+import {TABLE_PREFIX} from '../../config.js';
 
 export default function (sequelize, dialect) {
   // SQLite does not allow shared names for index

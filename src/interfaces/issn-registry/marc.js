@@ -30,8 +30,8 @@
 import {MarcRecord} from '@natlibfi/marc-record';
 import {DateTime} from 'luxon';
 
-import {ISSN_PUBLICATION_TYPES, ISSN_REGISTRY_PUBLICATION_MEDIUM} from '../constants';
-import {NODE_ENV} from '../../config';
+import {ISSN_PUBLICATION_TYPES, ISSN_REGISTRY_PUBLICATION_MEDIUM} from '../constants.js';
+import {NODE_ENV} from '../../config.js';
 
 /**
  * Convert ISSN-registry publication entry to MARC record
@@ -102,7 +102,7 @@ function isElectronical(publication) {
 }
 
 function generate008({publication, electronical}) {
-  /* eslint-disable functional/no-let */
+ 
   const date = new Date();
 
   // Constructing field without immutability constraint
@@ -150,7 +150,7 @@ function generate008({publication, electronical}) {
   field += '| ';
 
   return field;
-  /* eslint-enable functional/no-let */
+  
 
   function getPublicationTypeInfo(publication) {
     const mapToCharacterP = [

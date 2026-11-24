@@ -31,9 +31,9 @@ import HttpStatus from 'http-status';
 
 import {
   validateIssnArchiveSearch
-} from '../validations';
+} from '../validations/index.js';
 
-import {issnRequestArchiveFactory} from '../../interfaces';
+import {issnRequestArchiveFactory} from '../../interfaces/index.js';
 
 export default function (permissionMiddleware) {
   const issnRequests = issnRequestArchiveFactory();

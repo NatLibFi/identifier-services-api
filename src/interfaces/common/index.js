@@ -27,6 +27,6 @@
 
 /* Based on original work by Petteri Kivimäki https://github.com/petkivim/ (Identifier Registry) */
 
-export {default as messageTypeFactory} from './messagetypes';
-export {default as messageTemplateFactory} from './messagetemplates';
-export {default as marcFactory} from './marc';
+export {default as messageTypeFactory} from './messagetypes.js';
+export {default as messageTemplateFactory} from './messagetemplates.js';
+export {default as marcFactory} from './marc/index.js';

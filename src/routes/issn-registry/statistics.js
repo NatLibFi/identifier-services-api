@@ -31,10 +31,10 @@ import HttpStatus from 'http-status';
 
 import {
   validateStatisticsRequestIssn
-} from '../validations';
+} from '../validations/index.js';
 
-import {statisticsIssnFactory} from '../../interfaces';
-import {ApiError} from '../../utils';
+import {statisticsIssnFactory} from '../../interfaces/index.js';
+import {ApiError} from '../../utils/index.js';
 
 export default function (permissionMiddleware) {
 

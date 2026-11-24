@@ -27,19 +27,19 @@
 
 import {Router} from 'express';
 
-import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../interfaces/constants';
+import {COMMON_IDENTIFIER_TYPES, COMMON_REGISTRY_TYPES} from '../../interfaces/constants.js';
 
-import {default as createIsbnRegistryPublisherRangeRouter} from './publisher-ranges';
-import {default as createIsbnRegistryRangeRouter} from './ranges';
-import {default as createIsbnRegistryIdentifierBatchRouter} from './identifierBatches';
-import {default as createIsbnRegistryIdentifierRouter} from './identifiers';
-import {default as createIsbnRegistryPublisherRouter} from './publishers';
-import {default as createIsbnRegistryPublisherArchiveRouter} from './publisher-archives';
-import {default as createIsbnRegistryPublisherRequestRouter} from './requests/publishers';
-import {default as createIsbnRegistryPublicationRequestRouter} from './requests/publications';
-import {default as createIsbnRegistryMessageRouter} from './messages';
-import {default as createIsbnRegistryStatisticsRouter} from './statistics';
-import * as commonRoutes from '../common';
+import {default as createIsbnRegistryPublisherRangeRouter} from './publisher-ranges.js';
+import {default as createIsbnRegistryRangeRouter} from './ranges.js';
+import {default as createIsbnRegistryIdentifierBatchRouter} from './identifierBatches.js';
+import {default as createIsbnRegistryIdentifierRouter} from './identifiers.js';
+import {default as createIsbnRegistryPublisherRouter} from './publishers.js';
+import {default as createIsbnRegistryPublisherArchiveRouter} from './publisher-archives.js';
+import {default as createIsbnRegistryPublisherRequestRouter} from './requests/publishers.js';
+import {default as createIsbnRegistryPublicationRequestRouter} from './requests/publications.js';
+import {default as createIsbnRegistryMessageRouter} from './messages.js';
+import {default as createIsbnRegistryStatisticsRouter} from './statistics.js';
+import * as commonRoutes from '../common/index.js';
 
 export default function (middlewares) {
   const {permissionMiddleware} = middlewares;

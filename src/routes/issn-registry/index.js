@@ -27,16 +27,16 @@
 
 import {Router} from 'express';
 
-import {COMMON_REGISTRY_TYPES} from '../../interfaces/constants';
+import {COMMON_REGISTRY_TYPES} from '../../interfaces/constants.js';
 
-import {default as createIssnRegistryRequestRouter} from './requests';
-import {default as createIssnRegistryArchivedRequestRouter} from './archived-requests';
-import {default as createIssnRegistryPublisherRouter} from './publishers';
-import {default as createIssnRegistryPublicationRouter} from './publications';
-import {default as createIssnRegistryRangeRouter} from './ranges';
-import {default as createIssnRegistryMessageRouter} from './messages';
-import {default as createIssnRegistryStatisticsRouter} from './statistics';
-import * as commonRoutes from '../common';
+import {default as createIssnRegistryRequestRouter} from './requests.js';
+import {default as createIssnRegistryArchivedRequestRouter} from './archived-requests.js';
+import {default as createIssnRegistryPublisherRouter} from './publishers.js';
+import {default as createIssnRegistryPublicationRouter} from './publications.js';
+import {default as createIssnRegistryRangeRouter} from './ranges.js';
+import {default as createIssnRegistryMessageRouter} from './messages.js';
+import {default as createIssnRegistryStatisticsRouter} from './statistics.js';
+import * as commonRoutes from '../common/index.js';
 
 export default function (middlewares) {
   const {permissionMiddleware} = middlewares;
